@@ -21,6 +21,13 @@ export async function POST(req: Request) {
     const departure = new Date(data.departure);
     const apartmentName = String(data.selected_apartments || '').trim();
 
+    if (!arrival || !departure || !apartmentName) {
+      return Response.json(
+        { success: false, message: 'Fehlende Daten' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
     const apartment = await prisma.apartment.findFirst({
       where: {
         name: apartmentName,
@@ -30,7 +37,11 @@ export async function POST(req: Request) {
 
     if (!apartment) {
       return Response.json(
-        { success: false, message: 'Apartment nicht gefunden.' },
+        {
+          success: false,
+          available: false,
+          message: 'Apartment nicht gefunden',
+        },
         { status: 404, headers: corsHeaders },
       );
     }
@@ -50,32 +61,22 @@ export async function POST(req: Request) {
     if (overlappingBlock) {
       return Response.json(
         {
-          success: false,
-          message:
-            'Das gewählte Apartment ist in diesem Zeitraum nicht verfügbar.',
+          success: true,
+          available: false,
+          message: 'Das Apartment ist im gewählten Zeitraum nicht verfügbar.',
         },
-        { status: 409, headers: corsHeaders },
+        { headers: corsHeaders },
       );
     }
 
-    const result = await prisma.request.create({
-      data: {
-        arrival,
-        departure,
-        nights: Number(data.nights),
-        adults: Number(data.adults),
-        children: Number(data.children || 0),
-        selectedApartmentIds: apartmentName,
-        salutation: data.salutation,
-        lastname: data.lastname,
-        email: data.email,
-        country: data.country,
-        message: data.message || null,
-        newsletter: Boolean(data.newsletter),
+    return Response.json(
+      {
+        success: true,
+        available: true,
+        message: 'Apartment ist verfügbar.',
       },
-    });
-
-    return Response.json({ success: true, result }, { headers: corsHeaders });
+      { headers: corsHeaders },
+    );
   } catch (error) {
     console.error(error);
 
