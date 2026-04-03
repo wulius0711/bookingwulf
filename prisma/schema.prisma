@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Apartment {
+  id            Int            @id @default(autoincrement())
+  name          String
+  slug          String         @unique
+  description   String?
+  maxAdults     Int            @default(2)
+  maxChildren   Int            @default(0)
+  basePrice     Float?
+  cleaningFee   Float?
+  isActive      Boolean        @default(true)
+  sortOrder     Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  priceSeasons  PriceSeason[]
+  blockedRanges BlockedRange[]
+}
+
+model PriceSeason {
+  id            Int       @id @default(autoincrement())
+  apartmentId   Int
+  startDate     DateTime
+  endDate       DateTime
+  pricePerNight Float
+  minStay       Int       @default(1)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  apartment     Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+}
+
+model BlockedRange {
+  id          Int       @id @default(autoincrement())
+  apartmentId Int
+  startDate   DateTime
+  endDate     DateTime
+  type        String
+  note        String?
+  createdAt   DateTime  @default(now())
+
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+}
+
+model Request {
+  id                   Int      @id @default(autoincrement())
+  arrival              DateTime
+  departure            DateTime
+  nights               Int
+  adults               Int
+  children             Int      @default(0)
+  selectedApartmentIds String
+  salutation           String
+  lastname             String
+  email                String
+  country              String
+  message              String?
+  newsletter           Boolean  @default(false)
+  status               String   @default("new")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
