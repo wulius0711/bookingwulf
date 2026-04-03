@@ -1,5 +1,18 @@
 import { prisma } from '@/src/lib/prisma';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -21,9 +34,21 @@ export async function POST(req: Request) {
       },
     });
 
-    return Response.json({ success: true, result });
+    return Response.json(
+      { success: true, result },
+      {
+        headers: corsHeaders,
+      },
+    );
   } catch (error) {
     console.error(error);
-    return Response.json({ success: false }, { status: 500 });
+
+    return Response.json(
+      { success: false, error: 'Server error' },
+      {
+        status: 500,
+        headers: corsHeaders,
+      },
+    );
   }
 }
