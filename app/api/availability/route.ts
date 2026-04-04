@@ -19,61 +19,70 @@ export async function POST(req: Request) {
 
     const arrival = new Date(data.arrival);
     const departure = new Date(data.departure);
-    const apartmentName = String(data.selected_apartments || '').trim();
 
-    if (!arrival || !departure || !apartmentName) {
+    const apartmentNames = String(data.selected_apartments || '')
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+
+    if (apartmentNames.length === 0) {
       return Response.json(
-        { success: false, message: 'Fehlende Daten' },
+        { success: false, message: 'Keine Apartments ausgewählt.' },
         { status: 400, headers: corsHeaders },
       );
     }
 
-    const apartment = await prisma.apartment.findFirst({
+    const apartments = await prisma.apartment.findMany({
       where: {
-        name: apartmentName,
+        name: {
+          in: apartmentNames,
+        },
         isActive: true,
       },
     });
 
-    if (!apartment) {
+    if (apartments.length !== apartmentNames.length) {
       return Response.json(
         {
           success: false,
           available: false,
-          message: 'Apartment nicht gefunden',
+          message: 'Ein oder mehrere Apartments wurden nicht gefunden.',
         },
         { status: 404, headers: corsHeaders },
       );
     }
 
-    const overlappingBlock = await prisma.blockedRange.findFirst({
-      where: {
-        apartmentId: apartment.id,
-        startDate: {
-          lt: departure,
+    // 🔥 ALLE Apartments prüfen
+    for (const apartment of apartments) {
+      const overlapping = await prisma.blockedRange.findFirst({
+        where: {
+          apartmentId: apartment.id,
+          startDate: {
+            lt: departure,
+          },
+          endDate: {
+            gt: arrival,
+          },
         },
-        endDate: {
-          gt: arrival,
-        },
-      },
-    });
+      });
 
-    if (overlappingBlock) {
-      return Response.json(
-        {
-          success: true,
-          available: false,
-          message: 'Das Apartment ist im gewählten Zeitraum nicht verfügbar.',
-        },
-        { headers: corsHeaders },
-      );
+      if (overlapping) {
+        return Response.json(
+          {
+            success: true,
+            available: false,
+            message: `${apartment.name} ist im gewählten Zeitraum nicht verfügbar.`,
+          },
+          { headers: corsHeaders },
+        );
+      }
     }
 
     return Response.json(
       {
         success: true,
         available: true,
-        message: 'Apartment ist verfügbar.',
+        message: 'Alle Apartments sind verfügbar.',
       },
       { headers: corsHeaders },
     );

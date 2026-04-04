@@ -19,43 +19,78 @@ export async function POST(req: Request) {
 
     const arrival = new Date(data.arrival);
     const departure = new Date(data.departure);
-    const apartmentName = String(data.selected_apartments || '').trim();
 
-    const apartment = await prisma.apartment.findFirst({
+    const apartmentNames = String(data.selected_apartments || '')
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+
+    if (!data.arrival || !data.departure) {
+      return Response.json(
+        { success: false, message: 'An- und Abreisedatum sind erforderlich.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    if (apartmentNames.length === 0) {
+      return Response.json(
+        {
+          success: false,
+          message: 'Bitte wählen Sie mindestens ein Apartment aus.',
+        },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    if (!data.lastname || !data.email) {
+      return Response.json(
+        { success: false, message: 'Name und E-Mail sind erforderlich.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    const apartments = await prisma.apartment.findMany({
       where: {
-        name: apartmentName,
+        name: {
+          in: apartmentNames,
+        },
         isActive: true,
       },
     });
 
-    if (!apartment) {
-      return Response.json(
-        { success: false, message: 'Apartment nicht gefunden.' },
-        { status: 404, headers: corsHeaders },
-      );
-    }
-
-    const overlappingBlock = await prisma.blockedRange.findFirst({
-      where: {
-        apartmentId: apartment.id,
-        startDate: {
-          lt: departure,
-        },
-        endDate: {
-          gt: arrival,
-        },
-      },
-    });
-
-    if (overlappingBlock) {
+    if (apartments.length !== apartmentNames.length) {
       return Response.json(
         {
           success: false,
           message:
-            'Das gewählte Apartment ist in diesem Zeitraum nicht verfügbar.',
+            'Ein oder mehrere ausgewählte Apartments wurden nicht gefunden.',
         },
-        { status: 409, headers: corsHeaders },
+        { status: 404, headers: corsHeaders },
       );
+    }
+
+    for (const apartment of apartments) {
+      const overlapping = await prisma.blockedRange.findFirst({
+        where: {
+          apartmentId: apartment.id,
+          startDate: {
+            lt: departure,
+          },
+          endDate: {
+            gt: arrival,
+          },
+        },
+      });
+
+      if (overlapping) {
+        return Response.json(
+          {
+            success: false,
+            message: `${apartment.name} ist im gewählten Zeitraum nicht verfügbar.`,
+          },
+          { status: 409, headers: corsHeaders },
+        );
+      }
     }
 
     const result = await prisma.request.create({
@@ -65,22 +100,31 @@ export async function POST(req: Request) {
         nights: Number(data.nights),
         adults: Number(data.adults),
         children: Number(data.children || 0),
-        selectedApartmentIds: apartmentName,
-        salutation: data.salutation,
-        lastname: data.lastname,
-        email: data.email,
-        country: data.country,
-        message: data.message || null,
+        selectedApartmentIds: apartmentNames.join(', '),
+        salutation: String(data.salutation || ''),
+        lastname: String(data.lastname || ''),
+        email: String(data.email || ''),
+        country: String(data.country || ''),
+        message: data.message ? String(data.message) : null,
         newsletter: Boolean(data.newsletter),
       },
     });
 
-    return Response.json({ success: true, result }, { headers: corsHeaders });
+    return Response.json(
+      {
+        success: true,
+        result,
+      },
+      { headers: corsHeaders },
+    );
   } catch (error) {
     console.error(error);
 
     return Response.json(
-      { success: false, message: 'Serverfehler' },
+      {
+        success: false,
+        message: 'Serverfehler',
+      },
       { status: 500, headers: corsHeaders },
     );
   }
