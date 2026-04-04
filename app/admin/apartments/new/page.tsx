@@ -9,6 +9,12 @@ async function createApartment(formData: FormData) {
   const description = String(formData.get('description') || '');
   const maxAdults = Number(formData.get('maxAdults') || 2);
   const maxChildren = Number(formData.get('maxChildren') || 0);
+  const basePrice = formData.get('basePrice')
+    ? Number(formData.get('basePrice'))
+    : null;
+  const cleaningFee = formData.get('cleaningFee')
+    ? Number(formData.get('cleaningFee'))
+    : null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
   const imageUrl = String(formData.get('imageUrl') || '');
   const altText = String(formData.get('altText') || '');
@@ -25,6 +31,8 @@ async function createApartment(formData: FormData) {
       description: description || null,
       maxAdults,
       maxChildren,
+      basePrice,
+      cleaningFee,
       sortOrder,
       isActive,
       images: imageUrl
@@ -71,6 +79,18 @@ export default function NewApartmentPage() {
           defaultValue={0}
         />
         <input
+          name="basePrice"
+          type="number"
+          step="0.01"
+          placeholder="Preis pro Nacht"
+        />
+        <input
+          name="cleaningFee"
+          type="number"
+          step="0.01"
+          placeholder="Reinigungsgebühr"
+        />
+        <input
           name="sortOrder"
           type="number"
           placeholder="Sortierung"
@@ -93,6 +113,7 @@ export default function NewApartmentPage() {
             color: '#fff',
             border: 'none',
             borderRadius: 999,
+            cursor: 'pointer',
           }}
         >
           Speichern
