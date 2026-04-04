@@ -12,13 +12,14 @@ type PageProps = {
 const row: React.CSSProperties = {
   display: 'grid',
   gridTemplateColumns: '180px 1fr',
-  alignItems: 'center',
+  alignItems: 'start',
   gap: 16,
 };
 
 const labelStyle: React.CSSProperties = {
   fontSize: 14,
   color: '#666',
+  paddingTop: 10,
 };
 
 const inputStyle: React.CSSProperties = {
@@ -73,8 +74,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const maxChildren = Number(formData.get('maxChildren') || 0);
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
-    const imageUrl = String(formData.get('imageUrl') || '').trim();
-    const altText = String(formData.get('altText') || '').trim();
     const isActive = formData.get('isActive') === 'on';
 
     if (!name || !slug) {
@@ -98,31 +97,31 @@ export default async function EditApartmentPage({ params }: PageProps) {
       },
     });
 
-    const currentImage = await prisma.apartmentImage.findFirst({
+    // Alle Bild-Felder sammeln
+    const imageUrls = formData.getAll('imageUrl').map((v) => String(v).trim());
+    const altTexts = formData.getAll('altText').map((v) => String(v).trim());
+
+    const cleanedImages = imageUrls
+      .map((url, index) => ({
+        imageUrl: url,
+        altText: altTexts[index] || null,
+        sortOrder: index,
+      }))
+      .filter((img) => img.imageUrl.length > 0);
+
+    // Bestehende Bilder komplett ersetzen
+    await prisma.apartmentImage.deleteMany({
       where: { apartmentId },
-      orderBy: { sortOrder: 'asc' },
     });
 
-    if (imageUrl && currentImage) {
-      await prisma.apartmentImage.update({
-        where: { id: currentImage.id },
-        data: {
-          imageUrl,
-          altText: altText || null,
-        },
-      });
-    } else if (imageUrl && !currentImage) {
-      await prisma.apartmentImage.create({
-        data: {
+    if (cleanedImages.length > 0) {
+      await prisma.apartmentImage.createMany({
+        data: cleanedImages.map((img) => ({
           apartmentId,
-          imageUrl,
-          altText: altText || null,
-          sortOrder: 0,
-        },
-      });
-    } else if (!imageUrl && currentImage) {
-      await prisma.apartmentImage.delete({
-        where: { id: currentImage.id },
+          imageUrl: img.imageUrl,
+          altText: img.altText,
+          sortOrder: img.sortOrder,
+        })),
       });
     }
 
@@ -130,7 +129,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 800 }}>
+    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 900 }}>
       <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
@@ -206,26 +205,59 @@ export default async function EditApartmentPage({ params }: PageProps) {
         </div>
 
         <div style={row}>
-          <label style={labelStyle}>Bild URL</label>
-          <input
-            name="imageUrl"
-            defaultValue={apartment.images[0]?.imageUrl || ''}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Alt Text</label>
-          <input
-            name="altText"
-            defaultValue={apartment.images[0]?.altText || ''}
-            style={inputStyle}
-          />
+          <label style={labelStyle}>Bilder</label>
+          <div style={{ display: 'grid', gap: 12 }}>
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <div
+                key={index}
+                style={{
+                  border: '1px solid #eee',
+                  borderRadius: 8,
+                  padding: 12,
+                  display: 'grid',
+                  gap: 10,
+                }}
+              >
+                <input
+                  name="imageUrl"
+                  placeholder={`Bild URL ${index + 1}`}
+                  defaultValue={apartment.images[index]?.imageUrl || ''}
+                  style={inputStyle}
+                />
+                <input
+                  name="altText"
+                  placeholder={`Alt Text ${index + 1}`}
+                  defaultValue={apartment.images[index]?.altText || ''}
+                  style={inputStyle}
+                />
+                {apartment.images[index]?.imageUrl && (
+                  <img
+                    src={apartment.images[index].imageUrl}
+                    alt={apartment.images[index].altText || `Bild ${index + 1}`}
+                    style={{
+                      width: 220,
+                      height: 140,
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                      border: '1px solid #eee',
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div style={{ ...row, alignItems: 'center' }}>
           <label style={labelStyle}>Status</label>
-          <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <label
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'center',
+              paddingTop: 8,
+            }}
+          >
             <input
               type="checkbox"
               name="isActive"

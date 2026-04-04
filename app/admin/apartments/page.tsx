@@ -36,7 +36,7 @@ async function duplicateApartment(formData: FormData) {
 
   if (!apartment) return;
 
-  const newApartment = await prisma.apartment.create({
+  await prisma.apartment.create({
     data: {
       name: `${apartment.name} Copy`,
       slug: `${apartment.slug}-copy-${Date.now()}`,
@@ -47,19 +47,18 @@ async function duplicateApartment(formData: FormData) {
       cleaningFee: apartment.cleaningFee,
       isActive: false,
       sortOrder: apartment.sortOrder + 1,
+      images:
+        apartment.images.length > 0
+          ? {
+              create: apartment.images.map((img, index) => ({
+                imageUrl: img.imageUrl,
+                altText: img.altText,
+                sortOrder: index,
+              })),
+            }
+          : undefined,
     },
   });
-
-  if (apartment.images.length > 0) {
-    await prisma.apartmentImage.create({
-      data: {
-        apartmentId: newApartment.id,
-        imageUrl: apartment.images[0].imageUrl,
-        altText: apartment.images[0].altText,
-        sortOrder: 0,
-      },
-    });
-  }
 
   redirect('/admin/apartments');
 }
@@ -121,6 +120,9 @@ export default async function ApartmentsAdminPage() {
             >
               <div style={{ fontWeight: 700, marginBottom: 8 }}>{a.name}</div>
 
+              <div>
+                <strong>ID:</strong> {a.id}
+              </div>
               <div>
                 <strong>Slug:</strong> {a.slug}
               </div>
