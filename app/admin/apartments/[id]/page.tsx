@@ -7,14 +7,45 @@ type PageProps = {
   };
 };
 
-export default async function EditApartmentPage({ params }: PageProps) {
-  const apartmentId = Number(params.id);
+const row: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '180px 1fr',
+  alignItems: 'center',
+  gap: 16,
+};
 
-  if (!Number.isFinite(apartmentId)) {
+const labelStyle: React.CSSProperties = {
+  fontSize: 14,
+  color: '#666',
+};
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '10px 12px',
+  border: '1px solid #ddd',
+  borderRadius: 6,
+  fontSize: 14,
+};
+
+const buttonStyle: React.CSSProperties = {
+  marginTop: 20,
+  padding: '12px 18px',
+  borderRadius: 999,
+  border: 'none',
+  background: '#111',
+  color: '#fff',
+  cursor: 'pointer',
+  width: 'fit-content',
+};
+
+export default async function EditApartmentPage({ params }: PageProps) {
+  const apartmentId = parseInt(params.id, 10);
+
+  if (!Number.isInteger(apartmentId)) {
     notFound();
   }
 
-  const apartment = await prisma.apartment.findUnique({
+  const apartment = await prisma.apartment.findFirst({
     where: { id: apartmentId },
     include: {
       images: {
@@ -95,58 +126,31 @@ export default async function EditApartmentPage({ params }: PageProps) {
     redirect('/admin/apartments');
   }
 
-  const row = {
-    display: 'grid',
-    gridTemplateColumns: '180px 1fr',
-    alignItems: 'center',
-    gap: 16,
-  };
-
-  const labelStyle = {
-    fontSize: 14,
-    color: '#666',
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '10px 12px',
-    border: '1px solid #ddd',
-    borderRadius: 6,
-    fontSize: 14,
-  };
-
-  const buttonStyle = {
-    marginTop: 20,
-    padding: '12px 18px',
-    borderRadius: 999,
-    border: 'none',
-    background: '#111',
-    color: '#fff',
-    cursor: 'pointer',
-    width: 'fit-content',
-  };
-
   return (
     <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 800 }}>
       <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
-        {/* ROW STYLE */}
-        {[
-          ['Name', 'name', apartment.name],
-          ['Slug', 'slug', apartment.slug],
-        ].map(([label, name, value]) => (
-          <div key={name} style={row}>
-            <label style={labelStyle}>{label}</label>
-            <input
-              name={name as string}
-              defaultValue={value as string}
-              style={inputStyle}
-            />
-          </div>
-        ))}
+        <div style={row}>
+          <label style={labelStyle}>Name</label>
+          <input
+            name="name"
+            defaultValue={apartment.name}
+            style={inputStyle}
+            required
+          />
+        </div>
 
-        {/* DESCRIPTION */}
+        <div style={row}>
+          <label style={labelStyle}>Slug</label>
+          <input
+            name="slug"
+            defaultValue={apartment.slug}
+            style={inputStyle}
+            required
+          />
+        </div>
+
         <div style={row}>
           <label style={labelStyle}>Beschreibung</label>
           <textarea
@@ -156,7 +160,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        {/* NUMBERS */}
         <div style={row}>
           <label style={labelStyle}>Max. Erwachsene</label>
           <input
@@ -178,9 +181,10 @@ export default async function EditApartmentPage({ params }: PageProps) {
         </div>
 
         <div style={row}>
-          <label style={labelStyle}>Preis (€)</label>
+          <label style={labelStyle}>Preis pro Nacht (€)</label>
           <input
             type="number"
+            step="0.01"
             name="basePrice"
             defaultValue={apartment.basePrice ?? ''}
             style={inputStyle}
@@ -188,16 +192,16 @@ export default async function EditApartmentPage({ params }: PageProps) {
         </div>
 
         <div style={row}>
-          <label style={labelStyle}>Cleaning (€)</label>
+          <label style={labelStyle}>Reinigungsgebühr (€)</label>
           <input
             type="number"
+            step="0.01"
             name="cleaningFee"
             defaultValue={apartment.cleaningFee ?? ''}
             style={inputStyle}
           />
         </div>
 
-        {/* IMAGE */}
         <div style={row}>
           <label style={labelStyle}>Bild URL</label>
           <input
@@ -216,10 +220,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        {/* CHECKBOX */}
         <div style={{ ...row, alignItems: 'center' }}>
           <label style={labelStyle}>Status</label>
-          <label style={{ display: 'flex', gap: 8 }}>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <input
               type="checkbox"
               name="isActive"
@@ -229,7 +232,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
           </label>
         </div>
 
-        <button style={buttonStyle}>Änderungen speichern</button>
+        <button type="submit" style={buttonStyle}>
+          Änderungen speichern
+        </button>
       </form>
     </main>
   );
