@@ -2,16 +2,15 @@ import { prisma } from '@/src/lib/prisma';
 import { notFound, redirect } from 'next/navigation';
 
 type PageProps = {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 };
 
 export default async function EditApartmentPage({ params }: PageProps) {
-  const { id } = await params;
-  const apartmentId = Number(id);
+  const apartmentId = Number(params.id);
 
-  if (!apartmentId) {
+  if (!Number.isFinite(apartmentId)) {
     notFound();
   }
 
@@ -33,24 +32,23 @@ export default async function EditApartmentPage({ params }: PageProps) {
   async function updateApartment(formData: FormData) {
     'use server';
 
-    const name = String(formData.get('name') || '');
-    const slug = String(formData.get('slug') || '');
-    const description = String(formData.get('description') || '');
+    const name = String(formData.get('name') || '').trim();
+    const slug = String(formData.get('slug') || '').trim();
+    const description = String(formData.get('description') || '').trim();
     const maxAdults = Number(formData.get('maxAdults') || 2);
     const maxChildren = Number(formData.get('maxChildren') || 0);
-    const basePrice = formData.get('basePrice')
-      ? Number(formData.get('basePrice'))
-      : null;
-    const cleaningFee = formData.get('cleaningFee')
-      ? Number(formData.get('cleaningFee'))
-      : null;
-    const imageUrl = String(formData.get('imageUrl') || '');
-    const altText = String(formData.get('altText') || '');
+    const basePriceRaw = String(formData.get('basePrice') || '').trim();
+    const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
+    const imageUrl = String(formData.get('imageUrl') || '').trim();
+    const altText = String(formData.get('altText') || '').trim();
     const isActive = formData.get('isActive') === 'on';
 
     if (!name || !slug) {
       throw new Error('Name und Slug sind erforderlich.');
     }
+
+    const basePrice = basePriceRaw ? Number(basePriceRaw) : null;
+    const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
 
     await prisma.apartment.update({
       where: { id: apartmentId },
@@ -66,32 +64,20 @@ export default async function EditApartmentPage({ params }: PageProps) {
       },
     });
 
-    const currentApartment = await prisma.apartment.findUnique({
-      where: { id: apartmentId },
-      include: {
-        images: {
-          orderBy: {
-            sortOrder: 'asc',
-          },
-        },
-      },
+    const currentImage = await prisma.apartmentImage.findFirst({
+      where: { apartmentId },
+      orderBy: { sortOrder: 'asc' },
     });
 
-    if (!currentApartment) {
-      throw new Error('Apartment nicht gefunden.');
-    }
-
-    const existingImage = currentApartment.images[0];
-
-    if (imageUrl && existingImage) {
+    if (imageUrl && currentImage) {
       await prisma.apartmentImage.update({
-        where: { id: existingImage.id },
+        where: { id: currentImage.id },
         data: {
           imageUrl,
           altText: altText || null,
         },
       });
-    } else if (imageUrl && !existingImage) {
+    } else if (imageUrl && !currentImage) {
       await prisma.apartmentImage.create({
         data: {
           apartmentId,
@@ -100,9 +86,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
           sortOrder: 0,
         },
       });
-    } else if (!imageUrl && existingImage) {
+    } else if (!imageUrl && currentImage) {
       await prisma.apartmentImage.delete({
-        where: { id: existingImage.id },
+        where: { id: currentImage.id },
       });
     }
 
@@ -110,7 +96,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 700 }}>
+    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 720 }}>
       <h1 style={{ marginBottom: 24 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 16 }}>
