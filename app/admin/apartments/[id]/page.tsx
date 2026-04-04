@@ -1,122 +1,220 @@
 import { prisma } from '@/src/lib/prisma';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
-export default async function EditApartmentPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function EditApartmentPage({ params }: PageProps) {
+  const { id } = await params;
+  const apartmentId = Number(id);
+
+  if (!apartmentId) {
+    notFound();
+  }
+
   const apartment = await prisma.apartment.findUnique({
-    where: { id: Number(params.id) },
-    include: { images: true },
+    where: { id: apartmentId },
+    include: {
+      images: {
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      },
+    },
   });
 
-  if (!apartment) return notFound();
+  if (!apartment) {
+    notFound();
+  }
+
+  async function updateApartment(formData: FormData) {
+    'use server';
+
+    const name = String(formData.get('name') || '');
+    const slug = String(formData.get('slug') || '');
+    const description = String(formData.get('description') || '');
+    const maxAdults = Number(formData.get('maxAdults') || 2);
+    const maxChildren = Number(formData.get('maxChildren') || 0);
+    const basePrice = formData.get('basePrice')
+      ? Number(formData.get('basePrice'))
+      : null;
+    const cleaningFee = formData.get('cleaningFee')
+      ? Number(formData.get('cleaningFee'))
+      : null;
+    const imageUrl = String(formData.get('imageUrl') || '');
+    const altText = String(formData.get('altText') || '');
+    const isActive = formData.get('isActive') === 'on';
+
+    if (!name || !slug) {
+      throw new Error('Name und Slug sind erforderlich.');
+    }
+
+    await prisma.apartment.update({
+      where: { id: apartmentId },
+      data: {
+        name,
+        slug,
+        description: description || null,
+        maxAdults,
+        maxChildren,
+        basePrice,
+        cleaningFee,
+        isActive,
+      },
+    });
+
+    const currentApartment = await prisma.apartment.findUnique({
+      where: { id: apartmentId },
+      include: {
+        images: {
+          orderBy: {
+            sortOrder: 'asc',
+          },
+        },
+      },
+    });
+
+    if (!currentApartment) {
+      throw new Error('Apartment nicht gefunden.');
+    }
+
+    const existingImage = currentApartment.images[0];
+
+    if (imageUrl && existingImage) {
+      await prisma.apartmentImage.update({
+        where: { id: existingImage.id },
+        data: {
+          imageUrl,
+          altText: altText || null,
+        },
+      });
+    } else if (imageUrl && !existingImage) {
+      await prisma.apartmentImage.create({
+        data: {
+          apartmentId,
+          imageUrl,
+          altText: altText || null,
+          sortOrder: 0,
+        },
+      });
+    } else if (!imageUrl && existingImage) {
+      await prisma.apartmentImage.delete({
+        where: { id: existingImage.id },
+      });
+    }
+
+    redirect('/admin/apartments');
+  }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 600 }}>
-      <h1>Apartment bearbeiten</h1>
+    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 700 }}>
+      <h1 style={{ marginBottom: 24 }}>Apartment bearbeiten</h1>
 
-      <form
-        action={async (formData) => {
-          'use server';
-
-          await prisma.apartment.update({
-            where: { id: apartment.id },
-            data: {
-              name: formData.get('name') as string,
-              slug: formData.get('slug') as string,
-              description: formData.get('description') as string,
-              maxAdults: Number(formData.get('maxAdults')),
-              maxChildren: Number(formData.get('maxChildren')),
-              basePrice: Number(formData.get('basePrice')),
-              cleaningFee: Number(formData.get('cleaningFee')),
-              isActive: formData.get('isActive') === 'on',
-            },
-          });
-        }}
-        style={{ display: 'grid', gap: 16 }}
-      >
-        {/* NAME */}
+      <form action={updateApartment} style={{ display: 'grid', gap: 16 }}>
         <div>
-          <label>Name</label>
-          <input name="name" defaultValue={apartment.name} />
-        </div>
-
-        {/* SLUG */}
-        <div>
-          <label>Slug</label>
-          <input name="slug" defaultValue={apartment.slug} />
-        </div>
-
-        {/* DESCRIPTION */}
-        <div>
-          <label>Beschreibung</label>
-          <textarea
-            name="description"
-            defaultValue={apartment.description || ''}
+          <label style={{ display: 'block', marginBottom: 6 }}>Name</label>
+          <input
+            name="name"
+            defaultValue={apartment.name}
+            required
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* MAX ADULTS */}
         <div>
-          <label>Max. Erwachsene</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>Slug</label>
+          <input
+            name="slug"
+            defaultValue={apartment.slug}
+            required
+            style={{ width: '100%', padding: 12 }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: 6 }}>
+            Beschreibung
+          </label>
+          <textarea
+            name="description"
+            defaultValue={apartment.description || ''}
+            rows={5}
+            style={{ width: '100%', padding: 12 }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: 6 }}>
+            Max. Erwachsene
+          </label>
           <input
             type="number"
             name="maxAdults"
             defaultValue={apartment.maxAdults}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* MAX CHILDREN */}
         <div>
-          <label>Max. Kinder</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>
+            Max. Kinder
+          </label>
           <input
             type="number"
             name="maxChildren"
             defaultValue={apartment.maxChildren}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* PRICE */}
         <div>
-          <label>Preis pro Nacht (€)</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>
+            Preis pro Nacht (€)
+          </label>
           <input
             type="number"
+            step="0.01"
             name="basePrice"
-            defaultValue={apartment.basePrice || 0}
+            defaultValue={apartment.basePrice ?? ''}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* CLEANING */}
         <div>
-          <label>Reinigungsgebühr (€)</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>
+            Reinigungsgebühr (€)
+          </label>
           <input
             type="number"
+            step="0.01"
             name="cleaningFee"
-            defaultValue={apartment.cleaningFee || 0}
+            defaultValue={apartment.cleaningFee ?? ''}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* IMAGE */}
         <div>
-          <label>Bild URL</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>Bild URL</label>
           <input
             name="imageUrl"
             defaultValue={apartment.images[0]?.imageUrl || ''}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
         <div>
-          <label>Alt Text</label>
+          <label style={{ display: 'block', marginBottom: 6 }}>Alt Text</label>
           <input
             name="altText"
             defaultValue={apartment.images[0]?.altText || ''}
+            style={{ width: '100%', padding: 12 }}
           />
         </div>
 
-        {/* ACTIVE */}
-        <label style={{ display: 'flex', gap: 8 }}>
+        <label style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <input
             type="checkbox"
             name="isActive"
@@ -128,11 +226,12 @@ export default async function EditApartmentPage({
         <button
           type="submit"
           style={{
-            padding: '14px 20px',
-            borderRadius: 999,
-            border: 'none',
+            width: 'fit-content',
+            padding: '12px 20px',
             background: '#111',
             color: '#fff',
+            border: 'none',
+            borderRadius: 999,
             cursor: 'pointer',
           }}
         >
