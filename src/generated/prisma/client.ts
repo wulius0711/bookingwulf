@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Apartment = Prisma.ApartmentModel
 /**
+ * Model ApartmentImage
+ * 
+ */
+export type ApartmentImage = Prisma.ApartmentImageModel
+/**
  * Model PriceSeason
  * 
  */

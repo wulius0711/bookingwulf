@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Apartment: 'Apartment',
+  ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "apartment" | "priceSeason" | "blockedRange" | "request" | "adminUser"
+    modelProps: "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -479,6 +480,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ApartmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ApartmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    ApartmentImage: {
+      payload: Prisma.$ApartmentImagePayload<ExtArgs>
+      fields: Prisma.ApartmentImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ApartmentImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ApartmentImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ApartmentImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ApartmentImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        findMany: {
+          args: Prisma.ApartmentImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>[]
+        }
+        create: {
+          args: Prisma.ApartmentImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        createMany: {
+          args: Prisma.ApartmentImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ApartmentImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ApartmentImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        update: {
+          args: Prisma.ApartmentImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ApartmentImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ApartmentImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ApartmentImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ApartmentImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApartmentImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ApartmentImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateApartmentImage>
+        }
+        groupBy: {
+          args: Prisma.ApartmentImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApartmentImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ApartmentImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApartmentImageCountAggregateOutputType> | number
         }
       }
     }
@@ -835,6 +910,18 @@ export const ApartmentScalarFieldEnum = {
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
 
 
+export const ApartmentImageScalarFieldEnum = {
+  id: 'id',
+  apartmentId: 'apartmentId',
+  imageUrl: 'imageUrl',
+  altText: 'altText',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type ApartmentImageScalarFieldEnum = (typeof ApartmentImageScalarFieldEnum)[keyof typeof ApartmentImageScalarFieldEnum]
+
+
 export const PriceSeasonScalarFieldEnum = {
   id: 'id',
   apartmentId: 'apartmentId',
@@ -1084,6 +1171,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   apartment?: Prisma.ApartmentOmit
+  apartmentImage?: Prisma.ApartmentImageOmit
   priceSeason?: Prisma.PriceSeasonOmit
   blockedRange?: Prisma.BlockedRangeOmit
   request?: Prisma.RequestOmit

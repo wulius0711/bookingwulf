@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Apartment: 'Apartment',
+  ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
@@ -90,6 +91,18 @@ export const ApartmentScalarFieldEnum = {
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
+
+
+export const ApartmentImageScalarFieldEnum = {
+  id: 'id',
+  apartmentId: 'apartmentId',
+  imageUrl: 'imageUrl',
+  altText: 'altText',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type ApartmentImageScalarFieldEnum = (typeof ApartmentImageScalarFieldEnum)[keyof typeof ApartmentImageScalarFieldEnum]
 
 
 export const PriceSeasonScalarFieldEnum = {

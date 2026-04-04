@@ -13,21 +13,33 @@ datasource db {
 }
 
 model Apartment {
-  id            Int            @id @default(autoincrement())
+  id            Int              @id @default(autoincrement())
   name          String
-  slug          String         @unique
+  slug          String           @unique
   description   String?
-  maxAdults     Int            @default(2)
-  maxChildren   Int            @default(0)
+  maxAdults     Int              @default(2)
+  maxChildren   Int              @default(0)
   basePrice     Float?
   cleaningFee   Float?
-  isActive      Boolean        @default(true)
-  sortOrder     Int            @default(0)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  isActive      Boolean          @default(true)
+  sortOrder     Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
+  images        ApartmentImage[]
   priceSeasons  PriceSeason[]
   blockedRanges BlockedRange[]
+}
+
+model ApartmentImage {
+  id          Int       @id @default(autoincrement())
+  apartmentId Int
+  imageUrl    String
+  altText     String?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 
 model PriceSeason {
