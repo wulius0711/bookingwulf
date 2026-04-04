@@ -4,16 +4,17 @@ import { notFound } from 'next/navigation';
 export const dynamic = 'force-dynamic';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function EditApartmentPage({ params }: PageProps) {
-  const apartmentId = Number(params.id);
+  const { id } = await params;
+  const apartmentId = Number(id);
 
-  if (!apartmentId) {
-    return <div style={{ padding: 40 }}>ID fehlt</div>;
+  if (!Number.isInteger(apartmentId)) {
+    return <div style={{ padding: 40, fontFamily: 'Arial' }}>ID fehlt</div>;
   }
 
   const apartment = await prisma.apartment.findUnique({
@@ -26,9 +27,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40 }}>
+    <main style={{ padding: 40, fontFamily: 'Arial' }}>
       <h1>Apartment bearbeiten</h1>
-      <p>ID: {params.id}</p>
+      <p>ID: {id}</p>
       <p>Name: {apartment.name}</p>
     </main>
   );
