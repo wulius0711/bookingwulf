@@ -23,7 +23,7 @@ async function duplicateApartment(formData: FormData) {
   const id = Number(formData.get('id'));
   if (!id) return;
 
-  const original = await prisma.apartment.findUnique({
+  const apartment = await prisma.apartment.findUnique({
     where: { id },
     include: {
       images: {
@@ -31,58 +31,35 @@ async function duplicateApartment(formData: FormData) {
           sortOrder: 'asc',
         },
       },
-      priceSeasons: true,
-      blockedRanges: true,
     },
   });
 
-  if (!original) return;
+  if (!apartment) return;
 
-  await prisma.apartment.create({
+  const newApartment = await prisma.apartment.create({
     data: {
-      name: `${original.name} (Copy)`,
-      slug: `${original.slug}-copy-${Date.now()}`,
-      description: original.description,
-      maxAdults: original.maxAdults,
-      maxChildren: original.maxChildren,
-      basePrice: original.basePrice,
-      cleaningFee: original.cleaningFee,
-      isActive: original.isActive,
-      sortOrder: original.sortOrder,
-
-      images: original.images.length
-        ? {
-            create: original.images.map((img) => ({
-              imageUrl: img.imageUrl,
-              altText: img.altText,
-              sortOrder: img.sortOrder,
-            })),
-          }
-        : undefined,
-
-      priceSeasons: original.priceSeasons.length
-        ? {
-            create: original.priceSeasons.map((ps) => ({
-              startDate: ps.startDate,
-              endDate: ps.endDate,
-              pricePerNight: ps.pricePerNight,
-              minStay: ps.minStay,
-            })),
-          }
-        : undefined,
-
-      blockedRanges: original.blockedRanges.length
-        ? {
-            create: original.blockedRanges.map((br) => ({
-              startDate: br.startDate,
-              endDate: br.endDate,
-              type: br.type,
-              note: br.note,
-            })),
-          }
-        : undefined,
+      name: `${apartment.name} Copy`,
+      slug: `${apartment.slug}-copy-${Date.now()}`,
+      description: apartment.description,
+      maxAdults: apartment.maxAdults,
+      maxChildren: apartment.maxChildren,
+      basePrice: apartment.basePrice,
+      cleaningFee: apartment.cleaningFee,
+      isActive: false,
+      sortOrder: apartment.sortOrder + 1,
     },
   });
+
+  if (apartment.images.length > 0) {
+    await prisma.apartmentImage.create({
+      data: {
+        apartmentId: newApartment.id,
+        imageUrl: apartment.images[0].imageUrl,
+        altText: apartment.images[0].altText,
+        sortOrder: 0,
+      },
+    });
+  }
 
   redirect('/admin/apartments');
 }
@@ -112,6 +89,7 @@ export default async function ApartmentsAdminPage() {
         }}
       >
         <h1 style={{ margin: 0 }}>Apartments</h1>
+
         <Link
           href="/admin/apartments/new"
           style={{
@@ -130,9 +108,9 @@ export default async function ApartmentsAdminPage() {
         <p>Noch keine Apartments vorhanden.</p>
       ) : (
         <div style={{ display: 'grid', gap: 16 }}>
-          {apartments.map((apartment) => (
+          {apartments.map((a) => (
             <div
-              key={apartment.id}
+              key={a.id}
               style={{
                 border: '1px solid #ddd',
                 borderRadius: 14,
@@ -141,41 +119,37 @@ export default async function ApartmentsAdminPage() {
                 color: '#111',
               }}
             >
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>
-                {apartment.name}
-              </div>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>{a.name}</div>
 
               <div>
-                <strong>Slug:</strong> {apartment.slug}
+                <strong>Slug:</strong> {a.slug}
               </div>
               <div>
-                <strong>Aktiv:</strong> {apartment.isActive ? 'Ja' : 'Nein'}
+                <strong>Aktiv:</strong> {a.isActive ? 'Ja' : 'Nein'}
               </div>
               <div>
-                <strong>Erwachsene:</strong> {apartment.maxAdults}
+                <strong>Erwachsene:</strong> {a.maxAdults}
               </div>
               <div>
-                <strong>Kinder:</strong> {apartment.maxChildren}
+                <strong>Kinder:</strong> {a.maxChildren}
               </div>
               <div>
                 <strong>Preis/Nacht:</strong>{' '}
-                {apartment.basePrice != null ? `€${apartment.basePrice}` : '—'}
+                {a.basePrice != null ? `€${a.basePrice}` : '—'}
               </div>
               <div>
                 <strong>Reinigung:</strong>{' '}
-                {apartment.cleaningFee != null
-                  ? `€${apartment.cleaningFee}`
-                  : '—'}
+                {a.cleaningFee != null ? `€${a.cleaningFee}` : '—'}
               </div>
               <div>
-                <strong>Bilder:</strong> {apartment.images.length}
+                <strong>Bilder:</strong> {a.images.length}
               </div>
 
-              {apartment.images[0] && (
+              {a.images[0] && (
                 <div style={{ marginTop: 14 }}>
                   <img
-                    src={apartment.images[0].imageUrl}
-                    alt={apartment.images[0].altText || apartment.name}
+                    src={a.images[0].imageUrl}
+                    alt={a.images[0].altText || a.name}
                     style={{
                       width: 220,
                       height: 140,
@@ -195,7 +169,7 @@ export default async function ApartmentsAdminPage() {
                 }}
               >
                 <Link
-                  href={`/admin/apartments/${apartment.id}`}
+                  href={`/admin/apartments/${a.id}`}
                   style={{
                     textDecoration: 'none',
                     padding: '10px 14px',
@@ -209,7 +183,7 @@ export default async function ApartmentsAdminPage() {
                 </Link>
 
                 <form action={duplicateApartment}>
-                  <input type="hidden" name="id" value={apartment.id} />
+                  <input type="hidden" name="id" value={a.id} />
                   <button
                     type="submit"
                     style={{
@@ -226,7 +200,7 @@ export default async function ApartmentsAdminPage() {
                 </form>
 
                 <form action={deleteApartment}>
-                  <input type="hidden" name="id" value={apartment.id} />
+                  <input type="hidden" name="id" value={a.id} />
                   <button
                     type="submit"
                     style={{
