@@ -95,134 +95,141 @@ export default async function EditApartmentPage({ params }: PageProps) {
     redirect('/admin/apartments');
   }
 
+  const row = {
+    display: 'grid',
+    gridTemplateColumns: '180px 1fr',
+    alignItems: 'center',
+    gap: 16,
+  };
+
+  const labelStyle = {
+    fontSize: 14,
+    color: '#666',
+  };
+
+  const inputStyle = {
+    width: '100%',
+    padding: '10px 12px',
+    border: '1px solid #ddd',
+    borderRadius: 6,
+    fontSize: 14,
+  };
+
+  const buttonStyle = {
+    marginTop: 20,
+    padding: '12px 18px',
+    borderRadius: 999,
+    border: 'none',
+    background: '#111',
+    color: '#fff',
+    cursor: 'pointer',
+    width: 'fit-content',
+  };
+
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 720 }}>
-      <h1 style={{ marginBottom: 24 }}>Apartment bearbeiten</h1>
+    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 800 }}>
+      <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
-      <form action={updateApartment} style={{ display: 'grid', gap: 16 }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>Name</label>
-          <input
-            name="name"
-            defaultValue={apartment.name}
-            required
-            style={{ width: '100%', padding: 12 }}
-          />
-        </div>
+      <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
+        {/* ROW STYLE */}
+        {[
+          ['Name', 'name', apartment.name],
+          ['Slug', 'slug', apartment.slug],
+        ].map(([label, name, value]) => (
+          <div key={name} style={row}>
+            <label style={labelStyle}>{label}</label>
+            <input
+              name={name as string}
+              defaultValue={value as string}
+              style={inputStyle}
+            />
+          </div>
+        ))}
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>Slug</label>
-          <input
-            name="slug"
-            defaultValue={apartment.slug}
-            required
-            style={{ width: '100%', padding: 12 }}
-          />
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>
-            Beschreibung
-          </label>
+        {/* DESCRIPTION */}
+        <div style={row}>
+          <label style={labelStyle}>Beschreibung</label>
           <textarea
             name="description"
             defaultValue={apartment.description || ''}
-            rows={5}
-            style={{ width: '100%', padding: 12 }}
+            style={{ ...inputStyle, minHeight: 100 }}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>
-            Max. Erwachsene
-          </label>
+        {/* NUMBERS */}
+        <div style={row}>
+          <label style={labelStyle}>Max. Erwachsene</label>
           <input
             type="number"
             name="maxAdults"
             defaultValue={apartment.maxAdults}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>
-            Max. Kinder
-          </label>
+        <div style={row}>
+          <label style={labelStyle}>Max. Kinder</label>
           <input
             type="number"
             name="maxChildren"
             defaultValue={apartment.maxChildren}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>
-            Preis pro Nacht (€)
-          </label>
+        <div style={row}>
+          <label style={labelStyle}>Preis (€)</label>
           <input
             type="number"
-            step="0.01"
             name="basePrice"
             defaultValue={apartment.basePrice ?? ''}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>
-            Reinigungsgebühr (€)
-          </label>
+        <div style={row}>
+          <label style={labelStyle}>Cleaning (€)</label>
           <input
             type="number"
-            step="0.01"
             name="cleaningFee"
             defaultValue={apartment.cleaningFee ?? ''}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>Bild URL</label>
+        {/* IMAGE */}
+        <div style={row}>
+          <label style={labelStyle}>Bild URL</label>
           <input
             name="imageUrl"
             defaultValue={apartment.images[0]?.imageUrl || ''}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>Alt Text</label>
+        <div style={row}>
+          <label style={labelStyle}>Alt Text</label>
           <input
             name="altText"
             defaultValue={apartment.images[0]?.altText || ''}
-            style={{ width: '100%', padding: 12 }}
+            style={inputStyle}
           />
         </div>
 
-        <label style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <input
-            type="checkbox"
-            name="isActive"
-            defaultChecked={apartment.isActive}
-          />
-          Aktiv
-        </label>
+        {/* CHECKBOX */}
+        <div style={{ ...row, alignItems: 'center' }}>
+          <label style={labelStyle}>Status</label>
+          <label style={{ display: 'flex', gap: 8 }}>
+            <input
+              type="checkbox"
+              name="isActive"
+              defaultChecked={apartment.isActive}
+            />
+            Aktiv
+          </label>
+        </div>
 
-        <button
-          type="submit"
-          style={{
-            width: 'fit-content',
-            padding: '12px 20px',
-            background: '#111',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 999,
-            cursor: 'pointer',
-          }}
-        >
-          Änderungen speichern
-        </button>
+        <button style={buttonStyle}>Änderungen speichern</button>
       </form>
     </main>
   );
