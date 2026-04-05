@@ -31,19 +31,36 @@ export async function GET() {
       },
     });
 
-    const formattedApartments = apartments.map((apartment) => ({
-      id: apartment.id,
-      name: apartment.name,
-      slug: apartment.slug,
-      description: apartment.description,
-      basePrice: apartment.basePrice,
-      cleaningFee: apartment.cleaningFee,
-      maxAdults: apartment.maxAdults,
-      maxChildren: apartment.maxChildren,
-      isActive: apartment.isActive,
-      sortOrder: apartment.sortOrder,
-      images: apartment.images,
-    }));
+    const apartments = await prisma.apartment.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        maxAdults: true,
+        maxChildren: true,
+        bedrooms: true,
+        size: true,
+        view: true,
+        basePrice: true,
+        cleaningFee: true,
+        images: {
+          orderBy: {
+            sortOrder: 'asc',
+          },
+          select: {
+            id: true,
+            imageUrl: true,
+            altText: true,
+            sortOrder: true,
+          },
+        },
+      },
+      orderBy: {
+        sortOrder: 'asc',
+      },
+    });
 
     return Response.json(formattedApartments, {
       headers: corsHeaders,
