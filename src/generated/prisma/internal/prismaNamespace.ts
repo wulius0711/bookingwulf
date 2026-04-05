@@ -903,6 +903,9 @@ export const ApartmentScalarFieldEnum = {
   cleaningFee: 'cleaningFee',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  bedrooms: 'bedrooms',
+  size: 'size',
+  view: 'view',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
