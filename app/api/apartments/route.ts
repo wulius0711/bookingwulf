@@ -16,22 +16,6 @@ export async function OPTIONS() {
 export async function GET() {
   try {
     const apartments = await prisma.apartment.findMany({
-      where: {
-        isActive: true,
-      },
-      include: {
-        images: {
-          orderBy: {
-            sortOrder: 'asc',
-          },
-        },
-      },
-      orderBy: {
-        sortOrder: 'asc',
-      },
-    });
-
-    const apartments = await prisma.apartment.findMany({
       where: { isActive: true },
       select: {
         id: true,
@@ -62,7 +46,7 @@ export async function GET() {
       },
     });
 
-    return Response.json(formattedApartments, {
+    return Response.json(apartments, {
       headers: corsHeaders,
     });
   } catch (error) {
