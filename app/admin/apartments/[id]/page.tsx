@@ -72,6 +72,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const description = String(formData.get('description') || '').trim();
     const maxAdults = Number(formData.get('maxAdults') || 2);
     const maxChildren = Number(formData.get('maxChildren') || 0);
+
+    const bedroomsRaw = String(formData.get('bedrooms') || '').trim();
+    const sizeRaw = String(formData.get('size') || '').trim();
+    const view = String(formData.get('view') || '').trim();
+
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
     const isActive = formData.get('isActive') === 'on';
@@ -80,6 +85,8 @@ export default async function EditApartmentPage({ params }: PageProps) {
       throw new Error('Name und Slug sind erforderlich.');
     }
 
+    const bedrooms = bedroomsRaw ? Number(bedroomsRaw) : null;
+    const size = sizeRaw ? Number(sizeRaw) : null;
     const basePrice = basePriceRaw ? Number(basePriceRaw) : null;
     const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
 
@@ -91,13 +98,15 @@ export default async function EditApartmentPage({ params }: PageProps) {
         description: description || null,
         maxAdults,
         maxChildren,
+        bedrooms,
+        size,
+        view: view || null,
         basePrice,
         cleaningFee,
         isActive,
       },
     });
 
-    // Alle Bild-Felder sammeln
     const imageUrls = formData.getAll('imageUrl').map((v) => String(v).trim());
     const altTexts = formData.getAll('altText').map((v) => String(v).trim());
 
@@ -109,7 +118,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
       }))
       .filter((img) => img.imageUrl.length > 0);
 
-    // Bestehende Bilder komplett ersetzen
     await prisma.apartmentImage.deleteMany({
       where: { apartmentId },
     });
@@ -154,15 +162,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
         </div>
 
         <div style={row}>
-          <label style={labelStyle}>Beschreibung</label>
-          <textarea
-            name="description"
-            defaultValue={apartment.description || ''}
-            style={{ ...inputStyle, minHeight: 100 }}
-          />
-        </div>
-
-        <div style={row}>
           <label style={labelStyle}>Max. Erwachsene</label>
           <input
             type="number"
@@ -179,6 +178,47 @@ export default async function EditApartmentPage({ params }: PageProps) {
             name="maxChildren"
             defaultValue={apartment.maxChildren}
             style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Schlafzimmer</label>
+          <input
+            type="number"
+            name="bedrooms"
+            min="0"
+            defaultValue={apartment.bedrooms ?? ''}
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Größe (m²)</label>
+          <input
+            type="number"
+            name="size"
+            min="0"
+            defaultValue={apartment.size ?? ''}
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Ausblick</label>
+          <input
+            name="view"
+            defaultValue={apartment.view ?? ''}
+            placeholder="z. B. Bergblick"
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Beschreibung</label>
+          <textarea
+            name="description"
+            defaultValue={apartment.description || ''}
+            style={{ ...inputStyle, minHeight: 100 }}
           />
         </div>
 
