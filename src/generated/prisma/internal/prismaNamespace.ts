@@ -80,11 +80,11 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.6.0
+ * Prisma Client JS version: 7.7.0
  * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.6.0",
+  client: "7.7.0",
   engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
@@ -903,11 +903,12 @@ export const ApartmentScalarFieldEnum = {
   cleaningFee: 'cleaningFee',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   bedrooms: 'bedrooms',
   size: 'size',
   view: 'view',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  amenities: 'amenities'
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]

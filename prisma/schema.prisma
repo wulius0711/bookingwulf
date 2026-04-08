@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -23,17 +18,15 @@ model Apartment {
   cleaningFee   Float?
   isActive      Boolean          @default(true)
   sortOrder     Int              @default(0)
-
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
   bedrooms      Int?
   size          Int?
   view          String?
-
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-
+  amenities     String[]         @default([])
   images        ApartmentImage[]
-  priceSeasons  PriceSeason[]
   blockedRanges BlockedRange[]
+  priceSeasons  PriceSeason[]
 }
 
 model ApartmentImage {
@@ -43,7 +36,6 @@ model ApartmentImage {
   altText     String?
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
-
   apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 
@@ -56,7 +48,6 @@ model PriceSeason {
   minStay       Int       @default(1)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
   apartment     Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 
@@ -68,7 +59,6 @@ model BlockedRange {
   type        String
   note        String?
   createdAt   DateTime  @default(now())
-
   apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 

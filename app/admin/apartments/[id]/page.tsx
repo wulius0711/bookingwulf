@@ -76,6 +76,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const bedroomsRaw = String(formData.get('bedrooms') || '').trim();
     const sizeRaw = String(formData.get('size') || '').trim();
     const view = String(formData.get('view') || '').trim();
+    const amenitiesRaw = String(formData.get('amenities') || '').trim();
 
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
@@ -90,6 +91,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const basePrice = basePriceRaw ? Number(basePriceRaw) : null;
     const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
 
+    const amenities = amenitiesRaw
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
     await prisma.apartment.update({
       where: { id: apartmentId },
       data: {
@@ -101,6 +107,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         bedrooms,
         size,
         view: view || null,
+        amenities,
         basePrice,
         cleaningFee,
         isActive,
@@ -210,6 +217,16 @@ export default async function EditApartmentPage({ params }: PageProps) {
             defaultValue={apartment.view ?? ''}
             placeholder="z. B. Bergblick"
             style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Ausstattung</label>
+          <textarea
+            name="amenities"
+            defaultValue={(apartment.amenities || []).join(', ')}
+            placeholder="z. B. WLAN, Balkon, Geschirrspüler, Kaffeemaschine"
+            style={{ ...inputStyle, minHeight: 100 }}
           />
         </div>
 

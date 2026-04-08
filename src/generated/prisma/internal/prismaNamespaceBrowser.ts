@@ -86,11 +86,12 @@ export const ApartmentScalarFieldEnum = {
   cleaningFee: 'cleaningFee',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   bedrooms: 'bedrooms',
   size: 'size',
   view: 'view',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  amenities: 'amenities'
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
