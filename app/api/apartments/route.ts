@@ -27,6 +27,7 @@ export async function GET() {
         bedrooms: true,
         size: true,
         view: true,
+        amenities: true,
         basePrice: true,
         cleaningFee: true,
         images: {
