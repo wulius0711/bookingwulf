@@ -49,16 +49,27 @@ export default async function EditApartmentPage({ params }: PageProps) {
     notFound();
   }
 
-  const apartment = await prisma.apartment.findFirst({
-    where: { id: apartmentId },
-    include: {
-      images: {
-        orderBy: {
-          sortOrder: 'asc',
+  const [apartment, hotels] = await Promise.all([
+    prisma.apartment.findFirst({
+      where: { id: apartmentId },
+      include: {
+        images: {
+          orderBy: {
+            sortOrder: 'asc',
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.hotel.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    }),
+  ]);
 
   if (!apartment) {
     notFound();
@@ -67,23 +78,28 @@ export default async function EditApartmentPage({ params }: PageProps) {
   async function updateApartment(formData: FormData) {
     'use server';
 
+    const hotelId = Number(formData.get('hotelId') || 0);
     const name = String(formData.get('name') || '').trim();
     const slug = String(formData.get('slug') || '').trim();
-    const description = String(formData.get('description') || '').trim();
+
     const maxAdults = Number(formData.get('maxAdults') || 2);
     const maxChildren = Number(formData.get('maxChildren') || 0);
 
     const bedroomsRaw = String(formData.get('bedrooms') || '').trim();
     const sizeRaw = String(formData.get('size') || '').trim();
     const view = String(formData.get('view') || '').trim();
-    const amenitiesRaw = String(formData.get('amenities') || '').trim();
 
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
+
+    const sortOrder = Number(formData.get('sortOrder') || 0);
     const isActive = formData.get('isActive') === 'on';
 
-    if (!name || !slug) {
-      throw new Error('Name und Slug sind erforderlich.');
+    const description = String(formData.get('description') || '').trim();
+    const amenitiesRaw = String(formData.get('amenities') || '').trim();
+
+    if (!hotelId || !name || !slug) {
+      throw new Error('Hotel, Name und Slug sind erforderlich.');
     }
 
     const bedrooms = bedroomsRaw ? Number(bedroomsRaw) : null;
@@ -92,24 +108,26 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
 
     const amenities = amenitiesRaw
-      .split(',')
+      .split('\n')
       .map((item) => item.trim())
       .filter(Boolean);
 
     await prisma.apartment.update({
       where: { id: apartmentId },
       data: {
+        hotelId,
         name,
         slug,
-        description: description || null,
         maxAdults,
         maxChildren,
         bedrooms,
         size,
         view: view || null,
         amenities,
+        description: description || null,
         basePrice,
         cleaningFee,
+        sortOrder,
         isActive,
       },
     });
@@ -149,6 +167,25 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
         <div style={row}>
+          <label style={labelStyle}>Hotel</label>
+          <select
+            name="hotelId"
+            required
+            style={inputStyle}
+            defaultValue={String(apartment.hotelId ?? '')}
+          >
+            <option value="" disabled>
+              Hotel auswählen
+            </option>
+            {hotels.map((hotel) => (
+              <option key={hotel.id} value={hotel.id}>
+                {hotel.name} ({hotel.slug})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={row}>
           <label style={labelStyle}>Name</label>
           <input
             name="name"
@@ -173,6 +210,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <input
             type="number"
             name="maxAdults"
+            min="1"
             defaultValue={apartment.maxAdults}
             style={inputStyle}
           />
@@ -183,18 +221,8 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <input
             type="number"
             name="maxChildren"
-            defaultValue={apartment.maxChildren}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Schlafzimmer</label>
-          <input
-            type="number"
-            name="bedrooms"
             min="0"
-            defaultValue={apartment.bedrooms ?? ''}
+            defaultValue={apartment.maxChildren}
             style={inputStyle}
           />
         </div>
@@ -211,31 +239,23 @@ export default async function EditApartmentPage({ params }: PageProps) {
         </div>
 
         <div style={row}>
+          <label style={labelStyle}>Schlafzimmer</label>
+          <input
+            type="number"
+            name="bedrooms"
+            min="0"
+            defaultValue={apartment.bedrooms ?? ''}
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
           <label style={labelStyle}>Ausblick</label>
           <input
             name="view"
             defaultValue={apartment.view ?? ''}
             placeholder="z. B. Bergblick"
             style={inputStyle}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Ausstattung</label>
-          <textarea
-            name="amenities"
-            defaultValue={(apartment.amenities || []).join(', ')}
-            placeholder="z. B. WLAN, Balkon, Geschirrspüler, Kaffeemaschine"
-            style={{ ...inputStyle, minHeight: 100 }}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Beschreibung</label>
-          <textarea
-            name="description"
-            defaultValue={apartment.description || ''}
-            style={{ ...inputStyle, minHeight: 100 }}
           />
         </div>
 
@@ -259,6 +279,62 @@ export default async function EditApartmentPage({ params }: PageProps) {
             defaultValue={apartment.cleaningFee ?? ''}
             style={inputStyle}
           />
+        </div>
+
+        <div style={{ ...row, alignItems: 'center' }}>
+          <label style={labelStyle}>Status</label>
+          <label
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'center',
+              paddingTop: 8,
+            }}
+          >
+            <input
+              type="checkbox"
+              name="isActive"
+              defaultChecked={apartment.isActive}
+            />
+            Aktiv
+          </label>
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Sortierung</label>
+          <input
+            type="number"
+            name="sortOrder"
+            defaultValue={apartment.sortOrder}
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Beschreibung</label>
+          <textarea
+            name="description"
+            defaultValue={apartment.description || ''}
+            style={{ ...inputStyle, minHeight: 120 }}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Ausstattung</label>
+          <div>
+            <textarea
+              name="amenities"
+              defaultValue={(apartment.amenities || []).join('\n')}
+              placeholder={`Eine Ausstattung pro Zeile, z. B.
+WLAN
+Balkon
+Kaffeemaschine`}
+              style={{ ...inputStyle, minHeight: 140 }}
+            />
+            <div style={{ marginTop: 8, fontSize: 12, color: '#777' }}>
+              Bitte eine Ausstattung pro Zeile eingeben.
+            </div>
+          </div>
         </div>
 
         <div style={row}>
@@ -303,25 +379,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
               </div>
             ))}
           </div>
-        </div>
-
-        <div style={{ ...row, alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label
-            style={{
-              display: 'flex',
-              gap: 8,
-              alignItems: 'center',
-              paddingTop: 8,
-            }}
-          >
-            <input
-              type="checkbox"
-              name="isActive"
-              defaultChecked={apartment.isActive}
-            />
-            Aktiv
-          </label>
         </div>
 
         <button type="submit" style={buttonStyle}>

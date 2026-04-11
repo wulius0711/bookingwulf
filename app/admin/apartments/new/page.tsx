@@ -4,22 +4,39 @@ import { redirect } from 'next/navigation';
 async function createApartment(formData: FormData) {
   'use server';
 
+  const hotelId = Number(formData.get('hotelId') || 0);
   const name = String(formData.get('name') || '').trim();
   const slug = String(formData.get('slug') || '').trim();
-  const description = String(formData.get('description') || '').trim();
+
   const maxAdults = Number(formData.get('maxAdults') || 2);
   const maxChildren = Number(formData.get('maxChildren') || 0);
+
+  const sizeRaw = String(formData.get('size') || '').trim();
+  const bedroomsRaw = String(formData.get('bedrooms') || '').trim();
+  const view = String(formData.get('view') || '').trim();
+
   const basePriceRaw = String(formData.get('basePrice') || '').trim();
   const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
+
   const sortOrder = Number(formData.get('sortOrder') || 0);
   const isActive = formData.get('isActive') === 'on';
 
-  if (!name || !slug) {
-    throw new Error('Name und Slug sind erforderlich.');
+  const description = String(formData.get('description') || '').trim();
+  const amenitiesRaw = String(formData.get('amenities') || '').trim();
+
+  if (!hotelId || !name || !slug) {
+    throw new Error('Hotel, Name und Slug sind erforderlich.');
   }
 
+  const size = sizeRaw ? Number(sizeRaw) : null;
+  const bedrooms = bedroomsRaw ? Number(bedroomsRaw) : null;
   const basePrice = basePriceRaw ? Number(basePriceRaw) : null;
   const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
+
+  const amenities = amenitiesRaw
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean);
 
   const imageUrls = formData.getAll('imageUrl').map((v) => String(v).trim());
   const altTexts = formData.getAll('altText').map((v) => String(v).trim());
@@ -34,15 +51,20 @@ async function createApartment(formData: FormData) {
 
   await prisma.apartment.create({
     data: {
+      hotelId,
       name,
       slug,
-      description: description || null,
       maxAdults,
       maxChildren,
+      size,
+      bedrooms,
+      view: view || null,
       basePrice,
       cleaningFee,
       sortOrder,
       isActive,
+      description: description || null,
+      amenities,
       images:
         cleanedImages.length > 0
           ? {
@@ -87,12 +109,36 @@ const buttonStyle: React.CSSProperties = {
   width: 'fit-content',
 };
 
-export default function NewApartmentPage() {
+export default async function NewApartmentPage() {
+  const hotels = await prisma.hotel.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+    },
+  });
+
   return (
     <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 900 }}>
       <h1 style={{ marginBottom: 30 }}>Neues Apartment</h1>
 
       <form action={createApartment} style={{ display: 'grid', gap: 18 }}>
+        <div style={row}>
+          <label style={labelStyle}>Hotel</label>
+          <select name="hotelId" required style={inputStyle} defaultValue="">
+            <option value="" disabled>
+              Hotel auswählen
+            </option>
+            {hotels.map((hotel) => (
+              <option key={hotel.id} value={hotel.id}>
+                {hotel.name} ({hotel.slug})
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div style={row}>
           <label style={labelStyle}>Name</label>
           <input name="name" required style={inputStyle} />
@@ -104,19 +150,12 @@ export default function NewApartmentPage() {
         </div>
 
         <div style={row}>
-          <label style={labelStyle}>Beschreibung</label>
-          <textarea
-            name="description"
-            style={{ ...inputStyle, minHeight: 100 }}
-          />
-        </div>
-
-        <div style={row}>
           <label style={labelStyle}>Max. Erwachsene</label>
           <input
             type="number"
             name="maxAdults"
             defaultValue={2}
+            min={1}
             style={inputStyle}
           />
         </div>
@@ -127,8 +166,24 @@ export default function NewApartmentPage() {
             type="number"
             name="maxChildren"
             defaultValue={0}
+            min={0}
             style={inputStyle}
           />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Größe (m²)</label>
+          <input type="number" name="size" min={0} style={inputStyle} />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Schlafzimmer</label>
+          <input type="number" name="bedrooms" min={0} style={inputStyle} />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Ausblick</label>
+          <input name="view" placeholder="z. B. Bergblick" style={inputStyle} />
         </div>
 
         <div style={row}>
@@ -151,6 +206,21 @@ export default function NewApartmentPage() {
           />
         </div>
 
+        <div style={{ ...row, alignItems: 'center' }}>
+          <label style={labelStyle}>Status</label>
+          <label
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'center',
+              paddingTop: 8,
+            }}
+          >
+            <input type="checkbox" name="isActive" defaultChecked />
+            Aktiv
+          </label>
+        </div>
+
         <div style={row}>
           <label style={labelStyle}>Sortierung</label>
           <input
@@ -159,6 +229,31 @@ export default function NewApartmentPage() {
             defaultValue={0}
             style={inputStyle}
           />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Beschreibung</label>
+          <textarea
+            name="description"
+            style={{ ...inputStyle, minHeight: 120 }}
+          />
+        </div>
+
+        <div style={row}>
+          <label style={labelStyle}>Ausstattung</label>
+          <div>
+            <textarea
+              name="amenities"
+              placeholder={`Eine Ausstattung pro Zeile, z. B.
+WLAN
+Balkon
+Kaffeemaschine`}
+              style={{ ...inputStyle, minHeight: 140 }}
+            />
+            <div style={{ marginTop: 8, fontSize: 12, color: '#777' }}>
+              Bitte eine Ausstattung pro Zeile eingeben.
+            </div>
+          </div>
         </div>
 
         <div style={row}>
@@ -188,21 +283,6 @@ export default function NewApartmentPage() {
               </div>
             ))}
           </div>
-        </div>
-
-        <div style={{ ...row, alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label
-            style={{
-              display: 'flex',
-              gap: 8,
-              alignItems: 'center',
-              paddingTop: 8,
-            }}
-          >
-            <input type="checkbox" name="isActive" defaultChecked />
-            Aktiv
-          </label>
         </div>
 
         <button type="submit" style={buttonStyle}>

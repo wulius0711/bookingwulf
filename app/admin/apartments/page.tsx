@@ -38,11 +38,16 @@ async function duplicateApartment(formData: FormData) {
 
   await prisma.apartment.create({
     data: {
+      hotelId: apartment.hotelId,
       name: `${apartment.name} Copy`,
       slug: `${apartment.slug}-copy-${Date.now()}`,
       description: apartment.description,
       maxAdults: apartment.maxAdults,
       maxChildren: apartment.maxChildren,
+      bedrooms: apartment.bedrooms,
+      size: apartment.size,
+      view: apartment.view,
+      amenities: apartment.amenities,
       basePrice: apartment.basePrice,
       cleaningFee: apartment.cleaningFee,
       isActive: false,
@@ -66,15 +71,20 @@ async function duplicateApartment(formData: FormData) {
 export default async function ApartmentsAdminPage() {
   const apartments = await prisma.apartment.findMany({
     include: {
+      hotel: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
       images: {
         orderBy: {
           sortOrder: 'asc',
         },
       },
     },
-    orderBy: {
-      sortOrder: 'asc',
-    },
+    orderBy: [{ hotelId: 'asc' }, { sortOrder: 'asc' }, { name: 'asc' }],
   });
 
   return (
@@ -118,10 +128,38 @@ export default async function ApartmentsAdminPage() {
                 color: '#111',
               }}
             >
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>{a.name}</div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: 16,
+                  alignItems: 'start',
+                  flexWrap: 'wrap',
+                  marginBottom: 8,
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: 20 }}>{a.name}</div>
+
+                <div
+                  style={{
+                    padding: '6px 10px',
+                    borderRadius: 999,
+                    background: '#f4f4f4',
+                    fontSize: 12,
+                    color: '#555',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {a.hotel?.name ?? 'Kein Hotel'}{' '}
+                  {a.hotel?.slug ? `(${a.hotel.slug})` : ''}
+                </div>
+              </div>
 
               <div>
                 <strong>ID:</strong> {a.id}
+              </div>
+              <div>
+                <strong>Hotel ID:</strong> {a.hotelId}
               </div>
               <div>
                 <strong>Slug:</strong> {a.slug}
@@ -136,6 +174,15 @@ export default async function ApartmentsAdminPage() {
                 <strong>Kinder:</strong> {a.maxChildren}
               </div>
               <div>
+                <strong>Schlafzimmer:</strong> {a.bedrooms ?? '—'}
+              </div>
+              <div>
+                <strong>Größe:</strong> {a.size != null ? `${a.size} m²` : '—'}
+              </div>
+              <div>
+                <strong>Ausblick:</strong> {a.view || '—'}
+              </div>
+              <div>
                 <strong>Preis/Nacht:</strong>{' '}
                 {a.basePrice != null ? `€${a.basePrice}` : '—'}
               </div>
@@ -144,8 +191,21 @@ export default async function ApartmentsAdminPage() {
                 {a.cleaningFee != null ? `€${a.cleaningFee}` : '—'}
               </div>
               <div>
+                <strong>Sortierung:</strong> {a.sortOrder}
+              </div>
+              <div>
                 <strong>Bilder:</strong> {a.images.length}
               </div>
+              <div>
+                <strong>Ausstattung:</strong>{' '}
+                {a.amenities?.length ? a.amenities.join(', ') : '—'}
+              </div>
+
+              {a.description && (
+                <div style={{ marginTop: 10, color: '#555', lineHeight: 1.5 }}>
+                  <strong>Beschreibung:</strong> {a.description}
+                </div>
+              )}
 
               {a.images[0] && (
                 <div style={{ marginTop: 14 }}>

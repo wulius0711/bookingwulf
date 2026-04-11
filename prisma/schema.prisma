@@ -46,31 +46,40 @@ model HotelSettings {
 }
 
 model Apartment {
-  id            Int              @id @default(autoincrement())
-  hotelId       Int?             // ← OPTIONAL (wichtig für Migration)
-  hotel         Hotel?           @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  id        Int    @id @default(autoincrement())
+  hotelId   Int
 
-  name          String
-  slug          String
-  description   String?
-  maxAdults     Int              @default(2)
-  maxChildren   Int              @default(0)
-  basePrice     Float?
-  cleaningFee   Float?
-  isActive      Boolean          @default(true)
-  sortOrder     Int              @default(0)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  bedrooms      Int?
-  size          Int?
-  view          String?
-  amenities     String[]         @default([])
+  // Core
+  name      String
+  slug      String
 
+  // Capacity
+  maxAdults   Int @default(2)
+  maxChildren Int @default(0)
+
+  // Pricing
+  basePrice   Float?
+  cleaningFee Float?
+
+  // Compact Content
+  size      Int?
+  bedrooms  Int?
+  view      String?
+
+  // Meta
+  isActive   Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // LONG CONTENT (bewusst unten)
+  description String?
+  amenities   String[] @default([])
+
+  // Relations
   images        ApartmentImage[]
   blockedRanges BlockedRange[]
   priceSeasons  PriceSeason[]
-
-
 }
 
 model ApartmentImage {
