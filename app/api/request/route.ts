@@ -13,6 +13,15 @@ export async function OPTIONS() {
   });
 }
 
+function parseSelectedApartmentIds(raw: string): number[] {
+  return raw
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => Number(item))
+    .filter((item) => Number.isInteger(item) && item > 0);
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -23,7 +32,9 @@ export async function POST(req: Request) {
     const nights = Number(body.nights || 0);
     const adults = Number(body.adults || 0);
     const children = Number(body.children || 0);
-    const selectedApartmentIds = String(body.selected_apartments || '').trim();
+    const selectedApartmentIdsRaw = String(
+      body.selected_apartments || '',
+    ).trim();
 
     const salutation = String(body.salutation || '').trim();
     const firstname = String(body.firstname || '').trim();
@@ -39,7 +50,7 @@ export async function POST(req: Request) {
       !departureRaw ||
       !nights ||
       !adults ||
-      !selectedApartmentIds ||
+      !selectedApartmentIdsRaw ||
       !lastname ||
       !email
     ) {
@@ -49,9 +60,37 @@ export async function POST(req: Request) {
       );
     }
 
+    const arrival = new Date(arrivalRaw);
+    const departure = new Date(departureRaw);
+
+    if (Number.isNaN(arrival.getTime()) || Number.isNaN(departure.getTime())) {
+      return Response.json(
+        { success: false, message: 'Ungültige Datumswerte.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    if (departure <= arrival) {
+      return Response.json(
+        { success: false, message: 'Abreise muss nach Anreise liegen.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    const selectedApartmentIds = parseSelectedApartmentIds(
+      selectedApartmentIdsRaw,
+    );
+
+    if (selectedApartmentIds.length === 0) {
+      return Response.json(
+        { success: false, message: 'Keine gültigen Apartments ausgewählt.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
-      select: { id: true },
+      select: { id: true, name: true },
     });
 
     if (!hotel) {
@@ -61,22 +100,46 @@ export async function POST(req: Request) {
       );
     }
 
+    const apartments = await prisma.apartment.findMany({
+      where: {
+        id: { in: selectedApartmentIds },
+        hotelId: hotel.id,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    if (apartments.length !== selectedApartmentIds.length) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            'Mindestens ein ausgewähltes Apartment gehört nicht zu diesem Hotel.',
+        },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    const requestMessage = [firstname ? `Vorname: ${firstname}` : '', message]
+      .filter(Boolean)
+      .join('\n\n');
+
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id,
-        arrival: new Date(arrivalRaw),
-        departure: new Date(departureRaw),
+        arrival,
+        departure,
         nights,
         adults,
         children,
-        selectedApartmentIds,
+        selectedApartmentIds: selectedApartmentIds.join(','),
         salutation,
         lastname,
         email,
         country,
-        message: [firstname ? `Vorname: ${firstname}` : '', message]
-          .filter(Boolean)
-          .join('\n\n'),
+        message: requestMessage || null,
         newsletter,
         status: 'new',
       },
