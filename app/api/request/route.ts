@@ -15,117 +15,91 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    const body = await req.json();
 
-    const arrival = new Date(data.arrival);
-    const departure = new Date(data.departure);
+    const hotelSlug = String(body.hotel || '').trim();
+    const arrivalRaw = String(body.arrival || '').trim();
+    const departureRaw = String(body.departure || '').trim();
+    const nights = Number(body.nights || 0);
+    const adults = Number(body.adults || 0);
+    const children = Number(body.children || 0);
+    const selectedApartmentIds = String(body.selected_apartments || '').trim();
 
-    const apartmentNames = String(data.selected_apartments || '')
-      .split(',')
-      .map((s: string) => s.trim())
-      .filter(Boolean);
+    const salutation = String(body.salutation || '').trim();
+    const firstname = String(body.firstname || '').trim();
+    const lastname = String(body.lastname || '').trim();
+    const email = String(body.email || '').trim();
+    const country = String(body.country || '').trim();
+    const message = String(body.message || '').trim();
+    const newsletter = Boolean(body.newsletter);
 
-    if (!data.arrival || !data.departure) {
+    if (
+      !hotelSlug ||
+      !arrivalRaw ||
+      !departureRaw ||
+      !nights ||
+      !adults ||
+      !selectedApartmentIds ||
+      !lastname ||
+      !email
+    ) {
       return Response.json(
-        { success: false, message: 'An- und Abreisedatum sind erforderlich.' },
+        { success: false, message: 'Pflichtfelder fehlen.' },
         { status: 400, headers: corsHeaders },
       );
     }
 
-    if (apartmentNames.length === 0) {
-      return Response.json(
-        {
-          success: false,
-          message: 'Bitte wählen Sie mindestens ein Apartment aus.',
-        },
-        { status: 400, headers: corsHeaders },
-      );
-    }
-
-    if (!data.lastname || !data.email) {
-      return Response.json(
-        { success: false, message: 'Name und E-Mail sind erforderlich.' },
-        { status: 400, headers: corsHeaders },
-      );
-    }
-
-    const apartments = await prisma.apartment.findMany({
-      where: {
-        name: {
-          in: apartmentNames,
-        },
-        isActive: true,
-      },
+    const hotel = await prisma.hotel.findUnique({
+      where: { slug: hotelSlug },
+      select: { id: true },
     });
 
-    if (apartments.length !== apartmentNames.length) {
+    if (!hotel) {
       return Response.json(
-        {
-          success: false,
-          message:
-            'Ein oder mehrere ausgewählte Apartments wurden nicht gefunden.',
-        },
+        { success: false, message: 'Hotel nicht gefunden.' },
         { status: 404, headers: corsHeaders },
       );
     }
 
-    for (const apartment of apartments) {
-      const overlapping = await prisma.blockedRange.findFirst({
-        where: {
-          apartmentId: apartment.id,
-          startDate: {
-            lt: departure,
-          },
-          endDate: {
-            gt: arrival,
-          },
-        },
-      });
-
-      if (overlapping) {
-        return Response.json(
-          {
-            success: false,
-            message: `${apartment.name} ist im gewählten Zeitraum nicht verfügbar.`,
-          },
-          { status: 409, headers: corsHeaders },
-        );
-      }
-    }
-
-    const result = await prisma.request.create({
+    const requestEntry = await prisma.request.create({
       data: {
-        arrival,
-        departure,
-        nights: Number(data.nights),
-        adults: Number(data.adults),
-        children: Number(data.children || 0),
-        selectedApartmentIds: apartmentNames.join(', '),
-        salutation: String(data.salutation || ''),
-        lastname: String(data.lastname || ''),
-        email: String(data.email || ''),
-        country: String(data.country || ''),
-        message: data.message ? String(data.message) : null,
-        newsletter: Boolean(data.newsletter),
+        hotelId: hotel.id,
+        arrival: new Date(arrivalRaw),
+        departure: new Date(departureRaw),
+        nights,
+        adults,
+        children,
+        selectedApartmentIds,
+        salutation,
+        lastname,
+        email,
+        country,
+        message: [firstname ? `Vorname: ${firstname}` : '', message]
+          .filter(Boolean)
+          .join('\n\n'),
+        newsletter,
+        status: 'new',
       },
     });
 
     return Response.json(
       {
         success: true,
-        result,
+        requestId: requestEntry.id,
       },
-      { headers: corsHeaders },
+      {
+        headers: corsHeaders,
+      },
     );
   } catch (error) {
     console.error(error);
 
     return Response.json(
+      { success: false, message: 'Fehler beim Speichern der Anfrage.' },
       {
-        success: false,
-        message: 'Serverfehler',
+        status: 500,
+        headers: corsHeaders,
       },
-      { status: 500, headers: corsHeaders },
     );
   }
 }

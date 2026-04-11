@@ -7,10 +7,51 @@ datasource db {
   provider = "postgresql"
 }
 
+model Hotel {
+  id            Int            @id @default(autoincrement())
+  name          String
+  slug          String         @unique
+  email         String?
+  phone         String?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  settings      HotelSettings?
+  apartments    Apartment[]
+  requests      Request[]
+  adminUsers    AdminUser[]
+  blockedRanges BlockedRange[]
+}
+
+model HotelSettings {
+  id                Int      @id @default(autoincrement())
+  hotelId           Int      @unique
+  hotel             Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  showPrices        Boolean  @default(true)
+  allowMultiSelect  Boolean  @default(false)
+  showAmenities     Boolean  @default(true)
+  showExtrasStep    Boolean  @default(true)
+  showPhoneField    Boolean  @default(true)
+  showMessageField  Boolean  @default(true)
+  enableImageSlider Boolean  @default(true)
+  enableLightbox    Boolean  @default(true)
+
+  accentColor       String?
+  backgroundColor   String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
 model Apartment {
   id            Int              @id @default(autoincrement())
+  hotelId       Int?             // ← OPTIONAL (wichtig für Migration)
+  hotel         Hotel?           @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
   name          String
-  slug          String           @unique
+  slug          String
   description   String?
   maxAdults     Int              @default(2)
   maxChildren   Int              @default(0)
@@ -24,9 +65,12 @@ model Apartment {
   size          Int?
   view          String?
   amenities     String[]         @default([])
+
   images        ApartmentImage[]
   blockedRanges BlockedRange[]
   priceSeasons  PriceSeason[]
+
+
 }
 
 model ApartmentImage {
@@ -36,6 +80,7 @@ model ApartmentImage {
   altText     String?
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
+
   apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 
@@ -48,22 +93,30 @@ model PriceSeason {
   minStay       Int       @default(1)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
   apartment     Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 }
 
 model BlockedRange {
-  id          Int       @id @default(autoincrement())
-  apartmentId Int
+  id          Int        @id @default(autoincrement())
+  hotelId     Int?       // ← OPTIONAL
+  hotel       Hotel?     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  apartmentId Int?
+  apartment   Apartment? @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
   startDate   DateTime
   endDate     DateTime
   type        String
   note        String?
-  createdAt   DateTime  @default(now())
-  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
 }
 
 model Request {
   id                   Int      @id @default(autoincrement())
+  hotelId              Int?     // ← OPTIONAL
+  hotel                Hotel?   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
   arrival              DateTime
   departure            DateTime
   nights               Int
@@ -83,9 +136,13 @@ model Request {
 
 model AdminUser {
   id           Int      @id @default(autoincrement())
+  hotelId      Int?
+  hotel        Hotel?   @relation(fields: [hotelId], references: [id], onDelete: SetNull)
+
   email        String   @unique
   passwordHash String
-  role         String   @default("admin")
+  role         String   @default("hotel_admin")
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

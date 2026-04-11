@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Apartments
- * const apartments = await prisma.apartment.findMany()
+ * // Fetch zero or more Hotels
+ * const hotels = await prisma.hotel.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,6 +41,16 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Hotel
+ * 
+ */
+export type Hotel = Prisma.HotelModel
+/**
+ * Model HotelSettings
+ * 
+ */
+export type HotelSettings = Prisma.HotelSettingsModel
 /**
  * Model Apartment
  * 

@@ -28,16 +28,19 @@ export type AggregateBlockedRange = {
 
 export type BlockedRangeAvgAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   apartmentId: number | null
 }
 
 export type BlockedRangeSumAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   apartmentId: number | null
 }
 
 export type BlockedRangeMinAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   apartmentId: number | null
   startDate: Date | null
   endDate: Date | null
@@ -48,6 +51,7 @@ export type BlockedRangeMinAggregateOutputType = {
 
 export type BlockedRangeMaxAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   apartmentId: number | null
   startDate: Date | null
   endDate: Date | null
@@ -58,6 +62,7 @@ export type BlockedRangeMaxAggregateOutputType = {
 
 export type BlockedRangeCountAggregateOutputType = {
   id: number
+  hotelId: number
   apartmentId: number
   startDate: number
   endDate: number
@@ -70,16 +75,19 @@ export type BlockedRangeCountAggregateOutputType = {
 
 export type BlockedRangeAvgAggregateInputType = {
   id?: true
+  hotelId?: true
   apartmentId?: true
 }
 
 export type BlockedRangeSumAggregateInputType = {
   id?: true
+  hotelId?: true
   apartmentId?: true
 }
 
 export type BlockedRangeMinAggregateInputType = {
   id?: true
+  hotelId?: true
   apartmentId?: true
   startDate?: true
   endDate?: true
@@ -90,6 +98,7 @@ export type BlockedRangeMinAggregateInputType = {
 
 export type BlockedRangeMaxAggregateInputType = {
   id?: true
+  hotelId?: true
   apartmentId?: true
   startDate?: true
   endDate?: true
@@ -100,6 +109,7 @@ export type BlockedRangeMaxAggregateInputType = {
 
 export type BlockedRangeCountAggregateInputType = {
   id?: true
+  hotelId?: true
   apartmentId?: true
   startDate?: true
   endDate?: true
@@ -197,7 +207,8 @@ export type BlockedRangeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type BlockedRangeGroupByOutputType = {
   id: number
-  apartmentId: number
+  hotelId: number | null
+  apartmentId: number | null
   startDate: Date
   endDate: Date
   type: string
@@ -230,23 +241,27 @@ export type BlockedRangeWhereInput = {
   OR?: Prisma.BlockedRangeWhereInput[]
   NOT?: Prisma.BlockedRangeWhereInput | Prisma.BlockedRangeWhereInput[]
   id?: Prisma.IntFilter<"BlockedRange"> | number
-  apartmentId?: Prisma.IntFilter<"BlockedRange"> | number
+  hotelId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
+  apartmentId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
   startDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
   endDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
   type?: Prisma.StringFilter<"BlockedRange"> | string
   note?: Prisma.StringNullableFilter<"BlockedRange"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
-  apartment?: Prisma.XOR<Prisma.ApartmentScalarRelationFilter, Prisma.ApartmentWhereInput>
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  apartment?: Prisma.XOR<Prisma.ApartmentNullableScalarRelationFilter, Prisma.ApartmentWhereInput> | null
 }
 
 export type BlockedRangeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  apartmentId?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
+  apartmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   type?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  hotel?: Prisma.HotelOrderByWithRelationInput
   apartment?: Prisma.ApartmentOrderByWithRelationInput
 }
 
@@ -255,18 +270,21 @@ export type BlockedRangeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BlockedRangeWhereInput | Prisma.BlockedRangeWhereInput[]
   OR?: Prisma.BlockedRangeWhereInput[]
   NOT?: Prisma.BlockedRangeWhereInput | Prisma.BlockedRangeWhereInput[]
-  apartmentId?: Prisma.IntFilter<"BlockedRange"> | number
+  hotelId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
+  apartmentId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
   startDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
   endDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
   type?: Prisma.StringFilter<"BlockedRange"> | string
   note?: Prisma.StringNullableFilter<"BlockedRange"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
-  apartment?: Prisma.XOR<Prisma.ApartmentScalarRelationFilter, Prisma.ApartmentWhereInput>
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  apartment?: Prisma.XOR<Prisma.ApartmentNullableScalarRelationFilter, Prisma.ApartmentWhereInput> | null
 }, "id">
 
 export type BlockedRangeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  apartmentId?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
+  apartmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -284,7 +302,8 @@ export type BlockedRangeScalarWhereWithAggregatesInput = {
   OR?: Prisma.BlockedRangeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BlockedRangeScalarWhereWithAggregatesInput | Prisma.BlockedRangeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"BlockedRange"> | number
-  apartmentId?: Prisma.IntWithAggregatesFilter<"BlockedRange"> | number
+  hotelId?: Prisma.IntNullableWithAggregatesFilter<"BlockedRange"> | number | null
+  apartmentId?: Prisma.IntNullableWithAggregatesFilter<"BlockedRange"> | number | null
   startDate?: Prisma.DateTimeWithAggregatesFilter<"BlockedRange"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"BlockedRange"> | Date | string
   type?: Prisma.StringWithAggregatesFilter<"BlockedRange"> | string
@@ -298,12 +317,14 @@ export type BlockedRangeCreateInput = {
   type: string
   note?: string | null
   createdAt?: Date | string
-  apartment: Prisma.ApartmentCreateNestedOneWithoutBlockedRangesInput
+  hotel?: Prisma.HotelCreateNestedOneWithoutBlockedRangesInput
+  apartment?: Prisma.ApartmentCreateNestedOneWithoutBlockedRangesInput
 }
 
 export type BlockedRangeUncheckedCreateInput = {
   id?: number
-  apartmentId: number
+  hotelId?: number | null
+  apartmentId?: number | null
   startDate: Date | string
   endDate: Date | string
   type: string
@@ -317,12 +338,14 @@ export type BlockedRangeUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  apartment?: Prisma.ApartmentUpdateOneRequiredWithoutBlockedRangesNestedInput
+  hotel?: Prisma.HotelUpdateOneWithoutBlockedRangesNestedInput
+  apartment?: Prisma.ApartmentUpdateOneWithoutBlockedRangesNestedInput
 }
 
 export type BlockedRangeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  apartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  apartmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -332,7 +355,8 @@ export type BlockedRangeUncheckedUpdateInput = {
 
 export type BlockedRangeCreateManyInput = {
   id?: number
-  apartmentId: number
+  hotelId?: number | null
+  apartmentId?: number | null
   startDate: Date | string
   endDate: Date | string
   type: string
@@ -350,7 +374,8 @@ export type BlockedRangeUpdateManyMutationInput = {
 
 export type BlockedRangeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  apartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  apartmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -370,6 +395,7 @@ export type BlockedRangeOrderByRelationAggregateInput = {
 
 export type BlockedRangeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -380,11 +406,13 @@ export type BlockedRangeCountOrderByAggregateInput = {
 
 export type BlockedRangeAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
 }
 
 export type BlockedRangeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -395,6 +423,7 @@ export type BlockedRangeMaxOrderByAggregateInput = {
 
 export type BlockedRangeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -405,7 +434,50 @@ export type BlockedRangeMinOrderByAggregateInput = {
 
 export type BlockedRangeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+}
+
+export type BlockedRangeCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput> | Prisma.BlockedRangeCreateWithoutHotelInput[] | Prisma.BlockedRangeUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.BlockedRangeCreateOrConnectWithoutHotelInput | Prisma.BlockedRangeCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.BlockedRangeCreateManyHotelInputEnvelope
+  connect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+}
+
+export type BlockedRangeUncheckedCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput> | Prisma.BlockedRangeCreateWithoutHotelInput[] | Prisma.BlockedRangeUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.BlockedRangeCreateOrConnectWithoutHotelInput | Prisma.BlockedRangeCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.BlockedRangeCreateManyHotelInputEnvelope
+  connect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+}
+
+export type BlockedRangeUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput> | Prisma.BlockedRangeCreateWithoutHotelInput[] | Prisma.BlockedRangeUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.BlockedRangeCreateOrConnectWithoutHotelInput | Prisma.BlockedRangeCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.BlockedRangeUpsertWithWhereUniqueWithoutHotelInput | Prisma.BlockedRangeUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.BlockedRangeCreateManyHotelInputEnvelope
+  set?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  disconnect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  delete?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  connect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  update?: Prisma.BlockedRangeUpdateWithWhereUniqueWithoutHotelInput | Prisma.BlockedRangeUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.BlockedRangeUpdateManyWithWhereWithoutHotelInput | Prisma.BlockedRangeUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
+}
+
+export type BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput> | Prisma.BlockedRangeCreateWithoutHotelInput[] | Prisma.BlockedRangeUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.BlockedRangeCreateOrConnectWithoutHotelInput | Prisma.BlockedRangeCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.BlockedRangeUpsertWithWhereUniqueWithoutHotelInput | Prisma.BlockedRangeUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.BlockedRangeCreateManyHotelInputEnvelope
+  set?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  disconnect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  delete?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  connect?: Prisma.BlockedRangeWhereUniqueInput | Prisma.BlockedRangeWhereUniqueInput[]
+  update?: Prisma.BlockedRangeUpdateWithWhereUniqueWithoutHotelInput | Prisma.BlockedRangeUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.BlockedRangeUpdateManyWithWhereWithoutHotelInput | Prisma.BlockedRangeUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
 }
 
 export type BlockedRangeCreateNestedManyWithoutApartmentInput = {
@@ -450,7 +522,18 @@ export type BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput = {
   deleteMany?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
 }
 
-export type BlockedRangeCreateWithoutApartmentInput = {
+export type BlockedRangeCreateWithoutHotelInput = {
+  startDate: Date | string
+  endDate: Date | string
+  type: string
+  note?: string | null
+  createdAt?: Date | string
+  apartment?: Prisma.ApartmentCreateNestedOneWithoutBlockedRangesInput
+}
+
+export type BlockedRangeUncheckedCreateWithoutHotelInput = {
+  id?: number
+  apartmentId?: number | null
   startDate: Date | string
   endDate: Date | string
   type: string
@@ -458,8 +541,58 @@ export type BlockedRangeCreateWithoutApartmentInput = {
   createdAt?: Date | string
 }
 
+export type BlockedRangeCreateOrConnectWithoutHotelInput = {
+  where: Prisma.BlockedRangeWhereUniqueInput
+  create: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput>
+}
+
+export type BlockedRangeCreateManyHotelInputEnvelope = {
+  data: Prisma.BlockedRangeCreateManyHotelInput | Prisma.BlockedRangeCreateManyHotelInput[]
+  skipDuplicates?: boolean
+}
+
+export type BlockedRangeUpsertWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.BlockedRangeWhereUniqueInput
+  update: Prisma.XOR<Prisma.BlockedRangeUpdateWithoutHotelInput, Prisma.BlockedRangeUncheckedUpdateWithoutHotelInput>
+  create: Prisma.XOR<Prisma.BlockedRangeCreateWithoutHotelInput, Prisma.BlockedRangeUncheckedCreateWithoutHotelInput>
+}
+
+export type BlockedRangeUpdateWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.BlockedRangeWhereUniqueInput
+  data: Prisma.XOR<Prisma.BlockedRangeUpdateWithoutHotelInput, Prisma.BlockedRangeUncheckedUpdateWithoutHotelInput>
+}
+
+export type BlockedRangeUpdateManyWithWhereWithoutHotelInput = {
+  where: Prisma.BlockedRangeScalarWhereInput
+  data: Prisma.XOR<Prisma.BlockedRangeUpdateManyMutationInput, Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelInput>
+}
+
+export type BlockedRangeScalarWhereInput = {
+  AND?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
+  OR?: Prisma.BlockedRangeScalarWhereInput[]
+  NOT?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
+  id?: Prisma.IntFilter<"BlockedRange"> | number
+  hotelId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
+  apartmentId?: Prisma.IntNullableFilter<"BlockedRange"> | number | null
+  startDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
+  endDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
+  type?: Prisma.StringFilter<"BlockedRange"> | string
+  note?: Prisma.StringNullableFilter<"BlockedRange"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
+}
+
+export type BlockedRangeCreateWithoutApartmentInput = {
+  startDate: Date | string
+  endDate: Date | string
+  type: string
+  note?: string | null
+  createdAt?: Date | string
+  hotel?: Prisma.HotelCreateNestedOneWithoutBlockedRangesInput
+}
+
 export type BlockedRangeUncheckedCreateWithoutApartmentInput = {
   id?: number
+  hotelId?: number | null
   startDate: Date | string
   endDate: Date | string
   type: string
@@ -493,21 +626,48 @@ export type BlockedRangeUpdateManyWithWhereWithoutApartmentInput = {
   data: Prisma.XOR<Prisma.BlockedRangeUpdateManyMutationInput, Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentInput>
 }
 
-export type BlockedRangeScalarWhereInput = {
-  AND?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
-  OR?: Prisma.BlockedRangeScalarWhereInput[]
-  NOT?: Prisma.BlockedRangeScalarWhereInput | Prisma.BlockedRangeScalarWhereInput[]
-  id?: Prisma.IntFilter<"BlockedRange"> | number
-  apartmentId?: Prisma.IntFilter<"BlockedRange"> | number
-  startDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
-  type?: Prisma.StringFilter<"BlockedRange"> | string
-  note?: Prisma.StringNullableFilter<"BlockedRange"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"BlockedRange"> | Date | string
+export type BlockedRangeCreateManyHotelInput = {
+  id?: number
+  apartmentId?: number | null
+  startDate: Date | string
+  endDate: Date | string
+  type: string
+  note?: string | null
+  createdAt?: Date | string
+}
+
+export type BlockedRangeUpdateWithoutHotelInput = {
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  apartment?: Prisma.ApartmentUpdateOneWithoutBlockedRangesNestedInput
+}
+
+export type BlockedRangeUncheckedUpdateWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  apartmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BlockedRangeUncheckedUpdateManyWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  apartmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BlockedRangeCreateManyApartmentInput = {
   id?: number
+  hotelId?: number | null
   startDate: Date | string
   endDate: Date | string
   type: string
@@ -521,10 +681,12 @@ export type BlockedRangeUpdateWithoutApartmentInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hotel?: Prisma.HotelUpdateOneWithoutBlockedRangesNestedInput
 }
 
 export type BlockedRangeUncheckedUpdateWithoutApartmentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -534,6 +696,7 @@ export type BlockedRangeUncheckedUpdateWithoutApartmentInput = {
 
 export type BlockedRangeUncheckedUpdateManyWithoutApartmentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -545,39 +708,46 @@ export type BlockedRangeUncheckedUpdateManyWithoutApartmentInput = {
 
 export type BlockedRangeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   apartmentId?: boolean
   startDate?: boolean
   endDate?: boolean
   type?: boolean
   note?: boolean
   createdAt?: boolean
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }, ExtArgs["result"]["blockedRange"]>
 
 export type BlockedRangeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   apartmentId?: boolean
   startDate?: boolean
   endDate?: boolean
   type?: boolean
   note?: boolean
   createdAt?: boolean
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }, ExtArgs["result"]["blockedRange"]>
 
 export type BlockedRangeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   apartmentId?: boolean
   startDate?: boolean
   endDate?: boolean
   type?: boolean
   note?: boolean
   createdAt?: boolean
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }, ExtArgs["result"]["blockedRange"]>
 
 export type BlockedRangeSelectScalar = {
   id?: boolean
+  hotelId?: boolean
   apartmentId?: boolean
   startDate?: boolean
   endDate?: boolean
@@ -586,25 +756,30 @@ export type BlockedRangeSelectScalar = {
   createdAt?: boolean
 }
 
-export type BlockedRangeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "apartmentId" | "startDate" | "endDate" | "type" | "note" | "createdAt", ExtArgs["result"]["blockedRange"]>
+export type BlockedRangeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "apartmentId" | "startDate" | "endDate" | "type" | "note" | "createdAt", ExtArgs["result"]["blockedRange"]>
 export type BlockedRangeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }
 export type BlockedRangeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }
 export type BlockedRangeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
+  hotel?: boolean | Prisma.BlockedRange$hotelArgs<ExtArgs>
+  apartment?: boolean | Prisma.BlockedRange$apartmentArgs<ExtArgs>
 }
 
 export type $BlockedRangePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "BlockedRange"
   objects: {
-    apartment: Prisma.$ApartmentPayload<ExtArgs>
+    hotel: Prisma.$HotelPayload<ExtArgs> | null
+    apartment: Prisma.$ApartmentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    apartmentId: number
+    hotelId: number | null
+    apartmentId: number | null
     startDate: Date
     endDate: Date
     type: string
@@ -1004,7 +1179,8 @@ readonly fields: BlockedRangeFieldRefs;
  */
 export interface Prisma__BlockedRangeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  apartment<T extends Prisma.ApartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__ApartmentClient<runtime.Types.Result.GetResult<Prisma.$ApartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  hotel<T extends Prisma.BlockedRange$hotelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BlockedRange$hotelArgs<ExtArgs>>): Prisma.Prisma__HotelClient<runtime.Types.Result.GetResult<Prisma.$HotelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  apartment<T extends Prisma.BlockedRange$apartmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BlockedRange$apartmentArgs<ExtArgs>>): Prisma.Prisma__ApartmentClient<runtime.Types.Result.GetResult<Prisma.$ApartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1035,6 +1211,7 @@ export interface Prisma__BlockedRangeClient<T, Null = never, ExtArgs extends run
  */
 export interface BlockedRangeFieldRefs {
   readonly id: Prisma.FieldRef<"BlockedRange", 'Int'>
+  readonly hotelId: Prisma.FieldRef<"BlockedRange", 'Int'>
   readonly apartmentId: Prisma.FieldRef<"BlockedRange", 'Int'>
   readonly startDate: Prisma.FieldRef<"BlockedRange", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"BlockedRange", 'DateTime'>
@@ -1439,6 +1616,44 @@ export type BlockedRangeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many BlockedRanges to delete.
    */
   limit?: number
+}
+
+/**
+ * BlockedRange.hotel
+ */
+export type BlockedRange$hotelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Hotel
+   */
+  select?: Prisma.HotelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Hotel
+   */
+  omit?: Prisma.HotelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HotelInclude<ExtArgs> | null
+  where?: Prisma.HotelWhereInput
+}
+
+/**
+ * BlockedRange.apartment
+ */
+export type BlockedRange$apartmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Apartment
+   */
+  select?: Prisma.ApartmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Apartment
+   */
+  omit?: Prisma.ApartmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApartmentInclude<ExtArgs> | null
+  where?: Prisma.ApartmentWhereInput
 }
 
 /**

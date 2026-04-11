@@ -13,32 +13,29 @@ export async function OPTIONS() {
   });
 }
 
+function normalizeDate(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 function getNights(arrival: Date, departure: Date) {
-  return Math.ceil(
-    (departure.getTime() - arrival.getTime()) / (1000 * 60 * 60 * 24),
-  );
+  const ms =
+    normalizeDate(departure).getTime() - normalizeDate(arrival).getTime();
+  return Math.round(ms / (1000 * 60 * 60 * 24));
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const arrivalRaw = body.arrival;
-    const departureRaw = body.departure;
+    const hotelSlug = String(body.hotel || '').trim();
+    const arrivalRaw = String(body.arrival || '').trim();
+    const departureRaw = String(body.departure || '').trim();
+    const selectedApartmentsRaw = String(body.selected_apartments || '').trim();
 
-    const selectedApartmentsRaw =
-      body.selected_apartments || body.selectedApartmentIds || '';
-
-    if (!arrivalRaw || !departureRaw) {
+    if (!hotelSlug || !arrivalRaw || !departureRaw || !selectedApartmentsRaw) {
       return Response.json(
-        {
-          success: false,
-          message: 'An- und Abreisedatum sind erforderlich.',
-        },
-        {
-          status: 400,
-          headers: corsHeaders,
-        },
+        { success: false, message: 'Pflichtfelder fehlen.' },
+        { status: 400, headers: corsHeaders },
       );
     }
 
@@ -47,14 +44,8 @@ export async function POST(req: Request) {
 
     if (Number.isNaN(arrival.getTime()) || Number.isNaN(departure.getTime())) {
       return Response.json(
-        {
-          success: false,
-          message: 'Ungültige Datumsangaben.',
-        },
-        {
-          status: 400,
-          headers: corsHeaders,
-        },
+        { success: false, message: 'Ungültige Datumswerte.' },
+        { status: 400, headers: corsHeaders },
       );
     }
 
@@ -62,37 +53,31 @@ export async function POST(req: Request) {
 
     if (nights <= 0) {
       return Response.json(
-        {
-          success: false,
-          message: 'Das Abreisedatum muss nach dem Anreisedatum liegen.',
-        },
-        {
-          status: 400,
-          headers: corsHeaders,
-        },
+        { success: false, message: 'Abreise muss nach Anreise liegen.' },
+        { status: 400, headers: corsHeaders },
       );
     }
 
-    const apartmentNames = String(selectedApartmentsRaw)
-      .split(',')
-      .map((s: string) => s.trim())
-      .filter(Boolean);
+    const hotel = await prisma.hotel.findUnique({
+      where: { slug: hotelSlug },
+      select: { id: true },
+    });
 
-    if (apartmentNames.length === 0) {
+    if (!hotel) {
       return Response.json(
-        {
-          success: false,
-          message: 'Bitte wählen Sie mindestens ein Apartment aus.',
-        },
-        {
-          status: 400,
-          headers: corsHeaders,
-        },
+        { success: false, message: 'Hotel nicht gefunden.' },
+        { status: 404, headers: corsHeaders },
       );
     }
+
+    const apartmentNames = selectedApartmentsRaw
+      .split(',')
+      .map((name) => name.trim())
+      .filter(Boolean);
 
     const apartments = await prisma.apartment.findMany({
       where: {
+        hotelId: hotel.id,
         name: {
           in: apartmentNames,
         },
@@ -105,143 +90,117 @@ export async function POST(req: Request) {
     });
 
     if (apartments.length !== apartmentNames.length) {
-      const foundNames = apartments.map((a) => a.name);
-      const missingNames = apartmentNames.filter(
-        (name: string) => !foundNames.includes(name),
-      );
-
       return Response.json(
         {
           success: false,
-          message: `Ein oder mehrere Apartments wurden nicht gefunden: ${missingNames.join(', ')}`,
+          message:
+            'Mindestens ein Apartment konnte im gewählten Hotel nicht gefunden werden.',
         },
-        {
-          status: 404,
-          headers: corsHeaders,
-        },
+        { status: 404, headers: corsHeaders },
       );
     }
 
-    const apartmentResults = apartments.map((apartment) => {
-      const overlappingBlockedRange = apartment.blockedRanges.find((range) => {
-        const blockedStart = new Date(range.startDate);
-        const blockedEnd = new Date(range.endDate);
+    const unavailableApartments: Array<{
+      apartmentId: number;
+      apartmentName: string;
+      message: string;
+    }> = [];
 
-        return arrival < blockedEnd && departure > blockedStart;
+    const apartmentResults = apartments.map((apartment) => {
+      const overlapsBlocked = apartment.blockedRanges.some((range) => {
+        return arrival < range.endDate && departure > range.startDate;
       });
 
-      if (overlappingBlockedRange) {
+      if (overlapsBlocked) {
+        unavailableApartments.push({
+          apartmentId: apartment.id,
+          apartmentName: apartment.name,
+          message: 'Im gewählten Zeitraum nicht verfügbar.',
+        });
+
         return {
           apartmentId: apartment.id,
           apartmentName: apartment.name,
           available: false,
-          nights,
-          pricePerNight: 0,
+          totalPrice: null,
+          pricePerNight: null,
           cleaningFee: apartment.cleaningFee ?? 0,
-          totalPrice: 0,
-          seasonApplied: false,
-          minStay: 1,
-          message: `${apartment.name} ist im gewählten Zeitraum nicht verfügbar.`,
         };
       }
 
-      const matchingSeason = apartment.priceSeasons.find((season) => {
-        const seasonStart = new Date(season.startDate);
-        const seasonEnd = new Date(season.endDate);
+      let totalPrice = 0;
 
-        return arrival >= seasonStart && departure <= seasonEnd;
-      });
+      for (let i = 0; i < nights; i++) {
+        const currentDate = new Date(arrival);
+        currentDate.setDate(arrival.getDate() + i);
 
-      const pricePerNight =
-        matchingSeason?.pricePerNight ?? apartment.basePrice ?? 0;
+        const season = apartment.priceSeasons.find((season) => {
+          return (
+            currentDate >= season.startDate && currentDate <= season.endDate
+          );
+        });
 
-      const cleaningFee = apartment.cleaningFee ?? 0;
-      const totalPrice = pricePerNight * nights + cleaningFee;
+        const nightlyPrice = season?.pricePerNight ?? apartment.basePrice ?? 0;
+        totalPrice += nightlyPrice;
+      }
+
+      totalPrice += apartment.cleaningFee ?? 0;
+
+      const averagePricePerNight =
+        nights > 0
+          ? Number(
+              ((totalPrice - (apartment.cleaningFee ?? 0)) / nights).toFixed(2),
+            )
+          : 0;
 
       return {
         apartmentId: apartment.id,
         apartmentName: apartment.name,
         available: true,
-        nights,
-        pricePerNight,
-        cleaningFee,
-        totalPrice,
-        seasonApplied: !!matchingSeason,
-        minStay: matchingSeason?.minStay ?? 1,
-        message: `${apartment.name} ist verfügbar.`,
+        totalPrice: Number(totalPrice.toFixed(2)),
+        pricePerNight: averagePricePerNight,
+        cleaningFee: apartment.cleaningFee ?? 0,
       };
     });
 
-    const unavailableApartments = apartmentResults.filter(
-      (item) => !item.available,
-    );
-
-    const availableApartments = apartmentResults.filter(
-      (item) => item.available,
-    );
-
-    const totalSelectionPrice = availableApartments.reduce(
-      (sum, item) => sum + item.totalPrice,
-      0,
-    );
-
-    // Single apartment fallback für bestehendes Frontend
-    if (apartmentResults.length === 1) {
-      const single = apartmentResults[0];
-
+    if (unavailableApartments.length > 0) {
       return Response.json(
         {
           success: true,
-          available: single.available,
-          apartmentId: single.apartmentId,
-          apartmentName: single.apartmentName,
-          nights: single.nights,
-          pricePerNight: single.pricePerNight,
-          cleaningFee: single.cleaningFee,
-          totalPrice: single.totalPrice,
-          currency: 'EUR',
-          seasonApplied: single.seasonApplied,
-          minStay: single.minStay,
-          message: single.message,
-          apartmentResults,
-          totalSelectionPrice,
+          available: false,
+          message:
+            'Mindestens ein Apartment ist im gewählten Zeitraum nicht verfügbar.',
+          unavailableApartments,
+          nights,
         },
-        {
-          headers: corsHeaders,
-        },
+        { headers: corsHeaders },
       );
     }
+
+    const totalPrice = apartmentResults.reduce(
+      (sum, item) => sum + (item.totalPrice ?? 0),
+      0,
+    );
+
+    const firstApartment = apartmentResults[0];
 
     return Response.json(
       {
         success: true,
-        available: unavailableApartments.length === 0,
-        message:
-          unavailableApartments.length === 0
-            ? 'Alle ausgewählten Apartments sind verfügbar.'
-            : 'Mindestens ein ausgewähltes Apartment ist nicht verfügbar.',
-        currency: 'EUR',
+        available: true,
         nights,
-        apartmentResults,
-        availableApartments,
-        unavailableApartments,
-        totalSelectionPrice,
-        selectedCount: apartmentResults.length,
-        availableCount: availableApartments.length,
-        unavailableCount: unavailableApartments.length,
+        totalPrice: Number(totalPrice.toFixed(2)),
+        pricePerNight: firstApartment?.pricePerNight ?? 0,
+        cleaningFee: firstApartment?.cleaningFee ?? 0,
+        apartments: apartmentResults,
       },
-      {
-        headers: corsHeaders,
-      },
+      { headers: corsHeaders },
     );
   } catch (error) {
-    console.error('Availability API error:', error);
+    console.error(error);
 
     return Response.json(
-      {
-        success: false,
-        message: 'Serverfehler bei der Verfügbarkeitsprüfung.',
-      },
+      { success: false, message: 'Verfügbarkeit konnte nicht geprüft werden.' },
       {
         status: 500,
         headers: corsHeaders,

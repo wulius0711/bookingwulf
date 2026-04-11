@@ -13,12 +13,38 @@ export async function OPTIONS() {
   });
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const hotelSlug = searchParams.get('hotel');
+
+    if (!hotelSlug) {
+      return Response.json(
+        { success: false, message: 'Hotel-Slug fehlt.' },
+        { status: 400, headers: corsHeaders },
+      );
+    }
+
+    const hotel = await prisma.hotel.findUnique({
+      where: { slug: hotelSlug },
+      select: { id: true },
+    });
+
+    if (!hotel) {
+      return Response.json(
+        { success: false, message: 'Hotel nicht gefunden.' },
+        { status: 404, headers: corsHeaders },
+      );
+    }
+
     const apartments = await prisma.apartment.findMany({
-      where: { isActive: true },
+      where: {
+        hotelId: hotel.id,
+        isActive: true,
+      },
       select: {
         id: true,
+        hotelId: true,
         name: true,
         slug: true,
         description: true,

@@ -28,6 +28,7 @@ export type AggregateApartment = {
 
 export type ApartmentAvgAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   maxAdults: number | null
   maxChildren: number | null
   basePrice: number | null
@@ -39,6 +40,7 @@ export type ApartmentAvgAggregateOutputType = {
 
 export type ApartmentSumAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   maxAdults: number | null
   maxChildren: number | null
   basePrice: number | null
@@ -50,6 +52,7 @@ export type ApartmentSumAggregateOutputType = {
 
 export type ApartmentMinAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   name: string | null
   slug: string | null
   description: string | null
@@ -68,6 +71,7 @@ export type ApartmentMinAggregateOutputType = {
 
 export type ApartmentMaxAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   name: string | null
   slug: string | null
   description: string | null
@@ -86,6 +90,7 @@ export type ApartmentMaxAggregateOutputType = {
 
 export type ApartmentCountAggregateOutputType = {
   id: number
+  hotelId: number
   name: number
   slug: number
   description: number
@@ -107,6 +112,7 @@ export type ApartmentCountAggregateOutputType = {
 
 export type ApartmentAvgAggregateInputType = {
   id?: true
+  hotelId?: true
   maxAdults?: true
   maxChildren?: true
   basePrice?: true
@@ -118,6 +124,7 @@ export type ApartmentAvgAggregateInputType = {
 
 export type ApartmentSumAggregateInputType = {
   id?: true
+  hotelId?: true
   maxAdults?: true
   maxChildren?: true
   basePrice?: true
@@ -129,6 +136,7 @@ export type ApartmentSumAggregateInputType = {
 
 export type ApartmentMinAggregateInputType = {
   id?: true
+  hotelId?: true
   name?: true
   slug?: true
   description?: true
@@ -147,6 +155,7 @@ export type ApartmentMinAggregateInputType = {
 
 export type ApartmentMaxAggregateInputType = {
   id?: true
+  hotelId?: true
   name?: true
   slug?: true
   description?: true
@@ -165,6 +174,7 @@ export type ApartmentMaxAggregateInputType = {
 
 export type ApartmentCountAggregateInputType = {
   id?: true
+  hotelId?: true
   name?: true
   slug?: true
   description?: true
@@ -271,6 +281,7 @@ export type ApartmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type ApartmentGroupByOutputType = {
   id: number
+  hotelId: number | null
   name: string
   slug: string
   description: string | null
@@ -313,6 +324,7 @@ export type ApartmentWhereInput = {
   OR?: Prisma.ApartmentWhereInput[]
   NOT?: Prisma.ApartmentWhereInput | Prisma.ApartmentWhereInput[]
   id?: Prisma.IntFilter<"Apartment"> | number
+  hotelId?: Prisma.IntNullableFilter<"Apartment"> | number | null
   name?: Prisma.StringFilter<"Apartment"> | string
   slug?: Prisma.StringFilter<"Apartment"> | string
   description?: Prisma.StringNullableFilter<"Apartment"> | string | null
@@ -328,6 +340,7 @@ export type ApartmentWhereInput = {
   size?: Prisma.IntNullableFilter<"Apartment"> | number | null
   view?: Prisma.StringNullableFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
   images?: Prisma.ApartmentImageListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
   priceSeasons?: Prisma.PriceSeasonListRelationFilter
@@ -335,6 +348,7 @@ export type ApartmentWhereInput = {
 
 export type ApartmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -350,6 +364,7 @@ export type ApartmentOrderByWithRelationInput = {
   size?: Prisma.SortOrderInput | Prisma.SortOrder
   view?: Prisma.SortOrderInput | Prisma.SortOrder
   amenities?: Prisma.SortOrder
+  hotel?: Prisma.HotelOrderByWithRelationInput
   images?: Prisma.ApartmentImageOrderByRelationAggregateInput
   blockedRanges?: Prisma.BlockedRangeOrderByRelationAggregateInput
   priceSeasons?: Prisma.PriceSeasonOrderByRelationAggregateInput
@@ -357,11 +372,12 @@ export type ApartmentOrderByWithRelationInput = {
 
 export type ApartmentWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  slug?: string
   AND?: Prisma.ApartmentWhereInput | Prisma.ApartmentWhereInput[]
   OR?: Prisma.ApartmentWhereInput[]
   NOT?: Prisma.ApartmentWhereInput | Prisma.ApartmentWhereInput[]
+  hotelId?: Prisma.IntNullableFilter<"Apartment"> | number | null
   name?: Prisma.StringFilter<"Apartment"> | string
+  slug?: Prisma.StringFilter<"Apartment"> | string
   description?: Prisma.StringNullableFilter<"Apartment"> | string | null
   maxAdults?: Prisma.IntFilter<"Apartment"> | number
   maxChildren?: Prisma.IntFilter<"Apartment"> | number
@@ -375,13 +391,15 @@ export type ApartmentWhereUniqueInput = Prisma.AtLeast<{
   size?: Prisma.IntNullableFilter<"Apartment"> | number | null
   view?: Prisma.StringNullableFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
   images?: Prisma.ApartmentImageListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
   priceSeasons?: Prisma.PriceSeasonListRelationFilter
-}, "id" | "slug">
+}, "id">
 
 export type ApartmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -409,6 +427,7 @@ export type ApartmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.ApartmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ApartmentScalarWhereWithAggregatesInput | Prisma.ApartmentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Apartment"> | number
+  hotelId?: Prisma.IntNullableWithAggregatesFilter<"Apartment"> | number | null
   name?: Prisma.StringWithAggregatesFilter<"Apartment"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Apartment"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Apartment"> | string | null
@@ -442,6 +461,7 @@ export type ApartmentCreateInput = {
   size?: number | null
   view?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  hotel?: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
@@ -449,6 +469,7 @@ export type ApartmentCreateInput = {
 
 export type ApartmentUncheckedCreateInput = {
   id?: number
+  hotelId?: number | null
   name: string
   slug: string
   description?: string | null
@@ -485,6 +506,7 @@ export type ApartmentUpdateInput = {
   size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  hotel?: Prisma.HotelUpdateOneWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
@@ -492,6 +514,7 @@ export type ApartmentUpdateInput = {
 
 export type ApartmentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -514,6 +537,7 @@ export type ApartmentUncheckedUpdateInput = {
 
 export type ApartmentCreateManyInput = {
   id?: number
+  hotelId?: number | null
   name: string
   slug: string
   description?: string | null
@@ -551,6 +575,7 @@ export type ApartmentUpdateManyMutationInput = {
 
 export type ApartmentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -568,6 +593,16 @@ export type ApartmentUncheckedUpdateManyInput = {
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
 }
 
+export type ApartmentListRelationFilter = {
+  every?: Prisma.ApartmentWhereInput
+  some?: Prisma.ApartmentWhereInput
+  none?: Prisma.ApartmentWhereInput
+}
+
+export type ApartmentOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type StringNullableListFilter<$PrismaModel = never> = {
   equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
   has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
@@ -578,6 +613,7 @@ export type StringNullableListFilter<$PrismaModel = never> = {
 
 export type ApartmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -597,6 +633,7 @@ export type ApartmentCountOrderByAggregateInput = {
 
 export type ApartmentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   maxAdults?: Prisma.SortOrder
   maxChildren?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
@@ -608,6 +645,7 @@ export type ApartmentAvgOrderByAggregateInput = {
 
 export type ApartmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -626,6 +664,7 @@ export type ApartmentMaxOrderByAggregateInput = {
 
 export type ApartmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -644,6 +683,7 @@ export type ApartmentMinOrderByAggregateInput = {
 
 export type ApartmentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   maxAdults?: Prisma.SortOrder
   maxChildren?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
@@ -658,24 +698,55 @@ export type ApartmentScalarRelationFilter = {
   isNot?: Prisma.ApartmentWhereInput
 }
 
+export type ApartmentNullableScalarRelationFilter = {
+  is?: Prisma.ApartmentWhereInput | null
+  isNot?: Prisma.ApartmentWhereInput | null
+}
+
+export type ApartmentCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput> | Prisma.ApartmentCreateWithoutHotelInput[] | Prisma.ApartmentUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.ApartmentCreateOrConnectWithoutHotelInput | Prisma.ApartmentCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.ApartmentCreateManyHotelInputEnvelope
+  connect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+}
+
+export type ApartmentUncheckedCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput> | Prisma.ApartmentCreateWithoutHotelInput[] | Prisma.ApartmentUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.ApartmentCreateOrConnectWithoutHotelInput | Prisma.ApartmentCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.ApartmentCreateManyHotelInputEnvelope
+  connect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+}
+
+export type ApartmentUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput> | Prisma.ApartmentCreateWithoutHotelInput[] | Prisma.ApartmentUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.ApartmentCreateOrConnectWithoutHotelInput | Prisma.ApartmentCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.ApartmentUpsertWithWhereUniqueWithoutHotelInput | Prisma.ApartmentUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.ApartmentCreateManyHotelInputEnvelope
+  set?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  disconnect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  delete?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  connect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  update?: Prisma.ApartmentUpdateWithWhereUniqueWithoutHotelInput | Prisma.ApartmentUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.ApartmentUpdateManyWithWhereWithoutHotelInput | Prisma.ApartmentUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.ApartmentScalarWhereInput | Prisma.ApartmentScalarWhereInput[]
+}
+
+export type ApartmentUncheckedUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput> | Prisma.ApartmentCreateWithoutHotelInput[] | Prisma.ApartmentUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.ApartmentCreateOrConnectWithoutHotelInput | Prisma.ApartmentCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.ApartmentUpsertWithWhereUniqueWithoutHotelInput | Prisma.ApartmentUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.ApartmentCreateManyHotelInputEnvelope
+  set?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  disconnect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  delete?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  connect?: Prisma.ApartmentWhereUniqueInput | Prisma.ApartmentWhereUniqueInput[]
+  update?: Prisma.ApartmentUpdateWithWhereUniqueWithoutHotelInput | Prisma.ApartmentUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.ApartmentUpdateManyWithWhereWithoutHotelInput | Prisma.ApartmentUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.ApartmentScalarWhereInput | Prisma.ApartmentScalarWhereInput[]
+}
+
 export type ApartmentCreateamenitiesInput = {
   set: string[]
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -684,14 +755,6 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -741,12 +804,106 @@ export type ApartmentCreateNestedOneWithoutBlockedRangesInput = {
   connect?: Prisma.ApartmentWhereUniqueInput
 }
 
-export type ApartmentUpdateOneRequiredWithoutBlockedRangesNestedInput = {
+export type ApartmentUpdateOneWithoutBlockedRangesNestedInput = {
   create?: Prisma.XOR<Prisma.ApartmentCreateWithoutBlockedRangesInput, Prisma.ApartmentUncheckedCreateWithoutBlockedRangesInput>
   connectOrCreate?: Prisma.ApartmentCreateOrConnectWithoutBlockedRangesInput
   upsert?: Prisma.ApartmentUpsertWithoutBlockedRangesInput
+  disconnect?: Prisma.ApartmentWhereInput | boolean
+  delete?: Prisma.ApartmentWhereInput | boolean
   connect?: Prisma.ApartmentWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ApartmentUpdateToOneWithWhereWithoutBlockedRangesInput, Prisma.ApartmentUpdateWithoutBlockedRangesInput>, Prisma.ApartmentUncheckedUpdateWithoutBlockedRangesInput>
+}
+
+export type ApartmentCreateWithoutHotelInput = {
+  name: string
+  slug: string
+  description?: string | null
+  maxAdults?: number
+  maxChildren?: number
+  basePrice?: number | null
+  cleaningFee?: number | null
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bedrooms?: number | null
+  size?: number | null
+  view?: string | null
+  amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
+  blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
+  priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
+}
+
+export type ApartmentUncheckedCreateWithoutHotelInput = {
+  id?: number
+  name: string
+  slug: string
+  description?: string | null
+  maxAdults?: number
+  maxChildren?: number
+  basePrice?: number | null
+  cleaningFee?: number | null
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bedrooms?: number | null
+  size?: number | null
+  view?: string | null
+  amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
+  priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
+}
+
+export type ApartmentCreateOrConnectWithoutHotelInput = {
+  where: Prisma.ApartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput>
+}
+
+export type ApartmentCreateManyHotelInputEnvelope = {
+  data: Prisma.ApartmentCreateManyHotelInput | Prisma.ApartmentCreateManyHotelInput[]
+  skipDuplicates?: boolean
+}
+
+export type ApartmentUpsertWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.ApartmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.ApartmentUpdateWithoutHotelInput, Prisma.ApartmentUncheckedUpdateWithoutHotelInput>
+  create: Prisma.XOR<Prisma.ApartmentCreateWithoutHotelInput, Prisma.ApartmentUncheckedCreateWithoutHotelInput>
+}
+
+export type ApartmentUpdateWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.ApartmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.ApartmentUpdateWithoutHotelInput, Prisma.ApartmentUncheckedUpdateWithoutHotelInput>
+}
+
+export type ApartmentUpdateManyWithWhereWithoutHotelInput = {
+  where: Prisma.ApartmentScalarWhereInput
+  data: Prisma.XOR<Prisma.ApartmentUpdateManyMutationInput, Prisma.ApartmentUncheckedUpdateManyWithoutHotelInput>
+}
+
+export type ApartmentScalarWhereInput = {
+  AND?: Prisma.ApartmentScalarWhereInput | Prisma.ApartmentScalarWhereInput[]
+  OR?: Prisma.ApartmentScalarWhereInput[]
+  NOT?: Prisma.ApartmentScalarWhereInput | Prisma.ApartmentScalarWhereInput[]
+  id?: Prisma.IntFilter<"Apartment"> | number
+  hotelId?: Prisma.IntNullableFilter<"Apartment"> | number | null
+  name?: Prisma.StringFilter<"Apartment"> | string
+  slug?: Prisma.StringFilter<"Apartment"> | string
+  description?: Prisma.StringNullableFilter<"Apartment"> | string | null
+  maxAdults?: Prisma.IntFilter<"Apartment"> | number
+  maxChildren?: Prisma.IntFilter<"Apartment"> | number
+  basePrice?: Prisma.FloatNullableFilter<"Apartment"> | number | null
+  cleaningFee?: Prisma.FloatNullableFilter<"Apartment"> | number | null
+  isActive?: Prisma.BoolFilter<"Apartment"> | boolean
+  sortOrder?: Prisma.IntFilter<"Apartment"> | number
+  createdAt?: Prisma.DateTimeFilter<"Apartment"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Apartment"> | Date | string
+  bedrooms?: Prisma.IntNullableFilter<"Apartment"> | number | null
+  size?: Prisma.IntNullableFilter<"Apartment"> | number | null
+  view?: Prisma.StringNullableFilter<"Apartment"> | string | null
+  amenities?: Prisma.StringNullableListFilter<"Apartment">
 }
 
 export type ApartmentCreateWithoutImagesInput = {
@@ -765,12 +922,14 @@ export type ApartmentCreateWithoutImagesInput = {
   size?: number | null
   view?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  hotel?: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
 }
 
 export type ApartmentUncheckedCreateWithoutImagesInput = {
   id?: number
+  hotelId?: number | null
   name: string
   slug: string
   description?: string | null
@@ -822,12 +981,14 @@ export type ApartmentUpdateWithoutImagesInput = {
   size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  hotel?: Prisma.HotelUpdateOneWithoutApartmentsNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
 }
 
 export type ApartmentUncheckedUpdateWithoutImagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -863,12 +1024,14 @@ export type ApartmentCreateWithoutPriceSeasonsInput = {
   size?: number | null
   view?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  hotel?: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
 }
 
 export type ApartmentUncheckedCreateWithoutPriceSeasonsInput = {
   id?: number
+  hotelId?: number | null
   name: string
   slug: string
   description?: string | null
@@ -920,12 +1083,14 @@ export type ApartmentUpdateWithoutPriceSeasonsInput = {
   size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  hotel?: Prisma.HotelUpdateOneWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
 }
 
 export type ApartmentUncheckedUpdateWithoutPriceSeasonsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -961,12 +1126,14 @@ export type ApartmentCreateWithoutBlockedRangesInput = {
   size?: number | null
   view?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  hotel?: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
 }
 
 export type ApartmentUncheckedCreateWithoutBlockedRangesInput = {
   id?: number
+  hotelId?: number | null
   name: string
   slug: string
   description?: string | null
@@ -1018,12 +1185,14 @@ export type ApartmentUpdateWithoutBlockedRangesInput = {
   size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  hotel?: Prisma.HotelUpdateOneWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
 }
 
 export type ApartmentUncheckedUpdateWithoutBlockedRangesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1041,6 +1210,87 @@ export type ApartmentUncheckedUpdateWithoutBlockedRangesInput = {
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
+}
+
+export type ApartmentCreateManyHotelInput = {
+  id?: number
+  name: string
+  slug: string
+  description?: string | null
+  maxAdults?: number
+  maxChildren?: number
+  basePrice?: number | null
+  cleaningFee?: number | null
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bedrooms?: number | null
+  size?: number | null
+  view?: string | null
+  amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+}
+
+export type ApartmentUpdateWithoutHotelInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxAdults?: Prisma.IntFieldUpdateOperationsInput | number
+  maxChildren?: Prisma.IntFieldUpdateOperationsInput | number
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cleaningFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bedrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
+  blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
+  priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
+}
+
+export type ApartmentUncheckedUpdateWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxAdults?: Prisma.IntFieldUpdateOperationsInput | number
+  maxChildren?: Prisma.IntFieldUpdateOperationsInput | number
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cleaningFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bedrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
+  priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
+}
+
+export type ApartmentUncheckedUpdateManyWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxAdults?: Prisma.IntFieldUpdateOperationsInput | number
+  maxChildren?: Prisma.IntFieldUpdateOperationsInput | number
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cleaningFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bedrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  size?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  view?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
 }
 
 
@@ -1094,6 +1344,7 @@ export type ApartmentCountOutputTypeCountPriceSeasonsArgs<ExtArgs extends runtim
 
 export type ApartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   name?: boolean
   slug?: boolean
   description?: boolean
@@ -1109,6 +1360,7 @@ export type ApartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   size?: boolean
   view?: boolean
   amenities?: boolean
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
   images?: boolean | Prisma.Apartment$imagesArgs<ExtArgs>
   blockedRanges?: boolean | Prisma.Apartment$blockedRangesArgs<ExtArgs>
   priceSeasons?: boolean | Prisma.Apartment$priceSeasonsArgs<ExtArgs>
@@ -1117,6 +1369,7 @@ export type ApartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type ApartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   name?: boolean
   slug?: boolean
   description?: boolean
@@ -1132,10 +1385,12 @@ export type ApartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   size?: boolean
   view?: boolean
   amenities?: boolean
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["apartment"]>
 
 export type ApartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   name?: boolean
   slug?: boolean
   description?: boolean
@@ -1151,10 +1406,12 @@ export type ApartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   size?: boolean
   view?: boolean
   amenities?: boolean
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["apartment"]>
 
 export type ApartmentSelectScalar = {
   id?: boolean
+  hotelId?: boolean
   name?: boolean
   slug?: boolean
   description?: boolean
@@ -1172,25 +1429,32 @@ export type ApartmentSelectScalar = {
   amenities?: boolean
 }
 
-export type ApartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "maxAdults" | "maxChildren" | "basePrice" | "cleaningFee" | "isActive" | "sortOrder" | "createdAt" | "updatedAt" | "bedrooms" | "size" | "view" | "amenities", ExtArgs["result"]["apartment"]>
+export type ApartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "name" | "slug" | "description" | "maxAdults" | "maxChildren" | "basePrice" | "cleaningFee" | "isActive" | "sortOrder" | "createdAt" | "updatedAt" | "bedrooms" | "size" | "view" | "amenities", ExtArgs["result"]["apartment"]>
 export type ApartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
   images?: boolean | Prisma.Apartment$imagesArgs<ExtArgs>
   blockedRanges?: boolean | Prisma.Apartment$blockedRangesArgs<ExtArgs>
   priceSeasons?: boolean | Prisma.Apartment$priceSeasonsArgs<ExtArgs>
   _count?: boolean | Prisma.ApartmentCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ApartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ApartmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ApartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
+}
+export type ApartmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Apartment$hotelArgs<ExtArgs>
+}
 
 export type $ApartmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Apartment"
   objects: {
+    hotel: Prisma.$HotelPayload<ExtArgs> | null
     images: Prisma.$ApartmentImagePayload<ExtArgs>[]
     blockedRanges: Prisma.$BlockedRangePayload<ExtArgs>[]
     priceSeasons: Prisma.$PriceSeasonPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    hotelId: number | null
     name: string
     slug: string
     description: string | null
@@ -1600,6 +1864,7 @@ readonly fields: ApartmentFieldRefs;
  */
 export interface Prisma__ApartmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  hotel<T extends Prisma.Apartment$hotelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Apartment$hotelArgs<ExtArgs>>): Prisma.Prisma__HotelClient<runtime.Types.Result.GetResult<Prisma.$HotelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   images<T extends Prisma.Apartment$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Apartment$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApartmentImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blockedRanges<T extends Prisma.Apartment$blockedRangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Apartment$blockedRangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockedRangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   priceSeasons<T extends Prisma.Apartment$priceSeasonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Apartment$priceSeasonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PriceSeasonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1633,6 +1898,7 @@ export interface Prisma__ApartmentClient<T, Null = never, ExtArgs extends runtim
  */
 export interface ApartmentFieldRefs {
   readonly id: Prisma.FieldRef<"Apartment", 'Int'>
+  readonly hotelId: Prisma.FieldRef<"Apartment", 'Int'>
   readonly name: Prisma.FieldRef<"Apartment", 'String'>
   readonly slug: Prisma.FieldRef<"Apartment", 'String'>
   readonly description: Prisma.FieldRef<"Apartment", 'String'>
@@ -1902,6 +2168,10 @@ export type ApartmentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    */
   data: Prisma.ApartmentCreateManyInput | Prisma.ApartmentCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApartmentIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1972,6 +2242,10 @@ export type ApartmentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many Apartments to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApartmentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2038,6 +2312,25 @@ export type ApartmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Apartments to delete.
    */
   limit?: number
+}
+
+/**
+ * Apartment.hotel
+ */
+export type Apartment$hotelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Hotel
+   */
+  select?: Prisma.HotelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Hotel
+   */
+  omit?: Prisma.HotelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HotelInclude<ExtArgs> | null
+  where?: Prisma.HotelWhereInput
 }
 
 /**

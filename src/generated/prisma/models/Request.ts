@@ -28,6 +28,7 @@ export type AggregateRequest = {
 
 export type RequestAvgAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   nights: number | null
   adults: number | null
   children: number | null
@@ -35,6 +36,7 @@ export type RequestAvgAggregateOutputType = {
 
 export type RequestSumAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   nights: number | null
   adults: number | null
   children: number | null
@@ -42,6 +44,7 @@ export type RequestSumAggregateOutputType = {
 
 export type RequestMinAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   arrival: Date | null
   departure: Date | null
   nights: number | null
@@ -61,6 +64,7 @@ export type RequestMinAggregateOutputType = {
 
 export type RequestMaxAggregateOutputType = {
   id: number | null
+  hotelId: number | null
   arrival: Date | null
   departure: Date | null
   nights: number | null
@@ -80,6 +84,7 @@ export type RequestMaxAggregateOutputType = {
 
 export type RequestCountAggregateOutputType = {
   id: number
+  hotelId: number
   arrival: number
   departure: number
   nights: number
@@ -101,6 +106,7 @@ export type RequestCountAggregateOutputType = {
 
 export type RequestAvgAggregateInputType = {
   id?: true
+  hotelId?: true
   nights?: true
   adults?: true
   children?: true
@@ -108,6 +114,7 @@ export type RequestAvgAggregateInputType = {
 
 export type RequestSumAggregateInputType = {
   id?: true
+  hotelId?: true
   nights?: true
   adults?: true
   children?: true
@@ -115,6 +122,7 @@ export type RequestSumAggregateInputType = {
 
 export type RequestMinAggregateInputType = {
   id?: true
+  hotelId?: true
   arrival?: true
   departure?: true
   nights?: true
@@ -134,6 +142,7 @@ export type RequestMinAggregateInputType = {
 
 export type RequestMaxAggregateInputType = {
   id?: true
+  hotelId?: true
   arrival?: true
   departure?: true
   nights?: true
@@ -153,6 +162,7 @@ export type RequestMaxAggregateInputType = {
 
 export type RequestCountAggregateInputType = {
   id?: true
+  hotelId?: true
   arrival?: true
   departure?: true
   nights?: true
@@ -259,6 +269,7 @@ export type RequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type RequestGroupByOutputType = {
   id: number
+  hotelId: number | null
   arrival: Date
   departure: Date
   nights: number
@@ -301,6 +312,7 @@ export type RequestWhereInput = {
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   id?: Prisma.IntFilter<"Request"> | number
+  hotelId?: Prisma.IntNullableFilter<"Request"> | number | null
   arrival?: Prisma.DateTimeFilter<"Request"> | Date | string
   departure?: Prisma.DateTimeFilter<"Request"> | Date | string
   nights?: Prisma.IntFilter<"Request"> | number
@@ -316,10 +328,12 @@ export type RequestWhereInput = {
   status?: Prisma.StringFilter<"Request"> | string
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
 }
 
 export type RequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
   arrival?: Prisma.SortOrder
   departure?: Prisma.SortOrder
   nights?: Prisma.SortOrder
@@ -335,6 +349,7 @@ export type RequestOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  hotel?: Prisma.HotelOrderByWithRelationInput
 }
 
 export type RequestWhereUniqueInput = Prisma.AtLeast<{
@@ -342,6 +357,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
+  hotelId?: Prisma.IntNullableFilter<"Request"> | number | null
   arrival?: Prisma.DateTimeFilter<"Request"> | Date | string
   departure?: Prisma.DateTimeFilter<"Request"> | Date | string
   nights?: Prisma.IntFilter<"Request"> | number
@@ -357,10 +373,12 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"Request"> | string
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
 }, "id">
 
 export type RequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrderInput | Prisma.SortOrder
   arrival?: Prisma.SortOrder
   departure?: Prisma.SortOrder
   nights?: Prisma.SortOrder
@@ -388,6 +406,7 @@ export type RequestScalarWhereWithAggregatesInput = {
   OR?: Prisma.RequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RequestScalarWhereWithAggregatesInput | Prisma.RequestScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Request"> | number
+  hotelId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   arrival?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   departure?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   nights?: Prisma.IntWithAggregatesFilter<"Request"> | number
@@ -421,10 +440,12 @@ export type RequestCreateInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  hotel?: Prisma.HotelCreateNestedOneWithoutRequestsInput
 }
 
 export type RequestUncheckedCreateInput = {
   id?: number
+  hotelId?: number | null
   arrival: Date | string
   departure: Date | string
   nights: number
@@ -458,10 +479,12 @@ export type RequestUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hotel?: Prisma.HotelUpdateOneWithoutRequestsNestedInput
 }
 
 export type RequestUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nights?: Prisma.IntFieldUpdateOperationsInput | number
@@ -481,6 +504,7 @@ export type RequestUncheckedUpdateInput = {
 
 export type RequestCreateManyInput = {
   id?: number
+  hotelId?: number | null
   arrival: Date | string
   departure: Date | string
   nights: number
@@ -518,6 +542,7 @@ export type RequestUpdateManyMutationInput = {
 
 export type RequestUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nights?: Prisma.IntFieldUpdateOperationsInput | number
@@ -535,8 +560,19 @@ export type RequestUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type RequestListRelationFilter = {
+  every?: Prisma.RequestWhereInput
+  some?: Prisma.RequestWhereInput
+  none?: Prisma.RequestWhereInput
+}
+
+export type RequestOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type RequestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   arrival?: Prisma.SortOrder
   departure?: Prisma.SortOrder
   nights?: Prisma.SortOrder
@@ -556,6 +592,7 @@ export type RequestCountOrderByAggregateInput = {
 
 export type RequestAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   nights?: Prisma.SortOrder
   adults?: Prisma.SortOrder
   children?: Prisma.SortOrder
@@ -563,6 +600,7 @@ export type RequestAvgOrderByAggregateInput = {
 
 export type RequestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   arrival?: Prisma.SortOrder
   departure?: Prisma.SortOrder
   nights?: Prisma.SortOrder
@@ -582,6 +620,7 @@ export type RequestMaxOrderByAggregateInput = {
 
 export type RequestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   arrival?: Prisma.SortOrder
   departure?: Prisma.SortOrder
   nights?: Prisma.SortOrder
@@ -601,15 +640,220 @@ export type RequestMinOrderByAggregateInput = {
 
 export type RequestSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hotelId?: Prisma.SortOrder
   nights?: Prisma.SortOrder
   adults?: Prisma.SortOrder
   children?: Prisma.SortOrder
+}
+
+export type RequestCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput> | Prisma.RequestCreateWithoutHotelInput[] | Prisma.RequestUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutHotelInput | Prisma.RequestCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.RequestCreateManyHotelInputEnvelope
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+}
+
+export type RequestUncheckedCreateNestedManyWithoutHotelInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput> | Prisma.RequestCreateWithoutHotelInput[] | Prisma.RequestUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutHotelInput | Prisma.RequestCreateOrConnectWithoutHotelInput[]
+  createMany?: Prisma.RequestCreateManyHotelInputEnvelope
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+}
+
+export type RequestUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput> | Prisma.RequestCreateWithoutHotelInput[] | Prisma.RequestUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutHotelInput | Prisma.RequestCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutHotelInput | Prisma.RequestUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.RequestCreateManyHotelInputEnvelope
+  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  update?: Prisma.RequestUpdateWithWhereUniqueWithoutHotelInput | Prisma.RequestUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutHotelInput | Prisma.RequestUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+}
+
+export type RequestUncheckedUpdateManyWithoutHotelNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput> | Prisma.RequestCreateWithoutHotelInput[] | Prisma.RequestUncheckedCreateWithoutHotelInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutHotelInput | Prisma.RequestCreateOrConnectWithoutHotelInput[]
+  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutHotelInput | Prisma.RequestUpsertWithWhereUniqueWithoutHotelInput[]
+  createMany?: Prisma.RequestCreateManyHotelInputEnvelope
+  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  update?: Prisma.RequestUpdateWithWhereUniqueWithoutHotelInput | Prisma.RequestUpdateWithWhereUniqueWithoutHotelInput[]
+  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutHotelInput | Prisma.RequestUpdateManyWithWhereWithoutHotelInput[]
+  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+}
+
+export type RequestCreateWithoutHotelInput = {
+  arrival: Date | string
+  departure: Date | string
+  nights: number
+  adults: number
+  children?: number
+  selectedApartmentIds: string
+  salutation: string
+  lastname: string
+  email: string
+  country: string
+  message?: string | null
+  newsletter?: boolean
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RequestUncheckedCreateWithoutHotelInput = {
+  id?: number
+  arrival: Date | string
+  departure: Date | string
+  nights: number
+  adults: number
+  children?: number
+  selectedApartmentIds: string
+  salutation: string
+  lastname: string
+  email: string
+  country: string
+  message?: string | null
+  newsletter?: boolean
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RequestCreateOrConnectWithoutHotelInput = {
+  where: Prisma.RequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput>
+}
+
+export type RequestCreateManyHotelInputEnvelope = {
+  data: Prisma.RequestCreateManyHotelInput | Prisma.RequestCreateManyHotelInput[]
+  skipDuplicates?: boolean
+}
+
+export type RequestUpsertWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.RequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.RequestUpdateWithoutHotelInput, Prisma.RequestUncheckedUpdateWithoutHotelInput>
+  create: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput>
+}
+
+export type RequestUpdateWithWhereUniqueWithoutHotelInput = {
+  where: Prisma.RequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.RequestUpdateWithoutHotelInput, Prisma.RequestUncheckedUpdateWithoutHotelInput>
+}
+
+export type RequestUpdateManyWithWhereWithoutHotelInput = {
+  where: Prisma.RequestScalarWhereInput
+  data: Prisma.XOR<Prisma.RequestUpdateManyMutationInput, Prisma.RequestUncheckedUpdateManyWithoutHotelInput>
+}
+
+export type RequestScalarWhereInput = {
+  AND?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+  OR?: Prisma.RequestScalarWhereInput[]
+  NOT?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+  id?: Prisma.IntFilter<"Request"> | number
+  hotelId?: Prisma.IntNullableFilter<"Request"> | number | null
+  arrival?: Prisma.DateTimeFilter<"Request"> | Date | string
+  departure?: Prisma.DateTimeFilter<"Request"> | Date | string
+  nights?: Prisma.IntFilter<"Request"> | number
+  adults?: Prisma.IntFilter<"Request"> | number
+  children?: Prisma.IntFilter<"Request"> | number
+  selectedApartmentIds?: Prisma.StringFilter<"Request"> | string
+  salutation?: Prisma.StringFilter<"Request"> | string
+  lastname?: Prisma.StringFilter<"Request"> | string
+  email?: Prisma.StringFilter<"Request"> | string
+  country?: Prisma.StringFilter<"Request"> | string
+  message?: Prisma.StringNullableFilter<"Request"> | string | null
+  newsletter?: Prisma.BoolFilter<"Request"> | boolean
+  status?: Prisma.StringFilter<"Request"> | string
+  createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+}
+
+export type RequestCreateManyHotelInput = {
+  id?: number
+  arrival: Date | string
+  departure: Date | string
+  nights: number
+  adults: number
+  children?: number
+  selectedApartmentIds: string
+  salutation: string
+  lastname: string
+  email: string
+  country: string
+  message?: string | null
+  newsletter?: boolean
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RequestUpdateWithoutHotelInput = {
+  arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nights?: Prisma.IntFieldUpdateOperationsInput | number
+  adults?: Prisma.IntFieldUpdateOperationsInput | number
+  children?: Prisma.IntFieldUpdateOperationsInput | number
+  selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
+  salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RequestUncheckedUpdateWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nights?: Prisma.IntFieldUpdateOperationsInput | number
+  adults?: Prisma.IntFieldUpdateOperationsInput | number
+  children?: Prisma.IntFieldUpdateOperationsInput | number
+  selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
+  salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RequestUncheckedUpdateManyWithoutHotelInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nights?: Prisma.IntFieldUpdateOperationsInput | number
+  adults?: Prisma.IntFieldUpdateOperationsInput | number
+  children?: Prisma.IntFieldUpdateOperationsInput | number
+  selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
+  salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
 export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   arrival?: boolean
   departure?: boolean
   nights?: boolean
@@ -625,10 +869,12 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   arrival?: boolean
   departure?: boolean
   nights?: boolean
@@ -644,10 +890,12 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hotelId?: boolean
   arrival?: boolean
   departure?: boolean
   nights?: boolean
@@ -663,10 +911,12 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectScalar = {
   id?: boolean
+  hotelId?: boolean
   arrival?: boolean
   departure?: boolean
   nights?: boolean
@@ -684,13 +934,25 @@ export type RequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
+}
+export type RequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
+}
+export type RequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
+}
 
 export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Request"
-  objects: {}
+  objects: {
+    hotel: Prisma.$HotelPayload<ExtArgs> | null
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    hotelId: number | null
     arrival: Date
     departure: Date
     nights: number
@@ -1100,6 +1362,7 @@ readonly fields: RequestFieldRefs;
  */
 export interface Prisma__RequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  hotel<T extends Prisma.Request$hotelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$hotelArgs<ExtArgs>>): Prisma.Prisma__HotelClient<runtime.Types.Result.GetResult<Prisma.$HotelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1130,6 +1393,7 @@ export interface Prisma__RequestClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface RequestFieldRefs {
   readonly id: Prisma.FieldRef<"Request", 'Int'>
+  readonly hotelId: Prisma.FieldRef<"Request", 'Int'>
   readonly arrival: Prisma.FieldRef<"Request", 'DateTime'>
   readonly departure: Prisma.FieldRef<"Request", 'DateTime'>
   readonly nights: Prisma.FieldRef<"Request", 'Int'>
@@ -1162,6 +1426,10 @@ export type RequestFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
+  /**
    * Filter, which Request to fetch.
    */
   where: Prisma.RequestWhereUniqueInput
@@ -1180,6 +1448,10 @@ export type RequestFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
+  /**
    * Filter, which Request to fetch.
    */
   where: Prisma.RequestWhereUniqueInput
@@ -1197,6 +1469,10 @@ export type RequestFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Request
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
   /**
    * Filter, which Request to fetch.
    */
@@ -1246,6 +1522,10 @@ export type RequestFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
+  /**
    * Filter, which Request to fetch.
    */
   where?: Prisma.RequestWhereInput
@@ -1293,6 +1573,10 @@ export type RequestFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Request
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
   /**
    * Filter, which Requests to fetch.
    */
@@ -1342,6 +1626,10 @@ export type RequestCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
+  /**
    * The data needed to create a Request.
    */
   data: Prisma.XOR<Prisma.RequestCreateInput, Prisma.RequestUncheckedCreateInput>
@@ -1375,6 +1663,10 @@ export type RequestCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.RequestCreateManyInput | Prisma.RequestCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1389,6 +1681,10 @@ export type RequestUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Request
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
   /**
    * The data needed to update a Request.
    */
@@ -1441,6 +1737,10 @@ export type RequestUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Requests to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1455,6 +1755,10 @@ export type RequestUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Request
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
   /**
    * The filter to search for the Request to update in case it exists.
    */
@@ -1482,6 +1786,10 @@ export type RequestDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
+  /**
    * Filter which Request to delete.
    */
   where: Prisma.RequestWhereUniqueInput
@@ -1502,6 +1810,25 @@ export type RequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Request.hotel
+ */
+export type Request$hotelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Hotel
+   */
+  select?: Prisma.HotelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Hotel
+   */
+  omit?: Prisma.HotelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HotelInclude<ExtArgs> | null
+  where?: Prisma.HotelWhereInput
+}
+
+/**
  * Request without action
  */
 export type RequestDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1513,4 +1840,8 @@ export type RequestDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Request
    */
   omit?: Prisma.RequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestInclude<ExtArgs> | null
 }

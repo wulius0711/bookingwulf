@@ -384,6 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Hotel: 'Hotel',
+  HotelSettings: 'HotelSettings',
   Apartment: 'Apartment',
   ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
@@ -405,10 +407,158 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "adminUser"
+    modelProps: "hotel" | "hotelSettings" | "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Hotel: {
+      payload: Prisma.$HotelPayload<ExtArgs>
+      fields: Prisma.HotelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HotelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HotelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        findFirst: {
+          args: Prisma.HotelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HotelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        findMany: {
+          args: Prisma.HotelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>[]
+        }
+        create: {
+          args: Prisma.HotelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        createMany: {
+          args: Prisma.HotelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HotelCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>[]
+        }
+        delete: {
+          args: Prisma.HotelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        update: {
+          args: Prisma.HotelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        deleteMany: {
+          args: Prisma.HotelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HotelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HotelUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>[]
+        }
+        upsert: {
+          args: Prisma.HotelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelPayload>
+        }
+        aggregate: {
+          args: Prisma.HotelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHotel>
+        }
+        groupBy: {
+          args: Prisma.HotelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HotelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelCountAggregateOutputType> | number
+        }
+      }
+    }
+    HotelSettings: {
+      payload: Prisma.$HotelSettingsPayload<ExtArgs>
+      fields: Prisma.HotelSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HotelSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HotelSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.HotelSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HotelSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.HotelSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.HotelSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.HotelSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HotelSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.HotelSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        update: {
+          args: Prisma.HotelSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.HotelSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HotelSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HotelSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.HotelSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.HotelSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHotelSettings>
+        }
+        groupBy: {
+          args: Prisma.HotelSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HotelSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
     Apartment: {
       payload: Prisma.$ApartmentPayload<ExtArgs>
       fields: Prisma.ApartmentFieldRefs
@@ -892,8 +1042,43 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const HotelScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  email: 'email',
+  phone: 'phone',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelScalarFieldEnum = (typeof HotelScalarFieldEnum)[keyof typeof HotelScalarFieldEnum]
+
+
+export const HotelSettingsScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  showPrices: 'showPrices',
+  allowMultiSelect: 'allowMultiSelect',
+  showAmenities: 'showAmenities',
+  showExtrasStep: 'showExtrasStep',
+  showPhoneField: 'showPhoneField',
+  showMessageField: 'showMessageField',
+  enableImageSlider: 'enableImageSlider',
+  enableLightbox: 'enableLightbox',
+  accentColor: 'accentColor',
+  backgroundColor: 'backgroundColor',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
+
+
 export const ApartmentScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   name: 'name',
   slug: 'slug',
   description: 'description',
@@ -942,6 +1127,7 @@ export type PriceSeasonScalarFieldEnum = (typeof PriceSeasonScalarFieldEnum)[key
 
 export const BlockedRangeScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   apartmentId: 'apartmentId',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -955,6 +1141,7 @@ export type BlockedRangeScalarFieldEnum = (typeof BlockedRangeScalarFieldEnum)[k
 
 export const RequestScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   arrival: 'arrival',
   departure: 'departure',
   nights: 'nights',
@@ -977,9 +1164,11 @@ export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeo
 
 export const AdminUserScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   email: 'email',
   passwordHash: 'passwordHash',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1046,20 +1235,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -1077,6 +1252,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1174,6 +1363,8 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  hotel?: Prisma.HotelOmit
+  hotelSettings?: Prisma.HotelSettingsOmit
   apartment?: Prisma.ApartmentOmit
   apartmentImage?: Prisma.ApartmentImageOmit
   priceSeason?: Prisma.PriceSeasonOmit

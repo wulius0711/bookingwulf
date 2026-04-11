@@ -51,6 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Hotel: 'Hotel',
+  HotelSettings: 'HotelSettings',
   Apartment: 'Apartment',
   ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
@@ -75,8 +77,43 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const HotelScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  email: 'email',
+  phone: 'phone',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelScalarFieldEnum = (typeof HotelScalarFieldEnum)[keyof typeof HotelScalarFieldEnum]
+
+
+export const HotelSettingsScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  showPrices: 'showPrices',
+  allowMultiSelect: 'allowMultiSelect',
+  showAmenities: 'showAmenities',
+  showExtrasStep: 'showExtrasStep',
+  showPhoneField: 'showPhoneField',
+  showMessageField: 'showMessageField',
+  enableImageSlider: 'enableImageSlider',
+  enableLightbox: 'enableLightbox',
+  accentColor: 'accentColor',
+  backgroundColor: 'backgroundColor',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
+
+
 export const ApartmentScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   name: 'name',
   slug: 'slug',
   description: 'description',
@@ -125,6 +162,7 @@ export type PriceSeasonScalarFieldEnum = (typeof PriceSeasonScalarFieldEnum)[key
 
 export const BlockedRangeScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   apartmentId: 'apartmentId',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -138,6 +176,7 @@ export type BlockedRangeScalarFieldEnum = (typeof BlockedRangeScalarFieldEnum)[k
 
 export const RequestScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   arrival: 'arrival',
   departure: 'departure',
   nights: 'nights',
@@ -160,9 +199,11 @@ export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeo
 
 export const AdminUserScalarFieldEnum = {
   id: 'id',
+  hotelId: 'hotelId',
   email: 'email',
   passwordHash: 'passwordHash',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
