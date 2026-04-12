@@ -501,12 +501,10 @@ export type HotelCreateNestedOneWithoutApartmentsInput = {
   connect?: Prisma.HotelWhereUniqueInput
 }
 
-export type HotelUpdateOneWithoutApartmentsNestedInput = {
+export type HotelUpdateOneRequiredWithoutApartmentsNestedInput = {
   create?: Prisma.XOR<Prisma.HotelCreateWithoutApartmentsInput, Prisma.HotelUncheckedCreateWithoutApartmentsInput>
   connectOrCreate?: Prisma.HotelCreateOrConnectWithoutApartmentsInput
   upsert?: Prisma.HotelUpsertWithoutApartmentsInput
-  disconnect?: Prisma.HotelWhereInput | boolean
-  delete?: Prisma.HotelWhereInput | boolean
   connect?: Prisma.HotelWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.HotelUpdateToOneWithWhereWithoutApartmentsInput, Prisma.HotelUpdateWithoutApartmentsInput>, Prisma.HotelUncheckedUpdateWithoutApartmentsInput>
 }

@@ -52,6 +52,7 @@ export type RequestMinAggregateOutputType = {
   children: number | null
   selectedApartmentIds: string | null
   salutation: string | null
+  firstname: string | null
   lastname: string | null
   email: string | null
   country: string | null
@@ -72,6 +73,7 @@ export type RequestMaxAggregateOutputType = {
   children: number | null
   selectedApartmentIds: string | null
   salutation: string | null
+  firstname: string | null
   lastname: string | null
   email: string | null
   country: string | null
@@ -92,6 +94,7 @@ export type RequestCountAggregateOutputType = {
   children: number
   selectedApartmentIds: number
   salutation: number
+  firstname: number
   lastname: number
   email: number
   country: number
@@ -130,6 +133,7 @@ export type RequestMinAggregateInputType = {
   children?: true
   selectedApartmentIds?: true
   salutation?: true
+  firstname?: true
   lastname?: true
   email?: true
   country?: true
@@ -150,6 +154,7 @@ export type RequestMaxAggregateInputType = {
   children?: true
   selectedApartmentIds?: true
   salutation?: true
+  firstname?: true
   lastname?: true
   email?: true
   country?: true
@@ -170,6 +175,7 @@ export type RequestCountAggregateInputType = {
   children?: true
   selectedApartmentIds?: true
   salutation?: true
+  firstname?: true
   lastname?: true
   email?: true
   country?: true
@@ -277,6 +283,7 @@ export type RequestGroupByOutputType = {
   children: number
   selectedApartmentIds: string
   salutation: string
+  firstname: string | null
   lastname: string
   email: string
   country: string
@@ -320,6 +327,7 @@ export type RequestWhereInput = {
   children?: Prisma.IntFilter<"Request"> | number
   selectedApartmentIds?: Prisma.StringFilter<"Request"> | string
   salutation?: Prisma.StringFilter<"Request"> | string
+  firstname?: Prisma.StringNullableFilter<"Request"> | string | null
   lastname?: Prisma.StringFilter<"Request"> | string
   email?: Prisma.StringFilter<"Request"> | string
   country?: Prisma.StringFilter<"Request"> | string
@@ -341,6 +349,7 @@ export type RequestOrderByWithRelationInput = {
   children?: Prisma.SortOrder
   selectedApartmentIds?: Prisma.SortOrder
   salutation?: Prisma.SortOrder
+  firstname?: Prisma.SortOrderInput | Prisma.SortOrder
   lastname?: Prisma.SortOrder
   email?: Prisma.SortOrder
   country?: Prisma.SortOrder
@@ -365,6 +374,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   children?: Prisma.IntFilter<"Request"> | number
   selectedApartmentIds?: Prisma.StringFilter<"Request"> | string
   salutation?: Prisma.StringFilter<"Request"> | string
+  firstname?: Prisma.StringNullableFilter<"Request"> | string | null
   lastname?: Prisma.StringFilter<"Request"> | string
   email?: Prisma.StringFilter<"Request"> | string
   country?: Prisma.StringFilter<"Request"> | string
@@ -386,6 +396,7 @@ export type RequestOrderByWithAggregationInput = {
   children?: Prisma.SortOrder
   selectedApartmentIds?: Prisma.SortOrder
   salutation?: Prisma.SortOrder
+  firstname?: Prisma.SortOrderInput | Prisma.SortOrder
   lastname?: Prisma.SortOrder
   email?: Prisma.SortOrder
   country?: Prisma.SortOrder
@@ -414,6 +425,7 @@ export type RequestScalarWhereWithAggregatesInput = {
   children?: Prisma.IntWithAggregatesFilter<"Request"> | number
   selectedApartmentIds?: Prisma.StringWithAggregatesFilter<"Request"> | string
   salutation?: Prisma.StringWithAggregatesFilter<"Request"> | string
+  firstname?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   lastname?: Prisma.StringWithAggregatesFilter<"Request"> | string
   email?: Prisma.StringWithAggregatesFilter<"Request"> | string
   country?: Prisma.StringWithAggregatesFilter<"Request"> | string
@@ -432,6 +444,7 @@ export type RequestCreateInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -453,6 +466,7 @@ export type RequestUncheckedCreateInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -471,6 +485,7 @@ export type RequestUpdateInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -492,6 +507,7 @@ export type RequestUncheckedUpdateInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -512,6 +528,7 @@ export type RequestCreateManyInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -530,6 +547,7 @@ export type RequestUpdateManyMutationInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -550,6 +568,7 @@ export type RequestUncheckedUpdateManyInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -580,6 +599,7 @@ export type RequestCountOrderByAggregateInput = {
   children?: Prisma.SortOrder
   selectedApartmentIds?: Prisma.SortOrder
   salutation?: Prisma.SortOrder
+  firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
   email?: Prisma.SortOrder
   country?: Prisma.SortOrder
@@ -608,6 +628,7 @@ export type RequestMaxOrderByAggregateInput = {
   children?: Prisma.SortOrder
   selectedApartmentIds?: Prisma.SortOrder
   salutation?: Prisma.SortOrder
+  firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
   email?: Prisma.SortOrder
   country?: Prisma.SortOrder
@@ -628,6 +649,7 @@ export type RequestMinOrderByAggregateInput = {
   children?: Prisma.SortOrder
   selectedApartmentIds?: Prisma.SortOrder
   salutation?: Prisma.SortOrder
+  firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
   email?: Prisma.SortOrder
   country?: Prisma.SortOrder
@@ -696,6 +718,7 @@ export type RequestCreateWithoutHotelInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -715,6 +738,7 @@ export type RequestUncheckedCreateWithoutHotelInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -764,6 +788,7 @@ export type RequestScalarWhereInput = {
   children?: Prisma.IntFilter<"Request"> | number
   selectedApartmentIds?: Prisma.StringFilter<"Request"> | string
   salutation?: Prisma.StringFilter<"Request"> | string
+  firstname?: Prisma.StringNullableFilter<"Request"> | string | null
   lastname?: Prisma.StringFilter<"Request"> | string
   email?: Prisma.StringFilter<"Request"> | string
   country?: Prisma.StringFilter<"Request"> | string
@@ -783,6 +808,7 @@ export type RequestCreateManyHotelInput = {
   children?: number
   selectedApartmentIds: string
   salutation: string
+  firstname?: string | null
   lastname: string
   email: string
   country: string
@@ -801,6 +827,7 @@ export type RequestUpdateWithoutHotelInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -820,6 +847,7 @@ export type RequestUncheckedUpdateWithoutHotelInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -839,6 +867,7 @@ export type RequestUncheckedUpdateManyWithoutHotelInput = {
   children?: Prisma.IntFieldUpdateOperationsInput | number
   selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
   salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
@@ -861,6 +890,7 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   children?: boolean
   selectedApartmentIds?: boolean
   salutation?: boolean
+  firstname?: boolean
   lastname?: boolean
   email?: boolean
   country?: boolean
@@ -882,6 +912,7 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   children?: boolean
   selectedApartmentIds?: boolean
   salutation?: boolean
+  firstname?: boolean
   lastname?: boolean
   email?: boolean
   country?: boolean
@@ -903,6 +934,7 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   children?: boolean
   selectedApartmentIds?: boolean
   salutation?: boolean
+  firstname?: boolean
   lastname?: boolean
   email?: boolean
   country?: boolean
@@ -924,6 +956,7 @@ export type RequestSelectScalar = {
   children?: boolean
   selectedApartmentIds?: boolean
   salutation?: boolean
+  firstname?: boolean
   lastname?: boolean
   email?: boolean
   country?: boolean
@@ -934,7 +967,7 @@ export type RequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }
@@ -960,6 +993,7 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     children: number
     selectedApartmentIds: string
     salutation: string
+    firstname: string | null
     lastname: string
     email: string
     country: string
@@ -1401,6 +1435,7 @@ export interface RequestFieldRefs {
   readonly children: Prisma.FieldRef<"Request", 'Int'>
   readonly selectedApartmentIds: Prisma.FieldRef<"Request", 'String'>
   readonly salutation: Prisma.FieldRef<"Request", 'String'>
+  readonly firstname: Prisma.FieldRef<"Request", 'String'>
   readonly lastname: Prisma.FieldRef<"Request", 'String'>
   readonly email: Prisma.FieldRef<"Request", 'String'>
   readonly country: Prisma.FieldRef<"Request", 'String'>

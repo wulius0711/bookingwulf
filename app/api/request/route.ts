@@ -122,10 +122,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const requestMessage = [firstname ? `Vorname: ${firstname}` : '', message]
-      .filter(Boolean)
-      .join('\n\n');
-
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id,
@@ -136,10 +132,11 @@ export async function POST(req: Request) {
         children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation,
+        firstname,
         lastname,
         email,
         country,
-        message: requestMessage || null,
+        message: message || null,
         newsletter,
         status: 'new',
       },
