@@ -89,9 +89,11 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   if (!request) notFound();
 
-  const settings = await prisma.hotelSettings.findFirst({
-    where: { hotelId: request.hotelId },
-  });
+  const settings = request.hotelId
+    ? await prisma.hotelSettings.findFirst({
+        where: { hotelId: request.hotelId },
+      })
+    : null;
 
   const cardRadius: number = settings?.cardRadius ?? 12;
   const buttonRadius: number = settings?.buttonRadius ?? 999;
