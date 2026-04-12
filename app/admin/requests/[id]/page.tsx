@@ -118,6 +118,21 @@ export default async function BookingDetailPage({ params }: PageProps) {
         maxWidth: 860,
       }}
     >
+      <a
+        href="/admin/requests"
+        style={{
+          display: 'inline-block',
+          marginBottom: 20,
+          padding: '8px 14px',
+          borderRadius: 999,
+          border: '1px solid #ccc',
+          textDecoration: 'none',
+          color: '#111',
+          background: '#fff',
+        }}
+      >
+        ← Zurück zur Übersicht
+      </a>
       <h1 style={{ marginBottom: 24 }}>Buchung #{request.id}</h1>
 
       <div
