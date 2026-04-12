@@ -1,4 +1,16 @@
 import { prisma } from '@/src/lib/prisma';
+import { NextResponse } from 'next/server';
+
+function withCors(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  return response;
+}
+
+export async function OPTIONS() {
+  return withCors(new NextResponse(null, { status: 204 }));
+}
 
 export async function GET(req: Request) {
   try {
@@ -6,9 +18,11 @@ export async function GET(req: Request) {
     const hotelSlug = searchParams.get('hotel');
 
     if (!hotelSlug) {
-      return Response.json(
-        { success: false, message: 'Hotel fehlt.' },
-        { status: 400 },
+      return withCors(
+        NextResponse.json(
+          { success: false, message: 'Missing hotel slug' },
+          { status: 400 },
+        ),
       );
     }
 
@@ -21,30 +35,33 @@ export async function GET(req: Request) {
     });
 
     if (!hotel) {
-      return Response.json(
-        { success: false, message: 'Hotel nicht gefunden.' },
-        { status: 404 },
+      return withCors(
+        NextResponse.json(
+          { success: false, message: 'Hotel not found' },
+          { status: 404 },
+        ),
       );
     }
 
-    const settings = await prisma.hotelSettings.findFirst({
+    const settings = await prisma.hotelSettings.findUnique({
       where: { hotelId: hotel.id },
     });
 
-    return Response.json({
-      success: true,
-      hotel: {
-        id: hotel.id,
-        name: hotel.name,
-      },
-      settings: settings || {},
-    });
+    return withCors(
+      NextResponse.json({
+        success: true,
+        hotel,
+        settings,
+      }),
+    );
   } catch (error) {
-    console.error(error);
+    console.error('hotel-settings GET error:', error);
 
-    return Response.json(
-      { success: false, message: 'Fehler beim Laden der Settings.' },
-      { status: 500 },
+    return withCors(
+      NextResponse.json(
+        { success: false, message: 'Server error' },
+        { status: 500 },
+      ),
     );
   }
 }
