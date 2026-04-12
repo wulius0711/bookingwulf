@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
 type PageProps = {
@@ -118,7 +119,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
         maxWidth: 860,
       }}
     >
-      <a
+      <Link
         href="/admin/requests"
         style={{
           display: 'inline-block',
@@ -132,7 +133,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
         }}
       >
         ← Zurück zur Übersicht
-      </a>
+      </Link>
       <h1 style={{ marginBottom: 24 }}>Buchung #{request.id}</h1>
 
       <div
