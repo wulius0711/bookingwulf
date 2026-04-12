@@ -68,14 +68,46 @@ async function duplicateApartment(formData: FormData) {
   redirect('/admin/apartments');
 }
 
-export default async function ApartmentsAdminPage() {
+type SearchParams = Promise<{
+  hotel?: string;
+}>;
+
+type PageProps = {
+  searchParams: SearchParams;
+};
+
+export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
+  const { hotel } = await searchParams;
+  const selectedHotelSlug = hotel?.trim() || '';
+
+  const hotels = await prisma.hotel.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      accentColor: true,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+
   const apartments = await prisma.apartment.findMany({
+    where: selectedHotelSlug
+      ? {
+          hotel: {
+            slug: selectedHotelSlug,
+          },
+        }
+      : undefined,
     include: {
       hotel: {
         select: {
           id: true,
           name: true,
           slug: true,
+          accentColor: true,
         },
       },
       images: {
@@ -93,25 +125,146 @@ export default async function ApartmentsAdminPage() {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'end',
           marginBottom: 24,
+          gap: 20,
+          flexWrap: 'wrap',
         }}
       >
-        <h1 style={{ margin: 0 }}>Apartments</h1>
+        <div>
+          <h1 style={{ margin: 0 }}>Apartments</h1>
+          <div style={{ marginTop: 8, fontSize: 13, color: '#666' }}>
+            {selectedHotelSlug
+              ? `Gefiltert nach Hotel: ${hotels.find((h) => h.slug === selectedHotelSlug)?.name || selectedHotelSlug}`
+              : 'Alle Hotels'}
+          </div>
+        </div>
 
-        <Link
-          href="/admin/apartments/new"
+        <div
           style={{
-            textDecoration: 'none',
-            padding: '12px 18px',
-            background: '#111',
-            color: '#fff',
-            borderRadius: 999,
+            display: 'flex',
+            gap: 12,
+            alignItems: 'end',
+            flexWrap: 'wrap',
           }}
         >
-          Neues Apartment
-        </Link>
+          <form method="GET">
+            <label
+              style={{
+                display: 'grid',
+                gap: 8,
+                fontSize: 13,
+                color: '#666',
+              }}
+            >
+              Hotel filtern
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <select
+                  name="hotel"
+                  defaultValue={selectedHotelSlug}
+                  style={{
+                    minWidth: 220,
+                    padding: '10px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: 10,
+                    background: '#fff',
+                    fontSize: 14,
+                  }}
+                >
+                  <option value="">Alle Hotels</option>
+                  {hotels.map((hotel) => (
+                    <option key={hotel.id} value={hotel.slug}>
+                      {hotel.name}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 999,
+                    border: '1px solid #111',
+                    background: '#111',
+                    color: '#fff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Anwenden
+                </button>
+
+                {selectedHotelSlug ? (
+                  <Link
+                    href="/admin/apartments"
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: 999,
+                      border: '1px solid #ccc',
+                      background: '#fff',
+                      color: '#111',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Reset
+                  </Link>
+                ) : null}
+              </div>
+            </label>
+          </form>
+
+          <Link
+            href="/admin/apartments/new"
+            style={{
+              textDecoration: 'none',
+              padding: '12px 18px',
+              background: '#111',
+              color: '#fff',
+              borderRadius: 999,
+            }}
+          >
+            Neues Apartment
+          </Link>
+        </div>
       </div>
+
+      {hotels.length > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            gap: 10,
+            flexWrap: 'wrap',
+            marginBottom: 20,
+          }}
+        >
+          {hotels.map((hotel) => (
+            <div
+              key={hotel.id}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '6px 10px',
+                borderRadius: 999,
+                border: '1px solid #eee',
+                background: '#fff',
+                fontSize: 12,
+                color: '#444',
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 999,
+                  background: hotel.accentColor || '#bbb',
+                  display: 'inline-block',
+                }}
+              />
+              {hotel.name}
+            </div>
+          ))}
+        </div>
+      )}
 
       {apartments.length === 0 ? (
         <p>Noch keine Apartments vorhanden.</p>
@@ -138,20 +291,34 @@ export default async function ApartmentsAdminPage() {
                   marginBottom: 8,
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: 20 }}>{a.name}</div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 20 }}>{a.name}</div>
 
-                <div
-                  style={{
-                    padding: '6px 10px',
-                    borderRadius: 999,
-                    background: '#f4f4f4',
-                    fontSize: 12,
-                    color: '#555',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {a.hotel?.name ?? 'Kein Hotel'}{' '}
-                  {a.hotel?.slug ? `(${a.hotel.slug})` : ''}
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      marginTop: 6,
+                      padding: '4px 10px',
+                      borderRadius: 999,
+                      background: a.hotel?.accentColor || '#eee',
+                      color: '#fafafa',
+                      fontSize: 11,
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 999,
+                        background: 'rgba(255,255,255,0.9)',
+                        display: 'inline-block',
+                      }}
+                    />
+                    {a.hotel?.name ?? 'Kein Hotel'}
+                  </div>
                 </div>
               </div>
 

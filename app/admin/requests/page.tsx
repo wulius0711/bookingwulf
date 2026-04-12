@@ -36,12 +36,44 @@ function getStatusBadge(status: string) {
   }
 }
 
-export default async function RequestsPage() {
+type SearchParams = Promise<{
+  hotel?: string;
+}>;
+
+type PageProps = {
+  searchParams: SearchParams;
+};
+
+export default async function RequestsPage({ searchParams }: PageProps) {
+  const { hotel } = await searchParams;
+  const selectedHotelSlug = hotel?.trim() || '';
+
+  const hotels = await prisma.hotel.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      accentColor: true,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+
   const requests = await prisma.request.findMany({
+    where: selectedHotelSlug
+      ? {
+          hotel: {
+            slug: selectedHotelSlug,
+          },
+        }
+      : undefined,
     include: {
       hotel: {
         select: {
           name: true,
+          slug: true,
           accentColor: true,
         },
       },
@@ -53,10 +85,131 @@ export default async function RequestsPage() {
 
   return (
     <main style={{ padding: 40, fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ marginBottom: 24 }}>Buchungen</h1>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'end',
+          gap: 20,
+          flexWrap: 'wrap',
+          marginBottom: 24,
+        }}
+      >
+        <div>
+          <h1 style={{ margin: 0 }}>Buchungen</h1>
+          <div style={{ marginTop: 8, fontSize: 13, color: '#666' }}>
+            {selectedHotelSlug
+              ? `Gefiltert nach Hotel: ${hotels.find((h) => h.slug === selectedHotelSlug)?.name || selectedHotelSlug}`
+              : 'Alle Hotels'}
+          </div>
+        </div>
+
+        <form method="GET">
+          <label
+            style={{
+              display: 'grid',
+              gap: 8,
+              fontSize: 13,
+              color: '#666',
+            }}
+          >
+            Hotel filtern
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <select
+                name="hotel"
+                defaultValue={selectedHotelSlug}
+                style={{
+                  minWidth: 220,
+                  padding: '10px 12px',
+                  border: '1px solid #ddd',
+                  borderRadius: 10,
+                  background: '#fff',
+                  fontSize: 14,
+                }}
+              >
+                <option value="">Alle Hotels</option>
+                {hotels.map((hotel) => (
+                  <option key={hotel.id} value={hotel.slug}>
+                    {hotel.name}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="submit"
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: 999,
+                  border: '1px solid #111',
+                  background: '#111',
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                Anwenden
+              </button>
+
+              {selectedHotelSlug ? (
+                <Link
+                  href="/admin/requests"
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 999,
+                    border: '1px solid #ccc',
+                    background: '#fff',
+                    color: '#111',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Reset
+                </Link>
+              ) : null}
+            </div>
+          </label>
+        </form>
+      </div>
+
+      {hotels.length > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            gap: 10,
+            flexWrap: 'wrap',
+            marginBottom: 20,
+          }}
+        >
+          {hotels.map((hotel) => (
+            <div
+              key={hotel.id}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '6px 10px',
+                borderRadius: 999,
+                border: '1px solid #eee',
+                background: '#fff',
+                fontSize: 12,
+                color: '#444',
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 999,
+                  background: hotel.accentColor || '#bbb',
+                  display: 'inline-block',
+                }}
+              />
+              {hotel.name}
+            </div>
+          ))}
+        </div>
+      )}
 
       {requests.length === 0 ? (
-        <p>Noch keine Buchungen vorhanden.</p>
+        <p>Keine Buchungen vorhanden.</p>
       ) : (
         <div style={{ display: 'grid', gap: 16 }}>
           {requests.map((r) => {
@@ -90,23 +243,36 @@ export default async function RequestsPage() {
                       marginBottom: 8,
                     }}
                   >
-                    <div style={{ fontWeight: 600 }}>
-                      {r.firstname || ''} {r.lastname}
-                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>
+                        {r.firstname || ''} {r.lastname}
+                      </div>
 
-                    <div
-                      style={{
-                        display: 'inline-block',
-                        marginTop: 4,
-                        padding: '4px 10px',
-                        borderRadius: 999,
-                        background: r.hotel?.accentColor || '#eee',
-                        color: '#fafafa',
-                        fontSize: 11,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {r.hotel?.name}
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          marginTop: 4,
+                          padding: '4px 10px',
+                          borderRadius: 999,
+                          background: r.hotel?.accentColor || '#eee',
+                          color: '#fafafa',
+                          fontSize: 11,
+                          fontWeight: 600,
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: 999,
+                            background: 'rgba(255,255,255,0.9)',
+                            display: 'inline-block',
+                          }}
+                        />
+                        {r.hotel?.name}
+                      </div>
                     </div>
 
                     <div
