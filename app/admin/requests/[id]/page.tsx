@@ -79,7 +79,10 @@ export default async function BookingDetailPage({ params }: PageProps) {
     where: { id: requestId },
     include: {
       hotel: {
-        select: { name: true },
+        select: {
+          name: true,
+          accentColor: true,
+        },
       },
     },
   });
