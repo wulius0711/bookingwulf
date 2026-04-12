@@ -161,7 +161,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
             style={{
               padding: '6px 12px',
               borderRadius: 999,
-              background: '#f5f5f5',
+              background: request.hotel?.accentColor || '#f5f5f5',
               fontSize: 12,
               fontWeight: 600,
             }}

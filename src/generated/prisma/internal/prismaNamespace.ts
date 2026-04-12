@@ -1046,6 +1046,7 @@ export const HotelScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  accentColor: 'accentColor',
   email: 'email',
   phone: 'phone',
   isActive: 'isActive',

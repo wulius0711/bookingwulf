@@ -38,6 +38,7 @@ export type HotelMinAggregateOutputType = {
   id: number | null
   name: string | null
   slug: string | null
+  accentColor: string | null
   email: string | null
   phone: string | null
   isActive: boolean | null
@@ -49,6 +50,7 @@ export type HotelMaxAggregateOutputType = {
   id: number | null
   name: string | null
   slug: string | null
+  accentColor: string | null
   email: string | null
   phone: string | null
   isActive: boolean | null
@@ -60,6 +62,7 @@ export type HotelCountAggregateOutputType = {
   id: number
   name: number
   slug: number
+  accentColor: number
   email: number
   phone: number
   isActive: number
@@ -81,6 +84,7 @@ export type HotelMinAggregateInputType = {
   id?: true
   name?: true
   slug?: true
+  accentColor?: true
   email?: true
   phone?: true
   isActive?: true
@@ -92,6 +96,7 @@ export type HotelMaxAggregateInputType = {
   id?: true
   name?: true
   slug?: true
+  accentColor?: true
   email?: true
   phone?: true
   isActive?: true
@@ -103,6 +108,7 @@ export type HotelCountAggregateInputType = {
   id?: true
   name?: true
   slug?: true
+  accentColor?: true
   email?: true
   phone?: true
   isActive?: true
@@ -201,6 +207,7 @@ export type HotelGroupByOutputType = {
   id: number
   name: string
   slug: string
+  accentColor: string | null
   email: string | null
   phone: string | null
   isActive: boolean
@@ -235,6 +242,7 @@ export type HotelWhereInput = {
   id?: Prisma.IntFilter<"Hotel"> | number
   name?: Prisma.StringFilter<"Hotel"> | string
   slug?: Prisma.StringFilter<"Hotel"> | string
+  accentColor?: Prisma.StringNullableFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
@@ -251,6 +259,7 @@ export type HotelOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -270,6 +279,7 @@ export type HotelWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.HotelWhereInput[]
   NOT?: Prisma.HotelWhereInput | Prisma.HotelWhereInput[]
   name?: Prisma.StringFilter<"Hotel"> | string
+  accentColor?: Prisma.StringNullableFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
@@ -286,6 +296,7 @@ export type HotelOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -305,6 +316,7 @@ export type HotelScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Hotel"> | number
   name?: Prisma.StringWithAggregatesFilter<"Hotel"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Hotel"> | string
+  accentColor?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Hotel"> | boolean
@@ -315,6 +327,7 @@ export type HotelScalarWhereWithAggregatesInput = {
 export type HotelCreateInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -331,6 +344,7 @@ export type HotelUncheckedCreateInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -346,6 +360,7 @@ export type HotelUncheckedCreateInput = {
 export type HotelUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -362,6 +377,7 @@ export type HotelUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -378,6 +394,7 @@ export type HotelCreateManyInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -388,6 +405,7 @@ export type HotelCreateManyInput = {
 export type HotelUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -399,6 +417,7 @@ export type HotelUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -410,6 +429,7 @@ export type HotelCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -425,6 +445,7 @@ export type HotelMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -436,6 +457,7 @@ export type HotelMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -560,6 +582,7 @@ export type HotelUpdateOneWithoutAdminUsersNestedInput = {
 export type HotelCreateWithoutSettingsInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -575,6 +598,7 @@ export type HotelUncheckedCreateWithoutSettingsInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -605,6 +629,7 @@ export type HotelUpdateToOneWithWhereWithoutSettingsInput = {
 export type HotelUpdateWithoutSettingsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -620,6 +645,7 @@ export type HotelUncheckedUpdateWithoutSettingsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -634,6 +660,7 @@ export type HotelUncheckedUpdateWithoutSettingsInput = {
 export type HotelCreateWithoutApartmentsInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -649,6 +676,7 @@ export type HotelUncheckedCreateWithoutApartmentsInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -679,6 +707,7 @@ export type HotelUpdateToOneWithWhereWithoutApartmentsInput = {
 export type HotelUpdateWithoutApartmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -694,6 +723,7 @@ export type HotelUncheckedUpdateWithoutApartmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -708,6 +738,7 @@ export type HotelUncheckedUpdateWithoutApartmentsInput = {
 export type HotelCreateWithoutBlockedRangesInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -723,6 +754,7 @@ export type HotelUncheckedCreateWithoutBlockedRangesInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -753,6 +785,7 @@ export type HotelUpdateToOneWithWhereWithoutBlockedRangesInput = {
 export type HotelUpdateWithoutBlockedRangesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -768,6 +801,7 @@ export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -782,6 +816,7 @@ export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
 export type HotelCreateWithoutRequestsInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -797,6 +832,7 @@ export type HotelUncheckedCreateWithoutRequestsInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -827,6 +863,7 @@ export type HotelUpdateToOneWithWhereWithoutRequestsInput = {
 export type HotelUpdateWithoutRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -842,6 +879,7 @@ export type HotelUncheckedUpdateWithoutRequestsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -856,6 +894,7 @@ export type HotelUncheckedUpdateWithoutRequestsInput = {
 export type HotelCreateWithoutAdminUsersInput = {
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -871,6 +910,7 @@ export type HotelUncheckedCreateWithoutAdminUsersInput = {
   id?: number
   name: string
   slug: string
+  accentColor?: string | null
   email?: string | null
   phone?: string | null
   isActive?: boolean
@@ -901,6 +941,7 @@ export type HotelUpdateToOneWithWhereWithoutAdminUsersInput = {
 export type HotelUpdateWithoutAdminUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -916,6 +957,7 @@ export type HotelUncheckedUpdateWithoutAdminUsersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -989,6 +1031,7 @@ export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   name?: boolean
   slug?: boolean
+  accentColor?: boolean
   email?: boolean
   phone?: boolean
   isActive?: boolean
@@ -1006,6 +1049,7 @@ export type HotelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   name?: boolean
   slug?: boolean
+  accentColor?: boolean
   email?: boolean
   phone?: boolean
   isActive?: boolean
@@ -1017,6 +1061,7 @@ export type HotelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   name?: boolean
   slug?: boolean
+  accentColor?: boolean
   email?: boolean
   phone?: boolean
   isActive?: boolean
@@ -1028,6 +1073,7 @@ export type HotelSelectScalar = {
   id?: boolean
   name?: boolean
   slug?: boolean
+  accentColor?: boolean
   email?: boolean
   phone?: boolean
   isActive?: boolean
@@ -1035,7 +1081,7 @@ export type HotelSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hotel"]>
+export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "accentColor" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hotel"]>
 export type HotelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settings?: boolean | Prisma.Hotel$settingsArgs<ExtArgs>
   apartments?: boolean | Prisma.Hotel$apartmentsArgs<ExtArgs>
@@ -1060,6 +1106,7 @@ export type $HotelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: number
     name: string
     slug: string
+    accentColor: string | null
     email: string | null
     phone: string | null
     isActive: boolean
@@ -1496,6 +1543,7 @@ export interface HotelFieldRefs {
   readonly id: Prisma.FieldRef<"Hotel", 'Int'>
   readonly name: Prisma.FieldRef<"Hotel", 'String'>
   readonly slug: Prisma.FieldRef<"Hotel", 'String'>
+  readonly accentColor: Prisma.FieldRef<"Hotel", 'String'>
   readonly email: Prisma.FieldRef<"Hotel", 'String'>
   readonly phone: Prisma.FieldRef<"Hotel", 'String'>
   readonly isActive: Prisma.FieldRef<"Hotel", 'Boolean'>
