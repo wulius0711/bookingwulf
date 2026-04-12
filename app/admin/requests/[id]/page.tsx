@@ -162,12 +162,15 @@ export default async function BookingDetailPage({ params }: PageProps) {
             flexWrap: 'wrap',
           }}
         >
-          <div>
-            <strong>Name:</strong> {request.firstname || ''} {request.lastname}
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div>
+              <strong>Name:</strong> {request.firstname || ''}{' '}
+              {request.lastname}
+            </div>
 
-          <div>
-            <strong>Hotel:</strong> {request.hotel?.name || '—'}
+            <div>
+              <strong>Hotel:</strong> {request.hotel?.name || '—'}
+            </div>
           </div>
 
           <div
