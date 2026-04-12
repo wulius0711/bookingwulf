@@ -42,6 +42,7 @@ export default async function RequestsPage() {
       hotel: {
         select: {
           name: true,
+          accentColor: true,
         },
       },
     },
