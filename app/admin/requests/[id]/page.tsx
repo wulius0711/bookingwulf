@@ -89,6 +89,10 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   if (!request) notFound();
 
+  const settings = await prisma.hotelSettings.findUnique({
+    where: { hotelId: request.hotelId },
+  });
+
   const apartmentIds = parseApartmentIds(request.selectedApartmentIds);
 
   const apartments =
