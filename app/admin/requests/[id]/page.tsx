@@ -167,6 +167,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
               background: request.hotel?.accentColor || '#f5f5f5',
               fontSize: 12,
               fontWeight: 600,
+              color: '#000',
             }}
           >
             {request.hotel?.name || '—'}
