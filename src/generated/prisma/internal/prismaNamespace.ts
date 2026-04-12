@@ -1070,6 +1070,12 @@ export const HotelSettingsScalarFieldEnum = {
   enableLightbox: 'enableLightbox',
   accentColor: 'accentColor',
   backgroundColor: 'backgroundColor',
+  cardBackground: 'cardBackground',
+  textColor: 'textColor',
+  mutedTextColor: 'mutedTextColor',
+  borderColor: 'borderColor',
+  cardRadius: 'cardRadius',
+  buttonRadius: 'buttonRadius',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

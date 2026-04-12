@@ -29,11 +29,15 @@ export type AggregateHotelSettings = {
 export type HotelSettingsAvgAggregateOutputType = {
   id: number | null
   hotelId: number | null
+  cardRadius: number | null
+  buttonRadius: number | null
 }
 
 export type HotelSettingsSumAggregateOutputType = {
   id: number | null
   hotelId: number | null
+  cardRadius: number | null
+  buttonRadius: number | null
 }
 
 export type HotelSettingsMinAggregateOutputType = {
@@ -49,6 +53,12 @@ export type HotelSettingsMinAggregateOutputType = {
   enableLightbox: boolean | null
   accentColor: string | null
   backgroundColor: string | null
+  cardBackground: string | null
+  textColor: string | null
+  mutedTextColor: string | null
+  borderColor: string | null
+  cardRadius: number | null
+  buttonRadius: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +76,12 @@ export type HotelSettingsMaxAggregateOutputType = {
   enableLightbox: boolean | null
   accentColor: string | null
   backgroundColor: string | null
+  cardBackground: string | null
+  textColor: string | null
+  mutedTextColor: string | null
+  borderColor: string | null
+  cardRadius: number | null
+  buttonRadius: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -83,6 +99,12 @@ export type HotelSettingsCountAggregateOutputType = {
   enableLightbox: number
   accentColor: number
   backgroundColor: number
+  cardBackground: number
+  textColor: number
+  mutedTextColor: number
+  borderColor: number
+  cardRadius: number
+  buttonRadius: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,11 +114,15 @@ export type HotelSettingsCountAggregateOutputType = {
 export type HotelSettingsAvgAggregateInputType = {
   id?: true
   hotelId?: true
+  cardRadius?: true
+  buttonRadius?: true
 }
 
 export type HotelSettingsSumAggregateInputType = {
   id?: true
   hotelId?: true
+  cardRadius?: true
+  buttonRadius?: true
 }
 
 export type HotelSettingsMinAggregateInputType = {
@@ -112,6 +138,12 @@ export type HotelSettingsMinAggregateInputType = {
   enableLightbox?: true
   accentColor?: true
   backgroundColor?: true
+  cardBackground?: true
+  textColor?: true
+  mutedTextColor?: true
+  borderColor?: true
+  cardRadius?: true
+  buttonRadius?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -129,6 +161,12 @@ export type HotelSettingsMaxAggregateInputType = {
   enableLightbox?: true
   accentColor?: true
   backgroundColor?: true
+  cardBackground?: true
+  textColor?: true
+  mutedTextColor?: true
+  borderColor?: true
+  cardRadius?: true
+  buttonRadius?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -146,6 +184,12 @@ export type HotelSettingsCountAggregateInputType = {
   enableLightbox?: true
   accentColor?: true
   backgroundColor?: true
+  cardBackground?: true
+  textColor?: true
+  mutedTextColor?: true
+  borderColor?: true
+  cardRadius?: true
+  buttonRadius?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -250,6 +294,12 @@ export type HotelSettingsGroupByOutputType = {
   enableLightbox: boolean
   accentColor: string | null
   backgroundColor: string | null
+  cardBackground: string | null
+  textColor: string | null
+  mutedTextColor: string | null
+  borderColor: string | null
+  cardRadius: number | null
+  buttonRadius: number | null
   createdAt: Date
   updatedAt: Date
   _count: HotelSettingsCountAggregateOutputType | null
@@ -290,6 +340,12 @@ export type HotelSettingsWhereInput = {
   enableLightbox?: Prisma.BoolFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  cardBackground?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  textColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  mutedTextColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  borderColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  cardRadius?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
+  buttonRadius?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   createdAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -308,6 +364,12 @@ export type HotelSettingsOrderByWithRelationInput = {
   enableLightbox?: Prisma.SortOrder
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardBackground?: Prisma.SortOrderInput | Prisma.SortOrder
+  textColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  mutedTextColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  borderColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardRadius?: Prisma.SortOrderInput | Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
@@ -329,6 +391,12 @@ export type HotelSettingsWhereUniqueInput = Prisma.AtLeast<{
   enableLightbox?: Prisma.BoolFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  cardBackground?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  textColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  mutedTextColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  borderColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
+  cardRadius?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
+  buttonRadius?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   createdAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -347,6 +415,12 @@ export type HotelSettingsOrderByWithAggregationInput = {
   enableLightbox?: Prisma.SortOrder
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardBackground?: Prisma.SortOrderInput | Prisma.SortOrder
+  textColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  mutedTextColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  borderColor?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardRadius?: Prisma.SortOrderInput | Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HotelSettingsCountOrderByAggregateInput
@@ -372,6 +446,12 @@ export type HotelSettingsScalarWhereWithAggregatesInput = {
   enableLightbox?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
+  cardBackground?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
+  textColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
+  mutedTextColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
+  borderColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
+  cardRadius?: Prisma.IntNullableWithAggregatesFilter<"HotelSettings"> | number | null
+  buttonRadius?: Prisma.IntNullableWithAggregatesFilter<"HotelSettings"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HotelSettings"> | Date | string
 }
@@ -387,6 +467,12 @@ export type HotelSettingsCreateInput = {
   enableLightbox?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
+  cardBackground?: string | null
+  textColor?: string | null
+  mutedTextColor?: string | null
+  borderColor?: string | null
+  cardRadius?: number | null
+  buttonRadius?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel: Prisma.HotelCreateNestedOneWithoutSettingsInput
@@ -405,6 +491,12 @@ export type HotelSettingsUncheckedCreateInput = {
   enableLightbox?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
+  cardBackground?: string | null
+  textColor?: string | null
+  mutedTextColor?: string | null
+  borderColor?: string | null
+  cardRadius?: number | null
+  buttonRadius?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -420,6 +512,12 @@ export type HotelSettingsUpdateInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneRequiredWithoutSettingsNestedInput
@@ -438,6 +536,12 @@ export type HotelSettingsUncheckedUpdateInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +559,12 @@ export type HotelSettingsCreateManyInput = {
   enableLightbox?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
+  cardBackground?: string | null
+  textColor?: string | null
+  mutedTextColor?: string | null
+  borderColor?: string | null
+  cardRadius?: number | null
+  buttonRadius?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -470,6 +580,12 @@ export type HotelSettingsUpdateManyMutationInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -487,6 +603,12 @@ export type HotelSettingsUncheckedUpdateManyInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -509,6 +631,12 @@ export type HotelSettingsCountOrderByAggregateInput = {
   enableLightbox?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
+  cardBackground?: Prisma.SortOrder
+  textColor?: Prisma.SortOrder
+  mutedTextColor?: Prisma.SortOrder
+  borderColor?: Prisma.SortOrder
+  cardRadius?: Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -516,6 +644,8 @@ export type HotelSettingsCountOrderByAggregateInput = {
 export type HotelSettingsAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   hotelId?: Prisma.SortOrder
+  cardRadius?: Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrder
 }
 
 export type HotelSettingsMaxOrderByAggregateInput = {
@@ -531,6 +661,12 @@ export type HotelSettingsMaxOrderByAggregateInput = {
   enableLightbox?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
+  cardBackground?: Prisma.SortOrder
+  textColor?: Prisma.SortOrder
+  mutedTextColor?: Prisma.SortOrder
+  borderColor?: Prisma.SortOrder
+  cardRadius?: Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -548,6 +684,12 @@ export type HotelSettingsMinOrderByAggregateInput = {
   enableLightbox?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
+  cardBackground?: Prisma.SortOrder
+  textColor?: Prisma.SortOrder
+  mutedTextColor?: Prisma.SortOrder
+  borderColor?: Prisma.SortOrder
+  cardRadius?: Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -555,6 +697,8 @@ export type HotelSettingsMinOrderByAggregateInput = {
 export type HotelSettingsSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   hotelId?: Prisma.SortOrder
+  cardRadius?: Prisma.SortOrder
+  buttonRadius?: Prisma.SortOrder
 }
 
 export type HotelSettingsCreateNestedOneWithoutHotelInput = {
@@ -589,6 +733,14 @@ export type HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HotelSettingsUpdateToOneWithWhereWithoutHotelInput, Prisma.HotelSettingsUpdateWithoutHotelInput>, Prisma.HotelSettingsUncheckedUpdateWithoutHotelInput>
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type HotelSettingsCreateWithoutHotelInput = {
   showPrices?: boolean
   allowMultiSelect?: boolean
@@ -600,6 +752,12 @@ export type HotelSettingsCreateWithoutHotelInput = {
   enableLightbox?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
+  cardBackground?: string | null
+  textColor?: string | null
+  mutedTextColor?: string | null
+  borderColor?: string | null
+  cardRadius?: number | null
+  buttonRadius?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -616,6 +774,12 @@ export type HotelSettingsUncheckedCreateWithoutHotelInput = {
   enableLightbox?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
+  cardBackground?: string | null
+  textColor?: string | null
+  mutedTextColor?: string | null
+  borderColor?: string | null
+  cardRadius?: number | null
+  buttonRadius?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -647,6 +811,12 @@ export type HotelSettingsUpdateWithoutHotelInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -663,6 +833,12 @@ export type HotelSettingsUncheckedUpdateWithoutHotelInput = {
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  textColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mutedTextColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  borderColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  buttonRadius?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -682,6 +858,12 @@ export type HotelSettingsSelect<ExtArgs extends runtime.Types.Extensions.Interna
   enableLightbox?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
+  cardBackground?: boolean
+  textColor?: boolean
+  mutedTextColor?: boolean
+  borderColor?: boolean
+  cardRadius?: boolean
+  buttonRadius?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -700,6 +882,12 @@ export type HotelSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   enableLightbox?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
+  cardBackground?: boolean
+  textColor?: boolean
+  mutedTextColor?: boolean
+  borderColor?: boolean
+  cardRadius?: boolean
+  buttonRadius?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -718,6 +906,12 @@ export type HotelSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   enableLightbox?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
+  cardBackground?: boolean
+  textColor?: boolean
+  mutedTextColor?: boolean
+  borderColor?: boolean
+  cardRadius?: boolean
+  buttonRadius?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -736,11 +930,17 @@ export type HotelSettingsSelectScalar = {
   enableLightbox?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
+  cardBackground?: boolean
+  textColor?: boolean
+  mutedTextColor?: boolean
+  borderColor?: boolean
+  cardRadius?: boolean
+  buttonRadius?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "accentColor" | "backgroundColor" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
+export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "accentColor" | "backgroundColor" | "cardBackground" | "textColor" | "mutedTextColor" | "borderColor" | "cardRadius" | "buttonRadius" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
 export type HotelSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -769,6 +969,12 @@ export type $HotelSettingsPayload<ExtArgs extends runtime.Types.Extensions.Inter
     enableLightbox: boolean
     accentColor: string | null
     backgroundColor: string | null
+    cardBackground: string | null
+    textColor: string | null
+    mutedTextColor: string | null
+    borderColor: string | null
+    cardRadius: number | null
+    buttonRadius: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["hotelSettings"]>
@@ -1207,6 +1413,12 @@ export interface HotelSettingsFieldRefs {
   readonly enableLightbox: Prisma.FieldRef<"HotelSettings", 'Boolean'>
   readonly accentColor: Prisma.FieldRef<"HotelSettings", 'String'>
   readonly backgroundColor: Prisma.FieldRef<"HotelSettings", 'String'>
+  readonly cardBackground: Prisma.FieldRef<"HotelSettings", 'String'>
+  readonly textColor: Prisma.FieldRef<"HotelSettings", 'String'>
+  readonly mutedTextColor: Prisma.FieldRef<"HotelSettings", 'String'>
+  readonly borderColor: Prisma.FieldRef<"HotelSettings", 'String'>
+  readonly cardRadius: Prisma.FieldRef<"HotelSettings", 'Int'>
+  readonly buttonRadius: Prisma.FieldRef<"HotelSettings", 'Int'>
   readonly createdAt: Prisma.FieldRef<"HotelSettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HotelSettings", 'DateTime'>
 }
