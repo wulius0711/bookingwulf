@@ -30,6 +30,7 @@ model HotelSettings {
   hotelId Int   @unique
   hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
+  // 🔧 Feature Toggles
   showPrices        Boolean @default(true)
   allowMultiSelect  Boolean @default(false)
   showAmenities     Boolean @default(true)
@@ -39,8 +40,22 @@ model HotelSettings {
   enableImageSlider Boolean @default(true)
   enableLightbox    Boolean @default(true)
 
-  accentColor     String?
-  backgroundColor String?
+  // 🎨 Colors
+  accentColor      String?  // Primary highlight
+  backgroundColor  String?  // App background
+  cardBackground   String?  // Card background
+  textColor        String?  // Main text
+  mutedTextColor   String?  // Secondary text (#666)
+  borderColor      String?  // Borders / dividers
+
+  // 💠 UI Shape
+  cardRadius   Int?  // z.B. 8 / 12 / 16
+  buttonRadius Int?  // optional getrennt
+
+  // 🧩 Optional später
+  // buttonStyle   String? // 'filled' | 'outline'
+  // fontFamily    String?
+  // spacingScale  String? // 'tight' | 'normal' | 'airy'
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
