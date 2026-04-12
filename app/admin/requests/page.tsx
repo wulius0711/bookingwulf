@@ -93,7 +93,18 @@ export default async function RequestsPage() {
                       {r.firstname || ''} {r.lastname}
                     </div>
 
-                    <div style={{ fontSize: 13, color: '#666' }}>
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        marginTop: 4,
+                        padding: '4px 10px',
+                        borderRadius: 999,
+                        background: r.hotel?.accentColor || '#eee',
+                        color: '#fafafa',
+                        fontSize: 11,
+                        fontWeight: 600,
+                      }}
+                    >
                       {r.hotel?.name}
                     </div>
 
