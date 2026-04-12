@@ -80,6 +80,13 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   const request = await prisma.request.findUnique({
     where: { id: requestId },
+    include: {
+      hotel: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
   if (!request) {
@@ -157,6 +164,10 @@ export default async function BookingDetailPage({ params }: PageProps) {
         >
           <div>
             <strong>Name:</strong> {request.firstname || ''} {request.lastname}
+          </div>
+
+          <div>
+            <strong>Hotel:</strong> {request.hotel?.name || '—'}
           </div>
 
           <div

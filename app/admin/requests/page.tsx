@@ -38,6 +38,13 @@ function getStatusBadge(status: string) {
 
 export default async function RequestsPage() {
   const requests = await prisma.request.findMany({
+    include: {
+      hotel: {
+        select: {
+          name: true,
+        },
+      },
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -84,6 +91,10 @@ export default async function RequestsPage() {
                   >
                     <div style={{ fontWeight: 600 }}>
                       {r.firstname || ''} {r.lastname}
+                    </div>
+
+                    <div style={{ fontSize: 13, color: '#666' }}>
+                      {r.hotel?.name}
                     </div>
 
                     <div
