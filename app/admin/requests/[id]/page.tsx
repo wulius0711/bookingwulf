@@ -23,15 +23,10 @@ async function updateBookingStatus(formData: FormData) {
   const id = Number(formData.get('id'));
   const status = String(formData.get('status') || '').trim();
 
-  if (!id || !status) {
-    return;
-  }
+  if (!id || !status) return;
 
-  const allowedStatuses = ['new', 'answered', 'booked', 'cancelled'];
-
-  if (!allowedStatuses.includes(status)) {
-    return;
-  }
+  const allowed = ['new', 'answered', 'booked', 'cancelled'];
+  if (!allowed.includes(status)) return;
 
   await prisma.request.update({
     where: { id },
@@ -41,29 +36,33 @@ async function updateBookingStatus(formData: FormData) {
   redirect(`/admin/requests/${id}`);
 }
 
-function getStatusBadgeColor(status: string) {
+function getStatusBadge(status: string) {
   switch (status) {
     case 'booked':
       return {
-        background: '#e8f5e9',
+        label: 'Gebucht',
+        bg: '#e8f5e9',
         color: '#256029',
         border: '#b7dfba',
       };
     case 'answered':
       return {
-        background: '#eaf2ff',
+        label: 'Beantwortet',
+        bg: '#eaf2ff',
         color: '#2457a6',
         border: '#bfd4fb',
       };
     case 'cancelled':
       return {
-        background: '#fdecec',
+        label: 'Storniert',
+        bg: '#fdecec',
         color: '#a63b3b',
         border: '#f3c3c3',
       };
     default:
       return {
-        background: '#f4f4f4',
+        label: 'Neu',
+        bg: '#f4f4f4',
         color: '#555',
         border: '#ddd',
       };
@@ -74,58 +73,46 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const { id } = await params;
   const requestId = parseInt(id, 10);
 
-  if (!Number.isInteger(requestId)) {
-    notFound();
-  }
+  if (!Number.isInteger(requestId)) notFound();
 
   const request = await prisma.request.findUnique({
     where: { id: requestId },
     include: {
       hotel: {
-        select: {
-          name: true,
-        },
+        select: { name: true },
       },
     },
   });
 
-  if (!request) {
-    notFound();
-  }
+  if (!request) notFound();
 
   const apartmentIds = parseApartmentIds(request.selectedApartmentIds);
 
   const apartments =
     apartmentIds.length > 0
       ? await prisma.apartment.findMany({
-          where: {
-            id: { in: apartmentIds },
-          },
-          select: {
-            id: true,
-            name: true,
-          },
+          where: { id: { in: apartmentIds } },
+          select: { id: true, name: true },
         })
       : [];
 
   const apartmentNames = apartmentIds
     .map(
-      (id) =>
-        apartments.find((apartment) => apartment.id === id)?.name ||
-        `Apartment #${id}`,
+      (id) => apartments.find((a) => a.id === id)?.name || `Apartment #${id}`,
     )
     .join(', ');
 
-  const badge = getStatusBadgeColor(request.status);
+  const badge = getStatusBadge(request.status);
 
   return (
     <main
       style={{
         padding: 40,
         fontFamily: 'Arial, sans-serif',
-        maxWidth: 860,
+        maxWidth: 900,
       }}
     >
+      {/* 🔙 Back */}
       <Link
         href="/admin/requests"
         style={{
@@ -141,6 +128,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
       >
         ← Zurück zur Übersicht
       </Link>
+
       <h1 style={{ marginBottom: 24 }}>Buchung #{request.id}</h1>
 
       <div
@@ -153,42 +141,48 @@ export default async function BookingDetailPage({ params }: PageProps) {
           background: '#fff',
         }}
       >
+        {/* 🔥 HEADER ROW */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            gap: 16,
             alignItems: 'center',
+            gap: 16,
             flexWrap: 'wrap',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <div>
-              <strong>Name:</strong> {request.firstname || ''}{' '}
-              {request.lastname}
-            </div>
-
-            <div>
-              <strong>Hotel:</strong> {request.hotel?.name || '—'}
-            </div>
+          {/* Name */}
+          <div>
+            <strong>Name:</strong> {request.firstname || ''} {request.lastname}
           </div>
 
+          {/* Hotel Badge */}
           <div
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '8px 12px',
+              padding: '6px 12px',
               borderRadius: 999,
-              background: badge.background,
-              color: badge.color,
-              border: `1px solid ${badge.border}`,
-              fontSize: 13,
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
+              background: '#f5f5f5',
+              fontSize: 12,
+              fontWeight: 600,
             }}
           >
-            {request.status}
+            {request.hotel?.name || '—'}
+          </div>
+
+          {/* Status Badge */}
+          <div
+            style={{
+              padding: '8px 12px',
+              borderRadius: 999,
+              background: badge.bg,
+              color: badge.color,
+              border: `1px solid ${badge.border}`,
+              fontSize: 12,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+            }}
+          >
+            {badge.label}
           </div>
         </div>
 
@@ -222,48 +216,41 @@ export default async function BookingDetailPage({ params }: PageProps) {
         {request.message && (
           <div>
             <strong>Mitteilung:</strong>
-            <div style={{ marginTop: 6, lineHeight: 1.5 }}>
-              {request.message}
-            </div>
+            <div style={{ marginTop: 6 }}>{request.message}</div>
           </div>
         )}
 
+        {/* 🔘 Status Buttons */}
         <div>
           <strong>Status ändern:</strong>
-          <div
-            style={{
-              display: 'flex',
-              gap: 10,
-              flexWrap: 'wrap',
-              marginTop: 10,
-            }}
-          >
+
+          <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
             {[
               { value: 'new', label: 'Neu' },
               { value: 'answered', label: 'Beantwortet' },
               { value: 'booked', label: 'Gebucht' },
               { value: 'cancelled', label: 'Storniert' },
-            ].map((item) => {
-              const isActive = request.status === item.value;
+            ].map((s) => {
+              const active = request.status === s.value;
 
               return (
-                <form action={updateBookingStatus} key={item.value}>
+                <form key={s.value} action={updateBookingStatus}>
                   <input type="hidden" name="id" value={request.id} />
-                  <input type="hidden" name="status" value={item.value} />
+                  <input type="hidden" name="status" value={s.value} />
+
                   <button
                     type="submit"
-                    disabled={isActive}
+                    disabled={active}
                     style={{
                       padding: '10px 14px',
                       borderRadius: 999,
-                      border: isActive ? '1px solid #111' : '1px solid #ccc',
-                      background: isActive ? '#111' : '#fff',
-                      color: isActive ? '#fff' : '#111',
-                      cursor: isActive ? 'default' : 'pointer',
-                      opacity: isActive ? 0.9 : 1,
+                      border: active ? '1px solid #111' : '1px solid #ccc',
+                      background: active ? '#111' : '#fff',
+                      color: active ? '#fff' : '#111',
+                      cursor: active ? 'default' : 'pointer',
                     }}
                   >
-                    {item.label}
+                    {s.label}
                   </button>
                 </form>
               );
@@ -271,13 +258,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div
-          style={{
-            marginTop: 8,
-            fontSize: 12,
-            color: '#666',
-          }}
-        >
+        <div style={{ fontSize: 12, color: '#666' }}>
           Erstellt: {new Date(request.createdAt).toLocaleString()}
         </div>
       </div>
