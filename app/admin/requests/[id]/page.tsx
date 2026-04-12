@@ -89,9 +89,16 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   if (!request) notFound();
 
-  const settings = await prisma.hotelSettings.findUnique({
+  const settings = await prisma.hotelSettings.findFirst({
     where: { hotelId: request.hotelId },
   });
+
+  const cardRadius: number = settings?.cardRadius ?? 12;
+  const buttonRadius: number = settings?.buttonRadius ?? 999;
+
+  const cardBackground = settings?.cardBackground || '#fff';
+  const textColor = settings?.textColor || '#111';
+  const borderColor = settings?.borderColor || '#ddd';
 
   const apartmentIds = parseApartmentIds(request.selectedApartmentIds);
 
@@ -126,7 +133,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           display: 'inline-block',
           marginBottom: 20,
           padding: '8px 14px',
-          borderRadius: 999,
+          borderRadius: buttonRadius,
           border: '1px solid #ccc',
           textDecoration: 'none',
           color: '#111',
@@ -142,10 +149,11 @@ export default async function BookingDetailPage({ params }: PageProps) {
         style={{
           display: 'grid',
           gap: 18,
-          border: '1px solid #ddd',
-          borderRadius: 12,
+          border: `1px solid ${borderColor}`,
+          borderRadius: cardRadius,
           padding: 24,
-          background: '#fff',
+          background: cardBackground,
+          color: textColor,
         }}
       >
         {/* 🔥 HEADER ROW */}
