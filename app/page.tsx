@@ -1,10 +1,20 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  const [hotel, setHotel] = useState('beimoser');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const h = params.get('hotel');
+    if (h) setHotel(h);
+
+    console.log('ACTIVE HOTEL:', h || 'beimoser');
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
