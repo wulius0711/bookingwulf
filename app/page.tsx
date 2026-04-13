@@ -5,33 +5,38 @@ import { FormEvent, useEffect, useState } from 'react';
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-
   const [hotel, setHotel] = useState('beimoser');
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const h = params.get('hotel');
-    if (h) setHotel(h);
-
-    console.log('ACTIVE HOTEL:', h || 'beimoser');
-  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const h = params.get('hotel') || 'beimoser';
 
     setHotel(h);
-
     console.log('ACTIVE HOTEL:', h);
 
-    // 👉 SIMPLE THEME SWITCH (TEST)
-    if (h === 'dashabitat') {
-      document.body.style.background = '#111';
-      document.body.style.color = '#fff';
-    } else {
-      document.body.style.background = '#FAEBD7';
-      document.body.style.color = '#2a2a2a';
+    async function loadHotelSettings() {
+      try {
+        const res = await fetch(`/api/hotel-settings?hotel=${h}`);
+
+        if (!res.ok) {
+          console.error('Hotel settings request failed:', res.status);
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!data.success || !data.settings) return;
+
+        const settings = data.settings;
+
+        document.body.style.background = settings.backgroundColor || '#FAEBD7';
+        document.body.style.color = settings.textColor || '#2a2a2a';
+      } catch (error) {
+        console.error('Failed to load hotel settings:', error);
+      }
     }
+
+    loadHotelSettings();
   }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -50,6 +55,7 @@ export default function Home() {
       (1000 * 60 * 60 * 24);
 
     const payload = {
+      hotel,
       arrival,
       departure,
       nights,
@@ -90,7 +96,7 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 700, margin: '0 auto', padding: '40px 20px' }}>
+    <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
       <h1>Booking Formular Test</h1>
 
       <form
