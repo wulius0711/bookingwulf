@@ -140,7 +140,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                 style={{
                   padding: '10px 14px',
                   borderRadius: 999,
-                  border: '1px solid #111',
+                  border: '1px solid #fff',
                   background: '#111',
                   color: '#fff',
                   cursor: 'pointer',
