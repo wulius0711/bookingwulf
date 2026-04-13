@@ -202,17 +202,7 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
                 </select>
               </div>
 
-              <button
-                type="submit"
-                style={{
-                  padding: '12px 16px',
-                  borderRadius: 999,
-                  border: '1px solid #111',
-                  background: '#111',
-                  color: '#fff',
-                  cursor: 'pointer',
-                }}
-              >
+              <button type="submit" style={buttonStyle}>
                 Laden
               </button>
             </div>
