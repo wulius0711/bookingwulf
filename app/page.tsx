@@ -16,6 +16,24 @@ export default function Home() {
     console.log('ACTIVE HOTEL:', h || 'beimoser');
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const h = params.get('hotel') || 'beimoser';
+
+    setHotel(h);
+
+    console.log('ACTIVE HOTEL:', h);
+
+    // 👉 SIMPLE THEME SWITCH (TEST)
+    if (h === 'dashabitat') {
+      document.body.style.background = '#111';
+      document.body.style.color = '#fff';
+    } else {
+      document.body.style.background = '#FAEBD7';
+      document.body.style.color = '#2a2a2a';
+    }
+  }, []);
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
