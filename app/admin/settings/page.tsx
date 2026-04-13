@@ -164,7 +164,12 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
 
   return (
     <main
-      style={{ padding: 40, fontFamily: 'Arial, sans-serif', maxWidth: 980 }}
+      style={{
+        padding: 40,
+        fontFamily: 'Arial, sans-serif',
+        maxWidth: 980,
+        background: '#d6d6d6',
+      }}
     >
       <h1 style={{ marginBottom: 24 }}>Hotel Settings</h1>
 
