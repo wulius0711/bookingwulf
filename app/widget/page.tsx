@@ -1,37 +1,23 @@
-'use client';
+type Props = {
+  searchParams: Promise<{
+    hotel?: string;
+  }>;
+};
 
-import { useEffect, useState } from 'react';
-
-export default function WidgetStandalone() {
-  const [total, setTotal] = useState(0);
+export default async function WidgetPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const hotel = params.hotel ?? 'beimoser';
 
   return (
-    <div
+    <iframe
+      src={`https://booking-app-snowy-two.vercel.app/?hotel=${hotel}`}
       style={{
-        background: '#FAEBD7',
-        padding: 20,
-        fontFamily: 'Inter, sans-serif',
+        width: '100%',
+        height: '1700px',
+        border: 'none',
+        display: 'block',
+        background: 'transparent',
       }}
-    >
-      <h2>Booking Widget</h2>
-
-      <p>Hier läuft dein komplettes System.</p>
-
-      <button
-        onClick={() => setTotal(total + 100)}
-        style={{
-          padding: '12px 20px',
-          background: '#DC143C',
-          color: '#fff',
-          border: 'none',
-          borderRadius: 999,
-          cursor: 'pointer',
-        }}
-      >
-        Add €100
-      </button>
-
-      <h3>Gesamt: € {total}</h3>
-    </div>
+    />
   );
 }
