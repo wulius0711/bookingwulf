@@ -128,11 +128,11 @@ const buttonStyle: React.CSSProperties = {
   marginTop: 8,
   padding: '12px 18px',
   borderRadius: 999,
-  border: 'none',
   background: '#111',
   color: '#fff',
   cursor: 'pointer',
   width: 'fit-content',
+  border: '1px solid rgb(255, 255, 255)',
 };
 
 export default async function AdminSettingsPage({ searchParams }: PageProps) {
@@ -168,7 +168,6 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
         padding: 40,
         fontFamily: 'Arial, sans-serif',
         maxWidth: 980,
-        background: '#d6d6d6',
       }}
     >
       <h1 style={{ marginBottom: 24 }}>Hotel Settings</h1>
