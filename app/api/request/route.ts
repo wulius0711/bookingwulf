@@ -27,6 +27,16 @@ function parseSelectedApartmentIds(raw: string): number[] {
     .filter((item) => Number.isInteger(item) && item > 0);
 }
 
+function normalizeDate(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function getNightsBetween(arrival: Date, departure: Date) {
+  const ms =
+    normalizeDate(departure).getTime() - normalizeDate(arrival).getTime();
+  return Math.round(ms / (1000 * 60 * 60 * 24));
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -126,6 +136,15 @@ export async function POST(req: Request) {
       select: {
         id: true,
         name: true,
+        basePrice: true,
+        cleaningFee: true,
+        priceSeasons: {
+          select: {
+            startDate: true,
+            endDate: true,
+            pricePerNight: true,
+          },
+        },
       },
     });
 
@@ -139,6 +158,38 @@ export async function POST(req: Request) {
         { status: 400, headers: corsHeaders },
       );
     }
+
+    const apartmentPricing = apartments.map((apartment) => {
+      let totalPrice = 0;
+
+      for (let i = 0; i < nights; i++) {
+        const currentDate = new Date(arrival);
+        currentDate.setDate(arrival.getDate() + i);
+
+        const season = apartment.priceSeasons.find((season) => {
+          return (
+            currentDate >= season.startDate && currentDate <= season.endDate
+          );
+        });
+
+        const nightlyPrice = season?.pricePerNight ?? apartment.basePrice ?? 0;
+        totalPrice += nightlyPrice;
+      }
+
+      totalPrice += apartment.cleaningFee ?? 0;
+
+      return {
+        apartmentId: apartment.id,
+        apartmentName: apartment.name,
+        totalPrice: Number(totalPrice.toFixed(2)),
+        cleaningFee: apartment.cleaningFee ?? 0,
+      };
+    });
+
+    const apartmentsTotal = apartmentPricing.reduce(
+      (sum, item) => sum + item.totalPrice,
+      0,
+    );
 
     const requestEntry = await prisma.request.create({
       data: {
@@ -192,6 +243,8 @@ export async function POST(req: Request) {
         </ul>`
       : 'Keine';
 
+    const totalBookingPrice = apartmentsTotal + extrasTotal;
+
     try {
       console.log('=== MAIL START ===');
       console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
@@ -215,13 +268,15 @@ export async function POST(req: Request) {
           Kinder: ${children}</p>
 
           <p><strong>Apartments:</strong><br/>
-          ${apartmentNames}</p>
+            ${apartmentNames}</p>
 
-          <p><strong>Zusatzleistungen:</strong><br/>
-          ${extrasHtml}</p>
+            <p><strong>Preisübersicht:</strong><br/>
+            Apartments: € ${apartmentsTotal.toFixed(2)}<br/>
+            Zusatzleistungen: € ${extrasTotal.toFixed(2)}<br/>
+            Gesamtbetrag: <strong>€ ${totalBookingPrice.toFixed(2)}</strong></p>
 
-          <p><strong>Zusatzleistungen Gesamt:</strong><br/>
-          € ${extrasTotal.toFixed(2)}</p>
+            <p><strong>Zusatzleistungen:</strong><br/>
+            ${extrasHtml}</p>
 
           <hr/>
 
@@ -264,13 +319,15 @@ export async function POST(req: Request) {
             Kinder: ${children}</p>
 
             <p><strong>Gebuchte Apartments:</strong><br/>
-            ${apartments.map((a) => a.name).join(', ')}</p>
+              ${apartments.map((a) => a.name).join(', ')}</p>
 
-            <p><strong>Zusatzleistungen:</strong><br/>
-            ${extrasHtml}</p>
+              <p><strong>Preisübersicht:</strong><br/>
+              Apartments: € ${apartmentsTotal.toFixed(2)}<br/>
+              Zusatzleistungen: € ${extrasTotal.toFixed(2)}<br/>
+              Gesamtbetrag: <strong>€ ${totalBookingPrice.toFixed(2)}</strong></p>
 
-            <p><strong>Zusatzleistungen Gesamt:</strong><br/>
-            € ${extrasTotal.toFixed(2)}</p>
+              <p><strong>Zusatzleistungen:</strong><br/>
+              ${extrasHtml}</p>
 
             ${
               message
