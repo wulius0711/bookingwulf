@@ -45,7 +45,12 @@ export async function POST(req: Request) {
     ).trim();
     const extras = body.extras || {};
     const dog = Boolean(extras.dog);
-    console.log('BODY DOG RAW:', body.dog);
+    const breakfast = Boolean(extras.breakfast);
+    const parking = Boolean(extras.parking);
+    const lateCheckout = Boolean(extras.lateCheckout);
+
+    console.log('BODY EXTRAS:', body.extras);
+    console.log('BODY EXTRAS DOG:', body.extras?.dog);
     console.log('DOG BOOLEAN:', dog);
 
     const salutation = String(body.salutation || '').trim();
@@ -155,9 +160,29 @@ export async function POST(req: Request) {
     });
 
     const selectedExtras: string[] = [];
+    let extrasTotal = 0;
+    const guestCount = adults + children;
 
     if (dog) {
       selectedExtras.push(`Hund (${nights} Tage)`);
+      extrasTotal += 18 * nights;
+    }
+
+    if (breakfast) {
+      selectedExtras.push(
+        `Frühstück (${guestCount} Personen, ${nights} Nächte)`,
+      );
+      extrasTotal += 14 * guestCount * nights;
+    }
+
+    if (parking) {
+      selectedExtras.push('Parkplatz (pro Aufenthalt)');
+      extrasTotal += 12;
+    }
+
+    if (lateCheckout) {
+      selectedExtras.push('Late Check-out (pro Aufenthalt)');
+      extrasTotal += 25;
     }
 
     const extrasText = selectedExtras.length
@@ -189,8 +214,8 @@ export async function POST(req: Request) {
           <p><strong>Apartments:</strong><br/>
           ${apartmentNames}</p>
 
-          <p><strong>Extras:</strong><br/>
-          ${extrasText}</p>
+          <p><strong>Zusatzleistungen Gesamt:</strong><br/>
+            € ${extrasTotal.toFixed(2)}</p>
 
 
           <hr/>
@@ -237,8 +262,8 @@ export async function POST(req: Request) {
       <p><strong>Gebuchte Apartments:</strong><br/>
       ${apartments.map((a) => a.name).join(', ')}</p>
 
-      <p><strong>Extras:</strong><br/>
-      ${extrasText}</p>
+      <p><strong>Zusatzleistungen Gesamt:</strong><br/>
+      € ${extrasTotal.toFixed(2)}</p>
 
 
       ${message ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>` : ''}
