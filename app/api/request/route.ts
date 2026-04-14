@@ -159,11 +159,11 @@ export async function POST(req: Request) {
       const mailResponse = await resend.emails.send({
         from: process.env.BOOKING_FROM_EMAIL!,
         to: process.env.BOOKING_RECEIVER_EMAIL!,
-        subject: `Neue Anfrage (${arrivalRaw} → ${departureRaw})`,
+        subject: `Neue Buchung (${arrivalRaw} → ${departureRaw})`,
         html: `
-          <h2>Neue Anfrage – ${hotel.name}</h2>
+          <h2>Neue Buchung – ${hotel.name}</h2>
 
-          <p><strong>Zeitraum:</strong><br/>
+          <p><strong>Buchungszeitraum:</strong><br/>
           ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
 
           <p><strong>Gäste:</strong><br/>
@@ -189,7 +189,7 @@ export async function POST(req: Request) {
           </p>
 
           <p style="font-size:12px;color:#777;">
-          Request ID: ${requestEntry.id}
+            Buchungs-ID: ${requestEntry.id}
           </p>
         `,
       });
@@ -212,7 +212,7 @@ export async function POST(req: Request) {
     console.error(error);
 
     return Response.json(
-      { success: false, message: 'Fehler beim Speichern der Anfrage.' },
+      { success: false, message: 'Fehler beim Speichern der Buchung.' },
       {
         status: 500,
         headers: corsHeaders,
