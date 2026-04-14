@@ -43,6 +43,7 @@ export async function POST(req: Request) {
     const selectedApartmentIdsRaw = String(
       body.selected_apartments || '',
     ).trim();
+
     const extras = body.extras || {};
     const dog = Boolean(extras.dog);
     const breakfast = Boolean(extras.breakfast);
@@ -185,8 +186,10 @@ export async function POST(req: Request) {
       extrasTotal += 25;
     }
 
-    const extrasText = selectedExtras.length
-      ? selectedExtras.join(', ')
+    const extrasHtml = selectedExtras.length
+      ? `<ul style="margin: 8px 0 0 0; padding-left: 18px; line-height: 1.6;">
+          ${selectedExtras.map((e: string) => `<li>${e}</li>`).join('')}
+        </ul>`
       : 'Keine';
 
     try {
@@ -214,9 +217,11 @@ export async function POST(req: Request) {
           <p><strong>Apartments:</strong><br/>
           ${apartmentNames}</p>
 
-          <p><strong>Zusatzleistungen Gesamt:</strong><br/>
-            € ${extrasTotal.toFixed(2)}</p>
+          <p><strong>Zusatzleistungen:</strong><br/>
+          ${extrasHtml}</p>
 
+          <p><strong>Zusatzleistungen Gesamt:</strong><br/>
+          € ${extrasTotal.toFixed(2)}</p>
 
           <hr/>
 
@@ -234,51 +239,56 @@ export async function POST(req: Request) {
           </p>
 
           <p style="font-size:12px;color:#777;">
-            Buchungs-ID: ${requestEntry.id}
+          Buchungs-ID: ${requestEntry.id}
           </p>
         `,
       });
 
-      // 📩 BESTÄTIGUNG AN GAST
       try {
         await resend.emails.send({
           from: process.env.BOOKING_FROM_EMAIL!,
           to: email,
           subject: `Ihre Buchung bei ${hotel.name}`,
           html: `
-      <h2>Ihre Buchung bei ${hotel.name}</h2>
+            <h2>Ihre Buchung bei ${hotel.name}</h2>
 
-      <p>Hallo ${firstname || ''},</p>
+            <p>Hallo ${firstname || ''},</p>
 
-      <p>vielen Dank für Ihre Buchung.</p>
+            <p>vielen Dank für Ihre Buchung.</p>
 
-      <p><strong>Buchungszeitraum:</strong><br/>
-      ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
+            <p><strong>Buchungszeitraum:</strong><br/>
+            ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
 
-      <p><strong>Gäste:</strong><br/>
-      Erwachsene: ${adults}<br/>
-      Kinder: ${children}</p>
+            <p><strong>Gäste:</strong><br/>
+            Erwachsene: ${adults}<br/>
+            Kinder: ${children}</p>
 
-      <p><strong>Gebuchte Apartments:</strong><br/>
-      ${apartments.map((a) => a.name).join(', ')}</p>
+            <p><strong>Gebuchte Apartments:</strong><br/>
+            ${apartments.map((a) => a.name).join(', ')}</p>
 
-      <p><strong>Zusatzleistungen Gesamt:</strong><br/>
-      € ${extrasTotal.toFixed(2)}</p>
+            <p><strong>Zusatzleistungen:</strong><br/>
+            ${extrasHtml}</p>
 
+            <p><strong>Zusatzleistungen Gesamt:</strong><br/>
+            € ${extrasTotal.toFixed(2)}</p>
 
-      ${message ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>` : ''}
+            ${
+              message
+                ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>`
+                : ''
+            }
 
-      <p>Wir melden uns in Kürze mit den weiteren Details.</p>
+            <p>Wir melden uns in Kürze mit den weiteren Details.</p>
 
-      <p>Mit freundlichen Grüßen<br/>
-      ${hotel.name}</p>
+            <p>Mit freundlichen Grüßen<br/>
+            ${hotel.name}</p>
 
-      <hr/>
+            <hr/>
 
-      <p style="font-size:12px;color:#777;">
-      Buchungs-ID: ${requestEntry.id}
-      </p>
-    `,
+            <p style="font-size:12px;color:#777;">
+            Buchungs-ID: ${requestEntry.id}
+            </p>
+          `,
         });
 
         console.log('CUSTOMER MAIL SENT');
