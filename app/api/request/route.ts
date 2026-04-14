@@ -1,4 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -122,6 +125,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // ✅ DB speichern
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id,
@@ -141,6 +145,42 @@ export async function POST(req: Request) {
         status: 'new',
       },
     });
+
+    // 🔥 MAIL SENDEN
+    try {
+      const apartmentNames = apartments.map((a) => a.name).join(', ');
+
+      const mailResponse = await resend.emails.send({
+        from: process.env.BOOKING_FROM_EMAIL!,
+        to: process.env.BOOKING_RECEIVER_EMAIL!,
+        subject: `Neue Anfrage – ${hotel.name}`,
+        html: `
+          <h2>Neue Buchungsanfrage</h2>
+
+          <p><strong>Hotel:</strong> ${hotel.name}</p>
+          <p><strong>Zeitraum:</strong> ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
+          <p><strong>Gäste:</strong> ${adults} Erwachsene, ${children} Kinder</p>
+          <p><strong>Apartments:</strong> ${apartmentNames}</p>
+
+          <hr/>
+
+          <p><strong>Name:</strong> ${salutation} ${firstname} ${lastname}</p>
+          <p><strong>E-Mail:</strong> ${email}</p>
+          <p><strong>Land:</strong> ${country}</p>
+
+          ${message ? `<p><strong>Nachricht:</strong><br/>${message}</p>` : ''}
+
+          <hr/>
+
+          <p><small>Request ID: ${requestEntry.id}</small></p>
+        `,
+      });
+
+      console.log('MAIL SENT:', mailResponse);
+    } catch (mailError) {
+      console.error('MAIL ERROR:', mailError);
+      // ❗ bewusst KEIN throw → Request bleibt gespeichert
+    }
 
     return Response.json(
       {
