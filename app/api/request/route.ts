@@ -146,40 +146,26 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log('=== MAIL START ===');
+    console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
+    console.log('FROM:', process.env.BOOKING_FROM_EMAIL);
+
     // 🔥 MAIL SENDEN
     try {
+      console.log('=== SENDING MAIL ===');
+
       const apartmentNames = apartments.map((a) => a.name).join(', ');
 
       const mailResponse = await resend.emails.send({
         from: process.env.BOOKING_FROM_EMAIL!,
         to: process.env.BOOKING_RECEIVER_EMAIL!,
         subject: `Neue Anfrage – ${hotel.name}`,
-        html: `
-          <h2>Neue Buchungsanfrage</h2>
-
-          <p><strong>Hotel:</strong> ${hotel.name}</p>
-          <p><strong>Zeitraum:</strong> ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
-          <p><strong>Gäste:</strong> ${adults} Erwachsene, ${children} Kinder</p>
-          <p><strong>Apartments:</strong> ${apartmentNames}</p>
-
-          <hr/>
-
-          <p><strong>Name:</strong> ${salutation} ${firstname} ${lastname}</p>
-          <p><strong>E-Mail:</strong> ${email}</p>
-          <p><strong>Land:</strong> ${country}</p>
-
-          ${message ? `<p><strong>Nachricht:</strong><br/>${message}</p>` : ''}
-
-          <hr/>
-
-          <p><small>Request ID: ${requestEntry.id}</small></p>
-        `,
+        html: `<p>Test Mail</p>`,
       });
 
-      console.log('MAIL SENT:', mailResponse);
+      console.log('MAIL RESPONSE:', JSON.stringify(mailResponse, null, 2));
     } catch (mailError) {
       console.error('MAIL ERROR:', mailError);
-      // ❗ bewusst KEIN throw → Request bleibt gespeichert
     }
 
     return Response.json(
