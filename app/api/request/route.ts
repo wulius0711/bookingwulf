@@ -43,7 +43,8 @@ export async function POST(req: Request) {
     const selectedApartmentIdsRaw = String(
       body.selected_apartments || '',
     ).trim();
-    const dog = Boolean(body.dog);
+    const extras = body.extras || {};
+    const dog = Boolean(extras.dog);
     console.log('BODY DOG RAW:', body.dog);
     console.log('DOG BOOLEAN:', dog);
 
@@ -153,13 +154,15 @@ export async function POST(req: Request) {
       },
     });
 
-    const extras = [];
+    const selectedExtras: string[] = [];
 
     if (dog) {
-      extras.push(`Hund (${nights} Tage)`);
+      selectedExtras.push(`Hund (${nights} Tage)`);
     }
 
-    const extrasText = extras.length ? extras.join(', ') : 'Keine';
+    const extrasText = selectedExtras.length
+      ? selectedExtras.join(', ')
+      : 'Keine';
 
     try {
       console.log('=== MAIL START ===');
