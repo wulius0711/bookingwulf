@@ -1,6 +1,8 @@
 import { prisma } from '@/src/lib/prisma';
 import { Resend } from 'resend';
 
+console.log('=== ROUTE VERSION 2 ===');
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const corsHeaders = {
