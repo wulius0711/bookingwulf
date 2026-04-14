@@ -42,6 +42,8 @@ export async function POST(req: Request) {
       body.selected_apartments || '',
     ).trim();
     const dog = Boolean(body.dog);
+    console.log('BODY DOG RAW:', body.dog);
+    console.log('DOG BOOLEAN:', dog);
 
     const salutation = String(body.salutation || '').trim();
     const firstname = String(body.firstname || '').trim();
