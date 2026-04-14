@@ -41,6 +41,7 @@ export async function POST(req: Request) {
     const selectedApartmentIdsRaw = String(
       body.selected_apartments || '',
     ).trim();
+    const dog = Boolean(body.dog);
 
     const salutation = String(body.salutation || '').trim();
     const firstname = String(body.firstname || '').trim();
@@ -148,6 +149,14 @@ export async function POST(req: Request) {
       },
     });
 
+    const extras = [];
+
+    if (dog) {
+      extras.push(`Hund (${nights} Tage)`);
+    }
+
+    const extrasText = extras.length ? extras.join(', ') : 'Keine';
+
     try {
       console.log('=== MAIL START ===');
       console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
@@ -172,6 +181,9 @@ export async function POST(req: Request) {
 
           <p><strong>Apartments:</strong><br/>
           ${apartmentNames}</p>
+
+          <p><strong>Extras:</strong><br/>
+          ${extrasText}</p>
 
           <hr/>
 
@@ -216,6 +228,9 @@ export async function POST(req: Request) {
 
       <p><strong>Gebuchte Apartments:</strong><br/>
       ${apartments.map((a) => a.name).join(', ')}</p>
+
+      <p><strong>Extras:</strong><br/>
+      ${extrasText}</p>
 
       ${message ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>` : ''}
 
