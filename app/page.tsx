@@ -17,6 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [hotel, setHotel] = useState('beimoser');
+  const [dog, setDog] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -123,6 +124,7 @@ export default function Home() {
       country: String(formData.get('country') || ''),
       message: String(formData.get('message') || ''),
       newsletter: formData.get('newsletter') === 'on',
+      dog,
     };
 
     try {
@@ -135,8 +137,9 @@ export default function Home() {
       const data = await res.json();
 
       if (data.success) {
-        setMessage('Anfrage erfolgreich gespeichert.');
+        setMessage('Buchung erfolgreich gespeichert.');
         form.reset();
+        setDog(false);
       } else {
         setMessage('Fehler beim Speichern.');
       }
@@ -268,6 +271,22 @@ export default function Home() {
             <input name="newsletter" type="checkbox" /> Newsletter
           </label>
 
+          <label
+            style={{
+              color: 'var(--text)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={dog}
+              onChange={(e) => setDog(e.target.checked)}
+            />
+            Hund
+          </label>
+
           <button
             type="submit"
             disabled={loading}
@@ -282,7 +301,7 @@ export default function Home() {
               minHeight: 48,
             }}
           >
-            {loading ? 'Speichert...' : 'Anfrage senden'}
+            {loading ? 'Speichert...' : 'Buchung senden'}
           </button>
         </form>
 
