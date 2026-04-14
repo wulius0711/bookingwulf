@@ -194,6 +194,49 @@ export async function POST(req: Request) {
         `,
       });
 
+      // 📩 BESTÄTIGUNG AN GAST
+      try {
+        await resend.emails.send({
+          from: process.env.BOOKING_FROM_EMAIL!,
+          to: email,
+          subject: `Ihre Buchung bei ${hotel.name}`,
+          html: `
+      <h2>Ihre Buchung bei ${hotel.name}</h2>
+
+      <p>Hallo ${firstname || ''},</p>
+
+      <p>vielen Dank für Ihre Buchung.</p>
+
+      <p><strong>Buchungszeitraum:</strong><br/>
+      ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
+
+      <p><strong>Gäste:</strong><br/>
+      Erwachsene: ${adults}<br/>
+      Kinder: ${children}</p>
+
+      <p><strong>Gebuchte Apartments:</strong><br/>
+      ${apartments.map((a) => a.name).join(', ')}</p>
+
+      ${message ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>` : ''}
+
+      <p>Wir melden uns in Kürze mit den weiteren Details.</p>
+
+      <p>Mit freundlichen Grüßen<br/>
+      ${hotel.name}</p>
+
+      <hr/>
+
+      <p style="font-size:12px;color:#777;">
+      Buchungs-ID: ${requestEntry.id}
+      </p>
+    `,
+        });
+
+        console.log('CUSTOMER MAIL SENT');
+      } catch (customerMailError) {
+        console.error('CUSTOMER MAIL ERROR:', customerMailError);
+      }
+
       console.log('MAIL RESPONSE:', JSON.stringify(mailResponse, null, 2));
     } catch (mailError) {
       console.error('MAIL ERROR:', mailError);
