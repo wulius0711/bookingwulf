@@ -29,6 +29,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    console.log('REQUEST API HIT');
+    console.log('BODY HOTEL:', body.hotel);
+
     const hotelSlug = String(body.hotel || '').trim();
     const arrivalRaw = String(body.arrival || '').trim();
     const departureRaw = String(body.departure || '').trim();
@@ -125,7 +128,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ DB speichern
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id,
@@ -146,12 +148,10 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log('=== MAIL START ===');
-    console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
-    console.log('FROM:', process.env.BOOKING_FROM_EMAIL);
-
-    // 🔥 MAIL SENDEN
     try {
+      console.log('=== MAIL START ===');
+      console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
+      console.log('FROM:', process.env.BOOKING_FROM_EMAIL);
       console.log('=== SENDING MAIL ===');
 
       const apartmentNames = apartments.map((a) => a.name).join(', ');
@@ -159,8 +159,39 @@ export async function POST(req: Request) {
       const mailResponse = await resend.emails.send({
         from: process.env.BOOKING_FROM_EMAIL!,
         to: process.env.BOOKING_RECEIVER_EMAIL!,
-        subject: `Neue Anfrage – ${hotel.name}`,
-        html: `<p>Test Mail</p>`,
+        subject: `Neue Anfrage (${arrivalRaw} → ${departureRaw})`,
+        html: `
+          <h2>Neue Anfrage – ${hotel.name}</h2>
+
+          <p><strong>Zeitraum:</strong><br/>
+          ${arrivalRaw} → ${departureRaw} (${nights} Nächte)</p>
+
+          <p><strong>Gäste:</strong><br/>
+          Erwachsene: ${adults}<br/>
+          Kinder: ${children}</p>
+
+          <p><strong>Apartments:</strong><br/>
+          ${apartmentNames}</p>
+
+          <hr/>
+
+          <p><strong>Kontakt:</strong><br/>
+          ${salutation} ${firstname} ${lastname}<br/>
+          ${email}<br/>
+          ${country}</p>
+
+          ${message ? `<p><strong>Nachricht:</strong><br/>${message}</p>` : ''}
+
+          <hr/>
+
+          <p style="font-size:12px;color:#777;">
+          Newsletter: ${newsletter ? 'Ja' : 'Nein'}
+          </p>
+
+          <p style="font-size:12px;color:#777;">
+          Request ID: ${requestEntry.id}
+          </p>
+        `,
       });
 
       console.log('MAIL RESPONSE:', JSON.stringify(mailResponse, null, 2));
