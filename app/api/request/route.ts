@@ -189,8 +189,6 @@ export async function POST(req: Request) {
           <p><strong>Extras:</strong><br/>
           ${extrasText}</p>
 
-          <p><strong>DEBUG dog:</strong><br/>
-          ${String(dog)}</p>
 
           <hr/>
 
@@ -239,8 +237,6 @@ export async function POST(req: Request) {
       <p><strong>Extras:</strong><br/>
       ${extrasText}</p>
 
-      <p><strong>DEBUG dog:</strong><br/>
-      ${String(dog)}</p>
 
       ${message ? `<p><strong>Ihre Nachricht:</strong><br/>${message}</p>` : ''}
 
