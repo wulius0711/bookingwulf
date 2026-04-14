@@ -270,13 +270,28 @@ export async function POST(req: Request) {
           <p><strong>Apartments:</strong><br/>
             ${apartmentNames}</p>
 
-            <p><strong>Preisübersicht:</strong><br/>
-            Apartments: € ${apartmentsTotal.toFixed(2)}<br/>
-            Zusatzleistungen: € ${extrasTotal.toFixed(2)}<br/>
-            Gesamtbetrag: <strong>€ ${totalBookingPrice.toFixed(2)}</strong></p>
-
-            <p><strong>Zusatzleistungen:</strong><br/>
+          <p><strong>Zusatzleistungen:</strong><br/>
             ${extrasHtml}</p>
+
+            <p><strong>Preisübersicht:</strong></p>
+
+              <table style="width:100%; max-width:400px; border-collapse:collapse; font-size:14px;">
+                <tr>
+                  <td style="padding:4px 0;">Apartments</td>
+                  <td style="text-align:right;">€ ${apartmentsTotal.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;">Zusatzleistungen</td>
+                  <td style="text-align:right;">€ ${extrasTotal.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style="padding-top:8px; font-weight:600;">Gesamtbetrag</td>
+                  <td style="text-align:right; padding-top:8px; font-weight:700;">
+                    € ${totalBookingPrice.toFixed(2)}
+                  </td>
+                </tr>
+              </table>
+
 
           <hr/>
 
@@ -321,13 +336,28 @@ export async function POST(req: Request) {
             <p><strong>Gebuchte Apartments:</strong><br/>
               ${apartments.map((a) => a.name).join(', ')}</p>
 
-              <p><strong>Preisübersicht:</strong><br/>
-              Apartments: € ${apartmentsTotal.toFixed(2)}<br/>
-              Zusatzleistungen: € ${extrasTotal.toFixed(2)}<br/>
-              Gesamtbetrag: <strong>€ ${totalBookingPrice.toFixed(2)}</strong></p>
-
-              <p><strong>Zusatzleistungen:</strong><br/>
+            <p><strong>Zusatzleistungen:</strong><br/>
               ${extrasHtml}</p>
+
+              <p><strong>Preisübersicht:</strong></p>
+
+                <table style="width:100%; max-width:400px; border-collapse:collapse; font-size:14px;">
+                  <tr>
+                    <td style="padding:4px 0;">Apartments</td>
+                    <td style="text-align:right;">€ ${apartmentsTotal.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0;">Zusatzleistungen</td>
+                    <td style="text-align:right;">€ ${extrasTotal.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top:8px; font-weight:600;">Gesamtbetrag</td>
+                    <td style="text-align:right; padding-top:8px; font-weight:700;">
+                      € ${totalBookingPrice.toFixed(2)}
+                    </td>
+                  </tr>
+                </table>
+
 
             ${
               message
