@@ -36,11 +36,8 @@ async function saveHotelSettings(formData: FormData) {
   const mutedTextColor = String(formData.get('mutedTextColor') || '').trim();
   const borderColor = String(formData.get('borderColor') || '').trim();
 
-  const cardRadiusRaw = String(formData.get('cardRadius') || '').trim();
-  const buttonRadiusRaw = String(formData.get('buttonRadius') || '').trim();
-
-  const cardRadius = cardRadiusRaw ? Number(cardRadiusRaw) : null;
-  const buttonRadius = buttonRadiusRaw ? Number(buttonRadiusRaw) : null;
+  const cardRadius = Number(formData.get('cardRadius') || 0) || null;
+  const buttonRadius = Number(formData.get('buttonRadius') || 0) || null;
 
   await prisma.hotelSettings.upsert({
     where: { hotelId },
@@ -98,7 +95,6 @@ const sectionStyle: React.CSSProperties = {
 const row: React.CSSProperties = {
   display: 'grid',
   gridTemplateColumns: '220px 1fr',
-  alignItems: 'start',
   gap: 16,
 };
 
@@ -109,30 +105,10 @@ const labelStyle: React.CSSProperties = {
 };
 
 const inputStyle: React.CSSProperties = {
-  width: '100%',
   padding: '10px 12px',
   border: '1px solid #ddd',
   borderRadius: 8,
   fontSize: 14,
-  background: '#fff',
-};
-
-const checkboxWrap: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 10,
-  minHeight: 40,
-};
-
-const buttonStyle: React.CSSProperties = {
-  marginTop: 8,
-  padding: '12px 18px',
-  borderRadius: 999,
-  background: '#111',
-  color: '#fff',
-  cursor: 'pointer',
-  width: 'fit-content',
-  border: '1px solid rgb(255, 255, 255)',
 };
 
 export default async function AdminSettingsPage({ searchParams }: PageProps) {
@@ -141,11 +117,7 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
   const hotels = await prisma.hotel.findMany({
     where: { isActive: true },
     orderBy: { name: 'asc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
+    select: { id: true, name: true, slug: true },
   });
 
   const selectedHotelId =
@@ -156,276 +128,119 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
   const selectedHotel = selectedHotelId
     ? await prisma.hotel.findUnique({
         where: { id: selectedHotelId },
-        include: {
-          settings: true,
-        },
+        include: { settings: true },
       })
     : null;
+
+  const widgetUrl = selectedHotel ? `/?hotel=${selectedHotel.slug}` : '/';
 
   return (
     <main
       style={{
         padding: 40,
-        fontFamily: 'Arial, sans-serif',
-        maxWidth: 980,
+        fontFamily: 'Arial',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 30,
       }}
     >
-      <h1 style={{ marginBottom: 24 }}>Hotel Settings</h1>
+      {/* LEFT: SETTINGS */}
+      <div>
+        <h1>Hotel Settings</h1>
 
-      {hotels.length === 0 ? (
-        <p>Keine Hotels vorhanden.</p>
-      ) : (
-        <>
-          <form method="GET" style={{ marginBottom: 24 }}>
-            <div
+        {selectedHotel && (
+          <form action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>
+            <input type="hidden" name="hotelId" value={selectedHotel.id} />
+
+            <div style={sectionStyle}>
+              <h2>Design</h2>
+
+              {[
+                ['Accent', 'accentColor'],
+                ['Background', 'backgroundColor'],
+                ['Card', 'cardBackground'],
+                ['Text', 'textColor'],
+                ['Muted', 'mutedTextColor'],
+                ['Border', 'borderColor'],
+              ].map(([label, key]) => {
+                const value =
+                  (selectedHotel.settings as any)?.[key] || '#cccccc';
+
+                return (
+                  <div style={row} key={key}>
+                    <label style={labelStyle}>{label}</label>
+
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <input type="color" name={key} defaultValue={value} />
+                      <input
+                        name={key}
+                        defaultValue={value}
+                        style={{ ...inputStyle, width: 120 }}
+                      />
+                      <div
+                        style={{
+                          width: 28,
+                          height: 28,
+                          background: value,
+                          border: '1px solid #ccc',
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div style={row}>
+                <label style={labelStyle}>Card Radius</label>
+                <input
+                  type="number"
+                  name="cardRadius"
+                  defaultValue={selectedHotel.settings?.cardRadius ?? ''}
+                  style={inputStyle}
+                />
+              </div>
+
+              <div style={row}>
+                <label style={labelStyle}>Button Radius</label>
+                <input
+                  type="number"
+                  name="buttonRadius"
+                  defaultValue={selectedHotel.settings?.buttonRadius ?? ''}
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
               style={{
-                display: 'flex',
-                gap: 12,
-                alignItems: 'end',
-                flexWrap: 'wrap',
+                padding: 14,
+                borderRadius: 999,
+                background: '#111',
+                color: '#fff',
               }}
             >
-              <div style={{ display: 'grid', gap: 8 }}>
-                <label style={{ fontSize: 13, color: '#666' }}>
-                  Hotel auswählen
-                </label>
-                <select
-                  name="hotel"
-                  defaultValue={String(selectedHotelId || '')}
-                  style={{ ...inputStyle, minWidth: 260 }}
-                >
-                  {hotels.map((hotelItem) => (
-                    <option key={hotelItem.id} value={hotelItem.id}>
-                      {hotelItem.name} ({hotelItem.slug})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button type="submit" style={buttonStyle}>
-                Laden
-              </button>
-            </div>
+              Speichern
+            </button>
           </form>
+        )}
+      </div>
 
-          {selectedHotel ? (
-            <form
-              action={saveHotelSettings}
-              style={{ display: 'grid', gap: 20 }}
-            >
-              <input type="hidden" name="hotelId" value={selectedHotel.id} />
+      {/* RIGHT: LIVE PREVIEW */}
+      <div>
+        <h2>Live Preview</h2>
 
-              <div style={sectionStyle}>
-                <h2 style={{ margin: 0, fontSize: 20 }}>
-                  Allgemein – {selectedHotel.name}
-                </h2>
-
-                <div style={row}>
-                  <label style={labelStyle}>Accent Color</label>
-                  <input
-                    name="accentColor"
-                    defaultValue={selectedHotel.settings?.accentColor || ''}
-                    placeholder="#CBA135"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Background App</label>
-                  <input
-                    name="backgroundColor"
-                    defaultValue={selectedHotel.settings?.backgroundColor || ''}
-                    placeholder="#FAEBD7"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Background Cards</label>
-                  <input
-                    name="cardBackground"
-                    defaultValue={selectedHotel.settings?.cardBackground || ''}
-                    placeholder="#FFFFFF"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Text Color</label>
-                  <input
-                    name="textColor"
-                    defaultValue={selectedHotel.settings?.textColor || ''}
-                    placeholder="#111111"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Muted Text Color</label>
-                  <input
-                    name="mutedTextColor"
-                    defaultValue={selectedHotel.settings?.mutedTextColor || ''}
-                    placeholder="#666666"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Border Color</label>
-                  <input
-                    name="borderColor"
-                    defaultValue={selectedHotel.settings?.borderColor || ''}
-                    placeholder="#DDDDDD"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Card Radius</label>
-                  <input
-                    type="number"
-                    name="cardRadius"
-                    defaultValue={selectedHotel.settings?.cardRadius ?? ''}
-                    placeholder="12"
-                    style={inputStyle}
-                  />
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Button Radius</label>
-                  <input
-                    type="number"
-                    name="buttonRadius"
-                    defaultValue={selectedHotel.settings?.buttonRadius ?? ''}
-                    placeholder="999"
-                    style={inputStyle}
-                  />
-                </div>
-              </div>
-
-              <div style={sectionStyle}>
-                <h2 style={{ margin: 0, fontSize: 20 }}>Feature Toggles</h2>
-
-                <div style={row}>
-                  <label style={labelStyle}>Preise anzeigen</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="showPrices"
-                      defaultChecked={
-                        selectedHotel.settings?.showPrices ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Multi Select erlauben</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="allowMultiSelect"
-                      defaultChecked={
-                        selectedHotel.settings?.allowMultiSelect ?? false
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Ausstattung anzeigen</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="showAmenities"
-                      defaultChecked={
-                        selectedHotel.settings?.showAmenities ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Extras Step anzeigen</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="showExtrasStep"
-                      defaultChecked={
-                        selectedHotel.settings?.showExtrasStep ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Telefonfeld anzeigen</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="showPhoneField"
-                      defaultChecked={
-                        selectedHotel.settings?.showPhoneField ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Mitteilungsfeld anzeigen</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="showMessageField"
-                      defaultChecked={
-                        selectedHotel.settings?.showMessageField ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Image Slider aktivieren</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="enableImageSlider"
-                      defaultChecked={
-                        selectedHotel.settings?.enableImageSlider ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-
-                <div style={row}>
-                  <label style={labelStyle}>Lightbox aktivieren</label>
-                  <label style={checkboxWrap}>
-                    <input
-                      type="checkbox"
-                      name="enableLightbox"
-                      defaultChecked={
-                        selectedHotel.settings?.enableLightbox ?? true
-                      }
-                    />
-                    Aktiv
-                  </label>
-                </div>
-              </div>
-
-              <button type="submit" style={buttonStyle}>
-                Settings speichern
-              </button>
-            </form>
-          ) : null}
-        </>
-      )}
+        <iframe
+          src={widgetUrl}
+          style={{
+            width: '100%',
+            height: 900,
+            border: '1px solid #ddd',
+            borderRadius: 12,
+            background: '#fff',
+          }}
+        />
+      </div>
     </main>
   );
 }
