@@ -3,87 +3,69 @@ import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-type SearchParams = Promise<{
-  hotel?: string;
-}>;
-
-type PageProps = {
-  searchParams: SearchParams;
-};
+type SearchParams = Promise<{ hotel?: string }>;
+type PageProps = { searchParams: SearchParams };
 
 async function saveHotelSettings(formData: FormData) {
   'use server';
 
   const hotelId = Number(formData.get('hotelId') || 0);
 
-  if (!hotelId) {
-    throw new Error('Hotel ist erforderlich.');
-  }
+  if (!hotelId) throw new Error('Hotel fehlt');
 
-  const showPrices = formData.get('showPrices') === 'on';
-  const allowMultiSelect = formData.get('allowMultiSelect') === 'on';
-  const showAmenities = formData.get('showAmenities') === 'on';
-  const showExtrasStep = formData.get('showExtrasStep') === 'on';
-  const showPhoneField = formData.get('showPhoneField') === 'on';
-  const showMessageField = formData.get('showMessageField') === 'on';
-  const enableImageSlider = formData.get('enableImageSlider') === 'on';
-  const enableLightbox = formData.get('enableLightbox') === 'on';
-
-  const accentColor = String(formData.get('accentColor') || '').trim();
-  const backgroundColor = String(formData.get('backgroundColor') || '').trim();
-  const cardBackground = String(formData.get('cardBackground') || '').trim();
-  const textColor = String(formData.get('textColor') || '').trim();
-  const mutedTextColor = String(formData.get('mutedTextColor') || '').trim();
-  const borderColor = String(formData.get('borderColor') || '').trim();
-
-  const cardRadius = Number(formData.get('cardRadius') || 0) || null;
-  const buttonRadius = Number(formData.get('buttonRadius') || 0) || null;
+  const getBool = (name: string) => formData.get(name) === 'on';
 
   await prisma.hotelSettings.upsert({
     where: { hotelId },
     update: {
-      showPrices,
-      allowMultiSelect,
-      showAmenities,
-      showExtrasStep,
-      showPhoneField,
-      showMessageField,
-      enableImageSlider,
-      enableLightbox,
-      accentColor: accentColor || null,
-      backgroundColor: backgroundColor || null,
-      cardBackground: cardBackground || null,
-      textColor: textColor || null,
-      mutedTextColor: mutedTextColor || null,
-      borderColor: borderColor || null,
-      cardRadius,
-      buttonRadius,
+      showPrices: getBool('showPrices'),
+      allowMultiSelect: getBool('allowMultiSelect'),
+      showAmenities: getBool('showAmenities'),
+      showExtrasStep: getBool('showExtrasStep'),
+      showPhoneField: getBool('showPhoneField'),
+      showMessageField: getBool('showMessageField'),
+      enableImageSlider: getBool('enableImageSlider'),
+      enableLightbox: getBool('enableLightbox'),
+
+      accentColor: String(formData.get('accentColor') || '') || null,
+      backgroundColor: String(formData.get('backgroundColor') || '') || null,
+      cardBackground: String(formData.get('cardBackground') || '') || null,
+      textColor: String(formData.get('textColor') || '') || null,
+      mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
+      borderColor: String(formData.get('borderColor') || '') || null,
+
+      cardRadius: Number(formData.get('cardRadius') || 0) || null,
+      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
     },
     create: {
       hotelId,
-      showPrices,
-      allowMultiSelect,
-      showAmenities,
-      showExtrasStep,
-      showPhoneField,
-      showMessageField,
-      enableImageSlider,
-      enableLightbox,
-      accentColor: accentColor || null,
-      backgroundColor: backgroundColor || null,
-      cardBackground: cardBackground || null,
-      textColor: textColor || null,
-      mutedTextColor: mutedTextColor || null,
-      borderColor: borderColor || null,
-      cardRadius,
-      buttonRadius,
+      showPrices: getBool('showPrices'),
+      allowMultiSelect: getBool('allowMultiSelect'),
+      showAmenities: getBool('showAmenities'),
+      showExtrasStep: getBool('showExtrasStep'),
+      showPhoneField: getBool('showPhoneField'),
+      showMessageField: getBool('showMessageField'),
+      enableImageSlider: getBool('enableImageSlider'),
+      enableLightbox: getBool('enableLightbox'),
+
+      accentColor: String(formData.get('accentColor') || '') || null,
+      backgroundColor: String(formData.get('backgroundColor') || '') || null,
+      cardBackground: String(formData.get('cardBackground') || '') || null,
+      textColor: String(formData.get('textColor') || '') || null,
+      mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
+      borderColor: String(formData.get('borderColor') || '') || null,
+
+      cardRadius: Number(formData.get('cardRadius') || 0) || null,
+      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
     },
   });
 
   redirect(`/admin/settings?hotel=${hotelId}`);
 }
 
-const sectionStyle: React.CSSProperties = {
+/* ---------- STYLES ---------- */
+
+const section = {
   border: '1px solid #ddd',
   borderRadius: 14,
   padding: 20,
@@ -92,20 +74,13 @@ const sectionStyle: React.CSSProperties = {
   gap: 16,
 };
 
-const row: React.CSSProperties = {
+const row = {
   display: 'grid',
   gridTemplateColumns: '220px 1fr',
   gap: 16,
 };
 
-const labelStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#444',
-  paddingTop: 10,
-  fontWeight: 600,
-};
-
-const inputStyle: React.CSSProperties = {
+const input = {
   padding: '10px 12px',
   border: '1px solid #ddd',
   borderRadius: 8,
@@ -114,133 +89,171 @@ const inputStyle: React.CSSProperties = {
   color: '#111',
 };
 
-export default async function AdminSettingsPage({ searchParams }: PageProps) {
+const button = {
+  padding: '10px 16px',
+  borderRadius: 999,
+  background: '#111',
+  color: '#fff',
+  border: '1px solid #fff',
+  cursor: 'pointer',
+  fontSize: 14,
+};
+
+const buttonGhost = {
+  padding: '10px 16px',
+  borderRadius: 999,
+  background: '#fff',
+  color: '#111',
+  border: '1px solid #ddd',
+  cursor: 'pointer',
+  fontSize: 14,
+};
+
+/* ---------- PAGE ---------- */
+
+export default async function Page({ searchParams }: PageProps) {
   const { hotel } = await searchParams;
 
   const hotels = await prisma.hotel.findMany({
     where: { isActive: true },
     orderBy: { name: 'asc' },
-    select: { id: true, name: true, slug: true },
   });
 
-  const selectedHotelId =
-    hotel && !Number.isNaN(Number(hotel))
-      ? Number(hotel)
-      : hotels[0]?.id || null;
+  const selectedId =
+    hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : hotels[0]?.id;
 
-  const selectedHotel = selectedHotelId
-    ? await prisma.hotel.findUnique({
-        where: { id: selectedHotelId },
-        include: { settings: true },
-      })
-    : null;
+  const selected = await prisma.hotel.findUnique({
+    where: { id: selectedId },
+    include: { settings: true },
+  });
 
-  const widgetUrl = selectedHotel ? `/?hotel=${selectedHotel.slug}` : '/';
+  if (!selected) return <p>Kein Hotel</p>;
 
   return (
     <main
       style={{
-        padding: 40,
-        fontFamily: 'Arial',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: 30,
+        gap: 40,
+        padding: 40,
       }}
     >
-      {/* LEFT: SETTINGS */}
+      {/* LEFT */}
       <div>
         <h1>Hotel Settings</h1>
 
-        {selectedHotel && (
-          <form action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>
-            <input type="hidden" name="hotelId" value={selectedHotel.id} />
+        <form action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>
+          <input type="hidden" name="hotelId" value={selected.id} />
 
-            <div style={sectionStyle}>
-              <h2>Design</h2>
+          {/* DESIGN */}
+          <div style={section}>
+            <h2>Design</h2>
 
-              {[
-                ['Accent', 'accentColor'],
-                ['Background', 'backgroundColor'],
-                ['Card', 'cardBackground'],
-                ['Text', 'textColor'],
-                ['Muted', 'mutedTextColor'],
-                ['Border', 'borderColor'],
-              ].map(([label, key]) => {
-                const value =
-                  (selectedHotel.settings as any)?.[key] || '#cccccc';
+            {[
+              ['Accent', 'accentColor'],
+              ['Background', 'backgroundColor'],
+              ['Card', 'cardBackground'],
+              ['Text', 'textColor'],
+              ['Muted', 'mutedTextColor'],
+              ['Border', 'borderColor'],
+            ].map(([label, key]) => {
+              const val = (selected.settings as any)?.[key] || '#ccc';
 
-                return (
-                  <div style={row} key={key}>
-                    <label style={labelStyle}>{label}</label>
+              return (
+                <div style={row} key={key}>
+                  <label>{label}</label>
 
-                    <div style={{ display: 'flex', gap: 10 }}>
-                      <input type="color" defaultValue={value} />
-                      <input
-                        name={key}
-                        defaultValue={value}
-                        style={{ ...inputStyle, width: 120 }}
-                      />
-                      <div
-                        style={{
-                          width: 28,
-                          height: 28,
-                          background: value,
-                          border: '1px solid #ccc',
-                        }}
-                      />
-                    </div>
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    <input type="color" defaultValue={val} />
+                    <input
+                      name={key}
+                      defaultValue={val}
+                      style={{ ...input, width: 120 }}
+                    />
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        background: val,
+                        border: '1px solid #ccc',
+                      }}
+                    />
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
 
-              <div style={row}>
-                <label style={labelStyle}>Card Radius</label>
-                <input
-                  type="number"
-                  name="cardRadius"
-                  defaultValue={selectedHotel.settings?.cardRadius ?? ''}
-                  style={inputStyle}
-                />
-              </div>
-
-              <div style={row}>
-                <label style={labelStyle}>Button Radius</label>
-                <input
-                  type="number"
-                  name="buttonRadius"
-                  defaultValue={selectedHotel.settings?.buttonRadius ?? ''}
-                  style={inputStyle}
-                />
-              </div>
+            <div style={row}>
+              <label>Card Radius</label>
+              <input
+                name="cardRadius"
+                defaultValue={selected.settings?.cardRadius ?? ''}
+                style={input}
+              />
             </div>
 
-            <button
-              type="submit"
-              style={{
-                padding: 14,
-                borderRadius: 999,
-                background: '#111',
-                color: '#fff',
-              }}
-            >
+            <div style={row}>
+              <label>Button Radius</label>
+              <input
+                name="buttonRadius"
+                defaultValue={selected.settings?.buttonRadius ?? ''}
+                style={input}
+              />
+            </div>
+          </div>
+
+          {/* FEATURES */}
+          <div style={section}>
+            <h2>Features</h2>
+
+            {[
+              ['showPrices', 'Preise anzeigen'],
+              ['allowMultiSelect', 'Multi Select'],
+              ['showAmenities', 'Ausstattung'],
+              ['showExtrasStep', 'Extras Step'],
+              ['showPhoneField', 'Telefonfeld'],
+              ['showMessageField', 'Nachricht'],
+              ['enableImageSlider', 'Image Slider'],
+              ['enableLightbox', 'Lightbox'],
+            ].map(([key, label]) => (
+              <label key={key} style={{ display: 'flex', gap: 10 }}>
+                <input
+                  type="checkbox"
+                  name={key}
+                  defaultChecked={(selected.settings as any)?.[key] ?? true}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+
+          {/* ACTIONS */}
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button type="submit" style={button}>
               Speichern
             </button>
-          </form>
-        )}
+
+            <a
+              href={`/admin/settings?hotel=${selected.id}`}
+              style={buttonGhost}
+            >
+              Reset
+            </a>
+          </div>
+        </form>
       </div>
 
-      {/* RIGHT: LIVE PREVIEW */}
+      {/* RIGHT PREVIEW */}
       <div>
         <h2>Live Preview</h2>
 
         <iframe
-          src={widgetUrl}
+          src={`/?hotel=${selected.slug}`}
           style={{
             width: '100%',
             height: 900,
             border: '1px solid #ddd',
             borderRadius: 12,
-            background: '#fff',
           }}
         />
       </div>
