@@ -397,12 +397,17 @@ export default async function Page({ searchParams }: PageProps) {
                       flexWrap: 'wrap',
                     }}
                   >
-                    <input type="color" defaultValue={String(value)} />
                     <input
-                      name={String(key)}
-                      defaultValue={String(value)}
-                      style={smallInputStyle}
+                      type="color"
+                      defaultValue={val}
+                      onChange={(e) => {
+                        const input = e.currentTarget
+                          .nextElementSibling as HTMLInputElement;
+                        if (input) input.value = e.currentTarget.value;
+                      }}
                     />
+
+                    <input name={key} defaultValue={val} />
                     <div style={swatchStyle(String(value))} />
                   </div>
                 </div>
