@@ -171,7 +171,7 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
                     <label style={labelStyle}>{label}</label>
 
                     <div style={{ display: 'flex', gap: 10 }}>
-                      <input type="color" name={key} defaultValue={value} />
+                      <input type="color" defaultValue={value} />
                       <input
                         name={key}
                         defaultValue={value}
