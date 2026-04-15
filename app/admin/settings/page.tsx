@@ -114,7 +114,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid #ddd',
   borderRadius: 8,
   fontSize: 14,
-  background: '#494949',
+  background: '#fff',
 };
 
 const checkboxWrap: React.CSSProperties = {
