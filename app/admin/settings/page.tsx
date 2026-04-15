@@ -100,8 +100,9 @@ const row: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontSize: 14,
-  color: '#555',
+  color: '#444',
   paddingTop: 10,
+  fontWeight: 600,
 };
 
 const inputStyle: React.CSSProperties = {
@@ -109,6 +110,8 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid #ddd',
   borderRadius: 8,
   fontSize: 14,
+  background: '#fff',
+  color: '#111',
 };
 
 export default async function AdminSettingsPage({ searchParams }: PageProps) {
