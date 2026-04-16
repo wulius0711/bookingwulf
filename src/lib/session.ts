@@ -1,35 +1,13 @@
 import 'server-only'
-import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
+import { encrypt, decrypt, type SessionPayload } from './session-crypto'
 
-export type SessionPayload = {
-  userId: number
-  email: string
-  role: string
-}
+export type { SessionPayload } from './session-crypto'
+export { encrypt, decrypt }
 
-const secret = new TextEncoder().encode(process.env.ADMIN_SESSION_SECRET)
 const SESSION_MS = 7 * 24 * 60 * 60 * 1000
-
-export async function encrypt(payload: SessionPayload): Promise<string> {
-  return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('7d')
-    .sign(secret)
-}
-
-export async function decrypt(token: string | undefined): Promise<SessionPayload | null> {
-  if (!token) return null
-  try {
-    const { payload } = await jwtVerify(token, secret, { algorithms: ['HS256'] })
-    return payload as unknown as SessionPayload
-  } catch {
-    return null
-  }
-}
 
 export async function createSession(data: SessionPayload): Promise<void> {
   const expiresAt = new Date(Date.now() + SESSION_MS)

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { decrypt } from '@/src/lib/session'
+import { decrypt } from '@/src/lib/session-crypto'
 
 const PUBLIC_ROUTES = ['/admin/login', '/admin/setup']
 
