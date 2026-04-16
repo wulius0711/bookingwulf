@@ -16,7 +16,7 @@ type ThemeSettings = {
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [hotel, setHotel] = useState('beimoser');
+  const [hotel, setHotel] = useState('default');
   const [dog, setDog] = useState(false);
 
   useEffect(() => {
