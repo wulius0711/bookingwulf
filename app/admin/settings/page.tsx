@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,17 @@ async function saveHotelSettings(formData: FormData) {
   'use server';
 
   const hotelId = Number(formData.get('hotelId') || 0);
+
+  console.log('SAVE SETTINGS HIT');
+  console.log('hotelId:', hotelId);
+  console.log('accentColor:', formData.get('accentColor'));
+  console.log('backgroundColor:', formData.get('backgroundColor'));
+  console.log('cardBackground:', formData.get('cardBackground'));
+  console.log('textColor:', formData.get('textColor'));
+  console.log('mutedTextColor:', formData.get('mutedTextColor'));
+  console.log('borderColor:', formData.get('borderColor'));
+  console.log('showPrices:', formData.get('showPrices'));
+  console.log('allowMultiSelect:', formData.get('allowMultiSelect'));
 
   if (!hotelId) throw new Error('Hotel fehlt');
 
@@ -59,6 +71,9 @@ async function saveHotelSettings(formData: FormData) {
       buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
     },
   });
+
+  revalidatePath('/admin/settings');
+  revalidatePath('/');
 
   redirect(`/admin/settings?hotel=${hotelId}`);
 }
