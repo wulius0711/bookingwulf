@@ -6,7 +6,7 @@ import { createSession, deleteSession } from '@/src/lib/session'
 
 export type LoginState = { error?: string } | undefined
 
-export async function login(state: LoginState, formData: FormData): Promise<LoginState> {
+export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
   const email = formData.get('email')?.toString().trim().toLowerCase()
   const password = formData.get('password')?.toString()
 
@@ -14,18 +14,37 @@ export async function login(state: LoginState, formData: FormData): Promise<Logi
     return { error: 'E-Mail und Passwort sind erforderlich.' }
   }
 
-  const user = await prisma.adminUser.findUnique({ where: { email } })
+  let user
+  try {
+    user = await prisma.adminUser.findUnique({ where: { email } })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: `DB-Fehler: ${msg}` }
+  }
 
   if (!user || !user.isActive) {
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  const valid = await verifyPassword(password, user.passwordHash)
+  let valid = false
+  try {
+    valid = await verifyPassword(password, user.passwordHash)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: `Passwort-Fehler: ${msg}` }
+  }
+
   if (!valid) {
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  await createSession({ userId: user.id, email: user.email, role: user.role })
+  try {
+    await createSession({ userId: user.id, email: user.email, role: user.role })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: `Session-Fehler: ${msg}` }
+  }
+
   redirect('/admin')
 }
 
