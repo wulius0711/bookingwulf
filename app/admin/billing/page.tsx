@@ -150,7 +150,25 @@ export default function BillingPage() {
                   ))}
                 </ul>
 
-                {!isCurrent && (
+                {(isCurrent && !isActive) ? (
+                  <button
+                    onClick={() => startCheckout(key)}
+                    disabled={actionLoading}
+                    style={{
+                      padding: '10px 16px',
+                      borderRadius: 999,
+                      background: '#16a34a',
+                      color: '#fff',
+                      border: 'none',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      opacity: actionLoading ? 0.6 : 1,
+                    }}
+                  >
+                    Jetzt aktivieren
+                  </button>
+                ) : !isCurrent ? (
                   <button
                     onClick={() => startCheckout(key)}
                     disabled={actionLoading}
@@ -168,7 +186,7 @@ export default function BillingPage() {
                   >
                     {isActive ? 'Wechseln' : 'Auswählen'}
                   </button>
-                )}
+                ) : null}
               </div>
             );
           })}
