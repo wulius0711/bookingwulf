@@ -3,6 +3,9 @@ import { decrypt } from '@/src/lib/session'
 import { logout } from './login/actions'
 import { prisma } from '@/src/lib/prisma'
 import { redirect } from 'next/navigation'
+import { hasPlanAccess, NAV_PLAN_GATES, PLAN_LABEL } from '@/src/lib/plan-gates'
+import { PlanKey } from '@/src/lib/plans'
+import NavItem from './components/NavItem'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -12,34 +15,55 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Login- und Setup-Seiten haben kein Nav
   if (!session) return <>{children}</>
 
-  // Billing gate: redirect unpaid hotel_admin users to billing page
-  // Super admins and exempt pages (billing, login, setup) are skipped
+  // Fetch hotel for billing gate + plan gating
+  let hotelPlan: PlanKey = 'starter'
   if (session.role !== 'super_admin' && session.hotelId) {
+    const hotel = await prisma.hotel.findUnique({
+      where: { id: session.hotelId },
+      select: { subscriptionStatus: true, trialEndsAt: true, plan: true },
+    })
+
+    hotelPlan = (hotel?.plan as PlanKey) ?? 'starter'
+    let status = hotel?.subscriptionStatus ?? 'inactive'
+
+    // Auto-expire trial
+    if (status === 'trialing' && hotel?.trialEndsAt && new Date() > hotel.trialEndsAt) {
+      await prisma.hotel.update({
+        where: { id: session.hotelId },
+        data: { subscriptionStatus: 'inactive' },
+      })
+      status = 'inactive'
+    }
+
+    // Billing gate
     const headerStore = await headers()
     const pathname = headerStore.get('x-invoke-path') || headerStore.get('x-matched-path') || ''
     const isExempt = pathname.includes('/billing') || pathname.includes('/login') || pathname.includes('/setup')
 
-    if (pathname && !isExempt) {
-      const hotel = await prisma.hotel.findUnique({
-        where: { id: session.hotelId },
-        select: { subscriptionStatus: true, trialEndsAt: true },
-      })
-      let status = hotel?.subscriptionStatus ?? 'inactive'
-
-      // Auto-expire trial
-      if (status === 'trialing' && hotel?.trialEndsAt && new Date() > hotel.trialEndsAt) {
-        await prisma.hotel.update({
-          where: { id: session.hotelId },
-          data: { subscriptionStatus: 'inactive' },
-        })
-        status = 'inactive'
-      }
-
-      if (status !== 'active' && status !== 'trialing') {
-        redirect('/admin/billing')
-      }
+    if (pathname && !isExempt && status !== 'active' && status !== 'trialing') {
+      redirect('/admin/billing')
     }
   }
+
+  const isSuperAdmin = session.role === 'super_admin'
+
+  const navItems = [
+    { href: '/admin', label: 'Übersicht' },
+    { href: '/admin/analytics', label: 'Analytics' },
+    { href: '/admin/requests', label: 'Anfragen' },
+    { href: '/admin/apartments', label: 'Apartments' },
+    { href: '/admin/price-seasons', label: 'Preissaisons' },
+    { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
+    { href: '/admin/extras', label: 'Extras' },
+    { href: '/admin/settings', label: 'Einstellungen' },
+    { href: '/admin/billing', label: 'Abonnement' },
+    ...(isSuperAdmin
+      ? [
+          { href: '/admin/hotels', label: 'Hotels' },
+          { href: '/admin/users', label: 'Benutzer' },
+        ]
+      : []),
+  ]
 
   return (
     <div
@@ -68,38 +92,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>Admin</span>
           <div style={{ display: 'flex', gap: 4 }}>
-            {[
-              { href: '/admin', label: 'Übersicht' },
-              { href: '/admin/analytics', label: 'Analytics' },
-              { href: '/admin/requests', label: 'Anfragen' },
-              { href: '/admin/apartments', label: 'Apartments' },
-              { href: '/admin/price-seasons', label: 'Preissaisons' },
-              { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
-              { href: '/admin/extras', label: 'Extras' },
-              { href: '/admin/settings', label: 'Einstellungen' },
-              { href: '/admin/billing', label: 'Abonnement' },
-              ...(session.role === 'super_admin'
-                ? [
-                    { href: '/admin/hotels', label: 'Hotels' },
-                    { href: '/admin/users', label: 'Benutzer' },
-                  ]
-                : []),
-            ].map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: '#444',
-                  textDecoration: 'none',
-                }}
-              >
-                {label}
-              </a>
-            ))}
+            {navItems.map(({ href, label }) => {
+              const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
+              const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
+              return (
+                <NavItem
+                  key={href}
+                  href={href}
+                  label={label}
+                  locked={locked}
+                  upgradeLabel={minPlan ? PLAN_LABEL[minPlan] : undefined}
+                />
+              )
+            })}
           </div>
         </div>
 
