@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import DeleteHotelButton from './DeleteHotelButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -175,30 +176,11 @@ export default async function HotelsPage() {
                   </button>
                 </form>
 
-                <form
+                <DeleteHotelButton
+                  hotelId={h.id}
+                  hotelName={h.name}
                   action={deleteHotel}
-                  onSubmit={(e) => {
-                    if (!confirm(`Hotel „${h.name}" und alle zugehörigen Daten unwiderruflich löschen?`)) {
-                      e.preventDefault();
-                    }
-                  }}
-                >
-                  <input type="hidden" name="id" value={h.id} />
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: 999,
-                      border: '1px solid #fca5a5',
-                      background: '#fff',
-                      color: '#dc2626',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                    }}
-                  >
-                    Löschen
-                  </button>
-                </form>
+                />
               </div>
             </div>
           ))}
