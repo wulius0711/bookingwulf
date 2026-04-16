@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 import { registerHotel } from './register-hotel';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
@@ -8,15 +8,6 @@ const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '1
 
 export default function RegisterForm() {
   const [state, action, pending] = useActionState(registerHotel, undefined);
-
-  // After successful registration, redirect to billing to start subscription
-  useEffect(() => {
-    if (state && 'success' in state && state.success) {
-      window.location.href = `/admin/billing?plan=${state.plan}`;
-    }
-  }, [state]);
-
-  const busy = pending;
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -56,7 +47,7 @@ export default function RegisterForm() {
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 20, padding: 32 }}>
           <form action={action} style={{ display: 'grid', gap: 18 }}>
 
-            {state && 'error' in state && (
+            {state?.error && (
               <div style={{ padding: '12px 16px', background: '#fee2e2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 14, color: '#dc2626' }}>
                 {state.error}
               </div>
@@ -118,7 +109,7 @@ export default function RegisterForm() {
 
             <button
               type="submit"
-              disabled={busy}
+              disabled={pending}
               style={{
                 padding: '13px 20px',
                 borderRadius: 999,
@@ -127,8 +118,8 @@ export default function RegisterForm() {
                 border: 'none',
                 fontSize: 15,
                 fontWeight: 600,
-                cursor: busy ? 'not-allowed' : 'pointer',
-                opacity: busy ? 0.7 : 1,
+                cursor: pending ? 'not-allowed' : 'pointer',
+                opacity: pending ? 0.7 : 1,
                 marginTop: 4,
               }}
             >

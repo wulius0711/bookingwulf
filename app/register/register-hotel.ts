@@ -4,11 +4,9 @@ import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import { createSession } from '@/src/lib/session';
+import { redirect } from 'next/navigation';
 
-export type RegisterState =
-  | { error: string }
-  | { success: true; hotelId: number; plan: string }
-  | undefined;
+export type RegisterState = { error: string } | undefined;
 
 export async function registerHotel(
   _state: RegisterState,
@@ -58,5 +56,5 @@ export async function registerHotel(
     hotelId: hotel.id,
   });
 
-  return { success: true, hotelId: hotel.id, plan };
+  redirect(`/admin/billing?plan=${plan}`);
 }
