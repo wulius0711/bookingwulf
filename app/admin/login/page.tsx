@@ -1,0 +1,122 @@
+'use client'
+import { useActionState } from 'react'
+import { login, type LoginState } from './actions'
+
+export default function LoginPage() {
+  const [state, action, pending] = useActionState<LoginState, FormData>(login, undefined)
+
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#f5f5f7',
+        fontFamily:
+          'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      }}
+    >
+      <div
+        style={{
+          background: '#ffffff',
+          borderRadius: 16,
+          padding: '40px 48px',
+          width: '100%',
+          maxWidth: 400,
+          boxShadow: '0 2px 24px rgba(0,0,0,0.08)',
+        }}
+      >
+        <h1
+          style={{
+            fontSize: 22,
+            fontWeight: 700,
+            marginBottom: 8,
+            color: '#111',
+          }}
+        >
+          Admin-Anmeldung
+        </h1>
+        <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
+          Booking-App Verwaltung
+        </p>
+
+        <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label htmlFor="email" style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+              E-Mail
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              style={{
+                padding: '10px 14px',
+                borderRadius: 8,
+                border: '1px solid #ddd',
+                fontSize: 14,
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <label htmlFor="password" style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+              Passwort
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              style={{
+                padding: '10px 14px',
+                borderRadius: 8,
+                border: '1px solid #ddd',
+                fontSize: 14,
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          {state?.error && (
+            <p
+              style={{
+                fontSize: 13,
+                color: '#c0392b',
+                background: '#fdf0ef',
+                border: '1px solid #f5c6c2',
+                borderRadius: 8,
+                padding: '8px 12px',
+                margin: 0,
+              }}
+            >
+              {state.error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={pending}
+            style={{
+              marginTop: 4,
+              padding: '11px 0',
+              borderRadius: 8,
+              border: 'none',
+              background: pending ? '#aaa' : '#111',
+              color: '#fff',
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: pending ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {pending ? 'Anmelden…' : 'Anmelden'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
