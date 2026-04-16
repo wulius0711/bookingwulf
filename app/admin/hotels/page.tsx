@@ -19,6 +19,21 @@ async function toggleHotelActive(formData: FormData) {
   redirect('/admin/hotels');
 }
 
+async function deleteHotel(formData: FormData) {
+  'use server';
+
+  const session = await verifySession();
+  if (session.role !== 'super_admin') return;
+
+  const id = Number(formData.get('id'));
+  if (!id) return;
+
+  // Delete admin users first (onDelete: SetNull won't remove them)
+  await prisma.adminUser.deleteMany({ where: { hotelId: id } });
+  await prisma.hotel.delete({ where: { id } });
+  redirect('/admin/hotels');
+}
+
 export default async function HotelsPage() {
   const session = await verifySession();
   if (session.role !== 'super_admin') redirect('/admin');
@@ -157,6 +172,31 @@ export default async function HotelsPage() {
                     }}
                   >
                     {h.isActive ? 'Deaktivieren' : 'Aktivieren'}
+                  </button>
+                </form>
+
+                <form
+                  action={deleteHotel}
+                  onSubmit={(e) => {
+                    if (!confirm(`Hotel „${h.name}" und alle zugehörigen Daten unwiderruflich löschen?`)) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  <input type="hidden" name="id" value={h.id} />
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: 999,
+                      border: '1px solid #fca5a5',
+                      background: '#fff',
+                      color: '#dc2626',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                    }}
+                  >
+                    Löschen
                   </button>
                 </form>
               </div>
