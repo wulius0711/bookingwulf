@@ -21,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const h = params.get('hotel') || 'beimoser';
+    const h = params.get('hotel') || 'default';
 
     setHotel(h);
     console.log('ACTIVE HOTEL:', h);
