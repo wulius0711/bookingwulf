@@ -383,22 +383,62 @@ export default async function Page({ searchParams }: PageProps) {
                 </div>
               ))}
 
-              <div style={rowStyle}>
-                <label style={labelStyle}>Card Radius</label>
-                <input
-                  name="cardRadius"
-                  defaultValue={selected.settings?.cardRadius ?? '4px'}
-                  style={{ ...inputStyle, maxWidth: 180 }}
-                />
+              <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
+                <div style={rowStyle}>
+                  <label style={labelStyle}>Card Radius</label>
+                  <input
+                    name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
+                    defaultValue={selected.settings?.cardRadius ?? '4px'}
+                    style={{ ...inputStyle, maxWidth: 180 }}
+                  />
+                </div>
+                {!fullBranding && (
+                  <div
+                    title="Ab Pro Plan verfügbar"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      cursor: 'not-allowed',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      paddingRight: 12,
+                      fontSize: 12,
+                      color: '#9ca3af',
+                    }}
+                  >
+                    🔒 Pro
+                  </div>
+                )}
               </div>
 
-              <div style={rowStyle}>
-                <label style={labelStyle}>Button Radius</label>
-                <input
-                  name="buttonRadius"
-                  defaultValue={selected.settings?.buttonRadius ?? '4px'}
-                  style={{ ...inputStyle, maxWidth: 180 }}
-                />
+              <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
+                <div style={rowStyle}>
+                  <label style={labelStyle}>Button Radius</label>
+                  <input
+                    name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
+                    defaultValue={selected.settings?.buttonRadius ?? '4px'}
+                    style={{ ...inputStyle, maxWidth: 180 }}
+                  />
+                </div>
+                {!fullBranding && (
+                  <div
+                    title="Ab Pro Plan verfügbar"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      cursor: 'not-allowed',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      paddingRight: 12,
+                      fontSize: 12,
+                      color: '#9ca3af',
+                    }}
+                  >
+                    🔒 Pro
+                  </div>
+                )}
               </div>
             </div>
 
