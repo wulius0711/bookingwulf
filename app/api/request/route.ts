@@ -1,8 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { Resend } from 'resend';
 
-console.log('=== ROUTE VERSION 2 ===');
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const corsHeaders = {
@@ -41,8 +39,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    console.log('REQUEST API HIT');
-    console.log('BODY HOTEL:', body.hotel);
 
     const hotelSlug = String(body.hotel || '').trim();
     const arrivalRaw = String(body.arrival || '').trim();
@@ -60,9 +56,6 @@ export async function POST(req: Request) {
     const parking = Boolean(extras.parking);
     const lateCheckout = Boolean(extras.lateCheckout);
 
-    console.log('BODY EXTRAS:', body.extras);
-    console.log('BODY EXTRAS DOG:', body.extras?.dog);
-    console.log('DOG BOOLEAN:', dog);
 
     const salutation = String(body.salutation || '').trim();
     const firstname = String(body.firstname || '').trim();
@@ -118,7 +111,7 @@ export async function POST(req: Request) {
 
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
-      select: { id: true, name: true },
+      select: { id: true, name: true, email: true },
     });
 
     if (!hotel) {
@@ -246,16 +239,12 @@ export async function POST(req: Request) {
     const totalBookingPrice = apartmentsTotal + extrasTotal;
 
     try {
-      console.log('=== MAIL START ===');
-      console.log('TO:', process.env.BOOKING_RECEIVER_EMAIL);
-      console.log('FROM:', process.env.BOOKING_FROM_EMAIL);
-      console.log('=== SENDING MAIL ===');
-
       const apartmentNames = apartments.map((a) => a.name).join(', ');
+      const receiverEmail = hotel.email || process.env.BOOKING_RECEIVER_EMAIL!;
 
-      const mailResponse = await resend.emails.send({
+      await resend.emails.send({
         from: process.env.BOOKING_FROM_EMAIL!,
-        to: process.env.BOOKING_RECEIVER_EMAIL!,
+        to: receiverEmail,
         subject: `Neue Buchung (${arrivalRaw} → ${departureRaw})`,
         html: `
           <h2>Neue Buchung – ${hotel.name}</h2>
@@ -378,14 +367,11 @@ export async function POST(req: Request) {
           `,
         });
 
-        console.log('CUSTOMER MAIL SENT');
-      } catch (customerMailError) {
-        console.error('CUSTOMER MAIL ERROR:', customerMailError);
+      } catch {
+        // Gast-Mail-Fehler soll Buchung nicht blockieren
       }
-
-      console.log('MAIL RESPONSE:', JSON.stringify(mailResponse, null, 2));
     } catch (mailError) {
-      console.error('MAIL ERROR:', mailError);
+      console.error('Mail error:', mailError);
     }
 
     return Response.json(
