@@ -1,34 +1,22 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
-import { registerHotel, type RegisterState } from './register-hotel';
+import { useActionState, useEffect } from 'react';
+import { registerHotel } from './register-hotel';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 
 export default function RegisterForm() {
   const [state, action, pending] = useActionState(registerHotel, undefined);
-  const [redirecting, setRedirecting] = useState(false);
 
-  // After successful registration, create Stripe checkout via API
+  // After successful registration, redirect to billing to start subscription
   useEffect(() => {
     if (state && 'success' in state && state.success) {
-      setRedirecting(true);
-      fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: state.plan, hotelId: state.hotelId }),
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.url) window.location.href = data.url;
-          else setRedirecting(false);
-        })
-        .catch(() => setRedirecting(false));
+      window.location.href = `/admin/billing?plan=${state.plan}`;
     }
   }, [state]);
 
-  const busy = pending || redirecting;
+  const busy = pending;
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -144,7 +132,7 @@ export default function RegisterForm() {
                 marginTop: 4,
               }}
             >
-              {redirecting ? 'Weiterleitung zu Stripe…' : pending ? 'Konto wird erstellt…' : 'Konto anlegen & Zahlung starten'}
+              {pending ? 'Konto wird erstellt…' : 'Konto anlegen & Zahlung starten'}
             </button>
 
             <p style={{ margin: 0, textAlign: 'center', fontSize: 13, color: '#9ca3af' }}>
