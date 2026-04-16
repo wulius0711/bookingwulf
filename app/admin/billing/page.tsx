@@ -130,7 +130,7 @@ export default function BillingPage() {
               >
                 {key === 'pro' && (
                   <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: '#111827', color: '#fff', borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
-                    BELIEBT
+                    BESTER DEAL
                   </div>
                 )}
 
