@@ -143,7 +143,7 @@ export default function BillingPage() {
   const status = hotel?.subscriptionStatus ?? 'inactive';
   const statusInfo = STATUS_LABELS[status] ?? STATUS_LABELS.inactive;
   const isActive = status === 'active' || status === 'trialing';
-  const currentFeatures = PLANS[currentPlan]?.features ?? [];
+  const currentFeatures: readonly string[] = PLANS[currentPlan]?.features ?? [];
   const currentPlanName = PLANS[currentPlan]?.name ?? 'Starter';
 
   return (
