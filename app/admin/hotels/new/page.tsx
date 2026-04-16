@@ -98,7 +98,7 @@ export default async function NewHotelPage() {
         <ColorField
           label="Akzentfarbe"
           name="accentColor"
-          defaultValue="#dc143c"
+          defaultValue="#111827"
           labelStyle={labelStyle}
         />
 

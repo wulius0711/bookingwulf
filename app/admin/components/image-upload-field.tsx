@@ -9,6 +9,8 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid #ddd',
   borderRadius: 6,
   fontSize: 14,
+  color: '#111',
+  background: '#fff',
 };
 
 export function ImageUploadField({

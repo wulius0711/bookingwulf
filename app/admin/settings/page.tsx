@@ -347,7 +347,7 @@ export default async function Page({ searchParams }: PageProps) {
 
               {(
                 [
-                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#dc143c', true],
+                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#111827', true],
                   ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#ffffff', fullBranding],
                   ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff', fullBranding],
                   ['Text',       'textColor',       selected.settings?.textColor       || '#111111', fullBranding],

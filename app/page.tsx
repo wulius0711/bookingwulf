@@ -56,26 +56,26 @@ export default function Home() {
 
   function applyThemeDefaults() {
     applyTheme({
-      backgroundColor: '#FAEBD7',
-      textColor: '#2a2a2a',
+      backgroundColor: '#ffffff',
+      textColor: '#111111',
       cardBackground: '#ffffff',
-      accentColor: '#dc143c',
-      borderColor: '#d7c8b6',
-      mutedTextColor: '#6d6258',
-      cardRadius: 12,
-      buttonRadius: 999,
+      accentColor: '#111827',
+      borderColor: '#dddddd',
+      mutedTextColor: '#666666',
+      cardRadius: 4,
+      buttonRadius: 4,
     });
   }
 
   function applyTheme(settings: ThemeSettings) {
-    const backgroundColor = settings.backgroundColor || '#FAEBD7';
-    const textColor = settings.textColor || '#2a2a2a';
+    const backgroundColor = settings.backgroundColor || '#ffffff';
+    const textColor = settings.textColor || '#111111';
     const cardBackground = settings.cardBackground || '#ffffff';
-    const accentColor = settings.accentColor || '#dc143c';
-    const borderColor = settings.borderColor || '#d7c8b6';
-    const mutedTextColor = settings.mutedTextColor || '#6d6258';
-    const cardRadius = settings.cardRadius ?? 12;
-    const buttonRadius = settings.buttonRadius ?? 999;
+    const accentColor = settings.accentColor || '#111827';
+    const borderColor = settings.borderColor || '#dddddd';
+    const mutedTextColor = settings.mutedTextColor || '#666666';
+    const cardRadius = settings.cardRadius ?? 4;
+    const buttonRadius = settings.buttonRadius ?? 4;
 
     document.documentElement.style.setProperty('--bg', backgroundColor);
     document.documentElement.style.setProperty('--text', textColor);

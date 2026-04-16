@@ -119,7 +119,7 @@ export default async function EditHotelPage({ params }: PageProps) {
         <ColorField
           label="Akzentfarbe"
           name="accentColor"
-          defaultValue={hotel.accentColor ?? '#dc143c'}
+          defaultValue={hotel.accentColor ?? '#111827'}
           labelStyle={labelStyle}
         />
 

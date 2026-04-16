@@ -8,7 +8,7 @@ export default function WidgetStandalone() {
   return (
     <div
       style={{
-        background: '#FAEBD7',
+        background: '#ffffff',
         padding: 20,
         fontFamily: 'Inter, sans-serif',
       }}
