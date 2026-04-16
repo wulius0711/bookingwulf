@@ -3,9 +3,12 @@
 import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
 import { PLANS, PlanKey } from '@/src/lib/plans';
-import { redirect } from 'next/navigation';
+import { createSession } from '@/src/lib/session';
 
-export type RegisterState = { error?: string } | undefined;
+export type RegisterState =
+  | { error: string }
+  | { success: true; hotelId: number; plan: string }
+  | undefined;
 
 export async function registerHotel(
   _state: RegisterState,
@@ -33,9 +36,6 @@ export async function registerHotel(
 
   const passwordHash = await hashPassword(password);
 
-  // Lazy import to avoid Stripe SDK being evaluated during module initialization
-  const { stripe, getPriceId } = await import('@/src/lib/stripe');
-
   const hotel = await prisma.hotel.create({
     data: {
       name: hotelName,
@@ -47,31 +47,16 @@ export async function registerHotel(
         create: { email, passwordHash, role: 'hotel_admin', isActive: true },
       },
     },
+    include: { adminUsers: { take: 1 } },
   });
 
-  // Create Stripe customer and redirect to checkout
-  const customer = await stripe.customers.create({
-    name: hotelName,
-    email,
-    metadata: { hotelId: String(hotel.id) },
+  const adminUser = hotel.adminUsers[0];
+  await createSession({
+    userId: adminUser.id,
+    email: adminUser.email,
+    role: adminUser.role,
+    hotelId: hotel.id,
   });
 
-  await prisma.hotel.update({
-    where: { id: hotel.id },
-    data: { stripeCustomerId: customer.id },
-  });
-
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-
-  const checkoutSession = await stripe.checkout.sessions.create({
-    customer: customer.id,
-    mode: 'subscription',
-    line_items: [{ price: getPriceId(plan), quantity: 1 }],
-    success_url: `${appUrl}/admin?registered=1`,
-    cancel_url: `${appUrl}/register?cancelled=1`,
-    metadata: { hotelId: String(hotel.id), plan },
-    subscription_data: { metadata: { hotelId: String(hotel.id), plan } },
-  });
-
-  redirect(checkoutSession.url!);
+  return { success: true, hotelId: hotel.id, plan };
 }
