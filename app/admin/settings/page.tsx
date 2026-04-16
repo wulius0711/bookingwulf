@@ -395,6 +395,7 @@ export default async function Page({ searchParams }: PageProps) {
 
                   <label style={checkboxBoxStyle}>
                     <input
+                      key={String(selected.settings?.[key] ?? true)}
                       type="checkbox"
                       name={key}
                       defaultChecked={selected.settings?.[key] ?? true}
