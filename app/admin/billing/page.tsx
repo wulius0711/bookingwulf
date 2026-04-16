@@ -11,6 +11,61 @@ const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }
   inactive:  { label: 'Inaktiv',     color: '#6b7280', bg: '#f3f4f6' },
 };
 
+function FeatureItem({ label, included, currentPlanName }: { label: string; included: boolean; currentPlanName: string }) {
+  const [hover, setHover] = useState(false);
+
+  if (included) {
+    return (
+      <li style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>
+        <span style={{ color: '#10b981', fontWeight: 700, fontSize: 15 }}>✓</span> {label}
+      </li>
+    );
+  }
+
+  return (
+    <li
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#c0c5ce', position: 'relative', cursor: 'default' }}
+    >
+      <span style={{ fontSize: 13 }}>🔒</span>
+      <span style={{ textDecoration: 'line-through', textDecorationColor: '#e0e3e8' }}>{label}</span>
+      {hover && (
+        <span
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: '100%',
+            transform: 'translateX(-50%)',
+            marginBottom: 6,
+            padding: '6px 12px',
+            background: '#1e293b',
+            color: '#fff',
+            fontSize: 12,
+            fontWeight: 500,
+            borderRadius: 8,
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            zIndex: 10,
+          }}
+        >
+          Nicht im {currentPlanName} Plan
+          <span style={{
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderWidth: 5,
+            borderStyle: 'solid',
+            borderColor: '#1e293b transparent transparent transparent',
+          }} />
+        </span>
+      )}
+    </li>
+  );
+}
+
 export default function BillingPage() {
   const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string; trialEndsAt: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,19 +84,34 @@ export default function BillingPage() {
     load();
   }, []);
 
-  async function startCheckout(plan: PlanKey) {
+  async function handlePlanAction(plan: PlanKey) {
     if (!hotel) return;
     setActionLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, hotelId: hotel.id }),
-      });
-      const data = await res.json();
-      if (data.url) { window.location.href = data.url; return; }
-      setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+      if (status === 'trialing') {
+        const res = await fetch('/api/admin/switch-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          setHotel({ ...hotel, plan });
+          setActionLoading(false);
+          return;
+        }
+        setError(data.error || 'Planwechsel fehlgeschlagen');
+      } else {
+        const res = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan, hotelId: hotel.id }),
+        });
+        const data = await res.json();
+        if (data.url) { window.location.href = data.url; return; }
+        setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+      }
     } catch (e) {
       setError(String(e));
     }
@@ -69,10 +139,12 @@ export default function BillingPage() {
 
   if (loading) return <main style={{ padding: 40, fontFamily: 'Inter, sans-serif' }}>Laden…</main>;
 
-  const currentPlan = hotel?.plan ?? 'starter';
+  const currentPlan = (hotel?.plan ?? 'starter') as PlanKey;
   const status = hotel?.subscriptionStatus ?? 'inactive';
   const statusInfo = STATUS_LABELS[status] ?? STATUS_LABELS.inactive;
   const isActive = status === 'active' || status === 'trialing';
+  const currentFeatures = PLANS[currentPlan]?.features ?? [];
+  const currentPlanName = PLANS[currentPlan]?.name ?? 'Starter';
 
   return (
     <main style={{ padding: 32, background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -88,7 +160,7 @@ export default function BillingPage() {
           <div>
             <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 4 }}>Aktueller Plan</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
-              {PLANS[currentPlan as PlanKey]?.name ?? 'Starter'}
+              {currentPlanName}
             </div>
             <span style={{ display: 'inline-block', marginTop: 6, padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: statusInfo.bg, color: statusInfo.color }}>
               {statusInfo.label}
@@ -104,7 +176,7 @@ export default function BillingPage() {
               </span>
             )}
           </div>
-          {isActive && (
+          {isActive && status !== 'trialing' && (
             <button
               onClick={openPortal}
               disabled={actionLoading}
@@ -155,14 +227,17 @@ export default function BillingPage() {
 
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>
                   {plan.features.map((f) => (
-                    <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>
-                      <span style={{ color: '#10b981', fontWeight: 700 }}>✓</span> {f}
-                    </li>
+                    <FeatureItem
+                      key={f}
+                      label={f}
+                      included={isCurrent || currentFeatures.includes(f)}
+                      currentPlanName={currentPlanName}
+                    />
                   ))}
                 </ul>
 
                 <button
-                  onClick={() => startCheckout(key)}
+                  onClick={() => handlePlanAction(key)}
                   disabled={actionLoading || (isCurrent && isActive)}
                   style={{
                     padding: '10px 16px',
@@ -176,7 +251,7 @@ export default function BillingPage() {
                     opacity: (isCurrent && isActive) ? 0.4 : actionLoading ? 0.6 : 1,
                   }}
                 >
-                  {isCurrent && isActive ? 'Aktiver Plan' : 'Auswählen'}
+                  {isCurrent && isActive ? 'Aktueller Plan' : 'Auswählen'}
                 </button>
               </div>
             );
