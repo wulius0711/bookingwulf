@@ -1,6 +1,8 @@
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { decrypt } from '@/src/lib/session'
 import { logout } from './login/actions'
+import { prisma } from '@/src/lib/prisma'
+import { redirect } from 'next/navigation'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -9,6 +11,25 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   // Login- und Setup-Seiten haben kein Nav
   if (!session) return <>{children}</>
+
+  // Billing gate: redirect unpaid hotel_admin users to billing page
+  // Super admins and exempt pages (billing, login, setup) are skipped
+  if (session.role !== 'super_admin' && session.hotelId) {
+    const headerStore = await headers()
+    const pathname = headerStore.get('x-invoke-path') || headerStore.get('x-matched-path') || ''
+    const isExempt = pathname.includes('/billing') || pathname.includes('/login') || pathname.includes('/setup')
+
+    if (pathname && !isExempt) {
+      const hotel = await prisma.hotel.findUnique({
+        where: { id: session.hotelId },
+        select: { subscriptionStatus: true },
+      })
+      const status = hotel?.subscriptionStatus ?? 'inactive'
+      if (status !== 'active' && status !== 'trialing') {
+        redirect('/admin/billing')
+      }
+    }
+  }
 
   return (
     <div
