@@ -120,7 +120,7 @@ export default function BillingPage() {
                 key={key}
                 style={{
                   background: '#fff',
-                  border: `2px solid ${isCurrent ? '#111827' : '#e5e7eb'}`,
+                  border: `2px solid ${key === 'pro' ? '#111827' : '#e5e7eb'}`,
                   borderRadius: 16,
                   padding: 24,
                   display: 'grid',
@@ -128,9 +128,9 @@ export default function BillingPage() {
                   position: 'relative',
                 }}
               >
-                {isCurrent && (
+                {key === 'pro' && (
                   <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: '#111827', color: '#fff', borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
-                    AKTUELL
+                    BELIEBT
                   </div>
                 )}
 
@@ -150,43 +150,23 @@ export default function BillingPage() {
                   ))}
                 </ul>
 
-                {(isCurrent && !isActive) ? (
-                  <button
-                    onClick={() => startCheckout(key)}
-                    disabled={actionLoading}
-                    style={{
-                      padding: '10px 16px',
-                      borderRadius: 999,
-                      background: '#16a34a',
-                      color: '#fff',
-                      border: 'none',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      opacity: actionLoading ? 0.6 : 1,
-                    }}
-                  >
-                    Jetzt aktivieren
-                  </button>
-                ) : !isCurrent ? (
-                  <button
-                    onClick={() => startCheckout(key)}
-                    disabled={actionLoading}
-                    style={{
-                      padding: '10px 16px',
-                      borderRadius: 999,
-                      background: '#111827',
-                      color: '#fff',
-                      border: 'none',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      opacity: actionLoading ? 0.6 : 1,
-                    }}
-                  >
-                    {isActive ? 'Wechseln' : 'Auswählen'}
-                  </button>
-                ) : null}
+                <button
+                  onClick={() => startCheckout(key)}
+                  disabled={actionLoading || (isCurrent && isActive)}
+                  style={{
+                    padding: '10px 16px',
+                    borderRadius: 999,
+                    background: '#111827',
+                    color: '#fff',
+                    border: 'none',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: (isCurrent && isActive) ? 'default' : 'pointer',
+                    opacity: (isCurrent && isActive) ? 0.4 : actionLoading ? 0.6 : 1,
+                  }}
+                >
+                  {isCurrent && isActive ? 'Aktiver Plan' : 'Auswählen'}
+                </button>
               </div>
             );
           })}
