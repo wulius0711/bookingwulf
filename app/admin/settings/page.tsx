@@ -1,6 +1,4 @@
 import { prisma } from '@/src/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { saveHotelSettings } from './actions';
 
 export const dynamic = 'force-dynamic';
