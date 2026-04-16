@@ -1,7 +1,10 @@
 import { prisma } from '@/src/lib/prisma';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -258,10 +261,11 @@ export async function POST(req: Request) {
     const totalBookingPrice = apartmentsTotal + extrasTotal;
 
     try {
+      const resend = getResend();
       const apartmentNames = apartments.map((a) => a.name).join(', ');
       const receiverEmail = hotel.email || process.env.BOOKING_RECEIVER_EMAIL!;
 
-      await resend.emails.send({
+      if (resend) await resend.emails.send({
         from: process.env.BOOKING_FROM_EMAIL!,
         to: receiverEmail,
         subject: `Neue Buchung (${arrivalRaw} → ${departureRaw})`,
@@ -323,7 +327,7 @@ export async function POST(req: Request) {
       });
 
       try {
-        await resend.emails.send({
+        if (resend) await resend.emails.send({
           from: process.env.BOOKING_FROM_EMAIL!,
           to: email,
           subject: `Ihre Buchung bei ${hotel.name}`,
