@@ -10,72 +10,7 @@ type PageProps = { searchParams: SearchParams };
 async function saveHotelSettings(formData: FormData) {
   'use server';
 
-  const hotelId = Number(formData.get('hotelId') || 0);
-
-  console.log('SAVE SETTINGS HIT');
-  console.log('hotelId:', hotelId);
-  console.log('accentColor:', formData.get('accentColor'));
-  console.log('backgroundColor:', formData.get('backgroundColor'));
-  console.log('cardBackground:', formData.get('cardBackground'));
-  console.log('textColor:', formData.get('textColor'));
-  console.log('mutedTextColor:', formData.get('mutedTextColor'));
-  console.log('borderColor:', formData.get('borderColor'));
-  console.log('showPrices:', formData.get('showPrices'));
-  console.log('allowMultiSelect:', formData.get('allowMultiSelect'));
-
-  if (!hotelId) throw new Error('Hotel fehlt');
-
-  const getBool = (name: string) => formData.get(name) === 'on';
-
-  await prisma.hotelSettings.upsert({
-    where: { hotelId },
-    update: {
-      showPrices: getBool('showPrices'),
-      allowMultiSelect: getBool('allowMultiSelect'),
-      showAmenities: getBool('showAmenities'),
-      showExtrasStep: getBool('showExtrasStep'),
-      showPhoneField: getBool('showPhoneField'),
-      showMessageField: getBool('showMessageField'),
-      enableImageSlider: getBool('enableImageSlider'),
-      enableLightbox: getBool('enableLightbox'),
-
-      accentColor: String(formData.get('accentColor') || '') || null,
-      backgroundColor: String(formData.get('backgroundColor') || '') || null,
-      cardBackground: String(formData.get('cardBackground') || '') || null,
-      textColor: String(formData.get('textColor') || '') || null,
-      mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
-      borderColor: String(formData.get('borderColor') || '') || null,
-
-      cardRadius: Number(formData.get('cardRadius') || 0) || null,
-      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
-    },
-    create: {
-      hotelId,
-      showPrices: getBool('showPrices'),
-      allowMultiSelect: getBool('allowMultiSelect'),
-      showAmenities: getBool('showAmenities'),
-      showExtrasStep: getBool('showExtrasStep'),
-      showPhoneField: getBool('showPhoneField'),
-      showMessageField: getBool('showMessageField'),
-      enableImageSlider: getBool('enableImageSlider'),
-      enableLightbox: getBool('enableLightbox'),
-
-      accentColor: String(formData.get('accentColor') || '') || null,
-      backgroundColor: String(formData.get('backgroundColor') || '') || null,
-      cardBackground: String(formData.get('cardBackground') || '') || null,
-      textColor: String(formData.get('textColor') || '') || null,
-      mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
-      borderColor: String(formData.get('borderColor') || '') || null,
-
-      cardRadius: Number(formData.get('cardRadius') || 0) || null,
-      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
-    },
-  });
-
-  revalidatePath('/admin/settings');
-  revalidatePath('/');
-
-  redirect(`/admin/settings?hotel=${hotelId}`);
+  throw new Error('SERVER ACTION TRIGGERED');
 }
 
 /* ---------- STYLES ---------- */
