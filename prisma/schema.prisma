@@ -18,6 +18,12 @@ model Hotel {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Billing
+  plan                   String   @default("starter") // starter | pro | business
+  stripeCustomerId       String?  @unique
+  stripeSubscriptionId   String?  @unique
+  subscriptionStatus     String   @default("inactive") // inactive | trialing | active | past_due | cancelled
+
   settings      HotelSettings?
   apartments    Apartment[]
   requests      Request[]

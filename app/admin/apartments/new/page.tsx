@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
+import { canAddApartment } from '@/src/lib/plan-gates';
 
 async function createApartment(formData: FormData) {
   'use server';
@@ -33,6 +34,11 @@ async function createApartment(formData: FormData) {
 
   if (session.hotelId !== null && hotelId !== session.hotelId) {
     throw new Error('Zugriff verweigert.');
+  }
+
+  const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { plan: true, _count: { select: { apartments: true } } } });
+  if (hotel && !canAddApartment(hotel.plan, hotel._count.apartments)) {
+    throw new Error(`Apartment-Limit für Plan "${hotel.plan}" erreicht. Bitte upgraden.`);
   }
 
   const size = sizeRaw ? Number(sizeRaw) : null;

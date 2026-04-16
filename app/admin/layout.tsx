@@ -46,6 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
               { href: '/admin/extras', label: 'Extras' },
               { href: '/admin/settings', label: 'Einstellungen' },
+              { href: '/admin/billing', label: 'Abonnement' },
               ...(session.role === 'super_admin'
                 ? [
                     { href: '/admin/hotels', label: 'Hotels' },

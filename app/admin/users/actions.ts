@@ -4,6 +4,7 @@ import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
+import { canAddUser } from '@/src/lib/plan-gates';
 
 export type CreateUserState = { error?: string } | undefined;
 
@@ -37,6 +38,16 @@ export async function createAdminUser(
   const existing = await prisma.adminUser.findUnique({ where: { email } });
   if (existing) {
     return { error: 'Diese E-Mail-Adresse wird bereits verwendet.' };
+  }
+
+  if (role === 'hotel_admin' && hotelId) {
+    const hotel = await prisma.hotel.findUnique({
+      where: { id: hotelId },
+      select: { plan: true, _count: { select: { adminUsers: true } } },
+    });
+    if (hotel && !canAddUser(hotel.plan, hotel._count.adminUsers)) {
+      return { error: `User-Limit für Plan "${hotel.plan}" erreicht. Bitte upgraden.` };
+    }
   }
 
   const passwordHash = await hashPassword(password);
