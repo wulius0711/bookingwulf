@@ -312,6 +312,27 @@ export default async function Page({ searchParams }: PageProps) {
           <form action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>
             <input type="hidden" name="hotelId" value={selected.id} />
 
+            {/* BENACHRICHTIGUNGEN */}
+            <div style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
+                <p style={sectionIntroStyle}>
+                  E-Mail-Adresse, an die neue Buchungsanfragen gesendet werden.
+                </p>
+              </div>
+
+              <div style={rowStyle}>
+                <label style={labelStyle}>Benachrichtigungs-E-Mail</label>
+                <input
+                  name="notificationEmail"
+                  type="email"
+                  defaultValue={selected.email ?? ''}
+                  placeholder="z. B. info@hotel.at"
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
             {/* DESIGN */}
             <div style={sectionStyle}>
               <div>
