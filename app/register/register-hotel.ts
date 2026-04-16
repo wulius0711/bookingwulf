@@ -40,7 +40,8 @@ export async function registerHotel(
       slug,
       email,
       plan,
-      subscriptionStatus: 'inactive',
+      subscriptionStatus: 'trialing',
+      trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       adminUsers: {
         create: { email, passwordHash, role: 'hotel_admin', isActive: true },
       },
@@ -56,5 +57,5 @@ export async function registerHotel(
     hotelId: hotel.id,
   });
 
-  redirect(`/admin/billing?plan=${plan}`);
+  redirect('/admin');
 }

@@ -12,7 +12,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }
 };
 
 export default function BillingPage() {
-  const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string } | null>(null);
+  const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string; trialEndsAt: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +93,16 @@ export default function BillingPage() {
             <span style={{ display: 'inline-block', marginTop: 6, padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: statusInfo.bg, color: statusInfo.color }}>
               {statusInfo.label}
             </span>
+            {status === 'trialing' && hotel?.trialEndsAt && (
+              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: '#6b7280' }}>
+                Testphase endet am {new Date(hotel.trialEndsAt).toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+              </span>
+            )}
+            {status === 'inactive' && hotel?.trialEndsAt && new Date(hotel.trialEndsAt) < new Date() && (
+              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: '#dc2626' }}>
+                Testphase abgelaufen — bitte Plan aktivieren.
+              </span>
+            )}
           </div>
           {isActive && (
             <button

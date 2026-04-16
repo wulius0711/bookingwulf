@@ -22,9 +22,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     if (pathname && !isExempt) {
       const hotel = await prisma.hotel.findUnique({
         where: { id: session.hotelId },
-        select: { subscriptionStatus: true },
+        select: { subscriptionStatus: true, trialEndsAt: true },
       })
-      const status = hotel?.subscriptionStatus ?? 'inactive'
+      let status = hotel?.subscriptionStatus ?? 'inactive'
+
+      // Auto-expire trial
+      if (status === 'trialing' && hotel?.trialEndsAt && new Date() > hotel.trialEndsAt) {
+        await prisma.hotel.update({
+          where: { id: session.hotelId },
+          data: { subscriptionStatus: 'inactive' },
+        })
+        status = 'inactive'
+      }
+
       if (status !== 'active' && status !== 'trialing') {
         redirect('/admin/billing')
       }

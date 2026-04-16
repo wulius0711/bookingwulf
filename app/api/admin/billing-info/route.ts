@@ -9,7 +9,7 @@ export async function GET() {
 
     const hotel = await prisma.hotel.findUnique({
       where: { id: session.hotelId },
-      select: { id: true, name: true, plan: true, subscriptionStatus: true, stripeCustomerId: true },
+      select: { id: true, name: true, plan: true, subscriptionStatus: true, stripeCustomerId: true, trialEndsAt: true },
     });
 
     return NextResponse.json({ hotel });
