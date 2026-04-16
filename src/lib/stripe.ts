@@ -2,7 +2,8 @@ import 'server-only';
 import Stripe from 'stripe';
 import { PLANS, PlanKey } from './plans';
 
-export { PLANS, PlanKey } from './plans';
+export { PLANS } from './plans';
+export type { PlanKey } from './plans';
 
 let _stripe: Stripe | null = null;
 
