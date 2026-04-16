@@ -45,6 +45,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }
   }
 
+  // Get pathname for active nav highlighting
+  const allHeaders = await headers()
+  const currentPath = allHeaders.get('x-invoke-path') || allHeaders.get('x-matched-path') || ''
+
   const isSuperAdmin = session.role === 'super_admin'
 
   const navItems = [
@@ -95,12 +99,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             {navItems.map(({ href, label }) => {
               const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
               const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
+              const active = href === '/admin'
+                ? currentPath === '/admin'
+                : currentPath.startsWith(href)
               return (
                 <NavItem
                   key={href}
                   href={href}
                   label={label}
                   locked={locked}
+                  active={active}
                   upgradeLabel={minPlan ? PLAN_LABEL[minPlan] : undefined}
                 />
               )

@@ -348,7 +348,7 @@ export default async function Page({ searchParams }: PageProps) {
               {(
                 [
                   ['Accent',     'accentColor',     selected.settings?.accentColor     || '#dc143c', true],
-                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#FAEBD7', fullBranding],
+                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#ffffff', fullBranding],
                   ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff', fullBranding],
                   ['Text',       'textColor',       selected.settings?.textColor       || '#111111', fullBranding],
                   ['Muted',      'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666', fullBranding],
@@ -387,7 +387,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <label style={labelStyle}>Card Radius</label>
                 <input
                   name="cardRadius"
-                  defaultValue={selected.settings?.cardRadius ?? ''}
+                  defaultValue={selected.settings?.cardRadius ?? '4px'}
                   style={{ ...inputStyle, maxWidth: 180 }}
                 />
               </div>
@@ -396,7 +396,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <label style={labelStyle}>Button Radius</label>
                 <input
                   name="buttonRadius"
-                  defaultValue={selected.settings?.buttonRadius ?? ''}
+                  defaultValue={selected.settings?.buttonRadius ?? '4px'}
                   style={{ ...inputStyle, maxWidth: 180 }}
                 />
               </div>

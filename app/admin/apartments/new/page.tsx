@@ -99,7 +99,8 @@ const row: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontSize: 14,
-  color: '#666',
+  color: '#111',
+  fontWeight: 500,
   paddingTop: 10,
 };
 
@@ -141,19 +142,23 @@ export default async function NewApartmentPage() {
       <h1 style={{ marginBottom: 30 }}>Neues Apartment</h1>
 
       <form action={createApartment} style={{ display: 'grid', gap: 18 }}>
-        <div style={row}>
-          <label style={labelStyle}>Hotel</label>
-          <select name="hotelId" required style={inputStyle} defaultValue="">
-            <option value="" disabled>
-              Hotel auswählen
-            </option>
-            {hotels.map((hotel) => (
-              <option key={hotel.id} value={hotel.id}>
-                {hotel.name} ({hotel.slug})
+        {session.hotelId === null ? (
+          <div style={row}>
+            <label style={labelStyle}>Hotel</label>
+            <select name="hotelId" required style={inputStyle} defaultValue="">
+              <option value="" disabled>
+                Hotel auswählen
               </option>
-            ))}
-          </select>
-        </div>
+              {hotels.map((hotel) => (
+                <option key={hotel.id} value={hotel.id}>
+                  {hotel.name} ({hotel.slug})
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <input type="hidden" name="hotelId" value={session.hotelId} />
+        )}
 
         <div style={row}>
           <label style={labelStyle}>Name</label>

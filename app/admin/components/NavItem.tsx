@@ -6,11 +6,13 @@ export default function NavItem({
   href,
   label,
   locked,
+  active,
   upgradeLabel,
 }: {
   href: string;
   label: string;
   locked: boolean;
+  active?: boolean;
   upgradeLabel?: string;
 }) {
   const [hover, setHover] = useState(false);
@@ -23,9 +25,11 @@ export default function NavItem({
           padding: '6px 12px',
           borderRadius: 6,
           fontSize: 13,
-          fontWeight: 500,
-          color: '#444',
+          fontWeight: active ? 600 : 500,
+          color: active ? '#111' : '#444',
           textDecoration: 'none',
+          borderBottom: active ? '2px solid #111' : '2px solid transparent',
+          marginBottom: -1,
         }}
       >
         {label}
@@ -46,6 +50,8 @@ export default function NavItem({
         cursor: 'default',
         position: 'relative',
         userSelect: 'none',
+        borderBottom: '2px solid transparent',
+        marginBottom: -1,
       }}
     >
       {label} 🔒
