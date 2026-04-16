@@ -123,7 +123,8 @@ export default function BillingPage() {
                   border: `2px solid ${key === 'pro' ? '#111827' : '#e5e7eb'}`,
                   borderRadius: 16,
                   padding: 24,
-                  display: 'grid',
+                  display: 'flex',
+                  flexDirection: 'column' as const,
                   gap: 16,
                   position: 'relative',
                 }}
@@ -142,7 +143,7 @@ export default function BillingPage() {
                   </div>
                 </div>
 
-                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8 }}>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>
                   {plan.features.map((f) => (
                     <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>
                       <span style={{ color: '#10b981', fontWeight: 700 }}>✓</span> {f}
