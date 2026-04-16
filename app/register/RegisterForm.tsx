@@ -1,16 +1,14 @@
 'use client';
 
 import { useActionState } from 'react';
-// DIAGNOSTIC: action import removed to isolate crash
-// import { registerHotel } from './actions';
+// DIAGNOSTIC: using minimal test action (no prisma/stripe imports)
+import { registerHotelTest } from './actions-test';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 
-async function noop(_state: { error?: string } | undefined, _data: FormData): Promise<{ error?: string } | undefined> { return undefined; }
-
 export default function RegisterForm() {
-  const [state, action, pending] = useActionState(noop, undefined);
+  const [state, action, pending] = useActionState(registerHotelTest, undefined);
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
