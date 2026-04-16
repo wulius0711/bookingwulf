@@ -2,7 +2,6 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
-import { stripe, getPriceId } from '@/src/lib/stripe';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import { redirect } from 'next/navigation';
 
@@ -33,6 +32,9 @@ export async function registerHotel(
   if (emailConflict) return { error: 'Diese E-Mail wird bereits verwendet.' };
 
   const passwordHash = await hashPassword(password);
+
+  // Lazy import to avoid Stripe SDK being evaluated during module initialization
+  const { stripe, getPriceId } = await import('@/src/lib/stripe');
 
   const hotel = await prisma.hotel.create({
     data: {
