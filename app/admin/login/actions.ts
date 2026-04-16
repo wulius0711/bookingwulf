@@ -14,37 +14,18 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'E-Mail und Passwort sind erforderlich.' }
   }
 
-  let user
-  try {
-    user = await prisma.adminUser.findUnique({ where: { email } })
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    return { error: `DB-Fehler: ${msg}` }
-  }
+  const user = await prisma.adminUser.findUnique({ where: { email } })
 
   if (!user || !user.isActive) {
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  let valid = false
-  try {
-    valid = await verifyPassword(password, user.passwordHash)
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    return { error: `Passwort-Fehler: ${msg}` }
-  }
-
+  const valid = await verifyPassword(password, user.passwordHash)
   if (!valid) {
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  try {
-    await createSession({ userId: user.id, email: user.email, role: user.role })
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    return { error: `Session-Fehler: ${msg}` }
-  }
-
+  await createSession({ userId: user.id, email: user.email, role: user.role })
   redirect('/admin')
 }
 
