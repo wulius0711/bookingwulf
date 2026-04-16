@@ -8,18 +8,21 @@ export type SessionPayload = {
 
 function getSecret(): Uint8Array {
   const key = process.env.ADMIN_SESSION_SECRET
-  if (!key || key.length < 32) {
-    throw new Error('ADMIN_SESSION_SECRET must be set and at least 32 characters long')
-  }
+  if (!key) throw new Error('ADMIN_SESSION_SECRET env variable is not set')
   return new TextEncoder().encode(key)
 }
 
 export async function encrypt(payload: SessionPayload): Promise<string> {
-  return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('7d')
-    .sign(getSecret())
+  try {
+    return await new SignJWT({ ...payload })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('7d')
+      .sign(getSecret())
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    throw new Error(`Session encryption failed: ${msg}`)
+  }
 }
 
 export async function decrypt(token: string | undefined): Promise<SessionPayload | null> {
