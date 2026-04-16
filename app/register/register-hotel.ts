@@ -57,5 +57,5 @@ export async function registerHotel(
     hotelId: hotel.id,
   });
 
-  redirect('/admin');
+  redirect('/admin/billing?welcome=1');
 }

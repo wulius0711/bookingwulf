@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
@@ -12,10 +13,12 @@ const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }
 };
 
 export default function BillingPage() {
+  const searchParams = useSearchParams();
   const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string; trialEndsAt: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showWelcome, setShowWelcome] = useState(searchParams.get('welcome') === '1');
 
   useEffect(() => {
     async function load() {
@@ -198,6 +201,65 @@ export default function BillingPage() {
           })}
         </div>
       </div>
+
+      {/* Welcome modal */}
+      {showWelcome && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+            padding: 24,
+          }}
+          onClick={() => setShowWelcome(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#fff',
+              borderRadius: 20,
+              padding: '36px 32px',
+              maxWidth: 480,
+              width: '100%',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+            }}
+          >
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
+            <h2 style={{ margin: '0 0 8px', fontSize: 22, fontWeight: 700, color: '#0f172a' }}>
+              Willkommen!
+            </h2>
+            <p style={{ margin: '0 0 16px', fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+              Dein Hotel-Konto wurde erfolgreich erstellt. Du hast jetzt eine
+              <strong> 14-tägige kostenlose Testphase</strong>, in der du alle Features ausprobieren kannst.
+            </p>
+            <ul style={{ margin: '0 0 20px', padding: '0 0 0 18px', fontSize: 14, color: '#475569', lineHeight: 1.8 }}>
+              <li>Wähle hier einen Plan — du kannst jederzeit wechseln</li>
+              <li>Alle Features des gewählten Plans sind sofort verfügbar</li>
+              <li>Erst nach der Testphase wird eine Zahlung fällig</li>
+            </ul>
+            <button
+              onClick={() => setShowWelcome(false)}
+              style={{
+                width: '100%',
+                padding: '12px 20px',
+                borderRadius: 999,
+                background: '#111827',
+                color: '#fff',
+                border: 'none',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Plan auswählen
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
