@@ -1,4 +1,4 @@
-import { PLANS, PlanKey } from './stripe';
+import { PLANS, PlanKey } from './plans';
 
 export function canAddApartment(plan: string, currentCount: number): boolean {
   const p = PLANS[plan as PlanKey] ?? PLANS.starter;

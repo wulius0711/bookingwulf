@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { PLANS, PlanKey } from '@/src/lib/stripe';
+import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
   active:    { label: 'Aktiv',       color: '#16a34a', bg: '#dcfce7' },

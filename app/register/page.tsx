@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { registerHotel } from './actions';
-import { PLANS, PlanKey } from '@/src/lib/stripe';
+import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 

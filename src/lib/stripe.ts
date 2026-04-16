@@ -1,4 +1,8 @@
+import 'server-only';
 import Stripe from 'stripe';
+import { PLANS, PlanKey } from './plans';
+
+export { PLANS, PlanKey } from './plans';
 
 let _stripe: Stripe | null = null;
 
@@ -10,42 +14,26 @@ export function getStripe(): Stripe {
   return _stripe;
 }
 
-// Keep named export for convenience — resolved lazily at call time
 export const stripe = new Proxy({} as Stripe, {
   get(_target, prop) {
     return (getStripe() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
-export const PLANS = {
-  starter: {
-    name: 'Starter',
-    priceId: process.env.STRIPE_PRICE_STARTER!,
-    maxApartments: 5,
-    maxUsers: 1,
-    features: ['Bis zu 5 Apartments', '1 Admin-User', 'Standard-Branding', 'E-Mail-Benachrichtigungen'],
-  },
-  pro: {
-    name: 'Pro',
-    priceId: process.env.STRIPE_PRICE_PRO!,
-    maxApartments: 20,
-    maxUsers: 3,
-    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Konfigurierbare Extras', 'Preissaisons'],
-  },
-  business: {
-    name: 'Business',
-    priceId: process.env.STRIPE_PRICE_BUSINESS!,
-    maxApartments: Infinity,
-    maxUsers: Infinity,
-    features: ['Unlimitierte Apartments', 'Unlimitierte User', 'Custom Domain', 'Analytics', 'Priority Support'],
-  },
-} as const;
-
-export type PlanKey = keyof typeof PLANS;
-
 export function getPlanFromPriceId(priceId: string): PlanKey {
-  for (const [key, plan] of Object.entries(PLANS)) {
-    if (plan.priceId === priceId) return key as PlanKey;
-  }
-  return 'starter';
+  const priceMap: Record<string, PlanKey> = {
+    [process.env.STRIPE_PRICE_STARTER ?? '']: 'starter',
+    [process.env.STRIPE_PRICE_PRO ?? '']: 'pro',
+    [process.env.STRIPE_PRICE_BUSINESS ?? '']: 'business',
+  };
+  return priceMap[priceId] ?? 'starter';
+}
+
+export function getPriceId(plan: PlanKey): string {
+  const map: Record<PlanKey, string> = {
+    starter: process.env.STRIPE_PRICE_STARTER ?? '',
+    pro: process.env.STRIPE_PRICE_PRO ?? '',
+    business: process.env.STRIPE_PRICE_BUSINESS ?? '',
+  };
+  return map[plan];
 }
