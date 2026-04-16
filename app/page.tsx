@@ -16,12 +16,11 @@ type ThemeSettings = {
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [hotel, setHotel] = useState('default');
-  const [dog, setDog] = useState(false);
+  const [hotel, setHotel] = useState('beimoser');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const h = params.get('hotel') || 'default';
+    const h = params.get('hotel') || 'beimoser';
 
     setHotel(h);
     console.log('ACTIVE HOTEL:', h);
@@ -124,7 +123,6 @@ export default function Home() {
       country: String(formData.get('country') || ''),
       message: String(formData.get('message') || ''),
       newsletter: formData.get('newsletter') === 'on',
-      dog,
     };
 
     try {
@@ -137,9 +135,8 @@ export default function Home() {
       const data = await res.json();
 
       if (data.success) {
-        setMessage('Buchung erfolgreich gespeichert.');
+        setMessage('Anfrage erfolgreich gespeichert.');
         form.reset();
-        setDog(false);
       } else {
         setMessage('Fehler beim Speichern.');
       }
@@ -271,22 +268,6 @@ export default function Home() {
             <input name="newsletter" type="checkbox" /> Newsletter
           </label>
 
-          <label
-            style={{
-              color: 'var(--text)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={dog}
-              onChange={(e) => setDog(e.target.checked)}
-            />
-            Hund
-          </label>
-
           <button
             type="submit"
             disabled={loading}
@@ -301,7 +282,7 @@ export default function Home() {
               minHeight: 48,
             }}
           >
-            {loading ? 'Speichert...' : 'Buchung senden'}
+            {loading ? 'Speichert...' : 'Anfrage senden'}
           </button>
         </form>
 
