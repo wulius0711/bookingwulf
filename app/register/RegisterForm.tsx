@@ -1,13 +1,16 @@
 'use client';
 
 import { useActionState } from 'react';
-import { registerHotel } from './actions';
+// DIAGNOSTIC: action import removed to isolate crash
+// import { registerHotel } from './actions';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 
+async function noop(_state: undefined, _data: FormData): Promise<undefined> { return undefined; }
+
 export default function RegisterForm() {
-  const [state, action, pending] = useActionState(registerHotel, undefined);
+  const [state, action, pending] = useActionState(noop, undefined);
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
