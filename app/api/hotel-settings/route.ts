@@ -47,11 +47,18 @@ export async function GET(req: Request) {
       where: { hotelId: hotel.id },
     });
 
+    const extras = await prisma.hotelExtra.findMany({
+      where: { hotelId: hotel.id, isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      select: { key: true, name: true, billingType: true, price: true },
+    });
+
     return withCors(
       NextResponse.json({
         success: true,
         hotel,
         settings,
+        extras,
       }),
     );
   } catch (error) {

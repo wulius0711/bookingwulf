@@ -39,10 +39,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div style={{ display: 'flex', gap: 4 }}>
             {[
               { href: '/admin', label: 'Übersicht' },
+              { href: '/admin/analytics', label: 'Analytics' },
               { href: '/admin/requests', label: 'Anfragen' },
               { href: '/admin/apartments', label: 'Apartments' },
               { href: '/admin/price-seasons', label: 'Preissaisons' },
               { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
+              { href: '/admin/extras', label: 'Extras' },
               { href: '/admin/settings', label: 'Einstellungen' },
               ...(session.role === 'super_admin'
                 ? [

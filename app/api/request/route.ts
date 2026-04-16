@@ -50,11 +50,9 @@ export async function POST(req: Request) {
       body.selected_apartments || '',
     ).trim();
 
-    const extras = body.extras || {};
-    const dog = Boolean(extras.dog);
-    const breakfast = Boolean(extras.breakfast);
-    const parking = Boolean(extras.parking);
-    const lateCheckout = Boolean(extras.lateCheckout);
+    const selectedExtrasKeys: string[] = Array.isArray(body.extras)
+      ? body.extras.map((k: unknown) => String(k))
+      : [];
 
 
     const salutation = String(body.salutation || '').trim();
@@ -111,7 +109,15 @@ export async function POST(req: Request) {
 
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
-      select: { id: true, name: true, email: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        extras: {
+          where: { isActive: true },
+          select: { key: true, name: true, billingType: true, price: true },
+        },
+      },
     });
 
     if (!hotel) {
@@ -184,6 +190,44 @@ export async function POST(req: Request) {
       0,
     );
 
+    const guestCount = adults + children;
+
+    type ExtraLineItem = {
+      key: string;
+      name: string;
+      billingType: string;
+      unitPrice: number;
+      quantity: number;
+      subtotal: number;
+      label: string;
+    };
+
+    const extrasLineItems: ExtraLineItem[] = [];
+    let extrasTotal = 0;
+
+    for (const extra of hotel.extras) {
+      if (!selectedExtrasKeys.includes(extra.key)) continue;
+
+      const unitPrice = Number(extra.price);
+      let quantity = 1;
+      let label = extra.name;
+
+      if (extra.billingType === 'per_night') {
+        quantity = nights;
+        label = `${extra.name} (${nights} Nächte)`;
+      } else if (extra.billingType === 'per_person_per_night') {
+        quantity = guestCount * nights;
+        label = `${extra.name} (${guestCount} Pers. × ${nights} Nächte)`;
+      } else if (extra.billingType === 'per_person_per_stay') {
+        quantity = guestCount;
+        label = `${extra.name} (${guestCount} Personen)`;
+      }
+
+      const subtotal = unitPrice * quantity;
+      extrasTotal += subtotal;
+      extrasLineItems.push({ key: extra.key, name: extra.name, billingType: extra.billingType, unitPrice, quantity, subtotal, label });
+    }
+
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id,
@@ -201,38 +245,13 @@ export async function POST(req: Request) {
         message: message || null,
         newsletter,
         status: 'new',
+        extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
       },
     });
 
-    const selectedExtras: string[] = [];
-    let extrasTotal = 0;
-    const guestCount = adults + children;
-
-    if (dog) {
-      selectedExtras.push(`Hund (${nights} Tage)`);
-      extrasTotal += 18 * nights;
-    }
-
-    if (breakfast) {
-      selectedExtras.push(
-        `Frühstück (${guestCount} Personen, ${nights} Nächte)`,
-      );
-      extrasTotal += 14 * guestCount * nights;
-    }
-
-    if (parking) {
-      selectedExtras.push('Parkplatz (pro Aufenthalt)');
-      extrasTotal += 12;
-    }
-
-    if (lateCheckout) {
-      selectedExtras.push('Late Check-out (pro Aufenthalt)');
-      extrasTotal += 25;
-    }
-
-    const extrasHtml = selectedExtras.length
+    const extrasHtml = extrasLineItems.length
       ? `<ul style="margin: 8px 0 0 0; padding-left: 18px; line-height: 1.6;">
-          ${selectedExtras.map((e: string) => `<li>${e}</li>`).join('')}
+          ${extrasLineItems.map((e) => `<li>${e.label} — € ${e.subtotal.toFixed(2)}</li>`).join('')}
         </ul>`
       : 'Keine';
 
