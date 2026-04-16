@@ -15,6 +15,7 @@ export default function BillingPage() {
   const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -31,27 +32,39 @@ export default function BillingPage() {
   async function startCheckout(plan: PlanKey) {
     if (!hotel) return;
     setActionLoading(true);
-    const res = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, hotelId: hotel.id }),
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setActionLoading(false);
+    setError(null);
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, hotelId: hotel.id }),
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; return; }
+      setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+    } catch (e) {
+      setError(String(e));
+    }
+    setActionLoading(false);
   }
 
   async function openPortal() {
     if (!hotel) return;
     setActionLoading(true);
-    const res = await fetch('/api/stripe/portal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hotelId: hotel.id }),
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setActionLoading(false);
+    setError(null);
+    try {
+      const res = await fetch('/api/stripe/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hotelId: hotel.id }),
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; return; }
+      setError(data.error || `Portal fehlgeschlagen (${res.status})`);
+    } catch (e) {
+      setError(String(e));
+    }
+    setActionLoading(false);
   }
 
   if (loading) return <main style={{ padding: 40, fontFamily: 'Inter, sans-serif' }}>Laden…</main>;
@@ -91,6 +104,12 @@ export default function BillingPage() {
             </button>
           )}
         </div>
+
+        {error && (
+          <div style={{ padding: '12px 16px', background: '#fee2e2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 14, color: '#dc2626' }}>
+            {error}
+          </div>
+        )}
 
         {/* Plan cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
