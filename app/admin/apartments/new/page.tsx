@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
+import { ImageUploadField } from '@/app/admin/components/image-upload-field';
 
 async function createApartment(formData: FormData) {
   'use server';
@@ -269,27 +270,7 @@ Kaffeemaschine`}
           <label style={labelStyle}>Bilder</label>
           <div style={{ display: 'grid', gap: 12 }}>
             {[0, 1, 2, 3, 4, 5].map((index) => (
-              <div
-                key={index}
-                style={{
-                  border: '1px solid #eee',
-                  borderRadius: 8,
-                  padding: 12,
-                  display: 'grid',
-                  gap: 10,
-                }}
-              >
-                <input
-                  name="imageUrl"
-                  placeholder={`Bild URL ${index + 1}`}
-                  style={inputStyle}
-                />
-                <input
-                  name="altText"
-                  placeholder={`Alt Text ${index + 1}`}
-                  style={inputStyle}
-                />
-              </div>
+              <ImageUploadField key={index} index={index} />
             ))}
           </div>
         </div>

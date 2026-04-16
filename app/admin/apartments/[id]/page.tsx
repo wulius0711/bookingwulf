@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
+import { ImageUploadField } from '@/app/admin/components/image-upload-field';
 
 export const dynamic = 'force-dynamic';
 
@@ -346,42 +347,12 @@ Kaffeemaschine`}
           <label style={labelStyle}>Bilder</label>
           <div style={{ display: 'grid', gap: 12 }}>
             {[0, 1, 2, 3, 4, 5].map((index) => (
-              <div
+              <ImageUploadField
                 key={index}
-                style={{
-                  border: '1px solid #eee',
-                  borderRadius: 8,
-                  padding: 12,
-                  display: 'grid',
-                  gap: 10,
-                }}
-              >
-                <input
-                  name="imageUrl"
-                  placeholder={`Bild URL ${index + 1}`}
-                  defaultValue={apartment.images[index]?.imageUrl || ''}
-                  style={inputStyle}
-                />
-                <input
-                  name="altText"
-                  placeholder={`Alt Text ${index + 1}`}
-                  defaultValue={apartment.images[index]?.altText || ''}
-                  style={inputStyle}
-                />
-                {apartment.images[index]?.imageUrl && (
-                  <img
-                    src={apartment.images[index].imageUrl}
-                    alt={apartment.images[index].altText || `Bild ${index + 1}`}
-                    style={{
-                      width: 220,
-                      height: 140,
-                      objectFit: 'cover',
-                      borderRadius: 8,
-                      border: '1px solid #eee',
-                    }}
-                  />
-                )}
-              </div>
+                index={index}
+                defaultUrl={apartment.images[index]?.imageUrl || ''}
+                defaultAlt={apartment.images[index]?.altText || ''}
+              />
             ))}
           </div>
         </div>

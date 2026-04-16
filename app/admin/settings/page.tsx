@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
+import { ColorField } from './color-field';
 
 export const dynamic = 'force-dynamic';
 
@@ -204,14 +205,6 @@ const iframeStyle: React.CSSProperties = {
   background: '#ffffff',
 };
 
-const swatchStyle = (color: string): React.CSSProperties => ({
-  width: 30,
-  height: 30,
-  borderRadius: 8,
-  border: '1px solid #d1d5db',
-  background: color || '#ffffff',
-  flexShrink: 0,
-});
 
 /* ---------- TYPES ---------- */
 
@@ -328,54 +321,23 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              {[
+              {(
                 [
-                  'Accent',
-                  'accentColor',
-                  selected.settings?.accentColor || '#dc143c',
-                ],
-                [
-                  'Background',
-                  'backgroundColor',
-                  selected.settings?.backgroundColor || '#FAEBD7',
-                ],
-                [
-                  'Card',
-                  'cardBackground',
-                  selected.settings?.cardBackground || '#ffffff',
-                ],
-                [
-                  'Text',
-                  'textColor',
-                  selected.settings?.textColor || '#111111',
-                ],
-                [
-                  'Muted',
-                  'mutedTextColor',
-                  selected.settings?.mutedTextColor || '#666666',
-                ],
-                [
-                  'Border',
-                  'borderColor',
-                  selected.settings?.borderColor || '#dddddd',
-                ],
-              ].map(([label, key, value]) => (
-                <div style={rowStyle} key={String(key)}>
-                  <label style={labelStyle}>{label}</label>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 12,
-                      alignItems: 'center',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <input type="color" defaultValue={String(value)} />
-                    <input name={String(key)} defaultValue={String(value)} />
-                    <div style={swatchStyle(String(value))} />
-                  </div>
-                </div>
+                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#dc143c'],
+                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#FAEBD7'],
+                  ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff'],
+                  ['Text',       'textColor',       selected.settings?.textColor       || '#111111'],
+                  ['Muted',      'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666'],
+                  ['Border',     'borderColor',     selected.settings?.borderColor     || '#dddddd'],
+                ] as [string, string, string][]
+              ).map(([label, name, value]) => (
+                <ColorField
+                  key={name}
+                  label={label}
+                  name={name}
+                  defaultValue={value}
+                  labelStyle={labelStyle}
+                />
               ))}
 
               <div style={rowStyle}>
