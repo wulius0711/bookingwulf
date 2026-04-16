@@ -11,14 +11,14 @@ export const PLANS = {
     priceEur: '99',
     maxApartments: 20,
     maxUsers: 3,
-    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Konfigurierbare Extras', 'Preissaisons'],
+    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'E-Mail-Benachrichtigungen', 'Konfigurierbare Extras', 'Preissaisons'],
   },
   business: {
     name: 'Business',
     priceEur: '199',
     maxApartments: Infinity,
     maxUsers: Infinity,
-    features: ['Unlimitierte Apartments', 'Unlimitierte User', 'Custom Domain', 'Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Unlimitierte Apartments', 'Unlimitierte User', 'Custom Domain', 'Analytics', 'Priority Support'],
   },
 } as const;
 
