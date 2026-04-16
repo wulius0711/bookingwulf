@@ -2,7 +2,8 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
-import { stripe, PLANS, PlanKey } from '@/src/lib/stripe';
+import { stripe, getPriceId } from '@/src/lib/stripe';
+import { PLANS, PlanKey } from '@/src/lib/plans';
 import { redirect } from 'next/navigation';
 
 export type RegisterState = { error?: string } | undefined;
@@ -63,7 +64,7 @@ export async function registerHotel(
   const checkoutSession = await stripe.checkout.sessions.create({
     customer: customer.id,
     mode: 'subscription',
-    line_items: [{ price: PLANS[plan].priceId, quantity: 1 }],
+    line_items: [{ price: getPriceId(plan), quantity: 1 }],
     success_url: `${appUrl}/admin?registered=1`,
     cancel_url: `${appUrl}/register?cancelled=1`,
     metadata: { hotelId: String(hotel.id), plan },

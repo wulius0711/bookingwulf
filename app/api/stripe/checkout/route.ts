@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { stripe, PLANS, PlanKey } from '@/src/lib/stripe';
+import { stripe, getPriceId } from '@/src/lib/stripe';
+import { PLANS, PlanKey } from '@/src/lib/plans';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     const planKey = (plan as PlanKey) in PLANS ? (plan as PlanKey) : 'starter';
-    const priceId = PLANS[planKey].priceId;
+    const priceId = getPriceId(planKey);
 
     const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { id: true, name: true, email: true, stripeCustomerId: true } });
     if (!hotel) return NextResponse.json({ error: 'Hotel nicht gefunden.' }, { status: 404 });
