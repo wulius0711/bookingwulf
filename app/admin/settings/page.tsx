@@ -1,17 +1,12 @@
 import { prisma } from '@/src/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { saveHotelSettings } from './actions';
 
 export const dynamic = 'force-dynamic';
 
 type SearchParams = Promise<{ hotel?: string }>;
 type PageProps = { searchParams: SearchParams };
-
-async function saveHotelSettings(formData: FormData) {
-  'use server';
-
-  throw new Error('SERVER ACTION TRIGGERED');
-}
 
 /* ---------- STYLES ---------- */
 
