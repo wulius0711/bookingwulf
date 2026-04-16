@@ -1,14 +1,13 @@
 'use client';
 
 import { useActionState } from 'react';
-// DIAGNOSTIC: using minimal test action (no prisma/stripe imports)
-import { registerHotelTest } from './actions-test';
+import { registerHotel } from './register-hotel';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 
 const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 
 export default function RegisterForm() {
-  const [state, action, pending] = useActionState(registerHotelTest, undefined);
+  const [state, action, pending] = useActionState(registerHotel, undefined);
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
