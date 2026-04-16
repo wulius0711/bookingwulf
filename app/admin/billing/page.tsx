@@ -45,8 +45,7 @@ export default function BillingPage() {
         });
         const data = await res.json();
         if (data.ok) {
-          setHotel({ ...hotel, plan });
-          setActionLoading(false);
+          window.location.reload();
           return;
         }
         setError(data.error || 'Planwechsel fehlgeschlagen');
