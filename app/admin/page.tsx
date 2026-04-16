@@ -1,9 +1,13 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
+  const session = await verifySession();
+
   const requests = await prisma.request.findMany({
+    where: session.hotelId !== null ? { hotelId: session.hotelId } : undefined,
     orderBy: {
       createdAt: 'desc',
     },

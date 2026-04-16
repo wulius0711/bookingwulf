@@ -1,37 +1,42 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 
 export default async function NewPriceSeasonPage() {
+  const session = await verifySession();
+
   const apartments = await prisma.apartment.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+      ...(session.hotelId !== null ? { hotelId: session.hotelId } : {}),
+    },
     orderBy: { name: 'asc' },
   });
 
   async function createSeason(formData: FormData) {
     'use server';
 
+    const session = await verifySession();
     const apartmentId = Number(formData.get('apartmentId'));
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const pricePerNight = Number(formData.get('pricePerNight'));
     const minStay = Number(formData.get('minStay') || 1);
 
-    if (!apartmentId || !pricePerNight) {
-      throw new Error('Fehlende Daten');
+    if (!apartmentId || !pricePerNight) throw new Error('Fehlende Daten');
+
+    if (session.hotelId !== null) {
+      const apt = await prisma.apartment.findUnique({
+        where: { id: apartmentId },
+        select: { hotelId: true },
+      });
+      if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
     }
 
-    if (endDate <= startDate) {
-      throw new Error('Enddatum muss nach Startdatum liegen');
-    }
+    if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
     await prisma.priceSeason.create({
-      data: {
-        apartmentId,
-        startDate,
-        endDate,
-        pricePerNight,
-        minStay,
-      },
+      data: { apartmentId, startDate, endDate, pricePerNight, minStay },
     });
 
     redirect('/admin/price-seasons');

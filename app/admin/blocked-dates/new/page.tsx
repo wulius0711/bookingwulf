@@ -1,38 +1,44 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 
 export default async function NewBlockedDatePage() {
+  const session = await verifySession();
+
   const apartments = await prisma.apartment.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+      ...(session.hotelId !== null ? { hotelId: session.hotelId } : {}),
+    },
     orderBy: { name: 'asc' },
   });
 
   async function createBlockedDate(formData: FormData) {
     'use server';
 
+    const session = await verifySession();
     const apartmentId = Number(formData.get('apartmentId'));
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const type = String(formData.get('type') || 'manual');
     const note = String(formData.get('note') || '');
 
-    if (!apartmentId || !startDate || !endDate) {
-      return;
+    if (!apartmentId || !startDate || !endDate) return;
+
+    if (session.hotelId !== null) {
+      const apt = await prisma.apartment.findUnique({
+        where: { id: apartmentId },
+        select: { hotelId: true },
+      });
+      if (!apt || apt.hotelId !== session.hotelId) return;
     }
 
-    // 🔥 kleine Sicherheitslogik
     if (endDate <= startDate) {
       throw new Error('Enddatum muss nach Startdatum liegen');
     }
 
     await prisma.blockedRange.create({
-      data: {
-        apartmentId,
-        startDate,
-        endDate,
-        type,
-        note,
-      },
+      data: { apartmentId, startDate, endDate, type, note },
     });
 
     redirect('/admin/blocked-dates');

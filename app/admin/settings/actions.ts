@@ -1,14 +1,20 @@
 'use server';
 
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function saveHotelSettings(formData: FormData) {
+  const session = await verifySession();
   const hotelId = Number(formData.get('hotelId') || 0);
 
   if (!hotelId) {
     throw new Error('Hotel fehlt');
+  }
+
+  if (session.hotelId !== null && hotelId !== session.hotelId) {
+    throw new Error('Zugriff verweigert.');
   }
 
   const getBool = (name: string) => formData.get(name) === 'on';

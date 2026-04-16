@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -238,20 +239,25 @@ const featureToggles: [ToggleKey, string][] = [
 /* ---------- PAGE ---------- */
 
 export default async function Page({ searchParams }: PageProps) {
+  const session = await verifySession();
+  const isSuperAdmin = session.hotelId === null;
+
   const { hotel } = await searchParams;
 
-  const hotels = await prisma.hotel.findMany({
-    where: { isActive: true },
-    orderBy: { name: 'asc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
-  });
+  const hotels = isSuperAdmin
+    ? await prisma.hotel.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true, slug: true },
+      })
+    : await prisma.hotel.findMany({
+        where: { id: session.hotelId!, isActive: true },
+        select: { id: true, name: true, slug: true },
+      });
 
-  const selectedId =
-    hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : hotels[0]?.id;
+  const selectedId = isSuperAdmin
+    ? hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : hotels[0]?.id
+    : session.hotelId!;
 
   const selected = selectedId
     ? await prisma.hotel.findUnique({
@@ -276,36 +282,38 @@ export default async function Page({ searchParams }: PageProps) {
               </p>
             </div>
 
-            <form method="GET">
-              <div style={selectorWrapStyle}>
-                <label style={labelStyle}>Hotel auswählen</label>
+            {isSuperAdmin && (
+              <form method="GET">
+                <div style={selectorWrapStyle}>
+                  <label style={labelStyle}>Hotel auswählen</label>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 10,
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <select
-                    name="hotel"
-                    defaultValue={String(selected.id)}
-                    style={{ ...inputStyle, minWidth: 280 }}
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 10,
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                    }}
                   >
-                    {hotels.map((hotelItem) => (
-                      <option key={hotelItem.id} value={hotelItem.id}>
-                        {hotelItem.name} ({hotelItem.slug})
-                      </option>
-                    ))}
-                  </select>
+                    <select
+                      name="hotel"
+                      defaultValue={String(selected.id)}
+                      style={{ ...inputStyle, minWidth: 280 }}
+                    >
+                      {hotels.map((hotelItem) => (
+                        <option key={hotelItem.id} value={hotelItem.id}>
+                          {hotelItem.name} ({hotelItem.slug})
+                        </option>
+                      ))}
+                    </select>
 
-                  <button type="submit" style={secondaryButtonStyle}>
-                    Laden
-                  </button>
+                    <button type="submit" style={secondaryButtonStyle}>
+                      Laden
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
 
           <form action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>

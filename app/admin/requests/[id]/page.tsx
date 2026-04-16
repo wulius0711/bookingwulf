@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -20,6 +21,7 @@ function parseApartmentIds(raw: string): number[] {
 async function updateBookingStatus(formData: FormData) {
   'use server';
 
+  const session = await verifySession();
   const id = Number(formData.get('id'));
   const status = String(formData.get('status') || '').trim();
 
@@ -27,6 +29,11 @@ async function updateBookingStatus(formData: FormData) {
 
   const allowed = ['new', 'answered', 'booked', 'cancelled'];
   if (!allowed.includes(status)) return;
+
+  if (session.hotelId !== null) {
+    const req = await prisma.request.findUnique({ where: { id }, select: { hotelId: true } });
+    if (!req || req.hotelId !== session.hotelId) return;
+  }
 
   await prisma.request.update({
     where: { id },
@@ -70,6 +77,7 @@ function getStatusBadge(status: string) {
 }
 
 export default async function BookingDetailPage({ params }: PageProps) {
+  const session = await verifySession();
   const { id } = await params;
   const requestId = parseInt(id, 10);
 
@@ -88,6 +96,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
   });
 
   if (!request) notFound();
+  if (session.hotelId !== null && request.hotelId !== session.hotelId) notFound();
 
   const settings = request.hotelId
     ? await prisma.hotelSettings.findFirst({

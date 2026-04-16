@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -45,30 +46,28 @@ type PageProps = {
 };
 
 export default async function RequestsPage({ searchParams }: PageProps) {
-  const { hotel } = await searchParams;
-  const selectedHotelSlug = hotel?.trim() || '';
+  const session = await verifySession();
+  const isSuperAdmin = session.hotelId === null;
 
-  const hotels = await prisma.hotel.findMany({
-    where: { isActive: true },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      accentColor: true,
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
+  const { hotel } = await searchParams;
+  const selectedHotelSlug = isSuperAdmin ? (hotel?.trim() || '') : '';
+
+  const hotels = isSuperAdmin
+    ? await prisma.hotel.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true, slug: true, accentColor: true },
+        orderBy: { name: 'asc' },
+      })
+    : await prisma.hotel.findMany({
+        where: { id: session.hotelId!, isActive: true },
+        select: { id: true, name: true, slug: true, accentColor: true },
+      });
 
   const requests = await prisma.request.findMany({
-    where: selectedHotelSlug
-      ? {
-          hotel: {
-            slug: selectedHotelSlug,
-          },
-        }
-      : undefined,
+    where: {
+      ...(session.hotelId !== null ? { hotelId: session.hotelId } : {}),
+      ...(isSuperAdmin && selectedHotelSlug ? { hotel: { slug: selectedHotelSlug } } : {}),
+    },
     include: {
       hotel: {
         select: {
@@ -98,78 +97,82 @@ export default async function RequestsPage({ searchParams }: PageProps) {
         <div>
           <h1 style={{ margin: 0 }}>Buchungen</h1>
           <div style={{ marginTop: 8, fontSize: 13, color: '#666' }}>
-            {selectedHotelSlug
+            {!isSuperAdmin
+              ? hotels[0]?.name || ''
+              : selectedHotelSlug
               ? `Gefiltert nach Hotel: ${hotels.find((h) => h.slug === selectedHotelSlug)?.name || selectedHotelSlug}`
               : 'Alle Hotels'}
           </div>
         </div>
 
-        <form method="GET">
-          <label
-            style={{
-              display: 'grid',
-              gap: 8,
-              fontSize: 13,
-              color: '#666',
-            }}
-          >
-            Hotel filtern
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-              <select
-                name="hotel"
-                defaultValue={selectedHotelSlug}
-                style={{
-                  minWidth: 220,
-                  padding: '10px 12px',
-                  border: '1px solid #ddd',
-                  borderRadius: 10,
-                  background: '#fff',
-                  fontSize: 14,
-                }}
-              >
-                <option value="">Alle Hotels</option>
-                {hotels.map((hotel) => (
-                  <option key={hotel.id} value={hotel.slug}>
-                    {hotel.name}
-                  </option>
-                ))}
-              </select>
+        {isSuperAdmin && (
+          <form method="GET">
+            <label
+              style={{
+                display: 'grid',
+                gap: 8,
+                fontSize: 13,
+                color: '#666',
+              }}
+            >
+              Hotel filtern
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <select
+                  name="hotel"
+                  defaultValue={selectedHotelSlug}
+                  style={{
+                    minWidth: 220,
+                    padding: '10px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: 10,
+                    background: '#fff',
+                    fontSize: 14,
+                  }}
+                >
+                  <option value="">Alle Hotels</option>
+                  {hotels.map((hotel) => (
+                    <option key={hotel.id} value={hotel.slug}>
+                      {hotel.name}
+                    </option>
+                  ))}
+                </select>
 
-              <button
-                type="submit"
-                style={{
-                  padding: '10px 14px',
-                  borderRadius: 999,
-                  border: '1px solid #fff',
-                  background: '#111',
-                  color: '#fff',
-                  cursor: 'pointer',
-                }}
-              >
-                Anwenden
-              </button>
-
-              {selectedHotelSlug ? (
-                <Link
-                  href="/admin/requests"
+                <button
+                  type="submit"
                   style={{
                     padding: '10px 14px',
                     borderRadius: 999,
-                    border: '1px solid #ccc',
-                    background: '#fff',
-                    color: '#111',
-                    textDecoration: 'none',
+                    border: '1px solid #fff',
+                    background: '#111',
+                    color: '#fff',
+                    cursor: 'pointer',
                   }}
                 >
-                  Reset
-                </Link>
-              ) : null}
-            </div>
-          </label>
-        </form>
+                  Anwenden
+                </button>
+
+                {selectedHotelSlug ? (
+                  <Link
+                    href="/admin/requests"
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: 999,
+                      border: '1px solid #ccc',
+                      background: '#fff',
+                      color: '#111',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Reset
+                  </Link>
+                ) : null}
+              </div>
+            </label>
+          </form>
+        )}
       </div>
 
-      {hotels.length > 0 && (
+      {isSuperAdmin && hotels.length > 0 && (
         <div
           style={{
             display: 'flex',

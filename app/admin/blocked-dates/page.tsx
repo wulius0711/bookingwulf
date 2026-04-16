@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -6,25 +7,30 @@ export const dynamic = 'force-dynamic';
 async function deleteBlockedDate(formData: FormData) {
   'use server';
 
+  const session = await verifySession();
   const id = Number(formData.get('id'));
+  if (!id) return;
 
-  if (!id) {
-    return;
+  if (session.hotelId !== null) {
+    const range = await prisma.blockedRange.findUnique({
+      where: { id },
+      include: { apartment: { select: { hotelId: true } } },
+    });
+    if (!range || range.apartment?.hotelId !== session.hotelId) return;
   }
 
-  await prisma.blockedRange.delete({
-    where: { id },
-  });
+  await prisma.blockedRange.delete({ where: { id } });
 }
 
 export default async function BlockedDatesPage() {
+  const session = await verifySession();
+
   const ranges = await prisma.blockedRange.findMany({
-    include: {
-      apartment: true,
-    },
-    orderBy: {
-      startDate: 'asc',
-    },
+    where: session.hotelId !== null
+      ? { apartment: { hotelId: session.hotelId } }
+      : undefined,
+    include: { apartment: true },
+    orderBy: { startDate: 'asc' },
   });
 
   return (

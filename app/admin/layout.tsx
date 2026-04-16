@@ -44,6 +44,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               { href: '/admin/price-seasons', label: 'Preissaisons' },
               { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
               { href: '/admin/settings', label: 'Einstellungen' },
+              ...(session.role === 'super_admin'
+                ? [{ href: '/admin/users', label: 'Benutzer' }]
+                : []),
             ].map(({ href, label }) => (
               <a
                 key={href}

@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -6,22 +7,30 @@ export const dynamic = 'force-dynamic';
 async function deleteSeason(formData: FormData) {
   'use server';
 
+  const session = await verifySession();
   const id = Number(formData.get('id'));
   if (!id) return;
 
-  await prisma.priceSeason.delete({
-    where: { id },
-  });
+  if (session.hotelId !== null) {
+    const season = await prisma.priceSeason.findUnique({
+      where: { id },
+      include: { apartment: { select: { hotelId: true } } },
+    });
+    if (!season || season.apartment?.hotelId !== session.hotelId) return;
+  }
+
+  await prisma.priceSeason.delete({ where: { id } });
 }
 
 export default async function PriceSeasonsPage() {
+  const session = await verifySession();
+
   const seasons = await prisma.priceSeason.findMany({
-    include: {
-      apartment: true,
-    },
-    orderBy: {
-      startDate: 'asc',
-    },
+    where: session.hotelId !== null
+      ? { apartment: { hotelId: session.hotelId } }
+      : undefined,
+    include: { apartment: true },
+    orderBy: { startDate: 'asc' },
   });
 
   return (

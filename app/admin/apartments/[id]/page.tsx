@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -42,6 +43,7 @@ const buttonStyle: React.CSSProperties = {
 };
 
 export default async function EditApartmentPage({ params }: PageProps) {
+  const session = await verifySession();
   const { id } = await params;
   const apartmentId = parseInt(id, 10);
 
@@ -51,24 +53,22 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
   const [apartment, hotels] = await Promise.all([
     prisma.apartment.findFirst({
-      where: { id: apartmentId },
-      include: {
-        images: {
-          orderBy: {
-            sortOrder: 'asc',
-          },
-        },
+      where: {
+        id: apartmentId,
+        ...(session.hotelId !== null ? { hotelId: session.hotelId } : {}),
       },
+      include: { images: { orderBy: { sortOrder: 'asc' } } },
     }),
-    prisma.hotel.findMany({
-      where: { isActive: true },
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    }),
+    session.hotelId !== null
+      ? prisma.hotel.findMany({
+          where: { id: session.hotelId, isActive: true },
+          select: { id: true, name: true, slug: true },
+        })
+      : prisma.hotel.findMany({
+          where: { isActive: true },
+          orderBy: { name: 'asc' },
+          select: { id: true, name: true, slug: true },
+        }),
   ]);
 
   if (!apartment) {
@@ -78,6 +78,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
   async function updateApartment(formData: FormData) {
     'use server';
 
+    const session = await verifySession();
     const hotelId = Number(formData.get('hotelId') || 0);
     const name = String(formData.get('name') || '').trim();
     const slug = String(formData.get('slug') || '').trim();
@@ -100,6 +101,10 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
     if (!hotelId || !name || !slug) {
       throw new Error('Hotel, Name und Slug sind erforderlich.');
+    }
+
+    if (session.hotelId !== null && hotelId !== session.hotelId) {
+      throw new Error('Zugriff verweigert.');
     }
 
     const bedrooms = bedroomsRaw ? Number(bedroomsRaw) : null;

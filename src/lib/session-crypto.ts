@@ -4,6 +4,7 @@ export type SessionPayload = {
   userId: number
   email: string
   role: string
+  hotelId: number | null
 }
 
 function getSecret(): Uint8Array {
@@ -29,7 +30,13 @@ export async function decrypt(token: string | undefined): Promise<SessionPayload
   if (!token) return null
   try {
     const { payload } = await jwtVerify(token, getSecret(), { algorithms: ['HS256'] })
-    return payload as unknown as SessionPayload
+    const p = payload as Record<string, unknown>
+    return {
+      userId: p.userId as number,
+      email: p.email as string,
+      role: p.role as string,
+      hotelId: (p.hotelId as number | null | undefined) ?? null,
+    }
   } catch {
     return null
   }

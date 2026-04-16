@@ -25,7 +25,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  await createSession({ userId: user.id, email: user.email, role: user.role })
+  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: user.hotelId ?? null })
   redirect('/admin')
 }
 

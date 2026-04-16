@@ -1,9 +1,11 @@
 import { prisma } from '@/src/lib/prisma';
+import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 
 async function createApartment(formData: FormData) {
   'use server';
 
+  const session = await verifySession();
   const hotelId = Number(formData.get('hotelId') || 0);
   const name = String(formData.get('name') || '').trim();
   const slug = String(formData.get('slug') || '').trim();
@@ -26,6 +28,10 @@ async function createApartment(formData: FormData) {
 
   if (!hotelId || !name || !slug) {
     throw new Error('Hotel, Name und Slug sind erforderlich.');
+  }
+
+  if (session.hotelId !== null && hotelId !== session.hotelId) {
+    throw new Error('Zugriff verweigert.');
   }
 
   const size = sizeRaw ? Number(sizeRaw) : null;
@@ -110,15 +116,18 @@ const buttonStyle: React.CSSProperties = {
 };
 
 export default async function NewApartmentPage() {
-  const hotels = await prisma.hotel.findMany({
-    where: { isActive: true },
-    orderBy: { name: 'asc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
-  });
+  const session = await verifySession();
+
+  const hotels = session.hotelId !== null
+    ? await prisma.hotel.findMany({
+        where: { id: session.hotelId, isActive: true },
+        select: { id: true, name: true, slug: true },
+      })
+    : await prisma.hotel.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true, slug: true },
+      });
 
   return (
     <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 900 }}>
