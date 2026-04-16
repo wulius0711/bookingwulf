@@ -15,5 +15,7 @@ export async function registerHotelTest(
   const _hash = await hashPassword('test');
   const _plans = Object.keys(PLANS) as PlanKey[];
   if (count < 0) redirect('/'); // never runs
-  return { error: `all imports ok — ${count} hotels` };
+  const { getPriceId } = await import('@/src/lib/stripe');
+  const _price = getPriceId('starter');
+  return { error: `stripe dynamic import ok — ${count} hotels` };
 }
