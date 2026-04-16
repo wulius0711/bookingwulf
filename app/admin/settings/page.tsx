@@ -212,6 +212,29 @@ const swatchStyle = (color: string): React.CSSProperties => ({
   flexShrink: 0,
 });
 
+/* ---------- TYPES ---------- */
+
+type ToggleKey =
+  | 'showPrices'
+  | 'allowMultiSelect'
+  | 'showAmenities'
+  | 'showExtrasStep'
+  | 'showPhoneField'
+  | 'showMessageField'
+  | 'enableImageSlider'
+  | 'enableLightbox'
+
+const featureToggles: [ToggleKey, string][] = [
+  ['showPrices', 'Preise anzeigen'],
+  ['allowMultiSelect', 'Multi Select Apartments'],
+  ['showAmenities', 'Ausstattung anzeigen'],
+  ['showExtrasStep', 'Zusatzleistungen anzeigen'],
+  ['showPhoneField', 'Telefonfeld anzeigen'],
+  ['showMessageField', 'Nachrichtenfeld anzeigen'],
+  ['enableImageSlider', 'Image Slider aktivieren'],
+  ['enableLightbox', 'Lightbox aktivieren'],
+]
+
 /* ---------- PAGE ---------- */
 
 export default async function Page({ searchParams }: PageProps) {
@@ -375,24 +398,15 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              {[
-                ['showPrices', 'Preise anzeigen'],
-                ['allowMultiSelect', 'Multi Select Apartments'],
-                ['showAmenities', 'Ausstattung anzeigen'],
-                ['showExtrasStep', 'Zusatzleistungen anzeigen'],
-                ['showPhoneField', 'Telefonfeld anzeigen'],
-                ['showMessageField', 'Nachrichtenfeld anzeigen'],
-                ['enableImageSlider', 'Image Slider aktivieren'],
-                ['enableLightbox', 'Lightbox aktivieren'],
-              ].map(([key, label]) => (
-                <div key={String(key)} style={checkboxRowStyle}>
+              {featureToggles.map(([key, label]) => (
+                <div key={key} style={checkboxRowStyle}>
                   <label style={labelStyle}>{label}</label>
 
                   <label style={checkboxBoxStyle}>
                     <input
                       type="checkbox"
-                      name={String(key)}
-                      defaultChecked={(selected.settings as any)?.[key] ?? true}
+                      name={key}
+                      defaultChecked={selected.settings?.[key] ?? true}
                     />
                     Aktiv
                   </label>
