@@ -58,6 +58,7 @@ export const ModelName = {
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
+  HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser'
 } as const
 
@@ -86,7 +87,11 @@ export const HotelScalarFieldEnum = {
   phone: 'phone',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  plan: 'plan',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubscriptionId: 'stripeSubscriptionId',
+  subscriptionStatus: 'subscriptionStatus'
 } as const
 
 export type HotelScalarFieldEnum = (typeof HotelScalarFieldEnum)[keyof typeof HotelScalarFieldEnum]
@@ -198,11 +203,28 @@ export const RequestScalarFieldEnum = {
   message: 'message',
   newsletter: 'newsletter',
   status: 'status',
+  extrasJson: 'extrasJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
+
+
+export const HotelExtraScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  name: 'name',
+  key: 'key',
+  billingType: 'billingType',
+  price: 'price',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelExtraScalarFieldEnum = (typeof HotelExtraScalarFieldEnum)[keyof typeof HotelExtraScalarFieldEnum]
 
 
 export const AdminUserScalarFieldEnum = {
@@ -227,6 +249,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -241,4 +271,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -44,6 +44,10 @@ export type HotelMinAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  plan: string | null
+  stripeCustomerId: string | null
+  stripeSubscriptionId: string | null
+  subscriptionStatus: string | null
 }
 
 export type HotelMaxAggregateOutputType = {
@@ -56,6 +60,10 @@ export type HotelMaxAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  plan: string | null
+  stripeCustomerId: string | null
+  stripeSubscriptionId: string | null
+  subscriptionStatus: string | null
 }
 
 export type HotelCountAggregateOutputType = {
@@ -68,6 +76,10 @@ export type HotelCountAggregateOutputType = {
   isActive: number
   createdAt: number
   updatedAt: number
+  plan: number
+  stripeCustomerId: number
+  stripeSubscriptionId: number
+  subscriptionStatus: number
   _all: number
 }
 
@@ -90,6 +102,10 @@ export type HotelMinAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  plan?: true
+  stripeCustomerId?: true
+  stripeSubscriptionId?: true
+  subscriptionStatus?: true
 }
 
 export type HotelMaxAggregateInputType = {
@@ -102,6 +118,10 @@ export type HotelMaxAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  plan?: true
+  stripeCustomerId?: true
+  stripeSubscriptionId?: true
+  subscriptionStatus?: true
 }
 
 export type HotelCountAggregateInputType = {
@@ -114,6 +134,10 @@ export type HotelCountAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  plan?: true
+  stripeCustomerId?: true
+  stripeSubscriptionId?: true
+  subscriptionStatus?: true
   _all?: true
 }
 
@@ -213,6 +237,10 @@ export type HotelGroupByOutputType = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
+  plan: string
+  stripeCustomerId: string | null
+  stripeSubscriptionId: string | null
+  subscriptionStatus: string
   _count: HotelCountAggregateOutputType | null
   _avg: HotelAvgAggregateOutputType | null
   _sum: HotelSumAggregateOutputType | null
@@ -248,11 +276,16 @@ export type HotelWhereInput = {
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
+  plan?: Prisma.StringFilter<"Hotel"> | string
+  stripeCustomerId?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  stripeSubscriptionId?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  subscriptionStatus?: Prisma.StringFilter<"Hotel"> | string
   settings?: Prisma.XOR<Prisma.HotelSettingsNullableScalarRelationFilter, Prisma.HotelSettingsWhereInput> | null
   apartments?: Prisma.ApartmentListRelationFilter
   requests?: Prisma.RequestListRelationFilter
   adminUsers?: Prisma.AdminUserListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
+  extras?: Prisma.HotelExtraListRelationFilter
 }
 
 export type HotelOrderByWithRelationInput = {
@@ -265,16 +298,23 @@ export type HotelOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
   settings?: Prisma.HotelSettingsOrderByWithRelationInput
   apartments?: Prisma.ApartmentOrderByRelationAggregateInput
   requests?: Prisma.RequestOrderByRelationAggregateInput
   adminUsers?: Prisma.AdminUserOrderByRelationAggregateInput
   blockedRanges?: Prisma.BlockedRangeOrderByRelationAggregateInput
+  extras?: Prisma.HotelExtraOrderByRelationAggregateInput
 }
 
 export type HotelWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   slug?: string
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
   AND?: Prisma.HotelWhereInput | Prisma.HotelWhereInput[]
   OR?: Prisma.HotelWhereInput[]
   NOT?: Prisma.HotelWhereInput | Prisma.HotelWhereInput[]
@@ -285,12 +325,15 @@ export type HotelWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
+  plan?: Prisma.StringFilter<"Hotel"> | string
+  subscriptionStatus?: Prisma.StringFilter<"Hotel"> | string
   settings?: Prisma.XOR<Prisma.HotelSettingsNullableScalarRelationFilter, Prisma.HotelSettingsWhereInput> | null
   apartments?: Prisma.ApartmentListRelationFilter
   requests?: Prisma.RequestListRelationFilter
   adminUsers?: Prisma.AdminUserListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
-}, "id" | "slug">
+  extras?: Prisma.HotelExtraListRelationFilter
+}, "id" | "slug" | "stripeCustomerId" | "stripeSubscriptionId">
 
 export type HotelOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -302,6 +345,10 @@ export type HotelOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
   _count?: Prisma.HotelCountOrderByAggregateInput
   _avg?: Prisma.HotelAvgOrderByAggregateInput
   _max?: Prisma.HotelMaxOrderByAggregateInput
@@ -322,6 +369,10 @@ export type HotelScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hotel"> | Date | string
+  plan?: Prisma.StringWithAggregatesFilter<"Hotel"> | string
+  stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
+  stripeSubscriptionId?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
+  subscriptionStatus?: Prisma.StringWithAggregatesFilter<"Hotel"> | string
 }
 
 export type HotelCreateInput = {
@@ -333,11 +384,16 @@ export type HotelCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateInput = {
@@ -350,11 +406,16 @@ export type HotelUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUpdateInput = {
@@ -366,11 +427,16 @@ export type HotelUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateInput = {
@@ -383,11 +449,16 @@ export type HotelUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateManyInput = {
@@ -400,6 +471,10 @@ export type HotelCreateManyInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
 }
 
 export type HotelUpdateManyMutationInput = {
@@ -411,6 +486,10 @@ export type HotelUpdateManyMutationInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type HotelUncheckedUpdateManyInput = {
@@ -423,6 +502,10 @@ export type HotelUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type HotelCountOrderByAggregateInput = {
@@ -435,6 +518,10 @@ export type HotelCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripeSubscriptionId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
 }
 
 export type HotelAvgOrderByAggregateInput = {
@@ -451,6 +538,10 @@ export type HotelMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripeSubscriptionId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
 }
 
 export type HotelMinOrderByAggregateInput = {
@@ -463,6 +554,10 @@ export type HotelMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripeSubscriptionId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
 }
 
 export type HotelSumOrderByAggregateInput = {
@@ -563,6 +658,20 @@ export type HotelUpdateOneWithoutRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HotelUpdateToOneWithWhereWithoutRequestsInput, Prisma.HotelUpdateWithoutRequestsInput>, Prisma.HotelUncheckedUpdateWithoutRequestsInput>
 }
 
+export type HotelCreateNestedOneWithoutExtrasInput = {
+  create?: Prisma.XOR<Prisma.HotelCreateWithoutExtrasInput, Prisma.HotelUncheckedCreateWithoutExtrasInput>
+  connectOrCreate?: Prisma.HotelCreateOrConnectWithoutExtrasInput
+  connect?: Prisma.HotelWhereUniqueInput
+}
+
+export type HotelUpdateOneRequiredWithoutExtrasNestedInput = {
+  create?: Prisma.XOR<Prisma.HotelCreateWithoutExtrasInput, Prisma.HotelUncheckedCreateWithoutExtrasInput>
+  connectOrCreate?: Prisma.HotelCreateOrConnectWithoutExtrasInput
+  upsert?: Prisma.HotelUpsertWithoutExtrasInput
+  connect?: Prisma.HotelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HotelUpdateToOneWithWhereWithoutExtrasInput, Prisma.HotelUpdateWithoutExtrasInput>, Prisma.HotelUncheckedUpdateWithoutExtrasInput>
+}
+
 export type HotelCreateNestedOneWithoutAdminUsersInput = {
   create?: Prisma.XOR<Prisma.HotelCreateWithoutAdminUsersInput, Prisma.HotelUncheckedCreateWithoutAdminUsersInput>
   connectOrCreate?: Prisma.HotelCreateOrConnectWithoutAdminUsersInput
@@ -588,10 +697,15 @@ export type HotelCreateWithoutSettingsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutSettingsInput = {
@@ -604,10 +718,15 @@ export type HotelUncheckedCreateWithoutSettingsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutSettingsInput = {
@@ -635,10 +754,15 @@ export type HotelUpdateWithoutSettingsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutSettingsInput = {
@@ -651,10 +775,15 @@ export type HotelUncheckedUpdateWithoutSettingsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutApartmentsInput = {
@@ -666,10 +795,15 @@ export type HotelCreateWithoutApartmentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
   requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutApartmentsInput = {
@@ -682,10 +816,15 @@ export type HotelUncheckedCreateWithoutApartmentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
   requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutApartmentsInput = {
@@ -713,10 +852,15 @@ export type HotelUpdateWithoutApartmentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
   requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutApartmentsInput = {
@@ -729,10 +873,15 @@ export type HotelUncheckedUpdateWithoutApartmentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
   requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutBlockedRangesInput = {
@@ -744,10 +893,15 @@ export type HotelCreateWithoutBlockedRangesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutBlockedRangesInput = {
@@ -760,10 +914,15 @@ export type HotelUncheckedCreateWithoutBlockedRangesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutBlockedRangesInput = {
@@ -791,10 +950,15 @@ export type HotelUpdateWithoutBlockedRangesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
@@ -807,10 +971,15 @@ export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutRequestsInput = {
@@ -822,10 +991,15 @@ export type HotelCreateWithoutRequestsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutRequestsInput = {
@@ -838,10 +1012,15 @@ export type HotelUncheckedCreateWithoutRequestsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
   adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutRequestsInput = {
@@ -869,10 +1048,15 @@ export type HotelUpdateWithoutRequestsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutRequestsInput = {
@@ -885,8 +1069,111 @@ export type HotelUncheckedUpdateWithoutRequestsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
+  adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
+}
+
+export type HotelCreateWithoutExtrasInput = {
+  name: string
+  slug: string
+  accentColor?: string | null
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
+  settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
+  apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
+  requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
+  adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
+  blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+}
+
+export type HotelUncheckedCreateWithoutExtrasInput = {
+  id?: number
+  name: string
+  slug: string
+  accentColor?: string | null
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
+  settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
+  apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
+  requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
+  adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+}
+
+export type HotelCreateOrConnectWithoutExtrasInput = {
+  where: Prisma.HotelWhereUniqueInput
+  create: Prisma.XOR<Prisma.HotelCreateWithoutExtrasInput, Prisma.HotelUncheckedCreateWithoutExtrasInput>
+}
+
+export type HotelUpsertWithoutExtrasInput = {
+  update: Prisma.XOR<Prisma.HotelUpdateWithoutExtrasInput, Prisma.HotelUncheckedUpdateWithoutExtrasInput>
+  create: Prisma.XOR<Prisma.HotelCreateWithoutExtrasInput, Prisma.HotelUncheckedCreateWithoutExtrasInput>
+  where?: Prisma.HotelWhereInput
+}
+
+export type HotelUpdateToOneWithWhereWithoutExtrasInput = {
+  where?: Prisma.HotelWhereInput
+  data: Prisma.XOR<Prisma.HotelUpdateWithoutExtrasInput, Prisma.HotelUncheckedUpdateWithoutExtrasInput>
+}
+
+export type HotelUpdateWithoutExtrasInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
+  apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
+  requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
+  adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
+  blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+}
+
+export type HotelUncheckedUpdateWithoutExtrasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
+  apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
+  requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
 }
@@ -900,10 +1187,15 @@ export type HotelCreateWithoutAdminUsersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutAdminUsersInput = {
@@ -916,10 +1208,15 @@ export type HotelUncheckedCreateWithoutAdminUsersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
   settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
   apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
   requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutAdminUsersInput = {
@@ -947,10 +1244,15 @@ export type HotelUpdateWithoutAdminUsersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutAdminUsersInput = {
@@ -963,10 +1265,15 @@ export type HotelUncheckedUpdateWithoutAdminUsersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
   apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
   requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 
@@ -979,6 +1286,7 @@ export type HotelCountOutputType = {
   requests: number
   adminUsers: number
   blockedRanges: number
+  extras: number
 }
 
 export type HotelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -986,6 +1294,7 @@ export type HotelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   requests?: boolean | HotelCountOutputTypeCountRequestsArgs
   adminUsers?: boolean | HotelCountOutputTypeCountAdminUsersArgs
   blockedRanges?: boolean | HotelCountOutputTypeCountBlockedRangesArgs
+  extras?: boolean | HotelCountOutputTypeCountExtrasArgs
 }
 
 /**
@@ -1026,6 +1335,13 @@ export type HotelCountOutputTypeCountBlockedRangesArgs<ExtArgs extends runtime.T
   where?: Prisma.BlockedRangeWhereInput
 }
 
+/**
+ * HotelCountOutputType without action
+ */
+export type HotelCountOutputTypeCountExtrasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HotelExtraWhereInput
+}
+
 
 export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1037,11 +1353,16 @@ export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean
+  stripeCustomerId?: boolean
+  stripeSubscriptionId?: boolean
+  subscriptionStatus?: boolean
   settings?: boolean | Prisma.Hotel$settingsArgs<ExtArgs>
   apartments?: boolean | Prisma.Hotel$apartmentsArgs<ExtArgs>
   requests?: boolean | Prisma.Hotel$requestsArgs<ExtArgs>
   adminUsers?: boolean | Prisma.Hotel$adminUsersArgs<ExtArgs>
   blockedRanges?: boolean | Prisma.Hotel$blockedRangesArgs<ExtArgs>
+  extras?: boolean | Prisma.Hotel$extrasArgs<ExtArgs>
   _count?: boolean | Prisma.HotelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hotel"]>
 
@@ -1055,6 +1376,10 @@ export type HotelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean
+  stripeCustomerId?: boolean
+  stripeSubscriptionId?: boolean
+  subscriptionStatus?: boolean
 }, ExtArgs["result"]["hotel"]>
 
 export type HotelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1067,6 +1392,10 @@ export type HotelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean
+  stripeCustomerId?: boolean
+  stripeSubscriptionId?: boolean
+  subscriptionStatus?: boolean
 }, ExtArgs["result"]["hotel"]>
 
 export type HotelSelectScalar = {
@@ -1079,15 +1408,20 @@ export type HotelSelectScalar = {
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean
+  stripeCustomerId?: boolean
+  stripeSubscriptionId?: boolean
+  subscriptionStatus?: boolean
 }
 
-export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "accentColor" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hotel"]>
+export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "accentColor" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt" | "plan" | "stripeCustomerId" | "stripeSubscriptionId" | "subscriptionStatus", ExtArgs["result"]["hotel"]>
 export type HotelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settings?: boolean | Prisma.Hotel$settingsArgs<ExtArgs>
   apartments?: boolean | Prisma.Hotel$apartmentsArgs<ExtArgs>
   requests?: boolean | Prisma.Hotel$requestsArgs<ExtArgs>
   adminUsers?: boolean | Prisma.Hotel$adminUsersArgs<ExtArgs>
   blockedRanges?: boolean | Prisma.Hotel$blockedRangesArgs<ExtArgs>
+  extras?: boolean | Prisma.Hotel$extrasArgs<ExtArgs>
   _count?: boolean | Prisma.HotelCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HotelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1101,6 +1435,7 @@ export type $HotelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     requests: Prisma.$RequestPayload<ExtArgs>[]
     adminUsers: Prisma.$AdminUserPayload<ExtArgs>[]
     blockedRanges: Prisma.$BlockedRangePayload<ExtArgs>[]
+    extras: Prisma.$HotelExtraPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1112,6 +1447,10 @@ export type $HotelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    plan: string
+    stripeCustomerId: string | null
+    stripeSubscriptionId: string | null
+    subscriptionStatus: string
   }, ExtArgs["result"]["hotel"]>
   composites: {}
 }
@@ -1511,6 +1850,7 @@ export interface Prisma__HotelClient<T, Null = never, ExtArgs extends runtime.Ty
   requests<T extends Prisma.Hotel$requestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$requestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   adminUsers<T extends Prisma.Hotel$adminUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$adminUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blockedRanges<T extends Prisma.Hotel$blockedRangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$blockedRangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockedRangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  extras<T extends Prisma.Hotel$extrasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$extrasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HotelExtraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1549,6 +1889,10 @@ export interface HotelFieldRefs {
   readonly isActive: Prisma.FieldRef<"Hotel", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Hotel", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Hotel", 'DateTime'>
+  readonly plan: Prisma.FieldRef<"Hotel", 'String'>
+  readonly stripeCustomerId: Prisma.FieldRef<"Hotel", 'String'>
+  readonly stripeSubscriptionId: Prisma.FieldRef<"Hotel", 'String'>
+  readonly subscriptionStatus: Prisma.FieldRef<"Hotel", 'String'>
 }
     
 
@@ -2054,6 +2398,30 @@ export type Hotel$blockedRangesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.BlockedRangeScalarFieldEnum | Prisma.BlockedRangeScalarFieldEnum[]
+}
+
+/**
+ * Hotel.extras
+ */
+export type Hotel$extrasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HotelExtra
+   */
+  select?: Prisma.HotelExtraSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HotelExtra
+   */
+  omit?: Prisma.HotelExtraOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HotelExtraInclude<ExtArgs> | null
+  where?: Prisma.HotelExtraWhereInput
+  orderBy?: Prisma.HotelExtraOrderByWithRelationInput | Prisma.HotelExtraOrderByWithRelationInput[]
+  cursor?: Prisma.HotelExtraWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HotelExtraScalarFieldEnum | Prisma.HotelExtraScalarFieldEnum[]
 }
 
 /**

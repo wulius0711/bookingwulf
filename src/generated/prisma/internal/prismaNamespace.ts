@@ -391,6 +391,7 @@ export const ModelName = {
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
+  HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser'
 } as const
 
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "adminUser"
+    modelProps: "hotel" | "hotelSettings" | "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "hotelExtra" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HotelExtra: {
+      payload: Prisma.$HotelExtraPayload<ExtArgs>
+      fields: Prisma.HotelExtraFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HotelExtraFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HotelExtraFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        findFirst: {
+          args: Prisma.HotelExtraFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HotelExtraFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        findMany: {
+          args: Prisma.HotelExtraFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>[]
+        }
+        create: {
+          args: Prisma.HotelExtraCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        createMany: {
+          args: Prisma.HotelExtraCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HotelExtraCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>[]
+        }
+        delete: {
+          args: Prisma.HotelExtraDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        update: {
+          args: Prisma.HotelExtraUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        deleteMany: {
+          args: Prisma.HotelExtraDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HotelExtraUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HotelExtraUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>[]
+        }
+        upsert: {
+          args: Prisma.HotelExtraUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelExtraPayload>
+        }
+        aggregate: {
+          args: Prisma.HotelExtraAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHotelExtra>
+        }
+        groupBy: {
+          args: Prisma.HotelExtraGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelExtraGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HotelExtraCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelExtraCountAggregateOutputType> | number
+        }
+      }
+    }
     AdminUser: {
       payload: Prisma.$AdminUserPayload<ExtArgs>
       fields: Prisma.AdminUserFieldRefs
@@ -1051,7 +1126,11 @@ export const HotelScalarFieldEnum = {
   phone: 'phone',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  plan: 'plan',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubscriptionId: 'stripeSubscriptionId',
+  subscriptionStatus: 'subscriptionStatus'
 } as const
 
 export type HotelScalarFieldEnum = (typeof HotelScalarFieldEnum)[keyof typeof HotelScalarFieldEnum]
@@ -1163,11 +1242,28 @@ export const RequestScalarFieldEnum = {
   message: 'message',
   newsletter: 'newsletter',
   status: 'status',
+  extrasJson: 'extrasJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
+
+
+export const HotelExtraScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  name: 'name',
+  key: 'key',
+  billingType: 'billingType',
+  price: 'price',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HotelExtraScalarFieldEnum = (typeof HotelExtraScalarFieldEnum)[keyof typeof HotelExtraScalarFieldEnum]
 
 
 export const AdminUserScalarFieldEnum = {
@@ -1192,6 +1288,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -1206,6 +1310,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1274,6 +1387,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 /**
@@ -1378,6 +1519,7 @@ export type GlobalOmitConfig = {
   priceSeason?: Prisma.PriceSeasonOmit
   blockedRange?: Prisma.BlockedRangeOmit
   request?: Prisma.RequestOmit
+  hotelExtra?: Prisma.HotelExtraOmit
   adminUser?: Prisma.AdminUserOmit
 }
 
