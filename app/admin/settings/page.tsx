@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
+import { hasFullBranding } from '@/src/lib/plan-gates';
 
 export const dynamic = 'force-dynamic';
 
@@ -261,6 +262,8 @@ export default async function Page({ searchParams }: PageProps) {
 
   if (!selected) return <p>Kein Hotel</p>;
 
+  const fullBranding = isSuperAdmin || hasFullBranding(selected.plan ?? 'starter');
+
   return (
     <main style={pageStyle}>
       <div style={shellStyle}>
@@ -344,21 +347,40 @@ export default async function Page({ searchParams }: PageProps) {
 
               {(
                 [
-                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#dc143c'],
-                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#FAEBD7'],
-                  ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff'],
-                  ['Text',       'textColor',       selected.settings?.textColor       || '#111111'],
-                  ['Muted',      'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666'],
-                  ['Border',     'borderColor',     selected.settings?.borderColor     || '#dddddd'],
-                ] as [string, string, string][]
-              ).map(([label, name, value]) => (
-                <ColorField
-                  key={name}
-                  label={label}
-                  name={name}
-                  defaultValue={value}
-                  labelStyle={labelStyle}
-                />
+                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#dc143c', true],
+                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#FAEBD7', fullBranding],
+                  ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff', fullBranding],
+                  ['Text',       'textColor',       selected.settings?.textColor       || '#111111', fullBranding],
+                  ['Muted',      'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666', fullBranding],
+                  ['Border',     'borderColor',     selected.settings?.borderColor     || '#dddddd', fullBranding],
+                ] as [string, string, string, boolean][]
+              ).map(([label, name, value, enabled]) => (
+                <div key={name} style={{ position: 'relative', opacity: enabled ? 1 : 0.4 }}>
+                  <ColorField
+                    label={label}
+                    name={enabled ? name : `_disabled_${name}`}
+                    defaultValue={value}
+                    labelStyle={labelStyle}
+                  />
+                  {!enabled && (
+                    <div
+                      title="Ab Pro Plan verfügbar"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        cursor: 'not-allowed',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        paddingRight: 12,
+                        fontSize: 12,
+                        color: '#9ca3af',
+                      }}
+                    >
+                      🔒 Pro
+                    </div>
+                  )}
+                </div>
               ))}
 
               <div style={rowStyle}>

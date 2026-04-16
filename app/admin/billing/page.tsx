@@ -20,6 +20,11 @@ export default function BillingPage() {
   const [error, setError] = useState<string | null>(null);
   const [showWelcome, setShowWelcome] = useState(searchParams.get('welcome') === '1');
 
+  function closeWelcome() {
+    setShowWelcome(false);
+    window.history.replaceState(null, '', '/admin/billing');
+  }
+
   useEffect(() => {
     async function load() {
       const res = await fetch('/api/admin/billing-info');
@@ -214,7 +219,7 @@ export default function BillingPage() {
             zIndex: 100,
             padding: 24,
           }}
-          onClick={() => setShowWelcome(false)}
+          onClick={closeWelcome}
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -241,7 +246,7 @@ export default function BillingPage() {
               <li>Erst nach der Testphase wird eine Zahlung fällig</li>
             </ul>
             <button
-              onClick={() => setShowWelcome(false)}
+              onClick={closeWelcome}
               style={{
                 width: '100%',
                 padding: '12px 20px',
