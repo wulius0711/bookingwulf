@@ -29,19 +29,34 @@ export default function BillingPage() {
     load();
   }, []);
 
-  async function startCheckout(plan: PlanKey) {
+  async function handlePlanAction(plan: PlanKey) {
     if (!hotel) return;
     setActionLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, hotelId: hotel.id }),
-      });
-      const data = await res.json();
-      if (data.url) { window.location.href = data.url; return; }
-      setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+      if (status === 'trialing') {
+        const res = await fetch('/api/admin/switch-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          setHotel({ ...hotel, plan });
+          setActionLoading(false);
+          return;
+        }
+        setError(data.error || 'Planwechsel fehlgeschlagen');
+      } else {
+        const res = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan, hotelId: hotel.id }),
+        });
+        const data = await res.json();
+        if (data.url) { window.location.href = data.url; return; }
+        setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+      }
     } catch (e) {
       setError(String(e));
     }
@@ -162,7 +177,7 @@ export default function BillingPage() {
                 </ul>
 
                 <button
-                  onClick={() => startCheckout(key)}
+                  onClick={() => handlePlanAction(key)}
                   disabled={actionLoading || (isCurrent && isActive)}
                   style={{
                     padding: '10px 16px',
