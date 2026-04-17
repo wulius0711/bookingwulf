@@ -1,8 +1,10 @@
+import { headers } from 'next/headers';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
 import { hasFullBranding } from '@/src/lib/plan-gates';
+import { EmbedCode } from './EmbedCode';
 
 export const dynamic = 'force-dynamic';
 
@@ -236,6 +238,7 @@ export default async function Page({ searchParams }: PageProps) {
   const isSuperAdmin = session.hotelId === null;
 
   const { hotel, saved } = await searchParams;
+  const headerStore = await headers();
 
   const hotels = isSuperAdmin
     ? await prisma.hotel.findMany({
@@ -477,6 +480,20 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
             )}
           </form>
+
+          {/* EMBED CODE */}
+          <div style={sectionStyle}>
+            <div>
+              <h2 style={sectionTitleStyle}>Embed-Code</h2>
+              <p style={sectionIntroStyle}>
+                Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;.
+              </p>
+            </div>
+
+            <EmbedCode
+              code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
+            />
+          </div>
         </div>
 
         {/* RIGHT PREVIEW */}
