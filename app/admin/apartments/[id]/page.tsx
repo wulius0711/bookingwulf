@@ -179,24 +179,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
       <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
-        <div style={row}>
-          <label style={labelStyle}>Hotel</label>
-          <select
-            name="hotelId"
-            required
-            style={inputStyle}
-            defaultValue={String(apartment.hotelId ?? '')}
-          >
-            <option value="" disabled>
-              Hotel auswählen
-            </option>
-            {hotels.map((hotel) => (
-              <option key={hotel.id} value={hotel.id}>
-                {hotel.name} ({hotel.slug})
-              </option>
-            ))}
-          </select>
-        </div>
+        <input type="hidden" name="hotelId" value={apartment.hotelId} />
 
         <div style={row}>
           <label style={labelStyle}>Name</label>
