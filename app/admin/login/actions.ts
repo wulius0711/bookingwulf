@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/src/lib/prisma'
 import { verifyPassword } from '@/src/lib/password'
 import { createSession, deleteSession } from '@/src/lib/session'
+import { rateLimit } from '@/src/lib/rate-limit'
 
 export type LoginState = { error: string } | { success: true } | undefined
 
@@ -13,6 +14,9 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   if (!email || !password) {
     return { error: 'E-Mail und Passwort sind erforderlich.' }
   }
+
+  const { ok } = rateLimit(`login:${email}`, 5, 15 * 60 * 1000);
+  if (!ok) return { error: 'Zu viele Anmeldeversuche. Bitte warten Sie 15 Minuten.' }
 
   const user = await prisma.adminUser.findUnique({ where: { email } })
 

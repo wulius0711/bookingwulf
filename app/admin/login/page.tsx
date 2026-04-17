@@ -108,6 +108,15 @@ export default function LoginPage() {
             </p>
           )}
 
+          <div style={{ textAlign: 'right' }}>
+            <a
+              href="/admin/forgot-password"
+              style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}
+            >
+              Passwort vergessen?
+            </a>
+          </div>
+
           <button
             className="btn-primary"
             type="submit"

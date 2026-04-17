@@ -201,6 +201,10 @@ model AdminUser {
   passwordHash String
   role         String   @default("hotel_admin")
   isActive     Boolean  @default(true)
+
+  resetToken     String?   @unique
+  resetExpiresAt DateTime?
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

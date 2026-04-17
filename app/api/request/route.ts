@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml, buildPriceTable, buildInfoBlock, buildDivider, eur } from '@/src/lib/email';
+import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -32,6 +33,16 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const hotelSlug = String(body.hotel || '').trim();
+    const email = String(body.email || '').trim();
+
+    // Rate limit: 10 bookings per IP per 15 min, 3 per email per 5 min
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const { ok: ipOk } = rateLimit(`booking:ip:${ip}`, 10, 15 * 60 * 1000);
+    if (!ipOk) return rateLimitResponse();
+    if (email) {
+      const { ok: emailOk } = rateLimit(`booking:email:${email}`, 3, 5 * 60 * 1000);
+      if (!emailOk) return rateLimitResponse();
+    }
     const arrivalRaw = String(body.arrival || '').trim();
     const departureRaw = String(body.departure || '').trim();
     const nights = Number(body.nights || 0);
@@ -54,7 +65,6 @@ export async function POST(req: Request) {
     const salutation = String(body.salutation || '').trim();
     const firstname = String(body.firstname || '').trim();
     const lastname = String(body.lastname || '').trim();
-    const email = String(body.email || '').trim();
     const country = String(body.country || '').trim();
     const message = String(body.message || '').trim();
     const newsletter = Boolean(body.newsletter);

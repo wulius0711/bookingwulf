@@ -1278,6 +1278,8 @@ export const AdminUserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   role: 'role',
   isActive: 'isActive',
+  resetToken: 'resetToken',
+  resetExpiresAt: 'resetExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
