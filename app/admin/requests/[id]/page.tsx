@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -18,6 +19,24 @@ function parseApartmentIds(raw: string): number[] {
     .filter((item) => Number.isInteger(item) && item > 0);
 }
 
+const STATUS_MESSAGES: Record<string, { subject: string; title: string; message: string }> = {
+  booked: {
+    subject: 'Ihre Buchung wurde bestätigt',
+    title: 'Buchung bestätigt',
+    message: 'Ihre Buchungsanfrage wurde bestätigt. Wir freuen uns auf Ihren Besuch und melden uns in Kürze mit den weiteren Details.',
+  },
+  cancelled: {
+    subject: 'Ihre Buchung wurde storniert',
+    title: 'Buchung storniert',
+    message: 'Ihre Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
+  },
+  answered: {
+    subject: 'Update zu Ihrer Buchungsanfrage',
+    title: 'Anfrage bearbeitet',
+    message: 'Wir haben Ihre Buchungsanfrage bearbeitet. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
+  },
+};
+
 async function updateBookingStatus(formData: FormData) {
   'use server';
 
@@ -30,15 +49,53 @@ async function updateBookingStatus(formData: FormData) {
   const allowed = ['new', 'answered', 'booked', 'cancelled'];
   if (!allowed.includes(status)) return;
 
-  if (session.hotelId !== null) {
-    const req = await prisma.request.findUnique({ where: { id }, select: { hotelId: true } });
-    if (!req || req.hotelId !== session.hotelId) return;
-  }
-
-  await prisma.request.update({
+  const request = await prisma.request.findUnique({
     where: { id },
-    data: { status },
+    include: { hotel: { select: { id: true, name: true, accentColor: true } } },
   });
+  if (!request) return;
+  if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
+
+  await prisma.request.update({ where: { id }, data: { status } });
+
+  // Send status notification email to guest
+  const statusMsg = STATUS_MESSAGES[status];
+  if (statusMsg && request.email) {
+    try {
+      const resend = getResend();
+      if (resend) {
+        const arrivalDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.arrival);
+        const departureDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.departure);
+
+        await resend.emails.send({
+          from: getFromEmail(),
+          to: request.email,
+          subject: `${statusMsg.subject} — ${request.hotel?.name || 'Hotel'}`,
+          html: buildEmailHtml({
+            hotelName: request.hotel?.name || 'Hotel',
+            accentColor: request.hotel?.accentColor || undefined,
+            title: statusMsg.title,
+            body: `
+              <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+                ${request.firstname ? `Hallo ${request.firstname},` : 'Hallo,'}<br/><br/>
+                ${statusMsg.message}
+              </p>
+              ${buildDivider()}
+              ${buildInfoBlock('Zeitraum', `${arrivalDate} — ${departureDate} (${request.nights} Nächte)`)}
+              ${buildInfoBlock('Gäste', `${request.adults} Erwachsene${request.children ? `, ${request.children} Kinder` : ''}`)}
+              <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
+                Mit freundlichen Grüßen<br/>
+                <strong>${request.hotel?.name || 'Hotel'}</strong>
+              </p>
+            `,
+            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${request.id}</p>`,
+          }),
+        });
+      }
+    } catch (e) {
+      console.error('Status mail error:', e);
+    }
+  }
 
   redirect(`/admin/requests/${id}`);
 }
