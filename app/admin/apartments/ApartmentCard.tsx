@@ -57,6 +57,24 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+          {!a.isActive && (
+            <span
+              style={{
+                padding: '2px 8px',
+                borderRadius: 8,
+                fontSize: 11,
+                fontWeight: 700,
+                background: '#fef2f2',
+                color: '#b91c1c',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                flexShrink: 0,
+              }}
+            >
+              Inaktiv
+            </span>
+          )}
+
           <div style={{ fontWeight: 700, fontSize: 18 }}>{a.name}</div>
 
           {showHotelBadge && (
@@ -87,23 +105,6 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
             </div>
           )}
 
-          {!a.isActive && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 8,
-                fontSize: 11,
-                fontWeight: 700,
-                background: '#fef2f2',
-                color: '#b91c1c',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-                flexShrink: 0,
-              }}
-            >
-              Inaktiv
-            </span>
-          )}
         </div>
 
         <span
