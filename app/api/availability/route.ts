@@ -106,12 +106,33 @@ export async function POST(req: Request) {
       message: string;
     }> = [];
 
+    // Check confirmed bookings that overlap the requested period
+    const confirmedBookings = await prisma.request.findMany({
+      where: {
+        hotelId: hotel.id,
+        status: 'booked',
+        arrival: { lt: departure },
+        departure: { gt: arrival },
+      },
+      select: { selectedApartmentIds: true },
+    });
+
+    const bookedApartmentIds = new Set<number>();
+    for (const booking of confirmedBookings) {
+      for (const idStr of booking.selectedApartmentIds.split(',')) {
+        const id = Number(idStr.trim());
+        if (id) bookedApartmentIds.add(id);
+      }
+    }
+
     const apartmentResults = apartments.map((apartment) => {
       const overlapsBlocked = apartment.blockedRanges.some((range) => {
         return arrival < range.endDate && departure > range.startDate;
       });
 
-      if (overlapsBlocked) {
+      const isBooked = bookedApartmentIds.has(apartment.id);
+
+      if (overlapsBlocked || isBooked) {
         unavailableApartments.push({
           apartmentId: apartment.id,
           apartmentName: apartment.name,
