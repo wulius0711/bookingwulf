@@ -174,7 +174,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         </div>
 
         {/* KPI Cards */}
-        <div className="stat-grid" style={{ display: 'grid', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
           {[
             { label: 'Anfragen (12M)', value: total },
             { label: 'Gebucht', value: booked },
@@ -239,7 +239,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         </div>
 
         {/* Top Apartments + Extras */}
-        <div className="two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
+        <div className="analytics-two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
 
           {/* Top apartments */}
           <div style={cardStyle}>

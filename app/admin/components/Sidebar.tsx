@@ -109,14 +109,12 @@ export default function Sidebar({ navItems, email }: Props) {
     <>
       {/* Mobile top bar */}
       <div className="mobile-topbar">
-        <button
-          className="sidebar-hamburger"
+        <img
+          src="/bookingwulf-logo.png"
+          alt="bookingwulf"
           onClick={() => setMobileOpen(true)}
-          aria-label="Menü öffnen"
-        >
-          <span /><span /><span />
-        </button>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 32, marginLeft: 'auto' }} />
+          style={{ height: 32, cursor: 'pointer' }}
+        />
       </div>
 
       {/* Backdrop */}
