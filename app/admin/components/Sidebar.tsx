@@ -126,7 +126,7 @@ export default function Sidebar({ navItems, email }: Props) {
         </div>
 
         {/* Nav items */}
-        <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
+        <nav style={{ flex: 1, overflow: 'visible', padding: '12px 8px' }}>
           {navItems.map((item) => (
             <SidebarNavItem key={item.href} {...item} />
           ))}

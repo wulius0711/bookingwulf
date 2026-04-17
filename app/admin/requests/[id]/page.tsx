@@ -273,7 +273,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           display: 'inline-block',
           marginBottom: 20,
           padding: '8px 14px',
-          borderRadius: buttonRadius,
+          borderRadius: 8,
           border: '1px solid #ccc',
           textDecoration: 'none',
           color: '#111',
@@ -428,7 +428,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                   style={{
                     display: 'inline-block',
                     padding: '8px 16px',
-                    borderRadius: buttonRadius,
+                    borderRadius: 8,
                     background: '#111',
                     color: '#fff',
                     textDecoration: 'none',
@@ -532,7 +532,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 type="submit"
                 style={{
                   padding: '9px 20px',
-                  borderRadius: buttonRadius,
+                  borderRadius: 8,
                   border: 'none',
                   background: '#111',
                   color: '#fff',
