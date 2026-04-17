@@ -31,6 +31,11 @@ export const NAV_PLAN_GATES: Record<string, PlanKey> = {
   '/admin/analytics': 'business',
 };
 
+/** Minimum plan required for specific features (non-nav) */
+export const FEATURE_PLAN_GATES: Record<string, PlanKey> = {
+  messages: 'pro',
+};
+
 /** Minimum plan label for tooltip */
 export const PLAN_LABEL: Record<PlanKey, string> = {
   starter: 'Starter',

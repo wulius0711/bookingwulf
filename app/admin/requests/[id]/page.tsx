@@ -2,6 +2,8 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
 import { bookingIcalUrl, generateBookingToken } from '@/src/lib/booking-token';
+import { hasPlanAccess, FEATURE_PLAN_GATES } from '@/src/lib/plan-gates';
+import { PlanKey } from '@/src/lib/plans';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -240,6 +242,11 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const textColor = settings?.textColor || '#111';
   const borderColor = settings?.borderColor || '#ddd';
 
+  const hotelPlan = isSuperAdmin
+    ? 'business'
+    : ((await prisma.hotel.findUnique({ where: { id: session.hotelId! }, select: { plan: true } }))?.plan as PlanKey ?? 'starter');
+  const canUseMessages = hasPlanAccess(hotelPlan, FEATURE_PLAN_GATES.messages);
+
   const apartmentIds = parseApartmentIds(request.selectedApartmentIds);
 
   const apartments =
@@ -450,6 +457,12 @@ export default async function BookingDetailPage({ params }: PageProps) {
       </div>
 
       {/* ─── Nachrichtenthread ─── */}
+      {!canUseMessages ? (
+        <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: '#fafafa', fontSize: 13, color: '#9ca3af' }}>
+          🔒 Direktnachrichten sind ab dem <strong style={{ color: '#111' }}>Pro-Plan</strong> verfügbar.{' '}
+          <a href="/admin/billing" style={{ color: '#111', fontWeight: 600 }}>Jetzt upgraden →</a>
+        </div>
+      ) : (
       <div style={{
         marginTop: 24,
         border: `1px solid ${borderColor}`,
@@ -547,6 +560,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           </form>
         </div>
       </div>
+      )}
     </main>
   );
 }
