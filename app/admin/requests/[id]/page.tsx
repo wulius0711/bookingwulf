@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
+import { generateBookingToken, bookingIcalUrl } from '@/src/lib/booking-token';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -67,6 +68,8 @@ async function updateBookingStatus(formData: FormData) {
         const arrivalDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.arrival);
         const departureDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.departure);
 
+        const icalUrl = status === 'booked' ? bookingIcalUrl(request.id, request.createdAt) : null;
+
         await resend.emails.send({
           from: getFromEmail(),
           to: request.email,
@@ -83,6 +86,13 @@ async function updateBookingStatus(formData: FormData) {
               ${buildDivider()}
               ${buildInfoBlock('Zeitraum', `${arrivalDate} — ${departureDate} (${request.nights} Nächte)`)}
               ${buildInfoBlock('Gäste', `${request.adults} Erwachsene${request.children ? `, ${request.children} Kinder` : ''}`)}
+              ${icalUrl ? `
+              <div style="margin-top:24px;">
+                <a href="${icalUrl}"
+                   style="display:inline-block;padding:11px 22px;background:#111827;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                  📅 Zum Kalender hinzufügen (.ics)
+                </a>
+              </div>` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
                 Mit freundlichen Grüßen<br/>
                 <strong>${request.hotel?.name || 'Hotel'}</strong>
@@ -344,6 +354,34 @@ export default async function BookingDetailPage({ params }: PageProps) {
             })}
           </div>
         </div>
+
+        {request.status === 'booked' && (() => {
+          const icsUrl = bookingIcalUrl(request.id, request.createdAt);
+          return (
+            <div style={{ paddingTop: 4 }}>
+              <strong style={{ fontSize: 13 }}>Kalender-Export für Gast:</strong>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+                <a
+                  href={icsUrl}
+                  download={`buchung-${request.id}.ics`}
+                  style={{
+                    display: 'inline-block',
+                    padding: '8px 16px',
+                    borderRadius: buttonRadius,
+                    background: '#111',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  📅 .ics herunterladen
+                </a>
+                <span style={{ fontSize: 12, color: '#9ca3af', wordBreak: 'break-all' }}>{icsUrl}</span>
+              </div>
+            </div>
+          );
+        })()}
 
         <div style={{ fontSize: 12, color: '#666' }}>
           Erstellt: {new Date(request.createdAt).toLocaleString()}
