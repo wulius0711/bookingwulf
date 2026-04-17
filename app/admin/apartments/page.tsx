@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import ApartmentCard from './ApartmentCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -244,143 +245,14 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
           </a>
         </div>
       ) : (
-        <div style={{ display: 'grid', gap: 16 }}>
+        <div style={{ display: 'grid', gap: 12 }}>
           {apartments.map((a) => (
-            <div
+            <ApartmentCard
               key={a.id}
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: 14,
-                padding: 20,
-                background: '#fff',
-                color: '#111',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  gap: 16,
-                  alignItems: 'start',
-                  flexWrap: 'wrap',
-                  marginBottom: 8,
-                }}
-              >
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 20 }}>{a.name}</div>
-
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      marginTop: 6,
-                      padding: '4px 10px',
-                      borderRadius: 999,
-                      background: a.hotel?.accentColor || '#eee',
-                      color: '#fafafa',
-                      fontSize: 11,
-                      fontWeight: 600,
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 999,
-                        background: 'rgba(255,255,255,0.9)',
-                        display: 'inline-block',
-                      }}
-                    />
-                    {a.hotel?.name ?? 'Kein Hotel'}
-                  </div>
-                </div>
-              </div>
-
-              <div><strong>ID:</strong> {a.id}</div>
-              <div><strong>Hotel ID:</strong> {a.hotelId}</div>
-              <div><strong>Slug:</strong> {a.slug}</div>
-              <div><strong>Aktiv:</strong> {a.isActive ? 'Ja' : 'Nein'}</div>
-              <div><strong>Erwachsene:</strong> {a.maxAdults}</div>
-              <div><strong>Kinder:</strong> {a.maxChildren}</div>
-              <div><strong>Schlafzimmer:</strong> {a.bedrooms ?? '—'}</div>
-              <div><strong>Größe:</strong> {a.size != null ? `${a.size} m²` : '—'}</div>
-              <div><strong>Ausblick:</strong> {a.view || '—'}</div>
-              <div><strong>Preis/Nacht:</strong> {a.basePrice != null ? `€${a.basePrice}` : '—'}</div>
-              <div><strong>Reinigung:</strong> {a.cleaningFee != null ? `€${a.cleaningFee}` : '—'}</div>
-              <div><strong>Sortierung:</strong> {a.sortOrder}</div>
-              <div><strong>Bilder:</strong> {a.images.length}</div>
-              <div>
-                <strong>Ausstattung:</strong>{' '}
-                {a.amenities?.length ? a.amenities.join(', ') : '—'}
-              </div>
-
-              {a.description && (
-                <div style={{ marginTop: 10, color: '#555', lineHeight: 1.5 }}>
-                  <strong>Beschreibung:</strong> {a.description}
-                </div>
-              )}
-
-              {a.images[0] && (
-                <div style={{ marginTop: 14 }}>
-                  <img
-                    src={a.images[0].imageUrl}
-                    alt={a.images[0].altText || a.name}
-                    style={{ width: 220, height: 140, objectFit: 'cover', borderRadius: 10 }}
-                  />
-                </div>
-              )}
-
-              <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
-                <Link
-                  href={`/admin/apartments/${a.id}`}
-                  style={{
-                    textDecoration: 'none',
-                    padding: '10px 14px',
-                    border: '1px solid #111',
-                    borderRadius: 999,
-                    color: '#111',
-                    background: '#fff',
-                  }}
-                >
-                  Bearbeiten
-                </Link>
-
-                <form action={duplicateApartment}>
-                  <input type="hidden" name="id" value={a.id} />
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '10px 14px',
-                      border: '1px solid #111',
-                      borderRadius: 999,
-                      color: '#111',
-                      background: '#fff',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Duplizieren
-                  </button>
-                </form>
-
-                <form action={deleteApartment}>
-                  <input type="hidden" name="id" value={a.id} />
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '10px 14px',
-                      border: '1px solid #c43c57',
-                      borderRadius: 999,
-                      color: '#c43c57',
-                      background: '#fff',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Löschen
-                  </button>
-                </form>
-              </div>
-            </div>
+              apartment={a}
+              duplicateAction={duplicateApartment}
+              deleteAction={deleteApartment}
+            />
           ))}
         </div>
       )}
