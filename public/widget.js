@@ -19,31 +19,10 @@
 
   script.parentNode.insertBefore(iframe, script.nextSibling);
 
-  function resize() {
-    try {
-      var doc = iframe.contentWindow.document;
-      var h = Math.max(
-        doc.body.scrollHeight,
-        doc.documentElement.scrollHeight,
-        doc.body.offsetHeight,
-        doc.documentElement.offsetHeight
-      );
-      if (h > 100) iframe.style.height = h + 'px';
-    } catch (e) {}
-  }
-
-  iframe.addEventListener('load', function () {
-    resize();
-    try {
-      var observer = new MutationObserver(resize);
-      observer.observe(iframe.contentWindow.document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-      });
-      iframe.contentWindow.addEventListener('resize', resize);
-    } catch (e) {}
-    setInterval(resize, 500);
+  window.addEventListener('message', function (e) {
+    if (e.source !== iframe.contentWindow) return;
+    if (e.data && e.data.type === 'booking-widget-resize' && e.data.height > 100) {
+      iframe.style.height = e.data.height + 'px';
+    }
   });
 })();

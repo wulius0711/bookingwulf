@@ -2634,6 +2634,26 @@ sortedApartments.forEach((ap) => {
           await updateAvailabilityForApartments();
         }
 
+        // Post height to parent for iframe resizing
+        function postHeight() {
+          var h = Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.offsetHeight
+          );
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
+          }
+        }
+
+        var heightObserver = new MutationObserver(postHeight);
+        heightObserver.observe(document.body, {
+          childList: true, subtree: true, attributes: true, characterData: true
+        });
+        window.addEventListener('resize', postHeight);
+        setInterval(postHeight, 500);
+
         init();
       })();
     </script>
