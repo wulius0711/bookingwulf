@@ -477,6 +477,7 @@
         height: 100%;
         object-fit: cover;
         display: block;
+        cursor: pointer;
       }
 
       .apt-image-nav {
@@ -1695,7 +1696,17 @@
         }
 
         function openLightbox(apartmentId, index = 0) {
-          // Image viewing handled by inline slider — no lightbox needed
+          var apartment = state.apartments.find(function(a) { return a.id === apartmentId; });
+          if (!apartment) return;
+          var images = getApartmentImages(apartment);
+
+          if (window.parent !== window) {
+            window.parent.postMessage({
+              type: 'booking-widget-lightbox-open',
+              images: images,
+              index: index
+            }, '*');
+          }
         }
 
         function closeLightbox() {
