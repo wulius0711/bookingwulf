@@ -2,9 +2,6 @@
 
 import { useState, useActionState } from 'react';
 import { registerHotel } from './register-hotel';
-import { PLANS, PlanKey } from '@/src/lib/plans';
-
-const PRICES: Record<PlanKey, string> = { starter: '49', pro: '99', business: '199' };
 
 function generateSlug(name: string): string {
   return name
@@ -16,8 +13,6 @@ function generateSlug(name: string): string {
 
 export default function RegisterForm() {
   const [state, action, pending] = useActionState(registerHotel, undefined);
-  const [selectedPlan, setSelectedPlan] = useState<PlanKey>('starter');
-  const [hoveredPlan, setHoveredPlan] = useState<PlanKey | null>(null);
   const [slug, setSlug] = useState('');
   const [autoSlug, setAutoSlug] = useState(true);
 
@@ -80,23 +75,7 @@ export default function RegisterForm() {
               />
             </div>
 
-            <div>
-              <label style={labelStyle}>Slug *</label>
-              <input
-                name="slug"
-                required
-                placeholder="z. B. hotel-alpenblick"
-                style={inputStyle}
-                value={slug}
-                onChange={(e) => {
-                  setAutoSlug(false);
-                  setSlug(e.target.value);
-                }}
-              />
-              <p style={{ margin: '5px 0 0', fontSize: 12, color: '#9ca3af' }}>
-                Kleinbuchstaben und Bindestriche — wird als URL-Kennung verwendet.
-              </p>
-            </div>
+            <input type="hidden" name="slug" value={slug} />
 
             <div>
               <label style={labelStyle}>E-Mail (Admin-Login) *</label>
@@ -114,45 +93,7 @@ export default function RegisterForm() {
               </div>
             </div>
 
-            {/* Plan selector */}
-            <div>
-              <label style={labelStyle}>Plan *</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-                {(Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).map(([key, plan]) => {
-                  const isSelected = selectedPlan === key;
-                  const isHovered = hoveredPlan === key;
-                  return (
-                    <label
-                      key={key}
-                      style={{ display: 'block', cursor: 'pointer' }}
-                      onMouseEnter={() => setHoveredPlan(key)}
-                      onMouseLeave={() => setHoveredPlan(null)}
-                    >
-                      <input
-                        type="radio"
-                        name="plan"
-                        value={key}
-                        checked={selectedPlan === key}
-                        onChange={() => setSelectedPlan(key)}
-                        style={{ display: 'none' }}
-                      />
-                      <div style={{
-                        border: `2px solid ${isSelected ? '#111827' : isHovered ? '#9ca3af' : '#e5e7eb'}`,
-                        borderRadius: 12,
-                        padding: '14px 12px',
-                        textAlign: 'center',
-                        fontSize: 14,
-                        background: isSelected ? '#f8fafc' : 'transparent',
-                        transition: 'border-color 0.15s ease, background 0.15s ease',
-                      }}>
-                        <div style={{ fontWeight: 700, color: '#111827' }}>{plan.name}</div>
-                        <div style={{ fontWeight: 600, color: '#374151', marginTop: 4 }}>€ {PRICES[key]}<span style={{ fontSize: 11, fontWeight: 400, color: '#9ca3af' }}>/Mo</span></div>
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
+            <input type="hidden" name="plan" value="starter" />
 
             <button
               className="btn-primary"
@@ -171,7 +112,7 @@ export default function RegisterForm() {
                 marginTop: 4,
               }}
             >
-              {pending ? 'Konto wird erstellt…' : 'Konto anlegen & Zahlung starten'}
+              {pending ? 'Konto wird erstellt…' : 'Konto erstellen'}
             </button>
 
             <p style={{ margin: 0, textAlign: 'center', fontSize: 13, color: '#9ca3af' }}>
