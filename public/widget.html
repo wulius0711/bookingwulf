@@ -1263,6 +1263,8 @@
 
 
 
+              <div id="termsCheckboxWrap" style="margin-top: 18px; display: none;"></div>
+
               <div class="nav-row">
                 <button class="btn-light" data-prev>Zurück</button>
                 <button class="btn" id="submitBtn">Buchung senden</button>
@@ -1345,6 +1347,8 @@
             index: 0,
           },
           autoplayTimers: {},
+          bookingTermsUrl: null,
+          privacyPolicyUrl: null,
         };
 
         function getPriceLabel(billingType, price) {
@@ -1381,6 +1385,11 @@
             document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#c8b79f");
             document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 6}px`);
             document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 999}px`);
+
+            if (data.hotel) {
+              state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;
+              state.privacyPolicyUrl = data.hotel.privacyPolicyUrl || null;
+            }
 
             if (data.extras && Array.isArray(data.extras)) {
               state.availableExtras = data.extras;
@@ -2225,12 +2234,34 @@ sortedApartments.forEach((ap) => {
           }
         }
 
+        function renderTermsCheckbox() {
+          const wrap = document.getElementById("termsCheckboxWrap");
+          if (!wrap) return;
+
+          if (!state.bookingTermsUrl && !state.privacyPolicyUrl) {
+            wrap.style.display = "none";
+            return;
+          }
+
+          wrap.style.display = "block";
+
+          const links = [];
+          if (state.bookingTermsUrl) links.push('<a href="' + state.bookingTermsUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>');
+          if (state.privacyPolicyUrl) links.push('<a href="' + state.privacyPolicyUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>');
+
+          wrap.innerHTML = '<label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text);line-height:1.5;cursor:pointer;">' +
+            '<input type="checkbox" id="termsCheckbox" style="margin-top:3px;accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;" />' +
+            '<span>Ich akzeptiere die ' + links.join(' und die ') + '.</span>' +
+            '</label>';
+        }
+
         function renderAll() {
           renderSteps();
           renderApartments();
           renderExtras();
           renderSummary();
           renderLightbox();
+          renderTermsCheckbox();
         }
 
         function validateStep(step) {
@@ -2429,6 +2460,15 @@ sortedApartments.forEach((ap) => {
             showMessage(
               "error",
               "Bitte mindestens Nachname und E-Mail ausfüllen."
+            );
+            return;
+          }
+
+          const termsCheckbox = document.getElementById("termsCheckbox");
+          if (termsCheckbox && !termsCheckbox.checked) {
+            showMessage(
+              "error",
+              "Bitte akzeptieren Sie die Buchungsbedingungen."
             );
             return;
           }

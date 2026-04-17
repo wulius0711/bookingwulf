@@ -41,6 +41,8 @@ export type HotelMinAggregateOutputType = {
   accentColor: string | null
   email: string | null
   phone: string | null
+  bookingTermsUrl: string | null
+  privacyPolicyUrl: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,6 +60,8 @@ export type HotelMaxAggregateOutputType = {
   accentColor: string | null
   email: string | null
   phone: string | null
+  bookingTermsUrl: string | null
+  privacyPolicyUrl: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -75,6 +79,8 @@ export type HotelCountAggregateOutputType = {
   accentColor: number
   email: number
   phone: number
+  bookingTermsUrl: number
+  privacyPolicyUrl: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -102,6 +108,8 @@ export type HotelMinAggregateInputType = {
   accentColor?: true
   email?: true
   phone?: true
+  bookingTermsUrl?: true
+  privacyPolicyUrl?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -119,6 +127,8 @@ export type HotelMaxAggregateInputType = {
   accentColor?: true
   email?: true
   phone?: true
+  bookingTermsUrl?: true
+  privacyPolicyUrl?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -136,6 +146,8 @@ export type HotelCountAggregateInputType = {
   accentColor?: true
   email?: true
   phone?: true
+  bookingTermsUrl?: true
+  privacyPolicyUrl?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -240,6 +252,8 @@ export type HotelGroupByOutputType = {
   accentColor: string | null
   email: string | null
   phone: string | null
+  bookingTermsUrl: string | null
+  privacyPolicyUrl: string | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -280,6 +294,8 @@ export type HotelWhereInput = {
   accentColor?: Prisma.StringNullableFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  bookingTermsUrl?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
@@ -303,6 +319,8 @@ export type HotelOrderByWithRelationInput = {
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingTermsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -331,6 +349,8 @@ export type HotelWhereUniqueInput = Prisma.AtLeast<{
   accentColor?: Prisma.StringNullableFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  bookingTermsUrl?: Prisma.StringNullableFilter<"Hotel"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hotel"> | Date | string
@@ -352,6 +372,8 @@ export type HotelOrderByWithAggregationInput = {
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingTermsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -377,6 +399,8 @@ export type HotelScalarWhereWithAggregatesInput = {
   accentColor?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
+  bookingTermsUrl?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
+  privacyPolicyUrl?: Prisma.StringNullableWithAggregatesFilter<"Hotel"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Hotel"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hotel"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hotel"> | Date | string
@@ -393,6 +417,8 @@ export type HotelCreateInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -416,6 +442,8 @@ export type HotelUncheckedCreateInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -438,6 +466,8 @@ export type HotelUpdateInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -461,6 +491,8 @@ export type HotelUncheckedUpdateInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -484,6 +516,8 @@ export type HotelCreateManyInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -500,6 +534,8 @@ export type HotelUpdateManyMutationInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -517,6 +553,8 @@ export type HotelUncheckedUpdateManyInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -534,6 +572,8 @@ export type HotelCountOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  bookingTermsUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -555,6 +595,8 @@ export type HotelMaxOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  bookingTermsUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -572,6 +614,8 @@ export type HotelMinOrderByAggregateInput = {
   accentColor?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  bookingTermsUrl?: Prisma.SortOrder
+  privacyPolicyUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -720,6 +764,8 @@ export type HotelCreateWithoutSettingsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -742,6 +788,8 @@ export type HotelUncheckedCreateWithoutSettingsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -779,6 +827,8 @@ export type HotelUpdateWithoutSettingsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -801,6 +851,8 @@ export type HotelUncheckedUpdateWithoutSettingsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -822,6 +874,8 @@ export type HotelCreateWithoutApartmentsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -844,6 +898,8 @@ export type HotelUncheckedCreateWithoutApartmentsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -881,6 +937,8 @@ export type HotelUpdateWithoutApartmentsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -903,6 +961,8 @@ export type HotelUncheckedUpdateWithoutApartmentsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -924,6 +984,8 @@ export type HotelCreateWithoutBlockedRangesInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -946,6 +1008,8 @@ export type HotelUncheckedCreateWithoutBlockedRangesInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -983,6 +1047,8 @@ export type HotelUpdateWithoutBlockedRangesInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1005,6 +1071,8 @@ export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1026,6 +1094,8 @@ export type HotelCreateWithoutRequestsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1048,6 +1118,8 @@ export type HotelUncheckedCreateWithoutRequestsInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1085,6 +1157,8 @@ export type HotelUpdateWithoutRequestsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1107,6 +1181,8 @@ export type HotelUncheckedUpdateWithoutRequestsInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1128,6 +1204,8 @@ export type HotelCreateWithoutExtrasInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1150,6 +1228,8 @@ export type HotelUncheckedCreateWithoutExtrasInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1187,6 +1267,8 @@ export type HotelUpdateWithoutExtrasInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1209,6 +1291,8 @@ export type HotelUncheckedUpdateWithoutExtrasInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1230,6 +1314,8 @@ export type HotelCreateWithoutAdminUsersInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1252,6 +1338,8 @@ export type HotelUncheckedCreateWithoutAdminUsersInput = {
   accentColor?: string | null
   email?: string | null
   phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1289,6 +1377,8 @@ export type HotelUpdateWithoutAdminUsersInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1311,6 +1401,8 @@ export type HotelUncheckedUpdateWithoutAdminUsersInput = {
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1400,6 +1492,8 @@ export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accentColor?: boolean
   email?: boolean
   phone?: boolean
+  bookingTermsUrl?: boolean
+  privacyPolicyUrl?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1424,6 +1518,8 @@ export type HotelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   accentColor?: boolean
   email?: boolean
   phone?: boolean
+  bookingTermsUrl?: boolean
+  privacyPolicyUrl?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1441,6 +1537,8 @@ export type HotelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   accentColor?: boolean
   email?: boolean
   phone?: boolean
+  bookingTermsUrl?: boolean
+  privacyPolicyUrl?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1458,6 +1556,8 @@ export type HotelSelectScalar = {
   accentColor?: boolean
   email?: boolean
   phone?: boolean
+  bookingTermsUrl?: boolean
+  privacyPolicyUrl?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1468,7 +1568,7 @@ export type HotelSelectScalar = {
   trialEndsAt?: boolean
 }
 
-export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "accentColor" | "email" | "phone" | "isActive" | "createdAt" | "updatedAt" | "plan" | "stripeCustomerId" | "stripeSubscriptionId" | "subscriptionStatus" | "trialEndsAt", ExtArgs["result"]["hotel"]>
+export type HotelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "accentColor" | "email" | "phone" | "bookingTermsUrl" | "privacyPolicyUrl" | "isActive" | "createdAt" | "updatedAt" | "plan" | "stripeCustomerId" | "stripeSubscriptionId" | "subscriptionStatus" | "trialEndsAt", ExtArgs["result"]["hotel"]>
 export type HotelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settings?: boolean | Prisma.Hotel$settingsArgs<ExtArgs>
   apartments?: boolean | Prisma.Hotel$apartmentsArgs<ExtArgs>
@@ -1498,6 +1598,8 @@ export type $HotelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     accentColor: string | null
     email: string | null
     phone: string | null
+    bookingTermsUrl: string | null
+    privacyPolicyUrl: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1941,6 +2043,8 @@ export interface HotelFieldRefs {
   readonly accentColor: Prisma.FieldRef<"Hotel", 'String'>
   readonly email: Prisma.FieldRef<"Hotel", 'String'>
   readonly phone: Prisma.FieldRef<"Hotel", 'String'>
+  readonly bookingTermsUrl: Prisma.FieldRef<"Hotel", 'String'>
+  readonly privacyPolicyUrl: Prisma.FieldRef<"Hotel", 'String'>
   readonly isActive: Prisma.FieldRef<"Hotel", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Hotel", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Hotel", 'DateTime'>

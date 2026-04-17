@@ -327,6 +327,38 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
             </div>
 
+            {/* RECHTLICHES */}
+            <div style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Rechtliches</h2>
+                <p style={sectionIntroStyle}>
+                  Links zu Ihren Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.
+                </p>
+              </div>
+
+              <div style={rowStyle}>
+                <label style={labelStyle}>Buchungsbedingungen URL</label>
+                <input
+                  name="bookingTermsUrl"
+                  type="url"
+                  defaultValue={selected.bookingTermsUrl ?? ''}
+                  placeholder="https://hotel.at/buchungsbedingungen"
+                  style={inputStyle}
+                />
+              </div>
+
+              <div style={rowStyle}>
+                <label style={labelStyle}>Datenschutz URL</label>
+                <input
+                  name="privacyPolicyUrl"
+                  type="url"
+                  defaultValue={selected.privacyPolicyUrl ?? ''}
+                  placeholder="https://hotel.at/datenschutz"
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
             {/* DESIGN */}
             <div style={sectionStyle}>
               <div>

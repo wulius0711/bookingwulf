@@ -135,6 +135,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </nav>
 
       <main>{children}</main>
+
+      <footer
+        style={{
+          padding: '20px 32px',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 24,
+          fontSize: 12,
+          color: '#9ca3af',
+        }}
+      >
+        <a href="https://wulius.com/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>
+        <a href="https://wulius.com/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
+        <a href="https://wulius.com/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
+      </footer>
     </div>
   )
 }

@@ -95,6 +95,16 @@ export default function RegisterForm() {
 
             <input type="hidden" name="plan" value="starter" />
 
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13, color: '#374151', lineHeight: 1.5, cursor: 'pointer' }}>
+              <input name="terms" type="checkbox" required style={{ marginTop: 3, accentColor: '#111827' }} />
+              <span>
+                Ich akzeptiere die{' '}
+                <a href="https://wulius.com/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>AGB</a>
+                {' '}und die{' '}
+                <a href="https://wulius.com/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>Datenschutzerklärung</a>.
+              </span>
+            </label>
+
             <button
               className="btn-primary"
               type="submit"

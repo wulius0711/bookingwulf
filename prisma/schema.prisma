@@ -12,9 +12,11 @@ model Hotel {
   name        String
   slug        String   @unique
   accentColor String?
-  email       String?
-  phone       String?
-  isActive    Boolean  @default(true)
+  email            String?
+  phone            String?
+  bookingTermsUrl  String?
+  privacyPolicyUrl String?
+  isActive         Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

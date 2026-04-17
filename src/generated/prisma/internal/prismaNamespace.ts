@@ -1124,6 +1124,8 @@ export const HotelScalarFieldEnum = {
   accentColor: 'accentColor',
   email: 'email',
   phone: 'phone',
+  bookingTermsUrl: 'bookingTermsUrl',
+  privacyPolicyUrl: 'privacyPolicyUrl',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
