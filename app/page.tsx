@@ -24,7 +24,7 @@ export default function LandingPage() {
 
       {/* Nav */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 32px', maxWidth: 1200, margin: '0 auto' }}>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 48 }} />
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           <Link href="/admin/login" style={{ fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 500 }}>Login</Link>
           <Link href="/register" style={{ fontSize: 14, color: '#fff', background: '#111', padding: '8px 20px', borderRadius: 999, textDecoration: 'none', fontWeight: 600 }}>Kostenlos testen</Link>
