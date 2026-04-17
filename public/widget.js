@@ -20,27 +20,28 @@
   script.parentNode.insertBefore(iframe, script.nextSibling);
 
   var savedHeight = '1200px';
+  var lightboxOpen = false;
 
   window.addEventListener('message', function (e) {
     if (e.source !== iframe.contentWindow) return;
     if (!e.data || !e.data.type) return;
 
-    if (e.data.type === 'booking-widget-resize' && e.data.height > 100) {
+    if (e.data.type === 'booking-widget-resize' && !lightboxOpen && e.data.height > 100) {
       savedHeight = e.data.height + 'px';
       iframe.style.height = savedHeight;
-      iframe.style.overflow = 'hidden';
     }
 
     if (e.data.type === 'booking-widget-lightbox-open') {
+      lightboxOpen = true;
       savedHeight = iframe.style.height;
-      iframe.style.height = '100vh';
-      iframe.style.overflow = 'hidden';
-      iframe.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var vh = window.innerHeight;
+      iframe.style.height = vh + 'px';
+      iframe.scrollIntoView({ block: 'start' });
     }
 
     if (e.data.type === 'booking-widget-lightbox-close') {
+      lightboxOpen = false;
       iframe.style.height = savedHeight;
-      iframe.style.overflow = 'hidden';
     }
   });
 })();

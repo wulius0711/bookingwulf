@@ -2802,6 +2802,7 @@ sortedApartments.forEach((ap) => {
         // Post height to parent for iframe resizing
         function postHeight() {
           if (window.parent === window) return;
+          if (state.lightbox.open) return;
           var shell = document.querySelector('.booking-shell');
           if (!shell) return;
           var h = shell.offsetHeight + 56;
