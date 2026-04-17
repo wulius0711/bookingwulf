@@ -51,11 +51,8 @@ const rightPanelStyle: React.CSSProperties = {
 };
 
 const topBarStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-end',
-  gap: 18,
-  flexWrap: 'wrap',
+  display: 'grid',
+  gap: 6,
 };
 
 const headlineStyle: React.CSSProperties = {
@@ -74,16 +71,18 @@ const sublineStyle: React.CSSProperties = {
 };
 
 const selectorWrapStyle: React.CSSProperties = {
-  display: 'grid',
-  gap: 8,
-  minWidth: 280,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  flexWrap: 'wrap',
+  padding: '12px 0 4px',
 };
 
 const sectionStyle: React.CSSProperties = {
   border: '1px solid #eceef2',
   borderRadius: 18,
   background: '#ffffff',
-  padding: 22,
+  padding: '26px 28px',
   display: 'grid',
   gap: 18,
 };
@@ -279,35 +278,24 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {isSuperAdmin && (
-              <form method="GET">
-                <div style={selectorWrapStyle}>
-                  <label style={labelStyle}>Hotel auswählen</label>
+              <form method="GET" style={selectorWrapStyle}>
+                <label style={{ ...labelStyle, whiteSpace: 'nowrap' }}>Hotel auswählen</label>
 
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                      alignItems: 'center',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <select
-                      name="hotel"
-                      defaultValue={String(selected.id)}
-                      style={{ ...inputStyle, minWidth: 280 }}
-                    >
-                      {hotels.map((hotelItem) => (
-                        <option key={hotelItem.id} value={hotelItem.id}>
-                          {hotelItem.name} ({hotelItem.slug})
-                        </option>
-                      ))}
-                    </select>
+                <select
+                  name="hotel"
+                  defaultValue={String(selected.id)}
+                  style={{ ...inputStyle, minWidth: 240, maxWidth: 320 }}
+                >
+                  {hotels.map((hotelItem) => (
+                    <option key={hotelItem.id} value={hotelItem.id}>
+                      {hotelItem.name} ({hotelItem.slug})
+                    </option>
+                  ))}
+                </select>
 
-                    <button type="submit" style={secondaryButtonStyle}>
-                      Laden
-                    </button>
-                  </div>
-                </div>
+                <button type="submit" style={secondaryButtonStyle}>
+                  Laden
+                </button>
               </form>
             )}
           </div>

@@ -107,3 +107,9 @@ button, a[role="button"], input[type="submit"] {
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(to bottom, #374151, #1f2937) !important;
 }
+
+/* Headline font */
+h1, h2 {
+  font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
