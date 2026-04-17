@@ -186,18 +186,20 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
             </form>
           )}
 
-          <Link
-            href="/admin/apartments/new"
-            style={{
-              textDecoration: 'none',
-              padding: '12px 18px',
-              background: '#111',
-              color: '#fff',
-              borderRadius: 999,
-            }}
-          >
-            Neues Apartment
-          </Link>
+          {apartments.length > 0 && (
+            <Link
+              href="/admin/apartments/new"
+              style={{
+                textDecoration: 'none',
+                padding: '12px 18px',
+                background: '#111',
+                color: '#fff',
+                borderRadius: 999,
+              }}
+            >
+              Neues Apartment
+            </Link>
+          )}
         </div>
       </div>
 
