@@ -1,7 +1,9 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
+import IcalSection from './IcalSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,7 +61,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
         id: apartmentId,
         ...(session.hotelId !== null ? { hotelId: session.hotelId } : {}),
       },
-      include: { images: { orderBy: { sortOrder: 'asc' } } },
+      include: {
+        images: { orderBy: { sortOrder: 'asc' } },
+        icalFeeds: { orderBy: { createdAt: 'asc' } },
+        hotel: { select: { slug: true } },
+      },
     }),
     session.hotelId !== null
       ? prisma.hotel.findMany({
@@ -362,6 +368,49 @@ Kaffeemaschine`}
           Änderungen speichern
         </button>
       </form>
+
+      <IcalSection
+        apartmentId={apartmentId}
+        hotelSlug={apartment.hotel?.slug || ''}
+        feeds={apartment.icalFeeds.map((f) => ({
+          id: f.id,
+          name: f.name,
+          url: f.url,
+          lastSyncAt: f.lastSyncAt?.toISOString() || null,
+          lastError: f.lastError,
+        }))}
+        addFeedAction={async (formData: FormData) => {
+          'use server';
+          const session = await verifySession();
+          const aptId = Number(formData.get('apartmentId') || 0);
+          const name = String(formData.get('name') || '').trim();
+          const url = String(formData.get('url') || '').trim();
+          if (!aptId || !name || !url) return;
+          if (session.hotelId !== null) {
+            const apt = await prisma.apartment.findUnique({ where: { id: aptId }, select: { hotelId: true } });
+            if (!apt || apt.hotelId !== session.hotelId) return;
+          }
+          await prisma.icalFeed.create({ data: { apartmentId: aptId, name, url } });
+          revalidatePath(`/admin/apartments/${aptId}`);
+          redirect(`/admin/apartments/${aptId}`);
+        }}
+        deleteFeedAction={async (formData: FormData) => {
+          'use server';
+          const session = await verifySession();
+          const feedId = Number(formData.get('feedId') || 0);
+          if (!feedId) return;
+          const feed = await prisma.icalFeed.findUnique({ where: { id: feedId }, include: { apartment: { select: { hotelId: true, id: true } } } });
+          if (!feed) return;
+          if (session.hotelId !== null && feed.apartment.hotelId !== session.hotelId) return;
+          await prisma.icalFeed.delete({ where: { id: feedId } });
+          // Also remove synced blocked ranges for this feed
+          await prisma.blockedRange.deleteMany({
+            where: { apartmentId: feed.apartmentId, type: 'ical_sync', note: { startsWith: `[${feed.name}]` } },
+          });
+          revalidatePath(`/admin/apartments/${feed.apartment.id}`);
+          redirect(`/admin/apartments/${feed.apartment.id}`);
+        }}
+      />
     </main>
   );
 }

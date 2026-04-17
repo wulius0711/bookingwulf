@@ -54,6 +54,7 @@ export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
   Apartment: 'Apartment',
+  IcalFeed: 'IcalFeed',
   ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
@@ -147,6 +148,20 @@ export const ApartmentScalarFieldEnum = {
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
+
+
+export const IcalFeedScalarFieldEnum = {
+  id: 'id',
+  apartmentId: 'apartmentId',
+  name: 'name',
+  url: 'url',
+  lastSyncAt: 'lastSyncAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IcalFeedScalarFieldEnum = (typeof IcalFeedScalarFieldEnum)[keyof typeof IcalFeedScalarFieldEnum]
 
 
 export const ApartmentImageScalarFieldEnum = {

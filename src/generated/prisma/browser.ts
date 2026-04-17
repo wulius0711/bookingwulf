@@ -33,6 +33,11 @@ export type HotelSettings = Prisma.HotelSettingsModel
  */
 export type Apartment = Prisma.ApartmentModel
 /**
+ * Model IcalFeed
+ * 
+ */
+export type IcalFeed = Prisma.IcalFeedModel
+/**
  * Model ApartmentImage
  * 
  */

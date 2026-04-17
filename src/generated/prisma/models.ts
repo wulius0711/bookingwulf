@@ -11,6 +11,7 @@
 export type * from './models/Hotel'
 export type * from './models/HotelSettings'
 export type * from './models/Apartment'
+export type * from './models/IcalFeed'
 export type * from './models/ApartmentImage'
 export type * from './models/PriceSeason'
 export type * from './models/BlockedRange'

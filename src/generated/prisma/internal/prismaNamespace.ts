@@ -387,6 +387,7 @@ export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
   Apartment: 'Apartment',
+  IcalFeed: 'IcalFeed',
   ApartmentImage: 'ApartmentImage',
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "apartment" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "hotelExtra" | "adminUser"
+    modelProps: "hotel" | "hotelSettings" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "hotelExtra" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -631,6 +632,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ApartmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ApartmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    IcalFeed: {
+      payload: Prisma.$IcalFeedPayload<ExtArgs>
+      fields: Prisma.IcalFeedFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IcalFeedFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IcalFeedFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        findFirst: {
+          args: Prisma.IcalFeedFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IcalFeedFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        findMany: {
+          args: Prisma.IcalFeedFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>[]
+        }
+        create: {
+          args: Prisma.IcalFeedCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        createMany: {
+          args: Prisma.IcalFeedCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IcalFeedCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>[]
+        }
+        delete: {
+          args: Prisma.IcalFeedDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        update: {
+          args: Prisma.IcalFeedUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        deleteMany: {
+          args: Prisma.IcalFeedDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IcalFeedUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IcalFeedUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>[]
+        }
+        upsert: {
+          args: Prisma.IcalFeedUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IcalFeedPayload>
+        }
+        aggregate: {
+          args: Prisma.IcalFeedAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIcalFeed>
+        }
+        groupBy: {
+          args: Prisma.IcalFeedGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IcalFeedGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IcalFeedCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IcalFeedCountAggregateOutputType> | number
         }
       }
     }
@@ -1188,6 +1263,20 @@ export const ApartmentScalarFieldEnum = {
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
 
 
+export const IcalFeedScalarFieldEnum = {
+  id: 'id',
+  apartmentId: 'apartmentId',
+  name: 'name',
+  url: 'url',
+  lastSyncAt: 'lastSyncAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IcalFeedScalarFieldEnum = (typeof IcalFeedScalarFieldEnum)[keyof typeof IcalFeedScalarFieldEnum]
+
+
 export const ApartmentImageScalarFieldEnum = {
   id: 'id',
   apartmentId: 'apartmentId',
@@ -1522,6 +1611,7 @@ export type GlobalOmitConfig = {
   hotel?: Prisma.HotelOmit
   hotelSettings?: Prisma.HotelSettingsOmit
   apartment?: Prisma.ApartmentOmit
+  icalFeed?: Prisma.IcalFeedOmit
   apartmentImage?: Prisma.ApartmentImageOmit
   priceSeason?: Prisma.PriceSeasonOmit
   blockedRange?: Prisma.BlockedRangeOmit
