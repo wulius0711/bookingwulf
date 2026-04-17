@@ -1,5 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { NextResponse } from 'next/server';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
+import type { PlanKey } from '@/src/lib/plans';
 
 function withCors(response: NextResponse) {
   response.headers.set('Access-Control-Allow-Origin', '*');
@@ -31,6 +33,7 @@ export async function GET(req: Request) {
       select: {
         id: true,
         name: true,
+        plan: true,
       },
     });
 
@@ -47,11 +50,14 @@ export async function GET(req: Request) {
       where: { hotelId: hotel.id },
     });
 
-    const extras = await prisma.hotelExtra.findMany({
-      where: { hotelId: hotel.id, isActive: true },
-      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-      select: { key: true, name: true, billingType: true, price: true },
-    });
+    const canUseExtras = hasPlanAccess((hotel.plan as PlanKey) ?? 'starter', 'pro');
+    const extras = canUseExtras
+      ? await prisma.hotelExtra.findMany({
+          where: { hotelId: hotel.id, isActive: true },
+          orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+          select: { key: true, name: true, billingType: true, price: true },
+        })
+      : [];
 
     return withCors(
       NextResponse.json({
