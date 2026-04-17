@@ -503,7 +503,7 @@ export default async function Page({ searchParams }: PageProps) {
             Vorschau des Widgets für {selected.name}.
           </p>
 
-          <iframe src={`/?hotel=${selected.slug}`} style={iframeStyle} />
+          <iframe src={`/widget.html?hotel=${selected.slug}`} style={iframeStyle} />
         </div>
       </div>
     </main>

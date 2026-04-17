@@ -11,7 +11,7 @@
   var base = script.src.replace(/\/widget\.js(\?.*)?$/, '');
 
   var iframe = document.createElement('iframe');
-  iframe.src = base + '/?hotel=' + encodeURIComponent(hotel);
+  iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel);
   iframe.style.cssText =
     'width:100%;border:none;overflow:hidden;background:transparent;min-height:800px;display:block;';
   iframe.scrolling = 'no';

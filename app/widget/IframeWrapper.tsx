@@ -44,7 +44,7 @@ export default function IframeWrapper({ hotel }: { hotel: string }) {
   return (
     <iframe
       ref={iframeRef}
-      src={`https://booking-app-snowy-two.vercel.app/?hotel=${hotel}`}
+      src={`/widget.html?hotel=${hotel}`}
       scrolling="no"
       style={{
         width: '100%',
