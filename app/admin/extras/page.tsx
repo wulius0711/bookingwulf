@@ -131,6 +131,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Name *</label>
                   <input name="name" required placeholder="z. B. Hund" style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
+                  <span style={{ fontSize: 11, color: '#9ca3af' }}>Wird dem Gast angezeigt</span>
                 </div>
 
                 <div style={{ display: 'grid', gap: 6 }}>
