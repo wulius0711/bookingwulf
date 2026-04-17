@@ -155,6 +155,7 @@ export default function RegisterForm() {
             </div>
 
             <button
+              className="btn-primary"
               type="submit"
               disabled={pending}
               style={{

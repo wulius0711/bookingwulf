@@ -16,6 +16,7 @@ export default function NavItem({
   upgradeLabel?: string;
 }) {
   const [hover, setHover] = useState(false);
+  const [shaking, setShaking] = useState(false);
 
   if (!locked) {
     return (
@@ -30,6 +31,7 @@ export default function NavItem({
           textDecoration: 'none',
           borderBottom: active ? '2px solid #111' : '2px solid transparent',
           marginBottom: -1,
+          transition: 'color 0.15s ease, border-color 0.15s ease',
         }}
       >
         {label}
@@ -39,6 +41,11 @@ export default function NavItem({
 
   return (
     <span
+      className={shaking ? 'shake' : undefined}
+      onClick={() => {
+        setShaking(true);
+        setTimeout(() => setShaking(false), 400);
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{

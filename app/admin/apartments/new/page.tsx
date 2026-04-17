@@ -280,7 +280,7 @@ Kaffeemaschine`}
           </div>
         </div>
 
-        <button type="submit" style={buttonStyle}>
+        <button className="btn-primary" type="submit" style={buttonStyle}>
           Speichern
         </button>
       </form>

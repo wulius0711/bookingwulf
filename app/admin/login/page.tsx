@@ -101,6 +101,7 @@ export default function LoginPage() {
           )}
 
           <button
+            className="btn-primary"
             type="submit"
             disabled={pending}
             style={{

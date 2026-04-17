@@ -470,11 +470,12 @@ export default async function Page({ searchParams }: PageProps) {
 
             {/* ACTIONS */}
             <div style={actionRowStyle}>
-              <button type="submit" style={primaryButtonStyle}>
+              <button className="btn-primary" type="submit" style={primaryButtonStyle}>
                 Speichern
               </button>
 
               <a
+                className="btn-secondary"
                 href={`/admin/settings?hotel=${selected.id}`}
                 style={secondaryButtonStyle}
               >
@@ -483,7 +484,7 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {saved === '1' && (
-              <div style={{ padding: '12px 16px', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a' }}>
+              <div className="success-banner" style={{ padding: '12px 16px', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a' }}>
                 Einstellungen gespeichert.
               </div>
             )}

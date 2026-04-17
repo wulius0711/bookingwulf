@@ -188,6 +188,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
 
           {apartments.length > 0 && (
             <Link
+              className="btn-primary"
               href="/admin/apartments/new"
               style={{
                 textDecoration: 'none',
@@ -238,7 +239,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
       {apartments.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Apartments vorhanden.</p>
-          <a href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+          <a className="btn-primary" href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
             Neues Apartment anlegen
           </a>
         </div>

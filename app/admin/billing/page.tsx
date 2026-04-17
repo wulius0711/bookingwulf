@@ -128,6 +128,7 @@ export default function BillingPage() {
           </div>
           {isActive && (
             <button
+              className="btn-secondary"
               onClick={openPortal}
               disabled={actionLoading}
               style={{ padding: '10px 20px', borderRadius: 999, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#374151' }}
@@ -150,6 +151,7 @@ export default function BillingPage() {
             return (
               <div
                 key={key}
+                className="plan-card"
                 style={{
                   background: '#fff',
                   border: `2px solid ${key === 'pro' ? '#111827' : '#e5e7eb'}`,
@@ -184,6 +186,7 @@ export default function BillingPage() {
                 </ul>
 
                 <button
+                  className="btn-primary"
                   onClick={() => handlePlanAction(key)}
                   disabled={actionLoading || (isCurrent && isActive)}
                   style={{
@@ -218,6 +221,7 @@ export default function BillingPage() {
             justifyContent: 'center',
             zIndex: 100,
             padding: 24,
+            animation: 'fadeIn 0.25s ease',
           }}
           onClick={closeWelcome}
         >
@@ -230,6 +234,7 @@ export default function BillingPage() {
               maxWidth: 480,
               width: '100%',
               boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+              animation: 'scaleIn 0.25s ease',
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>

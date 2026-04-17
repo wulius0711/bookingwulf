@@ -24,3 +24,86 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Micro-animations */
+
+/* Primary buttons: hover lift + press effect */
+button, a[role="button"], input[type="submit"] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+/* Plan cards and content cards */
+.plan-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+/* Success banner slide-in */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.success-banner {
+  animation: slideDown 0.3s ease;
+}
+
+/* Staggered fade-in for list items */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Locked feature shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-3px); }
+  40%, 80% { transform: translateX(3px); }
+}
+.shake {
+  animation: shake 0.4s ease;
+}
+
+/* Modal fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Button hover & press effects */
+.btn-primary {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Subtle gradient for primary dark buttons */
+.btn-primary {
+  background: linear-gradient(to bottom, #1f2937, #111827) !important;
+}
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #374151, #1f2937) !important;
+}
