@@ -145,9 +145,9 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #eee', padding: '24px 32px', display: 'flex', justifyContent: 'center', gap: 24, fontSize: 12, color: '#999' }}>
-        {process.env.LEGAL_IMPRINT_URL && <a href={process.env.LEGAL_IMPRINT_URL} style={{ color: '#999', textDecoration: 'none' }}>Impressum</a>}
-        {process.env.LEGAL_PRIVACY_URL && <a href={process.env.LEGAL_PRIVACY_URL} style={{ color: '#999', textDecoration: 'none' }}>Datenschutz</a>}
-        {process.env.LEGAL_TERMS_URL && <a href={process.env.LEGAL_TERMS_URL} style={{ color: '#999', textDecoration: 'none' }}>AGB</a>}
+        <a href="/impressum" style={{ color: '#999', textDecoration: 'none' }}>Impressum</a>
+        <a href="/datenschutz" style={{ color: '#999', textDecoration: 'none' }}>Datenschutz</a>
+        <a href="/agb" style={{ color: '#999', textDecoration: 'none' }}>AGB</a>
       </footer>
     </div>
   );
