@@ -2636,11 +2636,18 @@ sortedApartments.forEach((ap) => {
 
         // Post height to parent for iframe resizing
         function postHeight() {
-          var shell = document.querySelector('.booking-shell');
-          if (!shell) return;
-          var rect = shell.getBoundingClientRect();
-          var h = Math.ceil(rect.top + rect.height + 40);
-          if (window.parent !== window && h > 100) {
+          if (window.parent === window) return;
+          // Collapse to measure true content height
+          var html = document.documentElement;
+          var body = document.body;
+          html.style.height = '0';
+          body.style.height = '0';
+          body.style.overflow = 'hidden';
+          var h = body.scrollHeight;
+          html.style.height = '';
+          body.style.height = '';
+          body.style.overflow = '';
+          if (h > 100) {
             window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
           }
         }
