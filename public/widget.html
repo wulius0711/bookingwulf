@@ -1330,6 +1330,7 @@
           children: 0,
           selectedApartmentIds: [],
           selectedExtras: {},
+          selectedInsurance: null,
           availableExtras: [],
           apartments: [],
           pricingMap: {},
@@ -2109,12 +2110,16 @@ sortedApartments.forEach((ap) => {
           if (!wrap) return;
           wrap.innerHTML = "";
 
-          if (!state.availableExtras.length) {
+          const regularExtras = state.availableExtras.filter((ex) => ex.type !== "insurance");
+          const insuranceExtras = state.availableExtras.filter((ex) => ex.type === "insurance");
+
+          if (!regularExtras.length && !insuranceExtras.length) {
             wrap.innerHTML = '<div style="color:var(--muted);padding:8px 0;">Keine Zusatzleistungen verfügbar.</div>';
             return;
           }
 
-          state.availableExtras.forEach((ex) => {
+          // Regular extras as toggle cards
+          regularExtras.forEach((ex) => {
             const selected = !!state.selectedExtras[ex.key];
             const div = document.createElement("div");
             div.className = "toggle-card" + (selected ? " selected" : "");
@@ -2131,6 +2136,93 @@ sortedApartments.forEach((ap) => {
             });
             wrap.appendChild(div);
           });
+
+          // Insurance as radio group (required)
+          if (insuranceExtras.length > 0) {
+            const section = document.createElement("div");
+            section.style.cssText = "margin-top:24px;border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);padding:22px 24px;background:var(--surface-2);";
+
+            const heading = document.createElement("div");
+            heading.style.cssText = "font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text);";
+            heading.textContent = "Reiserücktrittsversicherung";
+            section.appendChild(heading);
+
+            const intro = document.createElement("div");
+            intro.style.cssText = "font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:18px;";
+            intro.textContent = "Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.";
+            section.appendChild(intro);
+
+            insuranceExtras.forEach((ex) => {
+              const selected = state.selectedInsurance === ex.key;
+              const label = document.createElement("label");
+              label.style.cssText = "display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid " + (selected ? "var(--accent)" : "var(--line)") + ";border-radius:calc(var(--radius) + 2px);margin-bottom:10px;cursor:pointer;background:" + (selected ? "var(--accent-soft, rgba(220,20,60,0.05))" : "var(--surface-2)") + ";transition:border-color 0.2s ease,background 0.2s ease;";
+
+              const radio = document.createElement("input");
+              radio.type = "radio";
+              radio.name = "insurance";
+              radio.checked = selected;
+              radio.style.cssText = "width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;";
+              radio.addEventListener("change", () => {
+                state.selectedInsurance = ex.key;
+                // Deselect all insurance from selectedExtras, select this one
+                insuranceExtras.forEach((ins) => { state.selectedExtras[ins.key] = false; });
+                state.selectedExtras[ex.key] = true;
+                renderAll();
+              });
+
+              const text = document.createElement("div");
+              text.style.cssText = "flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;";
+              const nameSpan = document.createElement("span");
+              nameSpan.style.cssText = "font-weight:600;font-size:15px;color:var(--text);";
+              nameSpan.textContent = ex.name;
+              const priceSpan = document.createElement("span");
+              priceSpan.style.cssText = "font-weight:700;font-size:15px;color:var(--text);";
+              priceSpan.textContent = eur(Number(ex.price));
+              text.appendChild(nameSpan);
+              text.appendChild(priceSpan);
+
+              if (ex.linkUrl) {
+                const link = document.createElement("a");
+                link.href = ex.linkUrl;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "mehr Infos";
+                link.style.cssText = "font-size:13px;color:var(--accent);text-decoration:underline;";
+                link.addEventListener("click", (e) => e.stopPropagation());
+                text.appendChild(link);
+              }
+
+              label.appendChild(radio);
+              label.appendChild(text);
+              section.appendChild(label);
+            });
+
+            // Decline option
+            const declineSelected = state.selectedInsurance === "_decline";
+            const declineLabel = document.createElement("label");
+            declineLabel.style.cssText = "display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid " + (declineSelected ? "var(--accent)" : "var(--line)") + ";border-radius:calc(var(--radius) + 2px);cursor:pointer;background:" + (declineSelected ? "var(--accent-soft, rgba(220,20,60,0.05))" : "var(--surface-2)") + ";transition:border-color 0.2s ease,background 0.2s ease;";
+
+            const declineRadio = document.createElement("input");
+            declineRadio.type = "radio";
+            declineRadio.name = "insurance";
+            declineRadio.checked = declineSelected;
+            declineRadio.style.cssText = "width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;";
+            declineRadio.addEventListener("change", () => {
+              state.selectedInsurance = "_decline";
+              insuranceExtras.forEach((ins) => { state.selectedExtras[ins.key] = false; });
+              renderAll();
+            });
+
+            const declineText = document.createElement("span");
+            declineText.style.cssText = "font-size:14px;color:var(--muted);";
+            declineText.textContent = "Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.";
+
+            declineLabel.appendChild(declineRadio);
+            declineLabel.appendChild(declineText);
+            section.appendChild(declineLabel);
+
+            wrap.appendChild(section);
+          }
         }
 
         function renderAll() {
@@ -2172,6 +2264,14 @@ sortedApartments.forEach((ap) => {
                 "error",
                 "Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar."
               );
+              return false;
+            }
+          }
+
+          if (step === 3) {
+            const hasInsurance = state.availableExtras.some((ex) => ex.type === "insurance");
+            if (hasInsurance && !state.selectedInsurance) {
+              showMessage("error", "Bitte wählen Sie eine Versicherungsoption.");
               return false;
             }
           }
@@ -2386,6 +2486,7 @@ sortedApartments.forEach((ap) => {
 
             state.selectedApartmentIds = [];
             Object.keys(state.selectedExtras).forEach((k) => { state.selectedExtras[k] = false; });
+            state.selectedInsurance = null;
             state.step = 1;
             renderAll();
           } catch (error) {

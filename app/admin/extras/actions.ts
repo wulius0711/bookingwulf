@@ -13,8 +13,10 @@ export async function createExtra(formData: FormData) {
   if (session.hotelId !== null && hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
 
   const name = String(formData.get('name') || '').trim();
+  const type = String(formData.get('type') || 'extra');
   const billingType = String(formData.get('billingType') || 'per_stay');
   const price = parseFloat(String(formData.get('price') || '0'));
+  const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
 
   if (!name) throw new Error('Name ist erforderlich.');
@@ -27,7 +29,7 @@ export async function createExtra(formData: FormData) {
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
   await prisma.hotelExtra.create({
-    data: { hotelId, name, key, billingType, price, sortOrder },
+    data: { hotelId, name, key, type, billingType, price, linkUrl, sortOrder },
   });
 
   revalidatePath('/admin/extras');

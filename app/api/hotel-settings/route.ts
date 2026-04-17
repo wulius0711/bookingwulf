@@ -51,13 +51,16 @@ export async function GET(req: Request) {
     });
 
     const canUseExtras = hasPlanAccess((hotel.plan as PlanKey) ?? 'starter', 'pro');
-    const extras = canUseExtras
-      ? await prisma.hotelExtra.findMany({
-          where: { hotelId: hotel.id, isActive: true },
-          orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-          select: { key: true, name: true, billingType: true, price: true },
-        })
-      : [];
+    const extras = await prisma.hotelExtra.findMany({
+      where: {
+        hotelId: hotel.id,
+        isActive: true,
+        // Starter plans only get insurance, Pro+ gets everything
+        ...(!canUseExtras ? { type: 'insurance' } : {}),
+      },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      select: { key: true, name: true, type: true, billingType: true, price: true, linkUrl: true },
+    });
 
     return withCors(
       NextResponse.json({

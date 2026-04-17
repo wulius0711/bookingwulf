@@ -45,8 +45,10 @@ export type HotelExtraMinAggregateOutputType = {
   hotelId: number | null
   name: string | null
   key: string | null
+  type: string | null
   billingType: string | null
   price: runtime.Decimal | null
+  linkUrl: string | null
   isActive: boolean | null
   sortOrder: number | null
   createdAt: Date | null
@@ -58,8 +60,10 @@ export type HotelExtraMaxAggregateOutputType = {
   hotelId: number | null
   name: string | null
   key: string | null
+  type: string | null
   billingType: string | null
   price: runtime.Decimal | null
+  linkUrl: string | null
   isActive: boolean | null
   sortOrder: number | null
   createdAt: Date | null
@@ -71,8 +75,10 @@ export type HotelExtraCountAggregateOutputType = {
   hotelId: number
   name: number
   key: number
+  type: number
   billingType: number
   price: number
+  linkUrl: number
   isActive: number
   sortOrder: number
   createdAt: number
@@ -100,8 +106,10 @@ export type HotelExtraMinAggregateInputType = {
   hotelId?: true
   name?: true
   key?: true
+  type?: true
   billingType?: true
   price?: true
+  linkUrl?: true
   isActive?: true
   sortOrder?: true
   createdAt?: true
@@ -113,8 +121,10 @@ export type HotelExtraMaxAggregateInputType = {
   hotelId?: true
   name?: true
   key?: true
+  type?: true
   billingType?: true
   price?: true
+  linkUrl?: true
   isActive?: true
   sortOrder?: true
   createdAt?: true
@@ -126,8 +136,10 @@ export type HotelExtraCountAggregateInputType = {
   hotelId?: true
   name?: true
   key?: true
+  type?: true
   billingType?: true
   price?: true
+  linkUrl?: true
   isActive?: true
   sortOrder?: true
   createdAt?: true
@@ -226,8 +238,10 @@ export type HotelExtraGroupByOutputType = {
   hotelId: number
   name: string
   key: string
+  type: string
   billingType: string
   price: runtime.Decimal
+  linkUrl: string | null
   isActive: boolean
   sortOrder: number
   createdAt: Date
@@ -262,8 +276,10 @@ export type HotelExtraWhereInput = {
   hotelId?: Prisma.IntFilter<"HotelExtra"> | number
   name?: Prisma.StringFilter<"HotelExtra"> | string
   key?: Prisma.StringFilter<"HotelExtra"> | string
+  type?: Prisma.StringFilter<"HotelExtra"> | string
   billingType?: Prisma.StringFilter<"HotelExtra"> | string
   price?: Prisma.DecimalFilter<"HotelExtra"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.StringNullableFilter<"HotelExtra"> | string | null
   isActive?: Prisma.BoolFilter<"HotelExtra"> | boolean
   sortOrder?: Prisma.IntFilter<"HotelExtra"> | number
   createdAt?: Prisma.DateTimeFilter<"HotelExtra"> | Date | string
@@ -276,8 +292,10 @@ export type HotelExtraOrderByWithRelationInput = {
   hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  linkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,8 +312,10 @@ export type HotelExtraWhereUniqueInput = Prisma.AtLeast<{
   hotelId?: Prisma.IntFilter<"HotelExtra"> | number
   name?: Prisma.StringFilter<"HotelExtra"> | string
   key?: Prisma.StringFilter<"HotelExtra"> | string
+  type?: Prisma.StringFilter<"HotelExtra"> | string
   billingType?: Prisma.StringFilter<"HotelExtra"> | string
   price?: Prisma.DecimalFilter<"HotelExtra"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.StringNullableFilter<"HotelExtra"> | string | null
   isActive?: Prisma.BoolFilter<"HotelExtra"> | boolean
   sortOrder?: Prisma.IntFilter<"HotelExtra"> | number
   createdAt?: Prisma.DateTimeFilter<"HotelExtra"> | Date | string
@@ -308,8 +328,10 @@ export type HotelExtraOrderByWithAggregationInput = {
   hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  linkUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -329,8 +351,10 @@ export type HotelExtraScalarWhereWithAggregatesInput = {
   hotelId?: Prisma.IntWithAggregatesFilter<"HotelExtra"> | number
   name?: Prisma.StringWithAggregatesFilter<"HotelExtra"> | string
   key?: Prisma.StringWithAggregatesFilter<"HotelExtra"> | string
+  type?: Prisma.StringWithAggregatesFilter<"HotelExtra"> | string
   billingType?: Prisma.StringWithAggregatesFilter<"HotelExtra"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"HotelExtra"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.StringNullableWithAggregatesFilter<"HotelExtra"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"HotelExtra"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"HotelExtra"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HotelExtra"> | Date | string
@@ -340,8 +364,10 @@ export type HotelExtraScalarWhereWithAggregatesInput = {
 export type HotelExtraCreateInput = {
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -354,8 +380,10 @@ export type HotelExtraUncheckedCreateInput = {
   hotelId: number
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -365,8 +393,10 @@ export type HotelExtraUncheckedCreateInput = {
 export type HotelExtraUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,8 +409,10 @@ export type HotelExtraUncheckedUpdateInput = {
   hotelId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,8 +424,10 @@ export type HotelExtraCreateManyInput = {
   hotelId: number
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -403,8 +437,10 @@ export type HotelExtraCreateManyInput = {
 export type HotelExtraUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -416,8 +452,10 @@ export type HotelExtraUncheckedUpdateManyInput = {
   hotelId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -444,8 +482,10 @@ export type HotelExtraCountOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  linkUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -464,8 +504,10 @@ export type HotelExtraMaxOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  linkUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -477,8 +519,10 @@ export type HotelExtraMinOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  linkUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -545,8 +589,10 @@ export type DecimalFieldUpdateOperationsInput = {
 export type HotelExtraCreateWithoutHotelInput = {
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -557,8 +603,10 @@ export type HotelExtraUncheckedCreateWithoutHotelInput = {
   id?: number
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -599,8 +647,10 @@ export type HotelExtraScalarWhereInput = {
   hotelId?: Prisma.IntFilter<"HotelExtra"> | number
   name?: Prisma.StringFilter<"HotelExtra"> | string
   key?: Prisma.StringFilter<"HotelExtra"> | string
+  type?: Prisma.StringFilter<"HotelExtra"> | string
   billingType?: Prisma.StringFilter<"HotelExtra"> | string
   price?: Prisma.DecimalFilter<"HotelExtra"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.StringNullableFilter<"HotelExtra"> | string | null
   isActive?: Prisma.BoolFilter<"HotelExtra"> | boolean
   sortOrder?: Prisma.IntFilter<"HotelExtra"> | number
   createdAt?: Prisma.DateTimeFilter<"HotelExtra"> | Date | string
@@ -611,8 +661,10 @@ export type HotelExtraCreateManyHotelInput = {
   id?: number
   name: string
   key: string
+  type?: string
   billingType: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: string | null
   isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
@@ -622,8 +674,10 @@ export type HotelExtraCreateManyHotelInput = {
 export type HotelExtraUpdateWithoutHotelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -634,8 +688,10 @@ export type HotelExtraUncheckedUpdateWithoutHotelInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -646,8 +702,10 @@ export type HotelExtraUncheckedUpdateManyWithoutHotelInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   key?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  linkUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -661,8 +719,10 @@ export type HotelExtraSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   hotelId?: boolean
   name?: boolean
   key?: boolean
+  type?: boolean
   billingType?: boolean
   price?: boolean
+  linkUrl?: boolean
   isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
@@ -675,8 +735,10 @@ export type HotelExtraSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   hotelId?: boolean
   name?: boolean
   key?: boolean
+  type?: boolean
   billingType?: boolean
   price?: boolean
+  linkUrl?: boolean
   isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
@@ -689,8 +751,10 @@ export type HotelExtraSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   hotelId?: boolean
   name?: boolean
   key?: boolean
+  type?: boolean
   billingType?: boolean
   price?: boolean
+  linkUrl?: boolean
   isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
@@ -703,15 +767,17 @@ export type HotelExtraSelectScalar = {
   hotelId?: boolean
   name?: boolean
   key?: boolean
+  type?: boolean
   billingType?: boolean
   price?: boolean
+  linkUrl?: boolean
   isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HotelExtraOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "name" | "key" | "billingType" | "price" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelExtra"]>
+export type HotelExtraOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "name" | "key" | "type" | "billingType" | "price" | "linkUrl" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelExtra"]>
 export type HotelExtraInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -732,8 +798,10 @@ export type $HotelExtraPayload<ExtArgs extends runtime.Types.Extensions.Internal
     hotelId: number
     name: string
     key: string
+    type: string
     billingType: string
     price: runtime.Decimal
+    linkUrl: string | null
     isActive: boolean
     sortOrder: number
     createdAt: Date
@@ -1166,8 +1234,10 @@ export interface HotelExtraFieldRefs {
   readonly hotelId: Prisma.FieldRef<"HotelExtra", 'Int'>
   readonly name: Prisma.FieldRef<"HotelExtra", 'String'>
   readonly key: Prisma.FieldRef<"HotelExtra", 'String'>
+  readonly type: Prisma.FieldRef<"HotelExtra", 'String'>
   readonly billingType: Prisma.FieldRef<"HotelExtra", 'String'>
   readonly price: Prisma.FieldRef<"HotelExtra", 'Decimal'>
+  readonly linkUrl: Prisma.FieldRef<"HotelExtra", 'String'>
   readonly isActive: Prisma.FieldRef<"HotelExtra", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"HotelExtra", 'Int'>
   readonly createdAt: Prisma.FieldRef<"HotelExtra", 'DateTime'>
