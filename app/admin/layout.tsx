@@ -39,10 +39,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       status = 'inactive'
     }
 
-    // Billing gate: only active subscribers can access the dashboard
-    // Trial and inactive users are redirected to the billing page
+    // Billing gate: redirect inactive/expired users (trial users can navigate freely)
     const isExempt = !currentPath || currentPath.includes('/billing') || currentPath.includes('/login') || currentPath.includes('/setup')
-    if (!isExempt && status !== 'active') {
+    if (!isExempt && status !== 'active' && status !== 'trialing') {
       redirect('/admin/billing')
     }
   }
