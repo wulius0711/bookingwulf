@@ -113,7 +113,7 @@ export default function Sidebar({ navItems, email }: Props) {
           src="/bookingwulf-logo.png"
           alt="bookingwulf"
           onClick={() => setMobileOpen(true)}
-          style={{ height: 32, cursor: 'pointer' }}
+          style={{ height: 36, cursor: 'pointer' }}
         />
       </div>
 
