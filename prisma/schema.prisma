@@ -185,6 +185,17 @@ model Request {
   extrasJson           Json?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+
+  messages RequestMessage[]
+}
+
+model RequestMessage {
+  id        Int      @id @default(autoincrement())
+  requestId Int
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender    String   // 'hotel' | 'guest'
+  body      String
+  createdAt DateTime @default(now())
 }
 
 model HotelExtra {

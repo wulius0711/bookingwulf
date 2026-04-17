@@ -58,6 +58,11 @@ export type BlockedRange = Prisma.BlockedRangeModel
  */
 export type Request = Prisma.RequestModel
 /**
+ * Model RequestMessage
+ * 
+ */
+export type RequestMessage = Prisma.RequestMessageModel
+/**
  * Model HotelExtra
  * 
  */

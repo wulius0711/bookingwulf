@@ -59,6 +59,7 @@ export const ModelName = {
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
+  RequestMessage: 'RequestMessage',
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser'
 } as const
@@ -227,6 +228,17 @@ export const RequestScalarFieldEnum = {
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
+
+
+export const RequestMessageScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  sender: 'sender',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type RequestMessageScalarFieldEnum = (typeof RequestMessageScalarFieldEnum)[keyof typeof RequestMessageScalarFieldEnum]
 
 
 export const HotelExtraScalarFieldEnum = {

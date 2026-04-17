@@ -1,7 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
-import { generateBookingToken, bookingIcalUrl } from '@/src/lib/booking-token';
+import { bookingIcalUrl, generateBookingToken } from '@/src/lib/booking-token';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -110,6 +110,66 @@ async function updateBookingStatus(formData: FormData) {
   redirect(`/admin/requests/${id}`);
 }
 
+async function sendAdminMessage(formData: FormData) {
+  'use server';
+
+  const session = await verifySession();
+  const id = Number(formData.get('requestId'));
+  const body = String(formData.get('body') || '').trim();
+  if (!id || !body) return;
+
+  const request = await prisma.request.findUnique({
+    where: { id },
+    include: { hotel: { select: { name: true, accentColor: true, email: true } } },
+  });
+  if (!request) return;
+  if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
+
+  await prisma.requestMessage.create({
+    data: { requestId: id, sender: 'hotel', body },
+  });
+
+  // Email guest with reply link
+  try {
+    const resend = getResend();
+    if (resend && request.email) {
+      const token = generateBookingToken(id, request.createdAt);
+      const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+      const replyUrl = `${base}/nachrichten?id=${id}&token=${token}`;
+      const hotelName = request.hotel?.name || 'Hotel';
+
+      await resend.emails.send({
+        from: getFromEmail(),
+        to: request.email,
+        subject: `Neue Nachricht zu Ihrer Buchungsanfrage — ${hotelName}`,
+        html: buildEmailHtml({
+          hotelName,
+          accentColor: request.hotel?.accentColor || undefined,
+          title: 'Neue Nachricht',
+          body: `
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px;">
+              ${request.firstname ? `Hallo ${request.firstname},` : 'Hallo,'}<br/><br/>
+              Sie haben eine neue Nachricht zu Ihrer Buchungsanfrage erhalten:
+            </p>
+            <div style="padding:16px;background:#f9fafb;border-left:3px solid #e5e7eb;border-radius:4px;font-size:15px;color:#374151;line-height:1.6;white-space:pre-wrap;">${body}</div>
+            <div style="margin-top:24px;">
+              <a href="${replyUrl}"
+                 style="display:inline-block;padding:11px 22px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                Antworten
+              </a>
+            </div>
+          `,
+          footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${id}</p>`,
+        }),
+      });
+    }
+  } catch (e) {
+    console.error('Admin message email error:', e);
+  }
+
+  redirect(`/admin/requests/${id}`);
+}
+
 function getStatusBadge(status: string) {
   switch (status) {
     case 'booked':
@@ -153,6 +213,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const request = await prisma.request.findUnique({
     where: { id: requestId },
     include: {
+      messages: { orderBy: { createdAt: 'asc' } },
       hotel: {
         select: {
           name: true,
@@ -385,6 +446,105 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
         <div style={{ fontSize: 12, color: '#666' }}>
           Erstellt: {new Date(request.createdAt).toLocaleString()}
+        </div>
+      </div>
+
+      {/* ─── Nachrichtenthread ─── */}
+      <div style={{
+        marginTop: 24,
+        border: `1px solid ${borderColor}`,
+        borderRadius: cardRadius,
+        background: cardBackground,
+        overflow: 'hidden',
+      }}>
+        <div style={{ padding: '16px 24px', borderBottom: '1px solid #f3f4f6' }}>
+          <strong style={{ fontSize: 15 }}>Nachrichten</strong>
+          {request.messages.length > 0 && (
+            <span style={{ marginLeft: 8, fontSize: 12, color: '#9ca3af' }}>
+              {request.messages.length} Nachricht{request.messages.length !== 1 ? 'en' : ''}
+            </span>
+          )}
+        </div>
+
+        {/* Thread */}
+        <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 80 }}>
+          {request.messages.length === 0 && (
+            <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>
+              Noch keine Nachrichten — schreiben Sie dem Gast direkt.
+            </p>
+          )}
+          {request.messages.map((msg) => {
+            const isHotel = msg.sender === 'hotel';
+            const senderLabel = isHotel
+              ? (request.hotel?.name || 'Hotel')
+              : ([request.firstname, request.lastname].filter(Boolean).join(' ') || 'Gast');
+            return (
+              <div key={msg.id} style={{ display: 'flex', flexDirection: 'column', alignItems: isHotel ? 'flex-end' : 'flex-start' }}>
+                <div style={{
+                  maxWidth: '75%',
+                  padding: '10px 14px',
+                  borderRadius: isHotel ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
+                  background: isHotel ? '#111' : '#f3f4f6',
+                  color: isHotel ? '#fff' : '#111',
+                  fontSize: 14,
+                  lineHeight: 1.6,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}>
+                  {msg.body}
+                </div>
+                <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 3 }}>
+                  {senderLabel} · {new Intl.DateTimeFormat('de-AT', {
+                    day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+                  }).format(new Date(msg.createdAt))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Send form */}
+        <div style={{ padding: '0 24px 20px' }}>
+          <form action={sendAdminMessage} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <input type="hidden" name="requestId" value={request.id} />
+            <textarea
+              name="body"
+              required
+              placeholder="Nachricht an den Gast…"
+              rows={3}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                border: `1px solid ${borderColor}`,
+                borderRadius: 8,
+                fontSize: 14,
+                fontFamily: 'inherit',
+                resize: 'vertical',
+                boxSizing: 'border-box',
+                color: textColor,
+              }}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 12, color: '#9ca3af' }}>
+                Gast erhält eine E-Mail mit Antwort-Link.
+              </span>
+              <button
+                type="submit"
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: buttonRadius,
+                  border: 'none',
+                  background: '#111',
+                  color: '#fff',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Senden
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </main>

@@ -341,6 +341,7 @@ export type RequestWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  messages?: Prisma.RequestMessageListRelationFilter
 }
 
 export type RequestOrderByWithRelationInput = {
@@ -364,6 +365,7 @@ export type RequestOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
+  messages?: Prisma.RequestMessageOrderByRelationAggregateInput
 }
 
 export type RequestWhereUniqueInput = Prisma.AtLeast<{
@@ -390,6 +392,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  messages?: Prisma.RequestMessageListRelationFilter
 }, "id">
 
 export type RequestOrderByWithAggregationInput = {
@@ -463,6 +466,7 @@ export type RequestCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel?: Prisma.HotelCreateNestedOneWithoutRequestsInput
+  messages?: Prisma.RequestMessageCreateNestedManyWithoutRequestInput
 }
 
 export type RequestUncheckedCreateInput = {
@@ -485,6 +489,7 @@ export type RequestUncheckedCreateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.RequestMessageUncheckedCreateNestedManyWithoutRequestInput
 }
 
 export type RequestUpdateInput = {
@@ -506,6 +511,7 @@ export type RequestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneWithoutRequestsNestedInput
+  messages?: Prisma.RequestMessageUpdateManyWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateInput = {
@@ -528,6 +534,7 @@ export type RequestUncheckedUpdateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.RequestMessageUncheckedUpdateManyWithoutRequestNestedInput
 }
 
 export type RequestCreateManyInput = {
@@ -684,6 +691,11 @@ export type RequestSumOrderByAggregateInput = {
   children?: Prisma.SortOrder
 }
 
+export type RequestScalarRelationFilter = {
+  is?: Prisma.RequestWhereInput
+  isNot?: Prisma.RequestWhereInput
+}
+
 export type RequestCreateNestedManyWithoutHotelInput = {
   create?: Prisma.XOR<Prisma.RequestCreateWithoutHotelInput, Prisma.RequestUncheckedCreateWithoutHotelInput> | Prisma.RequestCreateWithoutHotelInput[] | Prisma.RequestUncheckedCreateWithoutHotelInput[]
   connectOrCreate?: Prisma.RequestCreateOrConnectWithoutHotelInput | Prisma.RequestCreateOrConnectWithoutHotelInput[]
@@ -726,6 +738,20 @@ export type RequestUncheckedUpdateManyWithoutHotelNestedInput = {
   deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
 }
 
+export type RequestCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutMessagesInput, Prisma.RequestUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.RequestWhereUniqueInput
+}
+
+export type RequestUpdateOneRequiredWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutMessagesInput, Prisma.RequestUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.RequestUpsertWithoutMessagesInput
+  connect?: Prisma.RequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RequestUpdateToOneWithWhereWithoutMessagesInput, Prisma.RequestUpdateWithoutMessagesInput>, Prisma.RequestUncheckedUpdateWithoutMessagesInput>
+}
+
 export type RequestCreateWithoutHotelInput = {
   arrival: Date | string
   departure: Date | string
@@ -744,6 +770,7 @@ export type RequestCreateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.RequestMessageCreateNestedManyWithoutRequestInput
 }
 
 export type RequestUncheckedCreateWithoutHotelInput = {
@@ -765,6 +792,7 @@ export type RequestUncheckedCreateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.RequestMessageUncheckedCreateNestedManyWithoutRequestInput
 }
 
 export type RequestCreateOrConnectWithoutHotelInput = {
@@ -818,6 +846,108 @@ export type RequestScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
 }
 
+export type RequestCreateWithoutMessagesInput = {
+  arrival: Date | string
+  departure: Date | string
+  nights: number
+  adults: number
+  children?: number
+  selectedApartmentIds: string
+  salutation: string
+  firstname?: string | null
+  lastname: string
+  email: string
+  country: string
+  message?: string | null
+  newsletter?: boolean
+  status?: string
+  extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hotel?: Prisma.HotelCreateNestedOneWithoutRequestsInput
+}
+
+export type RequestUncheckedCreateWithoutMessagesInput = {
+  id?: number
+  hotelId?: number | null
+  arrival: Date | string
+  departure: Date | string
+  nights: number
+  adults: number
+  children?: number
+  selectedApartmentIds: string
+  salutation: string
+  firstname?: string | null
+  lastname: string
+  email: string
+  country: string
+  message?: string | null
+  newsletter?: boolean
+  status?: string
+  extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RequestCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.RequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.RequestCreateWithoutMessagesInput, Prisma.RequestUncheckedCreateWithoutMessagesInput>
+}
+
+export type RequestUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.RequestUpdateWithoutMessagesInput, Prisma.RequestUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.RequestCreateWithoutMessagesInput, Prisma.RequestUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.RequestWhereInput
+}
+
+export type RequestUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.RequestWhereInput
+  data: Prisma.XOR<Prisma.RequestUpdateWithoutMessagesInput, Prisma.RequestUncheckedUpdateWithoutMessagesInput>
+}
+
+export type RequestUpdateWithoutMessagesInput = {
+  arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nights?: Prisma.IntFieldUpdateOperationsInput | number
+  adults?: Prisma.IntFieldUpdateOperationsInput | number
+  children?: Prisma.IntFieldUpdateOperationsInput | number
+  selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
+  salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hotel?: Prisma.HotelUpdateOneWithoutRequestsNestedInput
+}
+
+export type RequestUncheckedUpdateWithoutMessagesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  arrival?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departure?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nights?: Prisma.IntFieldUpdateOperationsInput | number
+  adults?: Prisma.IntFieldUpdateOperationsInput | number
+  children?: Prisma.IntFieldUpdateOperationsInput | number
+  selectedApartmentIds?: Prisma.StringFieldUpdateOperationsInput | string
+  salutation?: Prisma.StringFieldUpdateOperationsInput | string
+  firstname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type RequestCreateManyHotelInput = {
   id?: number
   arrival: Date | string
@@ -857,6 +987,7 @@ export type RequestUpdateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.RequestMessageUpdateManyWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateWithoutHotelInput = {
@@ -878,6 +1009,7 @@ export type RequestUncheckedUpdateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.RequestMessageUncheckedUpdateManyWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateManyWithoutHotelInput = {
@@ -902,6 +1034,35 @@ export type RequestUncheckedUpdateManyWithoutHotelInput = {
 }
 
 
+/**
+ * Count Type RequestCountOutputType
+ */
+
+export type RequestCountOutputType = {
+  messages: number
+}
+
+export type RequestCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  messages?: boolean | RequestCountOutputTypeCountMessagesArgs
+}
+
+/**
+ * RequestCountOutputType without action
+ */
+export type RequestCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RequestCountOutputType
+   */
+  select?: Prisma.RequestCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * RequestCountOutputType without action
+ */
+export type RequestCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RequestMessageWhereInput
+}
+
 
 export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -924,6 +1085,8 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
+  messages?: boolean | Prisma.Request$messagesArgs<ExtArgs>
+  _count?: boolean | Prisma.RequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -997,6 +1160,8 @@ export type RequestSelectScalar = {
 export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "extrasJson" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
+  messages?: boolean | Prisma.Request$messagesArgs<ExtArgs>
+  _count?: boolean | Prisma.RequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
@@ -1009,6 +1174,7 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Request"
   objects: {
     hotel: Prisma.$HotelPayload<ExtArgs> | null
+    messages: Prisma.$RequestMessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1425,6 +1591,7 @@ readonly fields: RequestFieldRefs;
 export interface Prisma__RequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   hotel<T extends Prisma.Request$hotelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$hotelArgs<ExtArgs>>): Prisma.Prisma__HotelClient<runtime.Types.Result.GetResult<Prisma.$HotelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  messages<T extends Prisma.Request$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RequestMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1890,6 +2057,30 @@ export type Request$hotelArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   include?: Prisma.HotelInclude<ExtArgs> | null
   where?: Prisma.HotelWhereInput
+}
+
+/**
+ * Request.messages
+ */
+export type Request$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RequestMessage
+   */
+  select?: Prisma.RequestMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RequestMessage
+   */
+  omit?: Prisma.RequestMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RequestMessageInclude<ExtArgs> | null
+  where?: Prisma.RequestMessageWhereInput
+  orderBy?: Prisma.RequestMessageOrderByWithRelationInput | Prisma.RequestMessageOrderByWithRelationInput[]
+  cursor?: Prisma.RequestMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RequestMessageScalarFieldEnum | Prisma.RequestMessageScalarFieldEnum[]
 }
 
 /**

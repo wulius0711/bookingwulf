@@ -392,6 +392,7 @@ export const ModelName = {
   PriceSeason: 'PriceSeason',
   BlockedRange: 'BlockedRange',
   Request: 'Request',
+  RequestMessage: 'RequestMessage',
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser'
 } as const
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "hotelExtra" | "adminUser"
+    modelProps: "hotel" | "hotelSettings" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1005,6 +1006,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RequestMessage: {
+      payload: Prisma.$RequestMessagePayload<ExtArgs>
+      fields: Prisma.RequestMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RequestMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RequestMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.RequestMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RequestMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        findMany: {
+          args: Prisma.RequestMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>[]
+        }
+        create: {
+          args: Prisma.RequestMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        createMany: {
+          args: Prisma.RequestMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RequestMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>[]
+        }
+        delete: {
+          args: Prisma.RequestMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        update: {
+          args: Prisma.RequestMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.RequestMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RequestMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RequestMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>[]
+        }
+        upsert: {
+          args: Prisma.RequestMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequestMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.RequestMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRequestMessage>
+        }
+        groupBy: {
+          args: Prisma.RequestMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequestMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RequestMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequestMessageCountAggregateOutputType> | number
+        }
+      }
+    }
     HotelExtra: {
       payload: Prisma.$HotelExtraPayload<ExtArgs>
       fields: Prisma.HotelExtraFieldRefs
@@ -1342,6 +1417,17 @@ export const RequestScalarFieldEnum = {
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
 
 
+export const RequestMessageScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  sender: 'sender',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type RequestMessageScalarFieldEnum = (typeof RequestMessageScalarFieldEnum)[keyof typeof RequestMessageScalarFieldEnum]
+
+
 export const HotelExtraScalarFieldEnum = {
   id: 'id',
   hotelId: 'hotelId',
@@ -1616,6 +1702,7 @@ export type GlobalOmitConfig = {
   priceSeason?: Prisma.PriceSeasonOmit
   blockedRange?: Prisma.BlockedRangeOmit
   request?: Prisma.RequestOmit
+  requestMessage?: Prisma.RequestMessageOmit
   hotelExtra?: Prisma.HotelExtraOmit
   adminUser?: Prisma.AdminUserOmit
 }
