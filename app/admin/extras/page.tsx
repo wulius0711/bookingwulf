@@ -130,20 +130,20 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Name *</label>
-                  <input name="name" required placeholder="z. B. Hund" style={{ padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
+                  <input name="name" required placeholder="z. B. Hund" style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
                 </div>
 
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Key *</label>
-                  <input name="key" required placeholder="z. B. dog" style={{ padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', fontFamily: 'monospace' }} />
+                  <input name="key" required placeholder="z. B. dog" style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', fontFamily: 'monospace' }} />
                   <span style={{ fontSize: 11, color: '#9ca3af' }}>Kleinbuchstaben, keine Leerzeichen</span>
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 100px', gap: 16 }}>
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Abrechnung *</label>
-                  <select name="billingType" required style={{ padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
+                  <select name="billingType" required style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
                     <option value="per_stay">pro Aufenthalt</option>
                     <option value="per_night">pro Nacht</option>
                     <option value="per_person_per_night">pro Person / Nacht</option>
@@ -153,12 +153,12 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
 
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Preis (€) *</label>
-                  <input name="price" type="number" min="0" step="0.01" required placeholder="0.00" style={{ padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
+                  <input name="price" type="number" min="0" step="0.01" required placeholder="0.00" style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
                 </div>
 
                 <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Reihenfolge</label>
-                  <input name="sortOrder" type="number" min="0" defaultValue={0} style={{ padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
+                  <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Nr.</label>
+                  <input name="sortOrder" type="number" min="0" defaultValue={0} style={{ width: '100%', boxSizing: 'border-box', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }} />
                 </div>
               </div>
 
