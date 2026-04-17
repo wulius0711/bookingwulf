@@ -1687,23 +1687,10 @@
           var apartment = state.apartments.find(function(a) { return a.id === apartmentId; });
           if (!apartment) return;
           var images = getApartmentImages(apartment);
+          if (!images[index]) return;
 
-          // If embedded in iframe, delegate lightbox to parent
-          if (window.parent !== window) {
-            window.parent.postMessage({
-              type: 'booking-widget-lightbox-open',
-              images: images,
-              index: index
-            }, '*');
-            return;
-          }
-
-          // Fallback: use internal lightbox
-          state.lightbox.open = true;
-          state.lightbox.apartmentId = apartmentId;
-          state.lightbox.index = index;
-          document.body.style.overflow = 'hidden';
-          renderLightbox();
+          // Open image in new tab — works reliably in iframes
+          window.open(images[index].imageUrl, '_blank');
         }
 
         function closeLightbox() {
