@@ -257,9 +257,12 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                     {day.getDate()}
                   </div>
 
-                  {/* Booking chips */}
+                  {/* Booking chips — sorted by priority so booked shows first */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {bookings.slice(0, 3).map((req) => {
+                    {[...bookings].sort((a, b) => {
+                      const p: Record<string, number> = { booked: 0, answered: 1, new: 2 };
+                      return (p[a.status] ?? 3) - (p[b.status] ?? 3);
+                    }).slice(0, 4).map((req) => {
                       const aptIds = req.selectedApartmentIds.split(',').map(Number).filter(Boolean);
                       const aptName = aptIds.length > 0 ? (apartmentMap.get(aptIds[0]) ?? 'Apt') : '';
                       const isArrival = dateKey(new Date(req.arrival)) === key;
@@ -289,9 +292,9 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                         </Link>
                       );
                     })}
-                    {bookings.length > 3 && (
+                    {bookings.length > 4 && (
                       <div style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>
-                        +{bookings.length - 3} weitere
+                        +{bookings.length - 4} weitere
                       </div>
                     )}
                   </div>
