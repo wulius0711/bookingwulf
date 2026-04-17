@@ -92,7 +92,6 @@ button, a[role="button"], input[type="submit"] {
   flex-direction: column;
   z-index: 100;
   transition: transform 0.25s ease;
-  overflow: hidden;
 }
 
 .admin-main {
