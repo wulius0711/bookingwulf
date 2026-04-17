@@ -443,10 +443,10 @@
 
       .apt-image-wrap {
         position: relative;
-        width: 240px;
-        height: 162px;
+        width: 280px;
+        height: 200px;
         flex-shrink: 0;
-        border-radius: var(--radius);
+        border-radius: calc(var(--radius) + 2px);
         overflow: hidden;
         background: #f1ece4;
       }
@@ -477,17 +477,17 @@
         height: 100%;
         object-fit: cover;
         display: block;
-        cursor: pointer;
       }
 
       .apt-image-nav {
         position: absolute;
-        bottom: 14px;
-        width: 24px;
-        height: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
         border: none;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.96);
+        background: rgba(255, 255, 255, 0.9);
         color: #111;
         display: inline-flex;
         align-items: center;
@@ -496,33 +496,40 @@
         line-height: 1;
         cursor: pointer;
         z-index: 3;
-        box-shadow: 0 12px 24px rgba(0,0,0,0.16);
-        transition: transform 0.2s ease, background 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: transform 0.15s ease, background 0.15s ease;
+        opacity: 0;
+      }
+
+      .apt-image-wrap:hover .apt-image-nav {
+        opacity: 1;
       }
 
       .apt-image-nav:hover {
         background: #fff;
-        transform: translateY(-1px);
+        transform: translateY(-50%) scale(1.1);
       }
 
       .apt-image-nav.prev {
-        right: 44px;
+        left: 8px;
       }
 
       .apt-image-nav.next {
-        right: 14px;
+        right: 8px;
       }
 
-      .apt-image-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.55);
-        border: 1px solid rgba(255,255,255,0.8);
-      }
-
-      .apt-image-dot.active {
-        background: #fff;
+      .apt-image-counter {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        z-index: 3;
+        pointer-events: none;
       }
 
       .apt-copy {
@@ -1121,7 +1128,11 @@
         .apt-image-wrap,
         .toggle-card img {
           width: 100%;
-          height: 220px;
+          height: 240px;
+        }
+
+        .apt-image-nav {
+          opacity: 1;
         }
 
         .apt-bottom {
@@ -1684,13 +1695,7 @@
         }
 
         function openLightbox(apartmentId, index = 0) {
-          var apartment = state.apartments.find(function(a) { return a.id === apartmentId; });
-          if (!apartment) return;
-          var images = getApartmentImages(apartment);
-          if (!images[index]) return;
-
-          // Open image in new tab — works reliably in iframes
-          window.open(images[index].imageUrl, '_blank');
+          // Image viewing handled by inline slider — no lightbox needed
         }
 
         function closeLightbox() {
@@ -2020,17 +2025,9 @@ sortedApartments.forEach((ap) => {
                 ${
                   imageCount > 1
                     ? `
-                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}">‹</button>
-                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}">›</button>
-                      <div class="apt-image-dots">
-                        ${imageObjects
-                          .map(
-                            (_, dotIndex) => `
-                              <span class="apt-image-dot ${dotIndex === imageIndex ? "active" : ""}"></span>
-                            `
-                          )
-                          .join("")}
-                      </div>
+                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}">&#8249;</button>
+                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}">&#8250;</button>
+                      <div class="apt-image-counter">${imageIndex + 1} / ${imageCount}</div>
                     `
                     : ""
                 }
