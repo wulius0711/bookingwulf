@@ -208,14 +208,25 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
-          <label style={labelStyle}>Slug</label>
-          <input
-            name="slug"
-            defaultValue={apartment.slug}
-            style={inputStyle}
-            required
-          />
+        <input type="hidden" name="slug" value={apartment.slug} />
+
+        <div style={{ ...row, alignItems: 'center' }}>
+          <label style={labelStyle}>Status</label>
+          <label
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'center',
+              paddingTop: 8,
+            }}
+          >
+            <input
+              type="checkbox"
+              name="isActive"
+              defaultChecked={apartment.isActive}
+            />
+            Aktiv
+          </label>
         </div>
 
         <div style={row}>
@@ -292,25 +303,6 @@ export default async function EditApartmentPage({ params }: PageProps) {
             defaultValue={apartment.cleaningFee ?? ''}
             style={inputStyle}
           />
-        </div>
-
-        <div style={{ ...row, alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label
-            style={{
-              display: 'flex',
-              gap: 8,
-              alignItems: 'center',
-              paddingTop: 8,
-            }}
-          >
-            <input
-              type="checkbox"
-              name="isActive"
-              defaultChecked={apartment.isActive}
-            />
-            Aktiv
-          </label>
         </div>
 
         <div style={row}>
