@@ -35,6 +35,7 @@ export default function LoginPage() {
           boxShadow: '0 2px 24px rgba(0,0,0,0.08)',
         }}
       >
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36, marginBottom: 20 }} />
         <h1
           style={{
             fontSize: 22,
@@ -46,7 +47,7 @@ export default function LoginPage() {
           Admin-Anmeldung
         </h1>
         <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
-          bookingwulf Verwaltung
+          Verwaltung
         </p>
 
         <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

@@ -43,11 +43,12 @@ export default function RegisterForm() {
       <div style={{ width: '100%', maxWidth: 560 }}>
 
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 40, marginBottom: 20 }} />
           <h1 style={{ margin: 0, fontSize: 30, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.03em' }}>
             Konto erstellen
           </h1>
           <p style={{ margin: '8px 0 0', fontSize: 15, color: '#667085' }}>
-            bookingwulf für dein Hotel in wenigen Minuten einrichten.
+            Booking-Widget für dein Hotel in wenigen Minuten einrichten.
           </p>
         </div>
 
