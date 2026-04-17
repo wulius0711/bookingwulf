@@ -1,9 +1,17 @@
 'use client'
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { login, type LoginState } from './actions'
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState<LoginState, FormData>(login, undefined)
+
+  // Full page navigation after successful login (avoids white screen
+  // caused by cookie change invalidating client router cache)
+  useEffect(() => {
+    if (state && 'success' in state) {
+      window.location.href = '/admin'
+    }
+  }, [state])
 
   return (
     <div
@@ -84,7 +92,7 @@ export default function LoginPage() {
             />
           </div>
 
-          {state?.error && (
+          {state && 'error' in state && (
             <p
               style={{
                 fontSize: 13,

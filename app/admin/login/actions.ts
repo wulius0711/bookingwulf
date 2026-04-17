@@ -4,7 +4,7 @@ import { prisma } from '@/src/lib/prisma'
 import { verifyPassword } from '@/src/lib/password'
 import { createSession, deleteSession } from '@/src/lib/session'
 
-export type LoginState = { error?: string } | undefined
+export type LoginState = { error: string } | { success: true } | undefined
 
 export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
   const email = formData.get('email')?.toString().trim().toLowerCase()
@@ -26,7 +26,11 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   }
 
   await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: user.hotelId ?? null })
-  redirect('/admin')
+
+  // redirect() after createSession causes white screen because cookie change
+  // invalidates the client router cache within the same /admin layout.
+  // Return success and let the client do a full page navigation.
+  return { success: true }
 }
 
 export async function logout(): Promise<void> {
