@@ -99,6 +99,24 @@ button, a[role="button"], input[type="submit"] {
   word-break: break-word;
 }
 
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.extras-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr 80px;
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .extras-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-page {
     padding: 16px;

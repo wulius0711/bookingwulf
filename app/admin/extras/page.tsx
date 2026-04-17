@@ -52,7 +52,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
   const canUseExtras = isSuperAdmin || hasPlanAccess(hotelPlan, 'pro');
 
   return (
-    <main style={{ padding: 32, background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         {/* Header */}
@@ -99,6 +99,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
                 <p style={{ fontSize: 13, color: '#9ca3af' }}>Nutze das Formular unten, um eine neue Zusatzleistung hinzuzufügen.</p>
               </div>
             ) : (
+              <div className="table-scroll">
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
@@ -128,6 +129,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         )}
@@ -140,7 +142,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
             <form action={createExtra} style={{ display: 'grid', gap: 16 }}>
               <input type="hidden" name="hotelId" value={selectedId} />
 
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr 1fr 80px', gap: 12, alignItems: 'end' }}>
+              <div className="extras-form-grid">
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={labelStyle}>Name *</label>
                   <input name="name" required placeholder="z. B. Frühstück" style={inputStyle} />
