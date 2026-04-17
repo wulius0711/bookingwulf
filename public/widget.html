@@ -1684,14 +1684,25 @@
         }
 
         function openLightbox(apartmentId, index = 0) {
+          var apartment = state.apartments.find(function(a) { return a.id === apartmentId; });
+          if (!apartment) return;
+          var images = getApartmentImages(apartment);
+
+          // If embedded in iframe, delegate lightbox to parent
+          if (window.parent !== window) {
+            window.parent.postMessage({
+              type: 'booking-widget-lightbox-open',
+              images: images,
+              index: index
+            }, '*');
+            return;
+          }
+
+          // Fallback: use internal lightbox
           state.lightbox.open = true;
           state.lightbox.apartmentId = apartmentId;
           state.lightbox.index = index;
           document.body.style.overflow = 'hidden';
-          window.scrollTo({ top: 0 });
-          if (window.parent !== window) {
-            window.parent.postMessage({ type: 'booking-widget-lightbox-open' }, '*');
-          }
           renderLightbox();
         }
 
@@ -1700,11 +1711,15 @@
           state.lightbox.apartmentId = null;
           state.lightbox.index = 0;
           document.body.style.overflow = '';
-          if (window.parent !== window) {
-            window.parent.postMessage({ type: 'booking-widget-lightbox-close' }, '*');
-          }
           renderLightbox();
         }
+
+        // Listen for parent closing the lightbox
+        window.addEventListener('message', function(e) {
+          if (e.data && e.data.type === 'booking-widget-lightbox-closed') {
+            closeLightbox();
+          }
+        });
 
         function lightboxNext() {
           if (!state.lightbox.open || !state.lightbox.apartmentId) return;
@@ -2802,7 +2817,6 @@ sortedApartments.forEach((ap) => {
         // Post height to parent for iframe resizing
         function postHeight() {
           if (window.parent === window) return;
-          if (state.lightbox.open) return;
           var shell = document.querySelector('.booking-shell');
           if (!shell) return;
           var h = shell.offsetHeight + 56;
