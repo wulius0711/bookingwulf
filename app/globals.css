@@ -71,7 +71,120 @@ button, a[role="button"], input[type="submit"] {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Button hover & press effects */
+/* ─── Admin sidebar layout ─────────────────────────────────────── */
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f5f7;
+}
+
+.admin-sidebar {
+  width: 220px;
+  min-height: 100vh;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.25s ease;
+  overflow: hidden;
+}
+
+.admin-main {
+  margin-left: 220px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-nav-item:hover {
+  background: #f5f5f7 !important;
+  color: #111 !important;
+}
+
+.mobile-topbar {
+  display: none;
+}
+
+.sidebar-hamburger {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(-220px);
+    box-shadow: none;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0 16px;
+    z-index: 99;
+  }
+
+  .admin-main {
+    padding-top: 52px;
+  }
+
+  .sidebar-hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #444;
+    border-radius: 2px;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+  }
+}
+
+/* ─── Button hover & press effects ─────────────────────────────── */
 .btn-primary {
   transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
 }

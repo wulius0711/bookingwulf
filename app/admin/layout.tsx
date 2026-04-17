@@ -1,11 +1,10 @@
 import { cookies, headers } from 'next/headers'
 import { decrypt } from '@/src/lib/session'
-import { logout } from './login/actions'
 import { prisma } from '@/src/lib/prisma'
 import { redirect } from 'next/navigation'
 import { hasPlanAccess, NAV_PLAN_GATES, PLAN_LABEL } from '@/src/lib/plan-gates'
 import { PlanKey } from '@/src/lib/plans'
-import NavItem from './components/NavItem'
+import Sidebar from './components/Sidebar'
 import GuidedTour from './components/GuidedTour'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -13,14 +12,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const token = cookieStore.get('admin_session')?.value
   const session = await decrypt(token)
 
-  // Login- und Setup-Seiten haben kein Nav
   if (!session) return <>{children}</>
 
-  // Get pathname (set by middleware for reliable path detection)
   const headerStore = await headers()
   const currentPath = headerStore.get('x-pathname') || ''
 
-  // Fetch hotel for billing gate + plan gating
   let hotelPlan: PlanKey = 'starter'
   if (session.role !== 'super_admin' && session.hotelId) {
     const hotel = await prisma.hotel.findUnique({
@@ -31,7 +27,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     hotelPlan = (hotel?.plan as PlanKey) ?? 'starter'
     let status = hotel?.subscriptionStatus ?? 'inactive'
 
-    // Auto-expire trial
     if (status === 'trialing' && hotel?.trialEndsAt && new Date() > hotel.trialEndsAt) {
       await prisma.hotel.update({
         where: { id: session.hotelId },
@@ -40,7 +35,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       status = 'inactive'
     }
 
-    // Billing gate: redirect inactive/expired users (trial users can navigate freely)
     const isExempt = !currentPath || currentPath.includes('/billing') || currentPath.includes('/login') || currentPath.includes('/setup')
     if (!isExempt && status !== 'active' && status !== 'trialing') {
       redirect('/admin/billing')
@@ -49,7 +43,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const isSuperAdmin = session.role === 'super_admin'
 
-  const navItems = [
+  const navItemDefs = [
     { href: '/admin', label: 'Übersicht' },
     { href: '/admin/analytics', label: 'Analytics' },
     { href: '/admin/requests', label: 'Anfragen' },
@@ -68,91 +62,49 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       : []),
   ]
 
+  const navItems = navItemDefs.map(({ href, label }) => {
+    const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
+    const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
+    const active = href === '/admin'
+      ? currentPath === '/admin'
+      : currentPath.startsWith(href)
+    return {
+      href,
+      label,
+      locked,
+      active,
+      upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined,
+    }
+  })
+
   return (
     <div
+      className="admin-layout"
       style={{
-        minHeight: '100vh',
-        background: '#f5f5f7',
-        fontFamily:
-          'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
-      {/* Top Navigation */}
-      <nav
-        style={{
-          background: '#ffffff',
-          borderBottom: '1px solid #e5e5e5',
-          padding: '0 32px',
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 30 }} />
-          <div style={{ display: 'flex', gap: 4 }}>
-            {navItems.map(({ href, label }) => {
-              const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
-              const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
-              const active = href === '/admin'
-                ? currentPath === '/admin'
-                : currentPath.startsWith(href)
-              return (
-                <NavItem
-                  key={href}
-                  href={href}
-                  label={label}
-                  locked={locked}
-                  active={active}
-                  upgradeLabel={minPlan ? PLAN_LABEL[minPlan] : undefined}
-                />
-              )
-            })}
-          </div>
-        </div>
+      <Sidebar navItems={navItems} email={session.email} />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontSize: 13, color: '#888' }}>{session.email}</span>
-          <form action={logout}>
-            <button
-              type="submit"
-              style={{
-                padding: '6px 14px',
-                borderRadius: 6,
-                border: '1px solid #ddd',
-                background: 'transparent',
-                fontSize: 13,
-                color: '#444',
-                cursor: 'pointer',
-              }}
-            >
-              Abmelden
-            </button>
-          </form>
-        </div>
-      </nav>
+      <div className="admin-main">
+        <main style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
+        <footer
+          style={{
+            padding: '16px 32px',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 24,
+            fontSize: 12,
+            color: '#9ca3af',
+          }}
+        >
+          <a href="/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>
+          <a href="/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
+          <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
+        </footer>
+      </div>
 
-      <main>{children}</main>
       <GuidedTour />
-
-      <footer
-        style={{
-          padding: '20px 32px',
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 24,
-          fontSize: 12,
-          color: '#9ca3af',
-        }}
-      >
-        <a href="/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>
-        <a href="/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
-        <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
-      </footer>
     </div>
   )
 }
