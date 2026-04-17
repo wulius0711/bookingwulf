@@ -17,6 +17,7 @@ type Props = {
 };
 
 function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDef) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
   const [shaking, setShaking] = useState(false);
   const tourId = href.replace('/admin/', '').replace('/admin', 'overview') || 'overview';
@@ -28,6 +29,7 @@ function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDe
         onClick={() => { setShaking(true); setTimeout(() => setShaking(false), 400); }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
+        onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -39,29 +41,36 @@ function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDe
           color: '#c0c5ce',
           cursor: 'default',
           userSelect: 'none',
-          position: 'relative',
         }}
       >
         {label} 🔒
         {showTooltip && upgradeLabel && (
           <span style={{
-            position: 'absolute',
-            left: '100%',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            marginLeft: 12,
-            padding: '7px 12px',
+            position: 'fixed',
+            left: pos.x + 14,
+            top: pos.y + 14,
+            zIndex: 9999,
             background: '#1e293b',
             color: '#fff',
             fontSize: 12,
             fontWeight: 500,
-            borderRadius: 8,
+            padding: '5px 10px',
+            borderRadius: 0,
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 200,
+            boxShadow: '2px 2px 0 rgba(0,0,0,0.25)',
           }}>
-            Ab {upgradeLabel} Plan
+            <span style={{
+              position: 'absolute',
+              top: -5,
+              left: 10,
+              width: 0,
+              height: 0,
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderBottom: '5px solid #1e293b',
+            }} />
+            Ab {upgradeLabel} Plan verfügbar
           </span>
         )}
       </span>
