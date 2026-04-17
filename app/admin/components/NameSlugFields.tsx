@@ -36,19 +36,7 @@ export function NameSlugFields({ rowStyle, labelStyle, inputStyle }: NameSlugFie
         />
       </div>
 
-      <div style={rowStyle}>
-        <label style={labelStyle}>Slug</label>
-        <input
-          name="slug"
-          required
-          style={inputStyle}
-          value={slug}
-          onChange={(e) => {
-            setAutoSlug(false);
-            setSlug(e.target.value);
-          }}
-        />
-      </div>
+      <input type="hidden" name="slug" value={slug} />
     </>
   );
 }
