@@ -1,5 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
+import type { PlanKey } from '@/src/lib/plans';
 import { createExtra, updateExtra, toggleExtra, deleteExtra } from './actions';
 import ExtraRow from './ExtraRow';
 
@@ -42,6 +44,13 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
 
   const selectedHotel = hotels.find((h) => h.id === selectedId);
 
+  let hotelPlan: PlanKey = 'starter';
+  if (!isSuperAdmin && selectedId) {
+    const h = await prisma.hotel.findUnique({ where: { id: selectedId }, select: { plan: true } });
+    hotelPlan = (h?.plan as PlanKey) ?? 'starter';
+  }
+  const canUseExtras = isSuperAdmin || hasPlanAccess(hotelPlan, 'pro');
+
   return (
     <main style={{ padding: 32, background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
@@ -68,6 +77,12 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
             </form>
           )}
         </div>
+
+        {!canUseExtras && (
+          <div style={{ padding: '14px 18px', background: '#fffbeb', border: '1px solid #fef08a', borderRadius: 12, fontSize: 14, color: '#92400e', lineHeight: 1.5 }}>
+            <strong>Hinweis:</strong> Im Starter-Plan werden nur Versicherungsoptionen im Widget angezeigt. Für reguläre Zusatzleistungen ist ein Upgrade auf den <strong>Pro-Plan</strong> erforderlich.
+          </div>
+        )}
 
         {/* Existing extras */}
         {selectedHotel && (
