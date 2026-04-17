@@ -122,6 +122,15 @@ export default function LandingPage() {
         }
         .lp-footer-link:hover { color: #555; }
 
+        .lp-logo { height: 48px; }
+        .lp-nav-btn { padding: 8px 20px; font-size: 14px; text-align: center; }
+
+        @media (max-width: 640px) {
+          .lp-logo { height: 32px; }
+          .lp-nav-btn { padding: 8px 14px; font-size: 13px; }
+          .lp-btn { padding: 12px 24px; font-size: 15px; }
+        }
+
         @keyframes lp-fadeUp {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
@@ -130,11 +139,11 @@ export default function LandingPage() {
       `}</style>
 
       {/* Nav */}
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 32px', maxWidth: 1200, margin: '0 auto' }}>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 48 }} />
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', maxWidth: 1200, margin: '0 auto' }}>
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" className="lp-logo" />
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <Link href="/admin/login" className="lp-nav-link">Login</Link>
-          <Link href="/register" className="lp-btn lp-btn-primary" style={{ padding: '8px 20px', fontSize: 14 }}>Kostenlos testen</Link>
+          <Link href="/register" className="lp-btn lp-btn-primary lp-nav-btn">Kostenlos testen</Link>
         </div>
       </nav>
 
