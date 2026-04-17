@@ -115,6 +115,10 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.analytics-chart-row {
+  grid-template-columns: 1fr 280px;
+}
+
 .settings-shell {
   grid-template-columns: minmax(620px, 760px) minmax(380px, 1fr);
 }
@@ -132,6 +136,10 @@ button, a[role="button"], input[type="submit"] {
   }
 
   .extras-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-chart-row {
     grid-template-columns: 1fr;
   }
 

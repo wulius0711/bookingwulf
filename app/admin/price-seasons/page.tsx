@@ -34,7 +34,7 @@ export default async function PriceSeasonsPage() {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h1>Preiszeiträume</h1>
 

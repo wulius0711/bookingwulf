@@ -146,7 +146,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   };
 
   return (
-    <main style={{ padding: 32, background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         {/* Header */}
@@ -190,7 +190,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         </div>
 
         {/* Monthly chart + status */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 16, alignItems: 'start' }}>
+        <div className="analytics-chart-row" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
 
           {/* Monthly bar chart */}
           <div style={cardStyle}>
@@ -237,7 +237,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         </div>
 
         {/* Top Apartments + Extras */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
+        <div className="two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
 
           {/* Top apartments */}
           <div style={cardStyle}>
