@@ -1221,85 +1221,7 @@
                 Ergänzen Sie Ihren Aufenthalt mit ausgewählten Zusatzleistungen.
               </p>
 
-              <!-- 🐶 Hund -->
-              <div class="toggle-card" id="dogCard">
-                <div class="toggle-indicator">Nicht ausgewählt</div>
-                <img
-                  src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1200&q=80"
-                  alt="Hund"
-                />
-                <div>
-
-                  <h3 class="apt-name">Hund</h3>
-                  <div class="apt-meta">
-                    Wir freuen uns auf Ihren sauberen und freundlichen Hund.
-                  </div>
-                  <div class="apt-desc">
-                    Reisen Sie entspannt mit Ihrem vierbeinigen Begleiter.
-                  </div>
-                  <div class="toggle-price">€ 18 / Nacht</div>
-                </div>
-              </div>
-
-              <!-- 🥐 Frühstück -->
-              <div class="toggle-card" id="breakfastCard">
-                <div class="toggle-indicator">Nicht ausgewählt</div>
-                <img
-                  src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=80"
-                  alt="Frühstück"
-                />
-                <div>
-
-                  <h3 class="apt-name">Frühstück</h3>
-                  <div class="apt-meta">
-                    Entspannt in den Tag starten
-                  </div>
-                  <div class="apt-desc">
-                    Frisch, regional und ohne Zeitdruck genießen.
-                  </div>
-                  <div class="toggle-price">€ 14 / Person / Nacht</div>
-                </div>
-              </div>
-
-              <!-- 🚗 Parkplatz -->
-              <div class="toggle-card" id="parkingCard">
-                <div class="toggle-indicator">Nicht ausgewählt</div>
-                <img
-                  src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=80"
-                  alt="Parkplatz"
-                />
-                <div>
-
-                  <h3 class="apt-name">Parkplatz</h3>
-                  <div class="apt-meta">
-                    Bequem ankommen
-                  </div>
-                  <div class="apt-desc">
-                    Ihr Stellplatz direkt bei der Unterkunft.
-                  </div>
-                  <div class="toggle-price">€ 12 / Aufenthalt</div>
-                </div>
-              </div>
-
-              <!-- ⏳ Late Check-out -->
-              <div class="toggle-card" id="lateCheckoutCard">
-                <div class="toggle-indicator">Nicht ausgewählt</div>
-                <img
-                  src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
-                  alt="Late Check-out"
-                />
-                <div>
-
-                  <h3 class="apt-name">Late Check-out</h3>
-                  <div class="apt-meta">
-                    Mehr Zeit für Ihren Aufenthalt
-                  </div>
-                  <div class="apt-desc">
-                    Genießen Sie Ihren Abreisetag ohne Hektik.
-                  </div>
-                  <div class="toggle-price">€ 25 einmalig</div>
-                </div>
-              </div>
+              <div id="extrasContainer"></div>
 
               <div class="nav-row">
                 <button class="btn-light" data-prev>Zurück</button>
@@ -1407,12 +1329,8 @@
           adults: 2,
           children: 0,
           selectedApartmentIds: [],
-          extras: {
-            dog: false,
-            breakfast: false,
-            parking: false,
-            lateCheckout: false,
-          },
+          selectedExtras: {},
+          availableExtras: [],
           apartments: [],
           pricingMap: {},
           loadingApartments: false,
@@ -1428,28 +1346,13 @@
           autoplayTimers: {},
         };
 
-        const EXTRA_CONFIG = {
-          dog: {
-            label: "Hund",
-            pricing: "per_night",
-            price: 18,
-          },
-          breakfast: {
-            label: "Frühstück",
-            pricing: "per_person_per_night",
-            price: 14,
-          },
-          parking: {
-            label: "Parkplatz",
-            pricing: "per_stay",
-            price: 12,
-          },
-          lateCheckout: {
-            label: "Late Check-out",
-            pricing: "per_stay",
-            price: 25,
-          },
-        };
+        function getPriceLabel(billingType, price) {
+          const p = eur(price);
+          if (billingType === "per_night") return `${p} / Nacht`;
+          if (billingType === "per_person_per_night") return `${p} / Person / Nacht`;
+          if (billingType === "per_person_per_stay") return `${p} / Person`;
+          return `${p} / Aufenthalt`;
+        }
 
         const eur = (n) =>
           new Intl.NumberFormat("de-AT", {
@@ -1477,6 +1380,12 @@
             document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#c8b79f");
             document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 6}px`);
             document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 999}px`);
+
+            if (data.extras && Array.isArray(data.extras)) {
+              state.availableExtras = data.extras;
+              state.selectedExtras = {};
+              data.extras.forEach((ex) => { state.selectedExtras[ex.key] = false; });
+            }
           } catch (e) {
             console.error("Settings load failed", e);
           }
@@ -1550,38 +1459,29 @@
           const nights = getNights() || 1;
           const guests = getGuestCount();
 
-          return Object.entries(state.extras)
-            .filter(([, selected]) => selected)
-            .map(([key]) => {
-              const config = EXTRA_CONFIG[key];
-              if (!config) return null;
-
+          return state.availableExtras
+            .filter((ex) => state.selectedExtras[ex.key])
+            .map((ex) => {
+              const price = Number(ex.price);
               let total = 0;
               let detail = "";
 
-              if (config.pricing === "per_night") {
-                total = config.price * nights;
-                detail = `${config.label} (${nights} Tage)`;
+              if (ex.billingType === "per_night") {
+                total = price * nights;
+                detail = `${ex.name} (${nights} Nächte)`;
+              } else if (ex.billingType === "per_person_per_night") {
+                total = price * guests * nights;
+                detail = `${ex.name} (${guests} Pers., ${nights} Nächte)`;
+              } else if (ex.billingType === "per_person_per_stay") {
+                total = price * guests;
+                detail = `${ex.name} (${guests} Personen)`;
+              } else {
+                total = price;
+                detail = `${ex.name} (pro Aufenthalt)`;
               }
 
-              if (config.pricing === "per_person_per_night") {
-                total = config.price * guests * nights;
-                detail = `${config.label} (${guests} Personen, ${nights} Nächte)`;
-              }
-
-              if (config.pricing === "per_stay") {
-                total = config.price;
-                detail = `${config.label} (pro Aufenthalt)`;
-              }
-
-              return {
-                key,
-                label: config.label,
-                detail,
-                total,
-              };
-            })
-            .filter(Boolean);
+              return { key: ex.key, label: ex.name, detail, total };
+            });
         }
 
         function getExtrasTotal() {
@@ -2199,31 +2099,44 @@ sortedApartments.forEach((ap) => {
           );
           document.getElementById("summaryTotal").textContent = eur(getTotal());
 
-          [
-            { id: "dogCard", key: "dog" },
-            { id: "breakfastCard", key: "breakfast" },
-            { id: "parkingCard", key: "parking" },
-            { id: "lateCheckoutCard", key: "lateCheckout" },
-          ].forEach(({ id, key }) => {
-            const card = document.getElementById(id);
-            if (!card) return;
-
-            card.classList.toggle("selected", !!state.extras[key]);
-
-            const indicator = card.querySelector(".toggle-indicator");
-            if (indicator) {
-              indicator.textContent = state.extras[key]
-                ? "Ausgewählt"
-                : "Nicht ausgewählt";
-            }
-          });
+          renderExtras();
 
                 document.getElementById("submitBtn").disabled = state.submitting;
               }
 
+        function renderExtras() {
+          const wrap = document.getElementById("extrasContainer");
+          if (!wrap) return;
+          wrap.innerHTML = "";
+
+          if (!state.availableExtras.length) {
+            wrap.innerHTML = '<div style="color:var(--muted);padding:8px 0;">Keine Zusatzleistungen verfügbar.</div>';
+            return;
+          }
+
+          state.availableExtras.forEach((ex) => {
+            const selected = !!state.selectedExtras[ex.key];
+            const div = document.createElement("div");
+            div.className = "toggle-card" + (selected ? " selected" : "");
+            div.innerHTML = `
+              <div class="toggle-indicator">${selected ? "Ausgewählt" : "Nicht ausgewählt"}</div>
+              <div style="flex:1;">
+                <h3 class="apt-name">${ex.name}</h3>
+                <div class="toggle-price">${getPriceLabel(ex.billingType, Number(ex.price))}</div>
+              </div>
+            `;
+            div.addEventListener("click", () => {
+              state.selectedExtras[ex.key] = !state.selectedExtras[ex.key];
+              renderAll();
+            });
+            wrap.appendChild(div);
+          });
+        }
+
         function renderAll() {
           renderSteps();
           renderApartments();
+          renderExtras();
           renderSummary();
           renderLightbox();
         }
@@ -2447,7 +2360,7 @@ sortedApartments.forEach((ap) => {
                 email,
                 phone,
                 message,
-                extras: state.extras,
+                extras: state.selectedExtras,
                 newsletter: false,
               }),
             });
@@ -2472,12 +2385,7 @@ sortedApartments.forEach((ap) => {
             document.getElementById("notes").value = "";
 
             state.selectedApartmentIds = [];
-            state.extras = {
-              dog: false,
-              breakfast: false,
-              parking: false,
-              lateCheckout: false,
-            };
+            Object.keys(state.selectedExtras).forEach((k) => { state.selectedExtras[k] = false; });
             state.step = 1;
             renderAll();
           } catch (error) {
@@ -2524,20 +2432,7 @@ sortedApartments.forEach((ap) => {
             await updateAvailabilityForApartments();
           });
 
-        [
-          { id: "dogCard", key: "dog" },
-          { id: "breakfastCard", key: "breakfast" },
-          { id: "parkingCard", key: "parking" },
-          { id: "lateCheckoutCard", key: "lateCheckout" },
-        ].forEach(({ id, key }) => {
-          const el = document.getElementById(id);
-          if (!el) return;
-
-          el.addEventListener("click", () => {
-            state.extras[key] = !state.extras[key];
-            renderAll();
-          });
-        });
+        // Extras event listeners are attached dynamically in renderExtras()
 
         document.querySelectorAll("[data-next]").forEach((btn) => {
           btn.addEventListener("click", () => {
