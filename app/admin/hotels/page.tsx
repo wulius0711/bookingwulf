@@ -20,6 +20,25 @@ async function toggleHotelActive(formData: FormData) {
   redirect('/admin/hotels');
 }
 
+async function resetTrial(formData: FormData) {
+  'use server';
+
+  const session = await verifySession();
+  if (session.role !== 'super_admin') return;
+
+  const id = Number(formData.get('id'));
+  if (!id) return;
+
+  await prisma.hotel.update({
+    where: { id },
+    data: {
+      subscriptionStatus: 'trialing',
+      trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+    },
+  });
+  redirect('/admin/hotels');
+}
+
 async function deleteHotel(formData: FormData) {
   'use server';
 
@@ -137,6 +156,17 @@ export default async function HotelsPage() {
                   </div>
                   <div style={{ fontSize: 12, color: '#aaa' }}>
                     {h._count.apartments} Apartments · {h._count.requests} Anfragen
+                    {' · '}
+                    <span style={{
+                      padding: '1px 6px',
+                      borderRadius: 999,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      background: h.subscriptionStatus === 'active' ? '#dcfce7' : h.subscriptionStatus === 'trialing' ? '#e0f2fe' : '#fef2f2',
+                      color: h.subscriptionStatus === 'active' ? '#166534' : h.subscriptionStatus === 'trialing' ? '#0369a1' : '#b91c1c',
+                    }}>
+                      {h.subscriptionStatus}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -175,6 +205,27 @@ export default async function HotelsPage() {
                     {h.isActive ? 'Deaktivieren' : 'Aktivieren'}
                   </button>
                 </form>
+
+                {h.subscriptionStatus !== 'trialing' && h.subscriptionStatus !== 'active' && (
+                  <form action={resetTrial}>
+                    <input type="hidden" name="id" value={h.id} />
+                    <button
+                      type="submit"
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: 999,
+                        border: '1px solid #0284c7',
+                        background: '#e0f2fe',
+                        color: '#0369a1',
+                        cursor: 'pointer',
+                        fontSize: 13,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Trial zurücksetzen
+                    </button>
+                  </form>
+                )}
 
                 <DeleteHotelButton
                   hotelId={h.id}
