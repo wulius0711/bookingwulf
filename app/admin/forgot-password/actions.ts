@@ -40,7 +40,7 @@ export async function requestPasswordReset(_state: ForgotState, formData: FormDa
           to: email,
           subject: 'Passwort zurücksetzen',
           html: buildEmailHtml({
-            hotelName: 'Booking-App',
+            hotelName: 'bookingwulf',
             title: 'Passwort zurücksetzen',
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">

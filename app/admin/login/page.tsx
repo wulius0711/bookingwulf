@@ -46,7 +46,7 @@ export default function LoginPage() {
           Admin-Anmeldung
         </h1>
         <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
-          Booking-App Verwaltung
+          bookingwulf Verwaltung
         </p>
 
         <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

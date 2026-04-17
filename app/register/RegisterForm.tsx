@@ -47,7 +47,7 @@ export default function RegisterForm({ termsUrl, privacyUrl }: { termsUrl: strin
             Konto erstellen
           </h1>
           <p style={{ margin: '8px 0 0', fontSize: 15, color: '#667085' }}>
-            Booking-Widget für dein Hotel in wenigen Minuten einrichten.
+            bookingwulf für dein Hotel in wenigen Minuten einrichten.
           </p>
         </div>
 
