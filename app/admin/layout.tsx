@@ -15,9 +15,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Login- und Setup-Seiten haben kein Nav
   if (!session) return <>{children}</>
 
-  // Get pathname (used for billing gate + nav highlighting)
+  // Get pathname (set by middleware for reliable path detection)
   const headerStore = await headers()
-  const currentPath = headerStore.get('x-invoke-path') || headerStore.get('x-matched-path') || ''
+  const currentPath = headerStore.get('x-pathname') || ''
 
   // Fetch hotel for billing gate + plan gating
   let hotelPlan: PlanKey = 'starter'
