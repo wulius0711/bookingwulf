@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/ical-sync?secret=${CRON_SECRET}",
+      "path": "/api/ical-sync",
       "schedule": "*/30 * * * *"
     }
   ]

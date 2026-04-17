@@ -17,13 +17,10 @@ export async function POST(req: Request) {
   }
 }
 
-// Sync all feeds (called by cron or external trigger)
+// Sync all feeds (called by Vercel Cron every 30 min)
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const secret = searchParams.get('secret');
-
-  // Simple secret to protect the cron endpoint
-  if (secret !== process.env.CRON_SECRET) {
+  const auth = req.headers.get('authorization');
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
