@@ -107,7 +107,8 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const cardRadius: number = settings?.cardRadius ?? 12;
   const buttonRadius: number = settings?.buttonRadius ?? 999;
 
-  const cardBackground = settings?.cardBackground || '#fff';
+  const cardBackground = '#fff';
+  const isSuperAdmin = session.hotelId === null;
   const textColor = settings?.textColor || '#111';
   const borderColor = settings?.borderColor || '#ddd';
 
@@ -183,18 +184,20 @@ export default async function BookingDetailPage({ params }: PageProps) {
           </div>
 
           {/* Hotel Badge */}
-          <div
-            style={{
-              padding: '6px 12px',
-              borderRadius: 999,
-              background: request.hotel?.accentColor || '#f5f5f5',
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#fafafa',
-            }}
-          >
-            {request.hotel?.name || '—'}
-          </div>
+          {isSuperAdmin && (
+            <div
+              style={{
+                padding: '6px 12px',
+                borderRadius: 999,
+                background: request.hotel?.accentColor || '#f5f5f5',
+                fontSize: 12,
+                fontWeight: 600,
+                color: '#fafafa',
+              }}
+            >
+              {request.hotel?.name || '—'}
+            </div>
+          )}
 
           {/* Status Badge */}
           <div
