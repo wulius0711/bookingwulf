@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { hasPlanAccess, NAV_PLAN_GATES, PLAN_LABEL } from '@/src/lib/plan-gates'
 import { PlanKey } from '@/src/lib/plans'
 import NavItem from './components/NavItem'
+import GuidedTour from './components/GuidedTour'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -135,6 +136,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </nav>
 
       <main>{children}</main>
+      <GuidedTour />
 
       <footer
         style={{

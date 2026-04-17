@@ -18,10 +18,13 @@ export default function NavItem({
   const [hover, setHover] = useState(false);
   const [shaking, setShaking] = useState(false);
 
+  const tourId = href.replace('/admin/', '').replace('/admin', 'overview') || 'overview';
+
   if (!locked) {
     return (
       <a
         href={href}
+        data-tour={`nav-${tourId}`}
         style={{
           padding: '6px 12px',
           borderRadius: 6,
