@@ -169,13 +169,18 @@ button, a[role="button"], input[type="submit"] {
   }
 }
 
+.admin-page h1 {
+  font-size: 28px !important;
+  letter-spacing: -0.02em !important;
+}
+
 @media (max-width: 768px) {
   .admin-page {
     padding: 16px;
   }
 
   .admin-page h1 {
-    font-size: 24px !important;
+    font-size: 22px !important;
     letter-spacing: -0.02em !important;
   }
 
