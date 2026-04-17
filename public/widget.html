@@ -2636,14 +2636,11 @@ sortedApartments.forEach((ap) => {
 
         // Post height to parent for iframe resizing
         function postHeight() {
-          // Reset height so scrollHeight can shrink
-          document.documentElement.style.height = 'auto';
-          document.body.style.height = 'auto';
-          var h = Math.max(
-            document.body.scrollHeight,
-            document.documentElement.scrollHeight
-          );
-          if (window.parent !== window) {
+          var shell = document.querySelector('.booking-shell');
+          if (!shell) return;
+          var rect = shell.getBoundingClientRect();
+          var h = Math.ceil(rect.top + rect.height + 40);
+          if (window.parent !== window && h > 100) {
             window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
           }
         }

@@ -13,7 +13,7 @@
   var iframe = document.createElement('iframe');
   iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel);
   iframe.style.cssText =
-    'width:100%;border:none;overflow:hidden;background:transparent;min-height:800px;display:block;';
+    'width:100%;border:none;overflow:hidden;background:transparent;display:block;height:1200px;';
   iframe.scrolling = 'no';
   iframe.title = 'Booking Widget';
 
