@@ -23,11 +23,12 @@ type ApartmentCardProps = {
     hotel: { id: number; name: string; slug: string; accentColor: string | null } | null;
     images: { imageUrl: string; altText: string | null }[];
   };
+  showHotelBadge?: boolean;
   duplicateAction: (formData: FormData) => void;
   deleteAction: (formData: FormData) => void;
 };
 
-export default function ApartmentCard({ apartment: a, duplicateAction, deleteAction }: ApartmentCardProps) {
+export default function ApartmentCard({ apartment: a, showHotelBadge = true, duplicateAction, deleteAction }: ApartmentCardProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,31 +59,33 @@ export default function ApartmentCard({ apartment: a, duplicateAction, deleteAct
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
           <div style={{ fontWeight: 700, fontSize: 18 }}>{a.name}</div>
 
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '3px 10px',
-              borderRadius: 999,
-              background: a.hotel?.accentColor || '#eee',
-              color: '#fafafa',
-              fontSize: 11,
-              fontWeight: 600,
-              flexShrink: 0,
-            }}
-          >
-            <span
+          {showHotelBadge && (
+            <div
               style={{
-                width: 7,
-                height: 7,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '3px 10px',
                 borderRadius: 999,
-                background: 'rgba(255,255,255,0.9)',
-                display: 'inline-block',
+                background: a.hotel?.accentColor || '#eee',
+                color: '#fafafa',
+                fontSize: 11,
+                fontWeight: 600,
+                flexShrink: 0,
               }}
-            />
-            {a.hotel?.name ?? 'Kein Hotel'}
-          </div>
+            >
+              <span
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: 999,
+                  background: 'rgba(255,255,255,0.9)',
+                  display: 'inline-block',
+                }}
+              />
+              {a.hotel?.name ?? 'Kein Hotel'}
+            </div>
+          )}
 
           {!a.isActive && (
             <span

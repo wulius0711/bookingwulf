@@ -255,31 +255,33 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                         {r.firstname || ''} {r.lastname}
                       </div>
 
-                      <div
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          marginTop: 4,
-                          padding: '4px 10px',
-                          borderRadius: 999,
-                          background: r.hotel?.accentColor || '#eee',
-                          color: '#fafafa',
-                          fontSize: 11,
-                          fontWeight: 600,
-                        }}
-                      >
-                        <span
+                      {isSuperAdmin && (
+                        <div
                           style={{
-                            width: 8,
-                            height: 8,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            marginTop: 4,
+                            padding: '4px 10px',
                             borderRadius: 999,
-                            background: 'rgba(255,255,255,0.9)',
-                            display: 'inline-block',
+                            background: r.hotel?.accentColor || '#eee',
+                            color: '#fafafa',
+                            fontSize: 11,
+                            fontWeight: 600,
                           }}
-                        />
-                        {r.hotel?.name}
-                      </div>
+                        >
+                          <span
+                            style={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: 999,
+                              background: 'rgba(255,255,255,0.9)',
+                              display: 'inline-block',
+                            }}
+                          />
+                          {r.hotel?.name}
+                        </div>
+                      )}
                     </div>
 
                     <div

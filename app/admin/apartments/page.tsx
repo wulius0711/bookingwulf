@@ -250,6 +250,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
             <ApartmentCard
               key={a.id}
               apartment={a}
+              showHotelBadge={isSuperAdmin}
               duplicateAction={duplicateApartment}
               deleteAction={deleteApartment}
             />
