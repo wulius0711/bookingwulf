@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { createExtra, toggleExtra, deleteExtra } from './actions';
+import { createExtra, updateExtra, toggleExtra, deleteExtra } from './actions';
+import ExtraRow from './ExtraRow';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,44 +94,22 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
                 </thead>
                 <tbody>
                   {extras.map((extra) => (
-                    <tr key={extra.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 500, color: '#111827' }}>{extra.name}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{
-                          padding: '2px 8px', borderRadius: 999, fontSize: 11, fontWeight: 600,
-                          background: extra.type === 'insurance' ? '#fef3c7' : '#f0f9ff',
-                          color: extra.type === 'insurance' ? '#92400e' : '#0369a1',
-                        }}>
-                          {TYPE_LABELS[extra.type] ?? extra.type}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px 16px', color: '#374151' }}>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</td>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#111827' }}>{'\u20AC'} {Number(extra.price).toFixed(2)}</td>
-                      <td style={{ padding: '12px 16px', color: '#6b7280', fontSize: 12 }}>
-                        {extra.linkUrl ? (
-                          <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none' }}>Link</a>
-                        ) : '—'}
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
-                          {extra.isActive ? 'Aktiv' : 'Inaktiv'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <div style={{ display: 'flex', gap: 8 }}>
-                          <form action={async () => { 'use server'; await toggleExtra(extra.id, !extra.isActive); }}>
-                            <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
-                              {extra.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                            </button>
-                          </form>
-                          <form action={async () => { 'use server'; await deleteExtra(extra.id); }}>
-                            <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
-                              Löschen
-                            </button>
-                          </form>
-                        </div>
-                      </td>
-                    </tr>
+                    <ExtraRow
+                      key={extra.id}
+                      extra={{ ...extra, price: Number(extra.price) }}
+                      updateAction={updateExtra}
+                      toggleAction={async (formData: FormData) => {
+                        'use server';
+                        const id = Number(formData.get('id'));
+                        const isActive = formData.get('isActive') === 'true';
+                        await toggleExtra(id, isActive);
+                      }}
+                      deleteAction={async (formData: FormData) => {
+                        'use server';
+                        const id = Number(formData.get('id'));
+                        await deleteExtra(id);
+                      }}
+                    />
                   ))}
                 </tbody>
               </table>

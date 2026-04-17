@@ -47,6 +47,35 @@ export async function toggleExtra(id: number, isActive: boolean) {
   revalidatePath('/admin/extras');
 }
 
+export async function updateExtra(formData: FormData) {
+  const session = await verifySession();
+
+  const id = Number(formData.get('id') || 0);
+  if (!id) throw new Error('ID fehlt.');
+
+  const extra = await prisma.hotelExtra.findUnique({ where: { id } });
+  if (!extra) throw new Error('Nicht gefunden.');
+  if (session.hotelId !== null && extra.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+
+  const name = String(formData.get('name') || '').trim();
+  const type = String(formData.get('type') || 'extra');
+  const billingType = String(formData.get('billingType') || 'per_stay');
+  const price = parseFloat(String(formData.get('price') || '0'));
+  const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
+  const sortOrder = Number(formData.get('sortOrder') || 0);
+
+  if (!name) throw new Error('Name ist erforderlich.');
+  if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
+
+  await prisma.hotelExtra.update({
+    where: { id },
+    data: { name, type, billingType, price, linkUrl, sortOrder },
+  });
+
+  revalidatePath('/admin/extras');
+  redirect(`/admin/extras?hotel=${extra.hotelId}`);
+}
+
 export async function deleteExtra(id: number) {
   const session = await verifySession();
 
