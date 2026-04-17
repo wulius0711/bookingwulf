@@ -43,7 +43,7 @@ export default async function BlockedDatesPage() {
           marginBottom: 20,
         }}
       >
-        <h1 style={{ margin: 0 }}>Blocked Dates</h1>
+        <h1 style={{ margin: 0, color: '#111' }}>Sperrzeiten</h1>
         {ranges.length > 0 && (
           <Link href="/admin/blocked-dates/new">
             <button
@@ -75,36 +75,36 @@ export default async function BlockedDatesPage() {
             <div
               key={r.id}
               style={{
-                border: '1px solid #ddd',
-                padding: 16,
-                borderRadius: 12,
+                border: '1px solid #e5e7eb',
+                padding: '18px 20px',
+                borderRadius: 14,
                 background: '#fff',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 16,
               }}
             >
-              <strong>{r.apartment?.name}</strong>
-              <br />
-              {new Date(r.startDate).toLocaleDateString('de-AT')} –{' '}
-              {new Date(r.endDate).toLocaleDateString('de-AT')}
-              <br />
-              Typ: {r.type}
-              <br />
-              {r.note && (
-                <>
-                  Notiz: {r.note}
-                  <br />
-                </>
-              )}
-              <form action={deleteBlockedDate} style={{ marginTop: 12 }}>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>{r.apartment?.name || 'Alle Apartments'}</div>
+                <div style={{ fontSize: 14, color: '#374151', marginTop: 4 }}>
+                  {new Date(r.startDate).toLocaleDateString('de-AT')} – {new Date(r.endDate).toLocaleDateString('de-AT')}
+                </div>
+                {r.type && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>Typ: {r.type}</div>}
+                {r.note && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>Notiz: {r.note}</div>}
+              </div>
+              <form action={deleteBlockedDate}>
                 <input type="hidden" name="id" value={r.id} />
                 <button
                   type="submit"
                   style={{
                     padding: '8px 14px',
-                    border: '1px solid #c43c57',
+                    border: '1px solid #fca5a5',
                     background: '#fff',
-                    color: '#c43c57',
+                    color: '#dc2626',
                     cursor: 'pointer',
                     borderRadius: 999,
+                    fontSize: 13,
                   }}
                 >
                   Löschen
