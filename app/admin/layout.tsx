@@ -91,7 +91,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 22 }} />
+          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 30 }} />
           <div style={{ display: 'flex', gap: 4 }}>
             {navItems.map(({ href, label }) => {
               const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
