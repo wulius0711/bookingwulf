@@ -116,7 +116,7 @@ export default function Sidebar({ navItems, email }: Props) {
         >
           <span /><span /><span />
         </button>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 26 }} />
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 32 }} />
       </div>
 
       {/* Backdrop */}
@@ -131,7 +131,7 @@ export default function Sidebar({ navItems, email }: Props) {
       <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`}>
         {/* Logo */}
         <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #f0f0f0' }}>
-          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 28 }} />
+          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />
         </div>
 
         {/* Nav items */}
