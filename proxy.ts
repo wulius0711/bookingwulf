@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { decrypt } from '@/src/lib/session-crypto'
 
-const PUBLIC_ROUTES = ['/admin/login', '/admin/setup', '/admin/forgot-password', '/admin/reset-password']
+const PUBLIC_ROUTES = ['/admin/login', '/admin/setup', '/admin/forgot-password', '/admin/reset-password', '/admin/onboarding']
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
