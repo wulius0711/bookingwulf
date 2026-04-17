@@ -153,7 +153,7 @@ export default function LandingPage() {
           14 Tage kostenlos testen
         </div>
         <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
-          Das Buchungs-Widget<br />für Ihr Hotel
+          Das Buchungssystem<br />für Ihr Hotel
         </h1>
         <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 32px' }}>
           Buchungsanfragen direkt auf Ihrer Website entgegennehmen — ohne Provision, ohne Drittplattform. Einbauen in 5 Minuten.
@@ -179,7 +179,7 @@ export default function LandingPage() {
           />
         </div>
         <p style={{ textAlign: 'center', fontSize: 13, color: '#999', marginTop: 12 }}>
-          Live-Vorschau des Booking-Widgets
+          Live-Vorschau des Buchungssystems
         </p>
       </section>
 

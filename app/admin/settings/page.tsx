@@ -364,7 +364,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div>
                 <h2 style={sectionTitleStyle}>Design</h2>
                 <p style={sectionIntroStyle}>
-                  Farben und Formensprache für das Booking Widget dieses Hotels.
+                  Farben und Formensprache für das Buchungssystem dieses Hotels.
                 </p>
               </div>
 

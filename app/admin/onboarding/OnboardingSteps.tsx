@@ -20,7 +20,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
             <strong>{hotelName}</strong> wurde erfolgreich erstellt.
           </p>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>
-            In den nächsten Schritten richten wir Ihr Booking-Widget ein.
+            In den nächsten Schritten richten wir Ihr Buchungssystem ein.
             Das dauert nur wenige Minuten.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
       content: (
         <div>
           <p style={{ fontSize: 18, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
-            Ihr Booking-Widget ist einsatzbereit.
+            Ihr Buchungssystem ist einsatzbereit.
           </p>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 24px' }}>
             Im Admin-Bereich können Sie jederzeit Apartments bearbeiten, Design anpassen, Extras hinzufügen und Buchungen verwalten.
