@@ -15,7 +15,6 @@ type PageProps = { searchParams: SearchParams };
 
 const pageStyle: React.CSSProperties = {
   minHeight: '100vh',
-  padding: 32,
   background: '#f5f5f7',
   color: '#111111',
   fontFamily:
@@ -26,7 +25,6 @@ const shellStyle: React.CSSProperties = {
   maxWidth: 1440,
   margin: '0 auto',
   display: 'grid',
-  gridTemplateColumns: 'minmax(620px, 760px) minmax(380px, 1fr)',
   gap: 28,
   alignItems: 'start',
 };
@@ -105,10 +103,7 @@ const sectionIntroStyle: React.CSSProperties = {
 };
 
 const rowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '180px minmax(0, 1fr)',
   gap: 18,
-  alignItems: 'center',
 };
 
 const labelStyle: React.CSSProperties = {
@@ -136,10 +131,7 @@ const smallInputStyle: React.CSSProperties = {
 };
 
 const checkboxRowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '180px minmax(0, 1fr)',
   gap: 18,
-  alignItems: 'center',
 };
 
 const checkboxBoxStyle: React.CSSProperties = {
@@ -267,8 +259,8 @@ export default async function Page({ searchParams }: PageProps) {
   const fullBranding = isSuperAdmin || hasFullBranding(selected.plan ?? 'starter');
 
   return (
-    <main style={pageStyle}>
-      <div style={shellStyle}>
+    <main className="admin-page" style={pageStyle}>
+      <div className="settings-shell" style={shellStyle}>
         {/* LEFT */}
         <div style={leftPanelStyle}>
           <div style={topBarStyle}>
@@ -315,7 +307,7 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              <div style={rowStyle}>
+              <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>Benachrichtigungs-E-Mail</label>
                 <input
                   name="notificationEmail"
@@ -336,7 +328,7 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              <div style={rowStyle}>
+              <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>Buchungsbedingungen URL</label>
                 <input
                   name="bookingTermsUrl"
@@ -347,7 +339,7 @@ export default async function Page({ searchParams }: PageProps) {
                 />
               </div>
 
-              <div style={rowStyle}>
+              <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>Datenschutz URL</label>
                 <input
                   name="privacyPolicyUrl"
@@ -407,7 +399,7 @@ export default async function Page({ searchParams }: PageProps) {
               ))}
 
               <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
-                <div style={rowStyle}>
+                <div className="settings-row" style={rowStyle}>
                   <label style={labelStyle}>Card Radius</label>
                   <input
                     name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
@@ -436,7 +428,7 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
 
               <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
-                <div style={rowStyle}>
+                <div className="settings-row" style={rowStyle}>
                   <label style={labelStyle}>Button Radius</label>
                   <input
                     name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
@@ -475,7 +467,7 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
 
               {featureToggles.map(([key, label]) => (
-                <div key={key} style={checkboxRowStyle}>
+                <div key={key} className="settings-row" style={checkboxRowStyle}>
                   <label style={labelStyle}>{label}</label>
 
                   <label style={checkboxBoxStyle}>
@@ -529,7 +521,7 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
 
         {/* RIGHT PREVIEW */}
-        <div style={rightPanelStyle}>
+        <div className="settings-preview" style={rightPanelStyle}>
           <h2 style={previewTitleStyle}>Live Preview</h2>
           <p style={previewSubStyle}>
             Vorschau des Widgets für {selected.name}.

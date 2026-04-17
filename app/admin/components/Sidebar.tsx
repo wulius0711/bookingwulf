@@ -25,7 +25,7 @@ function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDe
   if (locked) {
     return (
       <span
-        className={shaking ? 'shake' : undefined}
+        className={shaking ? 'shake sidebar-nav-item' : 'sidebar-nav-item'}
         onClick={() => { setShaking(true); setTimeout(() => setShaking(false), 400); }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}

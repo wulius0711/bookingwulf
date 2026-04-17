@@ -89,7 +89,7 @@ export default function BillingPage() {
     setActionLoading(false);
   }
 
-  if (loading) return <main style={{ padding: 40, fontFamily: 'Inter, sans-serif' }}>Laden…</main>;
+  if (loading) return <main className="admin-page" style={{ fontFamily: 'Inter, sans-serif' }}>Laden…</main>;
 
   const currentPlan = hotel?.plan ?? 'starter';
   const status = hotel?.subscriptionStatus ?? 'inactive';
@@ -97,7 +97,7 @@ export default function BillingPage() {
   const isActive = status === 'active' || status === 'trialing';
 
   return (
-    <main style={{ padding: 32, background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         <div>
@@ -145,7 +145,7 @@ export default function BillingPage() {
         )}
 
         {/* Plan cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="plan-grid" style={{ display: 'grid', gap: 16 }}>
           {(Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).map(([key, plan]) => {
             const isCurrent = currentPlan === key;
             return (
