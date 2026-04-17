@@ -107,6 +107,7 @@ export function ImageUploadField({
             borderRadius: 999,
             border: '1px solid #d1d5db',
             background: '#fff',
+            color: '#374151',
             fontSize: 13,
             cursor: uploading ? 'not-allowed' : 'pointer',
             opacity: uploading ? 0.6 : 1,
