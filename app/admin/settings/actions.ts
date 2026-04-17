@@ -73,5 +73,5 @@ export async function saveHotelSettings(formData: FormData) {
 
   revalidatePath('/admin/settings');
   revalidatePath('/');
-  redirect(`/admin/settings?hotel=${hotelId}`);
+  redirect(`/admin/settings?hotel=${hotelId}&saved=1`);
 }

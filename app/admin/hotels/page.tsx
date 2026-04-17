@@ -47,7 +47,7 @@ export default async function HotelsPage() {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial, sans-serif', maxWidth: 900 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
       <div
         style={{
           display: 'flex',

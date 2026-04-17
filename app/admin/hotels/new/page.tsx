@@ -58,7 +58,7 @@ export default async function NewHotelPage() {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial, sans-serif', maxWidth: 700 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 700 }}>
       <h1 style={{ marginBottom: 8, fontSize: 26, color: '#111' }}>Neues Hotel</h1>
       <p style={{ marginBottom: 30, fontSize: 13, color: '#666' }}>
         Grunddaten für ein neues Hotel anlegen.

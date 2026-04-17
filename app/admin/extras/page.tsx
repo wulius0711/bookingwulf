@@ -48,7 +48,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
 
           {isSuperAdmin && (
             <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <select name="hotel" defaultValue={String(selectedId)} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
+              <select name="hotel" defaultValue={String(selectedId)} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
                 {hotels.map((h) => (
                   <option key={h.id} value={h.id}>{h.name}</option>
                 ))}
@@ -70,9 +70,10 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
             </div>
 
             {extras.length === 0 ? (
-              <p style={{ margin: 0, padding: '24px 20px', fontSize: 14, color: '#9ca3af' }}>
-                Noch keine Extras angelegt.
-              </p>
+              <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Extras angelegt.</p>
+                <p style={{ fontSize: 13, color: '#9ca3af' }}>Nutze das Formular unten, um ein neues Extra hinzuzufügen.</p>
+              </div>
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>

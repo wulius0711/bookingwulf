@@ -133,7 +133,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
     <main
       style={{
         padding: 40,
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
         maxWidth: 900,
       }}
     >

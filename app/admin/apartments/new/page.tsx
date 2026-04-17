@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
+import { NameSlugFields } from '@/app/admin/components/NameSlugFields';
 import { canAddApartment } from '@/src/lib/plan-gates';
 
 async function createApartment(formData: FormData) {
@@ -107,7 +108,7 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #ddd',
+  border: '1px solid #d1d5db',
   borderRadius: 6,
   fontSize: 14,
   color: '#111',
@@ -139,7 +140,7 @@ export default async function NewApartmentPage() {
       });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 900 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
       <h1 style={{ marginBottom: 30 }}>Neues Apartment</h1>
 
       <form action={createApartment} style={{ display: 'grid', gap: 18 }}>
@@ -161,15 +162,7 @@ export default async function NewApartmentPage() {
           <input type="hidden" name="hotelId" value={session.hotelId} />
         )}
 
-        <div style={row}>
-          <label style={labelStyle}>Name</label>
-          <input name="name" required style={inputStyle} />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Slug</label>
-          <input name="slug" required style={inputStyle} />
-        </div>
+        <NameSlugFields rowStyle={row} labelStyle={labelStyle} inputStyle={inputStyle} />
 
         <div style={row}>
           <label style={labelStyle}>Max. Erwachsene</label>

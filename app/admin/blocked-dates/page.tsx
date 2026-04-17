@@ -34,7 +34,7 @@ export default async function BlockedDatesPage() {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial' }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div
         style={{
           display: 'flex',

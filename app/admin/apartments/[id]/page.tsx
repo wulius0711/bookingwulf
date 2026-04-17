@@ -27,9 +27,10 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #ddd',
+  border: '1px solid #d1d5db',
   borderRadius: 6,
   fontSize: 14,
+  color: '#111',
 };
 
 const buttonStyle: React.CSSProperties = {
@@ -168,7 +169,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 900 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
       <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>

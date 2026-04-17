@@ -6,7 +6,7 @@ import { upload } from '@vercel/blob/client';
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #ddd',
+  border: '1px solid #d1d5db',
   borderRadius: 6,
   fontSize: 14,
   color: '#111',

@@ -43,14 +43,14 @@ export default async function NewPriceSeasonPage() {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 520 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
       <h1>Neuer Preiszeitraum</h1>
 
       <form
         action={createSeason}
         style={{ display: 'grid', gap: 12, marginTop: 20 }}
       >
-        <select name="apartmentId" required>
+        <select name="apartmentId" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
           <option value="">Apartment wählen</option>
           {apartments.map((a) => (
             <option key={a.id} value={a.id}>
@@ -59,8 +59,8 @@ export default async function NewPriceSeasonPage() {
           ))}
         </select>
 
-        <input type="date" name="startDate" required />
-        <input type="date" name="endDate" required />
+        <input type="date" name="startDate" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }} />
+        <input type="date" name="endDate" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }} />
 
         <input
           type="number"
@@ -68,6 +68,7 @@ export default async function NewPriceSeasonPage() {
           name="pricePerNight"
           placeholder="Preis pro Nacht"
           required
+          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
         />
 
         <input
@@ -75,6 +76,7 @@ export default async function NewPriceSeasonPage() {
           name="minStay"
           placeholder="Mindestaufenthalt"
           defaultValue={1}
+          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
         />
 
         <button

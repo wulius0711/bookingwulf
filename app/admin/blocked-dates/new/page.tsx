@@ -45,7 +45,7 @@ export default async function NewBlockedDatePage() {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial', maxWidth: 600 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 600 }}>
       <h1 style={{ marginBottom: 20 }}>Neue Blockierung</h1>
 
       <form action={createBlockedDate} style={{ display: 'grid', gap: 16 }}>
@@ -54,7 +54,7 @@ export default async function NewBlockedDatePage() {
           <select
             name="apartmentId"
             required
-            style={{ width: '100%', padding: 10 }}
+            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
           >
             <option value="">Bitte auswählen</option>
             {apartments.map((a) => (
@@ -71,7 +71,7 @@ export default async function NewBlockedDatePage() {
             type="date"
             name="startDate"
             required
-            style={{ width: '100%', padding: 10 }}
+            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
           />
         </div>
 
@@ -81,13 +81,13 @@ export default async function NewBlockedDatePage() {
             type="date"
             name="endDate"
             required
-            style={{ width: '100%', padding: 10 }}
+            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
           />
         </div>
 
         <div>
           <label>Typ</label>
-          <select name="type" style={{ width: '100%', padding: 10 }}>
+          <select name="type" style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}>
             <option value="manual">Manuell</option>
             <option value="booking">Booking</option>
           </select>
@@ -99,7 +99,7 @@ export default async function NewBlockedDatePage() {
             type="text"
             name="note"
             placeholder="z. B. Eigennutzung"
-            style={{ width: '100%', padding: 10 }}
+            style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
           />
         </div>
 

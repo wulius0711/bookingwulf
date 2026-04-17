@@ -6,7 +6,7 @@ import { hasFullBranding } from '@/src/lib/plan-gates';
 
 export const dynamic = 'force-dynamic';
 
-type SearchParams = Promise<{ hotel?: string }>;
+type SearchParams = Promise<{ hotel?: string; saved?: string }>;
 type PageProps = { searchParams: SearchParams };
 
 /* ---------- STYLES ---------- */
@@ -236,7 +236,7 @@ export default async function Page({ searchParams }: PageProps) {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
 
-  const { hotel } = await searchParams;
+  const { hotel, saved } = await searchParams;
 
   const hotels = isSuperAdmin
     ? await prisma.hotel.findMany({
@@ -481,6 +481,12 @@ export default async function Page({ searchParams }: PageProps) {
                 Reset
               </a>
             </div>
+
+            {saved === '1' && (
+              <div style={{ padding: '12px 16px', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a' }}>
+                Einstellungen gespeichert.
+              </div>
+            )}
           </form>
         </div>
 

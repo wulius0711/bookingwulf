@@ -70,7 +70,7 @@ export default async function EditHotelPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial, sans-serif', maxWidth: 700 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 700 }}>
       <h1 style={{ marginBottom: 8, fontSize: 26, color: '#111' }}>Hotel bearbeiten</h1>
       <p style={{ marginBottom: 30, fontSize: 13, color: '#666' }}>{hotel.name}</p>
 

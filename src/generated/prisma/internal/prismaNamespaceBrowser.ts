@@ -91,7 +91,8 @@ export const HotelScalarFieldEnum = {
   plan: 'plan',
   stripeCustomerId: 'stripeCustomerId',
   stripeSubscriptionId: 'stripeSubscriptionId',
-  subscriptionStatus: 'subscriptionStatus'
+  subscriptionStatus: 'subscriptionStatus',
+  trialEndsAt: 'trialEndsAt'
 } as const
 
 export type HotelScalarFieldEnum = (typeof HotelScalarFieldEnum)[keyof typeof HotelScalarFieldEnum]

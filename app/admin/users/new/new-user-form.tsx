@@ -9,7 +9,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
   const [state, action, pending] = useActionState(createAdminUser, undefined);
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial, sans-serif', maxWidth: 520 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
       <h1 style={{ marginBottom: 8, fontSize: 26, color: '#111' }}>Neuer Benutzer</h1>
       <p style={{ marginBottom: 28, fontSize: 13, color: '#666' }}>
         Legt einen neuen Admin-Zugang an.

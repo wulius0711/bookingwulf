@@ -23,8 +23,9 @@ export default function SetupForm() {
           style={{
             padding: '10px 14px',
             borderRadius: 8,
-            border: '1px solid #ddd',
+            border: '1px solid #d1d5db',
             fontSize: 14,
+            color: '#111',
           }}
         />
       </div>
@@ -43,8 +44,9 @@ export default function SetupForm() {
           style={{
             padding: '10px 14px',
             borderRadius: 8,
-            border: '1px solid #ddd',
+            border: '1px solid #d1d5db',
             fontSize: 14,
+            color: '#111',
           }}
         />
       </div>
@@ -62,8 +64,9 @@ export default function SetupForm() {
           style={{
             padding: '10px 14px',
             borderRadius: 8,
-            border: '1px solid #ddd',
+            border: '1px solid #d1d5db',
             fontSize: 14,
+            color: '#111',
           }}
         />
       </div>

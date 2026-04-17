@@ -103,7 +103,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Arial, sans-serif' }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div
         style={{
           display: 'flex',
@@ -137,10 +137,11 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                     style={{
                       minWidth: 220,
                       padding: '10px 12px',
-                      border: '1px solid #ddd',
+                      border: '1px solid #d1d5db',
                       borderRadius: 10,
                       background: '#fff',
                       fontSize: 14,
+                      color: '#111',
                     }}
                   >
                     <option value="">Alle Hotels</option>
@@ -233,7 +234,12 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
       )}
 
       {apartments.length === 0 ? (
-        <p>Noch keine Apartments vorhanden.</p>
+        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Apartments vorhanden.</p>
+          <a href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+            Neues Apartment anlegen
+          </a>
+        </div>
       ) : (
         <div style={{ display: 'grid', gap: 16 }}>
           {apartments.map((a) => (
