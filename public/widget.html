@@ -1084,16 +1084,20 @@
 
       @media (max-width: 640px) {
         body {
-          padding: 18px;
+          padding: 14px;
         }
 
         .content-card,
         .summary {
-          padding: 20px;
+          padding: 16px;
         }
 
         .title {
-          font-size: 28px;
+          font-size: 24px;
+        }
+
+        .intro {
+          font-size: 14px;
         }
 
         .apt-amenities {
@@ -1102,6 +1106,70 @@
 
         .lightbox-inner {
           padding: 14px;
+        }
+
+        .toggle-card {
+          padding: 14px;
+        }
+
+        .toggle-indicator {
+          min-width: auto;
+          height: 34px;
+          padding: 0 12px;
+          font-size: 12px;
+        }
+
+        .nav-row {
+          gap: 10px;
+        }
+
+        .btn, .btn-light {
+          min-height: 44px;
+          padding: 0 20px;
+          font-size: 14px;
+        }
+
+        .price-box strong {
+          font-size: 24px;
+        }
+
+        .summary h3 {
+          font-size: 24px;
+        }
+
+        .summary-total {
+          font-size: 22px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .step {
+          min-height: auto;
+          padding: 12px 14px;
+        }
+
+        .step-sub {
+          display: none;
+        }
+
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .apt-name {
+          font-size: 20px;
+        }
+
+        .apt-price {
+          font-size: 20px;
+        }
+
+        .top {
+          gap: 14px;
         }
       }
     </style>
@@ -2366,24 +2434,25 @@ sortedApartments.forEach((ap) => {
             return;
           }
 
-          for (const apartment of state.apartments) {
+          // Check non-matching guests synchronously
+          state.apartments.forEach((apartment) => {
             if (!isApartmentMatchingGuests(apartment)) {
               state.pricingMap[String(apartment.id)] = {
                 available: false,
-                message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${
-                  apartment.maxChildren || 0
-                } Kinder`,
+                message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${apartment.maxChildren || 0} Kinder`,
                 status: "not-matching",
               };
-              continue;
             }
+          });
 
+          // Check availability in parallel for matching apartments
+          const toCheck = state.apartments.filter((a) => isApartmentMatchingGuests(a));
+
+          await Promise.all(toCheck.map(async (apartment) => {
             try {
               const res = await fetch(`${API_BASE}/api/availability`, {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   hotel: HOTEL_SLUG,
                   arrival: state.arrival,
@@ -2397,16 +2466,11 @@ sortedApartments.forEach((ap) => {
               if (!data.success || !data.available) {
                 state.pricingMap[String(apartment.id)] = {
                   available: false,
-                  message:
-                    data.message || "Im gewählten Zeitraum nicht verfügbar",
+                  message: data.message || "Im gewählten Zeitraum nicht verfügbar",
                   status: "unavailable",
                 };
-
-                state.selectedApartmentIds = state.selectedApartmentIds.filter(
-                  (id) => id !== apartment.id
-                );
-
-                continue;
+                state.selectedApartmentIds = state.selectedApartmentIds.filter((id) => id !== apartment.id);
+                return;
               }
 
               state.pricingMap[String(apartment.id)] = {
@@ -2425,7 +2489,7 @@ sortedApartments.forEach((ap) => {
                 status: "unknown",
               };
             }
-          }
+          }));
 
           renderAll();
         }
