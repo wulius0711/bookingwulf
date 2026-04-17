@@ -15,6 +15,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Login- und Setup-Seiten haben kein Nav
   if (!session) return <>{children}</>
 
+  // Get pathname (used for billing gate + nav highlighting)
+  const headerStore = await headers()
+  const currentPath = headerStore.get('x-invoke-path') || headerStore.get('x-matched-path') || ''
+
   // Fetch hotel for billing gate + plan gating
   let hotelPlan: PlanKey = 'starter'
   if (session.role !== 'super_admin' && session.hotelId) {
@@ -35,19 +39,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       status = 'inactive'
     }
 
-    // Billing gate
-    const headerStore = await headers()
-    const pathname = headerStore.get('x-invoke-path') || headerStore.get('x-matched-path') || ''
-    const isExempt = pathname.includes('/billing') || pathname.includes('/login') || pathname.includes('/setup')
-
-    if (pathname && !isExempt && status !== 'active' && status !== 'trialing') {
+    // Billing gate: redirect unpaid users (exempt: billing, login, setup pages)
+    const isExempt = !currentPath || currentPath.includes('/billing') || currentPath.includes('/login') || currentPath.includes('/setup')
+    if (!isExempt && status !== 'active' && status !== 'trialing') {
       redirect('/admin/billing')
     }
   }
-
-  // Get pathname for active nav highlighting
-  const allHeaders = await headers()
-  const currentPath = allHeaders.get('x-invoke-path') || allHeaders.get('x-matched-path') || ''
 
   const isSuperAdmin = session.role === 'super_admin'
 
