@@ -44,24 +44,31 @@ export default async function BlockedDatesPage() {
         }}
       >
         <h1 style={{ margin: 0 }}>Blocked Dates</h1>
-        <Link href="/admin/blocked-dates/new">
-          <button
-            style={{
-              padding: '10px 16px',
-              border: 'none',
-              background: '#111',
-              color: '#fff',
-              cursor: 'pointer',
-              borderRadius: 999,
-            }}
-          >
-            Neu anlegen
-          </button>
-        </Link>
+        {ranges.length > 0 && (
+          <Link href="/admin/blocked-dates/new">
+            <button
+              style={{
+                padding: '10px 16px',
+                border: 'none',
+                background: '#111',
+                color: '#fff',
+                cursor: 'pointer',
+                borderRadius: 999,
+              }}
+            >
+              Neu anlegen
+            </button>
+          </Link>
+        )}
       </div>
 
       {ranges.length === 0 ? (
-        <p>Noch keine Blockierungen vorhanden.</p>
+        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
+          <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+            Neue Sperrzeit anlegen
+          </a>
+        </div>
       ) : (
         <div style={{ display: 'grid', gap: 16 }}>
           {ranges.map((r) => (

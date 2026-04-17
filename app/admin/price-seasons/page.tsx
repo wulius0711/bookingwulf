@@ -38,24 +38,31 @@ export default async function PriceSeasonsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h1>Preiszeiträume</h1>
 
-        <Link href="/admin/price-seasons/new">
-          <button
-            style={{
-              padding: '10px 16px',
-              background: '#111',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 999,
-              cursor: 'pointer',
-            }}
-          >
-            Neu anlegen
-          </button>
-        </Link>
+        {seasons.length > 0 && (
+          <Link href="/admin/price-seasons/new">
+            <button
+              style={{
+                padding: '10px 16px',
+                background: '#111',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 999,
+                cursor: 'pointer',
+              }}
+            >
+              Neu anlegen
+            </button>
+          </Link>
+        )}
       </div>
 
       {seasons.length === 0 ? (
-        <p>Keine Preiszeiträume vorhanden.</p>
+        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Keine Preiszeiträume vorhanden.</p>
+          <a href="/admin/price-seasons/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+            Neue Preissaison anlegen
+          </a>
+        </div>
       ) : (
         <div style={{ display: 'grid', gap: 16, marginTop: 20 }}>
           {seasons.map((s) => (
