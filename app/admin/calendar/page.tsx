@@ -15,10 +15,10 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const STATUS_BG: Record<string, string> = {
-  new: '#eff6ff',
-  answered: '#fffbeb',
-  booked: '#f0fdf4',
-  cancelled: '#fef2f2',
+  new: '#dbeafe',
+  answered: '#fef3c7',
+  booked: '#bbf7d0',
+  cancelled: '#fee2e2',
 };
 
 const STATUS_LABELS: Record<string, string> = {
