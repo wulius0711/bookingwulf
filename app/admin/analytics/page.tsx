@@ -174,7 +174,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         </div>
 
         {/* KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+        <div className="stat-grid" style={{ display: 'grid', gap: 16 }}>
           {[
             { label: 'Anfragen (12M)', value: total },
             { label: 'Gebucht', value: booked },
@@ -195,9 +195,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           {/* Monthly bar chart */}
           <div style={cardStyle}>
             <h2 style={sectionTitleStyle}>Anfragen pro Monat</h2>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140 }}>
+            <div style={{ overflowX: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, minWidth: 480 }}>
               {monthlyData.map(({ label, count }) => (
-                <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
+                <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end', minWidth: 0 }}>
                   <span style={{ fontSize: 10, color: '#9ca3af' }}>{count > 0 ? count : ''}</span>
                   <div
                     style={{
@@ -212,6 +213,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                   <span style={{ fontSize: 9, color: '#9ca3af', whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
+            </div>
             </div>
           </div>
 
