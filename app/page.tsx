@@ -36,7 +36,7 @@ export default function LandingPage() {
         <div style={{ display: 'inline-block', padding: '6px 16px', borderRadius: 999, background: '#f0fdf4', color: '#16a34a', fontSize: 13, fontWeight: 600, marginBottom: 20 }}>
           14 Tage kostenlos testen
         </div>
-        <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
+        <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontFamily: 'var(--font-display)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
           Das Buchungs-Widget<br />für Ihr Hotel
         </h1>
         <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 32px' }}>
@@ -70,7 +70,7 @@ export default function LandingPage() {
       {/* Features */}
       <section id="features" style={{ background: '#fafafa', padding: '80px 24px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Alles was Sie brauchen</h2>
+          <h2 style={{ textAlign: 'center', fontSize: 32, fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Alles was Sie brauchen</h2>
           <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 48px' }}>Kein Schnickschnack — nur die Features die Hotels wirklich nutzen.</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
             {features.map((f) => (
@@ -86,7 +86,7 @@ export default function LandingPage() {
 
       {/* How it works */}
       <section style={{ padding: '80px 24px', maxWidth: 800, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 48px' }}>In 3 Schritten live</h2>
+        <h2 style={{ textAlign: 'center', fontSize: 32, fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 48px' }}>In 3 Schritten live</h2>
         <div style={{ display: 'grid', gap: 32 }}>
           {steps.map((s) => (
             <div key={s.num} style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
@@ -105,7 +105,7 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="pricing" style={{ background: '#fafafa', padding: '80px 24px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Faire Preise</h2>
+          <h2 style={{ textAlign: 'center', fontSize: 32, fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Faire Preise</h2>
           <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 48px' }}>Keine Provision, keine versteckten Kosten. Monatlich kündbar.</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
             {plans.map(([key, plan]) => (
@@ -114,7 +114,7 @@ export default function LandingPage() {
                   <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#111', color: '#fff', padding: '4px 16px', borderRadius: 999, fontSize: 12, fontWeight: 700 }}>Beliebt</div>
                 )}
                 <h3 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{plan.name}</h3>
-                <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '8px 0' }}>
+                <div style={{ fontSize: 36, fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', margin: '8px 0' }}>
                   {'\u20AC'}{plan.priceEur}<span style={{ fontSize: 16, fontWeight: 400, color: '#999' }}>/Mo</span>
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 24px', display: 'grid', gap: 10 }}>
@@ -136,7 +136,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section style={{ textAlign: 'center', padding: '80px 24px' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 16px' }}>Bereit loszulegen?</h2>
+        <h2 style={{ fontSize: 32, fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 16px' }}>Bereit loszulegen?</h2>
         <p style={{ fontSize: 16, color: '#666', margin: '0 0 28px' }}>14 Tage kostenlos — keine Kreditkarte erforderlich.</p>
         <Link href="/register" style={{ padding: '14px 36px', background: '#111', color: '#fff', borderRadius: 999, fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
           Jetzt Konto erstellen
