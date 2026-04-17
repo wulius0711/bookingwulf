@@ -158,6 +158,11 @@ button, a[role="button"], input[type="submit"] {
     padding: 16px;
   }
 
+  .admin-page h1 {
+    font-size: 24px !important;
+    letter-spacing: -0.02em !important;
+  }
+
   .two-col {
     grid-template-columns: 1fr;
   }
