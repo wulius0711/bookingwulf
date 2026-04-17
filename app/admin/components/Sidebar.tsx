@@ -116,7 +116,7 @@ export default function Sidebar({ navItems, email }: Props) {
         >
           <span /><span /><span />
         </button>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 32 }} />
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 32, marginLeft: 'auto' }} />
       </div>
 
       {/* Backdrop */}
