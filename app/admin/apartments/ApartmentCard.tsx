@@ -135,8 +135,6 @@ export default function ApartmentCard({ apartment: a, duplicateAction, deleteAct
                 fontSize: 14,
               }}
             >
-              <div><strong>ID:</strong> {a.id}</div>
-              <div><strong>Slug:</strong> {a.slug}</div>
               <div><strong>Erwachsene:</strong> {a.maxAdults}</div>
               <div><strong>Kinder:</strong> {a.maxChildren}</div>
               <div><strong>Schlafzimmer:</strong> {a.bedrooms ?? '—'}</div>
