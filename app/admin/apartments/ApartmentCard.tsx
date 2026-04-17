@@ -57,6 +57,8 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 18 }}>{a.name}</div>
+
           {!a.isActive && (
             <span
               style={{
@@ -74,8 +76,6 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
               Inaktiv
             </span>
           )}
-
-          <div style={{ fontWeight: 700, fontSize: 18 }}>{a.name}</div>
 
           {showHotelBadge && (
             <div
