@@ -111,7 +111,7 @@ export default async function NewBlockedDatePage() {
             background: '#cc3955',
             color: '#fff',
             border: 'none',
-            borderRadius: 999,
+            borderRadius: 8,
             cursor: 'pointer',
           }}
         >

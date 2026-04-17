@@ -112,7 +112,7 @@ export default function RegisterForm() {
               disabled={pending}
               style={{
                 padding: '13px 20px',
-                borderRadius: 999,
+                borderRadius: 8,
                 background: '#111827',
                 color: '#fff',
                 border: 'none',

@@ -68,7 +68,7 @@ export default async function UsersPage() {
             padding: '10px 18px',
             background: '#111',
             color: '#fff',
-            borderRadius: 999,
+            borderRadius: 8,
             fontSize: 14,
             fontWeight: 600,
           }}
@@ -118,7 +118,7 @@ export default async function UsersPage() {
                   <span
                     style={{
                       padding: '2px 10px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       fontSize: 11,
                       fontWeight: 700,
                       background: u.role === 'super_admin' ? '#111' : '#e8f0fe',
@@ -140,7 +140,7 @@ export default async function UsersPage() {
                     <span
                       style={{
                         padding: '2px 10px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         fontSize: 11,
                         fontWeight: 700,
                         background: '#fef2f2',
@@ -164,7 +164,7 @@ export default async function UsersPage() {
                       type="submit"
                       style={{
                         padding: '8px 14px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         border: '1px solid #d1d5db',
                         background: '#fff',
                         color: '#555',
@@ -182,7 +182,7 @@ export default async function UsersPage() {
                       type="submit"
                       style={{
                         padding: '8px 14px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         border: '1px solid #fca5a5',
                         background: '#fff',
                         color: '#dc2626',

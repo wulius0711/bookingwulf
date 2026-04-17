@@ -27,7 +27,7 @@ export default function DeleteHotelButton({
         disabled={pending}
         style={{
           padding: '8px 14px',
-          borderRadius: 999,
+          borderRadius: 8,
           border: '1px solid #fca5a5',
           background: '#fff',
           color: pending ? '#aaa' : '#dc2626',

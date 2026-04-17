@@ -89,10 +89,10 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
-              <button type="submit" style={{ padding: '7px 16px', borderRadius: 999, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              <button type="submit" style={{ padding: '7px 16px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                 Speichern
               </button>
-              <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 16px', borderRadius: 999, border: '1px solid #d1d5db', background: '#fff', color: '#111', fontSize: 13, cursor: 'pointer' }}>
+              <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#111', fontSize: 13, cursor: 'pointer' }}>
                 Abbrechen
               </button>
             </div>
@@ -107,7 +107,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
       <td style={{ padding: '12px 16px', fontWeight: 500, color: '#111827' }}>{extra.name}</td>
       <td style={{ padding: '12px 16px' }}>
         <span style={{
-          padding: '2px 8px', borderRadius: 999, fontSize: 11, fontWeight: 600,
+          padding: '2px 8px', borderRadius: 8, fontSize: 11, fontWeight: 600,
           background: extra.type === 'insurance' ? '#fef3c7' : '#f0f9ff',
           color: extra.type === 'insurance' ? '#92400e' : '#0369a1',
         }}>
@@ -122,7 +122,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
         ) : '\u2014'}
       </td>
       <td style={{ padding: '12px 16px' }}>
-        <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
+        <span style={{ padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
           {extra.isActive ? 'Aktiv' : 'Inaktiv'}
         </span>
       </td>

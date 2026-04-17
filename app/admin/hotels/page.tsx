@@ -89,7 +89,7 @@ export default async function HotelsPage() {
             padding: '10px 18px',
             background: '#111',
             color: '#fff',
-            borderRadius: 999,
+            borderRadius: 8,
             fontSize: 14,
             fontWeight: 600,
           }}
@@ -137,7 +137,7 @@ export default async function HotelsPage() {
                         style={{
                           marginLeft: 8,
                           padding: '2px 8px',
-                          borderRadius: 999,
+                          borderRadius: 8,
                           fontSize: 11,
                           fontWeight: 700,
                           background: '#fef2f2',
@@ -159,7 +159,7 @@ export default async function HotelsPage() {
                     {' · '}
                     <span style={{
                       padding: '1px 6px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       fontSize: 11,
                       fontWeight: 600,
                       background: h.subscriptionStatus === 'active' ? '#dcfce7' : h.subscriptionStatus === 'trialing' ? '#e0f2fe' : '#fef2f2',
@@ -176,7 +176,7 @@ export default async function HotelsPage() {
                   href={`/admin/hotels/${h.id}`}
                   style={{
                     padding: '8px 14px',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     border: '1px solid #d1d5db',
                     background: '#fff',
                     color: '#111',
@@ -194,7 +194,7 @@ export default async function HotelsPage() {
                     type="submit"
                     style={{
                       padding: '8px 14px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       border: '1px solid #d1d5db',
                       background: '#fff',
                       color: '#555',
@@ -213,7 +213,7 @@ export default async function HotelsPage() {
                       type="submit"
                       style={{
                         padding: '8px 14px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         border: '1px solid #0284c7',
                         background: '#e0f2fe',
                         color: '#0369a1',

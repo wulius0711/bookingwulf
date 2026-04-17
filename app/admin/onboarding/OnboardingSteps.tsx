@@ -46,7 +46,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
                 padding: '11px 24px',
                 background: '#111',
                 color: '#fff',
-                borderRadius: 999,
+                borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 600,
                 textDecoration: 'none',
@@ -128,7 +128,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
               padding: '12px 28px',
               background: '#111',
               color: '#fff',
-              borderRadius: 999,
+              borderRadius: 8,
               fontSize: 15,
               fontWeight: 600,
               textDecoration: 'none',
@@ -166,7 +166,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
               style={{
                 flex: 1,
                 height: 4,
-                borderRadius: 999,
+                borderRadius: 8,
                 background: i <= step ? '#111' : '#ddd',
                 transition: 'background 0.3s ease',
               }}
@@ -202,7 +202,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
                 disabled={step === 0}
                 style={{
                   padding: '10px 20px',
-                  borderRadius: 999,
+                  borderRadius: 8,
                   border: '1px solid #ddd',
                   background: '#fff',
                   color: step === 0 ? '#ccc' : '#111',
@@ -218,7 +218,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
                 onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
                 style={{
                   padding: '10px 24px',
-                  borderRadius: 999,
+                  borderRadius: 8,
                   border: 'none',
                   background: '#111',
                   color: '#fff',

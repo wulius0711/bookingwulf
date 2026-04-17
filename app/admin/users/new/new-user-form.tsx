@@ -100,7 +100,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
           style={{
             marginTop: 8,
             padding: '12px 20px',
-            borderRadius: 999,
+            borderRadius: 8,
             background: '#111',
             color: '#fff',
             border: 'none',

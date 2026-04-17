@@ -53,7 +53,7 @@ export default async function BlockedDatesPage() {
                 background: '#111',
                 color: '#fff',
                 cursor: 'pointer',
-                borderRadius: 999,
+                borderRadius: 8,
               }}
             >
               Neu anlegen
@@ -65,7 +65,7 @@ export default async function BlockedDatesPage() {
       {ranges.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
-          <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+          <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 8, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
             Neue Sperrzeit anlegen
           </a>
         </div>
@@ -103,7 +103,7 @@ export default async function BlockedDatesPage() {
                     background: '#fff',
                     color: '#dc2626',
                     cursor: 'pointer',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     fontSize: 13,
                   }}
                 >

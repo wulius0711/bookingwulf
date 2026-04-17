@@ -164,7 +164,7 @@ const actionRowStyle: React.CSSProperties = {
 
 const primaryButtonStyle: React.CSSProperties = {
   padding: '10px 16px',
-  borderRadius: 999,
+  borderRadius: 8,
   background: '#111111',
   color: '#ffffff',
   border: '1px solid #ffffff',
@@ -175,7 +175,7 @@ const primaryButtonStyle: React.CSSProperties = {
 
 const secondaryButtonStyle: React.CSSProperties = {
   padding: '10px 16px',
-  borderRadius: 999,
+  borderRadius: 8,
   background: '#ffffff',
   color: '#111111',
   border: '1px solid #d1d5db',

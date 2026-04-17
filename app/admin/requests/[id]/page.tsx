@@ -245,7 +245,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
             <div
               style={{
                 padding: '6px 12px',
-                borderRadius: 999,
+                borderRadius: 8,
                 background: request.hotel?.accentColor || '#f5f5f5',
                 fontSize: 12,
                 fontWeight: 600,
@@ -260,7 +260,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           <div
             style={{
               padding: '8px 12px',
-              borderRadius: 999,
+              borderRadius: 8,
               background: badge.bg,
               color: badge.color,
               border: `1px solid ${badge.border}`,
@@ -330,7 +330,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                     disabled={active}
                     style={{
                       padding: '10px 14px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       border: active ? '1px solid #111' : '1px solid #ccc',
                       background: active ? '#111' : '#fff',
                       color: active ? '#fff' : '#111',

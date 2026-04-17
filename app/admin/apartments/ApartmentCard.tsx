@@ -66,7 +66,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                 alignItems: 'center',
                 gap: 6,
                 padding: '3px 10px',
-                borderRadius: 999,
+                borderRadius: 8,
                 background: a.hotel?.accentColor || '#eee',
                 color: '#fafafa',
                 fontSize: 11,
@@ -78,7 +78,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                 style={{
                   width: 7,
                   height: 7,
-                  borderRadius: 999,
+                  borderRadius: 8,
                   background: 'rgba(255,255,255,0.9)',
                   display: 'inline-block',
                 }}
@@ -91,7 +91,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
             <span
               style={{
                 padding: '2px 8px',
-                borderRadius: 999,
+                borderRadius: 8,
                 fontSize: 11,
                 fontWeight: 700,
                 background: '#fef2f2',
@@ -178,7 +178,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                   textDecoration: 'none',
                   padding: '10px 14px',
                   border: '1px solid #111',
-                  borderRadius: 999,
+                  borderRadius: 8,
                   color: '#111',
                   background: '#fff',
                   fontSize: 13,
@@ -195,7 +195,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                   style={{
                     padding: '10px 14px',
                     border: '1px solid #111',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     color: '#111',
                     background: '#fff',
                     cursor: 'pointer',
@@ -214,7 +214,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                   style={{
                     padding: '10px 14px',
                     border: '1px solid #c43c57',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     color: '#c43c57',
                     background: '#fff',
                     cursor: 'pointer',

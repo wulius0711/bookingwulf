@@ -17,7 +17,7 @@ type ApartmentGalleryProps = {
 const buttonBase: React.CSSProperties = {
   width: 44,
   height: 44,
-  borderRadius: 999,
+  borderRadius: 8,
   border: '1px solid rgba(255,255,255,0.22)',
   background: 'rgba(0,0,0,0.38)',
   color: '#fff',
@@ -134,7 +134,7 @@ export default function ApartmentGallery({
               background: 'rgba(0,0,0,0.48)',
               color: '#fff',
               padding: '8px 12px',
-              borderRadius: 999,
+              borderRadius: 8,
               fontSize: 13,
             }}
           >

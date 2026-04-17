@@ -131,7 +131,7 @@ async function SuperAdminDashboard() {
                     {newCount > 0 && (
                       <span style={{
                         padding: '3px 10px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         background: '#fef2f2',
                         color: '#dc2626',
                         fontSize: 12,
@@ -152,7 +152,7 @@ async function SuperAdminDashboard() {
                             key={st}
                             style={{
                               padding: '2px 10px',
-                              borderRadius: 999,
+                              borderRadius: 8,
                               fontSize: 11,
                               fontWeight: 600,
                               background: statusColor(st).bg,
@@ -215,7 +215,7 @@ async function SuperAdminDashboard() {
                         </div>
                         <span style={{
                           padding: '2px 10px',
-                          borderRadius: 999,
+                          borderRadius: 8,
                           fontSize: 11,
                           fontWeight: 700,
                           background: sc.bg,
@@ -233,7 +233,7 @@ async function SuperAdminDashboard() {
                             display: 'inline-block',
                             marginRight: 8,
                             padding: '1px 8px',
-                            borderRadius: 999,
+                            borderRadius: 8,
                             background: r.hotel.accentColor || '#eee',
                             color: '#fff',
                             fontSize: 11,
@@ -342,7 +342,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
                 key={st}
                 style={{
                   padding: '6px 14px',
-                  borderRadius: 999,
+                  borderRadius: 8,
                   fontSize: 13,
                   fontWeight: 600,
                   background: statusColor(st).bg,
@@ -378,7 +378,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
                     </div>
                     <span style={{
                       padding: '2px 10px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       fontSize: 11,
                       fontWeight: 700,
                       background: sc.bg,
@@ -476,7 +476,7 @@ const cardStyle: React.CSSProperties = {
 const linkBtnStyle: React.CSSProperties = {
   display: 'inline-block',
   padding: '6px 12px',
-  borderRadius: 999,
+  borderRadius: 8,
   border: '1px solid #e5e7eb',
   background: '#fff',
   color: '#444',

@@ -24,7 +24,7 @@ export default function WidgetStandalone() {
           background: '#DC143C',
           color: '#fff',
           border: 'none',
-          borderRadius: 999,
+          borderRadius: 8,
           cursor: 'pointer',
         }}
       >

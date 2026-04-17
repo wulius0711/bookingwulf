@@ -86,7 +86,7 @@ export default async function NewPriceSeasonPage() {
             background: '#111',
             color: '#fff',
             border: 'none',
-            borderRadius: 999,
+            borderRadius: 8,
             cursor: 'pointer',
           }}
         >

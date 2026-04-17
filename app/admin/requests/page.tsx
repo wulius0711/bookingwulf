@@ -142,7 +142,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                   type="submit"
                   style={{
                     padding: '10px 14px',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     border: '1px solid #fff',
                     background: '#111',
                     color: '#fff',
@@ -157,7 +157,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                     href="/admin/requests"
                     style={{
                       padding: '10px 14px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       border: '1px solid #ccc',
                       background: '#fff',
                       color: '#111',
@@ -190,7 +190,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                 alignItems: 'center',
                 gap: 8,
                 padding: '6px 10px',
-                borderRadius: 999,
+                borderRadius: 8,
                 border: '1px solid #eee',
                 background: '#fff',
                 fontSize: 12,
@@ -201,7 +201,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                 style={{
                   width: 10,
                   height: 10,
-                  borderRadius: 999,
+                  borderRadius: 8,
                   background: hotel.accentColor || '#bbb',
                   display: 'inline-block',
                 }}
@@ -263,7 +263,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                             gap: 8,
                             marginTop: 4,
                             padding: '4px 10px',
-                            borderRadius: 999,
+                            borderRadius: 8,
                             background: r.hotel?.accentColor || '#eee',
                             color: '#fafafa',
                             fontSize: 11,
@@ -274,7 +274,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                             style={{
                               width: 8,
                               height: 8,
-                              borderRadius: 999,
+                              borderRadius: 8,
                               background: 'rgba(255,255,255,0.9)',
                               display: 'inline-block',
                             }}
@@ -289,7 +289,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                         display: 'inline-flex',
                         alignItems: 'center',
                         padding: '8px 12px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         background: badge.background,
                         color: badge.color,
                         border: `1px solid ${badge.border}`,

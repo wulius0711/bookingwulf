@@ -157,7 +157,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                     type="submit"
                     style={{
                       padding: '10px 14px',
-                      borderRadius: 999,
+                      borderRadius: 8,
                       border: '1px solid #111',
                       background: '#111',
                       color: '#fff',
@@ -172,7 +172,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                       href="/admin/apartments"
                       style={{
                         padding: '10px 14px',
-                        borderRadius: 999,
+                        borderRadius: 8,
                         border: '1px solid #ccc',
                         background: '#fff',
                         color: '#111',
@@ -196,7 +196,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                 padding: '12px 18px',
                 background: '#111',
                 color: '#fff',
-                borderRadius: 999,
+                borderRadius: 8,
               }}
             >
               Neues Apartment
@@ -215,7 +215,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                 alignItems: 'center',
                 gap: 8,
                 padding: '6px 10px',
-                borderRadius: 999,
+                borderRadius: 8,
                 border: '1px solid #eee',
                 background: '#fff',
                 fontSize: 12,
@@ -226,7 +226,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
                 style={{
                   width: 10,
                   height: 10,
-                  borderRadius: 999,
+                  borderRadius: 8,
                   background: hotel.accentColor || '#bbb',
                   display: 'inline-block',
                 }}
@@ -240,7 +240,7 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
       {apartments.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Apartments vorhanden.</p>
-          <a className="btn-primary" href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 999, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+          <a className="btn-primary" href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 8, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
             Neues Apartment anlegen
           </a>
         </div>

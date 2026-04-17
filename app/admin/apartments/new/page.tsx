@@ -117,7 +117,7 @@ const inputStyle: React.CSSProperties = {
 const buttonStyle: React.CSSProperties = {
   marginTop: 20,
   padding: '12px 18px',
-  borderRadius: 999,
+  borderRadius: 8,
   border: 'none',
   background: '#111',
   color: '#fff',

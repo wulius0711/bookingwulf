@@ -115,7 +115,7 @@ export default async function NewHotelPage() {
             type="submit"
             style={{
               padding: '12px 20px',
-              borderRadius: 999,
+              borderRadius: 8,
               background: '#111',
               color: '#fff',
               border: 'none',
@@ -130,7 +130,7 @@ export default async function NewHotelPage() {
             href="/admin/hotels"
             style={{
               padding: '12px 20px',
-              borderRadius: 999,
+              borderRadius: 8,
               border: '1px solid #d1d5db',
               background: '#fff',
               color: '#111',

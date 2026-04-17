@@ -29,7 +29,7 @@ export default function LandingPage() {
         .lp-btn {
           display: inline-block;
           padding: 14px 32px;
-          border-radius: 999px;
+          border-radius: 8px;
           font-size: 16px;
           font-weight: 600;
           text-decoration: none;
@@ -88,7 +88,7 @@ export default function LandingPage() {
         }
         .lp-pricing-btn {
           display: block; text-align: center; padding: 12px 0;
-          border-radius: 999px; text-decoration: none;
+          border-radius: 8px; text-decoration: none;
           font-size: 14px; font-weight: 600;
           transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.15s ease, color 0.15s ease;
         }
@@ -225,7 +225,7 @@ export default function LandingPage() {
             {plans.map(([key, plan]) => (
               <div key={key} className="lp-pricing" style={{ border: key === 'pro' ? '2px solid #111' : '1px solid #e5e7eb' }}>
                 {key === 'pro' && (
-                  <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#111', color: '#fff', padding: '4px 16px', borderRadius: 999, fontSize: 12, fontWeight: 700 }}>Beliebt</div>
+                  <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#111', color: '#fff', padding: '4px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700 }}>Beliebt</div>
                 )}
                 <h3 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{plan.name}</h3>
                 <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '8px 0' }}>

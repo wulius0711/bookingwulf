@@ -82,7 +82,7 @@ export function ImageUploadField({
               right: 6,
               width: 24,
               height: 24,
-              borderRadius: 999,
+              borderRadius: 8,
               background: 'rgba(0,0,0,0.6)',
               color: '#fff',
               border: 'none',
@@ -104,7 +104,7 @@ export function ImageUploadField({
           style={{
             display: 'inline-block',
             padding: '8px 14px',
-            borderRadius: 999,
+            borderRadius: 8,
             border: '1px solid #d1d5db',
             background: '#fff',
             color: '#374151',

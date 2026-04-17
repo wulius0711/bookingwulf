@@ -112,7 +112,7 @@ export default function BillingPage() {
             <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
               {PLANS[currentPlan as PlanKey]?.name ?? 'Starter'}
             </div>
-            <span style={{ display: 'inline-block', marginTop: 6, padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: statusInfo.bg, color: statusInfo.color }}>
+            <span style={{ display: 'inline-block', marginTop: 6, padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, background: statusInfo.bg, color: statusInfo.color }}>
               {statusInfo.label}
             </span>
             {status === 'trialing' && hotel?.trialEndsAt && (
@@ -131,7 +131,7 @@ export default function BillingPage() {
               className="btn-secondary"
               onClick={openPortal}
               disabled={actionLoading}
-              style={{ padding: '10px 20px', borderRadius: 999, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#374151' }}
+              style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#374151' }}
             >
               Abonnement verwalten
             </button>
@@ -164,7 +164,7 @@ export default function BillingPage() {
                 }}
               >
                 {key === 'pro' && (
-                  <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: '#111827', color: '#fff', borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
+                  <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: '#111827', color: '#fff', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
                     BESTER DEAL
                   </div>
                 )}
@@ -191,7 +191,7 @@ export default function BillingPage() {
                   disabled={actionLoading || (isCurrent && isActive)}
                   style={{
                     padding: '10px 16px',
-                    borderRadius: 999,
+                    borderRadius: 8,
                     background: '#111827',
                     color: '#fff',
                     border: 'none',
@@ -255,7 +255,7 @@ export default function BillingPage() {
               style={{
                 width: '100%',
                 padding: '12px 20px',
-                borderRadius: 999,
+                borderRadius: 8,
                 background: '#111827',
                 color: '#fff',
                 border: 'none',
