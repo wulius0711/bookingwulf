@@ -71,6 +71,49 @@ button, a[role="button"], input[type="submit"] {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* ─── Admin responsive utilities ───────────────────────────────── */
+
+.admin-page {
+  padding: 32px 40px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Auto-fit: 4 cols desktop → 2 cols mobile */
+.stat-grid {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* Two-column layout → stacks on mobile */
+.two-col {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+}
+
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 16px;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  /* Status buttons wrap on mobile */
+  .status-btn-group {
+    flex-wrap: wrap;
+  }
+}
+
 /* ─── Admin sidebar layout ─────────────────────────────────────── */
 
 .admin-layout {

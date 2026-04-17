@@ -83,7 +83,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div
         style={{
           display: 'flex',
@@ -121,7 +121,8 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                   name="hotel"
                   defaultValue={selectedHotelSlug}
                   style={{
-                    minWidth: 220,
+                    minWidth: 0,
+                    width: '100%',
                     padding: '10px 12px',
                     border: '1px solid #d1d5db',
                     borderRadius: 10,
@@ -307,7 +308,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                     <strong>ID:</strong> {r.id}
                   </div>
 
-                  <div>
+                  <div className="overflow-wrap-anywhere">
                     <strong>Email:</strong> {r.email}
                   </div>
 
@@ -329,7 +330,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
                   {r.message && (
                     <div style={{ marginTop: 10 }}>
                       <strong>Mitteilung:</strong>
-                      <div style={{ marginTop: 4 }}>{r.message}</div>
+                      <div className="overflow-wrap-anywhere" style={{ marginTop: 4 }}>{r.message}</div>
                     </div>
                   )}
 

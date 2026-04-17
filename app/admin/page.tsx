@@ -70,14 +70,14 @@ async function SuperAdminDashboard() {
   ];
 
   return (
-    <main style={pageStyle}>
+    <main className="admin-page" style={pageStyle}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={headlineStyle}>Übersicht</h1>
         <p style={sublineStyle}>Alle Hotels auf einen Blick</p>
       </div>
 
       {/* STAT CARDS */}
-      <div style={statsRowStyle}>
+      <div className="stat-grid" style={statsRowStyle}>
         {stats.map((s) => (
           <Link key={s.label} href={s.href} style={{ textDecoration: 'none' }}>
             <div style={{ ...statCardStyle, ...(s.highlight ? { borderColor: '#fca5a5', background: '#fef2f2' } : {}) }}>
@@ -92,7 +92,7 @@ async function SuperAdminDashboard() {
         ))}
       </div>
 
-      <div style={twoColStyle}>
+      <div className="two-col" style={twoColStyle}>
         {/* HOTEL CARDS */}
         <div>
           <h2 style={sectionTitleStyle}>Hotels</h2>
@@ -299,7 +299,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
   ];
 
   return (
-    <main style={pageStyle}>
+    <main className="admin-page" style={pageStyle}>
       <div style={{ marginBottom: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
         <div
           style={{
@@ -318,7 +318,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
       </div>
 
       {/* STAT CARDS */}
-      <div style={{ ...statsRowStyle, gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="stat-grid" style={statsRowStyle}>
         {stats.map((s) => (
           <Link key={s.label} href={s.href} style={{ textDecoration: 'none' }}>
             <div style={{ ...statCardStyle, ...(s.highlight ? { borderColor: '#fca5a5', background: '#fef2f2' } : {}) }}>
@@ -416,8 +416,6 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
 /* ---------- styles ---------- */
 
 const pageStyle: React.CSSProperties = {
-  padding: 40,
-  fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif',
   maxWidth: 1100,
 };
 
@@ -436,8 +434,6 @@ const sublineStyle: React.CSSProperties = {
 };
 
 const statsRowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)',
   gap: 14,
   marginBottom: 32,
 };
@@ -452,8 +448,6 @@ const statCardStyle: React.CSSProperties = {
 };
 
 const twoColStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)',
   gap: 28,
   alignItems: 'start',
 };

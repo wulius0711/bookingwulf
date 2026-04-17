@@ -267,8 +267,8 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   return (
     <main
+      className="admin-page"
       style={{
-        padding: 40,
         fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
         maxWidth: 900,
       }}
@@ -389,7 +389,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
         <div>
           <strong>Status ändern:</strong>
 
-          <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+          <div style={{ display: 'flex', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
             {[
               { value: 'new', label: 'Neu' },
               { value: 'answered', label: 'Beantwortet' },
