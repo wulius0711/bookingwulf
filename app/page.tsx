@@ -8,6 +8,7 @@ export default function LandingPage() {
     { icon: '🎨', title: 'Individuelles Branding', desc: 'Farben, Formen und Funktionen passend zu Ihrem Hotel-Auftritt.' },
     { icon: '📧', title: 'E-Mail-Benachrichtigungen', desc: 'Automatische Bestätigungen an Gäste und Benachrichtigungen an Sie.' },
     { icon: '🛡️', title: 'Versicherungsoptionen', desc: 'Reiserücktrittsversicherung direkt im Buchungsprozess anbieten.' },
+    { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich per iCal — keine Doppelbuchungen mehr.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
   ];
 
