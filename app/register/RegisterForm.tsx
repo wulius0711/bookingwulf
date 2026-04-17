@@ -11,7 +11,7 @@ function generateSlug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export default function RegisterForm() {
+export default function RegisterForm({ termsUrl, privacyUrl }: { termsUrl: string; privacyUrl: string }) {
   const [state, action, pending] = useActionState(registerHotel, undefined);
   const [slug, setSlug] = useState('');
   const [autoSlug, setAutoSlug] = useState(true);
@@ -99,9 +99,9 @@ export default function RegisterForm() {
               <input name="terms" type="checkbox" required style={{ marginTop: 3, accentColor: '#111827' }} />
               <span>
                 Ich akzeptiere die{' '}
-                <a href="https://wulius.com/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>AGB</a>
+                <a href={termsUrl || '#'} target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>AGB</a>
                 {' '}und die{' '}
-                <a href="https://wulius.com/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>Datenschutzerklärung</a>.
+                <a href={privacyUrl || '#'} target="_blank" rel="noopener noreferrer" style={{ color: '#111827', fontWeight: 600, textDecoration: 'underline' }}>Datenschutzerklärung</a>.
               </span>
             </label>
 

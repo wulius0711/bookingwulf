@@ -146,9 +146,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           color: '#9ca3af',
         }}
       >
-        <a href="https://wulius.com/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>
-        <a href="https://wulius.com/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
-        <a href="https://wulius.com/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
+        {process.env.LEGAL_IMPRINT_URL && <a href={process.env.LEGAL_IMPRINT_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>}
+        {process.env.LEGAL_PRIVACY_URL && <a href={process.env.LEGAL_PRIVACY_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>}
+        {process.env.LEGAL_TERMS_URL && <a href={process.env.LEGAL_TERMS_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>}
       </footer>
     </div>
   )
