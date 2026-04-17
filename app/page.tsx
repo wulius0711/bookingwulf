@@ -10,6 +10,8 @@ export default function LandingPage() {
     { icon: '🛡️', title: 'Versicherungsoptionen', desc: 'Reiserücktrittsversicherung direkt im Buchungsprozess anbieten.' },
     { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich per iCal — keine Doppelbuchungen mehr.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
+    { icon: '💶', title: 'Preissaisons', desc: 'Saisonale Preise automatisch anwenden — Haupt-, Neben- und Feiertagspreise.' },
+    { icon: '⚡', title: 'Einbau in 1 Minute', desc: 'Eine Zeile Code auf Ihre Website — kein Entwickler nötig.' },
   ];
 
   const steps = [
