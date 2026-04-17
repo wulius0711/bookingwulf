@@ -2637,27 +2637,20 @@ sortedApartments.forEach((ap) => {
         // Post height to parent for iframe resizing
         function postHeight() {
           if (window.parent === window) return;
-          // Collapse to measure true content height
-          var html = document.documentElement;
-          var body = document.body;
-          html.style.height = '0';
-          body.style.height = '0';
-          body.style.overflow = 'hidden';
-          var h = body.scrollHeight;
-          html.style.height = '';
-          body.style.height = '';
-          body.style.overflow = '';
+          var shell = document.querySelector('.booking-shell');
+          if (!shell) return;
+          var h = shell.offsetHeight + 56;
           if (h > 100) {
             window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
           }
         }
 
-        var heightObserver = new MutationObserver(postHeight);
-        heightObserver.observe(document.body, {
-          childList: true, subtree: true, attributes: true, characterData: true
+        new ResizeObserver(postHeight).observe(document.querySelector('.booking-shell'));
+        new MutationObserver(postHeight).observe(document.body, {
+          childList: true, subtree: true, attributes: true
         });
         window.addEventListener('resize', postHeight);
-        setInterval(postHeight, 500);
+        setInterval(postHeight, 1000);
 
         init();
       })();
