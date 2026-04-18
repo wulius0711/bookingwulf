@@ -58,7 +58,7 @@ export async function POST(req: Request) {
                     </p>
                     <div style="padding:16px 20px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:20px;">
                       <div style="font-size:13px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Ihr Plan</div>
-                      <div style="font-size:18px;font-weight:700;color:#111;">${planInfo.name} — \u20AC ${planInfo.priceEur}/Monat</div>
+                      <div style="font-size:18px;font-weight:700;color:#111;">${planInfo.name} — \u20AC ${planInfo.priceMonthly}/Monat</div>
                     </div>
                     <ul style="font-size:14px;color:#374151;line-height:1.8;margin:0 0 20px;padding-left:20px;">
                       ${planInfo.features.map(f => '<li>' + f + '</li>').join('')}
