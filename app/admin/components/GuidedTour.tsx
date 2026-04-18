@@ -55,7 +55,7 @@ export default function GuidedTour() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (localStorage.getItem(STORAGE_KEY)) return;
-    // Start tour after a short delay
+    if (window.innerWidth < 768) return;
     const t = setTimeout(() => setStep(0), 600);
     return () => clearTimeout(t);
   }, []);
