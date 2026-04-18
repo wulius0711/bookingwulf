@@ -62,7 +62,8 @@ export const ModelName = {
   Request: 'Request',
   RequestMessage: 'RequestMessage',
   HotelExtra: 'HotelExtra',
-  AdminUser: 'AdminUser'
+  AdminUser: 'AdminUser',
+  EmailTemplate: 'EmailTemplate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +202,7 @@ export type ApartmentImageScalarFieldEnum = (typeof ApartmentImageScalarFieldEnu
 export const PriceSeasonScalarFieldEnum = {
   id: 'id',
   apartmentId: 'apartmentId',
+  name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
   pricePerNight: 'pricePerNight',
@@ -294,6 +296,19 @@ export const AdminUserScalarFieldEnum = {
 } as const
 
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
+export const EmailTemplateScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  type: 'type',
+  subject: 'subject',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum]
 
 
 export const SortOrder = {

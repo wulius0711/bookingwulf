@@ -93,6 +93,7 @@ export async function POST(req: Request) {
       where: { slug: hotelSlug },
       select: {
         id: true, name: true, email: true, accentColor: true,
+        emailTemplates: { select: { type: true, subject: true, body: true } },
         extras: {
           where: { isActive: true },
           select: { key: true, name: true, type: true, billingType: true, price: true },
@@ -183,6 +184,21 @@ export async function POST(req: Request) {
     // Build email content
     const accent = hotel.accentColor || '#111827';
     const apartmentNames = apartments.map(a => a.name).join(', ');
+
+    const tplVars: Record<string, string> = {
+      '{{guestName}}': firstname,
+      '{{guestLastName}}': lastname,
+      '{{hotelName}}': hotel.name,
+      '{{arrival}}': formatDate(arrival),
+      '{{departure}}': formatDate(departure),
+      '{{nights}}': String(nights),
+      '{{apartmentName}}': apartmentNames,
+      '{{bookingId}}': String(requestEntry.id),
+    };
+    function fillTpl(str: string) {
+      return Object.entries(tplVars).reduce((s, [k, v]) => s.replaceAll(k, v), str);
+    }
+    const getTpl = (type: string) => hotel.emailTemplates.find(t => t.type === type);
     const regularExtras = extrasLineItems.filter(e => e.type !== 'insurance');
     const insuranceExtras = extrasLineItems.filter(e => e.type === 'insurance');
     const declinedInsurance = !insuranceExtras.length && hotel.extras.some(e => e.type === 'insurance');
@@ -231,12 +247,17 @@ export async function POST(req: Request) {
       const fromEmail = getFromEmail();
 
       // Hotel notification
+      const hotelTpl = getTpl('request_hotel');
+      const hotelSubject = hotelTpl
+        ? fillTpl(hotelTpl.subject)
+        : bookingType === 'booking'
+          ? `Neue verbindliche Buchung #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`
+          : `Neue Buchungsanfrage #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`;
+
       await resend.emails.send({
         from: fromEmail,
         to: receiverEmail,
-        subject: bookingType === 'booking'
-          ? `Neue verbindliche Buchung #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`
-          : `Neue Buchungsanfrage #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
+        subject: hotelSubject,
         html: buildEmailHtml({
           hotelName: hotel.name,
           accentColor: accent,
@@ -262,12 +283,23 @@ export async function POST(req: Request) {
 
       // Guest confirmation
       try {
+        const guestTplType = bookingType === 'booking' ? 'booking_guest' : 'request_guest';
+        const guestTpl = getTpl(guestTplType);
+        const guestSubject = guestTpl
+          ? fillTpl(guestTpl.subject)
+          : bookingType === 'booking'
+            ? `Buchungsbestätigung bei ${hotel.name}`
+            : `Ihre Buchungsanfrage bei ${hotel.name}`;
+        const guestBodyText = guestTpl
+          ? fillTpl(guestTpl.body)
+          : bookingType === 'booking'
+            ? 'Ihre Buchung ist <strong>bestätigt</strong>. Wir freuen uns auf Ihren Besuch!'
+            : 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.';
+
         await resend.emails.send({
           from: fromEmail,
           to: email,
-          subject: bookingType === 'booking'
-            ? `Buchungsbestätigung bei ${hotel.name}`
-            : `Ihre Buchungsanfrage bei ${hotel.name}`,
+          subject: guestSubject,
           html: buildEmailHtml({
             hotelName: hotel.name,
             accentColor: accent,
@@ -276,9 +308,7 @@ export async function POST(req: Request) {
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
                 ${firstname ? `Hallo ${firstname},` : 'Hallo,'}<br/><br/>
-                ${bookingType === 'booking'
-                  ? 'Ihre Buchung ist <strong>bestätigt</strong>. Wir freuen uns auf Ihren Besuch!'
-                  : 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.'}
+                ${guestBodyText}
               </p>
               ${buildDivider()}
               ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}

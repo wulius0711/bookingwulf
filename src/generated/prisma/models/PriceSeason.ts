@@ -43,6 +43,7 @@ export type PriceSeasonSumAggregateOutputType = {
 export type PriceSeasonMinAggregateOutputType = {
   id: number | null
   apartmentId: number | null
+  name: string | null
   startDate: Date | null
   endDate: Date | null
   pricePerNight: number | null
@@ -54,6 +55,7 @@ export type PriceSeasonMinAggregateOutputType = {
 export type PriceSeasonMaxAggregateOutputType = {
   id: number | null
   apartmentId: number | null
+  name: string | null
   startDate: Date | null
   endDate: Date | null
   pricePerNight: number | null
@@ -65,6 +67,7 @@ export type PriceSeasonMaxAggregateOutputType = {
 export type PriceSeasonCountAggregateOutputType = {
   id: number
   apartmentId: number
+  name: number
   startDate: number
   endDate: number
   pricePerNight: number
@@ -92,6 +95,7 @@ export type PriceSeasonSumAggregateInputType = {
 export type PriceSeasonMinAggregateInputType = {
   id?: true
   apartmentId?: true
+  name?: true
   startDate?: true
   endDate?: true
   pricePerNight?: true
@@ -103,6 +107,7 @@ export type PriceSeasonMinAggregateInputType = {
 export type PriceSeasonMaxAggregateInputType = {
   id?: true
   apartmentId?: true
+  name?: true
   startDate?: true
   endDate?: true
   pricePerNight?: true
@@ -114,6 +119,7 @@ export type PriceSeasonMaxAggregateInputType = {
 export type PriceSeasonCountAggregateInputType = {
   id?: true
   apartmentId?: true
+  name?: true
   startDate?: true
   endDate?: true
   pricePerNight?: true
@@ -212,6 +218,7 @@ export type PriceSeasonGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type PriceSeasonGroupByOutputType = {
   id: number
   apartmentId: number
+  name: string | null
   startDate: Date
   endDate: Date
   pricePerNight: number
@@ -246,6 +253,7 @@ export type PriceSeasonWhereInput = {
   NOT?: Prisma.PriceSeasonWhereInput | Prisma.PriceSeasonWhereInput[]
   id?: Prisma.IntFilter<"PriceSeason"> | number
   apartmentId?: Prisma.IntFilter<"PriceSeason"> | number
+  name?: Prisma.StringNullableFilter<"PriceSeason"> | string | null
   startDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   endDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   pricePerNight?: Prisma.FloatFilter<"PriceSeason"> | number
@@ -258,6 +266,7 @@ export type PriceSeasonWhereInput = {
 export type PriceSeasonOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   pricePerNight?: Prisma.SortOrder
@@ -273,6 +282,7 @@ export type PriceSeasonWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PriceSeasonWhereInput[]
   NOT?: Prisma.PriceSeasonWhereInput | Prisma.PriceSeasonWhereInput[]
   apartmentId?: Prisma.IntFilter<"PriceSeason"> | number
+  name?: Prisma.StringNullableFilter<"PriceSeason"> | string | null
   startDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   endDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   pricePerNight?: Prisma.FloatFilter<"PriceSeason"> | number
@@ -285,6 +295,7 @@ export type PriceSeasonWhereUniqueInput = Prisma.AtLeast<{
 export type PriceSeasonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   pricePerNight?: Prisma.SortOrder
@@ -304,6 +315,7 @@ export type PriceSeasonScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PriceSeasonScalarWhereWithAggregatesInput | Prisma.PriceSeasonScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"PriceSeason"> | number
   apartmentId?: Prisma.IntWithAggregatesFilter<"PriceSeason"> | number
+  name?: Prisma.StringNullableWithAggregatesFilter<"PriceSeason"> | string | null
   startDate?: Prisma.DateTimeWithAggregatesFilter<"PriceSeason"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"PriceSeason"> | Date | string
   pricePerNight?: Prisma.FloatWithAggregatesFilter<"PriceSeason"> | number
@@ -313,6 +325,7 @@ export type PriceSeasonScalarWhereWithAggregatesInput = {
 }
 
 export type PriceSeasonCreateInput = {
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -325,6 +338,7 @@ export type PriceSeasonCreateInput = {
 export type PriceSeasonUncheckedCreateInput = {
   id?: number
   apartmentId: number
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -334,6 +348,7 @@ export type PriceSeasonUncheckedCreateInput = {
 }
 
 export type PriceSeasonUpdateInput = {
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -346,6 +361,7 @@ export type PriceSeasonUpdateInput = {
 export type PriceSeasonUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   apartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -357,6 +373,7 @@ export type PriceSeasonUncheckedUpdateInput = {
 export type PriceSeasonCreateManyInput = {
   id?: number
   apartmentId: number
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -366,6 +383,7 @@ export type PriceSeasonCreateManyInput = {
 }
 
 export type PriceSeasonUpdateManyMutationInput = {
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -377,6 +395,7 @@ export type PriceSeasonUpdateManyMutationInput = {
 export type PriceSeasonUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   apartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -398,6 +417,7 @@ export type PriceSeasonOrderByRelationAggregateInput = {
 export type PriceSeasonCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   pricePerNight?: Prisma.SortOrder
@@ -416,6 +436,7 @@ export type PriceSeasonAvgOrderByAggregateInput = {
 export type PriceSeasonMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   pricePerNight?: Prisma.SortOrder
@@ -427,6 +448,7 @@ export type PriceSeasonMaxOrderByAggregateInput = {
 export type PriceSeasonMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   apartmentId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   pricePerNight?: Prisma.SortOrder
@@ -493,6 +515,7 @@ export type FloatFieldUpdateOperationsInput = {
 }
 
 export type PriceSeasonCreateWithoutApartmentInput = {
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -503,6 +526,7 @@ export type PriceSeasonCreateWithoutApartmentInput = {
 
 export type PriceSeasonUncheckedCreateWithoutApartmentInput = {
   id?: number
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -543,6 +567,7 @@ export type PriceSeasonScalarWhereInput = {
   NOT?: Prisma.PriceSeasonScalarWhereInput | Prisma.PriceSeasonScalarWhereInput[]
   id?: Prisma.IntFilter<"PriceSeason"> | number
   apartmentId?: Prisma.IntFilter<"PriceSeason"> | number
+  name?: Prisma.StringNullableFilter<"PriceSeason"> | string | null
   startDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   endDate?: Prisma.DateTimeFilter<"PriceSeason"> | Date | string
   pricePerNight?: Prisma.FloatFilter<"PriceSeason"> | number
@@ -553,6 +578,7 @@ export type PriceSeasonScalarWhereInput = {
 
 export type PriceSeasonCreateManyApartmentInput = {
   id?: number
+  name?: string | null
   startDate: Date | string
   endDate: Date | string
   pricePerNight: number
@@ -562,6 +588,7 @@ export type PriceSeasonCreateManyApartmentInput = {
 }
 
 export type PriceSeasonUpdateWithoutApartmentInput = {
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -572,6 +599,7 @@ export type PriceSeasonUpdateWithoutApartmentInput = {
 
 export type PriceSeasonUncheckedUpdateWithoutApartmentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -582,6 +610,7 @@ export type PriceSeasonUncheckedUpdateWithoutApartmentInput = {
 
 export type PriceSeasonUncheckedUpdateManyWithoutApartmentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pricePerNight?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -595,6 +624,7 @@ export type PriceSeasonUncheckedUpdateManyWithoutApartmentInput = {
 export type PriceSeasonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   apartmentId?: boolean
+  name?: boolean
   startDate?: boolean
   endDate?: boolean
   pricePerNight?: boolean
@@ -607,6 +637,7 @@ export type PriceSeasonSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type PriceSeasonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   apartmentId?: boolean
+  name?: boolean
   startDate?: boolean
   endDate?: boolean
   pricePerNight?: boolean
@@ -619,6 +650,7 @@ export type PriceSeasonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 export type PriceSeasonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   apartmentId?: boolean
+  name?: boolean
   startDate?: boolean
   endDate?: boolean
   pricePerNight?: boolean
@@ -631,6 +663,7 @@ export type PriceSeasonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type PriceSeasonSelectScalar = {
   id?: boolean
   apartmentId?: boolean
+  name?: boolean
   startDate?: boolean
   endDate?: boolean
   pricePerNight?: boolean
@@ -639,7 +672,7 @@ export type PriceSeasonSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PriceSeasonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "apartmentId" | "startDate" | "endDate" | "pricePerNight" | "minStay" | "createdAt" | "updatedAt", ExtArgs["result"]["priceSeason"]>
+export type PriceSeasonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "apartmentId" | "name" | "startDate" | "endDate" | "pricePerNight" | "minStay" | "createdAt" | "updatedAt", ExtArgs["result"]["priceSeason"]>
 export type PriceSeasonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   apartment?: boolean | Prisma.ApartmentDefaultArgs<ExtArgs>
 }
@@ -658,6 +691,7 @@ export type $PriceSeasonPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     apartmentId: number
+    name: string | null
     startDate: Date
     endDate: Date
     pricePerNight: number
@@ -1090,6 +1124,7 @@ export interface Prisma__PriceSeasonClient<T, Null = never, ExtArgs extends runt
 export interface PriceSeasonFieldRefs {
   readonly id: Prisma.FieldRef<"PriceSeason", 'Int'>
   readonly apartmentId: Prisma.FieldRef<"PriceSeason", 'Int'>
+  readonly name: Prisma.FieldRef<"PriceSeason", 'String'>
   readonly startDate: Prisma.FieldRef<"PriceSeason", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"PriceSeason", 'DateTime'>
   readonly pricePerNight: Prisma.FieldRef<"PriceSeason", 'Float'>

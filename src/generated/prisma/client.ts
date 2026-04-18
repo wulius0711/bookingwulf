@@ -101,3 +101,8 @@ export type HotelExtra = Prisma.HotelExtraModel
  * 
  */
 export type AdminUser = Prisma.AdminUserModel
+/**
+ * Model EmailTemplate
+ * 
+ */
+export type EmailTemplate = Prisma.EmailTemplateModel

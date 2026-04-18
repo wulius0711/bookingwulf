@@ -29,6 +29,7 @@ model Hotel {
 
   settings        HotelSettings?
   settingsPresets HotelSettingsPreset[]
+  emailTemplates  EmailTemplate[]
   apartments      Apartment[]
   requests      Request[]
   adminUsers    AdminUser[]
@@ -253,4 +254,17 @@ model AdminUser {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model EmailTemplate {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  type      String   // request_guest | booking_guest | request_hotel
+  subject   String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hotelId, type])
 }
