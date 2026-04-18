@@ -209,7 +209,6 @@ type ToggleKey =
   | 'showPhoneField'
   | 'showMessageField'
   | 'enableImageSlider'
-  | 'instantBooking'
 
 const featureToggles: [ToggleKey, string][] = [
   ['showPrices', 'Preise anzeigen'],
@@ -218,7 +217,6 @@ const featureToggles: [ToggleKey, string][] = [
   ['showPhoneField', 'Telefonfeld anzeigen'],
   ['showMessageField', 'Nachrichtenfeld anzeigen'],
   ['enableImageSlider', 'Image Slider aktivieren'],
-  ['instantBooking', 'Sofortbuchung aktivieren'],
 ]
 
 /* ---------- PAGE ---------- */
