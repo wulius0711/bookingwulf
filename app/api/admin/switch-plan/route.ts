@@ -25,6 +25,17 @@ export async function POST(req: Request) {
       data: { plan: plan as PlanKey },
     });
 
+    if (plan === 'starter') {
+      await prisma.hotelSettings.updateMany({
+        where: { hotelId: session.hotelId },
+        data: {
+          accentColor: null, backgroundColor: null, cardBackground: null,
+          textColor: null, mutedTextColor: null, borderColor: null,
+          cardRadius: null, buttonRadius: null,
+        },
+      });
+    }
+
     return NextResponse.json({ ok: true, plan });
   } catch {
     return NextResponse.json({ error: 'Fehler beim Planwechsel.' }, { status: 500 });

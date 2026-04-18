@@ -101,6 +101,14 @@ export async function POST(req: Request) {
           where: { id: hotelId },
           data: { subscriptionStatus: 'cancelled', plan: 'starter' },
         });
+        await prisma.hotelSettings.updateMany({
+          where: { hotelId },
+          data: {
+            accentColor: null, backgroundColor: null, cardBackground: null,
+            textColor: null, mutedTextColor: null, borderColor: null,
+            cardRadius: null, buttonRadius: null,
+          },
+        });
         break;
       }
 
