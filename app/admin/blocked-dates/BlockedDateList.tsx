@@ -24,6 +24,7 @@ export default function BlockedDateList({
   const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
 
   async function handleDelete(id: number) {
+    if (!window.confirm('Sperrzeit wirklich löschen?')) return;
     setDeleting(id);
     const fd = new FormData();
     fd.append('id', String(id));

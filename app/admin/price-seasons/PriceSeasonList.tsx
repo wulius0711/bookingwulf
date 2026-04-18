@@ -26,6 +26,7 @@ export default function PriceSeasonList({
   const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
 
   async function handleDelete(id: number) {
+    if (!window.confirm('Preiszeitraum wirklich löschen?')) return;
     setDeleting(id);
     const fd = new FormData();
     fd.append('id', String(id));
