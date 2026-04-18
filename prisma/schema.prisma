@@ -159,6 +159,7 @@ model ApartmentImage {
 model PriceSeason {
   id            Int      @id @default(autoincrement())
   apartmentId   Int
+  name          String?
   startDate     DateTime
   endDate       DateTime
   pricePerNight Float

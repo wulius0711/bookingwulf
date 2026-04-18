@@ -18,6 +18,7 @@ export default async function NewPriceSeasonPage() {
 
     const session = await verifySession();
     const apartmentId = Number(formData.get('apartmentId'));
+    const name = String(formData.get('name') || '').trim() || null;
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const pricePerNight = Number(formData.get('pricePerNight'));
@@ -36,58 +37,108 @@ export default async function NewPriceSeasonPage() {
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
     await prisma.priceSeason.create({
-      data: { apartmentId, startDate, endDate, pricePerNight, minStay },
+      data: { apartmentId, name, startDate, endDate, pricePerNight, minStay },
     });
 
     redirect('/admin/price-seasons');
   }
 
+  const fieldStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '10px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: 8,
+    fontSize: 14,
+    background: '#ffffff',
+    color: '#111',
+    boxSizing: 'border-box',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: 12,
+    fontWeight: 700,
+    color: '#4b5563',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginBottom: 4,
+    display: 'block',
+  };
+
+  const fieldWrap: React.CSSProperties = {
+    display: 'grid',
+    gap: 4,
+  };
+
   return (
     <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
-      <h1>Neuer Preiszeitraum</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Neuer Preiszeitraum</h1>
 
-      <form
-        action={createSeason}
-        style={{ display: 'grid', gap: 12, marginTop: 20 }}
-      >
-        <select name="apartmentId" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
-          <option value="">Apartment wählen</option>
-          {apartments.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
+      <form action={createSeason} style={{ display: 'grid', gap: 16 }}>
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Apartment</label>
+          <select name="apartmentId" required style={fieldStyle}>
+            <option value="">Apartment wählen</option>
+            {apartments.map((a) => (
+              <option key={a.id} value={a.id}>{a.name}</option>
+            ))}
+          </select>
+        </div>
 
-        <input type="date" name="startDate" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }} />
-        <input type="date" name="endDate" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }} />
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Name / Bezeichnung</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="z. B. Hochsaison, Weihnachten …"
+            style={fieldStyle}
+          />
+        </div>
 
-        <input
-          type="number"
-          step="0.01"
-          name="pricePerNight"
-          placeholder="Preis pro Nacht"
-          required
-          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
-        />
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Von</label>
+          <input type="date" name="startDate" required style={fieldStyle} />
+        </div>
 
-        <input
-          type="number"
-          name="minStay"
-          placeholder="Mindestaufenthalt"
-          defaultValue={1}
-          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
-        />
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Bis</label>
+          <input type="date" name="endDate" required style={fieldStyle} />
+        </div>
+
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Preis pro Nacht (€)</label>
+          <input
+            type="number"
+            step="0.01"
+            name="pricePerNight"
+            placeholder="0.00"
+            required
+            style={fieldStyle}
+          />
+        </div>
+
+        <div style={fieldWrap}>
+          <label style={labelStyle}>Mindestaufenthalt (Nächte)</label>
+          <input
+            type="number"
+            name="minStay"
+            defaultValue={1}
+            min={1}
+            style={fieldStyle}
+          />
+        </div>
 
         <button
           type="submit"
           style={{
+            marginTop: 4,
             padding: '12px',
             background: '#111',
             color: '#fff',
             border: 'none',
             borderRadius: 8,
             cursor: 'pointer',
+            fontSize: 15,
+            fontWeight: 600,
           }}
         >
           Speichern
