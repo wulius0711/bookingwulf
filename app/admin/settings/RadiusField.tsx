@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function parseRadius(val: string | number | null | undefined): number {
   if (val == null) return 4;
   const n = parseInt(String(val));
-  return isNaN(n) ? 4 : Math.min(32, Math.max(0, n));
+  return isNaN(n) ? 4 : Math.max(0, n);
 }
 
 export function RadiusField({
@@ -20,6 +20,15 @@ export function RadiusField({
   labelStyle: React.CSSProperties;
 }) {
   const [value, setValue] = useState(parseRadius(defaultValue));
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Dispatch native input event so SettingsLivePreview picks up the change
+  useEffect(() => {
+    if (!inputRef.current) return;
+    const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
+    nativeSetter?.call(inputRef.current, `${value}px`);
+    inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+  }, [value]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
@@ -29,23 +38,30 @@ export function RadiusField({
         <input
           type="range"
           min={0}
-          max={32}
-          value={value}
+          max={100}
+          value={Math.min(value, 100)}
           onChange={(e) => setValue(Number(e.target.value))}
-          style={{ width: 100, accentColor: '#111' }}
+          style={{ width: 90, accentColor: '#111' }}
         />
         <input
+          ref={inputRef}
           name={name}
-          value={`${value}px`}
-          readOnly
+          defaultValue={`${value}px`}
+          onBlur={(e) => {
+            const n = parseInt(e.target.value);
+            setValue(isNaN(n) ? 0 : Math.min(999, Math.max(0, n)));
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+          }}
           style={{
-            width: 64,
+            width: 68,
             padding: '7px 10px',
             border: '1px solid #d1d5db',
             borderRadius: 8,
             fontSize: 13,
             fontFamily: 'monospace',
-            background: '#f9fafb',
+            background: '#fff',
             color: '#111',
             outline: 'none',
             textAlign: 'center',
