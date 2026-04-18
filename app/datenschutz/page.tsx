@@ -81,7 +81,7 @@ export default function DatenschutzPage() {
         <li><strong>Vercel Inc.</strong> (USA) — Hosting und Bereitstellung der Anwendung. Vercel verarbeitet Anfragedaten auf Edge-Servern weltweit. Datenschutzrichtlinie: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>vercel.com/legal/privacy-policy</a>.</li>
         <li><strong>Resend Inc.</strong> (USA) — E-Mail-Versand (Buchungsbestätigungen, Benachrichtigungen). Datenschutzrichtlinie: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>resend.com/legal/privacy-policy</a>.</li>
         <li><strong>Stripe Inc.</strong> (USA) — Zahlungsabwicklung. Stripe ist nach dem EU-US Data Privacy Framework zertifiziert.</li>
-        <li><strong>Sentry</strong> (USA) — Fehler-Monitoring zur Sicherstellung der Betriebsstabilität.</li>
+        <li><strong>Sentry Inc.</strong> (USA) — Fehler-Monitoring zur Sicherstellung der Betriebsstabilität. Dabei können technische Fehlerdaten (Stack Traces, Geräteinformationen, ggf. anonymisierte Nutzungsdaten) übertragen werden. Datenschutzrichtlinie: <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>sentry.io/privacy</a>.</li>
       </ul>
       <p style={p}>
         Für Datentransfers in die USA stützen wir uns auf das EU-US Data Privacy Framework, Standardvertragsklauseln (SCCs) sowie die Angemessenheitsbeschlüsse der EU-Kommission, soweit anwendbar.

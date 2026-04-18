@@ -266,6 +266,7 @@ export default function LandingPage() {
         <a href="/impressum" className="lp-footer-link">Impressum</a>
         <a href="/datenschutz" className="lp-footer-link">Datenschutz</a>
         <a href="/agb" className="lp-footer-link">AGB</a>
+        <a href="/avv" className="lp-footer-link">AVV</a>
       </footer>
     </div>
   );

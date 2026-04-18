@@ -72,7 +72,18 @@ export default function AGBPage() {
         Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Zugang zum Dienst einzuschränken, bis die ausstehenden Beträge beglichen sind.
       </p>
 
-      <h2 style={h2}>§ 6 Pflichten des Kunden</h2>
+      <h2 style={h2}>§ 6 Widerrufsrecht</h2>
+      <p style={p}>
+        Verbrauchern (natürlichen Personen, die bookingwulf zu Zwecken abschließen, die überwiegend nicht ihrer gewerblichen oder selbstständigen Tätigkeit zugerechnet werden können) steht grundsätzlich ein 14-tägiges Widerrufsrecht zu.
+      </p>
+      <p style={p}>
+        Da es sich bei bookingwulf um eine digitale Dienstleistung handelt und der Dienst auf ausdrücklichen Wunsch des Kunden sofort nach Vertragsschluss bereitgestellt wird, erlischt das Widerrufsrecht gemäß § 18 Abs. 1 Z 11 FAGG (AT) bzw. § 356 Abs. 5 BGB (DE), sobald der Anbieter mit der Ausführung des Vertrags begonnen hat und der Kunde ausdrücklich zugestimmt hat, dass er sein Widerrufsrecht verliert. Diese Zustimmung wird bei der Registrierung eingeholt.
+      </p>
+      <p style={p}>
+        Da bookingwulf in der Regel an gewerbliche Kunden (Hotelbetreiber) erbracht wird, findet das Widerrufsrecht für Verbraucher in den meisten Fällen keine Anwendung.
+      </p>
+
+      <h2 style={h2}>§ 7 Pflichten des Kunden</h2>
       <ul style={ul}>
         <li>Der Kunde ist für die Inhalte seiner Apartments (Beschreibungen, Bilder, Preise) selbst verantwortlich.</li>
         <li>Der Kunde stellt sicher, dass die über bookingwulf erhobenen Gästedaten gemäß DSGVO verarbeitet werden.</li>
@@ -81,7 +92,7 @@ export default function AGBPage() {
         <li>Zugangsdaten sind vertraulich zu behandeln.</li>
       </ul>
 
-      <h2 style={h2}>§ 7 Verfügbarkeit und Haftung</h2>
+      <h2 style={h2}>§ 8 Verfügbarkeit und Haftung</h2>
       <p style={p}>
         Der Anbieter bemüht sich um eine hohe Verfügbarkeit des Dienstes, kann jedoch keine ununterbrochene Erreichbarkeit garantieren. Wartungsarbeiten werden nach Möglichkeit angekündigt.
       </p>
@@ -89,7 +100,7 @@ export default function AGBPage() {
         Die Haftung des Anbieters beschränkt sich auf Vorsatz und grobe Fahrlässigkeit. Die Haftung für indirekte Schäden, entgangenen Gewinn und Datenverlust ist — soweit gesetzlich zulässig — ausgeschlossen. Die Haftung ist in jedem Fall auf den vom Kunden in den letzten 12 Monaten gezahlten Betrag begrenzt.
       </p>
 
-      <h2 style={h2}>§ 8 Kündigung</h2>
+      <h2 style={h2}>§ 9 Kündigung</h2>
       <p style={p}>
         Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen. Die Kündigung erfolgt über das Stripe-Kundenportal oder per E-Mail an office@wulius.at.
       </p>
@@ -100,17 +111,20 @@ export default function AGBPage() {
         Der Anbieter kann den Vertrag bei schwerwiegenden Verstößen gegen diese AGB fristlos kündigen.
       </p>
 
-      <h2 style={h2}>§ 9 Datenschutz</h2>
+      <h2 style={h2}>§ 10 Datenschutz und Auftragsverarbeitung</h2>
       <p style={p}>
-        Der Anbieter verarbeitet personenbezogene Daten gemäß der <Link href="/datenschutz" style={{ color: '#111', textDecoration: 'underline' }}>Datenschutzerklärung</Link>. Der Anbieter handelt in Bezug auf Gästedaten als Auftragsverarbeiter im Sinne von Art. 28 DSGVO. Die Details der Auftragsverarbeitung können auf Anfrage bereitgestellt werden.
+        Der Anbieter verarbeitet personenbezogene Daten gemäß der <Link href="/datenschutz" style={{ color: '#111', textDecoration: 'underline' }}>Datenschutzerklärung</Link>.
+      </p>
+      <p style={p}>
+        In Bezug auf Gästedaten, die über das Widget erhoben werden, handelt der Anbieter als Auftragsverarbeiter im Sinne von Art. 28 DSGVO. Der zwischen dem Anbieter und dem Kunden geltende Auftragsverarbeitungsvertrag (AVV) ist unter <Link href="/avv" style={{ color: '#111', textDecoration: 'underline' }}>bookingwulf.com/avv</Link> abrufbar und wird mit Abschluss des Nutzungsvertrags als vereinbart betrachtet.
       </p>
 
-      <h2 style={h2}>§ 10 Änderungen der AGB</h2>
+      <h2 style={h2}>§ 11 Änderungen der AGB</h2>
       <p style={p}>
         Der Anbieter behält sich vor, diese AGB mit angemessener Ankündigungsfrist zu ändern. Änderungen werden dem Kunden per E-Mail mitgeteilt. Widerspricht der Kunde nicht innerhalb von 30 Tagen, gelten die geänderten AGB als akzeptiert.
       </p>
 
-      <h2 style={h2}>§ 11 Schlussbestimmungen</h2>
+      <h2 style={h2}>§ 12 Schlussbestimmungen</h2>
       <p style={p}>
         Es gilt österreichisches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist Wien, Österreich.
       </p>
