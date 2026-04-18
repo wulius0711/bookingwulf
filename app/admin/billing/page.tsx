@@ -163,7 +163,7 @@ export default function BillingPage() {
           <span style={{ fontSize: 14, color: billingInterval === 'year' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
             Jährlich
             {billingInterval === 'year' && (
-              <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 700 }}>2 Monate gratis</span>
+              <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 700 }}>spare 10%</span>
             )}
           </span>
         </div>
