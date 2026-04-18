@@ -100,13 +100,7 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
           <input type="date" name="endDate" required defaultValue={fmt(range.endDate)} style={fieldStyle} />
         </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Typ</label>
-          <select name="type" defaultValue={range.type} style={fieldStyle}>
-            <option value="manual">Manuell</option>
-            <option value="booking">Booking</option>
-          </select>
-        </div>
+        <input type="hidden" name="type" value="manual" />
 
         <div style={fieldWrap}>
           <label style={labelStyle}>Notiz</label>
