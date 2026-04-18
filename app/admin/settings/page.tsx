@@ -458,15 +458,24 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* PRESETS */}
-            {fullBranding && (
-              <div style={sectionStyle}>
-                <div>
-                  <h2 style={sectionTitleStyle}>Design-Presets</h2>
-                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
-                </div>
-                <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
+            <div style={{ ...sectionStyle, position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
+              <div>
+                <h2 style={sectionTitleStyle}>Design-Presets</h2>
+                <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
               </div>
-            )}
+              {fullBranding
+                ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
+                : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
+              }
+              {!fullBranding && (
+                <div
+                  title="Ab Pro Plan verfügbar"
+                  style={{ position: 'absolute', inset: 0, cursor: 'not-allowed', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: '4px 0', fontSize: 12, color: '#9ca3af' }}
+                >
+                  🔒 Pro
+                </div>
+              )}
+            </div>
 
             {/* FEATURES */}
             <div style={sectionStyle}>
