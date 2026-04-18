@@ -2157,9 +2157,7 @@ sortedApartments.forEach((ap) => {
               e.preventDefault();
               e.stopPropagation();
               if (!validateStep(state.step)) return;
-              let next = state.step + 1;
-              if (next === 3 && !state.settings.showExtrasStep) next = 4;
-              state.step = Math.min(4, next);
+              state.step = Math.min(4, state.step + 1);
               renderAll();
               window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
             });
@@ -2313,7 +2311,8 @@ sortedApartments.forEach((ap) => {
           if (!wrap) return;
           wrap.innerHTML = "";
 
-          const regularExtras = state.availableExtras.filter((ex) => ex.type !== "insurance");
+          const allRegularExtras = state.availableExtras.filter((ex) => ex.type !== "insurance");
+          const regularExtras = state.settings.showExtrasStep ? allRegularExtras : [];
           const insuranceExtras = state.availableExtras.filter((ex) => ex.type === "insurance");
 
           if (!regularExtras.length && !insuranceExtras.length) {
@@ -2768,9 +2767,7 @@ sortedApartments.forEach((ap) => {
         document.querySelectorAll("[data-next]").forEach((btn) => {
           btn.addEventListener("click", () => {
             if (!validateStep(state.step)) return;
-            let next = state.step + 1;
-            if (next === 3 && !state.settings.showExtrasStep) next = 4;
-            state.step = Math.min(4, next);
+            state.step = Math.min(4, state.step + 1);
             renderAll();
             window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
           });
@@ -2778,9 +2775,7 @@ sortedApartments.forEach((ap) => {
 
         document.querySelectorAll("[data-prev]").forEach((btn) => {
           btn.addEventListener("click", () => {
-            let prev = state.step - 1;
-            if (prev === 3 && !state.settings.showExtrasStep) prev = 2;
-            state.step = Math.max(1, prev);
+            state.step = Math.max(1, state.step - 1);
             renderAll();
             window.scrollTo({ top: 0, behavior: "smooth" });
           });
@@ -2788,8 +2783,7 @@ sortedApartments.forEach((ap) => {
 
         document.querySelectorAll(".step").forEach((el) => {
           el.addEventListener("click", () => {
-            let target = Number(el.dataset.step);
-            if (target === 3 && !state.settings.showExtrasStep) return;
+            const target = Number(el.dataset.step);
             if (target <= state.step || validateStep(state.step)) {
               state.step = target;
               renderAll();
