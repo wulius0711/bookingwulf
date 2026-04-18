@@ -204,7 +204,6 @@ export default function BillingPage() {
                   flexDirection: 'column' as const,
                   gap: 16,
                   position: 'relative',
-                  opacity: isCurrent ? 0.7 : 1,
                 }}
               >
                 {key === 'pro' && (

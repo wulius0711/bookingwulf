@@ -23,6 +23,15 @@ export async function POST(req: Request) {
     if (!hotel) return NextResponse.json({ error: 'Hotel nicht gefunden.' }, { status: 404 });
 
     let customerId = hotel.stripeCustomerId;
+    if (customerId) {
+      // Verify the customer exists in this Stripe environment (live vs test)
+      try {
+        await stripe.customers.retrieve(customerId);
+      } catch {
+        customerId = null;
+        await prisma.hotel.update({ where: { id: hotelId }, data: { stripeCustomerId: null } });
+      }
+    }
     if (!customerId) {
       const customer = await stripe.customers.create({
         name: hotel.name,
