@@ -51,6 +51,8 @@ export type HotelSettingsMinAggregateOutputType = {
   showMessageField: boolean | null
   enableImageSlider: boolean | null
   enableLightbox: boolean | null
+  instantBooking: boolean | null
+  enableInstantBooking: boolean | null
   accentColor: string | null
   backgroundColor: string | null
   cardBackground: string | null
@@ -74,6 +76,8 @@ export type HotelSettingsMaxAggregateOutputType = {
   showMessageField: boolean | null
   enableImageSlider: boolean | null
   enableLightbox: boolean | null
+  instantBooking: boolean | null
+  enableInstantBooking: boolean | null
   accentColor: string | null
   backgroundColor: string | null
   cardBackground: string | null
@@ -97,6 +101,8 @@ export type HotelSettingsCountAggregateOutputType = {
   showMessageField: number
   enableImageSlider: number
   enableLightbox: number
+  instantBooking: number
+  enableInstantBooking: number
   accentColor: number
   backgroundColor: number
   cardBackground: number
@@ -136,6 +142,8 @@ export type HotelSettingsMinAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableLightbox?: true
+  instantBooking?: true
+  enableInstantBooking?: true
   accentColor?: true
   backgroundColor?: true
   cardBackground?: true
@@ -159,6 +167,8 @@ export type HotelSettingsMaxAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableLightbox?: true
+  instantBooking?: true
+  enableInstantBooking?: true
   accentColor?: true
   backgroundColor?: true
   cardBackground?: true
@@ -182,6 +192,8 @@ export type HotelSettingsCountAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableLightbox?: true
+  instantBooking?: true
+  enableInstantBooking?: true
   accentColor?: true
   backgroundColor?: true
   cardBackground?: true
@@ -292,6 +304,8 @@ export type HotelSettingsGroupByOutputType = {
   showMessageField: boolean
   enableImageSlider: boolean
   enableLightbox: boolean
+  instantBooking: boolean
+  enableInstantBooking: boolean
   accentColor: string | null
   backgroundColor: string | null
   cardBackground: string | null
@@ -338,6 +352,8 @@ export type HotelSettingsWhereInput = {
   showMessageField?: Prisma.BoolFilter<"HotelSettings"> | boolean
   enableImageSlider?: Prisma.BoolFilter<"HotelSettings"> | boolean
   enableLightbox?: Prisma.BoolFilter<"HotelSettings"> | boolean
+  instantBooking?: Prisma.BoolFilter<"HotelSettings"> | boolean
+  enableInstantBooking?: Prisma.BoolFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   cardBackground?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
@@ -362,6 +378,8 @@ export type HotelSettingsOrderByWithRelationInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableLightbox?: Prisma.SortOrder
+  instantBooking?: Prisma.SortOrder
+  enableInstantBooking?: Prisma.SortOrder
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundColor?: Prisma.SortOrderInput | Prisma.SortOrder
   cardBackground?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -389,6 +407,8 @@ export type HotelSettingsWhereUniqueInput = Prisma.AtLeast<{
   showMessageField?: Prisma.BoolFilter<"HotelSettings"> | boolean
   enableImageSlider?: Prisma.BoolFilter<"HotelSettings"> | boolean
   enableLightbox?: Prisma.BoolFilter<"HotelSettings"> | boolean
+  instantBooking?: Prisma.BoolFilter<"HotelSettings"> | boolean
+  enableInstantBooking?: Prisma.BoolFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
   cardBackground?: Prisma.StringNullableFilter<"HotelSettings"> | string | null
@@ -413,6 +433,8 @@ export type HotelSettingsOrderByWithAggregationInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableLightbox?: Prisma.SortOrder
+  instantBooking?: Prisma.SortOrder
+  enableInstantBooking?: Prisma.SortOrder
   accentColor?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundColor?: Prisma.SortOrderInput | Prisma.SortOrder
   cardBackground?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -444,6 +466,8 @@ export type HotelSettingsScalarWhereWithAggregatesInput = {
   showMessageField?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
   enableImageSlider?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
   enableLightbox?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
+  instantBooking?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
+  enableInstantBooking?: Prisma.BoolWithAggregatesFilter<"HotelSettings"> | boolean
   accentColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
   backgroundColor?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
   cardBackground?: Prisma.StringNullableWithAggregatesFilter<"HotelSettings"> | string | null
@@ -465,6 +489,8 @@ export type HotelSettingsCreateInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
   cardBackground?: string | null
@@ -489,6 +515,8 @@ export type HotelSettingsUncheckedCreateInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
   cardBackground?: string | null
@@ -510,6 +538,8 @@ export type HotelSettingsUpdateInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,6 +564,8 @@ export type HotelSettingsUncheckedUpdateInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -557,6 +589,8 @@ export type HotelSettingsCreateManyInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
   cardBackground?: string | null
@@ -578,6 +612,8 @@ export type HotelSettingsUpdateManyMutationInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -601,6 +637,8 @@ export type HotelSettingsUncheckedUpdateManyInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -629,6 +667,8 @@ export type HotelSettingsCountOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableLightbox?: Prisma.SortOrder
+  instantBooking?: Prisma.SortOrder
+  enableInstantBooking?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   cardBackground?: Prisma.SortOrder
@@ -659,6 +699,8 @@ export type HotelSettingsMaxOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableLightbox?: Prisma.SortOrder
+  instantBooking?: Prisma.SortOrder
+  enableInstantBooking?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   cardBackground?: Prisma.SortOrder
@@ -682,6 +724,8 @@ export type HotelSettingsMinOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableLightbox?: Prisma.SortOrder
+  instantBooking?: Prisma.SortOrder
+  enableInstantBooking?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
   backgroundColor?: Prisma.SortOrder
   cardBackground?: Prisma.SortOrder
@@ -750,6 +794,8 @@ export type HotelSettingsCreateWithoutHotelInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
   cardBackground?: string | null
@@ -772,6 +818,8 @@ export type HotelSettingsUncheckedCreateWithoutHotelInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: string | null
   backgroundColor?: string | null
   cardBackground?: string | null
@@ -809,6 +857,8 @@ export type HotelSettingsUpdateWithoutHotelInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -831,6 +881,8 @@ export type HotelSettingsUncheckedUpdateWithoutHotelInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableLightbox?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  instantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBackground?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -856,6 +908,8 @@ export type HotelSettingsSelect<ExtArgs extends runtime.Types.Extensions.Interna
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
   cardBackground?: boolean
@@ -880,6 +934,8 @@ export type HotelSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
   cardBackground?: boolean
@@ -904,6 +960,8 @@ export type HotelSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
   cardBackground?: boolean
@@ -928,6 +986,8 @@ export type HotelSettingsSelectScalar = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableLightbox?: boolean
+  instantBooking?: boolean
+  enableInstantBooking?: boolean
   accentColor?: boolean
   backgroundColor?: boolean
   cardBackground?: boolean
@@ -940,7 +1000,7 @@ export type HotelSettingsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "accentColor" | "backgroundColor" | "cardBackground" | "textColor" | "mutedTextColor" | "borderColor" | "cardRadius" | "buttonRadius" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
+export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "instantBooking" | "enableInstantBooking" | "accentColor" | "backgroundColor" | "cardBackground" | "textColor" | "mutedTextColor" | "borderColor" | "cardRadius" | "buttonRadius" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
 export type HotelSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -967,6 +1027,8 @@ export type $HotelSettingsPayload<ExtArgs extends runtime.Types.Extensions.Inter
     showMessageField: boolean
     enableImageSlider: boolean
     enableLightbox: boolean
+    instantBooking: boolean
+    enableInstantBooking: boolean
     accentColor: string | null
     backgroundColor: string | null
     cardBackground: string | null
@@ -1411,6 +1473,8 @@ export interface HotelSettingsFieldRefs {
   readonly showMessageField: Prisma.FieldRef<"HotelSettings", 'Boolean'>
   readonly enableImageSlider: Prisma.FieldRef<"HotelSettings", 'Boolean'>
   readonly enableLightbox: Prisma.FieldRef<"HotelSettings", 'Boolean'>
+  readonly instantBooking: Prisma.FieldRef<"HotelSettings", 'Boolean'>
+  readonly enableInstantBooking: Prisma.FieldRef<"HotelSettings", 'Boolean'>
   readonly accentColor: Prisma.FieldRef<"HotelSettings", 'String'>
   readonly backgroundColor: Prisma.FieldRef<"HotelSettings", 'String'>
   readonly cardBackground: Prisma.FieldRef<"HotelSettings", 'String'>

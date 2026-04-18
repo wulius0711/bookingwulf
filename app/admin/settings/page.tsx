@@ -3,8 +3,9 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
-import { hasFullBranding } from '@/src/lib/plan-gates';
+import { hasFullBranding, hasPlanAccess } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
+import SettingsPresets from './SettingsPresets';
 
 export const dynamic = 'force-dynamic';
 
@@ -248,7 +249,7 @@ export default async function Page({ searchParams }: PageProps) {
   const selected = selectedId
     ? await prisma.hotel.findUnique({
         where: { id: selectedId },
-        include: { settings: true },
+        include: { settings: true, settingsPresets: { orderBy: { createdAt: 'asc' } } },
       })
     : null;
 
@@ -454,6 +455,17 @@ export default async function Page({ searchParams }: PageProps) {
                 )}
               </div>
             </div>
+
+            {/* PRESETS */}
+            {fullBranding && (
+              <div style={sectionStyle}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Design-Presets</h2>
+                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
+                </div>
+                <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
+              </div>
+            )}
 
             {/* FEATURES */}
             <div style={sectionStyle}>

@@ -28,6 +28,11 @@ export type Hotel = Prisma.HotelModel
  */
 export type HotelSettings = Prisma.HotelSettingsModel
 /**
+ * Model HotelSettingsPreset
+ * 
+ */
+export type HotelSettingsPreset = Prisma.HotelSettingsPresetModel
+/**
  * Model Apartment
  * 
  */

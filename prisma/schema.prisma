@@ -27,8 +27,9 @@ model Hotel {
   subscriptionStatus     String    @default("inactive") // inactive | trialing | active | past_due | cancelled
   trialEndsAt            DateTime?
 
-  settings      HotelSettings?
-  apartments    Apartment[]
+  settings        HotelSettings?
+  settingsPresets HotelSettingsPreset[]
+  apartments      Apartment[]
   requests      Request[]
   adminUsers    AdminUser[]
   blockedRanges BlockedRange[]
@@ -71,6 +72,24 @@ model HotelSettings {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model HotelSettingsPreset {
+  id      Int   @id @default(autoincrement())
+  hotelId Int
+  hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  name             String
+  accentColor      String?
+  backgroundColor  String?
+  cardBackground   String?
+  textColor        String?
+  mutedTextColor   String?
+  borderColor      String?
+  cardRadius       Int?
+  buttonRadius     Int?
+
+  createdAt DateTime @default(now())
 }
 
 model Apartment {

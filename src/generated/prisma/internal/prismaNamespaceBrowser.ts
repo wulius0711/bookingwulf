@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
+  HotelSettingsPreset: 'HotelSettingsPreset',
   Apartment: 'Apartment',
   IcalFeed: 'IcalFeed',
   ApartmentImage: 'ApartmentImage',
@@ -113,6 +114,8 @@ export const HotelSettingsScalarFieldEnum = {
   showMessageField: 'showMessageField',
   enableImageSlider: 'enableImageSlider',
   enableLightbox: 'enableLightbox',
+  instantBooking: 'instantBooking',
+  enableInstantBooking: 'enableInstantBooking',
   accentColor: 'accentColor',
   backgroundColor: 'backgroundColor',
   cardBackground: 'cardBackground',
@@ -126,6 +129,24 @@ export const HotelSettingsScalarFieldEnum = {
 } as const
 
 export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
+
+
+export const HotelSettingsPresetScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  name: 'name',
+  accentColor: 'accentColor',
+  backgroundColor: 'backgroundColor',
+  cardBackground: 'cardBackground',
+  textColor: 'textColor',
+  mutedTextColor: 'mutedTextColor',
+  borderColor: 'borderColor',
+  cardRadius: 'cardRadius',
+  buttonRadius: 'buttonRadius',
+  createdAt: 'createdAt'
+} as const
+
+export type HotelSettingsPresetScalarFieldEnum = (typeof HotelSettingsPresetScalarFieldEnum)[keyof typeof HotelSettingsPresetScalarFieldEnum]
 
 
 export const ApartmentScalarFieldEnum = {

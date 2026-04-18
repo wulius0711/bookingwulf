@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
+  HotelSettingsPreset: 'HotelSettingsPreset',
   Apartment: 'Apartment',
   IcalFeed: 'IcalFeed',
   ApartmentImage: 'ApartmentImage',
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser"
+    modelProps: "hotel" | "hotelSettings" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,6 +560,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HotelSettingsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HotelSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    HotelSettingsPreset: {
+      payload: Prisma.$HotelSettingsPresetPayload<ExtArgs>
+      fields: Prisma.HotelSettingsPresetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HotelSettingsPresetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HotelSettingsPresetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        findFirst: {
+          args: Prisma.HotelSettingsPresetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HotelSettingsPresetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        findMany: {
+          args: Prisma.HotelSettingsPresetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>[]
+        }
+        create: {
+          args: Prisma.HotelSettingsPresetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        createMany: {
+          args: Prisma.HotelSettingsPresetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HotelSettingsPresetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>[]
+        }
+        delete: {
+          args: Prisma.HotelSettingsPresetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        update: {
+          args: Prisma.HotelSettingsPresetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        deleteMany: {
+          args: Prisma.HotelSettingsPresetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HotelSettingsPresetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HotelSettingsPresetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>[]
+        }
+        upsert: {
+          args: Prisma.HotelSettingsPresetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotelSettingsPresetPayload>
+        }
+        aggregate: {
+          args: Prisma.HotelSettingsPresetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHotelSettingsPreset>
+        }
+        groupBy: {
+          args: Prisma.HotelSettingsPresetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelSettingsPresetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HotelSettingsPresetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotelSettingsPresetCountAggregateOutputType> | number
         }
       }
     }
@@ -1300,6 +1375,8 @@ export const HotelSettingsScalarFieldEnum = {
   showMessageField: 'showMessageField',
   enableImageSlider: 'enableImageSlider',
   enableLightbox: 'enableLightbox',
+  instantBooking: 'instantBooking',
+  enableInstantBooking: 'enableInstantBooking',
   accentColor: 'accentColor',
   backgroundColor: 'backgroundColor',
   cardBackground: 'cardBackground',
@@ -1313,6 +1390,24 @@ export const HotelSettingsScalarFieldEnum = {
 } as const
 
 export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
+
+
+export const HotelSettingsPresetScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  name: 'name',
+  accentColor: 'accentColor',
+  backgroundColor: 'backgroundColor',
+  cardBackground: 'cardBackground',
+  textColor: 'textColor',
+  mutedTextColor: 'mutedTextColor',
+  borderColor: 'borderColor',
+  cardRadius: 'cardRadius',
+  buttonRadius: 'buttonRadius',
+  createdAt: 'createdAt'
+} as const
+
+export type HotelSettingsPresetScalarFieldEnum = (typeof HotelSettingsPresetScalarFieldEnum)[keyof typeof HotelSettingsPresetScalarFieldEnum]
 
 
 export const ApartmentScalarFieldEnum = {
@@ -1696,6 +1791,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   hotel?: Prisma.HotelOmit
   hotelSettings?: Prisma.HotelSettingsOmit
+  hotelSettingsPreset?: Prisma.HotelSettingsPresetOmit
   apartment?: Prisma.ApartmentOmit
   icalFeed?: Prisma.IcalFeedOmit
   apartmentImage?: Prisma.ApartmentImageOmit
