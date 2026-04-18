@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
+import { RadiusField } from './RadiusField';
 import { hasFullBranding, hasPlanAccess } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
@@ -386,28 +387,24 @@ export default async function Page({ searchParams }: PageProps) {
 
               <div style={{ position: 'relative' }}>
                 <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
-                  <div className="settings-row" style={rowStyle}>
-                    <label style={labelStyle}>Card Radius</label>
-                    <input
-                      name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
-                      defaultValue={selected.settings?.cardRadius ?? '4px'}
-                      style={{ ...inputStyle, maxWidth: 180 }}
-                    />
-                  </div>
+                  <RadiusField
+                    label="Card Radius"
+                    name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
+                    defaultValue={selected.settings?.cardRadius}
+                    labelStyle={labelStyle}
+                  />
                 </div>
                 {!fullBranding && <ProLockOverlay />}
               </div>
 
               <div style={{ position: 'relative' }}>
                 <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
-                  <div className="settings-row" style={rowStyle}>
-                    <label style={labelStyle}>Button Radius</label>
-                    <input
-                      name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
-                      defaultValue={selected.settings?.buttonRadius ?? '4px'}
-                      style={{ ...inputStyle, maxWidth: 180 }}
-                    />
-                  </div>
+                  <RadiusField
+                    label="Button Radius"
+                    name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
+                    defaultValue={selected.settings?.buttonRadius}
+                    labelStyle={labelStyle}
+                  />
                 </div>
                 {!fullBranding && <ProLockOverlay />}
               </div>
