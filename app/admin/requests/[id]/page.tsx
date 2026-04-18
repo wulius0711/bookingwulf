@@ -459,7 +459,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
       {/* ─── Nachrichtenthread ─── */}
       {!canUseMessages ? (
         <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: '#fafafa', fontSize: 13, color: '#9ca3af' }}>
-          🔒 Direktnachrichten sind ab dem <strong style={{ color: '#111' }}>Pro-Plan</strong> verfügbar.{' '}
+          🔒 Direktnachrichten sind ab dem <strong style={{ color: '#111' }}>Business-Plan</strong> verfügbar.{' '}
           <a href="/admin/billing" style={{ color: '#111', fontWeight: 600 }}>Jetzt upgraden →</a>
         </div>
       ) : (
