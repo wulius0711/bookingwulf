@@ -281,7 +281,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <select
                   name="hotel"
                   defaultValue={String(selected.id)}
-                  style={{ ...inputStyle, minWidth: 240, maxWidth: 320 }}
+                  style={{ ...inputStyle, width: '100%', maxWidth: 320 }}
                 >
                   {hotels.map((hotelItem) => (
                     <option key={hotelItem.id} value={hotelItem.id}>

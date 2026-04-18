@@ -216,7 +216,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               {periodDef.label}{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ''}
             </p>
           </div>
-          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
