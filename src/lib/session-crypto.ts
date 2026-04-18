@@ -18,7 +18,7 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
     return await new SignJWT({ ...payload })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
-      .setExpirationTime('7d')
+      .setExpirationTime('1d')
       .sign(getSecret())
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)

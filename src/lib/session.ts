@@ -6,7 +6,7 @@ import { encrypt, decrypt, type SessionPayload } from './session-crypto'
 export type { SessionPayload } from './session-crypto'
 export { encrypt, decrypt }
 
-const SESSION_MS = 7 * 24 * 60 * 60 * 1000
+const SESSION_MS = 24 * 60 * 60 * 1000
 
 export async function createSession(data: SessionPayload): Promise<void> {
   const expiresAt = new Date(Date.now() + SESSION_MS)
