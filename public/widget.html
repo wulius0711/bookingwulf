@@ -1910,16 +1910,6 @@
             return;
           }
 
-          const allNotMatching = state.apartments.length > 0 &&
-            state.apartments.every((a) => !isApartmentMatchingGuests(a));
-
-          if (allNotMatching) {
-            const hint = document.createElement("div");
-            hint.style.cssText = "padding:12px 16px;margin-bottom:16px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.5;";
-            hint.textContent = `Für ${state.adults} Erwachsene${state.children ? " + " + state.children + " Kinder" : ""} ist kein einzelnes Apartment ausreichend. Du kannst mehrere Apartments kombinieren.`;
-            wrap.appendChild(hint);
-          }
-
           const sortedApartments = [...state.apartments].sort((a, b) => {
   const statusA = getApartmentStatus(a);
   const statusB = getApartmentStatus(b);
@@ -1992,7 +1982,7 @@ sortedApartments.forEach((ap) => {
 
             const div = document.createElement("div");
             div.className = `apt-card ${selected ? "selected" : ""} ${
-              status.type === "unavailable" || (status.type === "not-matching" && !allNotMatching)
+              status.type === "unavailable" || status.type === "not-matching"
                 ? "disabled"
                 : ""
             }`;
@@ -2080,7 +2070,7 @@ sortedApartments.forEach((ap) => {
                   <div class="apt-actions">
                     ${priceHtml}
                     ${
-                      status.type === "available" || (allNotMatching && status.type === "not-matching")
+                      status.type === "available"
                         ? `<button type="button" class="apt-select-btn ${
                             selected ? "remove" : ""
                           }" data-select="${ap.id}">
@@ -2436,17 +2426,6 @@ sortedApartments.forEach((ap) => {
               showMessage(
                 "error",
                 "Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar."
-              );
-              return false;
-            }
-
-            const selectedApts = state.apartments.filter((a) => state.selectedApartmentIds.includes(a.id));
-            const combinedAdults = selectedApts.reduce((s, a) => s + Number(a.maxAdults || 0), 0);
-            const combinedChildren = selectedApts.reduce((s, a) => s + Number(a.maxChildren || 0), 0);
-            if (state.adults > combinedAdults || state.children > combinedChildren) {
-              showMessage(
-                "error",
-                `Die gewählten Apartments bieten Platz für max. ${combinedAdults} Erwachsene${combinedChildren ? " und " + combinedChildren + " Kinder" : ""}. Bitte weitere Apartments hinzufügen.`
               );
               return false;
             }
