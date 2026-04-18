@@ -13,15 +13,27 @@ type Season = {
 };
 
 export default function PriceSeasonList({
-  seasons,
+  seasons: initial,
   deleteSeason,
 }: {
   seasons: Season[];
   deleteSeason: (formData: FormData) => Promise<void>;
 }) {
+  const [seasons, setSeasons] = useState<Season[]>(initial);
   const [open, setOpen] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState<number | null>(null);
 
   const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
+
+  async function handleDelete(id: number) {
+    setDeleting(id);
+    const fd = new FormData();
+    fd.append('id', String(id));
+    await deleteSeason(fd);
+    setSeasons((prev) => prev.filter((s) => s.id !== id));
+    setOpen(null);
+    setDeleting(null);
+  }
 
   return (
     <div style={{ display: 'grid', gap: 8 }}>
@@ -30,14 +42,8 @@ export default function PriceSeasonList({
         return (
           <div
             key={s.id}
-            style={{
-              border: '1px solid #e5e7eb',
-              borderRadius: 12,
-              background: '#fff',
-              overflow: 'hidden',
-            }}
+            style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', overflow: 'hidden' }}
           >
-            {/* Header row */}
             <button
               type="button"
               onClick={() => setOpen(isOpen ? null : s.id)}
@@ -62,12 +68,9 @@ export default function PriceSeasonList({
                   {s.apartment?.name} · {fmt(s.startDate)} – {fmt(s.endDate)}
                 </span>
               </div>
-              <span style={{ fontSize: 13, color: '#9ca3af', flexShrink: 0 }}>
-                {isOpen ? '▲' : '▼'}
-              </span>
+              <span style={{ fontSize: 13, color: '#9ca3af', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
             </button>
 
-            {/* Expandable details */}
             {isOpen && (
               <div style={{ padding: '0 18px 18px', borderTop: '1px solid #f3f4f6' }}>
                 <div style={{ display: 'grid', gap: 6, marginTop: 14, fontSize: 14, color: '#374151' }}>
@@ -96,15 +99,14 @@ export default function PriceSeasonList({
                   >
                     Bearbeiten
                   </a>
-                  <form action={deleteSeason}>
-                    <input type="hidden" name="id" value={s.id} />
-                    <button
-                      type="submit"
-                      style={{ padding: '6px 14px', border: '1px solid #fecaca', background: '#fff', color: '#dc2626', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
-                    >
-                      Löschen
-                    </button>
-                  </form>
+                  <button
+                    type="button"
+                    disabled={deleting === s.id}
+                    onClick={() => handleDelete(s.id)}
+                    style={{ padding: '6px 14px', border: '1px solid #fecaca', background: '#fff', color: '#dc2626', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, opacity: deleting === s.id ? 0.5 : 1 }}
+                  >
+                    {deleting === s.id ? '…' : 'Löschen'}
+                  </button>
                 </div>
               </div>
             )}
