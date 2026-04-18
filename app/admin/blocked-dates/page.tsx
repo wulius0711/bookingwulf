@@ -26,11 +26,13 @@ async function deleteBlockedDate(formData: FormData) {
 export default async function BlockedDatesPage() {
   const session = await verifySession();
 
+  const isSuperAdmin = session.hotelId === null;
+
   const ranges = await prisma.blockedRange.findMany({
     where: session.hotelId !== null
       ? { apartment: { hotelId: session.hotelId } }
       : undefined,
-    include: { apartment: true },
+    include: { apartment: { include: { hotel: { select: { name: true } } } } },
     orderBy: { startDate: 'asc' },
   });
 
@@ -55,7 +57,7 @@ export default async function BlockedDatesPage() {
           </a>
         </div>
       ) : (
-        <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} />
+        <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} isSuperAdmin={isSuperAdmin} />
       )}
     </main>
   );

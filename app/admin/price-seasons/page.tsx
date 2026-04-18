@@ -26,11 +26,13 @@ async function deleteSeason(formData: FormData) {
 export default async function PriceSeasonsPage() {
   const session = await verifySession();
 
+  const isSuperAdmin = session.hotelId === null;
+
   const seasons = await prisma.priceSeason.findMany({
     where: session.hotelId !== null
       ? { apartment: { hotelId: session.hotelId } }
       : undefined,
-    include: { apartment: true },
+    include: { apartment: { include: { hotel: { select: { name: true } } } } },
     orderBy: { startDate: 'asc' },
   });
 
@@ -57,7 +59,7 @@ export default async function PriceSeasonsPage() {
         </div>
       ) : (
         <div style={{ marginTop: 20 }}>
-          <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} />
+          <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} isSuperAdmin={isSuperAdmin} />
         </div>
       )}
     </main>

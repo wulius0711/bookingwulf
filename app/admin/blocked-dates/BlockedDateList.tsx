@@ -8,15 +8,17 @@ type Range = {
   endDate: Date;
   type: string;
   note: string | null;
-  apartment: { name: string; [key: string]: unknown } | null;
+  apartment: { name: string; hotel?: { name: string } | null; [key: string]: unknown } | null;
 };
 
 export default function BlockedDateList({
   ranges: initial,
   deleteBlockedDate,
+  isSuperAdmin,
 }: {
   ranges: Range[];
   deleteBlockedDate: (formData: FormData) => Promise<void>;
+  isSuperAdmin: boolean;
 }) {
   const [ranges, setRanges] = useState<Range[]>(initial);
   const [deleting, setDeleting] = useState<number | null>(null);
@@ -50,8 +52,15 @@ export default function BlockedDateList({
           }}
         >
           <div>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>
-              {r.apartment?.name || 'Alle Apartments'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>
+                {r.apartment?.name || 'Alle Apartments'}
+              </span>
+              {isSuperAdmin && r.apartment?.hotel?.name && (
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 6, padding: '2px 8px', letterSpacing: '0.03em' }}>
+                  {r.apartment.hotel.name}
+                </span>
+              )}
             </div>
             <div style={{ fontSize: 14, color: '#374151', marginTop: 4 }}>
               {fmt(r.startDate)} – {fmt(r.endDate)}

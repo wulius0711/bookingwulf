@@ -9,15 +9,17 @@ type Season = {
   endDate: Date;
   pricePerNight: number;
   minStay: number;
-  apartment: { name: string; [key: string]: unknown } | null;
+  apartment: { name: string; hotel?: { name: string } | null; [key: string]: unknown } | null;
 };
 
 export default function PriceSeasonList({
   seasons: initial,
   deleteSeason,
+  isSuperAdmin,
 }: {
   seasons: Season[];
   deleteSeason: (formData: FormData) => Promise<void>;
+  isSuperAdmin: boolean;
 }) {
   const [seasons, setSeasons] = useState<Season[]>(initial);
   const [open, setOpen] = useState<number | null>(null);
@@ -61,10 +63,15 @@ export default function PriceSeasonList({
                 gap: 12,
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 15, fontWeight: 700, color: '#111827', flexShrink: 0 }}>
                   {s.name || '—'}
                 </span>
+                {isSuperAdmin && s.apartment?.hotel?.name && (
+                  <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 6, padding: '2px 8px', letterSpacing: '0.03em', flexShrink: 0 }}>
+                    {s.apartment.hotel.name}
+                  </span>
+                )}
                 <span style={{ fontSize: 13, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {s.apartment?.name} · {fmt(s.startDate)} – {fmt(s.endDate)}
                 </span>
