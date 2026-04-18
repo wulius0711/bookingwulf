@@ -1493,6 +1493,15 @@
           autoplayTimers: {},
           bookingTermsUrl: null,
           privacyPolicyUrl: null,
+          settings: {
+            showPrices: true,
+            showAmenities: true,
+            showExtrasStep: true,
+            showPhoneField: true,
+            showMessageField: true,
+            enableImageSlider: true,
+            instantBooking: false,
+          },
         };
 
         function getPriceLabel(billingType, price) {
@@ -1534,6 +1543,26 @@
               state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;
               state.privacyPolicyUrl = data.hotel.privacyPolicyUrl || null;
             }
+
+            // Apply feature toggles
+            const ft = settings;
+            state.settings.showPrices = ft.showPrices !== false;
+            state.settings.showAmenities = ft.showAmenities !== false;
+            state.settings.showExtrasStep = ft.showExtrasStep !== false;
+            state.settings.showPhoneField = ft.showPhoneField !== false;
+            state.settings.showMessageField = ft.showMessageField !== false;
+            state.settings.enableImageSlider = ft.enableImageSlider !== false;
+            state.settings.instantBooking = !!ft.instantBooking;
+
+            // Apply DOM toggles for static fields
+            const phoneWrap = document.getElementById("phone")?.closest(".field-block");
+            if (phoneWrap) phoneWrap.style.display = state.settings.showPhoneField ? "" : "none";
+            const notesWrap = document.getElementById("notes")?.closest("div");
+            if (notesWrap) notesWrap.style.display = state.settings.showMessageField ? "" : "none";
+
+            // Submit button label
+            const submitBtn = document.getElementById("submitBtn");
+            if (submitBtn) submitBtn.textContent = state.settings.instantBooking ? "Jetzt buchen" : "Buchungsanfrage senden";
 
             if (data.extras && Array.isArray(data.extras)) {
               state.availableExtras = data.extras;
@@ -1934,11 +1963,14 @@ sortedApartments.forEach((ap) => {
             const expanded = !!state.expandedDescriptions[ap.id];
             const amenitiesExpanded = !!state.expandedAmenities[ap.id];
 
-            let priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
-            if (pricing && pricing.available) {
-              priceHtml = `<div class="apt-price">${eur(pricing.totalPrice)}</div>`;
-            } else if (status.type === "unavailable") {
-              priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
+            let priceHtml = "";
+            if (state.settings.showPrices) {
+              priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
+              if (pricing && pricing.available) {
+                priceHtml = `<div class="apt-price">${eur(pricing.totalPrice)}</div>`;
+              } else if (status.type === "unavailable") {
+                priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
+              }
             }
 
             const imageObjects = getApartmentImages(ap);
@@ -1955,7 +1987,7 @@ sortedApartments.forEach((ap) => {
               "Apartment mit ruhiger Atmosphäre und klarem Boutique-Charakter.";
 
             const amenitiesHtml =
-              ap.amenities && ap.amenities.length
+              ap.amenities && ap.amenities.length && state.settings.showAmenities
                 ? `
                   <div class="apt-amenities-wrap">
                     <button
@@ -2030,7 +2062,7 @@ sortedApartments.forEach((ap) => {
                 </div>
 
                 ${
-                  imageCount > 1
+                  imageCount > 1 && state.settings.enableImageSlider
                     ? `
                       <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}">&#8249;</button>
                       <button type="button" class="apt-image-nav next" data-image-next="${ap.id}">&#8250;</button>
@@ -2125,7 +2157,9 @@ sortedApartments.forEach((ap) => {
               e.preventDefault();
               e.stopPropagation();
               if (!validateStep(state.step)) return;
-              state.step = Math.min(4, state.step + 1);
+              let next = state.step + 1;
+              if (next === 3 && !state.settings.showExtrasStep) next = 4;
+              state.step = Math.min(4, next);
               renderAll();
               window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
             });
@@ -2734,7 +2768,9 @@ sortedApartments.forEach((ap) => {
         document.querySelectorAll("[data-next]").forEach((btn) => {
           btn.addEventListener("click", () => {
             if (!validateStep(state.step)) return;
-            state.step = Math.min(4, state.step + 1);
+            let next = state.step + 1;
+            if (next === 3 && !state.settings.showExtrasStep) next = 4;
+            state.step = Math.min(4, next);
             renderAll();
             window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
           });
@@ -2742,7 +2778,9 @@ sortedApartments.forEach((ap) => {
 
         document.querySelectorAll("[data-prev]").forEach((btn) => {
           btn.addEventListener("click", () => {
-            state.step = Math.max(1, state.step - 1);
+            let prev = state.step - 1;
+            if (prev === 3 && !state.settings.showExtrasStep) prev = 2;
+            state.step = Math.max(1, prev);
             renderAll();
             window.scrollTo({ top: 0, behavior: "smooth" });
           });
@@ -2750,7 +2788,8 @@ sortedApartments.forEach((ap) => {
 
         document.querySelectorAll(".step").forEach((el) => {
           el.addEventListener("click", () => {
-            const target = Number(el.dataset.step);
+            let target = Number(el.dataset.step);
+            if (target === 3 && !state.settings.showExtrasStep) return;
             if (target <= state.step || validateStep(state.step)) {
               state.step = target;
               renderAll();
