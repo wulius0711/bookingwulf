@@ -10,6 +10,7 @@ import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
 import ProLockOverlay from '../components/ProLockOverlay';
 import WidgetConfigs from './WidgetConfigs';
+import InfoTooltip from '../components/InfoTooltip';
 
 export const dynamic = 'force-dynamic';
 
@@ -216,14 +217,14 @@ type ToggleKey =
   | 'enableImageSlider'
   | 'enableInstantBooking'
 
-const featureToggles: [ToggleKey, string, string][] = [
-  ['showPrices', 'Preise anzeigen', 'Zeigt Preise und Gesamtkosten im Widget an. Deaktivieren für reine Anfrage-Widgets ohne Preisangabe.'],
-  ['showAmenities', 'Ausstattung anzeigen', 'Zeigt die Ausstattungsliste jedes Apartments an.'],
-  ['showExtrasStep', 'Zusatzleistungen anzeigen', 'Zeigt Schritt 3 mit Zusatzleistungen und Versicherungsoptionen.'],
-  ['showPhoneField', 'Telefonfeld anzeigen', 'Fügt ein optionales Telefonfeld im Buchungsformular hinzu.'],
-  ['showMessageField', 'Nachrichtenfeld anzeigen', 'Fügt ein Nachrichtenfeld für besondere Wünsche hinzu.'],
-  ['enableImageSlider', 'Image Slider aktivieren', 'Aktiviert den Bild-Slider für Apartment-Fotos.'],
-  ['enableInstantBooking', 'Verbindliche Buchung anbieten', 'Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt.'],
+const featureToggles: [ToggleKey, string][] = [
+  ['showPrices', 'Preise anzeigen'],
+  ['showAmenities', 'Ausstattung anzeigen'],
+  ['showExtrasStep', 'Zusatzleistungen anzeigen'],
+  ['showPhoneField', 'Telefonfeld anzeigen'],
+  ['showMessageField', 'Nachrichtenfeld anzeigen'],
+  ['enableImageSlider', 'Image Slider aktivieren'],
+  ['enableInstantBooking', 'Verbindliche Buchung anbieten'],
 ]
 
 /* ---------- PAGE ---------- */
@@ -435,11 +436,11 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              {featureToggles.map(([key, label, tooltip]) => (
+              {featureToggles.map(([key, label]) => (
                 <div key={key} className="settings-row" style={checkboxRowStyle}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <label style={labelStyle}>{label}</label>
-                    <span title={tooltip} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: '50%', background: '#e5e7eb', color: '#6b7280', fontSize: 10, fontWeight: 700, cursor: 'help', flexShrink: 0 }}>i</span>
+                    {key === 'enableInstantBooking' && <InfoTooltip text="Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt." />}
                   </div>
                   <label style={checkboxBoxStyle}>
                     <input
