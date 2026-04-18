@@ -1471,6 +1471,12 @@
         const API_BASE = "";
         const HOTEL_SLUG = new URLSearchParams(window.location.search).get("hotel") || "default";
 
+        function scrollToActiveStep() {
+          const activeEl = document.querySelector('.step.active');
+          const offset = activeEl ? activeEl.offsetTop : 0;
+          window.parent.postMessage({ type: 'booking-widget-scroll-to', offset: offset }, '*');
+        }
+
         const state = {
           step: 1,
           arrival: "",
@@ -1599,7 +1605,7 @@
           const map = { info, error, success };
           map[type].textContent = text;
           map[type].style.display = "block";
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          scrollToActiveStep();
         }
 
         function toInputDate(d) {
@@ -2191,7 +2197,7 @@ sortedApartments.forEach((ap) => {
               if (!validateStep(state.step)) return;
               state.step = Math.min(4, state.step + 1);
               renderAll();
-              window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+              scrollToActiveStep();
             });
           });
 
@@ -2804,7 +2810,7 @@ sortedApartments.forEach((ap) => {
             if (!validateStep(state.step)) return;
             state.step = Math.min(4, state.step + 1);
             renderAll();
-            window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+            scrollToActiveStep();
           });
         });
 
@@ -2812,7 +2818,7 @@ sortedApartments.forEach((ap) => {
           btn.addEventListener("click", () => {
             state.step = Math.max(1, state.step - 1);
             renderAll();
-            window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+            scrollToActiveStep();
           });
         });
 
@@ -2822,7 +2828,7 @@ sortedApartments.forEach((ap) => {
             if (target <= state.step || validateStep(state.step)) {
               state.step = target;
               renderAll();
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              scrollToActiveStep();
             }
           });
         });
