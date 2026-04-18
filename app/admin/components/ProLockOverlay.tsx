@@ -2,31 +2,26 @@
 
 import { useState } from 'react';
 
-export default function ProLockOverlay({ align = 'right' }: { align?: 'right' | 'center' }) {
-  const [hover, setHover] = useState(false);
+export default function ProLockOverlay() {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
 
   return (
     <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
+      onMouseLeave={() => setPos(null)}
       style={{
         position: 'absolute',
         inset: 0,
         cursor: 'not-allowed',
-        display: 'flex',
-        alignItems: align === 'center' ? 'center' : 'flex-start',
-        justifyContent: 'flex-end',
-        padding: align === 'center' ? '0 12px 0 0' : '4px 0',
+        zIndex: 10,
       }}
     >
-      <span style={{ fontSize: 12, color: '#9ca3af', position: 'relative' }}>
-        🔒 Pro
-        {hover && (
-          <span style={{
-            position: 'absolute',
-            right: 0,
-            top: '100%',
-            marginTop: 8,
+      {pos && (
+        <span
+          style={{
+            position: 'fixed',
+            left: pos.x + 14,
+            top: pos.y + 14,
             padding: '7px 14px',
             background: '#1e293b',
             color: '#fff',
@@ -36,20 +31,13 @@ export default function ProLockOverlay({ align = 'right' }: { align?: 'right' | 
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 50,
-          }}>
-            Ab Pro Plan verfügbar
-            <span style={{
-              position: 'absolute',
-              bottom: '100%',
-              right: 16,
-              borderWidth: 5,
-              borderStyle: 'solid',
-              borderColor: 'transparent transparent #1e293b transparent',
-            }} />
-          </span>
-        )}
-      </span>
+            zIndex: 9999,
+            opacity: 1,
+          }}
+        >
+          Ab Pro Plan verfügbar
+        </span>
+      )}
     </div>
   );
 }

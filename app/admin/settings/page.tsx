@@ -371,52 +371,60 @@ export default async function Page({ searchParams }: PageProps) {
                   ['Border',     'borderColor',     selected.settings?.borderColor     || '#dddddd', fullBranding],
                 ] as [string, string, string, boolean][]
               ).map(([label, name, value, enabled]) => (
-                <div key={name} style={{ position: 'relative', opacity: enabled ? 1 : 0.4 }}>
-                  <ColorField
-                    label={label}
-                    name={enabled ? name : `_disabled_${name}`}
-                    defaultValue={value}
-                    labelStyle={labelStyle}
-                  />
-                  {!enabled && <ProLockOverlay align="center" />}
+                <div key={name} style={{ position: 'relative' }}>
+                  <div style={{ opacity: enabled ? 1 : 0.4 }}>
+                    <ColorField
+                      label={label}
+                      name={enabled ? name : `_disabled_${name}`}
+                      defaultValue={value}
+                      labelStyle={labelStyle}
+                    />
+                  </div>
+                  {!enabled && <ProLockOverlay />}
                 </div>
               ))}
 
-              <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
-                <div className="settings-row" style={rowStyle}>
-                  <label style={labelStyle}>Card Radius</label>
-                  <input
-                    name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
-                    defaultValue={selected.settings?.cardRadius ?? '4px'}
-                    style={{ ...inputStyle, maxWidth: 180 }}
-                  />
+              <div style={{ position: 'relative' }}>
+                <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
+                  <div className="settings-row" style={rowStyle}>
+                    <label style={labelStyle}>Card Radius</label>
+                    <input
+                      name={fullBranding ? 'cardRadius' : '_disabled_cardRadius'}
+                      defaultValue={selected.settings?.cardRadius ?? '4px'}
+                      style={{ ...inputStyle, maxWidth: 180 }}
+                    />
+                  </div>
                 </div>
-                {!fullBranding && <ProLockOverlay align="center" />}
+                {!fullBranding && <ProLockOverlay />}
               </div>
 
-              <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
-                <div className="settings-row" style={rowStyle}>
-                  <label style={labelStyle}>Button Radius</label>
-                  <input
-                    name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
-                    defaultValue={selected.settings?.buttonRadius ?? '4px'}
-                    style={{ ...inputStyle, maxWidth: 180 }}
-                  />
+              <div style={{ position: 'relative' }}>
+                <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
+                  <div className="settings-row" style={rowStyle}>
+                    <label style={labelStyle}>Button Radius</label>
+                    <input
+                      name={fullBranding ? 'buttonRadius' : '_disabled_buttonRadius'}
+                      defaultValue={selected.settings?.buttonRadius ?? '4px'}
+                      style={{ ...inputStyle, maxWidth: 180 }}
+                    />
+                  </div>
                 </div>
-                {!fullBranding && <ProLockOverlay align="center" />}
+                {!fullBranding && <ProLockOverlay />}
               </div>
             </div>
 
             {/* PRESETS */}
-            <div style={{ ...sectionStyle, position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
-              <div>
-                <h2 style={sectionTitleStyle}>Design-Presets</h2>
-                <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
+            <div style={{ ...sectionStyle, position: 'relative' }}>
+              <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Design-Presets</h2>
+                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
+                </div>
+                {fullBranding
+                  ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
+                  : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
+                }
               </div>
-              {fullBranding
-                ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
-                : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
-              }
               {!fullBranding && <ProLockOverlay />}
             </div>
 
