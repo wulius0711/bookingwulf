@@ -2549,7 +2549,7 @@ sortedApartments.forEach((ap) => {
           try {
             const res = await fetch(`${API_BASE}/api/apartments?hotel=${HOTEL_SLUG}`);
             if (!res.ok) {
-              throw new Error("Apartments konnten nicht geladen werden.");
+              throw new Error(`HTTP ${res.status}: Apartments konnten nicht geladen werden.`);
             }
 
             const apartments = await res.json();
@@ -2582,7 +2582,7 @@ sortedApartments.forEach((ap) => {
           } catch (error) {
             console.error(error);
             state.apartments = [];
-            showMessage("error", "Apartments konnten nicht geladen werden.");
+            showMessage("error", String(error));
           } finally {
             state.loadingApartments = false;
             renderAll();
