@@ -85,6 +85,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   }
 
   async function deletePreset(id: number) {
+    if (!window.confirm('Preset wirklich löschen?')) return;
     try {
       await fetch(`/api/admin/settings-presets?id=${id}`, { method: 'DELETE' });
       setPresets(presets.filter(p => p.id !== id));

@@ -415,7 +415,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Design-Presets</h2>
-                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
+                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern<br />und wiederverwenden. Max. 3 Stück.</p>
                 </div>
                 {fullBranding
                   ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
