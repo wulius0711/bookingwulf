@@ -3,8 +3,17 @@ import { verifySession } from '@/src/lib/session';
 
 export const dynamic = 'force-dynamic';
 
-type SearchParams = Promise<{ hotel?: string }>;
+type SearchParams = Promise<{ hotel?: string; period?: string }>;
 type PageProps = { searchParams: SearchParams };
+
+const PERIODS: { value: string; label: string; months: number | null }[] = [
+  { value: '1',  label: 'Letzter Monat',    months: 1  },
+  { value: '3',  label: 'Letzte 3 Monate',  months: 3  },
+  { value: '6',  label: 'Letzte 6 Monate',  months: 6  },
+  { value: '12', label: 'Letzte 12 Monate', months: 12 },
+  { value: '24', label: 'Letzte 2 Jahre',   months: 24 },
+  { value: 'all', label: 'Gesamter Zeitraum', months: null },
+];
 
 const STATUS_COLORS: Record<string, string> = {
   new: '#3b82f6',
@@ -42,7 +51,9 @@ function calcApartmentPrice(
 export default async function AnalyticsPage({ searchParams }: PageProps) {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
-  const { hotel } = await searchParams;
+  const { hotel, period: periodParam } = await searchParams;
+  const periodKey = PERIODS.find(p => p.value === periodParam) ? periodParam! : '12';
+  const periodDef = PERIODS.find(p => p.value === periodKey)!;
 
   const hotels = isSuperAdmin
     ? await prisma.hotel.findMany({ where: { isActive: true }, orderBy: { name: 'asc' }, select: { id: true, name: true, slug: true } })
@@ -55,7 +66,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const hotelFilter = selectedId ? { hotelId: selectedId } : {};
 
   const now = new Date();
-  const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+  const periodStart = periodDef.months === null
+    ? new Date(2020, 0, 1)
+    : new Date(now.getFullYear(), now.getMonth() - (periodDef.months - 1), 1);
+  const twelveMonthsAgo = periodStart; // alias used throughout
 
   const [allRequests, allApartments, blockedRanges] = await Promise.all([
     prisma.request.findMany({
@@ -86,8 +100,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   ]);
 
   // Monthly breakdown
+  const chartMonths = periodDef.months === null ? 24 : periodDef.months;
   const monthlyMap = new Map<string, number>();
-  for (let i = 11; i >= 0; i--) {
+  for (let i = chartMonths - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     monthlyMap.set(`${d.getFullYear()}-${d.getMonth()}`, 0);
   }
@@ -198,18 +213,21 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Analytics</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
-              Letzte 12 Monate{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ' · Alle Hotels'}
+              {periodDef.label}{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ''}
             </p>
           </div>
-          {isSuperAdmin && (
-            <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
+              {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+            </select>
+            {isSuperAdmin && (
               <select name="hotel" defaultValue={String(selectedId ?? '')} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
                 <option value="">Alle Hotels</option>
                 {hotels.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
               </select>
-              <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
-            </form>
-          )}
+            )}
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
+          </form>
         </div>
 
         {/* KPI Cards */}
