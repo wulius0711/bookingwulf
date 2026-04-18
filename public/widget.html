@@ -751,12 +751,12 @@
       }
 
       .apt-next-link {
+        display: block;
+        margin-top: 12px;
         font-size: 13px;
         color: var(--accent);
         text-decoration: underline;
         cursor: pointer;
-        white-space: nowrap;
-        align-self: center;
       }
 
       .apt-select-btn {
@@ -2078,12 +2078,12 @@ sortedApartments.forEach((ap) => {
                     ${priceHtml}
                     ${
                       status.type === "available"
-                        ? `${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ""}
-                          <button type="button" class="apt-select-btn ${
+                        ? `<button type="button" class="apt-select-btn ${
                             selected ? "remove" : ""
                           }" data-select="${ap.id}">
                             ${selected ? "Entfernen" : "Auswählen"}
-                          </button>`
+                          </button>
+                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ""}`
                         : ""
                     }
                   </div>
