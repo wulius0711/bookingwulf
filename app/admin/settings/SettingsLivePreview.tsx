@@ -40,10 +40,17 @@ export default function SettingsLivePreview() {
       });
     });
 
+    function onColorChanged(e: Event) {
+      const { name, value } = (e as CustomEvent).detail;
+      sendToIframe({ ...collectSettings(), [name]: value });
+    }
+
+    document.addEventListener('settings-color-changed', onColorChanged);
     document.addEventListener('settings-preset-applied', onPresetApplied);
 
     return () => {
       listeners.forEach(([el, event, fn]) => el.removeEventListener(event, fn));
+      document.removeEventListener('settings-color-changed', onColorChanged);
       document.removeEventListener('settings-preset-applied', onPresetApplied);
     };
   }, []);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -34,6 +34,10 @@ export function ColorField({
   labelStyle: React.CSSProperties;
 }) {
   const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    document.dispatchEvent(new CustomEvent('settings-color-changed', { detail: { name, value } }));
+  }, [value, name]);
 
   const rowStyle: React.CSSProperties = {
     display: 'grid',
