@@ -63,6 +63,7 @@ export const ModelName = {
   RequestMessage: 'RequestMessage',
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser',
+  AdminUserHotel: 'AdminUserHotel',
   EmailTemplate: 'EmailTemplate'
 } as const
 
@@ -296,6 +297,14 @@ export const AdminUserScalarFieldEnum = {
 } as const
 
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
+export const AdminUserHotelScalarFieldEnum = {
+  userId: 'userId',
+  hotelId: 'hotelId'
+} as const
+
+export type AdminUserHotelScalarFieldEnum = (typeof AdminUserHotelScalarFieldEnum)[keyof typeof AdminUserHotelScalarFieldEnum]
 
 
 export const EmailTemplateScalarFieldEnum = {

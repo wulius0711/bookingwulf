@@ -396,6 +396,7 @@ export const ModelName = {
   RequestMessage: 'RequestMessage',
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser',
+  AdminUserHotel: 'AdminUserHotel',
   EmailTemplate: 'EmailTemplate'
 } as const
 
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "emailTemplate"
+    modelProps: "hotel" | "hotelSettings" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "adminUserHotel" | "emailTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1304,6 +1305,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminUserHotel: {
+      payload: Prisma.$AdminUserHotelPayload<ExtArgs>
+      fields: Prisma.AdminUserHotelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminUserHotelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminUserHotelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminUserHotelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminUserHotelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        findMany: {
+          args: Prisma.AdminUserHotelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>[]
+        }
+        create: {
+          args: Prisma.AdminUserHotelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        createMany: {
+          args: Prisma.AdminUserHotelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminUserHotelCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminUserHotelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        update: {
+          args: Prisma.AdminUserHotelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminUserHotelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminUserHotelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminUserHotelUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminUserHotelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminUserHotelPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminUserHotelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminUserHotel>
+        }
+        groupBy: {
+          args: Prisma.AdminUserHotelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminUserHotelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminUserHotelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminUserHotelCountAggregateOutputType> | number
+        }
+      }
+    }
     EmailTemplate: {
       payload: Prisma.$EmailTemplatePayload<ExtArgs>
       fields: Prisma.EmailTemplateFieldRefs
@@ -1633,6 +1708,14 @@ export const AdminUserScalarFieldEnum = {
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
 
 
+export const AdminUserHotelScalarFieldEnum = {
+  userId: 'userId',
+  hotelId: 'hotelId'
+} as const
+
+export type AdminUserHotelScalarFieldEnum = (typeof AdminUserHotelScalarFieldEnum)[keyof typeof AdminUserHotelScalarFieldEnum]
+
+
 export const EmailTemplateScalarFieldEnum = {
   id: 'id',
   hotelId: 'hotelId',
@@ -1892,6 +1975,7 @@ export type GlobalOmitConfig = {
   requestMessage?: Prisma.RequestMessageOmit
   hotelExtra?: Prisma.HotelExtraOmit
   adminUser?: Prisma.AdminUserOmit
+  adminUserHotel?: Prisma.AdminUserHotelOmit
   emailTemplate?: Prisma.EmailTemplateOmit
 }
 

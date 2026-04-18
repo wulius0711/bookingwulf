@@ -29,7 +29,16 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
-  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: user.hotelId ?? null })
+  // Load primary hotel from join table, fall back to legacy hotelId
+  const userHotels = await prisma.adminUserHotel.findMany({
+    where: { userId: user.id },
+    orderBy: { hotelId: 'asc' },
+    take: 1,
+    select: { hotelId: true },
+  });
+  const primaryHotelId = userHotels[0]?.hotelId ?? user.hotelId ?? null;
+
+  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: primaryHotelId })
 
   // redirect() after createSession causes white screen because cookie change
   // invalidates the client router cache within the same /admin layout.

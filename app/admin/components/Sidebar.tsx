@@ -11,9 +11,13 @@ type NavItemDef = {
   upgradeLabel?: string;
 };
 
+type HotelOption = { id: number; name: string };
+
 type Props = {
   navItems: NavItemDef[];
   email: string;
+  activeHotelId: number | null;
+  userHotels: HotelOption[];
 };
 
 function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDef) {
@@ -102,8 +106,20 @@ function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDe
   );
 }
 
-export default function Sidebar({ navItems, email }: Props) {
+export default function Sidebar({ navItems, email, activeHotelId, userHotels }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
+
+  async function handleHotelSwitch(hotelId: number) {
+    if (hotelId === activeHotelId) return;
+    setSwitching(true);
+    await fetch('/api/admin/switch-hotel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hotelId }),
+    });
+    window.location.href = '/admin';
+  }
 
   return (
     <>
@@ -147,6 +163,21 @@ export default function Sidebar({ navItems, email }: Props) {
           flexDirection: 'column',
           gap: 8,
         }}>
+          {userHotels.length > 1 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</span>
+              <select
+                value={activeHotelId ?? ''}
+                disabled={switching}
+                onChange={(e) => handleHotelSwitch(Number(e.target.value))}
+                style={{ padding: '6px 8px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, color: '#111', background: '#fafafa', cursor: 'pointer', opacity: switching ? 0.5 : 1 }}
+              >
+                {userHotels.map((h) => (
+                  <option key={h.id} value={h.id}>{h.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <span style={{ fontSize: 12, color: '#9ca3af', wordBreak: 'break-all' }}>{email}</span>
           <form action={logout}>
             <button

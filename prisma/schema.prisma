@@ -33,6 +33,7 @@ model Hotel {
   apartments      Apartment[]
   requests      Request[]
   adminUsers    AdminUser[]
+  userHotels    AdminUserHotel[]
   blockedRanges BlockedRange[]
   extras        HotelExtra[]
 }
@@ -254,6 +255,17 @@ model AdminUser {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  userHotels AdminUserHotel[]
+}
+
+model AdminUserHotel {
+  userId  Int
+  hotelId Int
+  user    AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotel   Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, hotelId])
 }
 
 model EmailTemplate {

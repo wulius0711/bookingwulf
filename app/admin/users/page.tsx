@@ -157,6 +157,14 @@ export default async function UsersPage() {
 
               {u.id !== session.userId && (
                 <div style={{ display: 'flex', gap: 8 }}>
+                  {u.role === 'hotel_admin' && (
+                    <a
+                      href={`/admin/users/${u.id}`}
+                      style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}
+                    >
+                      Hotels
+                    </a>
+                  )}
                   <form action={toggleActive}>
                     <input type="hidden" name="id" value={u.id} />
                     <input type="hidden" name="isActive" value={String(u.isActive)} />

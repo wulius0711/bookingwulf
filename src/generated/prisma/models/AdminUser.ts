@@ -261,6 +261,7 @@ export type AdminUserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  userHotels?: Prisma.AdminUserHotelListRelationFilter
 }
 
 export type AdminUserOrderByWithRelationInput = {
@@ -275,6 +276,7 @@ export type AdminUserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
+  userHotels?: Prisma.AdminUserHotelOrderByRelationAggregateInput
 }
 
 export type AdminUserWhereUniqueInput = Prisma.AtLeast<{
@@ -292,6 +294,7 @@ export type AdminUserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
+  userHotels?: Prisma.AdminUserHotelListRelationFilter
 }, "id" | "email" | "resetToken">
 
 export type AdminUserOrderByWithAggregationInput = {
@@ -338,6 +341,7 @@ export type AdminUserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel?: Prisma.HotelCreateNestedOneWithoutAdminUsersInput
+  userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutUserInput
 }
 
 export type AdminUserUncheckedCreateInput = {
@@ -351,6 +355,7 @@ export type AdminUserUncheckedCreateInput = {
   resetExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AdminUserUpdateInput = {
@@ -363,6 +368,7 @@ export type AdminUserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneWithoutAdminUsersNestedInput
+  userHotels?: Prisma.AdminUserHotelUpdateManyWithoutUserNestedInput
 }
 
 export type AdminUserUncheckedUpdateInput = {
@@ -376,6 +382,7 @@ export type AdminUserUncheckedUpdateInput = {
   resetExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AdminUserCreateManyInput = {
@@ -474,6 +481,11 @@ export type AdminUserSumOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
 }
 
+export type AdminUserScalarRelationFilter = {
+  is?: Prisma.AdminUserWhereInput
+  isNot?: Prisma.AdminUserWhereInput
+}
+
 export type AdminUserCreateNestedManyWithoutHotelInput = {
   create?: Prisma.XOR<Prisma.AdminUserCreateWithoutHotelInput, Prisma.AdminUserUncheckedCreateWithoutHotelInput> | Prisma.AdminUserCreateWithoutHotelInput[] | Prisma.AdminUserUncheckedCreateWithoutHotelInput[]
   connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutHotelInput | Prisma.AdminUserCreateOrConnectWithoutHotelInput[]
@@ -516,6 +528,20 @@ export type AdminUserUncheckedUpdateManyWithoutHotelNestedInput = {
   deleteMany?: Prisma.AdminUserScalarWhereInput | Prisma.AdminUserScalarWhereInput[]
 }
 
+export type AdminUserCreateNestedOneWithoutUserHotelsInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutUserHotelsInput, Prisma.AdminUserUncheckedCreateWithoutUserHotelsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutUserHotelsInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+}
+
+export type AdminUserUpdateOneRequiredWithoutUserHotelsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutUserHotelsInput, Prisma.AdminUserUncheckedCreateWithoutUserHotelsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutUserHotelsInput
+  upsert?: Prisma.AdminUserUpsertWithoutUserHotelsInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutUserHotelsInput, Prisma.AdminUserUpdateWithoutUserHotelsInput>, Prisma.AdminUserUncheckedUpdateWithoutUserHotelsInput>
+}
+
 export type AdminUserCreateWithoutHotelInput = {
   email: string
   passwordHash: string
@@ -525,6 +551,7 @@ export type AdminUserCreateWithoutHotelInput = {
   resetExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutUserInput
 }
 
 export type AdminUserUncheckedCreateWithoutHotelInput = {
@@ -537,6 +564,7 @@ export type AdminUserUncheckedCreateWithoutHotelInput = {
   resetExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AdminUserCreateOrConnectWithoutHotelInput = {
@@ -581,6 +609,72 @@ export type AdminUserScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
 }
 
+export type AdminUserCreateWithoutUserHotelsInput = {
+  email: string
+  passwordHash: string
+  role?: string
+  isActive?: boolean
+  resetToken?: string | null
+  resetExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hotel?: Prisma.HotelCreateNestedOneWithoutAdminUsersInput
+}
+
+export type AdminUserUncheckedCreateWithoutUserHotelsInput = {
+  id?: number
+  hotelId?: number | null
+  email: string
+  passwordHash: string
+  role?: string
+  isActive?: boolean
+  resetToken?: string | null
+  resetExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdminUserCreateOrConnectWithoutUserHotelsInput = {
+  where: Prisma.AdminUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutUserHotelsInput, Prisma.AdminUserUncheckedCreateWithoutUserHotelsInput>
+}
+
+export type AdminUserUpsertWithoutUserHotelsInput = {
+  update: Prisma.XOR<Prisma.AdminUserUpdateWithoutUserHotelsInput, Prisma.AdminUserUncheckedUpdateWithoutUserHotelsInput>
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutUserHotelsInput, Prisma.AdminUserUncheckedCreateWithoutUserHotelsInput>
+  where?: Prisma.AdminUserWhereInput
+}
+
+export type AdminUserUpdateToOneWithWhereWithoutUserHotelsInput = {
+  where?: Prisma.AdminUserWhereInput
+  data: Prisma.XOR<Prisma.AdminUserUpdateWithoutUserHotelsInput, Prisma.AdminUserUncheckedUpdateWithoutUserHotelsInput>
+}
+
+export type AdminUserUpdateWithoutUserHotelsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hotel?: Prisma.HotelUpdateOneWithoutAdminUsersNestedInput
+}
+
+export type AdminUserUncheckedUpdateWithoutUserHotelsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  hotelId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type AdminUserCreateManyHotelInput = {
   id?: number
   email: string
@@ -602,6 +696,7 @@ export type AdminUserUpdateWithoutHotelInput = {
   resetExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userHotels?: Prisma.AdminUserHotelUpdateManyWithoutUserNestedInput
 }
 
 export type AdminUserUncheckedUpdateWithoutHotelInput = {
@@ -614,6 +709,7 @@ export type AdminUserUncheckedUpdateWithoutHotelInput = {
   resetExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AdminUserUncheckedUpdateManyWithoutHotelInput = {
@@ -629,6 +725,35 @@ export type AdminUserUncheckedUpdateManyWithoutHotelInput = {
 }
 
 
+/**
+ * Count Type AdminUserCountOutputType
+ */
+
+export type AdminUserCountOutputType = {
+  userHotels: number
+}
+
+export type AdminUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  userHotels?: boolean | AdminUserCountOutputTypeCountUserHotelsArgs
+}
+
+/**
+ * AdminUserCountOutputType without action
+ */
+export type AdminUserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminUserCountOutputType
+   */
+  select?: Prisma.AdminUserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AdminUserCountOutputType without action
+ */
+export type AdminUserCountOutputTypeCountUserHotelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminUserHotelWhereInput
+}
+
 
 export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -642,6 +767,8 @@ export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.AdminUser$hotelArgs<ExtArgs>
+  userHotels?: boolean | Prisma.AdminUser$userHotelsArgs<ExtArgs>
+  _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adminUser"]>
 
 export type AdminUserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -688,6 +815,8 @@ export type AdminUserSelectScalar = {
 export type AdminUserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "email" | "passwordHash" | "role" | "isActive" | "resetToken" | "resetExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["adminUser"]>
 export type AdminUserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.AdminUser$hotelArgs<ExtArgs>
+  userHotels?: boolean | Prisma.AdminUser$userHotelsArgs<ExtArgs>
+  _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminUserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.AdminUser$hotelArgs<ExtArgs>
@@ -700,6 +829,7 @@ export type $AdminUserPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "AdminUser"
   objects: {
     hotel: Prisma.$HotelPayload<ExtArgs> | null
+    userHotels: Prisma.$AdminUserHotelPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1107,6 +1237,7 @@ readonly fields: AdminUserFieldRefs;
 export interface Prisma__AdminUserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   hotel<T extends Prisma.AdminUser$hotelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$hotelArgs<ExtArgs>>): Prisma.Prisma__HotelClient<runtime.Types.Result.GetResult<Prisma.$HotelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  userHotels<T extends Prisma.AdminUser$userHotelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$userHotelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminUserHotelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1563,6 +1694,30 @@ export type AdminUser$hotelArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.HotelInclude<ExtArgs> | null
   where?: Prisma.HotelWhereInput
+}
+
+/**
+ * AdminUser.userHotels
+ */
+export type AdminUser$userHotelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminUserHotel
+   */
+  select?: Prisma.AdminUserHotelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminUserHotel
+   */
+  omit?: Prisma.AdminUserHotelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminUserHotelInclude<ExtArgs> | null
+  where?: Prisma.AdminUserHotelWhereInput
+  orderBy?: Prisma.AdminUserHotelOrderByWithRelationInput | Prisma.AdminUserHotelOrderByWithRelationInput[]
+  cursor?: Prisma.AdminUserHotelWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminUserHotelScalarFieldEnum | Prisma.AdminUserHotelScalarFieldEnum[]
 }
 
 /**

@@ -7,6 +7,12 @@ export function canAddApartment(plan: string, currentCount: number): boolean {
   return currentCount < p.maxApartments;
 }
 
+export function canAddHotelToUser(newHotelPlan: string, currentHotelCount: number): boolean {
+  if (currentHotelCount === 0) return true;
+  const p = PLANS[newHotelPlan as PlanKey] ?? PLANS.starter;
+  return p.maxHotels > 1 && currentHotelCount < p.maxHotels;
+}
+
 export function canAddUser(plan: string, currentCount: number): boolean {
   const p = PLANS[plan as PlanKey] ?? PLANS.starter;
   return currentCount < p.maxUsers;

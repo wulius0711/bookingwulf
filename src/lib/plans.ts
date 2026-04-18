@@ -5,6 +5,7 @@ export const PLANS = {
     priceYearly: 49,
     maxApartments: 5,
     maxUsers: 1,
+    maxHotels: 1,
     features: ['Bis zu 5 Apartments', '1 Admin-User', 'Standard-Branding', 'E-Mail-Benachrichtigungen'],
   },
   pro: {
@@ -13,6 +14,7 @@ export const PLANS = {
     priceYearly: 99,
     maxApartments: 20,
     maxUsers: 3,
+    maxHotels: 1,
     features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons'],
   },
   business: {
@@ -21,6 +23,7 @@ export const PLANS = {
     priceYearly: 199,
     maxApartments: Infinity,
     maxUsers: Infinity,
+    maxHotels: 2,
     features: ['Alles aus Pro', 'Direktnachrichten an Gäste', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Analytics', 'Priority Support'],
   },
 } as const;

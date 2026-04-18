@@ -78,6 +78,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }
   })
 
+  // Load user's assigned hotels for the switcher
+  const userHotels = session.role !== 'super_admin'
+    ? await prisma.adminUserHotel.findMany({
+        where: { userId: session.userId },
+        select: { hotelId: true, hotel: { select: { name: true } } },
+        orderBy: { hotelId: 'asc' },
+      })
+    : [];
+
   return (
     <div
       className="admin-layout"
@@ -85,7 +94,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
-      <Sidebar navItems={navItems} email={session.email} />
+      <Sidebar
+        navItems={navItems}
+        email={session.email}
+        activeHotelId={session.hotelId}
+        userHotels={userHotels.map((h) => ({ id: h.hotelId, name: h.hotel.name }))}
+      />
 
       <div className="admin-main">
         <main style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
