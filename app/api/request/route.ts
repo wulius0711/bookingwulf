@@ -93,7 +93,7 @@ export async function POST(req: Request) {
       where: { slug: hotelSlug },
       select: {
         id: true, name: true, email: true, accentColor: true,
-        emailTemplates: { select: { type: true, subject: true, body: true } },
+        emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
         extras: {
           where: { isActive: true },
           select: { key: true, name: true, type: true, billingType: true, price: true },
@@ -295,6 +295,12 @@ export async function POST(req: Request) {
           : bookingType === 'booking'
             ? 'Ihre Buchung ist <strong>bestätigt</strong>. Wir freuen uns auf Ihren Besuch!'
             : 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.';
+        const guestGreeting = guestTpl?.greeting
+          ? fillTpl(guestTpl.greeting)
+          : firstname ? `Hallo ${firstname},` : 'Hallo,';
+        const guestSignoff = guestTpl?.signoff
+          ? fillTpl(guestTpl.signoff)
+          : 'Mit freundlichen Grüßen';
 
         await resend.emails.send({
           from: fromEmail,
@@ -307,7 +313,7 @@ export async function POST(req: Request) {
             preheader: `${apartmentNames} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                ${firstname ? `Hallo ${firstname},` : 'Hallo,'}<br/><br/>
+                ${guestGreeting}<br/><br/>
                 ${guestBodyText}
               </p>
               ${buildDivider()}
@@ -321,7 +327,7 @@ export async function POST(req: Request) {
               ${priceTable}
               ${message ? buildDivider() + buildInfoBlock('Ihre Nachricht', message) : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
-                Mit freundlichen Grüßen<br/>
+                ${guestSignoff}<br/>
                 <strong>${hotel.name}</strong>
               </p>
             `,

@@ -41,7 +41,9 @@ export type EmailTemplateMinAggregateOutputType = {
   hotelId: number | null
   type: string | null
   subject: string | null
+  greeting: string | null
   body: string | null
+  signoff: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,7 +53,9 @@ export type EmailTemplateMaxAggregateOutputType = {
   hotelId: number | null
   type: string | null
   subject: string | null
+  greeting: string | null
   body: string | null
+  signoff: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -61,7 +65,9 @@ export type EmailTemplateCountAggregateOutputType = {
   hotelId: number
   type: number
   subject: number
+  greeting: number
   body: number
+  signoff: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,7 +89,9 @@ export type EmailTemplateMinAggregateInputType = {
   hotelId?: true
   type?: true
   subject?: true
+  greeting?: true
   body?: true
+  signoff?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -93,7 +101,9 @@ export type EmailTemplateMaxAggregateInputType = {
   hotelId?: true
   type?: true
   subject?: true
+  greeting?: true
   body?: true
+  signoff?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -103,7 +113,9 @@ export type EmailTemplateCountAggregateInputType = {
   hotelId?: true
   type?: true
   subject?: true
+  greeting?: true
   body?: true
+  signoff?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -200,7 +212,9 @@ export type EmailTemplateGroupByOutputType = {
   hotelId: number
   type: string
   subject: string
+  greeting: string | null
   body: string
+  signoff: string | null
   createdAt: Date
   updatedAt: Date
   _count: EmailTemplateCountAggregateOutputType | null
@@ -233,7 +247,9 @@ export type EmailTemplateWhereInput = {
   hotelId?: Prisma.IntFilter<"EmailTemplate"> | number
   type?: Prisma.StringFilter<"EmailTemplate"> | string
   subject?: Prisma.StringFilter<"EmailTemplate"> | string
+  greeting?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   body?: Prisma.StringFilter<"EmailTemplate"> | string
+  signoff?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -244,7 +260,9 @@ export type EmailTemplateOrderByWithRelationInput = {
   hotelId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  greeting?: Prisma.SortOrderInput | Prisma.SortOrder
   body?: Prisma.SortOrder
+  signoff?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
@@ -259,7 +277,9 @@ export type EmailTemplateWhereUniqueInput = Prisma.AtLeast<{
   hotelId?: Prisma.IntFilter<"EmailTemplate"> | number
   type?: Prisma.StringFilter<"EmailTemplate"> | string
   subject?: Prisma.StringFilter<"EmailTemplate"> | string
+  greeting?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   body?: Prisma.StringFilter<"EmailTemplate"> | string
+  signoff?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -270,7 +290,9 @@ export type EmailTemplateOrderByWithAggregationInput = {
   hotelId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  greeting?: Prisma.SortOrderInput | Prisma.SortOrder
   body?: Prisma.SortOrder
+  signoff?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EmailTemplateCountOrderByAggregateInput
@@ -288,7 +310,9 @@ export type EmailTemplateScalarWhereWithAggregatesInput = {
   hotelId?: Prisma.IntWithAggregatesFilter<"EmailTemplate"> | number
   type?: Prisma.StringWithAggregatesFilter<"EmailTemplate"> | string
   subject?: Prisma.StringWithAggregatesFilter<"EmailTemplate"> | string
+  greeting?: Prisma.StringNullableWithAggregatesFilter<"EmailTemplate"> | string | null
   body?: Prisma.StringWithAggregatesFilter<"EmailTemplate"> | string
+  signoff?: Prisma.StringNullableWithAggregatesFilter<"EmailTemplate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EmailTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"EmailTemplate"> | Date | string
 }
@@ -296,7 +320,9 @@ export type EmailTemplateScalarWhereWithAggregatesInput = {
 export type EmailTemplateCreateInput = {
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel: Prisma.HotelCreateNestedOneWithoutEmailTemplatesInput
@@ -307,7 +333,9 @@ export type EmailTemplateUncheckedCreateInput = {
   hotelId: number
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -315,7 +343,9 @@ export type EmailTemplateUncheckedCreateInput = {
 export type EmailTemplateUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneRequiredWithoutEmailTemplatesNestedInput
@@ -326,7 +356,9 @@ export type EmailTemplateUncheckedUpdateInput = {
   hotelId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -336,7 +368,9 @@ export type EmailTemplateCreateManyInput = {
   hotelId: number
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -344,7 +378,9 @@ export type EmailTemplateCreateManyInput = {
 export type EmailTemplateUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -354,7 +390,9 @@ export type EmailTemplateUncheckedUpdateManyInput = {
   hotelId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -379,7 +417,9 @@ export type EmailTemplateCountOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  greeting?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  signoff?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -394,7 +434,9 @@ export type EmailTemplateMaxOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  greeting?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  signoff?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -404,7 +446,9 @@ export type EmailTemplateMinOrderByAggregateInput = {
   hotelId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  greeting?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  signoff?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -459,7 +503,9 @@ export type EmailTemplateUncheckedUpdateManyWithoutHotelNestedInput = {
 export type EmailTemplateCreateWithoutHotelInput = {
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -468,7 +514,9 @@ export type EmailTemplateUncheckedCreateWithoutHotelInput = {
   id?: number
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -507,7 +555,9 @@ export type EmailTemplateScalarWhereInput = {
   hotelId?: Prisma.IntFilter<"EmailTemplate"> | number
   type?: Prisma.StringFilter<"EmailTemplate"> | string
   subject?: Prisma.StringFilter<"EmailTemplate"> | string
+  greeting?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   body?: Prisma.StringFilter<"EmailTemplate"> | string
+  signoff?: Prisma.StringNullableFilter<"EmailTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmailTemplate"> | Date | string
 }
@@ -516,7 +566,9 @@ export type EmailTemplateCreateManyHotelInput = {
   id?: number
   type: string
   subject: string
+  greeting?: string | null
   body: string
+  signoff?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -524,7 +576,9 @@ export type EmailTemplateCreateManyHotelInput = {
 export type EmailTemplateUpdateWithoutHotelInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -533,7 +587,9 @@ export type EmailTemplateUncheckedUpdateWithoutHotelInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -542,7 +598,9 @@ export type EmailTemplateUncheckedUpdateManyWithoutHotelInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  greeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  signoff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -554,7 +612,9 @@ export type EmailTemplateSelect<ExtArgs extends runtime.Types.Extensions.Interna
   hotelId?: boolean
   type?: boolean
   subject?: boolean
+  greeting?: boolean
   body?: boolean
+  signoff?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -565,7 +625,9 @@ export type EmailTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   hotelId?: boolean
   type?: boolean
   subject?: boolean
+  greeting?: boolean
   body?: boolean
+  signoff?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -576,7 +638,9 @@ export type EmailTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   hotelId?: boolean
   type?: boolean
   subject?: boolean
+  greeting?: boolean
   body?: boolean
+  signoff?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -587,12 +651,14 @@ export type EmailTemplateSelectScalar = {
   hotelId?: boolean
   type?: boolean
   subject?: boolean
+  greeting?: boolean
   body?: boolean
+  signoff?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmailTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "type" | "subject" | "body" | "createdAt" | "updatedAt", ExtArgs["result"]["emailTemplate"]>
+export type EmailTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "type" | "subject" | "greeting" | "body" | "signoff" | "createdAt" | "updatedAt", ExtArgs["result"]["emailTemplate"]>
 export type EmailTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -613,7 +679,9 @@ export type $EmailTemplatePayload<ExtArgs extends runtime.Types.Extensions.Inter
     hotelId: number
     type: string
     subject: string
+    greeting: string | null
     body: string
+    signoff: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["emailTemplate"]>
@@ -1044,7 +1112,9 @@ export interface EmailTemplateFieldRefs {
   readonly hotelId: Prisma.FieldRef<"EmailTemplate", 'Int'>
   readonly type: Prisma.FieldRef<"EmailTemplate", 'String'>
   readonly subject: Prisma.FieldRef<"EmailTemplate", 'String'>
+  readonly greeting: Prisma.FieldRef<"EmailTemplate", 'String'>
   readonly body: Prisma.FieldRef<"EmailTemplate", 'String'>
+  readonly signoff: Prisma.FieldRef<"EmailTemplate", 'String'>
   readonly createdAt: Prisma.FieldRef<"EmailTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"EmailTemplate", 'DateTime'>
 }

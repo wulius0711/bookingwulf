@@ -303,7 +303,9 @@ export const EmailTemplateScalarFieldEnum = {
   hotelId: 'hotelId',
   type: 'type',
   subject: 'subject',
+  greeting: 'greeting',
   body: 'body',
+  signoff: 'signoff',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

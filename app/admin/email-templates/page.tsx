@@ -70,13 +70,15 @@ export default async function EmailTemplatesPage() {
 
     for (const { type } of TEMPLATE_TYPES) {
       const subject = String(formData.get(`${type}_subject`) || '').trim();
+      const greeting = String(formData.get(`${type}_greeting`) || '').trim() || null;
       const body = String(formData.get(`${type}_body`) || '').trim();
+      const signoff = String(formData.get(`${type}_signoff`) || '').trim() || null;
       if (!subject) continue;
 
       await prisma.emailTemplate.upsert({
         where: { hotelId_type: { hotelId: session.hotelId, type } },
-        create: { hotelId: session.hotelId, type, subject, body },
-        update: { subject, body },
+        create: { hotelId: session.hotelId, type, subject, greeting, body, signoff },
+        update: { subject, greeting, body, signoff },
       });
     }
 
@@ -147,15 +149,37 @@ export default async function EmailTemplatesPage() {
                   </div>
 
                   {type !== 'request_hotel' && (
-                    <div style={{ display: 'grid', gap: 4 }}>
-                      <label style={labelStyle}>Fließtext</label>
-                      <textarea
-                        name={`${type}_body`}
-                        defaultValue={saved?.body ?? defaultBody}
-                        rows={4}
-                        style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
-                      />
-                    </div>
+                    <>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Begrüßung</label>
+                        <input
+                          name={`${type}_greeting`}
+                          type="text"
+                          defaultValue={saved?.greeting ?? 'Hallo {{guestName}},'}
+                          style={inputStyle}
+                        />
+                      </div>
+
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Fließtext</label>
+                        <textarea
+                          name={`${type}_body`}
+                          defaultValue={saved?.body ?? defaultBody}
+                          rows={4}
+                          style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
+                        />
+                      </div>
+
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Verabschiedung</label>
+                        <input
+                          name={`${type}_signoff`}
+                          type="text"
+                          defaultValue={saved?.signoff ?? 'Mit freundlichen Grüßen'}
+                          style={inputStyle}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               );

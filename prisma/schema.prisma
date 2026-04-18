@@ -262,7 +262,9 @@ model EmailTemplate {
   hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   type      String   // request_guest | booking_guest | request_hotel
   subject   String
+  greeting  String?
   body      String
+  signoff   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
