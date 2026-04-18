@@ -133,9 +133,19 @@ export default async function EmailTemplatesPage() {
               const saved = getTemplate(type);
               return (
                 <div key={type} style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', display: 'grid', gap: 14 }}>
-                  <div>
-                    <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 2px' }}>{label}</h2>
-                    <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{description}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                    <div>
+                      <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 2px' }}>{label}</h2>
+                      <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{description}</p>
+                    </div>
+                    <a
+                      href={`/api/admin/email-preview?type=${type}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ padding: '6px 14px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}
+                    >
+                      Vorschau
+                    </a>
                   </div>
 
                   <div style={{ display: 'grid', gap: 4 }}>
