@@ -7,6 +7,7 @@ import { hasFullBranding, hasPlanAccess } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
+import ProLockOverlay from '../components/ProLockOverlay';
 
 export const dynamic = 'force-dynamic';
 
@@ -377,24 +378,7 @@ export default async function Page({ searchParams }: PageProps) {
                     defaultValue={value}
                     labelStyle={labelStyle}
                   />
-                  {!enabled && (
-                    <div
-                      title="Ab Pro Plan verfügbar"
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        cursor: 'not-allowed',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        paddingRight: 12,
-                        fontSize: 12,
-                        color: '#9ca3af',
-                      }}
-                    >
-                      🔒 Pro
-                    </div>
-                  )}
+                  {!enabled && <ProLockOverlay align="center" />}
                 </div>
               ))}
 
@@ -407,24 +391,7 @@ export default async function Page({ searchParams }: PageProps) {
                     style={{ ...inputStyle, maxWidth: 180 }}
                   />
                 </div>
-                {!fullBranding && (
-                  <div
-                    title="Ab Pro Plan verfügbar"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      cursor: 'not-allowed',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
-                      paddingRight: 12,
-                      fontSize: 12,
-                      color: '#9ca3af',
-                    }}
-                  >
-                    🔒 Pro
-                  </div>
-                )}
+                {!fullBranding && <ProLockOverlay align="center" />}
               </div>
 
               <div style={{ position: 'relative', opacity: fullBranding ? 1 : 0.4 }}>
@@ -436,24 +403,7 @@ export default async function Page({ searchParams }: PageProps) {
                     style={{ ...inputStyle, maxWidth: 180 }}
                   />
                 </div>
-                {!fullBranding && (
-                  <div
-                    title="Ab Pro Plan verfügbar"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      cursor: 'not-allowed',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
-                      paddingRight: 12,
-                      fontSize: 12,
-                      color: '#9ca3af',
-                    }}
-                  >
-                    🔒 Pro
-                  </div>
-                )}
+                {!fullBranding && <ProLockOverlay align="center" />}
               </div>
             </div>
 
@@ -467,14 +417,7 @@ export default async function Page({ searchParams }: PageProps) {
                 ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
                 : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
               }
-              {!fullBranding && (
-                <div
-                  title="Ab Pro Plan verfügbar"
-                  style={{ position: 'absolute', inset: 0, cursor: 'not-allowed', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: '4px 0', fontSize: 12, color: '#9ca3af' }}
-                >
-                  🔒 Pro
-                </div>
-              )}
+              {!fullBranding && <ProLockOverlay />}
             </div>
 
             {/* FEATURES */}
