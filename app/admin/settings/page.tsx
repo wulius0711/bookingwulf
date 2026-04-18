@@ -216,14 +216,14 @@ type ToggleKey =
   | 'enableImageSlider'
   | 'enableInstantBooking'
 
-const featureToggles: [ToggleKey, string][] = [
-  ['showPrices', 'Preise anzeigen'],
-  ['showAmenities', 'Ausstattung anzeigen'],
-  ['showExtrasStep', 'Zusatzleistungen anzeigen'],
-  ['showPhoneField', 'Telefonfeld anzeigen'],
-  ['showMessageField', 'Nachrichtenfeld anzeigen'],
-  ['enableImageSlider', 'Image Slider aktivieren'],
-  ['enableInstantBooking', 'Verbindliche Buchung anbieten'],
+const featureToggles: [ToggleKey, string, string][] = [
+  ['showPrices', 'Preise anzeigen', 'Zeigt Preise und Gesamtkosten im Widget an. Deaktivieren für reine Anfrage-Widgets ohne Preisangabe.'],
+  ['showAmenities', 'Ausstattung anzeigen', 'Zeigt die Ausstattungsliste jedes Apartments an.'],
+  ['showExtrasStep', 'Zusatzleistungen anzeigen', 'Zeigt Schritt 3 mit Zusatzleistungen und Versicherungsoptionen.'],
+  ['showPhoneField', 'Telefonfeld anzeigen', 'Fügt ein optionales Telefonfeld im Buchungsformular hinzu.'],
+  ['showMessageField', 'Nachrichtenfeld anzeigen', 'Fügt ein Nachrichtenfeld für besondere Wünsche hinzu.'],
+  ['enableImageSlider', 'Image Slider aktivieren', 'Aktiviert den Bild-Slider für Apartment-Fotos.'],
+  ['enableInstantBooking', 'Verbindliche Buchung anbieten', 'Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt.'],
 ]
 
 /* ---------- PAGE ---------- */
@@ -435,10 +435,12 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              {featureToggles.map(([key, label]) => (
+              {featureToggles.map(([key, label, tooltip]) => (
                 <div key={key} className="settings-row" style={checkboxRowStyle}>
-                  <label style={labelStyle}>{label}</label>
-
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <label style={labelStyle}>{label}</label>
+                    <span title={tooltip} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: '50%', background: '#e5e7eb', color: '#6b7280', fontSize: 10, fontWeight: 700, cursor: 'help', flexShrink: 0 }}>i</span>
+                  </div>
                   <label style={checkboxBoxStyle}>
                     <input
                       key={String(selected.settings?.[key] ?? true)}

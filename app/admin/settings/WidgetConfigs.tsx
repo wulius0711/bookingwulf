@@ -23,14 +23,14 @@ type Props = {
   host: string;
 };
 
-const toggles: [keyof Config, string][] = [
-  ['showPrices', 'Preise anzeigen'],
-  ['showAmenities', 'Ausstattung anzeigen'],
-  ['showExtrasStep', 'Zusatzleistungen anzeigen'],
-  ['showPhoneField', 'Telefonfeld anzeigen'],
-  ['showMessageField', 'Nachrichtenfeld anzeigen'],
-  ['enableImageSlider', 'Image Slider'],
-  ['enableInstantBooking', 'Verbindliche Buchung'],
+const toggles: [keyof Config, string, string][] = [
+  ['showPrices', 'Preise anzeigen', 'Zeigt Preise und Gesamtkosten im Widget an. Deaktivieren für reine Anfrage-Widgets ohne Preisangabe.'],
+  ['showAmenities', 'Ausstattung anzeigen', 'Zeigt die Ausstattungsliste jedes Apartments an.'],
+  ['showExtrasStep', 'Zusatzleistungen anzeigen', 'Zeigt Schritt 3 mit Zusatzleistungen und Versicherungsoptionen.'],
+  ['showPhoneField', 'Telefonfeld anzeigen', 'Fügt ein optionales Telefonfeld im Buchungsformular hinzu.'],
+  ['showMessageField', 'Nachrichtenfeld anzeigen', 'Fügt ein Nachrichtenfeld für besondere Wünsche hinzu.'],
+  ['enableImageSlider', 'Image Slider aktivieren', 'Aktiviert den Bild-Slider für Apartment-Fotos.'],
+  ['enableInstantBooking', 'Verbindliche Buchung anbieten', 'Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt.'],
 ];
 
 const defaults: Omit<Config, 'id' | 'name' | 'slug'> = {
@@ -111,7 +111,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
               </div>
 
               <div style={{ display: 'grid', gap: 8 }}>
-                {toggles.map(([key, label]) => (
+                {toggles.map(([key, label, tooltip]) => (
                   <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 10, background: '#fafafa', cursor: 'pointer', fontSize: 14 }}>
                     <input
                       type="checkbox"
@@ -119,7 +119,8 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
                       checked={!!(form as Record<string, unknown>)[key]}
                       onChange={() => toggle(key as keyof typeof defaults)}
                     />
-                    {label}
+                    <span style={{ flex: 1 }}>{label}</span>
+                    <span title={tooltip} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: '50%', background: '#e5e7eb', color: '#6b7280', fontSize: 10, fontWeight: 700, cursor: 'help', flexShrink: 0 }}>i</span>
                   </label>
                 ))}
               </div>
