@@ -1887,11 +1887,9 @@
 
         function toggleApartmentSelection(id) {
           if (isSelectedApartment(id)) {
-            state.selectedApartmentIds = state.selectedApartmentIds.filter(
-              (item) => item !== id
-            );
+            state.selectedApartmentIds = [];
           } else {
-            state.selectedApartmentIds.push(id);
+            state.selectedApartmentIds = [id];
           }
           renderAll();
         }

@@ -204,7 +204,6 @@ const iframeStyle: React.CSSProperties = {
 
 type ToggleKey =
   | 'showPrices'
-  | 'allowMultiSelect'
   | 'showAmenities'
   | 'showExtrasStep'
   | 'showPhoneField'
@@ -214,7 +213,6 @@ type ToggleKey =
 
 const featureToggles: [ToggleKey, string][] = [
   ['showPrices', 'Preise anzeigen'],
-  ['allowMultiSelect', 'Multi Select Apartments'],
   ['showAmenities', 'Ausstattung anzeigen'],
   ['showExtrasStep', 'Zusatzleistungen anzeigen'],
   ['showPhoneField', 'Telefonfeld anzeigen'],
