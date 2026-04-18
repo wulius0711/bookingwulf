@@ -48,12 +48,14 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   }
 
   function applyPreset(preset: Preset) {
+    const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
     Object.entries(FIELD_MAP).forEach(([key]) => {
       const val = preset[key as keyof Preset];
       const el = document.querySelector(`[name="${key}"]`) as HTMLInputElement;
       if (el && val !== null && val !== undefined) {
-        el.value = String(val);
+        nativeSetter?.call(el, String(val));
         el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
       }
     });
   }
