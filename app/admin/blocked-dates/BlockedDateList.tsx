@@ -8,7 +8,7 @@ type Range = {
   endDate: Date;
   type: string;
   note: string | null;
-  apartment: { name: string; hotel?: { name: string } | null; [key: string]: unknown } | null;
+  apartment: { name: string; hotel?: { name: string; settings?: { accentColor?: string | null } | null } | null; [key: string]: unknown } | null;
 };
 
 export default function BlockedDateList({
@@ -56,11 +56,14 @@ export default function BlockedDateList({
               <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>
                 {r.apartment?.name || 'Alle Apartments'}
               </span>
-              {isSuperAdmin && r.apartment?.hotel?.name && (
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 6, padding: '2px 8px', letterSpacing: '0.03em' }}>
-                  {r.apartment.hotel.name}
-                </span>
-              )}
+              {isSuperAdmin && r.apartment?.hotel?.name && (() => {
+                const accent = r.apartment?.hotel?.settings?.accentColor || '#111827';
+                return (
+                  <span style={{ fontSize: 11, fontWeight: 700, color: accent, background: `${accent}18`, border: `1px solid ${accent}40`, borderRadius: 6, padding: '2px 8px', letterSpacing: '0.03em' }}>
+                    {r.apartment.hotel.name}
+                  </span>
+                );
+              })()}
             </div>
             <div style={{ fontSize: 14, color: '#374151', marginTop: 4 }}>
               {fmt(r.startDate)} – {fmt(r.endDate)}

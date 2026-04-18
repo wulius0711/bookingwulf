@@ -43,7 +43,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
     where: selectedHotelId !== null
       ? { apartment: { hotelId: selectedHotelId } }
       : undefined,
-    include: { apartment: { include: { hotel: { select: { name: true } } } } },
+    include: { apartment: { include: { hotel: { select: { name: true, settings: { select: { accentColor: true } } } } } } },
     orderBy: { startDate: 'asc' },
   });
 
