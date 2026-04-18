@@ -52,6 +52,11 @@ export type Hotel = Prisma.HotelModel
  */
 export type HotelSettings = Prisma.HotelSettingsModel
 /**
+ * Model WidgetConfig
+ * 
+ */
+export type WidgetConfig = Prisma.WidgetConfigModel
+/**
  * Model HotelSettingsPreset
  * 
  */

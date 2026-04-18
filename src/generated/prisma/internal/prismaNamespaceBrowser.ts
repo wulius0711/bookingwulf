@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
+  WidgetConfig: 'WidgetConfig',
   HotelSettingsPreset: 'HotelSettingsPreset',
   Apartment: 'Apartment',
   IcalFeed: 'IcalFeed',
@@ -131,6 +132,25 @@ export const HotelSettingsScalarFieldEnum = {
 } as const
 
 export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
+
+
+export const WidgetConfigScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  slug: 'slug',
+  name: 'name',
+  showPrices: 'showPrices',
+  showAmenities: 'showAmenities',
+  showExtrasStep: 'showExtrasStep',
+  showPhoneField: 'showPhoneField',
+  showMessageField: 'showMessageField',
+  enableImageSlider: 'enableImageSlider',
+  enableInstantBooking: 'enableInstantBooking',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WidgetConfigScalarFieldEnum = (typeof WidgetConfigScalarFieldEnum)[keyof typeof WidgetConfigScalarFieldEnum]
 
 
 export const HotelSettingsPresetScalarFieldEnum = {

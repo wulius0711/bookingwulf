@@ -18,6 +18,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const hotelSlug = searchParams.get('hotel');
+    const configSlug = searchParams.get('config') || null;
 
     if (!hotelSlug) {
       return withCors(
@@ -52,6 +53,27 @@ export async function GET(req: Request) {
       where: { hotelId: hotel.id },
     });
 
+    // If a widget config slug is given, override feature toggles
+    const widgetConfig = configSlug
+      ? await prisma.widgetConfig.findUnique({
+          where: { hotelId_slug: { hotelId: hotel.id, slug: configSlug } },
+        })
+      : null;
+
+    const mergedSettings = widgetConfig
+      ? {
+          ...settings,
+          showPrices: widgetConfig.showPrices,
+          showAmenities: widgetConfig.showAmenities,
+          showExtrasStep: widgetConfig.showExtrasStep,
+          showPhoneField: widgetConfig.showPhoneField,
+          showMessageField: widgetConfig.showMessageField,
+          enableImageSlider: widgetConfig.enableImageSlider,
+          enableInstantBooking: widgetConfig.enableInstantBooking,
+          instantBooking: widgetConfig.enableInstantBooking,
+        }
+      : settings;
+
     const canUseExtras = hasPlanAccess((hotel.plan as PlanKey) ?? 'starter', 'pro');
     const extras = await prisma.hotelExtra.findMany({
       where: {
@@ -68,7 +90,7 @@ export async function GET(req: Request) {
       NextResponse.json({
         success: true,
         hotel,
-        settings,
+        settings: mergedSettings,
         extras,
       }),
     );

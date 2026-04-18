@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Hotel: 'Hotel',
   HotelSettings: 'HotelSettings',
+  WidgetConfig: 'WidgetConfig',
   HotelSettingsPreset: 'HotelSettingsPreset',
   Apartment: 'Apartment',
   IcalFeed: 'IcalFeed',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "adminUserHotel" | "emailTemplate"
+    modelProps: "hotel" | "hotelSettings" | "widgetConfig" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "adminUserHotel" | "emailTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -562,6 +563,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HotelSettingsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HotelSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    WidgetConfig: {
+      payload: Prisma.$WidgetConfigPayload<ExtArgs>
+      fields: Prisma.WidgetConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WidgetConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WidgetConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.WidgetConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WidgetConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        findMany: {
+          args: Prisma.WidgetConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>[]
+        }
+        create: {
+          args: Prisma.WidgetConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        createMany: {
+          args: Prisma.WidgetConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WidgetConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.WidgetConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        update: {
+          args: Prisma.WidgetConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.WidgetConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WidgetConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WidgetConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.WidgetConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.WidgetConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWidgetConfig>
+        }
+        groupBy: {
+          args: Prisma.WidgetConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WidgetConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WidgetConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WidgetConfigCountAggregateOutputType> | number
         }
       }
     }
@@ -1542,6 +1617,25 @@ export const HotelSettingsScalarFieldEnum = {
 export type HotelSettingsScalarFieldEnum = (typeof HotelSettingsScalarFieldEnum)[keyof typeof HotelSettingsScalarFieldEnum]
 
 
+export const WidgetConfigScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  slug: 'slug',
+  name: 'name',
+  showPrices: 'showPrices',
+  showAmenities: 'showAmenities',
+  showExtrasStep: 'showExtrasStep',
+  showPhoneField: 'showPhoneField',
+  showMessageField: 'showMessageField',
+  enableImageSlider: 'enableImageSlider',
+  enableInstantBooking: 'enableInstantBooking',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WidgetConfigScalarFieldEnum = (typeof WidgetConfigScalarFieldEnum)[keyof typeof WidgetConfigScalarFieldEnum]
+
+
 export const HotelSettingsPresetScalarFieldEnum = {
   id: 'id',
   hotelId: 'hotelId',
@@ -1965,6 +2059,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   hotel?: Prisma.HotelOmit
   hotelSettings?: Prisma.HotelSettingsOmit
+  widgetConfig?: Prisma.WidgetConfigOmit
   hotelSettingsPreset?: Prisma.HotelSettingsPresetOmit
   apartment?: Prisma.ApartmentOmit
   icalFeed?: Prisma.IcalFeedOmit

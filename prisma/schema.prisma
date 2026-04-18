@@ -29,6 +29,7 @@ model Hotel {
 
   settings        HotelSettings?
   settingsPresets HotelSettingsPreset[]
+  widgetConfigs   WidgetConfig[]
   emailTemplates  EmailTemplate[]
   apartments      Apartment[]
   requests      Request[]
@@ -74,6 +75,28 @@ model HotelSettings {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model WidgetConfig {
+  id      Int   @id @default(autoincrement())
+  hotelId Int
+  hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  slug String  // z.B. "anfrage" oder "buchung"
+  name String  // Anzeigename im Admin
+
+  showPrices           Boolean @default(true)
+  showAmenities        Boolean @default(true)
+  showExtrasStep       Boolean @default(true)
+  showPhoneField       Boolean @default(true)
+  showMessageField     Boolean @default(true)
+  enableImageSlider    Boolean @default(true)
+  enableInstantBooking Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hotelId, slug])
 }
 
 model HotelSettingsPreset {

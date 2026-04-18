@@ -9,6 +9,7 @@ import { EmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
 import ProLockOverlay from '../components/ProLockOverlay';
+import WidgetConfigs from './WidgetConfigs';
 
 export const dynamic = 'force-dynamic';
 
@@ -252,7 +253,7 @@ export default async function Page({ searchParams }: PageProps) {
   const selected = selectedId
     ? await prisma.hotel.findUnique({
         where: { id: selectedId },
-        include: { settings: true, settingsPresets: { orderBy: { createdAt: 'asc' } } },
+        include: { settings: true, settingsPresets: { orderBy: { createdAt: 'asc' } }, widgetConfigs: { orderBy: { createdAt: 'asc' } } },
       })
     : null;
 
@@ -484,6 +485,21 @@ export default async function Page({ searchParams }: PageProps) {
 
             <EmbedCode
               code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
+            />
+
+          </div>
+
+          {/* Widget Configs */}
+          <div style={sectionStyle}>
+            <div>
+              <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
+              <p style={sectionIntroStyle}>Erstelle mehrere Varianten des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
+            </div>
+            <WidgetConfigs
+              hotelId={selected.id}
+              hotelSlug={selected.slug}
+              configs={selected.widgetConfigs}
+              host={headerStore.get('host') || 'deine-domain.com'}
             />
           </div>
         </div>

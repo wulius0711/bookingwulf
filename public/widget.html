@@ -1476,6 +1476,7 @@
       (() => {
         const API_BASE = "";
         const HOTEL_SLUG = new URLSearchParams(window.location.search).get("hotel") || "default";
+        const WIDGET_CONFIG = new URLSearchParams(window.location.search).get("config") || "";
 
         const state = {
           step: 1,
@@ -1530,7 +1531,7 @@
 
         async function loadHotelSettings() {
           try {
-            const res = await fetch(`${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}`);
+            const res = await fetch(`${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}`);
             const data = await res.json();
 
             if (!data.success) return;
