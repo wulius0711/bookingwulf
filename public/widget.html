@@ -2240,9 +2240,18 @@ sortedApartments.forEach((ap) => {
             state.children ? `, ${state.children} Kinder` : ""
           }`;
           const selectedExtras = getSelectedExtrasDetailed();
+          const extrasNormal = selectedExtras.filter((item) => {
+            const ex = state.availableExtras.find((e) => e.key === item.key);
+            return ex && ex.type !== "insurance";
+          });
+          const extrasInsurance = selectedExtras.filter((item) => {
+            const ex = state.availableExtras.find((e) => e.key === item.key);
+            return ex && ex.type === "insurance";
+          });
+          const extrasSorted = [...extrasNormal, ...extrasInsurance];
           const extras =
-            selectedExtras.length > 0
-              ? selectedExtras.map((item) => item.detail).join(", ")
+            extrasSorted.length > 0
+              ? `<ul style="margin:0;padding-left:18px;">${extrasSorted.map((item) => `<li>${item.detail}</li>`).join("")}</ul>`
               : "Keine ausgewählt";
 
           document.getElementById("totalBox").textContent = eur(getTotal());
