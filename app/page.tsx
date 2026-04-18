@@ -275,6 +275,9 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          <p style={{ textAlign: 'center', marginTop: 32, fontSize: 14, color: '#888' }}>
+            Fragen? <a href="mailto:support@bookingwulf.com" style={{ color: '#111', fontWeight: 600, textDecoration: 'none' }}>support@bookingwulf.com</a>
+          </p>
         </div>
       </section>
 
@@ -293,6 +296,7 @@ export default function LandingPage() {
         <a href="/datenschutz" className="lp-footer-link">Datenschutz</a>
         <a href="/agb" className="lp-footer-link">AGB</a>
         <a href="/avv" className="lp-footer-link">AVV</a>
+        <a href="mailto:support@bookingwulf.com" className="lp-footer-link">Support</a>
       </footer>
     </div>
   );

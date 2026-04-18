@@ -117,6 +117,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <a href="/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
           <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
           <a href="/avv" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AVV</a>
+          <a href="mailto:support@bookingwulf.com" style={{ color: '#9ca3af', textDecoration: 'none' }}>Support</a>
         </footer>
       </div>
 
