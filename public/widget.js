@@ -24,5 +24,8 @@
     if (e.data && e.data.type === 'booking-widget-resize' && e.data.height > 100) {
       iframe.style.height = e.data.height + 'px';
     }
+    if (e.data && e.data.type === 'booking-widget-scroll-top') {
+      iframe.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 })();
