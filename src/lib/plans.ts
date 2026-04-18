@@ -13,7 +13,7 @@ export const PLANS = {
     priceYearly: 99,
     maxApartments: 20,
     maxUsers: 3,
-    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'E-Mail-Benachrichtigungen', 'Konfigurierbare Zusatzleistungen', 'Preissaisons', 'Direktnachrichten an Gäste'],
+    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons', 'Direktnachrichten an Gäste'],
   },
   business: {
     name: 'Business',
