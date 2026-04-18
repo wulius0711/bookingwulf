@@ -71,6 +71,25 @@ export default function BillingPage() {
     setActionLoading(false);
   }
 
+  async function handleCheckout(plan: PlanKey) {
+    if (!hotel) return;
+    setActionLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, hotelId: hotel.id, interval: billingInterval }),
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; return; }
+      setError(data.error || `Checkout fehlgeschlagen (${res.status})`);
+    } catch (e) {
+      setError(String(e));
+    }
+    setActionLoading(false);
+  }
+
   async function openPortal() {
     if (!hotel) return;
     setActionLoading(true);
@@ -214,24 +233,46 @@ export default function BillingPage() {
                   ))}
                 </ul>
 
-                <button
-                  className="btn-primary"
-                  onClick={() => handlePlanAction(key)}
-                  disabled={actionLoading || (isCurrent && isActive)}
-                  style={{
-                    padding: '10px 16px',
-                    borderRadius: 8,
-                    background: '#111827',
-                    color: '#fff',
-                    border: 'none',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    cursor: (isCurrent && isActive) ? 'default' : 'pointer',
-                    opacity: (isCurrent && isActive) ? 0.4 : actionLoading ? 0.6 : 1,
-                  }}
-                >
-                  {isCurrent && isActive ? 'Aktiver Plan' : 'Auswählen'}
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <button
+                    className="btn-primary"
+                    onClick={() => handlePlanAction(key)}
+                    disabled={actionLoading || (isCurrent && status === 'active')}
+                    style={{
+                      padding: '10px 16px',
+                      borderRadius: 8,
+                      background: '#111827',
+                      color: '#fff',
+                      border: 'none',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: (isCurrent && status === 'active') ? 'default' : 'pointer',
+                      opacity: (isCurrent && status === 'active') ? 0.4 : actionLoading ? 0.6 : 1,
+                    }}
+                  >
+                    {isCurrent && status === 'active' ? 'Aktiver Plan' : 'Auswählen'}
+                  </button>
+
+                  {status === 'trialing' && (
+                    <button
+                      onClick={() => handleCheckout(key)}
+                      disabled={actionLoading}
+                      style={{
+                        padding: '10px 16px',
+                        borderRadius: 8,
+                        background: '#fff',
+                        color: '#111827',
+                        border: '1px solid #d1d5db',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        opacity: actionLoading ? 0.6 : 1,
+                      }}
+                    >
+                      Jetzt kaufen
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
