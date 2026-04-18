@@ -1992,7 +1992,7 @@ sortedApartments.forEach((ap) => {
 
             const div = document.createElement("div");
             div.className = `apt-card ${selected ? "selected" : ""} ${
-              status.type === "unavailable" || status.type === "not-matching"
+              status.type === "unavailable" || (status.type === "not-matching" && !allNotMatching)
                 ? "disabled"
                 : ""
             }`;
