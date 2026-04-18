@@ -247,7 +247,7 @@ export default function LandingPage() {
               )}
             </span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20, alignItems: 'start' }}>
             {plans.map(([key, plan]) => (
               <div key={key} className="lp-pricing" style={{ border: key === 'pro' ? '2px solid #111' : '1px solid #e5e7eb' }}>
                 {key === 'pro' && (
