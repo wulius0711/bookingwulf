@@ -1266,7 +1266,7 @@
           </div>
           <div class="step" data-step="3">
             <span class="step-index">3</span>
-            <span class="step-label">Extras</span>
+            <span class="step-label">Zusatzleistungen</span>
             <span class="step-sub">Zusatzleistungen ergänzen</span>
           </div>
           <div class="step" data-step="4">
@@ -2736,7 +2736,7 @@ sortedApartments.forEach((ap) => {
             if (!validateStep(state.step)) return;
             state.step = Math.min(4, state.step + 1);
             renderAll();
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
           });
         });
 
