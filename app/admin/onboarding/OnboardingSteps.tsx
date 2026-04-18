@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {
   hotelName: string;
@@ -10,12 +10,6 @@ type Props = {
 
 export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }: Props) {
   const [step, setStep] = useState(0);
-  const topRef = useRef<HTMLDivElement>(null);
-
-  function goToStep(n: number) {
-    setStep(n);
-    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 
   const steps = [
     {
@@ -152,7 +146,6 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
 
   return (
     <div
-      ref={topRef}
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -205,7 +198,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28, gap: 12 }}>
               <button
                 type="button"
-                onClick={() => goToStep(Math.max(0, step - 1))}
+                onClick={() => setStep(Math.max(0, step - 1))}
                 disabled={step === 0}
                 style={{
                   padding: '10px 20px',
@@ -222,7 +215,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
               </button>
               <button
                 type="button"
-                onClick={() => goToStep(Math.min(steps.length - 1, step + 1))}
+                onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
                 style={{
                   padding: '10px 24px',
                   borderRadius: 8,
