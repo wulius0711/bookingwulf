@@ -196,14 +196,15 @@ export default function BillingPage() {
                 key={key}
                 className="plan-card"
                 style={{
-                  background: '#fff',
-                  border: `2px solid ${key === 'pro' ? '#111827' : '#e5e7eb'}`,
+                  background: isCurrent ? '#f9fafb' : '#fff',
+                  border: `2px solid ${isCurrent ? '#e5e7eb' : key === 'pro' ? '#111827' : '#e5e7eb'}`,
                   borderRadius: 16,
                   padding: 24,
                   display: 'flex',
                   flexDirection: 'column' as const,
                   gap: 16,
                   position: 'relative',
+                  opacity: isCurrent ? 0.7 : 1,
                 }}
               >
                 {key === 'pro' && (
@@ -237,7 +238,7 @@ export default function BillingPage() {
                   <button
                     className="btn-primary"
                     onClick={() => handlePlanAction(key)}
-                    disabled={actionLoading || (isCurrent && status === 'active')}
+                    disabled={actionLoading || isCurrent}
                     style={{
                       padding: '10px 16px',
                       borderRadius: 8,
@@ -246,11 +247,11 @@ export default function BillingPage() {
                       border: 'none',
                       fontSize: 14,
                       fontWeight: 600,
-                      cursor: (isCurrent && status === 'active') ? 'default' : 'pointer',
-                      opacity: (isCurrent && status === 'active') ? 0.4 : actionLoading ? 0.6 : 1,
+                      cursor: isCurrent ? 'default' : 'pointer',
+                      opacity: isCurrent ? 0.4 : actionLoading ? 0.6 : 1,
                     }}
                   >
-                    {isCurrent && status === 'active' ? 'Aktiver Plan' : 'Auswählen'}
+                    {isCurrent ? 'Ausgewählt' : 'Auswählen'}
                   </button>
 
                   {status === 'trialing' && (
