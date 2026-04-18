@@ -1761,6 +1761,26 @@
           if (e.data && e.data.type === 'booking-widget-lightbox-closed') {
             closeLightbox();
           }
+          if (e.data && e.data.type === 'booking-widget-preview-settings') {
+            const s = e.data.settings || {};
+            if (s.accentColor) document.documentElement.style.setProperty('--accent', s.accentColor);
+            if (s.backgroundColor) document.documentElement.style.setProperty('--bg', s.backgroundColor);
+            if (s.cardBackground) {
+              document.documentElement.style.setProperty('--surface-2', s.cardBackground);
+              document.documentElement.style.setProperty('--surface-3', s.cardBackground);
+            }
+            if (s.textColor) document.documentElement.style.setProperty('--text', s.textColor);
+            if (s.mutedTextColor) {
+              document.documentElement.style.setProperty('--muted', s.mutedTextColor);
+              document.documentElement.style.setProperty('--muted-2', s.mutedTextColor);
+            }
+            if (s.borderColor) {
+              document.documentElement.style.setProperty('--line', s.borderColor);
+              document.documentElement.style.setProperty('--line-strong', s.borderColor);
+            }
+            if (s.cardRadius) document.documentElement.style.setProperty('--radius', parseInt(s.cardRadius) + 'px');
+            if (s.buttonRadius) document.documentElement.style.setProperty('--button-radius', parseInt(s.buttonRadius) + 'px');
+          }
         });
 
         function lightboxNext() {

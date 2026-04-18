@@ -58,6 +58,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
         el.dispatchEvent(new Event('change', { bubbles: true }));
       }
     });
+    document.dispatchEvent(new CustomEvent('settings-preset-applied'));
   }
 
   async function savePreset() {

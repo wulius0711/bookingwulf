@@ -6,6 +6,7 @@ import { ColorField } from './color-field';
 import { hasFullBranding, hasPlanAccess } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
+import SettingsLivePreview from './SettingsLivePreview';
 
 export const dynamic = 'force-dynamic';
 
@@ -531,13 +532,14 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
 
         {/* RIGHT PREVIEW */}
+        <SettingsLivePreview />
         <div className="settings-preview" style={rightPanelStyle}>
           <h2 style={previewTitleStyle}>Live Preview</h2>
           <p style={previewSubStyle}>
             Vorschau des Widgets für {selected.name}.
           </p>
 
-          <iframe src={`/widget.html?hotel=${selected.slug}`} style={iframeStyle} />
+          <iframe src={`/widget.html?hotel=${selected.slug}`} style={iframeStyle} className="settings-preview-iframe" />
         </div>
       </div>
     </main>
