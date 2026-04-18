@@ -48,8 +48,8 @@ export async function saveHotelSettings(formData: FormData) {
       mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
       borderColor: String(formData.get('borderColor') || '') || null,
 
-      cardRadius: Number(formData.get('cardRadius') || 0) || null,
-      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
+      cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
+      buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
     },
     create: {
       hotelId,
@@ -70,8 +70,8 @@ export async function saveHotelSettings(formData: FormData) {
       mutedTextColor: String(formData.get('mutedTextColor') || '') || null,
       borderColor: String(formData.get('borderColor') || '') || null,
 
-      cardRadius: Number(formData.get('cardRadius') || 0) || null,
-      buttonRadius: Number(formData.get('buttonRadius') || 0) || null,
+      cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
+      buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
     },
   });
 
