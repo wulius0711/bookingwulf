@@ -6,6 +6,7 @@ import { hasPlanAccess, FEATURE_PLAN_GATES } from '@/src/lib/plan-gates';
 import { PlanKey } from '@/src/lib/plans';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import StatusButtons from './StatusButtons';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -388,39 +389,12 @@ export default async function BookingDetailPage({ params }: PageProps) {
         {/* 🔘 Status Buttons */}
         <div>
           <strong>Status ändern:</strong>
-
-          <div style={{ display: 'flex', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
-            {[
-              { value: 'new', label: 'Neu' },
-              { value: 'answered', label: 'Beantwortet' },
-              { value: 'booked', label: 'Gebucht' },
-              { value: 'cancelled', label: 'Storniert' },
-            ].map((s) => {
-              const active = request.status === s.value;
-
-              return (
-                <form key={s.value} action={updateBookingStatus}>
-                  <input type="hidden" name="id" value={request.id} />
-                  <input type="hidden" name="status" value={s.value} />
-
-                  <button
-                    type="submit"
-                    disabled={active}
-                    style={{
-                      padding: '10px 14px',
-                      borderRadius: 8,
-                      border: active ? '1px solid #111' : '1px solid #ccc',
-                      background: active ? '#111' : '#fff',
-                      color: active ? '#fff' : '#111',
-                      cursor: active ? 'default' : 'pointer',
-                    }}
-                  >
-                    {s.label}
-                  </button>
-                </form>
-              );
-            })}
-          </div>
+          <StatusButtons
+            requestId={request.id}
+            currentStatus={request.status}
+            guestEmail={request.email}
+            action={updateBookingStatus}
+          />
         </div>
 
         {request.status === 'booked' && (() => {
