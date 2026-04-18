@@ -397,35 +397,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           />
         </div>
 
-        {request.status === 'booked' && (() => {
-          const icsUrl = bookingIcalUrl(request.id, request.createdAt);
-          return (
-            <div style={{ paddingTop: 4 }}>
-              <strong style={{ fontSize: 13 }}>Kalender-Export für Gast:</strong>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
-                <a
-                  href={icsUrl}
-                  download={`buchung-${request.id}.ics`}
-                  style={{
-                    display: 'inline-block',
-                    padding: '8px 16px',
-                    borderRadius: 8,
-                    background: '#111',
-                    color: '#fff',
-                    textDecoration: 'none',
-                    fontSize: 13,
-                    fontWeight: 600,
-                  }}
-                >
-                  📅 .ics herunterladen
-                </a>
-                <span style={{ fontSize: 12, color: '#9ca3af', wordBreak: 'break-all' }}>{icsUrl}</span>
-              </div>
-            </div>
-          );
-        })()}
-
-        <div style={{ fontSize: 12, color: '#666' }}>
+<div style={{ fontSize: 12, color: '#666' }}>
           Erstellt: {new Date(request.createdAt).toLocaleString()}
         </div>
       </div>
