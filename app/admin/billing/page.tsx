@@ -36,6 +36,13 @@ export default function BillingPage() {
       setLoading(false);
     }
     load();
+
+    // Reset loading state when user returns via browser back button (bfcache restore)
+    function handlePageShow(e: PageTransitionEvent) {
+      if (e.persisted) setActionLoading(false);
+    }
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
   async function handlePlanAction(plan: PlanKey) {
