@@ -19,6 +19,7 @@ export default function BillingPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showWelcome, setShowWelcome] = useState(searchParams.get('welcome') === '1');
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('year');
 
   function closeWelcome() {
     setShowWelcome(false);
@@ -46,7 +47,7 @@ export default function BillingPage() {
         const res = await fetch('/api/admin/switch-plan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan }),
+          body: JSON.stringify({ plan, interval: billingInterval }),
         });
         const data = await res.json();
         if (data.ok) {
@@ -58,7 +59,7 @@ export default function BillingPage() {
         const res = await fetch('/api/stripe/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan, hotelId: hotel.id }),
+          body: JSON.stringify({ plan, hotelId: hotel.id, interval: billingInterval }),
         });
         const data = await res.json();
         if (data.url) { window.location.href = data.url; return; }
@@ -144,6 +145,29 @@ export default function BillingPage() {
           </div>
         )}
 
+        {/* Billing interval toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+          <span style={{ fontSize: 14, color: billingInterval === 'month' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
+          <button
+            onClick={() => setBillingInterval(billingInterval === 'month' ? 'year' : 'month')}
+            style={{
+              width: 48, height: 26, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 3,
+              background: billingInterval === 'year' ? '#111827' : '#d1d5db',
+              display: 'flex', alignItems: 'center',
+              justifyContent: billingInterval === 'year' ? 'flex-end' : 'flex-start',
+              transition: 'background 0.2s ease',
+            }}
+          >
+            <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', display: 'block' }} />
+          </button>
+          <span style={{ fontSize: 14, color: billingInterval === 'year' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
+            Jährlich
+            {billingInterval === 'year' && (
+              <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 700 }}>2 Monate gratis</span>
+            )}
+          </span>
+        </div>
+
         {/* Plan cards */}
         <div className="plan-grid" style={{ display: 'grid', gap: 16 }}>
           {(Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).map(([key, plan]) => {
@@ -172,9 +196,14 @@ export default function BillingPage() {
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>{plan.name}</div>
                   <div style={{ fontSize: 28, fontWeight: 700, color: '#0f172a', marginTop: 8, letterSpacing: '-0.02em' }}>
-                    € {key === 'starter' ? '49' : key === 'pro' ? '99' : '199'}
+                    € {billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
                     <span style={{ fontSize: 14, fontWeight: 400, color: '#6b7280' }}> / Monat</span>
                   </div>
+                  {billingInterval === 'year' && (
+                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+                      = € {plan.priceYearly * 12} / Jahr
+                    </div>
+                  )}
                 </div>
 
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>

@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { PLANS } from '@/src/lib/plans';
 
 export default function LandingPage() {
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('year');
+
   const features = [
     { icon: '🏨', title: 'Multi-Apartment', desc: 'Verwalten Sie beliebig viele Apartments mit individuellen Preisen, Bildern und Ausstattung.' },
     { icon: '📅', title: 'Live-Verfügbarkeit', desc: 'Echtzeit-Prüfung der Verfügbarkeit mit Sperrzeiten und Preissaisons.' },
@@ -220,7 +225,28 @@ export default function LandingPage() {
       <section id="pricing" style={{ background: '#fafafa', padding: '80px 24px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Faire Preise</h2>
-          <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 48px' }}>Keine Provision, keine versteckten Kosten. Monatlich kündbar.</p>
+          <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 24px' }}>Keine Provision, keine versteckten Kosten. Monatlich kündbar.</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 40 }}>
+            <span style={{ fontSize: 14, color: billingInterval === 'month' ? '#111' : '#999', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
+            <button
+              onClick={() => setBillingInterval(billingInterval === 'month' ? 'year' : 'month')}
+              style={{
+                width: 48, height: 26, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 3,
+                background: billingInterval === 'year' ? '#111' : '#d1d5db',
+                display: 'flex', alignItems: 'center',
+                justifyContent: billingInterval === 'year' ? 'flex-end' : 'flex-start',
+                transition: 'background 0.2s ease',
+              }}
+            >
+              <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', display: 'block' }} />
+            </button>
+            <span style={{ fontSize: 14, color: billingInterval === 'year' ? '#111' : '#999', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
+              Jährlich
+              {billingInterval === 'year' && (
+                <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 700 }}>2 Monate gratis</span>
+              )}
+            </span>
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
             {plans.map(([key, plan]) => (
               <div key={key} className="lp-pricing" style={{ border: key === 'pro' ? '2px solid #111' : '1px solid #e5e7eb' }}>
@@ -229,7 +255,7 @@ export default function LandingPage() {
                 )}
                 <h3 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{plan.name}</h3>
                 <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '8px 0' }}>
-                  {'\u20AC'}{plan.priceEur}<span style={{ fontSize: 16, fontWeight: 400, color: '#999' }}>/Mo</span>
+                  {'\u20AC'}{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}<span style={{ fontSize: 16, fontWeight: 400, color: '#999' }}>/Mo</span>
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 24px', display: 'grid', gap: 10 }}>
                   {plan.features.map((f) => (

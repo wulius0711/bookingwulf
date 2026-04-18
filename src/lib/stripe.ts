@@ -25,11 +25,22 @@ export function getPlanFromPriceId(priceId: string): PlanKey {
     [process.env.STRIPE_PRICE_STARTER ?? '']: 'starter',
     [process.env.STRIPE_PRICE_PRO ?? '']: 'pro',
     [process.env.STRIPE_PRICE_BUSINESS ?? '']: 'business',
+    [process.env.STRIPE_PRICE_STARTER_YEARLY ?? '']: 'starter',
+    [process.env.STRIPE_PRICE_PRO_YEARLY ?? '']: 'pro',
+    [process.env.STRIPE_PRICE_BUSINESS_YEARLY ?? '']: 'business',
   };
   return priceMap[priceId] ?? 'starter';
 }
 
-export function getPriceId(plan: PlanKey): string {
+export function getPriceId(plan: PlanKey, interval: 'month' | 'year' = 'month'): string {
+  if (interval === 'year') {
+    const map: Record<PlanKey, string> = {
+      starter: process.env.STRIPE_PRICE_STARTER_YEARLY ?? '',
+      pro: process.env.STRIPE_PRICE_PRO_YEARLY ?? '',
+      business: process.env.STRIPE_PRICE_BUSINESS_YEARLY ?? '',
+    };
+    return map[plan];
+  }
   const map: Record<PlanKey, string> = {
     starter: process.env.STRIPE_PRICE_STARTER ?? '',
     pro: process.env.STRIPE_PRICE_PRO ?? '',

@@ -7,7 +7,7 @@ import { verifySession } from '@/src/lib/session';
 export async function POST(req: Request) {
   try {
     const session = await verifySession();
-    const { plan, hotelId: bodyHotelId } = await req.json();
+    const { plan, hotelId: bodyHotelId, interval } = await req.json();
 
     const hotelId = session.hotelId ?? Number(bodyHotelId);
     if (!hotelId) return NextResponse.json({ error: 'Hotel fehlt.' }, { status: 400 });
@@ -16,7 +16,8 @@ export async function POST(req: Request) {
     }
 
     const planKey = (plan as PlanKey) in PLANS ? (plan as PlanKey) : 'starter';
-    const priceId = getPriceId(planKey);
+    const billingInterval: 'month' | 'year' = interval === 'year' ? 'year' : 'month';
+    const priceId = getPriceId(planKey, billingInterval);
 
     const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { id: true, name: true, email: true, stripeCustomerId: true } });
     if (!hotel) return NextResponse.json({ error: 'Hotel nicht gefunden.' }, { status: 404 });
