@@ -22,6 +22,23 @@ const STATUS_LABELS: Record<string, string> = {
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 
+function calcApartmentPrice(
+  basePrice: number | null,
+  cleaningFee: number | null,
+  nights: number,
+  arrival: Date,
+  seasons: { startDate: Date; endDate: Date; pricePerNight: number }[]
+): number {
+  let total = 0;
+  for (let i = 0; i < nights; i++) {
+    const d = new Date(arrival);
+    d.setDate(d.getDate() + i);
+    const season = seasons.find(s => d >= s.startDate && d <= s.endDate);
+    total += Number(season?.pricePerNight ?? basePrice ?? 0);
+  }
+  return total + Number(cleaningFee ?? 0);
+}
+
 export default async function AnalyticsPage({ searchParams }: PageProps) {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
@@ -37,25 +54,36 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
   const hotelFilter = selectedId ? { hotelId: selectedId } : {};
 
-  // Last 12 months
   const now = new Date();
   const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
-  const allRequests = await prisma.request.findMany({
-    where: { ...hotelFilter, createdAt: { gte: twelveMonthsAgo } },
-    select: {
-      id: true,
-      createdAt: true,
-      status: true,
-      nights: true,
-      adults: true,
-      children: true,
-      selectedApartmentIds: true,
-      extrasJson: true,
-      hotel: { select: { name: true } },
-    },
-    orderBy: { createdAt: 'asc' },
-  });
+  const [allRequests, allApartments, blockedRanges] = await Promise.all([
+    prisma.request.findMany({
+      where: { ...hotelFilter, createdAt: { gte: twelveMonthsAgo } },
+      select: {
+        id: true, createdAt: true, status: true, nights: true,
+        adults: true, children: true, selectedApartmentIds: true,
+        extrasJson: true, arrival: true, departure: true, country: true,
+        hotel: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'asc' },
+    }),
+    prisma.apartment.findMany({
+      where: selectedId ? { hotelId: selectedId } : {},
+      select: {
+        id: true, name: true, basePrice: true, cleaningFee: true,
+        priceSeasons: { select: { startDate: true, endDate: true, pricePerNight: true } },
+      },
+    }),
+    prisma.blockedRange.findMany({
+      where: {
+        ...(selectedId ? { apartment: { hotelId: selectedId } } : {}),
+        type: 'booking',
+        startDate: { gte: twelveMonthsAgo },
+      },
+      select: { apartmentId: true, startDate: true, endDate: true },
+    }),
+  ]);
 
   // Monthly breakdown
   const monthlyMap = new Map<string, number>();
@@ -75,9 +103,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
   // Status breakdown
   const statusMap: Record<string, number> = {};
-  for (const r of allRequests) {
-    statusMap[r.status] = (statusMap[r.status] ?? 0) + 1;
-  }
+  for (const r of allRequests) statusMap[r.status] = (statusMap[r.status] ?? 0) + 1;
 
   // Top apartments
   const apartmentMap = new Map<string, number>();
@@ -87,16 +113,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       if (id) apartmentMap.set(id, (apartmentMap.get(id) ?? 0) + 1);
     }
   }
-  const apartmentIds = [...apartmentMap.keys()].map(Number).filter(Boolean);
-  const apartmentNames = apartmentIds.length
-    ? await prisma.apartment.findMany({
-        where: { id: { in: apartmentIds } },
-        select: { id: true, name: true },
-      })
-    : [];
   const topApartments = [...apartmentMap.entries()]
     .map(([id, count]) => ({
-      name: apartmentNames.find((a) => a.id === Number(id))?.name ?? `#${id}`,
+      name: allApartments.find((a) => a.id === Number(id))?.name ?? `#${id}`,
       count,
     }))
     .sort((a, b) => b.count - a.count)
@@ -110,40 +129,65 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
     if (!Array.isArray(r.extrasJson)) continue;
     for (const item of r.extrasJson as ExtraLine[]) {
       const existing = extrasMap.get(item.key) ?? { name: item.name, count: 0, revenue: 0 };
-      extrasMap.set(item.key, {
-        name: item.name,
-        count: existing.count + 1,
-        revenue: existing.revenue + (item.subtotal ?? 0),
-      });
+      extrasMap.set(item.key, { name: item.name, count: existing.count + 1, revenue: existing.revenue + (item.subtotal ?? 0) });
     }
   }
   const topExtras = [...extrasMap.values()].sort((a, b) => b.count - a.count);
+
+  // Revenue calculation
+  let totalRevenue = 0;
+  for (const r of allRequests) {
+    const aptIds = r.selectedApartmentIds.split(',').map(Number).filter(Boolean);
+    for (const aptId of aptIds) {
+      const apt = allApartments.find(a => a.id === aptId);
+      if (apt && r.arrival && r.nights) {
+        totalRevenue += calcApartmentPrice(apt.basePrice, apt.cleaningFee, r.nights, r.arrival, apt.priceSeasons);
+      }
+    }
+    if (Array.isArray(r.extrasJson)) {
+      for (const item of r.extrasJson as ExtraLine[]) {
+        totalRevenue += item.subtotal ?? 0;
+      }
+    }
+  }
+  const avgBookingValue = allRequests.length > 0 ? totalRevenue / allRequests.length : 0;
+
+  // Occupancy per apartment (last 12 months)
+  const availableNights = 365;
+  const occupancyData = allApartments.map(apt => {
+    const bookedNights = blockedRanges
+      .filter(b => b.apartmentId === apt.id)
+      .reduce((sum, b) => {
+        const nights = Math.round((new Date(b.endDate).getTime() - new Date(b.startDate).getTime()) / 86400000);
+        return sum + Math.max(0, nights);
+      }, 0);
+    const pct = Math.min(100, Math.round((bookedNights / availableNights) * 100));
+    return { name: apt.name, bookedNights, pct };
+  }).sort((a, b) => b.pct - a.pct);
+
+  // Countries
+  const countryMap = new Map<string, number>();
+  for (const r of allRequests) {
+    if (r.country?.trim()) {
+      const c = r.country.trim();
+      countryMap.set(c, (countryMap.get(c) ?? 0) + 1);
+    }
+  }
+  const topCountries = [...countryMap.entries()]
+    .map(([country, count]) => ({ country, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+  const maxCountry = Math.max(...topCountries.map(c => c.count), 1);
 
   // KPIs
   const total = allRequests.length;
   const booked = allRequests.filter((r) => r.status === 'booked').length;
   const conversionRate = total > 0 ? ((booked / total) * 100).toFixed(1) : '0.0';
-  const avgNights = total > 0
-    ? (allRequests.reduce((s, r) => s + r.nights, 0) / total).toFixed(1)
-    : '0.0';
-  const avgGuests = total > 0
-    ? (allRequests.reduce((s, r) => s + r.adults + r.children, 0) / total).toFixed(1)
-    : '0.0';
+  const avgNights = total > 0 ? (allRequests.reduce((s, r) => s + r.nights, 0) / total).toFixed(1) : '0.0';
+  const avgGuests = total > 0 ? (allRequests.reduce((s, r) => s + r.adults + r.children, 0) / total).toFixed(1) : '0.0';
 
-  const cardStyle: React.CSSProperties = {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: 16,
-    padding: '20px 24px',
-  };
-
-  const sectionTitleStyle: React.CSSProperties = {
-    margin: '0 0 16px',
-    fontSize: 16,
-    fontWeight: 600,
-    color: '#111827',
-    letterSpacing: '-0.01em',
-  };
+  const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '20px 24px' };
+  const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: '#111827', letterSpacing: '-0.01em' };
 
   return (
     <main className="admin-page" style={{ background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -157,18 +201,13 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               Letzte 12 Monate{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ' · Alle Hotels'}
             </p>
           </div>
-
           {isSuperAdmin && (
             <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <select name="hotel" defaultValue={String(selectedId ?? '')} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
                 <option value="">Alle Hotels</option>
-                {hotels.map((h) => (
-                  <option key={h.id} value={h.id}>{h.name}</option>
-                ))}
+                {hotels.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
               </select>
-              <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>
-                Laden
-              </button>
+              <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
             </form>
           )}
         </div>
@@ -181,9 +220,11 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             { label: 'Conversion', value: `${conversionRate}%` },
             { label: 'Ø Nächte', value: avgNights },
             { label: 'Ø Gäste', value: avgGuests },
+            { label: 'Umsatz (12M)', value: `€ ${totalRevenue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
+            { label: 'Ø Buchungswert', value: `€ ${avgBookingValue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
           ].map(({ label, value }) => (
             <div key={label} style={{ ...cardStyle, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>{value}</div>
+              <div style={{ fontSize: 26, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>{value}</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>{label}</div>
             </div>
           ))}
@@ -191,33 +232,21 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
         {/* Monthly chart + status */}
         <div className="analytics-chart-row" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
-
-          {/* Monthly bar chart */}
           <div style={cardStyle}>
             <h2 style={sectionTitleStyle}>Anfragen pro Monat</h2>
             <div style={{ overflowX: 'auto' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, minWidth: 480 }}>
-              {monthlyData.map(({ label, count }) => (
-                <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end', minWidth: 0 }}>
-                  <span style={{ fontSize: 10, color: '#9ca3af' }}>{count > 0 ? count : ''}</span>
-                  <div
-                    style={{
-                      width: '100%',
-                      background: '#3b82f6',
-                      borderRadius: '4px 4px 0 0',
-                      height: `${(count / maxMonthly) * 110}px`,
-                      minHeight: count > 0 ? 4 : 0,
-                      opacity: 0.85,
-                    }}
-                  />
-                  <span style={{ fontSize: 9, color: '#9ca3af', whiteSpace: 'nowrap' }}>{label}</span>
-                </div>
-              ))}
-            </div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, minWidth: 480 }}>
+                {monthlyData.map(({ label, count }) => (
+                  <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end', minWidth: 0 }}>
+                    <span style={{ fontSize: 10, color: '#9ca3af' }}>{count > 0 ? count : ''}</span>
+                    <div style={{ width: '100%', background: '#3b82f6', borderRadius: '4px 4px 0 0', height: `${(count / maxMonthly) * 110}px`, minHeight: count > 0 ? 4 : 0, opacity: 0.85 }} />
+                    <span style={{ fontSize: 9, color: '#9ca3af', whiteSpace: 'nowrap' }}>{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Status breakdown */}
           <div style={cardStyle}>
             <h2 style={sectionTitleStyle}>Status</h2>
             <div style={{ display: 'grid', gap: 10 }}>
@@ -231,17 +260,13 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                   </span>
                 </div>
               ))}
-              {Object.keys(statusMap).length === 0 && (
-                <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Daten</p>
-              )}
+              {Object.keys(statusMap).length === 0 && <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Daten</p>}
             </div>
           </div>
         </div>
 
         {/* Top Apartments + Extras */}
         <div className="analytics-two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
-
-          {/* Top apartments */}
           <div style={cardStyle}>
             <h2 style={sectionTitleStyle}>Top Apartments</h2>
             {topApartments.length === 0 ? (
@@ -263,13 +288,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             )}
           </div>
 
-          {/* Extras popularity */}
           <div style={cardStyle}>
             <h2 style={sectionTitleStyle}>Extras Beliebtheit</h2>
             {topExtras.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>
-                Noch keine Extras in Buchungen erfasst.
-              </p>
+              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Noch keine Extras in Buchungen erfasst.</p>
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
                 {topExtras.map(({ name, count, revenue }) => (
@@ -277,9 +299,61 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                     <span style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>{name}</span>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{count}×</div>
-                      {revenue > 0 && (
-                        <div style={{ fontSize: 11, color: '#6b7280' }}>€ {revenue.toFixed(2)}</div>
-                      )}
+                      {revenue > 0 && <div style={{ fontSize: 11, color: '#6b7280' }}>€ {revenue.toFixed(2)}</div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Auslastung + Länder */}
+        <div className="analytics-two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
+
+          {/* Occupancy */}
+          <div style={cardStyle}>
+            <h2 style={sectionTitleStyle}>Auslastung (12M)</h2>
+            <p style={{ margin: '-8px 0 16px', fontSize: 12, color: '#9ca3af' }}>Gebuchte Nächte von 365 verfügbaren</p>
+            {occupancyData.length === 0 ? (
+              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Apartments</p>
+            ) : (
+              <div style={{ display: 'grid', gap: 12 }}>
+                {occupancyData.map(({ name, bookedNights, pct }) => (
+                  <div key={name}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{name}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{bookedNights} N. · {pct}%</span>
+                    </div>
+                    <div style={{ height: 8, background: '#f3f4f6', borderRadius: 99 }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${pct}%`,
+                        borderRadius: 99,
+                        background: pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#3b82f6',
+                      }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Countries */}
+          <div style={cardStyle}>
+            <h2 style={sectionTitleStyle}>Herkunftsländer</h2>
+            {topCountries.length === 0 ? (
+              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Länderdaten erfasst.</p>
+            ) : (
+              <div style={{ display: 'grid', gap: 10 }}>
+                {topCountries.map(({ country, count }) => (
+                  <div key={country}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{country}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{count}</span>
+                    </div>
+                    <div style={{ height: 6, background: '#f3f4f6', borderRadius: 99 }}>
+                      <div style={{ height: '100%', width: `${(count / maxCountry) * 100}%`, background: '#8b5cf6', borderRadius: 99, opacity: 0.8 }} />
                     </div>
                   </div>
                 ))}
