@@ -223,7 +223,7 @@ export default function LandingPage() {
 
       {/* Pricing */}
       <section id="pricing" style={{ background: '#fafafa', padding: '80px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ maxWidth: 950, margin: '0 auto' }}>
           <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Faire Preise</h2>
           <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 24px' }}>Keine Provision, keine versteckten Kosten. Monatlich kündbar.</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 40 }}>
