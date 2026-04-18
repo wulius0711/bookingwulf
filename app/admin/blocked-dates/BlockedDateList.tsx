@@ -56,8 +56,10 @@ export default function BlockedDateList({
             <div style={{ fontSize: 14, color: '#374151', marginTop: 4 }}>
               {fmt(r.startDate)} – {fmt(r.endDate)}
             </div>
-            {r.type && r.type !== 'manual' && (
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>Typ: {r.type}</div>
+            {r.type && (
+              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
+                {r.type === 'booking' ? 'Buchung' : r.type === 'manual' ? 'Eigennutzung' : 'Sonstiges'}
+              </div>
             )}
             {r.note && (
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>{r.note}</div>

@@ -167,6 +167,19 @@ export async function POST(req: Request) {
       },
     });
 
+    // Auto-block dates for confirmed bookings
+    if (bookingType === 'booking') {
+      await prisma.blockedRange.createMany({
+        data: selectedApartmentIds.map((apartmentId) => ({
+          apartmentId,
+          startDate: arrival,
+          endDate: departure,
+          type: 'booking',
+          note: `Buchung #${requestEntry.id} — ${firstname} ${lastname}`,
+        })),
+      });
+    }
+
     // Build email content
     const accent = hotel.accentColor || '#111827';
     const apartmentNames = apartments.map(a => a.name).join(', ');

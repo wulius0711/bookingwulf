@@ -85,7 +85,13 @@ export default async function NewBlockedDatePage() {
           />
         </div>
 
-        <input type="hidden" name="type" value="manual" />
+        <div>
+          <label>Grund</label>
+          <select name="type" style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111', background: '#fff' }}>
+            <option value="manual">Eigennutzung</option>
+            <option value="other">Sonstiges</option>
+          </select>
+        </div>
 
         <div>
           <label>Notiz</label>
