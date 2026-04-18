@@ -6,31 +6,31 @@
     <title>Booking Desktop</title>
     <style>
       :root {
-        --bg: #faebd7;
-        --surface: #fffdf9;
+        --bg: #f5f5f5;
+        --surface: #ffffff;
         --surface-2: #ffffff;
-        --surface-3: rgba(255, 255, 255, 0.68);
+        --surface-3: rgba(255, 255, 255, 0.85);
 
-        --text: #2a2a2a;
-        --muted: #6d6258;
-        --muted-2: #8a8177;
+        --text: #111111;
+        --muted: #6b7280;
+        --muted-2: #9ca3af;
 
-        --line: #d7c8b6;
-        --line-strong: #c8b79f;
+        --line: #e5e7eb;
+        --line-strong: #d1d5db;
 
-        --accent: #dc143c;
-        --accent-dark: #b81232;
-        --accent-soft: rgba(220, 20, 60, 0.08);
+        --accent: #111111;
+        --accent-dark: #000000;
+        --accent-soft: rgba(0, 0, 0, 0.06);
 
-        --success: #2d6a3a;
-        --danger: #9a3047;
+        --success: #16a34a;
+        --danger: #dc2626;
 
-        --shadow: 0 10px 30px rgba(60, 35, 12, 0.06);
-        --shadow-soft: 0 8px 18px rgba(40, 25, 10, 0.04);
-        --shadow-hover: 0 12px 24px rgba(40, 25, 10, 0.06);
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-        --radius: 6px;
-        --button-radius: 999px;
+        --radius: 8px;
+        --button-radius: 8px;
         --font: Inter, Arial, sans-serif;
       }
 
@@ -1531,17 +1531,17 @@
 
             const settings = data.settings || {};
 
-            document.documentElement.style.setProperty("--accent", settings.accentColor || "#dc143c");
-            document.documentElement.style.setProperty("--bg", settings.backgroundColor || "#faebd7");
+            document.documentElement.style.setProperty("--accent", settings.accentColor || "#111111");
+            document.documentElement.style.setProperty("--bg", settings.backgroundColor || "#f5f5f5");
             document.documentElement.style.setProperty("--surface-2", settings.cardBackground || "#ffffff");
-            document.documentElement.style.setProperty("--surface-3", settings.cardBackground || "rgba(255,255,255,0.68)");
-            document.documentElement.style.setProperty("--text", settings.textColor || "#2a2a2a");
-            document.documentElement.style.setProperty("--muted", settings.mutedTextColor || "#6d6258");
-            document.documentElement.style.setProperty("--muted-2", settings.mutedTextColor || "#8a8177");
-            document.documentElement.style.setProperty("--line", settings.borderColor || "#d7c8b6");
-            document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#c8b79f");
-            document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 6}px`);
-            document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 999}px`);
+            document.documentElement.style.setProperty("--surface-3", settings.cardBackground || "rgba(255,255,255,0.85)");
+            document.documentElement.style.setProperty("--text", settings.textColor || "#111111");
+            document.documentElement.style.setProperty("--muted", settings.mutedTextColor || "#6b7280");
+            document.documentElement.style.setProperty("--muted-2", settings.mutedTextColor || "#9ca3af");
+            document.documentElement.style.setProperty("--line", settings.borderColor || "#e5e7eb");
+            document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#d1d5db");
+            document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 8}px`);
+            document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 8}px`);
 
             if (data.hotel) {
               state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;
