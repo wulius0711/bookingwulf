@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
+import PriceSeasonList from './PriceSeasonList';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,21 +36,12 @@ export default async function PriceSeasonsPage() {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Preiszeiträume</h1>
 
         {seasons.length > 0 && (
           <Link href="/admin/price-seasons/new">
-            <button
-              style={{
-                padding: '10px 16px',
-                background: '#111',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 8,
-                cursor: 'pointer',
-              }}
-            >
+            <button style={{ padding: '10px 16px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
               Neu anlegen
             </button>
           </Link>
@@ -64,42 +56,8 @@ export default async function PriceSeasonsPage() {
           </a>
         </div>
       ) : (
-        <div style={{ display: 'grid', gap: 16, marginTop: 20 }}>
-          {seasons.map((s) => (
-            <div
-              key={s.id}
-              style={{
-                border: '1px solid #ddd',
-                padding: 16,
-                borderRadius: 12,
-                background: '#fff',
-              }}
-            >
-              <strong>{s.apartment?.name}</strong>
-              <br />
-              {new Date(s.startDate).toLocaleDateString('de-AT')} –{' '}
-              {new Date(s.endDate).toLocaleDateString('de-AT')}
-              <br />
-              Preis: € {s.pricePerNight}
-              <br />
-              <form action={deleteSeason} style={{ marginTop: 10 }}>
-                <input type="hidden" name="id" value={s.id} />
-                <button
-                  type="submit"
-                  style={{
-                    padding: '6px 12px',
-                    border: '1px solid red',
-                    background: '#fff',
-                    color: 'red',
-                    borderRadius: 8,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Löschen
-                </button>
-              </form>
-            </div>
-          ))}
+        <div style={{ marginTop: 20 }}>
+          <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} />
         </div>
       )}
     </main>

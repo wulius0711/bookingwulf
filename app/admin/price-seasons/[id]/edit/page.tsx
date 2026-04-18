@@ -1,9 +1,21 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 
-export default async function NewPriceSeasonPage() {
+type PageProps = { params: Promise<{ id: string }> };
+
+export default async function EditPriceSeasonPage({ params }: PageProps) {
   const session = await verifySession();
+  const { id } = await params;
+  const seasonId = Number(id);
+
+  const season = await prisma.priceSeason.findUnique({
+    where: { id: seasonId },
+    include: { apartment: { select: { id: true, name: true, hotelId: true } } },
+  });
+
+  if (!season) notFound();
+  if (session.hotelId !== null && season.apartment?.hotelId !== session.hotelId) notFound();
 
   const apartments = await prisma.apartment.findMany({
     where: {
@@ -13,35 +25,34 @@ export default async function NewPriceSeasonPage() {
     orderBy: { name: 'asc' },
   });
 
-  async function createSeason(formData: FormData) {
+  async function updateSeason(formData: FormData) {
     'use server';
 
     const session = await verifySession();
-    const apartmentId = Number(formData.get('apartmentId'));
     const name = String(formData.get('name') || '').trim();
+    const apartmentId = Number(formData.get('apartmentId'));
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const pricePerNight = Number(formData.get('pricePerNight'));
     const minStay = Number(formData.get('minStay') || 1);
 
     if (!apartmentId || !pricePerNight) throw new Error('Fehlende Daten');
+    if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
     if (session.hotelId !== null) {
-      const apt = await prisma.apartment.findUnique({
-        where: { id: apartmentId },
-        select: { hotelId: true },
-      });
+      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
       if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
     }
 
-    if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
-
-    await prisma.priceSeason.create({
-      data: { apartmentId, name: name || null, startDate, endDate, pricePerNight, minStay },
+    await prisma.priceSeason.update({
+      where: { id: seasonId },
+      data: { name: name || null, apartmentId, startDate, endDate, pricePerNight, minStay },
     });
 
     redirect('/admin/price-seasons');
   }
+
+  const fmt = (d: Date) => new Date(d).toISOString().slice(0, 10);
 
   const fieldStyle: React.CSSProperties = {
     width: '100%',
@@ -64,21 +75,19 @@ export default async function NewPriceSeasonPage() {
     display: 'block',
   };
 
-  const fieldWrap: React.CSSProperties = {
-    display: 'grid',
-    gap: 4,
-  };
+  const fieldWrap: React.CSSProperties = { display: 'grid', gap: 4 };
 
   return (
     <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Neuer Preiszeitraum</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Preiszeitraum bearbeiten</h1>
 
-      <form action={createSeason} style={{ display: 'grid', gap: 16 }}>
+      <form action={updateSeason} style={{ display: 'grid', gap: 16 }}>
         <div style={fieldWrap}>
           <label style={labelStyle}>Name / Bezeichnung</label>
           <input
             type="text"
             name="name"
+            defaultValue={season.name ?? ''}
             placeholder="z. B. Hochsaison, Weihnachten …"
             required
             style={fieldStyle}
@@ -87,8 +96,7 @@ export default async function NewPriceSeasonPage() {
 
         <div style={fieldWrap}>
           <label style={labelStyle}>Apartment</label>
-          <select name="apartmentId" required style={fieldStyle}>
-            <option value="">Apartment wählen</option>
+          <select name="apartmentId" required defaultValue={season.apartmentId} style={fieldStyle}>
             {apartments.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
@@ -97,12 +105,12 @@ export default async function NewPriceSeasonPage() {
 
         <div style={fieldWrap}>
           <label style={labelStyle}>Von</label>
-          <input type="date" name="startDate" required style={fieldStyle} />
+          <input type="date" name="startDate" required defaultValue={fmt(season.startDate)} style={fieldStyle} />
         </div>
 
         <div style={fieldWrap}>
           <label style={labelStyle}>Bis</label>
-          <input type="date" name="endDate" required style={fieldStyle} />
+          <input type="date" name="endDate" required defaultValue={fmt(season.endDate)} style={fieldStyle} />
         </div>
 
         <div style={fieldWrap}>
@@ -111,7 +119,7 @@ export default async function NewPriceSeasonPage() {
             type="number"
             step="0.01"
             name="pricePerNight"
-            placeholder="0.00"
+            defaultValue={season.pricePerNight}
             required
             style={fieldStyle}
           />
@@ -122,28 +130,26 @@ export default async function NewPriceSeasonPage() {
           <input
             type="number"
             name="minStay"
-            defaultValue={1}
+            defaultValue={season.minStay}
             min={1}
             style={fieldStyle}
           />
         </div>
 
-        <button
-          type="submit"
-          style={{
-            marginTop: 4,
-            padding: '12px',
-            background: '#111',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontSize: 15,
-            fontWeight: 600,
-          }}
-        >
-          Speichern
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+          <button
+            type="submit"
+            style={{ flex: 1, padding: '12px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 15, fontWeight: 600 }}
+          >
+            Speichern
+          </button>
+          <a
+            href="/admin/price-seasons"
+            style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 15, fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
+          >
+            Abbrechen
+          </a>
+        </div>
       </form>
     </main>
   );
