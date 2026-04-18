@@ -1411,7 +1411,10 @@
 
               <div class="nav-row">
                 <button class="btn-light" data-prev>Zurück</button>
-                <button class="btn" id="submitBtn">Buchung senden</button>
+                <div id="submitBtnWrap" style="display:flex;gap:10px;flex-wrap:wrap;">
+                  <button class="btn-light" id="submitRequestBtn" style="display:none;">Anfragen</button>
+                  <button class="btn" id="submitBtn">Buchungsanfrage senden</button>
+                </div>
               </div>
             </div>
           </section>
@@ -1501,6 +1504,7 @@
             showMessageField: true,
             enableImageSlider: true,
             instantBooking: false,
+            enableInstantBooking: false,
           },
         };
 
@@ -1553,6 +1557,7 @@
             state.settings.showMessageField = ft.showMessageField !== false;
             state.settings.enableImageSlider = ft.enableImageSlider !== false;
             state.settings.instantBooking = !!ft.instantBooking;
+            state.settings.enableInstantBooking = !!ft.enableInstantBooking;
 
             // Apply DOM toggles for static fields
             const phoneWrap = document.getElementById("phone")?.closest(".field-block");
@@ -1560,9 +1565,16 @@
             const notesWrap = document.getElementById("notes")?.closest("div");
             if (notesWrap) notesWrap.style.display = state.settings.showMessageField ? "" : "none";
 
-            // Submit button label
+            // Submit buttons
             const submitBtn = document.getElementById("submitBtn");
-            if (submitBtn) submitBtn.textContent = state.settings.instantBooking ? "Jetzt buchen" : "Buchungsanfrage senden";
+            const submitRequestBtn = document.getElementById("submitRequestBtn");
+            if (state.settings.enableInstantBooking) {
+              if (submitRequestBtn) submitRequestBtn.style.display = "";
+              if (submitBtn) submitBtn.textContent = "Verbindlich buchen";
+            } else {
+              if (submitRequestBtn) submitRequestBtn.style.display = "none";
+              if (submitBtn) submitBtn.textContent = "Buchungsanfrage senden";
+            }
 
             if (data.extras && Array.isArray(data.extras)) {
               state.availableExtras = data.extras;
@@ -2619,7 +2631,7 @@ sortedApartments.forEach((ap) => {
           renderAll();
         }
 
-        async function submitRequest() {
+        async function submitRequest(bookingType = "request") {
           const firstName = document.getElementById("firstName").value.trim();
           const lastName = document.getElementById("lastName").value.trim();
           const email = document.getElementById("email").value.trim();
@@ -2664,7 +2676,7 @@ sortedApartments.forEach((ap) => {
 
           state.submitting = true;
           renderSummary();
-          showMessage("info", "Buchung wird gesendet …");
+          showMessage("info", bookingType === "booking" ? "Buchung wird bestätigt …" : "Anfrage wird gesendet …");
 
           const nights = getNights();
           const apartmentIds = selectedApts.map((a) => a.id).join(",");
@@ -2691,6 +2703,7 @@ sortedApartments.forEach((ap) => {
                 message,
                 extras: state.selectedExtras,
                 newsletter: false,
+                bookingType,
               }),
             });
 
@@ -2704,7 +2717,9 @@ sortedApartments.forEach((ap) => {
 
             showMessage(
               "success",
-              "Vielen Dank – Ihre Buchung wurde erfolgreich gesendet."
+              bookingType === "booking"
+                ? "Ihre Buchung ist bestätigt – Sie erhalten eine Bestätigung per E-Mail."
+                : "Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet."
             );
 
             document.getElementById("firstName").value = "";
@@ -2794,7 +2809,11 @@ sortedApartments.forEach((ap) => {
 
         document
           .getElementById("submitBtn")
-          .addEventListener("click", submitRequest);
+          .addEventListener("click", () => submitRequest(state.settings.enableInstantBooking ? "booking" : "request"));
+
+        document
+          .getElementById("submitRequestBtn")
+          .addEventListener("click", () => submitRequest("request"));
 
         document
           .getElementById("lightboxClose")

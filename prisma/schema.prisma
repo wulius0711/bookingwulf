@@ -47,9 +47,10 @@ model HotelSettings {
   showExtrasStep    Boolean @default(true)
   showPhoneField    Boolean @default(true)
   showMessageField  Boolean @default(true)
-  enableImageSlider Boolean @default(true)
-  enableLightbox    Boolean @default(true)
-  instantBooking    Boolean @default(false)
+  enableImageSlider    Boolean @default(true)
+  enableLightbox       Boolean @default(true)
+  instantBooking       Boolean @default(false)
+  enableInstantBooking Boolean @default(false)
 
   // 🎨 Colors
   accentColor      String?  // Primary highlight

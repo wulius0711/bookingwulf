@@ -39,6 +39,7 @@ export async function saveHotelSettings(formData: FormData) {
       showMessageField: getBool('showMessageField'),
       enableImageSlider: getBool('enableImageSlider'),
       instantBooking: getBool('instantBooking'),
+      enableInstantBooking: getBool('enableInstantBooking'),
 
       accentColor: String(formData.get('accentColor') || '') || null,
       backgroundColor: String(formData.get('backgroundColor') || '') || null,
@@ -60,6 +61,7 @@ export async function saveHotelSettings(formData: FormData) {
       showMessageField: getBool('showMessageField'),
       enableImageSlider: getBool('enableImageSlider'),
       instantBooking: getBool('instantBooking'),
+      enableInstantBooking: getBool('enableInstantBooking'),
 
       accentColor: String(formData.get('accentColor') || '') || null,
       backgroundColor: String(formData.get('backgroundColor') || '') || null,

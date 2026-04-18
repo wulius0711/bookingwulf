@@ -68,6 +68,7 @@ export async function POST(req: Request) {
     const country = String(body.country || '').trim();
     const message = String(body.message || '').trim();
     const newsletter = Boolean(body.newsletter);
+    const bookingType: 'request' | 'booking' = body.bookingType === 'booking' ? 'booking' : 'request';
 
     if (!hotelSlug || !arrivalRaw || !departureRaw || !nights || !adults || !selectedApartmentIdsRaw || !lastname || !email) {
       return Response.json({ success: false, message: 'Pflichtfelder fehlen.' }, { status: 400, headers: corsHeaders });
@@ -160,7 +161,8 @@ export async function POST(req: Request) {
         hotelId: hotel.id, arrival, departure, nights, adults, children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
-        message: message || null, newsletter, status: 'new',
+        message: message || null, newsletter,
+        status: bookingType === 'booking' ? 'confirmed' : 'new',
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
       },
     });
@@ -219,11 +221,13 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: fromEmail,
         to: receiverEmail,
-        subject: `Neue Buchungsanfrage #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
+        subject: bookingType === 'booking'
+          ? `Neue verbindliche Buchung #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`
+          : `Neue Buchungsanfrage #${requestEntry.id} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
         html: buildEmailHtml({
           hotelName: hotel.name,
           accentColor: accent,
-          title: 'Neue Buchungsanfrage',
+          title: bookingType === 'booking' ? 'Neue verbindliche Buchung' : 'Neue Buchungsanfrage',
           preheader: `${firstname} ${lastname} — ${apartmentNames} — ${nights} Nächte`,
           body: `
             ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}
@@ -248,16 +252,20 @@ export async function POST(req: Request) {
         await resend.emails.send({
           from: fromEmail,
           to: email,
-          subject: `Ihre Buchungsanfrage bei ${hotel.name}`,
+          subject: bookingType === 'booking'
+            ? `Buchungsbestätigung bei ${hotel.name}`
+            : `Ihre Buchungsanfrage bei ${hotel.name}`,
           html: buildEmailHtml({
             hotelName: hotel.name,
             accentColor: accent,
-            title: 'Vielen Dank für Ihre Anfrage',
+            title: bookingType === 'booking' ? 'Buchungsbestätigung' : 'Vielen Dank für Ihre Anfrage',
             preheader: `${apartmentNames} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
                 ${firstname ? `Hallo ${firstname},` : 'Hallo,'}<br/><br/>
-                vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.
+                ${bookingType === 'booking'
+                  ? 'Ihre Buchung ist <strong>bestätigt</strong>. Wir freuen uns auf Ihren Besuch!'
+                  : 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.'}
               </p>
               ${buildDivider()}
               ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}
