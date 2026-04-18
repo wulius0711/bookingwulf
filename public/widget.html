@@ -2439,6 +2439,17 @@ sortedApartments.forEach((ap) => {
               );
               return false;
             }
+
+            const selectedApts = state.apartments.filter((a) => state.selectedApartmentIds.includes(a.id));
+            const combinedAdults = selectedApts.reduce((s, a) => s + Number(a.maxAdults || 0), 0);
+            const combinedChildren = selectedApts.reduce((s, a) => s + Number(a.maxChildren || 0), 0);
+            if (state.adults > combinedAdults || state.children > combinedChildren) {
+              showMessage(
+                "error",
+                `Die gewählten Apartments bieten Platz für max. ${combinedAdults} Erwachsene${combinedChildren ? " und " + combinedChildren + " Kinder" : ""}. Bitte weitere Apartments hinzufügen.`
+              );
+              return false;
+            }
           }
 
           if (step === 3) {
