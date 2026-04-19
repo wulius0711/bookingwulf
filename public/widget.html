@@ -372,13 +372,10 @@
       .booking-shell.sidebar-layout .layout > aside.summary {
         display: none;
       }
-      .booking-shell.sidebar-layout .top .summary-sidebar {
+      .booking-shell.sidebar-layout .top aside.summary {
         display: block;
         margin-top: 16px;
         position: static;
-      }
-      .summary-sidebar {
-        display: none;
       }
 
       .view-toggle {
@@ -1276,7 +1273,7 @@
         .booking-shell.sidebar-layout .steps { grid-template-columns: repeat(2, 1fr); }
         .booking-shell.sidebar-layout .layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; }
         .booking-shell.sidebar-layout .layout > aside.summary { display: block; }
-        .booking-shell.sidebar-layout .top .summary-sidebar { display: none; }
+        .booking-shell.sidebar-layout .top > aside.summary { display: none; }
         .view-toggle { display: none; }
 
         .top,
@@ -1467,7 +1464,6 @@
           <strong id="totalBox">€ 0,00</strong>
         </div>
 
-        <div class="summary summary-sidebar" id="summarySidebar"></div>
       </div>
 
       <div id="globalInfo" class="msg info"></div>
@@ -3084,28 +3080,22 @@ sortedApartments.forEach((ap) => {
           });
         });
 
-        // View toggle (top vs sidebar)
-        function syncSummarySidebar() {
-          const src = document.querySelector('.layout > aside.summary');
-          const dst = document.getElementById('summarySidebar');
-          if (src && dst) dst.innerHTML = src.innerHTML;
-        }
+        // View toggle (top vs sidebar) — move the real summary element, never clone
+        var summaryEl = document.querySelector('.layout > aside.summary');
+        var layoutEl  = document.querySelector('.layout');
+        var topEl     = document.querySelector('.top');
 
-        const summaryObserver = new MutationObserver(syncSummarySidebar);
-        const mainSummary = document.querySelector('.layout > aside.summary');
-        if (mainSummary) summaryObserver.observe(mainSummary, { childList: true, subtree: true, characterData: true });
-
-        var viewToggleEl = document.querySelector('.view-toggle');
         document.getElementById('viewTop').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.remove('sidebar-layout');
           document.getElementById('viewTop').classList.add('active');
           document.getElementById('viewSidebar').classList.remove('active');
+          if (summaryEl && layoutEl) layoutEl.appendChild(summaryEl);
         });
         document.getElementById('viewSidebar').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.add('sidebar-layout');
           document.getElementById('viewSidebar').classList.add('active');
           document.getElementById('viewTop').classList.remove('active');
-          syncSummarySidebar();
+          if (summaryEl && topEl) topEl.appendChild(summaryEl);
         });
 
         // Layout toggle
