@@ -21,13 +21,6 @@ const nunitoSans = Nunito_Sans({
 export const metadata: Metadata = {
   title: "bookingwulf — Das Buchungssystem für Hotels",
   description: "Buchungsanfragen direkt auf Ihrer Website entgegennehmen — ohne Provision, ohne Drittplattform.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.png", type: "image/png" },
-    ],
-    apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-  },
   openGraph: {
     title: "bookingwulf — Das Buchungssystem für Hotels",
     description: "Buchungsanfragen direkt auf Ihrer Website entgegennehmen — ohne Provision, ohne Drittplattform. Einbauen in 5 Minuten.",
