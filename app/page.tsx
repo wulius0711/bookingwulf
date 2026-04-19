@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import { LayoutGrid } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
 
 const LP_BASE = {
@@ -26,7 +27,7 @@ export default function LandingPage() {
     { icon: '🏨', title: 'Multi-Apartment', desc: 'Verwalten Sie beliebig viele Apartments mit individuellen Preisen, Bildern und Ausstattung.' },
     { icon: '📅', title: 'Live-Verfügbarkeit', desc: 'Echtzeit-Prüfung der Verfügbarkeit mit Sperrzeiten und Preissaisons.' },
     { icon: '🎨', title: 'Individuelles Branding', desc: 'Farben, Formen und Funktionen passend zu Ihrem Hotel-Auftritt.' },
-    { icon: '🛏️', title: 'Zimmerplan', desc: 'Belegungsstatus aller Apartments auf einen Blick — frei, belegt oder blockiert.' },
+    { icon: <LayoutGrid size={28} />, title: 'Zimmerplan', desc: 'Belegungsstatus aller Apartments auf einen Blick — frei, belegt oder blockiert.' },
     { icon: '♊', title: 'Doppelt einsetzbar', desc: 'Gleichzeitig für Buchung und Anfrage verwenden.' },
     { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich mit Airbnb & Booking.com via iCal.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
