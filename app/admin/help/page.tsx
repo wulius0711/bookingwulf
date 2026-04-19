@@ -369,6 +369,37 @@ function ApartmentsSection() {
         Der Basispreis gilt das ganze Jahr, sofern keine Preissaison für den jeweiligen Zeitraum
         definiert ist. Saisons haben immer Vorrang. Weitere Details unter <strong>Preise & Saisons</strong>.
       </P>
+
+      <H3>Kalender-Sync (iCal)</H3>
+      <P>
+        In der Detailansicht jedes Apartments finden Sie den Abschnitt <strong>Kalender-Sync</strong>.
+        Damit lassen sich Verfügbarkeiten mit Airbnb, Booking.com und anderen Plattformen
+        automatisch abgleichen — in beide Richtungen.
+      </P>
+      <div style={{ display: 'grid', gap: 10, margin: '12px 0 16px' }}>
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 16px' }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: '#111', marginBottom: 4 }}>Export-URL</div>
+          <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6 }}>
+            Eine eindeutige iCal-URL für das Apartment. Diese URL bei Airbnb oder Booking.com als
+            importierten Kalender hinterlegen — so werden Ihre Buchungen dort automatisch als
+            blockiert angezeigt.
+          </div>
+        </div>
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 16px' }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: '#111', marginBottom: 4 }}>Import-Feeds</div>
+          <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6 }}>
+            Die iCal-URL von Airbnb oder Booking.com eintragen. Buchungen von dort werden
+            automatisch als Sperrzeiten übernommen und verhindern Doppelbuchungen.
+            Mit <strong>„Jetzt syncen"</strong> können Sie den Abgleich manuell anstoßen.
+          </div>
+        </div>
+      </div>
+      <Tip>
+        <strong>Tipp:</strong> Tragen Sie bei Airbnb unter <em>Kalender → Verfügbarkeit → Anderen
+        Kalender importieren</em> die Export-URL ein, und umgekehrt die Airbnb-iCal-URL hier als
+        Import-Feed — dann laufen beide Richtungen synchron.
+      </Tip>
+
       <Note>
         <strong>Hinweis:</strong> Apartments können deaktiviert werden, ohne sie zu löschen.
         So bleiben historische Buchungsdaten erhalten.
