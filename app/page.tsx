@@ -181,7 +181,7 @@ export default function LandingPage() {
         .lp-footer-link:hover { color: #555; }
 
         .lp-logo { height: 48px; }
-        .lp-nav-btn { padding: 8px 20px; font-size: 14px; text-align: center; }
+        .lp-nav-btn { padding: 6px 16px; font-size: 14px; text-align: center; }
 
         @media (max-width: 640px) {
           .lp-logo { height: 32px; }
