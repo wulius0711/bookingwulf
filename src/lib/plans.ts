@@ -24,7 +24,7 @@ export const PLANS = {
     maxApartments: Infinity,
     maxUsers: Infinity,
     maxHotels: 2,
-    features: ['Alles aus Pro', 'Volles Branding', 'Schriftgröße & Gewichtung', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Analytics', 'Priority Support'],
   },
 } as const;
 
