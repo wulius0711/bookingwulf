@@ -90,7 +90,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
           {cards.map((card) => (
-            <ApartmentCardEl key={card.id} card={card} />
+            <ApartmentCardEl key={card.id} card={card} date={date} />
           ))}
         </div>
       )}
@@ -106,7 +106,7 @@ function Badge({ color, text, label }: { color: string; text: string; label: str
   );
 }
 
-function ApartmentCardEl({ card }: { card: ApartmentCard }) {
+function ApartmentCardEl({ card, date }: { card: ApartmentCard; date: string }) {
   const s = card.status;
 
   const borderColor = s.kind === 'frei' ? '#86efac' : s.kind === 'belegt' ? '#fca5a5' : '#fcd34d';
@@ -135,7 +135,14 @@ function ApartmentCardEl({ card }: { card: ApartmentCard }) {
 
       {s.kind === 'belegt' && (
         <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
-          <div style={{ fontWeight: 600 }}>{s.guestName}</div>
+          <div style={{ fontWeight: 600 }}>
+            {s.guestName}
+            {!s.checkoutToday && (
+              <span style={{ fontWeight: 400, color: '#6b7280', marginLeft: 6 }}>
+                — noch {Math.ceil((new Date(s.departure).getTime() - new Date(date + 'T12:00:00').getTime()) / 86400000)} Tage
+              </span>
+            )}
+          </div>
           <div style={{ color: '#6b7280' }}>{formatDate(s.arrival)} – {formatDate(s.departure)}</div>
           {s.checkoutToday && (
             <div style={{ marginTop: 6, background: '#fef9c3', color: '#854d0e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, display: 'inline-block' }}>
