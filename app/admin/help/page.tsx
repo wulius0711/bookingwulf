@@ -4,11 +4,6 @@ import { useState } from 'react';
 
 const sections = [
   {
-    id: 'einbindung',
-    title: 'Widget einbinden',
-    content: EinbindungSection,
-  },
-  {
     id: 'apartments',
     title: 'Apartments verwalten',
     content: ApartmentsSection,
@@ -38,10 +33,15 @@ const sections = [
     title: 'Einstellungen & Design',
     content: EinstellungenSection,
   },
+  {
+    id: 'einbindung',
+    title: 'Widget einbinden',
+    content: EinbindungSection,
+  },
 ];
 
 export default function HelpPage() {
-  const [active, setActive] = useState('einbindung');
+  const [active, setActive] = useState('apartments');
   const current = sections.find((s) => s.id === active)!;
   const Content = current.content;
 
