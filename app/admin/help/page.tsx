@@ -126,7 +126,7 @@ function InternalLink({ id, children }: { id: string; children: React.ReactNode 
   return (
     <button
       onClick={() => navigate(id)}
-      style={{ background: 'none', border: 'none', padding: 0, color: '#2563eb', fontSize: 'inherit', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 2 }}
+      style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', fontSize: 'inherit', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline dashed', textDecorationColor: '#9ca3af', textUnderlineOffset: 3 }}
     >
       {children}
     </button>
