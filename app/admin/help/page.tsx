@@ -16,6 +16,7 @@ const sections = [
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
   { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
+  { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
 ];
 
@@ -688,6 +689,76 @@ function AbonnementSection() {
         <strong>Tipp:</strong> Mit der jährlichen Zahlung sparen Sie ca. 10 % gegenüber der
         monatlichen Abrechnung.
       </Tip>
+    </div>
+  );
+}
+
+function NukiSection() {
+  return (
+    <div>
+      <H2>Schlüsselloses Einchecken</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Gäste erhalten nach einer Sofortbuchung automatisch einen 6-stelligen Zugangscode per E-Mail —
+        kein physischer Schlüssel, kein Koordinationsaufwand. Das System kommuniziert direkt mit Ihren
+        Nuki-Schlössern über die Nuki Web API.
+      </P>
+
+      <H3>Voraussetzungen</H3>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li>Nuki-Schloss mit verbundenem Keypad (Nuki Keypad oder Keypad 2.0)</li>
+        <li>Nuki Web-Konto unter <strong>web.nuki.io</strong></li>
+        <li>Sofortbuchung im Widget aktiviert (<InternalLink id="einstellungen">Einstellungen</InternalLink>)</li>
+        <li>Pro-Plan oder höher</li>
+      </ul>
+
+      <H3>Einrichtung</H3>
+      <Step num={1} title="API-Token erstellen">
+        <P>
+          Melden Sie sich unter <strong>web.nuki.io</strong> an → oben rechts auf Ihren Namen klicken →
+          <strong> API</strong> → <strong>API Token erstellen</strong>. Den Token kopieren.
+        </P>
+      </Step>
+      <Step num={2} title="Token in bookingwulf eingeben">
+        <P>
+          Im Admin-Bereich unter <strong>Schlüsselloses Einchecken</strong> den Token einfügen und auf
+          „Verbindung testen & speichern" klicken. Die verfügbaren Schlösser werden danach automatisch angezeigt.
+        </P>
+      </Step>
+      <Step num={3} title="Schloss pro Apartment zuweisen">
+        <P>
+          Unter <InternalLink id="apartments">Apartments</InternalLink> das gewünschte Apartment öffnen →
+          Abschnitt <strong>Nuki-Schloss</strong> → passendes Schloss aus der Liste wählen → Speichern.
+        </P>
+      </Step>
+      <Step num={4} title="Sofortbuchung aktivieren">
+        <P>
+          Unter <InternalLink id="einstellungen">Einstellungen</InternalLink> die Option
+          <strong> Sofortbuchung</strong> aktivieren. Nur bei Sofortbuchungen (nicht bei Anfragen)
+          wird automatisch ein Zugangscode generiert.
+        </P>
+      </Step>
+
+      <H3>So funktioniert es</H3>
+      <P>
+        Sobald ein Gast eine Sofortbuchung abschickt, generiert bookingwulf automatisch einen
+        6-stelligen Code, schickt ihn zeitlich begrenzt (Anreise bis Abreise) an das Nuki-Schloss
+        und fügt ihn in die Buchungsbestätigung an den Gast ein.
+      </P>
+      <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, padding: '16px 20px', marginBottom: 16, fontSize: 14, color: '#166534' }}>
+        <strong>🔑 Beispiel-Code in der Gast-E-Mail:</strong>
+        <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: '0.15em', fontFamily: 'monospace', margin: '8px 0 4px' }}>4 8 2 1 9 3</div>
+        <div style={{ fontSize: 13 }}>Gültig von Anreise bis Abreise — öffnet das Schloss direkt vor Ort.</div>
+      </div>
+
+      <H3>Hinweise</H3>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li>Pro Apartment kann genau ein Schloss zugewiesen werden.</li>
+        <li>Der Code läuft nach der Abreise automatisch ab (wird von Nuki deaktiviert).</li>
+        <li>Bei reinen Anfragen (kein Sofortbuchungs-Modus) wird kein Code generiert.</li>
+        <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code.</li>
+        <li>Den API-Token können Sie jederzeit aktualisieren oder die Verbindung trennen.</li>
+      </ul>
     </div>
   );
 }
