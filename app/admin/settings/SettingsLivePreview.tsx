@@ -26,6 +26,9 @@ function sendToIframe(settings: Record<string, string>) {
 
 export default function SettingsLivePreview() {
   useEffect(() => {
+    // Sync iframe on mount (covers post-reset navigation where iframe is reused)
+    setTimeout(() => sendToIframe(collectSettings()), 200);
+
     function onInputChange() {
       sendToIframe(collectSettings());
     }
