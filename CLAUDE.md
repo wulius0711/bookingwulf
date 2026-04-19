@@ -16,3 +16,13 @@
 - Umgebungsvariablen → Abschnitt 14
 - Deployment / Cron Jobs → Abschnitt 15
 - Datenschutz / DSGVO → Abschnitt 16
+
+## Handbuch aktuell halten
+
+`app/admin/help/page.tsx` ist das Benutzer-Handbuch im Admin-Bereich. Bei jeder Änderung die einen der folgenden Bereiche betrifft, den entsprechenden Abschnitt im Handbuch mitaktualisieren:
+
+- Neue Admin-Seiten oder Features → neuen Abschnitt in `sections` Array eintragen (mit `id`, `title`, `plan` falls plan-gesperrt, und `content`-Funktion)
+- Bestehende Features ändern (UI, Workflow, Einstellungen) → betroffenen Abschnitt im Handbuch anpassen
+- Plan-Änderungen (Feature wird pro/business) → `plan`-Feld im Handbuch-Eintrag aktualisieren
+- Neue Sprachen oder E-Mail-Features → Abschnitt "E-Mail Templates" aktualisieren
+- Nuki / Integrationen → Abschnitt "Schlüsselloses Einchecken" aktualisieren
