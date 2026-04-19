@@ -1576,7 +1576,6 @@ export const HotelScalarFieldEnum = {
   phone: 'phone',
   bookingTermsUrl: 'bookingTermsUrl',
   privacyPolicyUrl: 'privacyPolicyUrl',
-  language: 'language',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -1758,6 +1757,7 @@ export const RequestScalarFieldEnum = {
   message: 'message',
   newsletter: 'newsletter',
   status: 'status',
+  language: 'language',
   extrasJson: 'extrasJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

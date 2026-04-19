@@ -93,7 +93,7 @@ export async function POST(req: Request) {
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
       select: {
-        id: true, name: true, email: true, accentColor: true, language: true,
+        id: true, name: true, email: true, accentColor: true,
         emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
         extras: {
           where: { isActive: true },
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
     const guestCount = adults + children;
 
     // i18n setup (needed for guest labels)
-    const lang = (hotel.language || 'de') as Lang;
+    const lang = 'de' as Lang;
     const i18n = getEmailTranslations(lang);
     const locale = dateLocale[lang];
 
@@ -182,6 +182,7 @@ export async function POST(req: Request) {
         salutation, firstname, lastname, email, country,
         message: message || null, newsletter,
         status: bookingType === 'booking' ? 'confirmed' : 'new',
+        language: 'de',
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
       },
     });

@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
+import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18n';
 import { bookingIcalUrl, generateBookingToken } from '@/src/lib/booking-token';
 import { hasPlanAccess, FEATURE_PLAN_GATES } from '@/src/lib/plan-gates';
 import { PlanKey } from '@/src/lib/plans';
@@ -24,23 +25,20 @@ function parseApartmentIds(raw: string): number[] {
     .filter((item) => Number.isInteger(item) && item > 0);
 }
 
-const STATUS_MESSAGES: Record<string, { subject: string; title: string; message: string }> = {
-  booked: {
-    subject: 'Ihre Buchung wurde bestätigt',
-    title: 'Buchung bestätigt',
-    message: 'Ihre Buchungsanfrage wurde bestätigt. Wir freuen uns auf Ihren Besuch und melden uns in Kürze mit den weiteren Details.',
-  },
-  cancelled: {
-    subject: 'Ihre Buchung wurde storniert',
-    title: 'Buchung storniert',
-    message: 'Ihre Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
-  },
-  answered: {
-    subject: 'Update zu Ihrer Buchungsanfrage',
-    title: 'Anfrage bearbeitet',
-    message: 'Wir haben Ihre Buchungsanfrage bearbeitet. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
-  },
-};
+async function updateLanguage(formData: FormData) {
+  'use server';
+  const session = await verifySession();
+  const id = Number(formData.get('id'));
+  const language = String(formData.get('language') || 'de').trim();
+  if (!id) return;
+  const allowed = ['de', 'en', 'it'];
+  if (!allowed.includes(language)) return;
+  const request = await prisma.request.findUnique({ where: { id }, select: { hotelId: true } });
+  if (!request) return;
+  if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
+  await prisma.request.update({ where: { id }, data: { language } });
+  redirect(`/admin/requests/${id}`);
+}
 
 async function updateBookingStatus(formData: FormData) {
   'use server';
@@ -63,46 +61,49 @@ async function updateBookingStatus(formData: FormData) {
 
   await prisma.request.update({ where: { id }, data: { status } });
 
-  // Send status notification email to guest
-  const statusMsg = STATUS_MESSAGES[status];
+  const lang = (request.language || 'de') as Lang;
+  const i18n = getEmailTranslations(lang);
+  const locale = dateLocale[lang];
+  const statusMsg = i18n.statusMessages[status as keyof typeof i18n.statusMessages];
+
   if (statusMsg && request.email) {
     try {
       const resend = getResend();
       if (resend) {
-        const arrivalDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.arrival);
-        const departureDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.departure);
-
+        const arrivalDate = new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.arrival);
+        const departureDate = new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.departure);
         const icalUrl = status === 'booked' ? bookingIcalUrl(request.id, request.createdAt) : null;
+        const hotelName = request.hotel?.name || 'Hotel';
 
         await resend.emails.send({
           from: getFromEmail(),
           to: request.email,
-          subject: `${statusMsg.subject} — ${request.hotel?.name || 'Hotel'}`,
+          subject: `${statusMsg.subject} — ${hotelName}`,
           html: buildEmailHtml({
-            hotelName: request.hotel?.name || 'Hotel',
+            hotelName,
             accentColor: request.hotel?.accentColor || undefined,
             title: statusMsg.title,
+            autoReplyText: i18n.autoReply,
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                ${request.firstname ? `Hallo ${request.firstname},` : 'Hallo,'}<br/><br/>
+                ${i18n.greeting(request.firstname || '')}<br/><br/>
                 ${statusMsg.message}
               </p>
               ${buildDivider()}
-              ${buildInfoBlock('Zeitraum', `${arrivalDate} — ${departureDate} (${request.nights} Nächte)`)}
-              ${buildInfoBlock('Gäste', `${request.adults} Erwachsene${request.children ? `, ${request.children} Kinder` : ''}`)}
+              ${buildInfoBlock(i18n.period, `${arrivalDate} — ${departureDate} (${i18n.nights(request.nights)})`)}
+              ${buildInfoBlock(i18n.guests, i18n.adults(request.adults) + (request.children ? i18n.children(request.children) : ''))}
               ${icalUrl ? `
               <div style="margin-top:24px;">
-                <a href="${icalUrl}"
-                   style="display:inline-block;padding:11px 22px;background:#111827;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
-                  📅 Zum Kalender hinzufügen (.ics)
+                <a href="${icalUrl}" style="display:inline-block;padding:11px 22px;background:#111827;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                  📅 ${i18n.addToCalendar}
                 </a>
               </div>` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
-                Mit freundlichen Grüßen<br/>
-                <strong>${request.hotel?.name || 'Hotel'}</strong>
+                ${i18n.signoff}<br/>
+                <strong>${hotelName}</strong>
               </p>
             `,
-            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${request.id}</p>`,
+            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(request.id)}</p>`,
           }),
         });
       }
@@ -133,10 +134,11 @@ async function sendAdminMessage(formData: FormData) {
     data: { requestId: id, sender: 'hotel', body },
   });
 
-  // Email guest with reply link
   try {
     const resend = getResend();
     if (resend && request.email) {
+      const lang = (request.language || 'de') as Lang;
+      const i18n = getEmailTranslations(lang);
       const token = generateBookingToken(id, request.createdAt);
       const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
       const replyUrl = `${base}/nachrichten?id=${id}&token=${token}`;
@@ -145,25 +147,24 @@ async function sendAdminMessage(formData: FormData) {
       await resend.emails.send({
         from: getFromEmail(),
         to: request.email,
-        subject: `Neue Nachricht zu Ihrer Buchungsanfrage — ${hotelName}`,
+        subject: i18n.newMessageSubject(hotelName),
         html: buildEmailHtml({
           hotelName,
           accentColor: request.hotel?.accentColor || undefined,
-          title: 'Neue Nachricht',
+          title: i18n.newMessage,
+          autoReplyText: i18n.autoReply,
           body: `
             <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px;">
-              ${request.firstname ? `Hallo ${request.firstname},` : 'Hallo,'}<br/><br/>
-              Sie haben eine neue Nachricht zu Ihrer Buchungsanfrage erhalten:
+              ${i18n.newMessageIntro(request.firstname || '')}
             </p>
             <div style="padding:16px;background:#f9fafb;border-left:3px solid #e5e7eb;border-radius:4px;font-size:15px;color:#374151;line-height:1.6;white-space:pre-wrap;">${body}</div>
             <div style="margin-top:24px;">
-              <a href="${replyUrl}"
-                 style="display:inline-block;padding:11px 22px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
-                Antworten
+              <a href="${replyUrl}" style="display:inline-block;padding:11px 22px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                ${i18n.reply}
               </a>
             </div>
           `,
-          footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${id}</p>`,
+          footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(id)}</p>`,
         }),
       });
     }
@@ -224,6 +225,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           accentColor: true,
         },
       },
+
     },
   });
 
@@ -380,6 +382,26 @@ export default async function BookingDetailPage({ params }: PageProps) {
             <div style={{ marginTop: 6 }}>{request.message}</div>
           </div>
         )}
+
+        {/* 🌐 Sprache */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <strong>Mail-Sprache:</strong>
+          <form action={updateLanguage} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input type="hidden" name="id" value={request.id} />
+            <select
+              name="language"
+              defaultValue={request.language || 'de'}
+              style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, background: '#fff' }}
+            >
+              <option value="de">Deutsch</option>
+              <option value="en">English</option>
+              <option value="it">Italiano</option>
+            </select>
+            <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer' }}>
+              Speichern
+            </button>
+          </form>
+        </div>
 
         {/* 🔘 Status Buttons */}
         <div>

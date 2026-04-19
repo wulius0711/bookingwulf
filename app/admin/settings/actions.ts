@@ -22,11 +22,9 @@ export async function saveHotelSettings(formData: FormData) {
   const notificationEmail = String(formData.get('notificationEmail') || '').trim() || null;
   const bookingTermsUrl = String(formData.get('bookingTermsUrl') || '').trim() || null;
   const privacyPolicyUrl = String(formData.get('privacyPolicyUrl') || '').trim() || null;
-  const language = String(formData.get('language') || 'de').trim();
-
   await prisma.hotel.update({
     where: { id: hotelId },
-    data: { email: notificationEmail, bookingTermsUrl, privacyPolicyUrl, language },
+    data: { email: notificationEmail, bookingTermsUrl, privacyPolicyUrl },
   });
 
   await prisma.hotelSettings.upsert({

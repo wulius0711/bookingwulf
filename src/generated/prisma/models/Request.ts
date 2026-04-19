@@ -59,6 +59,7 @@ export type RequestMinAggregateOutputType = {
   message: string | null
   newsletter: boolean | null
   status: string | null
+  language: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -80,6 +81,7 @@ export type RequestMaxAggregateOutputType = {
   message: string | null
   newsletter: boolean | null
   status: string | null
+  language: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -101,6 +103,7 @@ export type RequestCountAggregateOutputType = {
   message: number
   newsletter: number
   status: number
+  language: number
   extrasJson: number
   createdAt: number
   updatedAt: number
@@ -141,6 +144,7 @@ export type RequestMinAggregateInputType = {
   message?: true
   newsletter?: true
   status?: true
+  language?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -162,6 +166,7 @@ export type RequestMaxAggregateInputType = {
   message?: true
   newsletter?: true
   status?: true
+  language?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -183,6 +188,7 @@ export type RequestCountAggregateInputType = {
   message?: true
   newsletter?: true
   status?: true
+  language?: true
   extrasJson?: true
   createdAt?: true
   updatedAt?: true
@@ -292,6 +298,7 @@ export type RequestGroupByOutputType = {
   message: string | null
   newsletter: boolean
   status: string
+  language: string
   extrasJson: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
@@ -337,6 +344,7 @@ export type RequestWhereInput = {
   message?: Prisma.StringNullableFilter<"Request"> | string | null
   newsletter?: Prisma.BoolFilter<"Request"> | boolean
   status?: Prisma.StringFilter<"Request"> | string
+  language?: Prisma.StringFilter<"Request"> | string
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
@@ -361,6 +369,7 @@ export type RequestOrderByWithRelationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   newsletter?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   extrasJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -388,6 +397,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   message?: Prisma.StringNullableFilter<"Request"> | string | null
   newsletter?: Prisma.BoolFilter<"Request"> | boolean
   status?: Prisma.StringFilter<"Request"> | string
+  language?: Prisma.StringFilter<"Request"> | string
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
@@ -412,6 +422,7 @@ export type RequestOrderByWithAggregationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   newsletter?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   extrasJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -442,6 +453,7 @@ export type RequestScalarWhereWithAggregatesInput = {
   message?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   newsletter?: Prisma.BoolWithAggregatesFilter<"Request"> | boolean
   status?: Prisma.StringWithAggregatesFilter<"Request"> | string
+  language?: Prisma.StringWithAggregatesFilter<"Request"> | string
   extrasJson?: Prisma.JsonNullableWithAggregatesFilter<"Request">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
@@ -462,6 +474,7 @@ export type RequestCreateInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -486,6 +499,7 @@ export type RequestUncheckedCreateInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -507,6 +521,7 @@ export type RequestUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -531,6 +546,7 @@ export type RequestUncheckedUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -554,6 +570,7 @@ export type RequestCreateManyInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -574,6 +591,7 @@ export type RequestUpdateManyMutationInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -596,6 +614,7 @@ export type RequestUncheckedUpdateManyInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -628,6 +647,7 @@ export type RequestCountOrderByAggregateInput = {
   message?: Prisma.SortOrder
   newsletter?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   extrasJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -658,6 +678,7 @@ export type RequestMaxOrderByAggregateInput = {
   message?: Prisma.SortOrder
   newsletter?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -679,6 +700,7 @@ export type RequestMinOrderByAggregateInput = {
   message?: Prisma.SortOrder
   newsletter?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -767,6 +789,7 @@ export type RequestCreateWithoutHotelInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -789,6 +812,7 @@ export type RequestUncheckedCreateWithoutHotelInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -841,6 +865,7 @@ export type RequestScalarWhereInput = {
   message?: Prisma.StringNullableFilter<"Request"> | string | null
   newsletter?: Prisma.BoolFilter<"Request"> | boolean
   status?: Prisma.StringFilter<"Request"> | string
+  language?: Prisma.StringFilter<"Request"> | string
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
@@ -861,6 +886,7 @@ export type RequestCreateWithoutMessagesInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -884,6 +910,7 @@ export type RequestUncheckedCreateWithoutMessagesInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -920,6 +947,7 @@ export type RequestUpdateWithoutMessagesInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -943,6 +971,7 @@ export type RequestUncheckedUpdateWithoutMessagesInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -964,6 +993,7 @@ export type RequestCreateManyHotelInput = {
   message?: string | null
   newsletter?: boolean
   status?: string
+  language?: string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -984,6 +1014,7 @@ export type RequestUpdateWithoutHotelInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1006,6 +1037,7 @@ export type RequestUncheckedUpdateWithoutHotelInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1028,6 +1060,7 @@ export type RequestUncheckedUpdateManyWithoutHotelInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1081,6 +1114,7 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   message?: boolean
   newsletter?: boolean
   status?: boolean
+  language?: boolean
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1106,6 +1140,7 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   message?: boolean
   newsletter?: boolean
   status?: boolean
+  language?: boolean
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1129,6 +1164,7 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   message?: boolean
   newsletter?: boolean
   status?: boolean
+  language?: boolean
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1152,12 +1188,13 @@ export type RequestSelectScalar = {
   message?: boolean
   newsletter?: boolean
   status?: boolean
+  language?: boolean
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "extrasJson" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "language" | "extrasJson" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
   messages?: boolean | Prisma.Request$messagesArgs<ExtArgs>
@@ -1193,6 +1230,7 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     message: string | null
     newsletter: boolean
     status: string
+    language: string
     extrasJson: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -1637,6 +1675,7 @@ export interface RequestFieldRefs {
   readonly message: Prisma.FieldRef<"Request", 'String'>
   readonly newsletter: Prisma.FieldRef<"Request", 'Boolean'>
   readonly status: Prisma.FieldRef<"Request", 'String'>
+  readonly language: Prisma.FieldRef<"Request", 'String'>
   readonly extrasJson: Prisma.FieldRef<"Request", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Request", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Request", 'DateTime'>

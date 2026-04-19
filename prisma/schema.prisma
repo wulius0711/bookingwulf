@@ -16,7 +16,6 @@ model Hotel {
   phone            String?
   bookingTermsUrl  String?
   privacyPolicyUrl String?
-  language         String   @default("de") // de | en | it
   isActive         Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -239,6 +238,7 @@ model Request {
   message              String?
   newsletter           Boolean  @default(false)
   status               String   @default("new")
+  language             String   @default("de") // de | en | it
   extrasJson           Json?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt

@@ -49,7 +49,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, language: true, emailTemplates: true },
+        select: { id: true, plan: true, emailTemplates: true },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -113,12 +113,6 @@ export default async function EmailTemplatesPage() {
         Betreff und Fließtext der automatischen E-Mails anpassen.
       </p>
 
-      {/* Language hint — only shown when a non-German language is configured */}
-      {hotel?.language && hotel.language !== 'de' && (
-        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 18px', marginBottom: 16, fontSize: 13, color: '#92400e' }}>
-          Die Vorschau und Bearbeitung der Templates erfolgt auf Deutsch. Wenn keine eigene Vorlage gespeichert ist, werden die Gast-E-Mails automatisch in der gewählten Sprache versendet.
-        </div>
-      )}
 
       {/* Placeholder reference */}
       <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>

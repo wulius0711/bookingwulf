@@ -34,6 +34,16 @@ const t = {
     insuranceDeclined: 'Abgelehnt',
     noExtras: 'Keine',
     autoReply: 'Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht direkt auf diese Nachricht.',
+    statusMessages: {
+      booked:    { subject: 'Ihre Buchung wurde bestätigt', title: 'Buchung bestätigt', message: 'Ihre Buchungsanfrage wurde bestätigt. Wir freuen uns auf Ihren Besuch und melden uns in Kürze mit den weiteren Details.' },
+      cancelled: { subject: 'Ihre Buchung wurde storniert', title: 'Buchung storniert', message: 'Ihre Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir Ihnen gerne zur Verfügung.' },
+      answered:  { subject: 'Update zu Ihrer Buchungsanfrage', title: 'Anfrage bearbeitet', message: 'Wir haben Ihre Buchungsanfrage bearbeitet. Bei Fragen stehen wir Ihnen gerne zur Verfügung.' },
+    },
+    addToCalendar: 'Zum Kalender hinzufügen (.ics)',
+    newMessage: 'Neue Nachricht',
+    newMessageSubject: (hotelName: string) => `Neue Nachricht zu Ihrer Buchungsanfrage — ${hotelName}`,
+    newMessageIntro: (firstname: string) => `${firstname ? `Hallo ${firstname},` : 'Hallo,'}<br/><br/>Sie haben eine neue Nachricht zu Ihrer Buchungsanfrage erhalten:`,
+    reply: 'Antworten',
   },
   en: {
     bookingSubject: (hotelName: string) => `Booking confirmation at ${hotelName}`,
@@ -62,6 +72,16 @@ const t = {
     insuranceDeclined: 'Declined',
     noExtras: 'None',
     autoReply: 'This email was sent automatically. Please do not reply directly to this message.',
+    statusMessages: {
+      booked:    { subject: 'Your booking has been confirmed', title: 'Booking Confirmed', message: 'Your booking request has been confirmed. We look forward to welcoming you and will be in touch shortly with further details.' },
+      cancelled: { subject: 'Your booking has been cancelled', title: 'Booking Cancelled', message: 'Unfortunately your booking request has been cancelled. Please do not hesitate to contact us if you have any questions.' },
+      answered:  { subject: 'Update on your booking request', title: 'Request Processed', message: 'We have processed your booking request. Please do not hesitate to contact us if you have any questions.' },
+    },
+    addToCalendar: 'Add to calendar (.ics)',
+    newMessage: 'New Message',
+    newMessageSubject: (hotelName: string) => `New message regarding your booking request — ${hotelName}`,
+    newMessageIntro: (firstname: string) => `${firstname ? `Hello ${firstname},` : 'Hello,'}<br/><br/>You have received a new message regarding your booking request:`,
+    reply: 'Reply',
   },
   it: {
     bookingSubject: (hotelName: string) => `Conferma prenotazione presso ${hotelName}`,
@@ -90,6 +110,16 @@ const t = {
     insuranceDeclined: 'Rifiutata',
     noExtras: 'Nessuno',
     autoReply: 'Questa email è stata inviata automaticamente. Si prega di non rispondere direttamente a questo messaggio.',
+    statusMessages: {
+      booked:    { subject: 'La sua prenotazione è stata confermata', title: 'Prenotazione confermata', message: 'La sua richiesta di prenotazione è stata confermata. Non vediamo l\'ora di accoglierla e la contatteremo a breve con ulteriori dettagli.' },
+      cancelled: { subject: 'La sua prenotazione è stata cancellata', title: 'Prenotazione cancellata', message: 'Purtroppo la sua richiesta di prenotazione è stata cancellata. Non esiti a contattarci per qualsiasi domanda.' },
+      answered:  { subject: 'Aggiornamento sulla sua richiesta di prenotazione', title: 'Richiesta elaborata', message: 'Abbiamo elaborato la sua richiesta di prenotazione. Non esiti a contattarci per qualsiasi domanda.' },
+    },
+    addToCalendar: 'Aggiungi al calendario (.ics)',
+    newMessage: 'Nuovo messaggio',
+    newMessageSubject: (hotelName: string) => `Nuovo messaggio riguardante la sua richiesta di prenotazione — ${hotelName}`,
+    newMessageIntro: (firstname: string) => `${firstname ? `Gentile ${firstname},` : 'Gentile ospite,'}<br/><br/>Ha ricevuto un nuovo messaggio riguardante la sua richiesta di prenotazione:`,
+    reply: 'Rispondi',
   },
 } as const;
 
