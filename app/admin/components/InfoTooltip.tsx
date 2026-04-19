@@ -25,7 +25,7 @@ export default function InfoTooltip({ text }: { text: string }) {
           fontSize: 12,
           lineHeight: 1.5,
           padding: '8px 12px',
-          borderRadius: 4,
+          borderRadius: 0,
           whiteSpace: 'normal',
           width: 220,
           zIndex: 50,
