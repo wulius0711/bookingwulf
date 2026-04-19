@@ -55,6 +55,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: '/admin/email-templates', label: 'E-Mail Templates' },
     { href: '/admin/settings', label: 'Einstellungen' },
     { href: '/admin/billing', label: 'Abonnement' },
+    { href: '/admin/help', label: 'Handbuch' },
     ...(isSuperAdmin
       ? [
           { href: '/admin/hotels', label: 'Hotels' },
