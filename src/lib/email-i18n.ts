@@ -33,6 +33,7 @@ const t = {
     insurance: 'Versicherung',
     insuranceDeclined: 'Abgelehnt',
     noExtras: 'Keine',
+    contactLine: (email: string) => `Bei Fragen erreichen Sie uns unter <a href="mailto:${email}" style="color:inherit;">${email}</a>.`,
     autoReply: 'Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht direkt auf diese Nachricht.',
     statusMessages: {
       booked:    { subject: 'Ihre Buchung wurde bestätigt', title: 'Buchung bestätigt', message: 'Ihre Buchungsanfrage wurde bestätigt. Wir freuen uns auf Ihren Besuch und melden uns in Kürze mit den weiteren Details.' },
@@ -71,6 +72,7 @@ const t = {
     insurance: 'Insurance',
     insuranceDeclined: 'Declined',
     noExtras: 'None',
+    contactLine: (email: string) => `If you have any questions, please contact us at <a href="mailto:${email}" style="color:inherit;">${email}</a>.`,
     autoReply: 'This email was sent automatically. Please do not reply directly to this message.',
     statusMessages: {
       booked:    { subject: 'Your booking has been confirmed', title: 'Booking Confirmed', message: 'Your booking request has been confirmed. We look forward to welcoming you and will be in touch shortly with further details.' },
@@ -109,6 +111,7 @@ const t = {
     insurance: 'Assicurazione',
     insuranceDeclined: 'Rifiutata',
     noExtras: 'Nessuno',
+    contactLine: (email: string) => `Per qualsiasi domanda, può contattarci all'indirizzo <a href="mailto:${email}" style="color:inherit;">${email}</a>.`,
     autoReply: 'Questa email è stata inviata automaticamente. Si prega di non rispondere direttamente a questo messaggio.',
     statusMessages: {
       booked:    { subject: 'La sua prenotazione è stata confermata', title: 'Prenotazione confermata', message: 'La sua richiesta di prenotazione è stata confermata. Non vediamo l\'ora di accoglierla e la contatteremo a breve con ulteriori dettagli.' },

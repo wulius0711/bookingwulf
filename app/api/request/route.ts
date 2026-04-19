@@ -363,6 +363,7 @@ export async function POST(req: Request) {
                 ${guestSignoff}<br/>
                 <strong>${hotel.name}</strong>
               </p>
+              ${hotel.email ? `<p style="font-size:13px;color:#6b7280;margin:8px 0 0;">${i18n.contactLine(hotel.email)}</p>` : ''}
             `,
             footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(requestEntry.id)}</p>`,
           }),

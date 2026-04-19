@@ -55,7 +55,7 @@ async function updateBookingStatus(formData: FormData) {
 
   const request = await prisma.request.findUnique({
     where: { id },
-    include: { hotel: { select: { id: true, name: true, accentColor: true } } },
+    include: { hotel: { select: { id: true, name: true, accentColor: true, email: true } } },
   });
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
@@ -105,6 +105,7 @@ async function updateBookingStatus(formData: FormData) {
                 ${i18n.signoff}<br/>
                 <strong>${hotelName}</strong>
               </p>
+              ${request.hotel?.email ? `<p style="font-size:13px;color:#6b7280;margin:8px 0 0;">${i18n.contactLine(request.hotel.email)}</p>` : ''}
             `,
             footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(request.id)}</p>`,
           }),
@@ -166,6 +167,7 @@ async function sendAdminMessage(formData: FormData) {
                 ${i18n.reply}
               </a>
             </div>
+            ${request.hotel?.email ? `<p style="font-size:13px;color:#6b7280;margin:16px 0 0;">${i18n.contactLine(request.hotel.email)}</p>` : ''}
           `,
           footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(id)}</p>`,
         }),
