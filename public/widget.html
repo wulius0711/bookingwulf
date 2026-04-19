@@ -357,6 +357,7 @@
       }
       .booking-shell.sidebar-layout .price-box {
         display: flex;
+        margin-top: 12px;
       }
       .booking-shell.sidebar-layout #globalInfo,
       .booking-shell.sidebar-layout #globalError,
@@ -383,8 +384,9 @@
       .view-toggle {
         display: flex;
         gap: 4px;
-        justify-content: flex-start;
+        justify-content: flex-end;
         margin-bottom: 20px;
+        padding-right: calc(340px + 30px);
       }
       .view-toggle button {
         background: none;
@@ -3094,15 +3096,18 @@ sortedApartments.forEach((ap) => {
         const mainSummary = document.querySelector('.layout > aside.summary');
         if (mainSummary) summaryObserver.observe(mainSummary, { childList: true, subtree: true, characterData: true });
 
+        var viewToggleEl = document.querySelector('.view-toggle');
         document.getElementById('viewTop').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.remove('sidebar-layout');
           document.getElementById('viewTop').classList.add('active');
           document.getElementById('viewSidebar').classList.remove('active');
+          if (viewToggleEl) viewToggleEl.style.paddingRight = 'calc(340px + 30px)';
         });
         document.getElementById('viewSidebar').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.add('sidebar-layout');
           document.getElementById('viewSidebar').classList.add('active');
           document.getElementById('viewTop').classList.remove('active');
+          if (viewToggleEl) viewToggleEl.style.paddingRight = '0';
           syncSummarySidebar();
         });
 
