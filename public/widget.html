@@ -825,6 +825,119 @@
         border-color: var(--accent);
       }
 
+      .apt-avail-btn {
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: var(--button-radius);
+        border: 1px solid var(--line-strong);
+        background: transparent;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+      .apt-avail-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+      /* Availability Calendar Modal */
+      .avail-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 9000;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .avail-modal-overlay.open { display: flex; }
+      .avail-modal {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px 32px 28px;
+        max-width: 760px;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .avail-modal-close {
+        position: absolute;
+        top: 16px; right: 20px;
+        background: none; border: none;
+        font-size: 24px; cursor: pointer;
+        color: #6b7280; line-height: 1;
+        padding: 4px 8px;
+      }
+      .avail-modal-close:hover { color: #111; }
+      .avail-modal-title {
+        font-size: 18px; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        margin: 0 0 24px; padding-right: 32px;
+        color: #111;
+      }
+      .avail-calendars {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      @media (max-width: 560px) { .avail-calendars { grid-template-columns: 1fr; } }
+      .avail-cal { font-size: 13px; color: #111; }
+      .avail-cal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .avail-cal-nav {
+        background: none; border: 1px solid #e5e7eb;
+        border-radius: 50%; width: 30px; height: 30px;
+        cursor: pointer; font-size: 16px; display: flex;
+        align-items: center; justify-content: center; color: #374151;
+      }
+      .avail-cal-nav:hover { background: #f3f4f6; }
+      .avail-cal-nav.hidden { visibility: hidden; pointer-events: none; }
+      .avail-cal-month { text-align: center; }
+      .avail-cal-year { font-size: 11px; color: #9ca3af; display: block; }
+      .avail-cal-name { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+      .avail-cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+      }
+      .avail-cal-wd {
+        text-align: center; font-size: 11px; font-weight: 600;
+        color: #9ca3af; padding: 4px 0 6px;
+        text-transform: uppercase;
+      }
+      .avail-cal-day {
+        text-align: center; padding: 6px 2px;
+        border-radius: 4px; font-size: 12px;
+        position: relative;
+      }
+      .avail-cal-day.booked {
+        background: rgba(239,68,68,0.15);
+        color: #9ca3af;
+      }
+      .avail-cal-day.booked.first { border-radius: 4px 0 0 4px; }
+      .avail-cal-day.booked.last  { border-radius: 0 4px 4px 0; }
+      .avail-cal-day.today {
+        outline: 2px solid #06b6d4;
+        outline-offset: -2px;
+        border-radius: 4px;
+        font-weight: 700;
+      }
+      .avail-cal-day.past { color: #d1d5db; }
+      .avail-cal-day.empty { }
+      .avail-legend {
+        display: flex; gap: 20px; margin-top: 20px;
+        font-size: 12px; color: #6b7280; align-items: center; flex-wrap: wrap;
+      }
+      .avail-legend span { display: flex; align-items: center; gap: 6px; }
+      .avail-legend-dot {
+        width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+      }
+
       .selection-note {
         margin-top: 12px;
         color: var(--muted);
@@ -1502,6 +1615,20 @@
         <span style="font-size:12px;font-family:Inter,sans-serif;color:#999;">powered by</span>
         <img src="/bookingwulf-logo.png" alt="bookingwulf" style="height:24px;opacity:0.6;" />
       </a>
+    </div>
+
+    <!-- Availability Calendar Modal -->
+    <div class="avail-modal-overlay" id="availModal">
+      <div class="avail-modal">
+        <button class="avail-modal-close" id="availModalClose">×</button>
+        <div class="avail-modal-title" id="availModalTitle"></div>
+        <div class="avail-calendars" id="availCalendars"></div>
+        <div class="avail-legend">
+          <span><span class="avail-legend-dot" style="background:rgba(239,68,68,0.2);border:1px solid #fca5a5;"></span>Nicht verfügbar</span>
+          <span><span class="avail-legend-dot" style="background:#fff;border:2px solid #06b6d4;"></span>Heute</span>
+          <span><span class="avail-legend-dot" style="background:#fff;border:1px solid #e5e7eb;"></span>Verfügbar</span>
+        </div>
+      </div>
     </div>
 
     <div class="lightbox" id="lightbox">
@@ -2242,6 +2369,7 @@ sortedApartments.forEach((ap) => {
 
                   <div class="apt-actions">
                     ${priceHtml}
+                    <button type="button" class="apt-avail-btn" data-avail="${ap.id}" data-avail-name="${ap.name}">Verfügbarkeit</button>
                     ${
                       status.type === "available"
                         ? `<button type="button" class="apt-select-btn ${
@@ -2954,6 +3082,113 @@ sortedApartments.forEach((ap) => {
           if (e.target.id === "lightbox") {
             closeLightbox();
           }
+        });
+
+        // ── Availability Calendar ──────────────────────────────────────────
+        const MONTH_NAMES_CAL = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        const WD = ['MO','DI','MI','DO','FR','SA','SO'];
+
+        let availState = { open: false, ranges: [], offset: 0 };
+
+        function isoToDate(s) { return new Date(s + 'T00:00:00Z'); }
+
+        function isBooked(y, m, d) {
+          const ts = Date.UTC(y, m, d);
+          return availState.ranges.some(r => {
+            const from = isoToDate(r.from).getTime();
+            const to   = isoToDate(r.to).getTime();
+            return ts >= from && ts < to;
+          });
+        }
+        function isFirst(y, m, d) {
+          const ts = Date.UTC(y, m, d);
+          return availState.ranges.some(r => isoToDate(r.from).getTime() === ts);
+        }
+        function isLast(y, m, d) {
+          const ts = Date.UTC(y, m, d);
+          return availState.ranges.some(r => {
+            const to = isoToDate(r.to).getTime();
+            return to - 86400000 === ts;
+          });
+        }
+
+        function renderAvailCalendar() {
+          const container = document.getElementById('availCalendars');
+          container.innerHTML = '';
+          const todayUTC = new Date();
+          const todayY = todayUTC.getFullYear(), todayM = todayUTC.getMonth(), todayD = todayUTC.getDate();
+
+          for (let m = 0; m < 2; m++) {
+            const offset = availState.offset + m;
+            const date = new Date(todayY, todayM + offset, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            // Monday-first weekday of first day (0=Mon..6=Sun)
+            let firstWd = (new Date(year, month, 1).getDay() + 6) % 7;
+
+            let html = `<div class="avail-cal">
+              <div class="avail-cal-header">
+                ${m === 0 ? `<button class="avail-cal-nav ${availState.offset === 0 ? 'hidden' : ''}" id="availPrev">‹</button>` : '<span></span>'}
+                <div class="avail-cal-month">
+                  <span class="avail-cal-year">${year}</span>
+                  <span class="avail-cal-name">${MONTH_NAMES_CAL[month]}</span>
+                </div>
+                ${m === 1 ? `<button class="avail-cal-nav" id="availNext">›</button>` : '<span></span>'}
+              </div>
+              <div class="avail-cal-grid">`;
+
+            WD.forEach(w => { html += `<div class="avail-cal-wd">${w}</div>`; });
+            for (let e = 0; e < firstWd; e++) html += `<div class="avail-cal-day empty"></div>`;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+              const isT = year === todayY && month === todayM && d === todayD;
+              const isPast = Date.UTC(year, month, d) < Date.UTC(todayY, todayM, todayD);
+              const booked = isBooked(year, month, d);
+              const first  = booked && isFirst(year, month, d);
+              const last   = booked && isLast(year, month, d);
+              let cls = 'avail-cal-day';
+              if (booked) cls += ' booked';
+              if (first)  cls += ' first';
+              if (last)   cls += ' last';
+              if (isT)    cls += ' today';
+              if (isPast && !booked) cls += ' past';
+              html += `<div class="${cls}">${d}</div>`;
+            }
+
+            html += `</div></div>`;
+            container.insertAdjacentHTML('beforeend', html);
+          }
+
+          document.getElementById('availPrev')?.addEventListener('click', () => { availState.offset = Math.max(0, availState.offset - 1); renderAvailCalendar(); });
+          document.getElementById('availNext')?.addEventListener('click', () => { availState.offset++; renderAvailCalendar(); });
+        }
+
+        async function openAvailCalendar(apartmentId, apartmentName) {
+          document.getElementById('availModalTitle').textContent = apartmentName;
+          availState = { open: true, ranges: [], offset: 0 };
+          document.getElementById('availModal').classList.add('open');
+          document.getElementById('availCalendars').innerHTML = '<div style="padding:32px;text-align:center;color:#9ca3af;grid-column:1/-1;">Lädt…</div>';
+          try {
+            const res = await fetch(`${API_BASE}/api/apartment-calendar?hotel=${HOTEL_SLUG}&apartmentId=${apartmentId}`);
+            const data = await res.json();
+            availState.ranges = data.ranges || [];
+          } catch(e) { availState.ranges = []; }
+          renderAvailCalendar();
+        }
+
+        function closeAvailCalendar() {
+          availState.open = false;
+          document.getElementById('availModal').classList.remove('open');
+        }
+
+        document.getElementById('availModalClose').addEventListener('click', closeAvailCalendar);
+        document.getElementById('availModal').addEventListener('click', e => { if (e.target.id === 'availModal') closeAvailCalendar(); });
+        document.addEventListener('keydown', e => { if (availState.open && e.key === 'Escape') closeAvailCalendar(); });
+
+        document.addEventListener('click', e => {
+          const btn = e.target.closest('[data-avail]');
+          if (btn) openAvailCalendar(btn.dataset.avail, btn.dataset.availName);
         });
 
         document.addEventListener("keydown", (e) => {
