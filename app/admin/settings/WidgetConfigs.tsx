@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { saveWidgetConfig, deleteWidgetConfig } from './widget-config-actions';
 import InfoTooltip from '../components/InfoTooltip';
 import { EmbedCode } from './EmbedCode';
@@ -46,11 +47,16 @@ const defaults: Omit<Config, 'id' | 'name' | 'slug'> = {
 };
 
 export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Props) {
+  const router = useRouter();
   const [editing, setEditing] = useState<Config | 'new' | null>(null);
-  const [count, setCount] = useState(configs.length);
+  const [pendingNew, setPendingNew] = useState(false);
   const [form, setForm] = useState<Omit<Config, 'id' | 'slug'>>(
     { name: '', ...defaults }
   );
+
+  useEffect(() => {
+    setPendingNew(false);
+  }, [configs.length]);
 
   function openNew() {
     setForm({ name: '', ...defaults });
@@ -96,7 +102,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
         <div style={{ border: '1px solid #111', borderRadius: 12, padding: '20px 24px', background: '#fff', display: 'grid', gap: 16 }}>
           <strong style={{ fontSize: 15 }}>{editing === 'new' ? 'Neue Konfiguration' : `„${(editing as Config).name}" bearbeiten`}</strong>
 
-          <form action={saveWidgetConfig} onSubmit={() => { if (editing === 'new') setCount((n) => n + 1); setEditing(null); }}>
+          <form action={saveWidgetConfig} onSubmit={() => { if (editing === 'new') { setPendingNew(true); router.refresh(); } setEditing(null); }}>
             <input type="hidden" name="hotelId" value={hotelId} />
             {configId && <input type="hidden" name="configId" value={configId} />}
 
@@ -135,7 +141,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
             </div>
           </form>
         </div>
-      ) : count < 2 ? (
+      ) : configs.length < 2 && !pendingNew ? (
         <button type="button" onClick={openNew} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px dashed #d1d5db', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}>
           + Neue Konfiguration
         </button>
