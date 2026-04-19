@@ -496,7 +496,7 @@ export default async function Page({ searchParams }: PageProps) {
           <div style={sectionStyle}>
             <div>
               <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
-              <p style={sectionIntroStyle}>Erstelle mehrere Varianten des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
+              <p style={sectionIntroStyle}>Erstelle eine weitere Variante des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
             </div>
             <WidgetConfigs
               hotelId={selected.id}

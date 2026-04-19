@@ -39,6 +39,8 @@ export async function saveWidgetConfig(formData: FormData) {
   if (configId) {
     await prisma.widgetConfig.update({ where: { id: configId }, data });
   } else {
+    const count = await prisma.widgetConfig.count({ where: { hotelId } });
+    if (count >= 2) return;
     await prisma.widgetConfig.create({ data: { ...data, hotelId } });
   }
 
