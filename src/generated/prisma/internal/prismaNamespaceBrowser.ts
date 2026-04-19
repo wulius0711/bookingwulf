@@ -127,6 +127,12 @@ export const HotelSettingsScalarFieldEnum = {
   borderColor: 'borderColor',
   cardRadius: 'cardRadius',
   buttonRadius: 'buttonRadius',
+  headlineFont: 'headlineFont',
+  bodyFont: 'bodyFont',
+  headlineFontSize: 'headlineFontSize',
+  bodyFontSize: 'bodyFontSize',
+  headlineFontWeight: 'headlineFontWeight',
+  bodyFontWeight: 'bodyFontWeight',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -165,6 +171,7 @@ export const HotelSettingsPresetScalarFieldEnum = {
   borderColor: 'borderColor',
   cardRadius: 'cardRadius',
   buttonRadius: 'buttonRadius',
+  buttonColor: 'buttonColor',
   createdAt: 'createdAt'
 } as const
 
