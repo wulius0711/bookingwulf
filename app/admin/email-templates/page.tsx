@@ -114,6 +114,11 @@ export default async function EmailTemplatesPage() {
       </p>
 
 
+      {/* Language hint */}
+      <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 18px', marginBottom: 16, fontSize: 13, color: '#92400e' }}>
+        Templates werden auf Deutsch bearbeitet. Die Sprache der Gast-Mails lässt sich pro Buchung in der Buchungsdetailansicht einstellen.
+      </div>
+
       {/* Placeholder reference */}
       <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
         <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
