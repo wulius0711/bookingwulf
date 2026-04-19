@@ -5,6 +5,9 @@ import { saveWidgetConfig, deleteWidgetConfig } from './widget-config-actions';
 import InfoTooltip from '../components/InfoTooltip';
 import { EmbedCode } from './EmbedCode';
 
+// persists across React re-renders and remounts within the same browser session
+const sessionCreated = new Map<number, number>();
+
 type Config = {
   id: number;
   name: string;
@@ -48,9 +51,12 @@ const defaults: Omit<Config, 'id' | 'name' | 'slug'> = {
 export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Props) {
   const [editing, setEditing] = useState<Config | 'new' | null>(null);
   const [saving, setSaving] = useState(false);
+  const [, forceRender] = useState(0);
   const [form, setForm] = useState<Omit<Config, 'id' | 'slug'>>(
     { name: '', ...defaults }
   );
+
+  const totalCount = configs.length + (sessionCreated.get(hotelId) ?? 0);
 
   function openNew() {
     setForm({ name: '', ...defaults });
@@ -96,7 +102,17 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
         <div style={{ border: '1px solid #111', borderRadius: 12, padding: '20px 24px', background: '#fff', display: 'grid', gap: 16 }}>
           <strong style={{ fontSize: 15 }}>{editing === 'new' ? 'Neue Konfiguration' : `„${(editing as Config).name}" bearbeiten`}</strong>
 
-          <form onSubmit={async (e) => { e.preventDefault(); setSaving(true); await saveWidgetConfig(new FormData(e.currentTarget)); setSaving(false); setEditing(null); }}>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            setSaving(true);
+            await saveWidgetConfig(new FormData(e.currentTarget));
+            if (editing === 'new') {
+              sessionCreated.set(hotelId, (sessionCreated.get(hotelId) ?? 0) + 1);
+            }
+            setSaving(false);
+            setEditing(null);
+            forceRender(n => n + 1);
+          }}>
             <input type="hidden" name="hotelId" value={hotelId} />
             {configId && <input type="hidden" name="configId" value={configId} />}
 
@@ -135,7 +151,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
             </div>
           </form>
         </div>
-      ) : configs.length < 2 ? (
+      ) : totalCount < 2 ? (
         <button type="button" onClick={openNew} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px dashed #d1d5db', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}>
           + Neue Konfiguration
         </button>
