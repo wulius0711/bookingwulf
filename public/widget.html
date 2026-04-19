@@ -32,6 +32,7 @@
 
         --radius: 8px;
         --button-radius: 8px;
+        --btn-color: #ffffff;
         --font: Inter, Arial, sans-serif;
         --font-headline: Inter, sans-serif;
         --font-body: Inter, sans-serif;
@@ -148,7 +149,7 @@
         padding: 0 30px;
         border: 1px solid var(--accent);
         background: var(--accent);
-        color: #fff;
+        color: var(--btn-color);
         cursor: pointer;
         font-size: 1.143rem;
         font-weight: 600;
@@ -1566,6 +1567,7 @@
             document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#d1d5db");
             document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 8}px`);
             document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 8}px`);
+            if (settings.buttonColor) document.documentElement.style.setProperty("--btn-color", settings.buttonColor);
 
             // Fonts
             const headlineFont = settings.headlineFont || 'Inter';
@@ -1830,6 +1832,7 @@
             }
             if (s.cardRadius) document.documentElement.style.setProperty('--radius', parseInt(s.cardRadius) + 'px');
             if (s.buttonRadius) document.documentElement.style.setProperty('--button-radius', parseInt(s.buttonRadius) + 'px');
+            if (s.buttonColor) document.documentElement.style.setProperty('--btn-color', s.buttonColor);
             if (s.headlineFont || s.bodyFont) {
               var fontsToLoad = [s.headlineFont, s.bodyFont].filter(function(f) { return f && f !== 'Inter'; });
               var unique = fontsToLoad.filter(function(f, i, arr) { return arr.indexOf(f) === i; });

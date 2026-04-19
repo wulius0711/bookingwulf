@@ -120,6 +120,7 @@ model HotelSettingsPreset {
   borderColor      String?
   cardRadius       Int?
   buttonRadius     Int?
+  buttonColor      String?
 
   createdAt DateTime @default(now())
 }

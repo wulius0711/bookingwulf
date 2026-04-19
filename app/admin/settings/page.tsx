@@ -368,12 +368,13 @@ export default async function Page({ searchParams }: PageProps) {
 
               {(
                 [
-                  ['Accent',     'accentColor',     selected.settings?.accentColor     || '#111827', true],
-                  ['Background', 'backgroundColor', selected.settings?.backgroundColor || '#ffffff', fullBranding],
-                  ['Card',       'cardBackground',  selected.settings?.cardBackground  || '#ffffff', fullBranding],
-                  ['Text',       'textColor',       selected.settings?.textColor       || '#111111', fullBranding],
-                  ['Muted',      'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666', fullBranding],
-                  ['Border',     'borderColor',     selected.settings?.borderColor     || '#dddddd', fullBranding],
+                  ['Accent',      'accentColor',     selected.settings?.accentColor     || '#111827', true],
+                  ['Background',  'backgroundColor', selected.settings?.backgroundColor || '#ffffff', fullBranding],
+                  ['Card',        'cardBackground',  selected.settings?.cardBackground  || '#ffffff', fullBranding],
+                  ['Text',        'textColor',       selected.settings?.textColor       || '#111111', fullBranding],
+                  ['Muted',       'mutedTextColor',  selected.settings?.mutedTextColor  || '#666666', fullBranding],
+                  ['Border',      'borderColor',     selected.settings?.borderColor     || '#dddddd', fullBranding],
+                  ['Button Text', 'buttonColor',     selected.settings?.buttonColor     || '#ffffff', hasPro],
                 ] as [string, string, string, boolean][]
               ).map(([label, name, value, enabled]) => (
                 <div key={name} style={{ position: 'relative' }}>

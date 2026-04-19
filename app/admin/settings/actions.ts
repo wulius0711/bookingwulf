@@ -50,6 +50,7 @@ export async function saveHotelSettings(formData: FormData) {
 
       cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
       buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
+      buttonColor: String(formData.get('buttonColor') || '') || null,
 
       headlineFont: String(formData.get('headlineFont') || '') || null,
       bodyFont: String(formData.get('bodyFont') || '') || null,
@@ -79,6 +80,7 @@ export async function saveHotelSettings(formData: FormData) {
 
       cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
       buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
+      buttonColor: String(formData.get('buttonColor') || '') || null,
 
       headlineFont: String(formData.get('headlineFont') || '') || null,
       bodyFont: String(formData.get('bodyFont') || '') || null,
