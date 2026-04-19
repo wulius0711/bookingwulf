@@ -50,6 +50,13 @@ export async function saveHotelSettings(formData: FormData) {
 
       cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
       buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
+
+      headlineFont: String(formData.get('headlineFont') || '') || null,
+      bodyFont: String(formData.get('bodyFont') || '') || null,
+      headlineFontSize: parseInt(String(formData.get('headlineFontSize') || '0')) || null,
+      bodyFontSize: parseInt(String(formData.get('bodyFontSize') || '0')) || null,
+      headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
+      bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
     },
     create: {
       hotelId,
@@ -72,6 +79,13 @@ export async function saveHotelSettings(formData: FormData) {
 
       cardRadius: parseInt(String(formData.get('cardRadius') || '0')) || null,
       buttonRadius: parseInt(String(formData.get('buttonRadius') || '0')) || null,
+
+      headlineFont: String(formData.get('headlineFont') || '') || null,
+      bodyFont: String(formData.get('bodyFont') || '') || null,
+      headlineFontSize: parseInt(String(formData.get('headlineFontSize') || '0')) || null,
+      bodyFontSize: parseInt(String(formData.get('bodyFontSize') || '0')) || null,
+      headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
+      bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
     },
   });
 

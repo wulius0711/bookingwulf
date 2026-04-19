@@ -32,6 +32,12 @@
         --radius: 8px;
         --button-radius: 8px;
         --font: Inter, Arial, sans-serif;
+        --font-headline: Inter, sans-serif;
+        --font-body: Inter, sans-serif;
+        --font-size-headline: 24px;
+        --font-size-body: 14px;
+        --font-weight-headline: 700;
+        --font-weight-body: 400;
       }
 
       * {
@@ -44,7 +50,14 @@
         padding: 0;
         background: var(--bg);
         color: var(--text);
-        font-family: var(--font);
+        font-family: var(--font-body);
+        font-size: var(--font-size-body);
+        font-weight: var(--font-weight-body);
+      }
+
+      h1, h2, h3, .headline {
+        font-family: var(--font-headline);
+        font-weight: var(--font-weight-headline);
       }
 
       body {
@@ -383,8 +396,9 @@
       }
 
       .title {
-        font-size: 32px;
-        font-weight: 700;
+        font-size: var(--font-size-headline, 32px);
+        font-weight: var(--font-weight-headline, 700);
+        font-family: var(--font-headline, Inter, sans-serif);
         margin: 0 0 8px;
         line-height: 1.1;
       }
@@ -539,7 +553,8 @@
 
       .apt-name {
         font-size: 24px;
-        font-weight: 600;
+        font-weight: var(--font-weight-headline, 600);
+        font-family: var(--font-headline, Inter, sans-serif);
         margin: 0 0 8px;
         line-height: 1.1;
       }
@@ -1549,6 +1564,32 @@
             document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#d1d5db");
             document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 8}px`);
             document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 8}px`);
+
+            // Fonts
+            const headlineFont = settings.headlineFont || 'Inter';
+            const bodyFont = settings.bodyFont || 'Inter';
+            const headlineFontSize = settings.headlineFontSize;
+            const bodyFontSize = settings.bodyFontSize;
+            const headlineFontWeight = settings.headlineFontWeight;
+            const bodyFontWeight = settings.bodyFontWeight;
+
+            // Load Google Fonts
+            const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(f => f !== 'Inter');
+            if (fontsToLoad.length > 0) {
+              const families = fontsToLoad.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`).join('&');
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = `https://fonts.googleapis.com/css2?${families}&display=swap`;
+              document.head.appendChild(link);
+            }
+
+            // Set CSS variables
+            document.documentElement.style.setProperty('--font-headline', `'${headlineFont}', serif`);
+            document.documentElement.style.setProperty('--font-body', `'${bodyFont}', sans-serif`);
+            if (headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', headlineFontSize + 'px');
+            if (bodyFontSize) document.documentElement.style.setProperty('--font-size-body', bodyFontSize + 'px');
+            if (headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(headlineFontWeight));
+            if (bodyFontWeight) document.documentElement.style.setProperty('--font-weight-body', String(bodyFontWeight));
 
             if (data.hotel) {
               state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;

@@ -22,6 +22,10 @@ export function hasFullBranding(plan: string): boolean {
   return plan === 'pro' || plan === 'business';
 }
 
+export function hasAdvancedTypography(plan: string): boolean {
+  return plan === 'business';
+}
+
 export function getPlanLimits(plan: string) {
   return PLANS[plan as PlanKey] ?? PLANS.starter;
 }

@@ -4,7 +4,7 @@ import { verifySession } from '@/src/lib/session';
 import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
 import { RadiusField } from './RadiusField';
-import { hasFullBranding, hasPlanAccess } from '@/src/lib/plan-gates';
+import { hasFullBranding, hasPlanAccess, hasAdvancedTypography } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
@@ -262,6 +262,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const fullBranding = isSuperAdmin || hasFullBranding(selected.plan ?? 'starter');
   const hasPro = isSuperAdmin || hasPlanAccess(selected.plan ?? 'starter', 'pro');
+  const hasTypography = isSuperAdmin || hasAdvancedTypography(selected.plan ?? 'starter');
 
   return (
     <main className="admin-page" style={pageStyle}>
@@ -411,6 +412,100 @@ export default async function Page({ searchParams }: PageProps) {
                 </div>
                 {!fullBranding && <ProLockOverlay />}
               </div>
+            </div>
+
+            {/* TYPOGRAFIE */}
+            <div style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Typografie</h2>
+                <p style={sectionIntroStyle}>Schriftarten, Größen und Gewichtungen für das Widget.</p>
+              </div>
+
+              {/* Font Family - Pro */}
+              {(['headlineFont', 'bodyFont'] as const).map((field) => {
+                const label = field === 'headlineFont' ? 'Headline-Schrift' : 'Fließtext-Schrift';
+                const currentVal = selected.settings?.[field] ?? '';
+                return (
+                  <div key={field} style={{ position: 'relative' }}>
+                    <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
+                      <div className="settings-row" style={rowStyle}>
+                        <label style={labelStyle}>{label}</label>
+                        <select
+                          name={fullBranding ? field : `_disabled_${field}`}
+                          defaultValue={currentVal}
+                          style={inputStyle}
+                        >
+                          <option value="">Standard (Inter)</option>
+                          <optgroup label="Sans-serif">
+                            {['Inter','Montserrat','Lato','Poppins','Raleway'].map(f => <option key={f} value={f}>{f}</option>)}
+                          </optgroup>
+                          <optgroup label="Serif">
+                            {['Playfair Display','Merriweather','Lora','EB Garamond','Cormorant Garamond'].map(f => <option key={f} value={f}>{f}</option>)}
+                          </optgroup>
+                          <optgroup label="Kalligrafie">
+                            {['Great Vibes','Dancing Script'].map(f => <option key={f} value={f}>{f}</option>)}
+                          </optgroup>
+                        </select>
+                      </div>
+                    </div>
+                    {!fullBranding && <ProLockOverlay />}
+                  </div>
+                );
+              })}
+
+              {/* Font Size - Business */}
+              {(['headlineFontSize', 'bodyFontSize'] as const).map((field) => {
+                const label = field === 'headlineFontSize' ? 'Headline-Größe (px)' : 'Fließtext-Größe (px)';
+                const currentVal = selected.settings?.[field] ?? '';
+                const placeholder = field === 'headlineFontSize' ? '24' : '14';
+                return (
+                  <div key={field} style={{ position: 'relative' }}>
+                    <div style={{ opacity: hasTypography ? 1 : 0.4 }}>
+                      <div className="settings-row" style={rowStyle}>
+                        <label style={labelStyle}>{label}</label>
+                        <input
+                          name={hasTypography ? field : `_disabled_${field}`}
+                          type="number"
+                          min={10}
+                          max={72}
+                          defaultValue={currentVal}
+                          placeholder={placeholder}
+                          style={{ ...smallInputStyle }}
+                        />
+                      </div>
+                    </div>
+                    {!hasTypography && <ProLockOverlay />}
+                  </div>
+                );
+              })}
+
+              {/* Font Weight - Business */}
+              {(['headlineFontWeight', 'bodyFontWeight'] as const).map((field) => {
+                const label = field === 'headlineFontWeight' ? 'Headline-Gewicht' : 'Fließtext-Gewicht';
+                const currentVal = selected.settings?.[field] ?? '';
+                return (
+                  <div key={field} style={{ position: 'relative' }}>
+                    <div style={{ opacity: hasTypography ? 1 : 0.4 }}>
+                      <div className="settings-row" style={rowStyle}>
+                        <label style={labelStyle}>{label}</label>
+                        <select
+                          name={hasTypography ? field : `_disabled_${field}`}
+                          defaultValue={String(currentVal)}
+                          style={{ ...inputStyle, width: 160 }}
+                        >
+                          <option value="">Standard</option>
+                          <option value="300">300 – Light</option>
+                          <option value="400">400 – Regular</option>
+                          <option value="500">500 – Medium</option>
+                          <option value="600">600 – Semibold</option>
+                          <option value="700">700 – Bold</option>
+                        </select>
+                      </div>
+                    </div>
+                    {!hasTypography && <ProLockOverlay />}
+                  </div>
+                );
+              })}
             </div>
 
             {/* PRESETS */}

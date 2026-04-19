@@ -68,9 +68,16 @@ model HotelSettings {
   cardRadius   Int?  // z.B. 8 / 12 / 16
   buttonRadius Int?  // optional getrennt
 
+  // 🔤 Typography
+  headlineFont       String?
+  bodyFont           String?
+  headlineFontSize   Int?
+  bodyFontSize       Int?
+  headlineFontWeight Int?
+  bodyFontWeight     Int?
+
   // 🧩 Optional später
   // buttonStyle   String? // 'filled' | 'outline'
-  // fontFamily    String?
   // spacingScale  String? // 'tight' | 'normal' | 'airy'
 
   createdAt DateTime @default(now())
