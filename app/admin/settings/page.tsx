@@ -261,6 +261,7 @@ export default async function Page({ searchParams }: PageProps) {
   if (!selected) return <p>Kein Hotel</p>;
 
   const fullBranding = isSuperAdmin || hasFullBranding(selected.plan ?? 'starter');
+  const hasPro = isSuperAdmin || hasPlanAccess(selected.plan ?? 'starter', 'pro');
 
   return (
     <main className="admin-page" style={pageStyle}>
@@ -493,17 +494,22 @@ export default async function Page({ searchParams }: PageProps) {
           </div>
 
           {/* Widget Configs */}
-          <div style={sectionStyle}>
-            <div>
-              <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
-              <p style={sectionIntroStyle}>Erstelle eine weitere Variante des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
+          <div style={{ ...sectionStyle, position: 'relative' }}>
+            <div style={{ opacity: hasPro ? 1 : 0.4 }}>
+              <div>
+                <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
+                <p style={sectionIntroStyle}>Erstelle eine weitere Variante des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
+              </div>
+              {hasPro && (
+                <WidgetConfigs
+                  hotelId={selected.id}
+                  hotelSlug={selected.slug}
+                  configs={selected.widgetConfigs}
+                  host={headerStore.get('host') || 'deine-domain.com'}
+                />
+              )}
             </div>
-            <WidgetConfigs
-              hotelId={selected.id}
-              hotelSlug={selected.slug}
-              configs={selected.widgetConfigs}
-              host={headerStore.get('host') || 'deine-domain.com'}
-            />
+            {!hasPro && <ProLockOverlay />}
           </div>
         </div>
 
