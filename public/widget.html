@@ -6,6 +6,7 @@
     <title>Booking Desktop</title>
     <style>
       :root {
+        font-size: var(--font-size-body);
         --bg: #f5f5f5;
         --surface: #ffffff;
         --surface-2: #ffffff;
@@ -51,13 +52,14 @@
         background: var(--bg);
         color: var(--text);
         font-family: var(--font-body);
-        font-size: var(--font-size-body);
+        font-size: 1rem;
         font-weight: var(--font-weight-body);
       }
 
       h1, h2, h3, .headline {
         font-family: var(--font-headline);
         font-weight: var(--font-weight-headline);
+        font-size: var(--font-size-headline);
       }
 
       body {
@@ -130,7 +132,7 @@
       .label {
         display: block;
         margin-bottom: 8px;
-        font-size: 13px;
+        font-size: 0.929rem;
         font-weight: 600;
         letter-spacing: 0.02em;
         color: var(--muted);
@@ -148,7 +150,7 @@
         background: var(--accent);
         color: #fff;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 1.143rem;
         font-weight: 600;
         border-radius: var(--button-radius);
         transition:
@@ -180,7 +182,7 @@
         background: transparent;
         color: var(--text);
         cursor: pointer;
-        font-size: 16px;
+        font-size: 1.143rem;
         font-weight: 500;
         border-radius: var(--button-radius);
         transition:
@@ -244,14 +246,14 @@
         justify-content: center;
         border-radius: 999px;
         border: 1px solid currentColor;
-        font-size: 12px;
+        font-size: 0.857rem;
         font-weight: 700;
         margin-bottom: 10px;
       }
 
       .step-label {
         display: block;
-        font-size: 13px;
+        font-size: 0.929rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 700;
@@ -260,7 +262,7 @@
       .step-sub {
         display: block;
         margin-top: 6px;
-        font-size: 13px;
+        font-size: 0.929rem;
         line-height: 1.35;
       }
 
@@ -290,14 +292,14 @@
       }
 
       .price-box small {
-        font-size: 12px;
+        font-size: 0.857rem;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         opacity: 0.82;
       }
 
       .price-box strong {
-        font-size: 30px;
+        font-size: 2.143rem;
         margin-top: 6px;
         line-height: 1.1;
       }
@@ -330,7 +332,7 @@
       .summary-eyebrow {
         display: inline-block;
         margin-bottom: 10px;
-        font-size: 12px;
+        font-size: 0.857rem;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -339,7 +341,7 @@
 
       .summary h3 {
         margin: 0 0 20px;
-        font-size: 30px;
+        font-size: 2.143rem;
         font-weight: 600;
         line-height: 1.15;
       }
@@ -349,7 +351,7 @@
       }
 
       .summary-block-title {
-        font-size: 13px;
+        font-size: 0.929rem;
         font-weight: 700;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -358,14 +360,14 @@
       }
 
       .summary-main {
-        font-size: 17px;
+        font-size: 1.214rem;
         font-weight: 600;
       }
 
       .summary-sub {
         margin-top: 6px;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
         line-height: 1.45;
       }
 
@@ -380,7 +382,7 @@
         justify-content: space-between;
         gap: 12px;
         padding: 8px 0;
-        font-size: 15px;
+        font-size: 1.071rem;
         color: var(--text);
       }
 
@@ -389,7 +391,7 @@
       }
 
       .summary-total {
-        font-size: 26px;
+        font-size: 1.857rem;
         font-weight: 700;
         color: var(--accent);
         padding-top: 12px;
@@ -406,7 +408,7 @@
       .intro {
         color: var(--muted);
         margin: 0 0 24px;
-        font-size: 16px;
+        font-size: 1.143rem;
         line-height: 1.55;
         max-width: 760px;
       }
@@ -506,7 +508,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 16px;
+        font-size: 1.143rem;
         line-height: 1;
         cursor: pointer;
         z-index: 3;
@@ -540,7 +542,7 @@
         border-radius: 6px;
         background: rgba(0,0,0,0.5);
         color: #fff;
-        font-size: 11px;
+        font-size: 0.786rem;
         font-weight: 600;
         z-index: 3;
         pointer-events: none;
@@ -552,7 +554,7 @@
       }
 
       .apt-name {
-        font-size: 24px;
+        font-size: 1.714rem;
         font-weight: var(--font-weight-headline, 600);
         font-family: var(--font-headline, Inter, sans-serif);
         margin: 0 0 8px;
@@ -561,14 +563,14 @@
 
       .apt-meta {
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
         margin-bottom: 12px;
       }
 
       .apt-desc {
         color: var(--text);
         line-height: 1.55;
-        font-size: 15px;
+        font-size: 1.071rem;
         max-width: 62ch;
         margin-bottom: 6px;
       }
@@ -587,7 +589,7 @@
         border: none;
         background: none;
         color: var(--accent);
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
       }
@@ -604,7 +606,7 @@
         border: none;
         background: transparent;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: color 0.2s ease, transform 0.2s ease;
@@ -626,7 +628,7 @@
         height: 18px;
         transform: rotate(0deg);
         transition: transform 0.28s ease;
-        font-size: 15px;
+        font-size: 1.071rem;
         line-height: 1;
       }
 
@@ -670,7 +672,7 @@
         align-items: center;
         gap: 8px;
         min-width: 0;
-        font-size: 14px;
+        font-size: 1rem;
         line-height: 1.35;
         color: var(--text);
       }
@@ -681,7 +683,7 @@
         border-radius: 999px;
         background: #8cc152;
         color: #fff;
-        font-size: 12px;
+        font-size: 0.857rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -704,11 +706,11 @@
 
       .apt-status-copy {
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
       }
 
       .apt-price {
-        font-size: 24px;
+        font-size: 1.714rem;
         font-weight: 700;
         color: var(--text);
         white-space: nowrap;
@@ -722,7 +724,7 @@
         display: none;
         padding: 7px 12px;
         border-radius: 999px;
-        font-size: 12px;
+        font-size: 0.857rem;
         line-height: 1;
         font-weight: 700;
         color: #fff;
@@ -747,7 +749,7 @@
         gap: 6px;
         padding: 7px 12px;
         border-radius: 999px;
-        font-size: 12px;
+        font-size: 0.857rem;
         line-height: 1;
         font-weight: 700;
         color: #000;
@@ -768,7 +770,7 @@
       .apt-next-link {
         display: block;
         margin-top: 12px;
-        font-size: 13px;
+        font-size: 0.929rem;
         color: var(--accent);
         text-decoration: underline;
         cursor: pointer;
@@ -781,7 +783,7 @@
         border: 1px solid var(--accent);
         background: var(--accent);
         color: #fff;
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -805,7 +807,7 @@
       .selection-note {
         margin-top: 12px;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
       }
 
       .toggle-card {
@@ -849,7 +851,7 @@
       .toggle-kicker {
         display: inline-block;
         margin-bottom: 10px;
-        font-size: 12px;
+        font-size: 0.857rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.06em;
@@ -857,7 +859,7 @@
       }
 
       .toggle-price {
-        font-size: 18px;
+        font-size: 1.286rem;
         font-weight: 700;
         margin-top: 12px;
       }
@@ -874,7 +876,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 700;
         color: var(--muted);
         background: var(--surface-2);
@@ -897,7 +899,7 @@
       .microcopy {
         margin-top: 14px;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 1rem;
         line-height: 1.5;
       }
 
@@ -1001,7 +1003,7 @@
         border: none;
         background: rgba(255,255,255,0.15);
         color: #fff;
-        font-size: 22px;
+        font-size: 1.571rem;
         cursor: pointer;
         z-index: 3;
         display: flex;
@@ -1024,7 +1026,7 @@
         border: none;
         background: rgba(255,255,255,0.15);
         color: #fff;
-        font-size: 20px;
+        font-size: 1.429rem;
         cursor: pointer;
         z-index: 3;
         display: flex;
@@ -1054,7 +1056,7 @@
         border-radius: 8px;
         background: rgba(0,0,0,0.5);
         color: #fff;
-        font-size: 12px;
+        font-size: 0.857rem;
         font-weight: 600;
         line-height: 1;
         z-index: 3;
@@ -1106,7 +1108,7 @@
         .lightbox-nav {
           width: 36px;
           height: 36px;
-          font-size: 16px;
+          font-size: 1.143rem;
         }
 
         .lightbox-nav.prev { left: 8px; }
@@ -1185,11 +1187,11 @@
         }
 
         .title {
-          font-size: 24px;
+          font-size: 1.714rem;
         }
 
         .intro {
-          font-size: 14px;
+          font-size: 1rem;
         }
 
         .apt-amenities {
@@ -1208,7 +1210,7 @@
           min-width: auto;
           height: 34px;
           padding: 0 12px;
-          font-size: 12px;
+          font-size: 0.857rem;
         }
 
         .nav-row {
@@ -1223,19 +1225,19 @@
         .btn, .btn-light {
           min-height: 44px;
           padding: 0 20px;
-          font-size: 14px;
+          font-size: 1rem;
         }
 
         .price-box strong {
-          font-size: 24px;
+          font-size: 1.714rem;
         }
 
         .summary h3 {
-          font-size: 24px;
+          font-size: 1.714rem;
         }
 
         .summary-total {
-          font-size: 22px;
+          font-size: 1.571rem;
         }
       }
 
@@ -1258,11 +1260,11 @@
         }
 
         .apt-name {
-          font-size: 20px;
+          font-size: 1.429rem;
         }
 
         .apt-price {
-          font-size: 20px;
+          font-size: 1.429rem;
         }
 
         .top {
@@ -1839,8 +1841,8 @@
                 document.head.appendChild(link);
               }
             }
-            if (s.headlineFont) document.documentElement.style.setProperty('--font-headline', "'" + s.headlineFont + "', serif");
-            if (s.bodyFont) document.documentElement.style.setProperty('--font-body', "'" + s.bodyFont + "', sans-serif");
+            if (s.headlineFont !== undefined) document.documentElement.style.setProperty('--font-headline', s.headlineFont ? "'" + s.headlineFont + "', serif" : 'Inter, sans-serif');
+            if (s.bodyFont !== undefined) document.documentElement.style.setProperty('--font-body', s.bodyFont ? "'" + s.bodyFont + "', sans-serif" : 'Inter, sans-serif');
             if (s.headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', parseInt(s.headlineFontSize) + 'px');
             if (s.bodyFontSize) document.documentElement.style.setProperty('--font-size-body', parseInt(s.bodyFontSize) + 'px');
             if (s.headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(s.headlineFontWeight));
@@ -2442,12 +2444,12 @@ sortedApartments.forEach((ap) => {
             section.style.cssText = "margin-top:24px;border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);padding:22px 24px;background:var(--surface-2);";
 
             const heading = document.createElement("div");
-            heading.style.cssText = "font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text);";
+            heading.style.cssText = "font-size:1.286rem;font-weight:700;margin-bottom:6px;color:var(--text);";
             heading.textContent = "Reiserücktrittsversicherung";
             section.appendChild(heading);
 
             const intro = document.createElement("div");
-            intro.style.cssText = "font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:18px;";
+            intro.style.cssText = "font-size:1rem;color:var(--muted);line-height:1.5;margin-bottom:18px;";
             intro.textContent = "Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.";
             section.appendChild(intro);
 
@@ -2472,10 +2474,10 @@ sortedApartments.forEach((ap) => {
               const text = document.createElement("div");
               text.style.cssText = "flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;";
               const nameSpan = document.createElement("span");
-              nameSpan.style.cssText = "font-weight:600;font-size:15px;color:var(--text);";
+              nameSpan.style.cssText = "font-weight:600;font-size:1.071rem;color:var(--text);";
               nameSpan.textContent = ex.name;
               const priceSpan = document.createElement("span");
-              priceSpan.style.cssText = "font-weight:700;font-size:15px;color:var(--text);";
+              priceSpan.style.cssText = "font-weight:700;font-size:1.071rem;color:var(--text);";
               priceSpan.textContent = eur(Number(ex.price));
               text.appendChild(nameSpan);
               text.appendChild(priceSpan);
@@ -2486,7 +2488,7 @@ sortedApartments.forEach((ap) => {
                 link.target = "_blank";
                 link.rel = "noopener noreferrer";
                 link.textContent = "mehr Infos";
-                link.style.cssText = "font-size:13px;color:var(--accent);text-decoration:underline;";
+                link.style.cssText = "font-size:0.929rem;color:var(--accent);text-decoration:underline;";
                 link.addEventListener("click", (e) => e.stopPropagation());
                 text.appendChild(link);
               }
@@ -2513,7 +2515,7 @@ sortedApartments.forEach((ap) => {
             });
 
             const declineText = document.createElement("span");
-            declineText.style.cssText = "font-size:14px;color:var(--muted);";
+            declineText.style.cssText = "font-size:1rem;color:var(--muted);";
             declineText.textContent = "Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.";
 
             declineLabel.appendChild(declineRadio);
@@ -2539,7 +2541,7 @@ sortedApartments.forEach((ap) => {
           if (state.bookingTermsUrl) links.push('<a href="' + state.bookingTermsUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>');
           if (state.privacyPolicyUrl) links.push('<a href="' + state.privacyPolicyUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>');
 
-          wrap.innerHTML = '<label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text);line-height:1.5;cursor:pointer;">' +
+          wrap.innerHTML = '<label style="display:flex;align-items:flex-start;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
             '<input type="checkbox" id="termsCheckbox" style="margin-top:3px;accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;" />' +
             '<span>Ich akzeptiere die ' + links.join(' und die ') + '.</span>' +
             '</label>';

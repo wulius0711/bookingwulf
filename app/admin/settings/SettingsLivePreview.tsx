@@ -2,13 +2,19 @@
 
 import { useEffect } from 'react';
 
-const FIELDS = ['accentColor', 'backgroundColor', 'cardBackground', 'textColor', 'mutedTextColor', 'borderColor', 'cardRadius', 'buttonRadius', 'headlineFont', 'bodyFont', 'headlineFontSize', 'bodyFontSize', 'headlineFontWeight', 'bodyFontWeight'];
+const FIELDS = ['accentColor', 'backgroundColor', 'cardBackground', 'textColor', 'mutedTextColor', 'borderColor', 'cardRadius', 'buttonRadius'];
+const FONT_FIELDS = ['headlineFont', 'bodyFont', 'headlineFontSize', 'bodyFontSize', 'headlineFontWeight', 'bodyFontWeight'];
 
 function collectSettings() {
   const result: Record<string, string> = {};
   FIELDS.forEach((name) => {
     const el = document.querySelector(`[name="${name}"]`) as HTMLInputElement | null;
     if (el?.value) result[name] = el.value;
+  });
+  // Font fields: always include (even if empty, to allow reset)
+  FONT_FIELDS.forEach((name) => {
+    const el = document.querySelector(`[name="${name}"]`) as HTMLInputElement | null;
+    if (el) result[name] = el.value;
   });
   return result;
 }
@@ -31,7 +37,7 @@ export default function SettingsLivePreview() {
 
     // Attach to all relevant form inputs
     const listeners: [HTMLElement, string, () => void][] = [];
-    FIELDS.forEach((name) => {
+    [...FIELDS, ...FONT_FIELDS].forEach((name) => {
       document.querySelectorAll<HTMLInputElement>(`[name="${name}"]`).forEach((el) => {
         el.addEventListener('input', onInputChange);
         el.addEventListener('change', onInputChange);
