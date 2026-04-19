@@ -134,11 +134,11 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
             </div>
           </form>
         </div>
-      ) : (
+      ) : configs.length < 2 ? (
         <button type="button" onClick={openNew} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px dashed #d1d5db', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}>
           + Neue Konfiguration
         </button>
-      )}
+      ) : null}
     </div>
   );
 }
