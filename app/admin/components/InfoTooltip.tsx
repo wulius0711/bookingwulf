@@ -6,7 +6,7 @@ export default function InfoTooltip({ text }: { text: string }) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <span style={{ position: 'relative', display: 'inline-flex', flexShrink: 0 }}>
+    <span style={{ position: 'relative', display: 'inline-flex', flexShrink: 0, overflow: 'visible' }}>
       <span
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
@@ -28,12 +28,12 @@ export default function InfoTooltip({ text }: { text: string }) {
           borderRadius: 0,
           whiteSpace: 'normal',
           width: 220,
-          zIndex: 50,
+          zIndex: 9999,
           pointerEvents: 'none',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+          overflow: 'visible',
         }}>
           {text}
-          {/* arrow */}
           <span style={{
             position: 'absolute',
             top: '100%',
@@ -41,9 +41,10 @@ export default function InfoTooltip({ text }: { text: string }) {
             transform: 'translateX(-50%)',
             width: 0,
             height: 0,
-            borderLeft: '6px solid transparent',
-            borderRight: '6px solid transparent',
-            borderTop: '6px solid #1e293b',
+            borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent',
+            borderTop: '7px solid #1e293b',
+            display: 'block',
           }} />
         </span>
       )}
