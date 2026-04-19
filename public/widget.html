@@ -3005,7 +3005,8 @@ sortedApartments.forEach((ap) => {
           if (window.parent === window) return;
           var shell = document.querySelector('.booking-shell');
           if (!shell) return;
-          var h = shell.offsetHeight + 56;
+          var branding = document.getElementById('bw-branding');
+          var h = shell.offsetHeight + (branding ? branding.offsetHeight : 0) + 56;
           if (h > 100) {
             window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
           }
