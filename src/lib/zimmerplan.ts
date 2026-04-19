@@ -6,13 +6,12 @@ type ApartmentStatus =
   | { kind: 'blockiert'; note?: string | null };
 
 function toIso(d: Date) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
 }
 
 export async function buildZimmerplan(hotelId: number | null, dateIso: string) {
-  const date = new Date(dateIso + 'T12:00:00');
-  const dayStart = new Date(dateIso + 'T00:00:00');
-  const dayEnd = new Date(dateIso + 'T23:59:59');
+  const dayStart = new Date(dateIso + 'T00:00:00.000Z');
+  const dayEnd = new Date(dateIso + 'T23:59:59.999Z');
 
   const [apartments, requests, blocked] = await Promise.all([
     prisma.apartment.findMany({
@@ -25,7 +24,7 @@ export async function buildZimmerplan(hotelId: number | null, dateIso: string) {
         ...(hotelId ? { hotelId } : {}),
         status: 'booked',
         arrival: { lte: dayEnd },
-        departure: { gt: dayStart },
+        departure: { gte: dayStart },
       },
       select: {
         id: true,
