@@ -332,6 +332,68 @@
         align-items: start;
       }
 
+      /* ── Sidebar layout ─────────────────────────────────── */
+      .booking-shell.sidebar-layout {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        grid-template-rows: auto;
+        gap: 0 28px;
+        align-items: start;
+      }
+      .booking-shell.sidebar-layout .top {
+        grid-column: 1;
+        grid-row: 1 / 99;
+        display: block;
+        margin-bottom: 0;
+        position: sticky;
+        top: 20px;
+      }
+      .booking-shell.sidebar-layout .steps {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .booking-shell.sidebar-layout .step {
+        min-height: auto;
+        padding: 12px 16px;
+      }
+      .booking-shell.sidebar-layout .price-box {
+        display: none;
+      }
+      .booking-shell.sidebar-layout #globalInfo,
+      .booking-shell.sidebar-layout #globalError,
+      .booking-shell.sidebar-layout #globalSuccess {
+        grid-column: 2;
+      }
+      .booking-shell.sidebar-layout .layout {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .view-toggle {
+        display: flex;
+        gap: 4px;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+      }
+      .view-toggle button {
+        background: none;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--button-radius);
+        padding: 5px 10px;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 12px;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .view-toggle button.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-soft);
+      }
+
       .content-card {
         border: 1px solid var(--line);
         border-radius: calc(var(--radius) + 6px);
@@ -1197,6 +1259,10 @@
 
       @media (max-width: 1080px) {
         #apartments.masonry { columns: 1; }
+        .booking-shell.sidebar-layout { grid-template-columns: 1fr; }
+        .booking-shell.sidebar-layout .top { position: static; grid-row: auto; }
+        .booking-shell.sidebar-layout .steps { grid-template-columns: repeat(2, 1fr); }
+        .booking-shell.sidebar-layout .layout { grid-column: 1; }
 
         .top,
         .layout,
@@ -1345,6 +1411,17 @@
     </style>
   </head>
   <body>
+    <div class="view-toggle">
+      <button id="viewTop" class="active" title="Schritte oben">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="14" height="4" rx="1" fill="currentColor"/><rect x="0" y="6" width="14" height="8" rx="1" fill="currentColor" opacity=".4"/></svg>
+        Oben
+      </button>
+      <button id="viewSidebar" title="Schritte links">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="4" height="14" rx="1" fill="currentColor"/><rect x="6" y="0" width="8" height="14" rx="1" fill="currentColor" opacity=".4"/></svg>
+        Sidebar
+      </button>
+    </div>
+
     <div class="booking-shell">
       <div class="top">
         <div class="steps">
@@ -2988,6 +3065,18 @@ sortedApartments.forEach((ap) => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           });
+        });
+
+        // View toggle (top vs sidebar)
+        document.getElementById('viewTop').addEventListener('click', function() {
+          document.querySelector('.booking-shell').classList.remove('sidebar-layout');
+          document.getElementById('viewTop').classList.add('active');
+          document.getElementById('viewSidebar').classList.remove('active');
+        });
+        document.getElementById('viewSidebar').addEventListener('click', function() {
+          document.querySelector('.booking-shell').classList.add('sidebar-layout');
+          document.getElementById('viewSidebar').classList.add('active');
+          document.getElementById('viewTop').classList.remove('active');
         });
 
         // Layout toggle
