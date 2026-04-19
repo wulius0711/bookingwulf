@@ -1605,7 +1605,7 @@
             const bodyFontWeight = settings.bodyFontWeight;
 
             // Load Google Fonts
-            const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(f => f !== 'Inter');
+            const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(f => f);
             if (fontsToLoad.length > 0) {
               const families = fontsToLoad.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`).join('&');
               const link = document.createElement('link');
@@ -1615,8 +1615,8 @@
             }
 
             // Set CSS variables
-            document.documentElement.style.setProperty('--font-headline', `'${headlineFont}', serif`);
-            document.documentElement.style.setProperty('--font-body', `'${bodyFont}', sans-serif`);
+            document.documentElement.style.setProperty('--font-headline', headlineFont === 'Inter' ? 'Inter, sans-serif' : `'${headlineFont}', serif`);
+            document.documentElement.style.setProperty('--font-body', bodyFont === 'Inter' ? 'Inter, sans-serif' : `'${bodyFont}', sans-serif`);
             if (headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', headlineFontSize + 'px');
             if (bodyFontSize) document.documentElement.style.setProperty('--font-size-body', bodyFontSize + 'px');
             if (headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(headlineFontWeight));
@@ -1865,7 +1865,7 @@
             if (s.buttonRadius) document.documentElement.style.setProperty('--button-radius', parseInt(s.buttonRadius) + 'px');
             if (s.buttonColor) document.documentElement.style.setProperty('--btn-color', s.buttonColor);
             if (s.headlineFont || s.bodyFont) {
-              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(function(f) { return f && f !== 'Inter'; });
+              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(function(f) { return !!f; });
               var unique = fontsToLoad.filter(function(f, i, arr) { return arr.indexOf(f) === i; });
               if (unique.length > 0) {
                 var families = unique.map(function(f) { return 'family=' + f.replace(/ /g, '+') + ':wght@300;400;500;600;700'; }).join('&');
@@ -1875,8 +1875,8 @@
                 document.head.appendChild(link);
               }
             }
-            if (s.headlineFont !== undefined) document.documentElement.style.setProperty('--font-headline', s.headlineFont ? "'" + s.headlineFont + "', serif" : 'Inter, sans-serif');
-            if (s.bodyFont !== undefined) document.documentElement.style.setProperty('--font-body', s.bodyFont ? "'" + s.bodyFont + "', sans-serif" : 'Inter, sans-serif');
+            if (s.headlineFont !== undefined) { var hf = (s.headlineFont === 'Inter') ? '' : s.headlineFont; document.documentElement.style.setProperty('--font-headline', hf ? "'" + hf + "', serif" : 'Inter, sans-serif'); }
+            if (s.bodyFont !== undefined) { var bf = (s.bodyFont === 'Inter') ? '' : s.bodyFont; document.documentElement.style.setProperty('--font-body', bf ? "'" + bf + "', sans-serif" : 'Inter, sans-serif'); }
             if (s.headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', parseInt(s.headlineFontSize) + 'px');
             if (s.bodyFontSize) document.documentElement.style.setProperty('--font-size-body', parseInt(s.bodyFontSize) + 'px');
             if (s.headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(s.headlineFontWeight));
