@@ -12,6 +12,7 @@ import { DeleteRequestButton } from '../DeleteButtons';
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ saved?: string }>;
 };
 
 export const dynamic = 'force-dynamic';
@@ -37,7 +38,7 @@ async function updateLanguage(formData: FormData) {
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
   await prisma.request.update({ where: { id }, data: { language } });
-  redirect(`/admin/requests/${id}`);
+  redirect(`/admin/requests/${id}?saved=language`);
 }
 
 async function updateBookingStatus(formData: FormData) {
@@ -208,9 +209,10 @@ function getStatusBadge(status: string) {
   }
 }
 
-export default async function BookingDetailPage({ params }: PageProps) {
+export default async function BookingDetailPage({ params, searchParams }: PageProps) {
   const session = await verifySession();
   const { id } = await params;
+  const { saved } = await searchParams;
   const requestId = parseInt(id, 10);
 
   if (!Number.isInteger(requestId)) notFound();
@@ -400,6 +402,9 @@ export default async function BookingDetailPage({ params }: PageProps) {
             <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer' }}>
               Speichern
             </button>
+            {saved === 'language' && (
+              <span style={{ fontSize: 12, color: '#16a34a' }}>Gespeichert</span>
+            )}
           </form>
         </div>
 
