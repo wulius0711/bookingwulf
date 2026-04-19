@@ -273,9 +273,10 @@ function BuchungenSection() {
       </P>
       <H3>Sprache pro Buchung</H3>
       <P>
-        Die Kommunikationssprache (Deutsch, Englisch, Italienisch) kann pro Buchung in der
-        Detailansicht eingestellt werden. Sie wird beim Eingang automatisch aus der Browser-Sprache
-        des Gastes ermittelt und kann jederzeit manuell geändert werden.
+        Die Kommunikationssprache kann pro Buchung in der Detailansicht eingestellt werden.
+        Unterstützte Sprachen: Deutsch, Englisch, Italienisch, Französisch, Niederländisch,
+        Spanisch, Polnisch, Tschechisch, Russisch. Sie wird beim Eingang automatisch aus der
+        Browser-Sprache des Gastes ermittelt und kann jederzeit manuell geändert werden.
       </P>
       <Tip>
         <strong>Tipp:</strong> Setzen Sie den Status auf <strong>„Beantwortet"</strong> wenn Sie per
