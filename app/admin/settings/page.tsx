@@ -612,7 +612,12 @@ export default async function Page({ searchParams }: PageProps) {
             Vorschau des Widgets für {selected.name}.
           </p>
 
-          <iframe src={`/widget.html?hotel=${selected.slug}`} style={iframeStyle} className="settings-preview-iframe" />
+          <iframe
+            key={selected.settings?.updatedAt?.toString() ?? 'default'}
+            src={`/widget.html?hotel=${selected.slug}`}
+            style={iframeStyle}
+            className="settings-preview-iframe"
+          />
         </div>
       </div>
     </main>
