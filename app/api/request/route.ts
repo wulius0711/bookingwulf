@@ -134,8 +134,13 @@ export async function POST(req: Request) {
     const apartmentsTotal = apartmentPricing.reduce((sum, i) => sum + i.totalPrice, 0);
     const guestCount = adults + children;
 
+    // i18n setup (needed for guest labels)
+    const lang = (hotel.language || 'de') as Lang;
+    const i18n = getEmailTranslations(lang);
+    const locale = dateLocale[lang];
+
     // Calculate extras and insurance
-    type ExtraLineItem = { key: string; name: string; type: string; billingType: string; unitPrice: number; quantity: number; subtotal: number; label: string };
+    type ExtraLineItem = { key: string; name: string; type: string; billingType: string; unitPrice: number; quantity: number; subtotal: number; label: string; guestLabel: string };
     const extrasLineItems: ExtraLineItem[] = [];
     let extrasTotal = 0;
 
@@ -144,15 +149,27 @@ export async function POST(req: Request) {
 
       const unitPrice = Number(extra.price);
       let quantity = 1;
+      // German label for hotel notification
       let label = extra.name;
+      let guestLabel = extra.name;
 
-      if (extra.billingType === 'per_night') { quantity = nights; label = `${extra.name} (${nights} Nächte)`; }
-      else if (extra.billingType === 'per_person_per_night') { quantity = guestCount * nights; label = `${extra.name} (${guestCount} Pers. × ${nights} Nächte)`; }
-      else if (extra.billingType === 'per_person_per_stay') { quantity = guestCount; label = `${extra.name} (${guestCount} Personen)`; }
+      if (extra.billingType === 'per_night') {
+        quantity = nights;
+        label = `${extra.name} (${nights} Nächte)`;
+        guestLabel = i18n.perNight(extra.name, nights);
+      } else if (extra.billingType === 'per_person_per_night') {
+        quantity = guestCount * nights;
+        label = `${extra.name} (${guestCount} Pers. × ${nights} Nächte)`;
+        guestLabel = i18n.perPersonPerNight(extra.name, guestCount, nights);
+      } else if (extra.billingType === 'per_person_per_stay') {
+        quantity = guestCount;
+        label = `${extra.name} (${guestCount} Personen)`;
+        guestLabel = i18n.perPersonPerStay(extra.name, guestCount);
+      }
 
       const subtotal = unitPrice * quantity;
       extrasTotal += subtotal;
-      extrasLineItems.push({ key: extra.key, name: extra.name, type: extra.type, billingType: extra.billingType, unitPrice, quantity, subtotal, label });
+      extrasLineItems.push({ key: extra.key, name: extra.name, type: extra.type, billingType: extra.billingType, unitPrice, quantity, subtotal, label, guestLabel });
     }
 
     const totalBookingPrice = apartmentsTotal + extrasTotal;
@@ -185,9 +202,6 @@ export async function POST(req: Request) {
     // Build email content
     const accent = hotel.accentColor || '#111827';
     const apartmentNames = apartments.map(a => a.name).join(', ');
-    const lang = (hotel.language || 'de') as Lang;
-    const i18n = getEmailTranslations(lang);
-    const locale = dateLocale[lang];
 
     const tplVars: Record<string, string> = {
       '{{guestName}}': firstname,
@@ -207,40 +221,50 @@ export async function POST(req: Request) {
     const insuranceExtras = extrasLineItems.filter(e => e.type === 'insurance');
     const declinedInsurance = !insuranceExtras.length && hotel.extras.some(e => e.type === 'insurance');
 
-    function buildExtrasSection(): string {
+    function buildExtrasSection(useGuestLabels = false): string {
       let html = '';
+      const insuranceLabel = useGuestLabels ? i18n.insurance : 'Versicherung';
+      const declinedLabel = useGuestLabels ? i18n.insuranceDeclined : 'Abgelehnt';
+      const noneLabel = useGuestLabels ? i18n.noExtras : 'Keine';
 
       if (regularExtras.length > 0) {
         html += `<div style="margin-bottom:12px;">`;
         regularExtras.forEach(e => {
-          html += `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;"><span style="color:#374151;">${e.label}</span><span style="font-weight:600;color:#111827;">${eur(e.subtotal)}</span></div>`;
+          const lbl = useGuestLabels ? e.guestLabel : e.label;
+          html += `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;"><span style="color:#374151;">${lbl}</span><span style="font-weight:600;color:#111827;">${eur(e.subtotal)}</span></div>`;
         });
         html += `</div>`;
       }
 
       if (insuranceExtras.length > 0) {
         html += `<div style="padding:12px 16px;background:#fefce8;border:1px solid #fef08a;border-radius:8px;margin-bottom:12px;">`;
-        html += `<div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Versicherung</div>`;
+        html += `<div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">${insuranceLabel}</div>`;
         insuranceExtras.forEach(e => {
           html += `<div style="font-size:14px;color:#111827;">${e.name} — <strong>${eur(e.subtotal)}</strong></div>`;
         });
         html += `</div>`;
       } else if (declinedInsurance) {
         html += `<div style="padding:12px 16px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;margin-bottom:12px;">`;
-        html += `<div style="font-size:13px;color:#991b1b;">Versicherung: <strong>Abgelehnt</strong></div>`;
+        html += `<div style="font-size:13px;color:#991b1b;">${insuranceLabel}: <strong>${declinedLabel}</strong></div>`;
         html += `</div>`;
       }
 
       if (!regularExtras.length && !insuranceExtras.length && !declinedInsurance) {
-        html += `<div style="font-size:14px;color:#6b7280;">Keine</div>`;
+        html += `<div style="font-size:14px;color:#6b7280;">${noneLabel}</div>`;
       }
 
       return html;
     }
 
+    // Hotel price table (German)
     const priceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
     if (extrasTotal > 0) priceRows.push({ label: 'Zusatzleistungen', amount: eur(extrasTotal) });
     const priceTable = buildPriceTable(priceRows, 'Gesamtbetrag', eur(totalBookingPrice), accent);
+
+    // Guest price table (translated)
+    const guestPriceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
+    if (extrasTotal > 0) guestPriceRows.push({ label: i18n.extrasTotal, amount: eur(extrasTotal) });
+    const guestPriceTable = buildPriceTable(guestPriceRows, i18n.total, eur(totalBookingPrice), accent);
 
     // Send emails
     try {
@@ -330,9 +354,9 @@ export async function POST(req: Request) {
               ${buildInfoBlock(i18n.apartments, apartmentNames)}
               ${buildDivider()}
               <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">${i18n.extras}</div>
-              ${buildExtrasSection()}
+              ${buildExtrasSection(true)}
               ${buildDivider()}
-              ${priceTable}
+              ${guestPriceTable}
               ${message ? buildDivider() + buildInfoBlock(i18n.yourMessage, message) : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
                 ${guestSignoff}<br/>
