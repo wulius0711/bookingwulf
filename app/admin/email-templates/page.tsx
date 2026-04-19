@@ -113,6 +113,11 @@ export default async function EmailTemplatesPage() {
         Betreff und Fließtext der automatischen E-Mails anpassen.
       </p>
 
+      {/* Language hint */}
+      <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 18px', marginBottom: 16, fontSize: 13, color: '#92400e' }}>
+        Die Vorschau und Bearbeitung der Templates erfolgt auf Deutsch. Wenn keine eigene Vorlage gespeichert ist, werden die E-Mails automatisch in der unter Settings gewählten Sprache versendet.
+      </div>
+
       {/* Placeholder reference */}
       <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
         <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
