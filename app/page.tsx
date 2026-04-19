@@ -1,8 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { PLANS } from '@/src/lib/plans';
+
+const LP_BASE = {
+  accentColor: '#dc143c', backgroundColor: '#faebd7', cardBackground: '#fef9f2',
+  textColor: '#111111', mutedTextColor: '#666666', borderColor: '#dddddd',
+  cardRadius: '12', buttonRadius: '44', buttonColor: '#ffffff',
+  headlineFontSize: '28', bodyFontSize: '14', headlineFontWeight: '700',
+};
+
+const LP_PRESETS = [
+  { accentColor: '#1a56db', backgroundColor: '#eff6ff', cardBackground: '#f8fbff', textColor: '#0f1941', borderColor: '#c3d9f8', cardRadius: '8', buttonRadius: '8' },
+  { accentColor: '#065f46', backgroundColor: '#ecfdf5', cardBackground: '#f6fdf9', textColor: '#022c22', borderColor: '#a7f3d0', cardRadius: '16', buttonRadius: '4' },
+  { accentColor: '#7c3aed', backgroundColor: '#f5f3ff', cardBackground: '#faf9ff', textColor: '#1e0a4a', borderColor: '#ddd6fe', cardRadius: '12', buttonRadius: '24' },
+  { accentColor: '#111827', backgroundColor: '#f9fafb', cardBackground: '#ffffff', textColor: '#111827', borderColor: '#e5e7eb', cardRadius: '6', buttonRadius: '6' },
+];
 
 export default function LandingPage() {
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('year');
@@ -26,6 +40,44 @@ export default function LandingPage() {
   ];
 
   const plans = Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][];
+
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    function send(settings: Record<string, string>) {
+      iframeRef.current?.contentWindow?.postMessage(
+        { type: 'booking-widget-preview-settings', settings },
+        '*'
+      );
+    }
+
+    let timer: ReturnType<typeof setTimeout>;
+    let presetIndex = 0;
+    let started = false;
+
+    function cycle() {
+      send({ ...LP_BASE, ...LP_PRESETS[presetIndex % LP_PRESETS.length] });
+      presetIndex++;
+      timer = setTimeout(() => {
+        send(LP_BASE);
+        timer = setTimeout(cycle, 3000);
+      }, 5000);
+    }
+
+    function onMessage(e: MessageEvent) {
+      if (e.data?.type === 'booking-widget-ready' && !started) {
+        started = true;
+        send(LP_BASE);
+        timer = setTimeout(cycle, 4000);
+      }
+    }
+
+    window.addEventListener('message', onMessage);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <div style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif', color: '#111' }}>
@@ -177,6 +229,7 @@ export default function LandingPage() {
       <section style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 80px' }}>
         <div className="lp-preview">
           <iframe
+            ref={iframeRef}
             src="/widget.html?hotel=beimoser"
             style={{ width: '100%', height: 600, border: 'none', display: 'block', pointerEvents: 'none' }}
             scrolling="no"
