@@ -40,7 +40,7 @@ export default function StatusButtons({ requestId, currentStatus, guestEmail, ac
             <input type="hidden" name="status" value={s.value} />
             <button
               type="submit"
-              disabled={active}
+              disabled={active || (s.value === 'new' && currentStatus !== 'new')}
               onClick={(e) => !active && handleClick(e, s.value, s.label)}
               style={{
                 padding: '10px 14px',
