@@ -5,7 +5,7 @@ import { useState } from 'react';
 type ApartmentStatus =
   | { kind: 'frei' }
   | { kind: 'belegt'; guestName: string; arrival: string; departure: string; requestId: number; checkoutToday: boolean }
-  | { kind: 'blockiert'; note?: string | null };
+  | { kind: 'blockiert'; note?: string | null; endDate: string };
 
 type ApartmentCard = {
   id: number;
@@ -158,8 +158,13 @@ function ApartmentCardEl({ card, date }: { card: ApartmentCard; date: string }) 
         </div>
       )}
 
-      {s.kind === 'blockiert' && s.note && (
-        <div style={{ fontSize: 13, color: '#6b7280' }}>{s.note}</div>
+      {s.kind === 'blockiert' && (
+        <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5 }}>
+          <div>
+            noch {Math.ceil((new Date(s.endDate).getTime() - new Date(date + 'T12:00:00').getTime()) / 86400000)} Tage
+          </div>
+          {s.note && <div>{s.note}</div>}
+        </div>
       )}
 
       {s.kind === 'frei' && (

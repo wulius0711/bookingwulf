@@ -42,7 +42,7 @@ export async function buildZimmerplan(hotelId: number | null, dateIso: string) {
         startDate: { lte: dayEnd },
         endDate: { gt: dayStart },
       },
-      select: { apartmentId: true, note: true },
+      select: { apartmentId: true, note: true, endDate: true },
     }),
   ]);
 
@@ -70,7 +70,7 @@ export async function buildZimmerplan(hotelId: number | null, dateIso: string) {
 
     const block = blocked.find((b) => b.apartmentId === apt.id || b.apartmentId === null);
     if (block) {
-      return { id: apt.id, name: apt.name, status: { kind: 'blockiert' as const, note: block.note } };
+      return { id: apt.id, name: apt.name, status: { kind: 'blockiert' as const, note: block.note, endDate: toIso(block.endDate) } };
     }
 
     return { id: apt.id, name: apt.name, status: { kind: 'frei' as const } };
