@@ -67,6 +67,7 @@ model HotelSettings {
   // 💠 UI Shape
   cardRadius   Int?  // z.B. 8 / 12 / 16
   buttonRadius Int?  // optional getrennt
+  buttonColor  String?
 
   // 🔤 Typography
   headlineFont       String?

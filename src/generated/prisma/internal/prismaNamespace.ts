@@ -1610,6 +1610,7 @@ export const HotelSettingsScalarFieldEnum = {
   borderColor: 'borderColor',
   cardRadius: 'cardRadius',
   buttonRadius: 'buttonRadius',
+  buttonColor: 'buttonColor',
   headlineFont: 'headlineFont',
   bodyFont: 'bodyFont',
   headlineFontSize: 'headlineFontSize',
