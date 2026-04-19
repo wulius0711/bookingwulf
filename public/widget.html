@@ -3090,12 +3090,17 @@ sortedApartments.forEach((ap) => {
           document.getElementById('viewTop').classList.add('active');
           document.getElementById('viewSidebar').classList.remove('active');
           if (summaryEl && layoutEl) layoutEl.appendChild(summaryEl);
+          var stepsEl = topEl && topEl.querySelector('.steps');
+          var priceBox = topEl && topEl.querySelector('.price-box');
+          if (stepsEl && priceBox) stepsEl.insertAdjacentElement('afterend', priceBox);
         });
         document.getElementById('viewSidebar').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.add('sidebar-layout');
           document.getElementById('viewSidebar').classList.add('active');
           document.getElementById('viewTop').classList.remove('active');
           if (summaryEl && topEl) topEl.appendChild(summaryEl);
+          var priceBox = topEl && topEl.querySelector('.price-box');
+          if (priceBox && topEl) topEl.insertBefore(priceBox, topEl.firstChild);
         });
 
         // Layout toggle
