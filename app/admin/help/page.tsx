@@ -22,12 +22,16 @@ const sections = [
 export default function HelpPage() {
   const [active, setActive] = useState('uebersicht');
   const contentRef = useRef<HTMLDivElement>(null);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
   const current = sections.find((s) => s.id === active)!;
   const Content = current.content;
 
   function navigate(id: string) {
     setActive(id);
-    setTimeout(() => contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+    setTimeout(() => {
+      const target = mobileNavRef.current ?? contentRef.current;
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
   }
 
   return (
@@ -38,7 +42,7 @@ export default function HelpPage() {
       </p>
 
       {/* Mobile: horizontal scrollable nav */}
-      <div className="help-mobile-nav">
+      <div className="help-mobile-nav" ref={mobileNavRef}>
         {sections.map((s) => (
           <button
             key={s.id}
