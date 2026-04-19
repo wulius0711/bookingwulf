@@ -370,6 +370,11 @@ function ApartmentsSection() {
         definiert ist. Saisons haben immer Vorrang. Weitere Details unter <strong>Preise & Saisons</strong>.
       </P>
 
+      <Note>
+        <strong>Hinweis:</strong> Apartments können deaktiviert werden, ohne sie zu löschen.
+        So bleiben historische Buchungsdaten erhalten.
+      </Note>
+
       <H3>Kalender-Sync (iCal)</H3>
       <P>
         In der Detailansicht jedes Apartments finden Sie den Abschnitt <strong>Kalender-Sync</strong>.
@@ -400,10 +405,6 @@ function ApartmentsSection() {
         Import-Feed — dann laufen beide Richtungen synchron.
       </Tip>
 
-      <Note>
-        <strong>Hinweis:</strong> Apartments können deaktiviert werden, ohne sie zu löschen.
-        So bleiben historische Buchungsdaten erhalten.
-      </Note>
     </div>
   );
 }
