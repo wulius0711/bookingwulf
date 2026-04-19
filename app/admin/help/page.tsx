@@ -360,9 +360,15 @@ function ZimmerplanSection() {
       </P>
       <H3>Belegte Apartments</H3>
       <P>
-        Bei belegten Apartments werden Gastname, Anreise- und Abreisedatum angezeigt.
-        Wenn die Abreise auf den gewählten Tag fällt, erscheint ein <strong>„Check-out heute"</strong>-Badge.
+        Bei belegten Apartments werden Gastname, verbleibende Tage bis zum Check-out sowie
+        Anreise- und Abreisedatum angezeigt. Wenn die Abreise auf den gewählten Tag fällt,
+        erscheint ein <strong>„Check-out heute"</strong>-Badge statt der Tagesangabe.
         Über den Link <em>„Anfrage ansehen"</em> gelangen Sie direkt zur Buchungsdetailansicht.
+      </P>
+      <H3>Blockierte Apartments</H3>
+      <P>
+        Blockierte Apartments zeigen die Anzahl der verbleibenden Sperrtage sowie — falls
+        angegeben — die hinterlegte Notiz zur Sperrzeit.
       </P>
       <Tip>
         <strong>Tipp:</strong> Der Zimmerplan ergänzt den Kalender — der Kalender gibt einen
