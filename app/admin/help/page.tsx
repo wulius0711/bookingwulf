@@ -285,7 +285,7 @@ function ApartmentsSection() {
       </P>
 
       <H3>Apartment anlegen</H3>
-      <Step num={1} title="„Apartment hinzufügen" klicken">
+      <Step num={1} title={'„Apartment hinzufügen" klicken'}>
         Geben Sie Name, Beschreibung, maximale Personenanzahl und Basispreis pro Nacht ein.
       </Step>
       <Step num={2} title="Bilder hochladen">
