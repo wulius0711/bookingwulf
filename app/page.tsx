@@ -12,10 +12,10 @@ const LP_BASE = {
 };
 
 const LP_PRESETS = [
-  { accentColor: '#1a56db', backgroundColor: '#eff6ff', cardBackground: '#f8fbff', textColor: '#0f1941', borderColor: '#c3d9f8', cardRadius: '8', buttonRadius: '8' },
-  { accentColor: '#065f46', backgroundColor: '#ecfdf5', cardBackground: '#f6fdf9', textColor: '#022c22', borderColor: '#a7f3d0', cardRadius: '16', buttonRadius: '4' },
-  { accentColor: '#7c3aed', backgroundColor: '#f5f3ff', cardBackground: '#faf9ff', textColor: '#1e0a4a', borderColor: '#ddd6fe', cardRadius: '12', buttonRadius: '24' },
-  { accentColor: '#111827', backgroundColor: '#f9fafb', cardBackground: '#ffffff', textColor: '#111827', borderColor: '#e5e7eb', cardRadius: '6', buttonRadius: '6' },
+  { accentColor: '#1a56db', backgroundColor: '#eff6ff', cardBackground: '#f8fbff', textColor: '#0f1941', borderColor: '#c3d9f8', cardRadius: '2',  buttonRadius: '2'  },
+  { accentColor: '#065f46', backgroundColor: '#ecfdf5', cardBackground: '#f6fdf9', textColor: '#022c22', borderColor: '#a7f3d0', cardRadius: '20', buttonRadius: '44' },
+  { accentColor: '#7c3aed', backgroundColor: '#f5f3ff', cardBackground: '#faf9ff', textColor: '#1e0a4a', borderColor: '#ddd6fe', cardRadius: '0',  buttonRadius: '32' },
+  { accentColor: '#111827', backgroundColor: '#f9fafb', cardBackground: '#ffffff', textColor: '#111827', borderColor: '#e5e7eb', cardRadius: '8',  buttonRadius: '8'  },
 ];
 
 export default function LandingPage() {
