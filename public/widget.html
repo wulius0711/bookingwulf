@@ -460,6 +460,54 @@
         margin-top: 18px;
       }
 
+      /* Masonry layout */
+      #apartments.masonry {
+        columns: 2;
+        column-gap: 18px;
+      }
+      #apartments.masonry .apt-card {
+        display: block;
+        break-inside: avoid;
+        margin-top: 0;
+        margin-bottom: 18px;
+      }
+      #apartments.masonry .apt-card + .apt-card {
+        margin-top: 0;
+      }
+      #apartments.masonry .apt-image-wrap {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 14px;
+      }
+      #apartments.masonry .apt-content {
+        width: 100%;
+      }
+
+      .layout-toggle {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 16px;
+        justify-content: flex-end;
+      }
+      .layout-toggle button {
+        background: none;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--button-radius);
+        padding: 5px 10px;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 12px;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .layout-toggle button.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-soft);
+      }
+
       .apt-card:hover {
         transform: translateY(-1px);
         box-shadow: var(--shadow-hover);
@@ -1148,6 +1196,8 @@
       }
 
       @media (max-width: 1080px) {
+        #apartments.masonry { columns: 1; }
+
         .top,
         .layout,
         .grid-2 {
@@ -1392,6 +1442,16 @@
                 passende oder nicht verfügbare Optionen werden entsprechend markiert.
               </p>
 
+              <div class="layout-toggle">
+                <button id="layoutList" class="active" title="Liste">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="1" width="14" height="2" rx="1" fill="currentColor"/><rect x="0" y="6" width="14" height="2" rx="1" fill="currentColor"/><rect x="0" y="11" width="14" height="2" rx="1" fill="currentColor"/></svg>
+                  Liste
+                </button>
+                <button id="layoutMasonry" title="Masonry">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="6" height="8" rx="1" fill="currentColor"/><rect x="8" y="0" width="6" height="5" rx="1" fill="currentColor"/><rect x="0" y="10" width="6" height="4" rx="1" fill="currentColor"/><rect x="8" y="7" width="6" height="7" rx="1" fill="currentColor"/></svg>
+                  Masonry
+                </button>
+              </div>
               <div id="apartments"></div>
               <div class="selection-note" id="selectionCountNote"></div>
 
@@ -2928,6 +2988,18 @@ sortedApartments.forEach((ap) => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           });
+        });
+
+        // Layout toggle
+        document.getElementById('layoutList').addEventListener('click', function() {
+          document.getElementById('apartments').classList.remove('masonry');
+          document.getElementById('layoutList').classList.add('active');
+          document.getElementById('layoutMasonry').classList.remove('active');
+        });
+        document.getElementById('layoutMasonry').addEventListener('click', function() {
+          document.getElementById('apartments').classList.add('masonry');
+          document.getElementById('layoutMasonry').classList.add('active');
+          document.getElementById('layoutList').classList.remove('active');
         });
 
         document
