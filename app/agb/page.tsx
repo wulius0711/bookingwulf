@@ -102,7 +102,7 @@ export default function AGBPage() {
 
       <h2 style={h2}>§ 9 Kündigung</h2>
       <p style={p}>
-        Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen. Die Kündigung erfolgt über das Stripe-Kundenportal oder per E-Mail an office@wulius.at.
+        Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen. Die Kündigung erfolgt über das Stripe-Kundenportal oder per E-Mail an support@bookingwulf.com.
       </p>
       <p style={p}>
         Nach Kündigung wird der Zugang zum Admin-Bereich gesperrt. Buchungsanfragen, die über bereits eingebettete Widgets eingehen, werden nicht mehr verarbeitet. Der Anbieter löscht die Kundendaten innerhalb von 30 Tagen nach Kündigung, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.

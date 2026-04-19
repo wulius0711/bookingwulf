@@ -23,7 +23,7 @@ export default function DatenschutzPage() {
         Wolfgang Heis<br />
         Vorgartenstraße 200/8<br />
         1020 Wien, Österreich<br />
-        E-Mail: office@wulius.at
+        E-Mail: support@bookingwulf.com
       </p>
 
       <h2 style={h2}>2. Überblick der Verarbeitungen</h2>
@@ -94,7 +94,7 @@ export default function DatenschutzPage() {
 
       <h2 style={h2}>7. Speicherdauer</h2>
       <ul style={ul}>
-        <li><strong>Buchungsanfragen:</strong> Werden gespeichert, solange das Hotelbetreiber-Konto aktiv ist. Eine Löschung einzelner oder aller Buchungsanfragen erfolgt auf Anfrage durch den Betreiber (office@wulius.at). Hotelbetreiber selbst haben keinen eigenständigen Löschzugriff.</li>
+        <li><strong>Buchungsanfragen:</strong> Werden gespeichert, solange das Hotelbetreiber-Konto aktiv ist. Eine Löschung einzelner oder aller Buchungsanfragen erfolgt auf Anfrage durch den Betreiber (support@bookingwulf.com). Hotelbetreiber selbst haben keinen eigenständigen Löschzugriff.</li>
         <li><strong>Nutzerkonten:</strong> Werden bei Kündigung des Abonnements gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</li>
         <li><strong>Session-Daten:</strong> Automatische Löschung nach 7 Tagen.</li>
         <li><strong>Passwort-Reset-Tokens:</strong> Automatische Löschung nach 1 Stunde.</li>
@@ -114,7 +114,7 @@ export default function DatenschutzPage() {
         <li><strong>Widerruf der Einwilligung</strong> (Art. 7 Abs. 3 DSGVO) — Recht, erteilte Einwilligungen jederzeit zu widerrufen.</li>
       </ul>
       <p style={p}>
-        Zur Ausübung Ihrer Rechte — insbesondere zur Löschung von Buchungsanfragen — kontaktieren Sie uns unter: <strong>office@wulius.at</strong>
+        Zur Ausübung Ihrer Rechte — insbesondere zur Löschung von Buchungsanfragen — kontaktieren Sie uns unter: <strong>support@bookingwulf.com</strong>
       </p>
 
       <h2 style={h2}>9. Beschwerderecht</h2>

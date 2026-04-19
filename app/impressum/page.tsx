@@ -23,7 +23,7 @@ export default function ImpressumPage() {
 
       <h2 style={h2}>Kontakt</h2>
       <p style={p}>
-        E-Mail: office@wulius.at
+        E-Mail: support@bookingwulf.com
       </p>
 
       <h2 style={h2}>Umsatzsteuer-ID</h2>

@@ -91,7 +91,7 @@ export async function registerHotel(
               Nach Ablauf können Sie ein Abonnement abschließen, um bookingwulf weiter zu nutzen.
             </p>
             <p style="font-size:15px;color:#374151;line-height:1.6;margin:0;">
-              Bei Fragen stehen wir Ihnen jederzeit unter <strong>office@wulius.at</strong> zur Verfügung.
+              Bei Fragen stehen wir Ihnen jederzeit unter <strong>support@bookingwulf.com</strong> zur Verfügung.
             </p>
           `,
         }),

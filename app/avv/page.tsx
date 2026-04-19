@@ -24,7 +24,7 @@ export default function AVVPage() {
         <strong>Auftragsverarbeiter:</strong><br />
         Wolfgang Heis (bookingwulf)<br />
         Vorgartenstraße 200/8, 1020 Wien, Österreich<br />
-        E-Mail: office@wulius.at
+        E-Mail: support@bookingwulf.com
       </p>
       <p style={p}>
         <strong>Verantwortlicher:</strong><br />
@@ -102,7 +102,7 @@ export default function AVVPage() {
 
       <h2 style={h2}>9. Weisungsrecht</h2>
       <p style={p}>
-        Der Verantwortliche kann Weisungen zur Datenverarbeitung erteilen, insbesondere zur Löschung von Daten, per E-Mail an office@wulius.at. Der Auftragsverarbeiter bestätigt den Eingang und setzt Weisungen innerhalb angemessener Frist um.
+        Der Verantwortliche kann Weisungen zur Datenverarbeitung erteilen, insbesondere zur Löschung von Daten, per E-Mail an support@bookingwulf.com. Der Auftragsverarbeiter bestätigt den Eingang und setzt Weisungen innerhalb angemessener Frist um.
       </p>
 
       <h2 style={h2}>10. Haftung</h2>
@@ -112,7 +112,7 @@ export default function AVVPage() {
 
       <h2 style={h2}>11. Kontakt</h2>
       <p style={p}>
-        Bei Fragen zum AVV oder zur Ausübung des Weisungsrechts: <strong>office@wulius.at</strong>
+        Bei Fragen zum AVV oder zur Ausübung des Weisungsrechts: <strong>support@bookingwulf.com</strong>
       </p>
     </main>
   );
