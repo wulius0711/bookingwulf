@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, createContext, useContext } from 'react';
+import { useState, useRef, createContext, useContext } from 'react';
 
 const NavigateCtx = createContext<(id: string) => void>(() => {});
 
@@ -21,8 +21,14 @@ const sections = [
 
 export default function HelpPage() {
   const [active, setActive] = useState('uebersicht');
+  const contentRef = useRef<HTMLDivElement>(null);
   const current = sections.find((s) => s.id === active)!;
   const Content = current.content;
+
+  function navigate(id: string) {
+    setActive(id);
+    setTimeout(() => contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+  }
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -45,7 +51,7 @@ export default function HelpPage() {
           {sections.map((s) => (
             <button
               key={s.id}
-              onClick={() => setActive(s.id)}
+              onClick={() => navigate(s.id)}
               style={{
                 textAlign: 'left',
                 padding: '8px 12px',
@@ -79,7 +85,7 @@ export default function HelpPage() {
         </nav>
 
         {/* Content */}
-        <div style={{
+        <div ref={contentRef} style={{
           flex: 1,
           minWidth: 0,
           background: '#fff',
@@ -87,7 +93,7 @@ export default function HelpPage() {
           borderRadius: 16,
           padding: '32px 40px',
         }}>
-          <NavigateCtx.Provider value={setActive}>
+          <NavigateCtx.Provider value={navigate}>
             <Content />
           </NavigateCtx.Provider>
         </div>
