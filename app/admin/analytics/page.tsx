@@ -100,7 +100,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   ]);
 
   // Monthly breakdown
-  const chartMonths = periodDef.months === null ? 24 : periodDef.months;
+  const chartMonths = periodDef.months === null
+    ? (now.getFullYear() - 2020) * 12 + now.getMonth() + 1
+    : periodDef.months;
   const monthlyMap = new Map<string, number>();
   for (let i = chartMonths - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -216,29 +218,29 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               {periodDef.label}{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ''}
             </p>
           </div>
-          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
+          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', flex: '1 1 auto', minWidth: 140 }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
             {isSuperAdmin && (
-              <select name="hotel" defaultValue={String(selectedId ?? '')} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
+              <select name="hotel" defaultValue={String(selectedId ?? '')} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', flex: '1 1 auto', minWidth: 140 }}>
                 <option value="">Alle Hotels</option>
                 {hotels.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
               </select>
             )}
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer', flexShrink: 0 }}>Laden</button>
           </form>
         </div>
 
         {/* KPI Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
           {[
-            { label: 'Anfragen (12M)', value: total },
+            { label: 'Anfragen', value: total },
             { label: 'Gebucht', value: booked },
             { label: 'Conversion', value: `${conversionRate}%` },
             { label: 'Ø Nächte', value: avgNights },
             { label: 'Ø Gäste', value: avgGuests },
-            { label: 'Umsatz (12M)', value: `€ ${totalRevenue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
+            { label: 'Umsatz', value: `€ ${totalRevenue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
             { label: 'Ø Buchungswert', value: `€ ${avgBookingValue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
           ].map(({ label, value }) => (
             <div key={label} style={{ ...cardStyle, textAlign: 'center' }}>

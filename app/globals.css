@@ -123,6 +123,50 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: 1fr 1fr;
 }
 
+/* Calendar responsive */
+.calendar-page {
+  padding: 32px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.calendar-cell {
+  min-height: 110px;
+  padding: 8px 6px;
+}
+
+.calendar-cell-empty {
+  min-height: 110px;
+}
+
+.calendar-chip-label {
+  /* visible on desktop */
+}
+
+@media (max-width: 768px) {
+  .calendar-page {
+    padding: 16px;
+  }
+
+  .calendar-cell {
+    min-height: 58px;
+    padding: 4px 2px !important;
+  }
+
+  .calendar-cell-empty {
+    min-height: 58px;
+  }
+
+  .calendar-chip-label {
+    display: none;
+  }
+
+  .calendar-nav-title {
+    min-width: 0 !important;
+    font-size: 15px !important;
+  }
+}
+
 .settings-shell {
   grid-template-columns: minmax(0, 760px) minmax(340px, 1fr);
 }

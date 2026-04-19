@@ -142,13 +142,13 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: 1300, margin: '0 auto' }}>
+    <div className="calendar-page">
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', margin: 0 }}>Kalender</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
-          <span style={{ fontSize: 18, fontWeight: 600, color: '#111', minWidth: 210, textAlign: 'center' }}>
+          <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: '#111', minWidth: 210, textAlign: 'center' }}>
             {MONTH_NAMES[month]} {year}
           </span>
           <Link href={nextLink} style={linkStyle}>→</Link>
@@ -215,8 +215,8 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                 return (
                   <div
                     key={di}
+                    className="calendar-cell-empty"
                     style={{
-                      minHeight: 110,
                       background: '#fafafa',
                       borderRight: di < 6 ? '1px solid #f3f4f6' : 'none',
                     }}
@@ -232,9 +232,8 @@ export default async function CalendarPage({ searchParams }: PageProps) {
               return (
                 <div
                   key={di}
+                  className="calendar-cell"
                   style={{
-                    minHeight: 110,
-                    padding: '8px 6px',
                     background: isWeekend ? '#fafafa' : '#fff',
                     borderRight: di < 6 ? '1px solid #f3f4f6' : 'none',
                   }}
@@ -288,12 +287,12 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                           }}
                           title={`${name}${aptName ? ' · ' + aptName : ''} | ${req.nights} Nächte`}
                         >
-                          {isArrival ? '↘ ' : ''}{name}{aptName ? ` · ${aptName}` : ''}
+                          <span className="calendar-chip-label">{isArrival ? '↘ ' : ''}{name}{aptName ? ` · ${aptName}` : ''}</span>
                         </Link>
                       );
                     })}
                     {bookings.length > 4 && (
-                      <div style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>
+                      <div className="calendar-chip-label" style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>
                         +{bookings.length - 4} weitere
                       </div>
                     )}
