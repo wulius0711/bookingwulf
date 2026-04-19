@@ -825,22 +825,6 @@
         border-color: var(--accent);
       }
 
-      .apt-avail-btn {
-        min-height: 40px;
-        padding: 0 16px;
-        border-radius: var(--button-radius);
-        border: 1px solid var(--line-strong);
-        background: transparent;
-        color: var(--text);
-        font-size: 0.9rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-      }
-      .apt-avail-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-
-
       .selection-note {
         margin-top: 12px;
         color: var(--muted);
@@ -2256,21 +2240,18 @@ sortedApartments.forEach((ap) => {
                     }
                   </div>
 
-                  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-                    <button type="button" class="apt-avail-btn" data-avail="${ap.id}" data-avail-name="${ap.name}">Verfügbarkeit</button>
-                    <div class="apt-actions">
-                      ${priceHtml}
-                      ${
-                        status.type === "available"
-                          ? `<button type="button" class="apt-select-btn ${
-                              selected ? "remove" : ""
-                            }" data-select="${ap.id}">
-                              ${selected ? "Entfernen" : "Auswählen"}
-                            </button>
-                            ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ""}`
-                          : ""
-                      }
-                    </div>
+                  <div class="apt-actions">
+                    ${priceHtml}
+                    ${
+                      status.type === "available"
+                        ? `<button type="button" class="apt-select-btn ${
+                            selected ? "remove" : ""
+                          }" data-select="${ap.id}">
+                            ${selected ? "Entfernen" : "Auswählen"}
+                          </button>
+                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ""}`
+                        : ""
+                    }
                   </div>
                 </div>
               </div>
@@ -2972,21 +2953,6 @@ sortedApartments.forEach((ap) => {
         document.getElementById("lightbox").addEventListener("click", (e) => {
           if (e.target.id === "lightbox") {
             closeLightbox();
-          }
-        });
-
-        // ── Availability Calendar — data fetch, delegate modal to parent ──
-        document.addEventListener('click', async e => {
-          const btn = e.target.closest('[data-avail]');
-          if (!btn) return;
-          const radius = getComputedStyle(document.documentElement).getPropertyValue('--radius').trim() || '8px';
-          window.parent.postMessage({ type: 'booking-widget-calendar-loading', title: btn.dataset.availName, radius }, '*');
-          try {
-            const res = await fetch(`${API_BASE}/api/apartment-calendar?hotel=${HOTEL_SLUG}&apartmentId=${btn.dataset.avail}`);
-            const data = await res.json();
-            window.parent.postMessage({ type: 'booking-widget-calendar-open', title: btn.dataset.availName, ranges: data.ranges || [], radius }, '*');
-          } catch(e) {
-            window.parent.postMessage({ type: 'booking-widget-calendar-open', title: btn.dataset.availName, ranges: [], radius }, '*');
           }
         });
 
