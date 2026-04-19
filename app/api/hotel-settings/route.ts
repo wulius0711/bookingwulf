@@ -14,6 +14,8 @@ export async function OPTIONS() {
   return withCors(new NextResponse(null, { status: 204 }));
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -87,12 +89,10 @@ export async function GET(req: Request) {
     });
 
     return withCors(
-      NextResponse.json({
-        success: true,
-        hotel,
-        settings: mergedSettings,
-        extras,
-      }),
+      NextResponse.json(
+        { success: true, hotel, settings: mergedSettings, extras },
+        { headers: { 'Cache-Control': 'no-store' } },
+      ),
     );
   } catch (error) {
     console.error('hotel-settings GET error:', error);
