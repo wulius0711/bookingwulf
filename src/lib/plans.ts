@@ -6,7 +6,7 @@ export const PLANS = {
     maxApartments: 5,
     maxUsers: 1,
     maxHotels: 1,
-    features: ['Bis zu 5 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
+    features: ['Bis zu 5 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen', 'Zimmerplan'],
   },
   pro: {
     name: 'Pro',
