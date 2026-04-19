@@ -382,8 +382,12 @@
       .view-toggle {
         display: flex;
         gap: 4px;
-        justify-content: flex-start;
+        justify-content: flex-end;
         margin-bottom: 20px;
+        padding-right: calc(340px + 30px);
+      }
+      .view-toggle.sidebar-active {
+        padding-right: 0;
       }
       .view-toggle button {
         background: none;
@@ -3086,10 +3090,12 @@ sortedApartments.forEach((ap) => {
         var layoutEl  = document.querySelector('.layout');
         var topEl     = document.querySelector('.top');
 
+        var viewToggleEl = document.querySelector('.view-toggle');
         document.getElementById('viewTop').addEventListener('click', function() {
           document.querySelector('.booking-shell').classList.remove('sidebar-layout');
           document.getElementById('viewTop').classList.add('active');
           document.getElementById('viewSidebar').classList.remove('active');
+          if (viewToggleEl) viewToggleEl.classList.remove('sidebar-active');
           if (summaryEl && layoutEl) layoutEl.appendChild(summaryEl);
           var stepsEl = topEl && topEl.querySelector('.steps');
           var priceBox = topEl && topEl.querySelector('.price-box');
@@ -3099,6 +3105,7 @@ sortedApartments.forEach((ap) => {
           document.querySelector('.booking-shell').classList.add('sidebar-layout');
           document.getElementById('viewSidebar').classList.add('active');
           document.getElementById('viewTop').classList.remove('active');
+          if (viewToggleEl) viewToggleEl.classList.add('sidebar-active');
           if (summaryEl && topEl) topEl.appendChild(summaryEl);
           var priceBox = topEl && topEl.querySelector('.price-box');
           if (priceBox && topEl) topEl.insertBefore(priceBox, topEl.firstChild);
