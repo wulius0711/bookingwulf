@@ -17,15 +17,15 @@ export default function InfoTooltip({ text }: { text: string }) {
       {visible && (
         <span style={{
           position: 'absolute',
-          bottom: 'calc(100% + 8px)',
+          bottom: 'calc(100% + 10px)',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: '#111',
+          background: '#1e293b',
           color: '#fff',
           fontSize: 12,
           lineHeight: 1.5,
           padding: '8px 12px',
-          borderRadius: 8,
+          borderRadius: 4,
           whiteSpace: 'normal',
           width: 220,
           zIndex: 50,
@@ -33,6 +33,18 @@ export default function InfoTooltip({ text }: { text: string }) {
           boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
         }}>
           {text}
+          {/* arrow */}
+          <span style={{
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: '6px solid #1e293b',
+          }} />
         </span>
       )}
     </span>
