@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
+import { DeleteAllRequestsButton } from './DeleteButtons';
 
 export const dynamic = 'force-dynamic';
 
@@ -104,6 +105,9 @@ export default async function RequestsPage({ searchParams }: PageProps) {
               : 'Alle Hotels'}
           </div>
         </div>
+        {isSuperAdmin && requests.length > 0 && (
+          <DeleteAllRequestsButton hotelSlug={selectedHotelSlug} count={requests.length} />
+        )}
 
         {isSuperAdmin && (
           <form method="GET">

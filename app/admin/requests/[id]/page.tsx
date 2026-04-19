@@ -7,6 +7,7 @@ import { PlanKey } from '@/src/lib/plans';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import StatusButtons from './StatusButtons';
+import { DeleteRequestButton } from '../DeleteButtons';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -275,21 +276,15 @@ export default async function BookingDetailPage({ params }: PageProps) {
       }}
     >
       {/* 🔙 Back */}
-      <Link
-        href="/admin/requests"
-        style={{
-          display: 'inline-block',
-          marginBottom: 20,
-          padding: '8px 14px',
-          borderRadius: 8,
-          border: '1px solid #ccc',
-          textDecoration: 'none',
-          color: '#111',
-          background: '#fff',
-        }}
-      >
-        ← Zurück zur Übersicht
-      </Link>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
+        <Link
+          href="/admin/requests"
+          style={{ display: 'inline-block', padding: '8px 14px', borderRadius: 8, border: '1px solid #ccc', textDecoration: 'none', color: '#111', background: '#fff' }}
+        >
+          ← Zurück zur Übersicht
+        </Link>
+        {isSuperAdmin && <DeleteRequestButton requestId={request.id} />}
+      </div>
 
       <h1 style={{ marginBottom: 24 }}>Buchung #{request.id}</h1>
 
