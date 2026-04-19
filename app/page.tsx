@@ -238,7 +238,7 @@ export default function LandingPage() {
           <iframe
             ref={iframeRef}
             src="/widget.html?hotel=beimoser"
-            style={{ width: '100%', height: 600, border: 'none', display: 'block', pointerEvents: 'none' }}
+            style={{ width: '100%', height: 680, border: 'none', display: 'block', pointerEvents: 'none' }}
             scrolling="no"
             title="Widget Preview"
           />
