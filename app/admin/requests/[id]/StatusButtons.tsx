@@ -19,11 +19,10 @@ const STATUS_OPTIONS = [
 export default function StatusButtons({ requestId, currentStatus, guestEmail, action }: Props) {
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({});
 
-  function handleClick(e: React.MouseEvent, statusLabel: string) {
-    const emailNote = guestEmail ? `\n\nDer Gast (${guestEmail}) wird per E-Mail informiert.` : '';
-    const confirmed = window.confirm(
-      `Status auf „${statusLabel}" setzen?${emailNote}`
-    );
+  function handleClick(e: React.MouseEvent, status: string, statusLabel: string) {
+    const sendsEmail = status !== 'answered';
+    const emailNote = sendsEmail && guestEmail ? `\n\nDer Gast (${guestEmail}) wird per E-Mail informiert.` : '';
+    const confirmed = window.confirm(`Status auf „${statusLabel}" setzen?${emailNote}`);
     if (!confirmed) e.preventDefault();
   }
 
@@ -42,7 +41,7 @@ export default function StatusButtons({ requestId, currentStatus, guestEmail, ac
             <button
               type="submit"
               disabled={active}
-              onClick={(e) => !active && handleClick(e, s.label)}
+              onClick={(e) => !active && handleClick(e, s.value, s.label)}
               style={{
                 padding: '10px 14px',
                 borderRadius: 8,
