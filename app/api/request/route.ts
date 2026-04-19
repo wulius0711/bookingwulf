@@ -78,7 +78,11 @@ export async function POST(req: Request) {
     const newsletter = body.newsletter;
     const bookingType = body.bookingType;
     const browserLang = body.browserLanguage.toLowerCase();
-    const autoLang: Lang = browserLang.startsWith('de') ? 'de' : browserLang.startsWith('it') ? 'it' : 'en';
+    const LANG_PREFIXES: [string, Lang][] = [
+      ['de', 'de'], ['it', 'it'], ['fr', 'fr'], ['nl', 'nl'],
+      ['es', 'es'], ['pl', 'pl'], ['cs', 'cs'], ['ru', 'ru'],
+    ];
+    const autoLang: Lang = LANG_PREFIXES.find(([prefix]) => browserLang.startsWith(prefix))?.[1] ?? 'en';
 
     const arrival = new Date(arrivalRaw);
     const departure = new Date(departureRaw);

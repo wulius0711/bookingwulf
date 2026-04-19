@@ -32,7 +32,7 @@ async function updateLanguage(formData: FormData) {
   const id = Number(formData.get('id'));
   const language = String(formData.get('language') || 'de').trim();
   if (!id) return;
-  const allowed = ['de', 'en', 'it'];
+  const allowed = ['de', 'en', 'it', 'fr', 'nl', 'ru', 'pl', 'cs', 'es'];
   if (!allowed.includes(language)) return;
   const request = await prisma.request.findUnique({ where: { id }, select: { hotelId: true } });
   if (!request) return;
@@ -402,6 +402,12 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               <option value="de">Deutsch</option>
               <option value="en">English</option>
               <option value="it">Italiano</option>
+              <option value="fr">Français</option>
+              <option value="nl">Nederlands</option>
+              <option value="es">Español</option>
+              <option value="pl">Polski</option>
+              <option value="cs">Čeština</option>
+              <option value="ru">Русский</option>
             </select>
             <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer' }}>
               Speichern
