@@ -65,7 +65,9 @@ async function updateBookingStatus(formData: FormData) {
   const lang = (request.language || 'de') as Lang;
   const i18n = getEmailTranslations(lang);
   const locale = dateLocale[lang];
-  const statusMsg = i18n.statusMessages[status as keyof typeof i18n.statusMessages];
+  const statusMsg = status !== 'answered'
+    ? i18n.statusMessages[status as keyof typeof i18n.statusMessages]
+    : null;
 
   if (statusMsg && request.email) {
     try {
