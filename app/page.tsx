@@ -8,6 +8,7 @@ const LP_BASE = {
   accentColor: '#dc143c', backgroundColor: '#faebd7', cardBackground: '#fef9f2',
   textColor: '#111111', mutedTextColor: '#666666', borderColor: '#dddddd',
   cardRadius: '12', buttonRadius: '44', buttonColor: '#ffffff',
+  headlineFont: '', bodyFont: '',
   headlineFontSize: '28', bodyFontSize: '14', headlineFontWeight: '700',
 };
 
