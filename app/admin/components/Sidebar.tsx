@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { logout } from '../login/actions';
 
 type NavItemDef = {
   href: string;
   label: string;
   locked: boolean;
-  active: boolean;
   upgradeLabel?: string;
 };
 
@@ -20,7 +20,9 @@ type Props = {
   userHotels: HotelOption[];
 };
 
-function SidebarNavItem({ href, label, locked, active, upgradeLabel }: NavItemDef) {
+function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
+  const pathname = usePathname();
+  const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
   const [shaking, setShaking] = useState(false);

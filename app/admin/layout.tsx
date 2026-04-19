@@ -67,14 +67,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const navItems = navItemDefs.map(({ href, label }) => {
     const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
     const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
-    const active = href === '/admin'
-      ? currentPath === '/admin'
-      : currentPath.startsWith(href)
     return {
       href,
       label,
       locked,
-      active,
       upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined,
     }
   })
