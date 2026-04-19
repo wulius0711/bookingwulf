@@ -32,6 +32,9 @@ export default function LandingPage() {
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
     { icon: '💶', title: 'Preissaisons', desc: 'Saisonale Preise automatisch anwenden — Haupt-, Neben- und Feiertagspreise.' },
     { icon: '⚡', title: 'Einbau in 1 Minute', desc: 'Eine Zeile Code auf Ihre Website — kein Entwickler nötig.' },
+    { icon: '🌍', title: 'Mehrsprachige Kommunikation', desc: 'Gäste-E-Mails in 9 Sprachen — automatisch erkannt, manuell anpassbar.' },
+    { icon: '🔑', title: 'Nuki-Integration', desc: 'Schlüsselloses Einchecken — kein Schlüssel, kein Aufwand.' },
+    { icon: '🇪🇺', title: 'Alle Daten in der EU', desc: 'Gespeichert auf Servern in Deutschland.' },
   ];
 
   const steps = [
@@ -263,9 +266,6 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <p style={{ textAlign: 'center', marginTop: 32, fontSize: 14, color: '#888' }}>
-            Datenspeicherung in der EU 🇪🇺
-          </p>
         </div>
       </section>
 
