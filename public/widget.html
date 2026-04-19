@@ -1270,12 +1270,13 @@
 
       @media (max-width: 1080px) {
         #apartments.masonry { columns: 1; }
-        .booking-shell.sidebar-layout { grid-template-columns: 1fr; }
-        .booking-shell.sidebar-layout .top { position: static; grid-row: auto; }
+        .booking-shell.sidebar-layout { display: block; }
+        .booking-shell.sidebar-layout .top { position: static; margin-bottom: 30px; }
         .booking-shell.sidebar-layout .steps { grid-template-columns: repeat(2, 1fr); }
-        .booking-shell.sidebar-layout .layout { grid-column: 1; grid-template-columns: 1fr; }
+        .booking-shell.sidebar-layout .layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; }
         .booking-shell.sidebar-layout .layout > aside.summary { display: block; }
         .booking-shell.sidebar-layout .top .summary-sidebar { display: none; }
+        .view-toggle { display: none; }
 
         .top,
         .layout,
