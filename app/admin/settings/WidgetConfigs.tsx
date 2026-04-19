@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { saveWidgetConfig, deleteWidgetConfig } from './widget-config-actions';
 import InfoTooltip from '../components/InfoTooltip';
+import { EmbedCode } from './EmbedCode';
 
 type Config = {
   id: number;
@@ -84,8 +85,8 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
             </div>
           </div>
 
-          <div style={{ marginTop: 10, fontSize: 12, color: '#6b7280', wordBreak: 'break-all' }}>
-            Einbindung: <code>{`<script src="https://${host}/widget.js" data-hotel="${hotelSlug}" data-config="${c.slug}"></script>`}</code>
+          <div style={{ marginTop: 10 }}>
+            <EmbedCode code={`<script src="https://${host}/widget.js" data-hotel="${hotelSlug}" data-config="${c.slug}"></script>`} />
           </div>
         </div>
       ))}
