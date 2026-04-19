@@ -26,6 +26,10 @@ function sendToIframe(settings: Record<string, string>) {
 
 export default function SettingsLivePreview() {
   useEffect(() => {
+    function onWidgetReady(e: MessageEvent) {
+      if (e.data?.type === 'booking-widget-ready') sendToIframe(collectSettings());
+    }
+
     function onInputChange() {
       sendToIframe(collectSettings());
     }
@@ -34,6 +38,8 @@ export default function SettingsLivePreview() {
       // Small delay to let React state settle after native setter
       setTimeout(() => sendToIframe(collectSettings()), 50);
     }
+
+    window.addEventListener('message', onWidgetReady);
 
     // Attach to all relevant form inputs
     const listeners: [HTMLElement, string, () => void][] = [];
@@ -55,6 +61,7 @@ export default function SettingsLivePreview() {
     document.addEventListener('settings-preset-applied', onPresetApplied);
 
     return () => {
+      window.removeEventListener('message', onWidgetReady);
       listeners.forEach(([el, event, fn]) => el.removeEventListener(event, fn));
       document.removeEventListener('settings-color-changed', onColorChanged);
       document.removeEventListener('settings-preset-applied', onPresetApplied);

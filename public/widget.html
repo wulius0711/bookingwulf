@@ -2961,6 +2961,7 @@ sortedApartments.forEach((ap) => {
 
         async function init() {
           await loadHotelSettings();
+          window.parent.postMessage({ type: 'booking-widget-ready' }, '*');
           setDefaultDates();
           applyDateRules();
           renderAll();
