@@ -460,7 +460,7 @@ function ExtrasSection() {
       </div>
       <H3>Versicherung</H3>
       <P>
-        Eine spezielle Zusatzleistung ist die Reiseversicherung. Gäste können diese annehmen oder
+        Die Reiseversicherung ist in allen Plänen verfügbar. Gäste können diese annehmen oder
         ablehnen — beides wird in der Buchungsübersicht und in den E-Mails angezeigt.
       </P>
       <Tip>
@@ -560,15 +560,15 @@ function AbonnementSection() {
       <div style={{ display: 'grid', gap: 12, margin: '12px 0 20px' }}>
         {[
           {
-            name: 'Starter', price: '€ 55 / Monat (€ 49 jährlich)',
+            name: 'Starter', price: '€ 55 / Monat (€ 49 bei Jahreszahlung)',
             features: ['Bis zu 5 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
           },
           {
-            name: 'Pro', price: '€ 109 / Monat (€ 99 jährlich)',
+            name: 'Pro', price: '€ 109 / Monat (€ 99 bei Jahreszahlung)',
             features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preissaisons', 'Zusatzleistungen', 'Widget-Konfigurationen'],
           },
           {
-            name: 'Business', price: '€ 217 / Monat (€ 199 jährlich)',
+            name: 'Business', price: '€ 217 / Monat (€ 199 bei Jahreszahlung)',
             features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
