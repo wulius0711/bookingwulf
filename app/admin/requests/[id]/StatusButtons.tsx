@@ -30,6 +30,8 @@ export default function StatusButtons({ requestId, currentStatus, guestEmail, ac
     <div style={{ display: 'flex', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
       {STATUS_OPTIONS.map((s) => {
         const active = currentStatus === s.value;
+        const disabled = active || (s.value === 'new' && currentStatus !== 'new');
+        const showPopup = s.value !== 'new' && s.value !== 'answered';
         return (
           <form
             key={s.value}
@@ -40,15 +42,15 @@ export default function StatusButtons({ requestId, currentStatus, guestEmail, ac
             <input type="hidden" name="status" value={s.value} />
             <button
               type="submit"
-              disabled={active || (s.value === 'new' && currentStatus !== 'new')}
-              onClick={(e) => !active && handleClick(e, s.value, s.label)}
+              disabled={disabled}
+              onClick={(e) => !disabled && showPopup && handleClick(e, s.value, s.label)}
               style={{
                 padding: '10px 14px',
                 borderRadius: 8,
                 border: active ? '1px solid #111' : '1px solid #ccc',
                 background: active ? '#111' : '#fff',
-                color: active ? '#fff' : '#111',
-                cursor: active ? 'default' : 'pointer',
+                color: disabled ? '#aaa' : active ? '#fff' : '#111',
+                cursor: disabled ? 'default' : 'pointer',
               }}
             >
               {s.label}
