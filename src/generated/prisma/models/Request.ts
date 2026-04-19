@@ -62,6 +62,8 @@ export type RequestMinAggregateOutputType = {
   language: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  nukiCode: string | null
+  nukiAuthIds: string | null
 }
 
 export type RequestMaxAggregateOutputType = {
@@ -84,6 +86,8 @@ export type RequestMaxAggregateOutputType = {
   language: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  nukiCode: string | null
+  nukiAuthIds: string | null
 }
 
 export type RequestCountAggregateOutputType = {
@@ -107,6 +111,8 @@ export type RequestCountAggregateOutputType = {
   extrasJson: number
   createdAt: number
   updatedAt: number
+  nukiCode: number
+  nukiAuthIds: number
   _all: number
 }
 
@@ -147,6 +153,8 @@ export type RequestMinAggregateInputType = {
   language?: true
   createdAt?: true
   updatedAt?: true
+  nukiCode?: true
+  nukiAuthIds?: true
 }
 
 export type RequestMaxAggregateInputType = {
@@ -169,6 +177,8 @@ export type RequestMaxAggregateInputType = {
   language?: true
   createdAt?: true
   updatedAt?: true
+  nukiCode?: true
+  nukiAuthIds?: true
 }
 
 export type RequestCountAggregateInputType = {
@@ -192,6 +202,8 @@ export type RequestCountAggregateInputType = {
   extrasJson?: true
   createdAt?: true
   updatedAt?: true
+  nukiCode?: true
+  nukiAuthIds?: true
   _all?: true
 }
 
@@ -302,6 +314,8 @@ export type RequestGroupByOutputType = {
   extrasJson: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
+  nukiCode: string | null
+  nukiAuthIds: string | null
   _count: RequestCountAggregateOutputType | null
   _avg: RequestAvgAggregateOutputType | null
   _sum: RequestSumAggregateOutputType | null
@@ -348,6 +362,8 @@ export type RequestWhereInput = {
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  nukiCode?: Prisma.StringNullableFilter<"Request"> | string | null
+  nukiAuthIds?: Prisma.StringNullableFilter<"Request"> | string | null
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
   messages?: Prisma.RequestMessageListRelationFilter
 }
@@ -373,6 +389,8 @@ export type RequestOrderByWithRelationInput = {
   extrasJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nukiCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  nukiAuthIds?: Prisma.SortOrderInput | Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
   messages?: Prisma.RequestMessageOrderByRelationAggregateInput
 }
@@ -401,6 +419,8 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  nukiCode?: Prisma.StringNullableFilter<"Request"> | string | null
+  nukiAuthIds?: Prisma.StringNullableFilter<"Request"> | string | null
   hotel?: Prisma.XOR<Prisma.HotelNullableScalarRelationFilter, Prisma.HotelWhereInput> | null
   messages?: Prisma.RequestMessageListRelationFilter
 }, "id">
@@ -426,6 +446,8 @@ export type RequestOrderByWithAggregationInput = {
   extrasJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nukiCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  nukiAuthIds?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RequestCountOrderByAggregateInput
   _avg?: Prisma.RequestAvgOrderByAggregateInput
   _max?: Prisma.RequestMaxOrderByAggregateInput
@@ -457,6 +479,8 @@ export type RequestScalarWhereWithAggregatesInput = {
   extrasJson?: Prisma.JsonNullableWithAggregatesFilter<"Request">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
+  nukiCode?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
+  nukiAuthIds?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
 }
 
 export type RequestCreateInput = {
@@ -478,6 +502,8 @@ export type RequestCreateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
   hotel?: Prisma.HotelCreateNestedOneWithoutRequestsInput
   messages?: Prisma.RequestMessageCreateNestedManyWithoutRequestInput
 }
@@ -503,6 +529,8 @@ export type RequestUncheckedCreateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
   messages?: Prisma.RequestMessageUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -525,6 +553,8 @@ export type RequestUpdateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneWithoutRequestsNestedInput
   messages?: Prisma.RequestMessageUpdateManyWithoutRequestNestedInput
 }
@@ -550,6 +580,8 @@ export type RequestUncheckedUpdateInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.RequestMessageUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -574,6 +606,8 @@ export type RequestCreateManyInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
 }
 
 export type RequestUpdateManyMutationInput = {
@@ -595,6 +629,8 @@ export type RequestUpdateManyMutationInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RequestUncheckedUpdateManyInput = {
@@ -618,6 +654,8 @@ export type RequestUncheckedUpdateManyInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RequestListRelationFilter = {
@@ -651,6 +689,8 @@ export type RequestCountOrderByAggregateInput = {
   extrasJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nukiCode?: Prisma.SortOrder
+  nukiAuthIds?: Prisma.SortOrder
 }
 
 export type RequestAvgOrderByAggregateInput = {
@@ -681,6 +721,8 @@ export type RequestMaxOrderByAggregateInput = {
   language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nukiCode?: Prisma.SortOrder
+  nukiAuthIds?: Prisma.SortOrder
 }
 
 export type RequestMinOrderByAggregateInput = {
@@ -703,6 +745,8 @@ export type RequestMinOrderByAggregateInput = {
   language?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nukiCode?: Prisma.SortOrder
+  nukiAuthIds?: Prisma.SortOrder
 }
 
 export type RequestSumOrderByAggregateInput = {
@@ -793,6 +837,8 @@ export type RequestCreateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
   messages?: Prisma.RequestMessageCreateNestedManyWithoutRequestInput
 }
 
@@ -816,6 +862,8 @@ export type RequestUncheckedCreateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
   messages?: Prisma.RequestMessageUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -869,6 +917,8 @@ export type RequestScalarWhereInput = {
   extrasJson?: Prisma.JsonNullableFilter<"Request">
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  nukiCode?: Prisma.StringNullableFilter<"Request"> | string | null
+  nukiAuthIds?: Prisma.StringNullableFilter<"Request"> | string | null
 }
 
 export type RequestCreateWithoutMessagesInput = {
@@ -890,6 +940,8 @@ export type RequestCreateWithoutMessagesInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
   hotel?: Prisma.HotelCreateNestedOneWithoutRequestsInput
 }
 
@@ -914,6 +966,8 @@ export type RequestUncheckedCreateWithoutMessagesInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
 }
 
 export type RequestCreateOrConnectWithoutMessagesInput = {
@@ -951,6 +1005,8 @@ export type RequestUpdateWithoutMessagesInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneWithoutRequestsNestedInput
 }
 
@@ -975,6 +1031,8 @@ export type RequestUncheckedUpdateWithoutMessagesInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RequestCreateManyHotelInput = {
@@ -997,6 +1055,8 @@ export type RequestCreateManyHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nukiCode?: string | null
+  nukiAuthIds?: string | null
 }
 
 export type RequestUpdateWithoutHotelInput = {
@@ -1018,6 +1078,8 @@ export type RequestUpdateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.RequestMessageUpdateManyWithoutRequestNestedInput
 }
 
@@ -1041,6 +1103,8 @@ export type RequestUncheckedUpdateWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.RequestMessageUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -1064,6 +1128,8 @@ export type RequestUncheckedUpdateManyWithoutHotelInput = {
   extrasJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nukiCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nukiAuthIds?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1118,6 +1184,8 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nukiCode?: boolean
+  nukiAuthIds?: boolean
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
   messages?: boolean | Prisma.Request$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.RequestCountOutputTypeDefaultArgs<ExtArgs>
@@ -1144,6 +1212,8 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nukiCode?: boolean
+  nukiAuthIds?: boolean
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
@@ -1168,6 +1238,8 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nukiCode?: boolean
+  nukiAuthIds?: boolean
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
@@ -1192,9 +1264,11 @@ export type RequestSelectScalar = {
   extrasJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nukiCode?: boolean
+  nukiAuthIds?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "language" | "extrasJson" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "arrival" | "departure" | "nights" | "adults" | "children" | "selectedApartmentIds" | "salutation" | "firstname" | "lastname" | "email" | "country" | "message" | "newsletter" | "status" | "language" | "extrasJson" | "createdAt" | "updatedAt" | "nukiCode" | "nukiAuthIds", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.Request$hotelArgs<ExtArgs>
   messages?: boolean | Prisma.Request$messagesArgs<ExtArgs>
@@ -1234,6 +1308,8 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     extrasJson: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
+    nukiCode: string | null
+    nukiAuthIds: string | null
   }, ExtArgs["result"]["request"]>
   composites: {}
 }
@@ -1679,6 +1755,8 @@ export interface RequestFieldRefs {
   readonly extrasJson: Prisma.FieldRef<"Request", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Request", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Request", 'DateTime'>
+  readonly nukiCode: Prisma.FieldRef<"Request", 'String'>
+  readonly nukiAuthIds: Prisma.FieldRef<"Request", 'String'>
 }
     
 

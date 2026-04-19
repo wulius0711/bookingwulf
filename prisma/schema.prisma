@@ -37,6 +37,7 @@ model Hotel {
   userHotels    AdminUserHotel[]
   blockedRanges BlockedRange[]
   extras        HotelExtra[]
+  nukiConfig    NukiConfig?
 }
 
 model HotelSettings {
@@ -158,6 +159,9 @@ model Apartment {
   description String?
   amenities   String[] @default([])
 
+  // Nuki
+  nukiSmartlockId String?
+
   // Relations
   images        ApartmentImage[]
   blockedRanges BlockedRange[]
@@ -243,6 +247,9 @@ model Request {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
+  nukiCode    String?
+  nukiAuthIds String?
+
   messages RequestMessage[]
 }
 
@@ -314,4 +321,13 @@ model EmailTemplate {
   updatedAt DateTime @updatedAt
 
   @@unique([hotelId, type])
+}
+
+model NukiConfig {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int      @unique
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  apiToken  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

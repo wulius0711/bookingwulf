@@ -3,6 +3,8 @@ import { getResend, getFromEmail, buildEmailHtml, buildPriceTable, buildInfoBloc
 import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18n';
 import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 import { bookingRequestSchema } from '@/src/lib/schemas';
+import { createNukiCode } from '@/src/lib/nuki';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -96,12 +98,13 @@ export async function POST(req: Request) {
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
       select: {
-        id: true, name: true, email: true, accentColor: true,
+        id: true, name: true, email: true, accentColor: true, plan: true,
         emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
         extras: {
           where: { isActive: true },
           select: { key: true, name: true, type: true, billingType: true, price: true },
         },
+        nukiConfig: { select: { apiToken: true } },
       },
     });
 
@@ -113,6 +116,7 @@ export async function POST(req: Request) {
       where: { id: { in: selectedApartmentIds }, hotelId: hotel.id },
       select: {
         id: true, name: true, basePrice: true, cleaningFee: true,
+        nukiSmartlockId: true,
         priceSeasons: { select: { startDate: true, endDate: true, pricePerNight: true } },
       },
     });
@@ -201,6 +205,36 @@ export async function POST(req: Request) {
           note: `Buchung #${requestEntry.id} — ${firstname} ${lastname}`,
         })),
       });
+    }
+
+    // Generate Nuki access code for instant bookings (Pro+)
+    let nukiCode: string | null = null;
+    if (bookingType === 'booking' && hotel.nukiConfig && hasPlanAccess(hotel.plan ?? 'starter', 'pro')) {
+      try {
+        const code = Math.floor(100000 + Math.random() * 900000);
+        const authIds: string[] = [];
+        for (const apt of apartments) {
+          if (!apt.nukiSmartlockId) continue;
+          const authId = await createNukiCode(
+            hotel.nukiConfig.apiToken,
+            apt.nukiSmartlockId,
+            `${firstname} ${lastname} #${requestEntry.id}`,
+            arrival,
+            departure,
+            code,
+          );
+          authIds.push(`${apt.nukiSmartlockId}:${authId}`);
+        }
+        if (authIds.length > 0) {
+          nukiCode = String(code);
+          await prisma.request.update({
+            where: { id: requestEntry.id },
+            data: { nukiCode, nukiAuthIds: authIds.join(',') },
+          });
+        }
+      } catch (nukiErr) {
+        console.error('Nuki code generation failed:', nukiErr);
+      }
     }
 
     // Build email content
@@ -362,6 +396,14 @@ export async function POST(req: Request) {
               ${buildDivider()}
               ${guestPriceTable}
               ${message ? buildDivider() + buildInfoBlock(i18n.yourMessage, message) : ''}
+              ${nukiCode ? `
+                ${buildDivider()}
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px 24px;text-align:center;">
+                  <div style="font-size:12px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">🔑 Ihr digitaler Zugangscode</div>
+                  <div style="font-size:36px;font-weight:800;letter-spacing:0.15em;color:#111827;font-family:monospace;">${nukiCode}</div>
+                  <div style="font-size:13px;color:#374151;margin-top:8px;">Gültig von Anreise bis Abreise — öffnet das Schloss direkt vor Ort.</div>
+                </div>
+              ` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
                 ${guestSignoff}<br/>
                 <strong>${hotel.name}</strong>

@@ -39,6 +39,7 @@ export function hasPlanAccess(currentPlan: string, minPlan: PlanKey): boolean {
 export const NAV_PLAN_GATES: Record<string, PlanKey> = {
   '/admin/price-seasons': 'pro',
   '/admin/email-templates': 'pro',
+  '/admin/nuki': 'pro',
   '/admin/analytics': 'business',
 };
 

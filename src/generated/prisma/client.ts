@@ -116,3 +116,8 @@ export type AdminUserHotel = Prisma.AdminUserHotelModel
  * 
  */
 export type EmailTemplate = Prisma.EmailTemplateModel
+/**
+ * Model NukiConfig
+ * 
+ */
+export type NukiConfig = Prisma.NukiConfigModel

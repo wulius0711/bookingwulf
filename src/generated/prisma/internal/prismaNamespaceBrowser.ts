@@ -65,7 +65,8 @@ export const ModelName = {
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser',
   AdminUserHotel: 'AdminUserHotel',
-  EmailTemplate: 'EmailTemplate'
+  EmailTemplate: 'EmailTemplate',
+  NukiConfig: 'NukiConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,7 +197,8 @@ export const ApartmentScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   description: 'description',
-  amenities: 'amenities'
+  amenities: 'amenities',
+  nukiSmartlockId: 'nukiSmartlockId'
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
@@ -277,7 +279,9 @@ export const RequestScalarFieldEnum = {
   language: 'language',
   extrasJson: 'extrasJson',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  nukiCode: 'nukiCode',
+  nukiAuthIds: 'nukiAuthIds'
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
@@ -349,6 +353,17 @@ export const EmailTemplateScalarFieldEnum = {
 } as const
 
 export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum]
+
+
+export const NukiConfigScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  apiToken: 'apiToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NukiConfigScalarFieldEnum = (typeof NukiConfigScalarFieldEnum)[keyof typeof NukiConfigScalarFieldEnum]
 
 
 export const SortOrder = {

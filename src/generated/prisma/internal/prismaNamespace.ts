@@ -398,7 +398,8 @@ export const ModelName = {
   HotelExtra: 'HotelExtra',
   AdminUser: 'AdminUser',
   AdminUserHotel: 'AdminUserHotel',
-  EmailTemplate: 'EmailTemplate'
+  EmailTemplate: 'EmailTemplate',
+  NukiConfig: 'NukiConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hotel" | "hotelSettings" | "widgetConfig" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "adminUserHotel" | "emailTemplate"
+    modelProps: "hotel" | "hotelSettings" | "widgetConfig" | "hotelSettingsPreset" | "apartment" | "icalFeed" | "apartmentImage" | "priceSeason" | "blockedRange" | "request" | "requestMessage" | "hotelExtra" | "adminUser" | "adminUserHotel" | "emailTemplate" | "nukiConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1528,6 +1529,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    NukiConfig: {
+      payload: Prisma.$NukiConfigPayload<ExtArgs>
+      fields: Prisma.NukiConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NukiConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NukiConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.NukiConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NukiConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        findMany: {
+          args: Prisma.NukiConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>[]
+        }
+        create: {
+          args: Prisma.NukiConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        createMany: {
+          args: Prisma.NukiConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NukiConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.NukiConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        update: {
+          args: Prisma.NukiConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.NukiConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NukiConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NukiConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.NukiConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NukiConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.NukiConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNukiConfig>
+        }
+        groupBy: {
+          args: Prisma.NukiConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NukiConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NukiConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NukiConfigCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1679,7 +1754,8 @@ export const ApartmentScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   description: 'description',
-  amenities: 'amenities'
+  amenities: 'amenities',
+  nukiSmartlockId: 'nukiSmartlockId'
 } as const
 
 export type ApartmentScalarFieldEnum = (typeof ApartmentScalarFieldEnum)[keyof typeof ApartmentScalarFieldEnum]
@@ -1760,7 +1836,9 @@ export const RequestScalarFieldEnum = {
   language: 'language',
   extrasJson: 'extrasJson',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  nukiCode: 'nukiCode',
+  nukiAuthIds: 'nukiAuthIds'
 } as const
 
 export type RequestScalarFieldEnum = (typeof RequestScalarFieldEnum)[keyof typeof RequestScalarFieldEnum]
@@ -1832,6 +1910,17 @@ export const EmailTemplateScalarFieldEnum = {
 } as const
 
 export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum]
+
+
+export const NukiConfigScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  apiToken: 'apiToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NukiConfigScalarFieldEnum = (typeof NukiConfigScalarFieldEnum)[keyof typeof NukiConfigScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2081,6 +2170,7 @@ export type GlobalOmitConfig = {
   adminUser?: Prisma.AdminUserOmit
   adminUserHotel?: Prisma.AdminUserHotelOmit
   emailTemplate?: Prisma.EmailTemplateOmit
+  nukiConfig?: Prisma.NukiConfigOmit
 }
 
 /* Types for Logging */

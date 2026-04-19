@@ -67,6 +67,7 @@ export type ApartmentMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   description: string | null
+  nukiSmartlockId: string | null
 }
 
 export type ApartmentMaxAggregateOutputType = {
@@ -86,6 +87,7 @@ export type ApartmentMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   description: string | null
+  nukiSmartlockId: string | null
 }
 
 export type ApartmentCountAggregateOutputType = {
@@ -106,6 +108,7 @@ export type ApartmentCountAggregateOutputType = {
   updatedAt: number
   description: number
   amenities: number
+  nukiSmartlockId: number
   _all: number
 }
 
@@ -151,6 +154,7 @@ export type ApartmentMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   description?: true
+  nukiSmartlockId?: true
 }
 
 export type ApartmentMaxAggregateInputType = {
@@ -170,6 +174,7 @@ export type ApartmentMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   description?: true
+  nukiSmartlockId?: true
 }
 
 export type ApartmentCountAggregateInputType = {
@@ -190,6 +195,7 @@ export type ApartmentCountAggregateInputType = {
   updatedAt?: true
   description?: true
   amenities?: true
+  nukiSmartlockId?: true
   _all?: true
 }
 
@@ -297,6 +303,7 @@ export type ApartmentGroupByOutputType = {
   updatedAt: Date
   description: string | null
   amenities: string[]
+  nukiSmartlockId: string | null
   _count: ApartmentCountAggregateOutputType | null
   _avg: ApartmentAvgAggregateOutputType | null
   _sum: ApartmentSumAggregateOutputType | null
@@ -340,6 +347,7 @@ export type ApartmentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Apartment"> | Date | string
   description?: Prisma.StringNullableFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  nukiSmartlockId?: Prisma.StringNullableFilter<"Apartment"> | string | null
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
   images?: Prisma.ApartmentImageListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
@@ -365,6 +373,7 @@ export type ApartmentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   amenities?: Prisma.SortOrder
+  nukiSmartlockId?: Prisma.SortOrderInput | Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
   images?: Prisma.ApartmentImageOrderByRelationAggregateInput
   blockedRanges?: Prisma.BlockedRangeOrderByRelationAggregateInput
@@ -394,6 +403,7 @@ export type ApartmentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Apartment"> | Date | string
   description?: Prisma.StringNullableFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  nukiSmartlockId?: Prisma.StringNullableFilter<"Apartment"> | string | null
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
   images?: Prisma.ApartmentImageListRelationFilter
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
@@ -419,6 +429,7 @@ export type ApartmentOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   amenities?: Prisma.SortOrder
+  nukiSmartlockId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ApartmentCountOrderByAggregateInput
   _avg?: Prisma.ApartmentAvgOrderByAggregateInput
   _max?: Prisma.ApartmentMaxOrderByAggregateInput
@@ -447,6 +458,7 @@ export type ApartmentScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Apartment"> | Date | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  nukiSmartlockId?: Prisma.StringNullableWithAggregatesFilter<"Apartment"> | string | null
 }
 
 export type ApartmentCreateInput = {
@@ -465,6 +477,7 @@ export type ApartmentCreateInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   hotel: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
@@ -490,6 +503,7 @@ export type ApartmentUncheckedCreateInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
@@ -512,6 +526,7 @@ export type ApartmentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneRequiredWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
@@ -537,6 +552,7 @@ export type ApartmentUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
@@ -561,6 +577,7 @@ export type ApartmentCreateManyInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
 }
 
 export type ApartmentUpdateManyMutationInput = {
@@ -579,6 +596,7 @@ export type ApartmentUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApartmentUncheckedUpdateManyInput = {
@@ -599,6 +617,7 @@ export type ApartmentUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApartmentListRelationFilter = {
@@ -642,6 +661,7 @@ export type ApartmentCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   amenities?: Prisma.SortOrder
+  nukiSmartlockId?: Prisma.SortOrder
 }
 
 export type ApartmentAvgOrderByAggregateInput = {
@@ -673,6 +693,7 @@ export type ApartmentMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  nukiSmartlockId?: Prisma.SortOrder
 }
 
 export type ApartmentMinOrderByAggregateInput = {
@@ -692,6 +713,7 @@ export type ApartmentMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  nukiSmartlockId?: Prisma.SortOrder
 }
 
 export type ApartmentSumOrderByAggregateInput = {
@@ -849,6 +871,7 @@ export type ApartmentCreateWithoutHotelInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
@@ -872,6 +895,7 @@ export type ApartmentUncheckedCreateWithoutHotelInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
@@ -925,6 +949,7 @@ export type ApartmentScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Apartment"> | Date | string
   description?: Prisma.StringNullableFilter<"Apartment"> | string | null
   amenities?: Prisma.StringNullableListFilter<"Apartment">
+  nukiSmartlockId?: Prisma.StringNullableFilter<"Apartment"> | string | null
 }
 
 export type ApartmentCreateWithoutIcalFeedsInput = {
@@ -943,6 +968,7 @@ export type ApartmentCreateWithoutIcalFeedsInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   hotel: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
@@ -967,6 +993,7 @@ export type ApartmentUncheckedCreateWithoutIcalFeedsInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
@@ -1004,6 +1031,7 @@ export type ApartmentUpdateWithoutIcalFeedsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneRequiredWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
@@ -1028,6 +1056,7 @@ export type ApartmentUncheckedUpdateWithoutIcalFeedsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
@@ -1049,6 +1078,7 @@ export type ApartmentCreateWithoutImagesInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   hotel: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
@@ -1073,6 +1103,7 @@ export type ApartmentUncheckedCreateWithoutImagesInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
   icalFeeds?: Prisma.IcalFeedUncheckedCreateNestedManyWithoutApartmentInput
@@ -1110,6 +1141,7 @@ export type ApartmentUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneRequiredWithoutApartmentsNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
@@ -1134,6 +1166,7 @@ export type ApartmentUncheckedUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
   icalFeeds?: Prisma.IcalFeedUncheckedUpdateManyWithoutApartmentNestedInput
@@ -1155,6 +1188,7 @@ export type ApartmentCreateWithoutPriceSeasonsInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   hotel: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutApartmentInput
@@ -1179,6 +1213,7 @@ export type ApartmentUncheckedCreateWithoutPriceSeasonsInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutApartmentInput
   icalFeeds?: Prisma.IcalFeedUncheckedCreateNestedManyWithoutApartmentInput
@@ -1216,6 +1251,7 @@ export type ApartmentUpdateWithoutPriceSeasonsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneRequiredWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
@@ -1240,6 +1276,7 @@ export type ApartmentUncheckedUpdateWithoutPriceSeasonsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
   icalFeeds?: Prisma.IcalFeedUncheckedUpdateManyWithoutApartmentNestedInput
@@ -1261,6 +1298,7 @@ export type ApartmentCreateWithoutBlockedRangesInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   hotel: Prisma.HotelCreateNestedOneWithoutApartmentsInput
   images?: Prisma.ApartmentImageCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonCreateNestedManyWithoutApartmentInput
@@ -1285,6 +1323,7 @@ export type ApartmentUncheckedCreateWithoutBlockedRangesInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
   images?: Prisma.ApartmentImageUncheckedCreateNestedManyWithoutApartmentInput
   priceSeasons?: Prisma.PriceSeasonUncheckedCreateNestedManyWithoutApartmentInput
   icalFeeds?: Prisma.IcalFeedUncheckedCreateNestedManyWithoutApartmentInput
@@ -1322,6 +1361,7 @@ export type ApartmentUpdateWithoutBlockedRangesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotel?: Prisma.HotelUpdateOneRequiredWithoutApartmentsNestedInput
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
@@ -1346,6 +1386,7 @@ export type ApartmentUncheckedUpdateWithoutBlockedRangesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
   icalFeeds?: Prisma.IcalFeedUncheckedUpdateManyWithoutApartmentNestedInput
@@ -1368,6 +1409,7 @@ export type ApartmentCreateManyHotelInput = {
   updatedAt?: Date | string
   description?: string | null
   amenities?: Prisma.ApartmentCreateamenitiesInput | string[]
+  nukiSmartlockId?: string | null
 }
 
 export type ApartmentUpdateWithoutHotelInput = {
@@ -1386,6 +1428,7 @@ export type ApartmentUpdateWithoutHotelInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUpdateManyWithoutApartmentNestedInput
@@ -1409,6 +1452,7 @@ export type ApartmentUncheckedUpdateWithoutHotelInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.ApartmentImageUncheckedUpdateManyWithoutApartmentNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutApartmentNestedInput
   priceSeasons?: Prisma.PriceSeasonUncheckedUpdateManyWithoutApartmentNestedInput
@@ -1432,6 +1476,7 @@ export type ApartmentUncheckedUpdateManyWithoutHotelInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amenities?: Prisma.ApartmentUpdateamenitiesInput | string[]
+  nukiSmartlockId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1510,6 +1555,7 @@ export type ApartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   updatedAt?: boolean
   description?: boolean
   amenities?: boolean
+  nukiSmartlockId?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Apartment$imagesArgs<ExtArgs>
   blockedRanges?: boolean | Prisma.Apartment$blockedRangesArgs<ExtArgs>
@@ -1536,6 +1582,7 @@ export type ApartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   updatedAt?: boolean
   description?: boolean
   amenities?: boolean
+  nukiSmartlockId?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["apartment"]>
 
@@ -1557,6 +1604,7 @@ export type ApartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   updatedAt?: boolean
   description?: boolean
   amenities?: boolean
+  nukiSmartlockId?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["apartment"]>
 
@@ -1578,9 +1626,10 @@ export type ApartmentSelectScalar = {
   updatedAt?: boolean
   description?: boolean
   amenities?: boolean
+  nukiSmartlockId?: boolean
 }
 
-export type ApartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "name" | "slug" | "maxAdults" | "maxChildren" | "basePrice" | "cleaningFee" | "size" | "bedrooms" | "view" | "isActive" | "sortOrder" | "createdAt" | "updatedAt" | "description" | "amenities", ExtArgs["result"]["apartment"]>
+export type ApartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "name" | "slug" | "maxAdults" | "maxChildren" | "basePrice" | "cleaningFee" | "size" | "bedrooms" | "view" | "isActive" | "sortOrder" | "createdAt" | "updatedAt" | "description" | "amenities" | "nukiSmartlockId", ExtArgs["result"]["apartment"]>
 export type ApartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Apartment$imagesArgs<ExtArgs>
@@ -1623,6 +1672,7 @@ export type $ApartmentPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     updatedAt: Date
     description: string | null
     amenities: string[]
+    nukiSmartlockId: string | null
   }, ExtArgs["result"]["apartment"]>
   composites: {}
 }
@@ -2068,6 +2118,7 @@ export interface ApartmentFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Apartment", 'DateTime'>
   readonly description: Prisma.FieldRef<"Apartment", 'String'>
   readonly amenities: Prisma.FieldRef<"Apartment", 'String[]'>
+  readonly nukiSmartlockId: Prisma.FieldRef<"Apartment", 'String'>
 }
     
 

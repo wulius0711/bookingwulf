@@ -4,6 +4,9 @@ import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
 import IcalSection from './IcalSection';
+import NukiLockSection from './NukiLockSection';
+import { getNukiLocks } from '@/src/lib/nuki';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +58,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
     notFound();
   }
 
-  const [apartment, hotels] = await Promise.all([
+  const [apartment, hotels, nukiConfig] = await Promise.all([
     prisma.apartment.findFirst({
       where: {
         id: apartmentId,
@@ -64,7 +67,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         icalFeeds: { orderBy: { createdAt: 'asc' } },
-        hotel: { select: { slug: true } },
+        hotel: { select: { slug: true, plan: true } },
       },
     }),
     session.hotelId !== null
@@ -77,10 +80,37 @@ export default async function EditApartmentPage({ params }: PageProps) {
           orderBy: { name: 'asc' },
           select: { id: true, name: true, slug: true },
         }),
+    session.hotelId
+      ? prisma.nukiConfig.findUnique({ where: { hotelId: session.hotelId }, select: { apiToken: true } })
+      : null,
   ]);
 
   if (!apartment) {
     notFound();
+  }
+
+  const hotelPlan = apartment.hotel?.plan ?? 'starter';
+  const showNuki = hasPlanAccess(hotelPlan, 'pro') && !!nukiConfig;
+  let nukiLocks: { smartlockId: number; name: string }[] = [];
+  if (showNuki && nukiConfig) {
+    try { nukiLocks = await getNukiLocks(nukiConfig.apiToken); } catch { /* ignore */ }
+  }
+
+  async function saveNukiLock(formData: FormData) {
+    'use server';
+    const session = await verifySession();
+    const aptId = Number(formData.get('apartmentId') || 0);
+    const smartlockId = String(formData.get('nukiSmartlockId') || '').trim();
+    if (!aptId) return;
+    if (session.hotelId !== null) {
+      const apt = await prisma.apartment.findUnique({ where: { id: aptId }, select: { hotelId: true } });
+      if (!apt || apt.hotelId !== session.hotelId) return;
+    }
+    await prisma.apartment.update({
+      where: { id: aptId },
+      data: { nukiSmartlockId: smartlockId || null },
+    });
+    revalidatePath(`/admin/apartments/${aptId}`);
   }
 
   async function updateApartment(formData: FormData) {
@@ -343,6 +373,15 @@ Kaffeemaschine`}
           Änderungen speichern
         </button>
       </form>
+
+      {showNuki && (
+        <NukiLockSection
+          apartmentId={apartmentId}
+          currentSmartlockId={apartment.nukiSmartlockId ?? null}
+          locks={nukiLocks}
+          saveAction={saveNukiLock}
+        />
+      )}
 
       <IcalSection
         apartmentId={apartmentId}

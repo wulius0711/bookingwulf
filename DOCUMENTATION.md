@@ -22,7 +22,8 @@
 13. [API-Routen](#13-api-routen)
 14. [Umgebungsvariablen](#14-umgebungsvariablen)
 15. [Deployment](#15-deployment)
-16. [Datenschutz & DSGVO](#16-datenschutz--dsgvo)
+16. [Schlüsselloses Einchecken (Nuki)](#16-schlüsselloses-einchecken-nuki-pro)
+17. [Datenschutz & DSGVO](#17-datenschutz--dsgvo)
 
 ---
 
@@ -201,6 +202,14 @@ Pro Hotel und Typ (`request_guest`, `booking_guest`, `request_hotel`) speicherba
 ### IcalFeed
 
 URL-Eintrag für externen Kalender (Airbnb, Booking.com). Speichert `lastSyncAt` und `lastError`. Sync erstellt/ersetzt `BlockedRange`-Einträge vom Typ `ical_sync`.
+
+### NukiConfig *(Pro+: Schlüsselloses Einchecken)*
+
+Speichert den Nuki Web API-Token pro Hotel (`@unique` auf `hotelId`). Der Token wird beim Speichern gegen die Nuki API verifiziert.
+
+Apartment bekommt `nukiSmartlockId` (optional) — verknüpft das Apartment mit einem konkreten Nuki-Schloss.
+
+Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"smartlockId:authId"` kommagetrennt für spätere Löschung).
 
 ---
 
@@ -478,6 +487,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/users` | Pro | Team-Mitglieder einladen |
 | `/admin/widget-configs` | Pro | Mehrere Widget-Konfigurationen |
 | `/admin/settings` | Alle | Hotel-Info, Branding, Widget-Optionen |
+| `/admin/nuki` | Pro | Nuki-Verbindung einrichten, Schlösser anzeigen |
 | `/admin/analytics` | Business | Buchungsstatistiken |
 | `/admin/billing` | Alle | Abonnement, Upgrade, Kündigung |
 | `/admin/help` | Alle | Handbuch |
@@ -533,6 +543,7 @@ Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
 | `/api/stripe/portal` | POST | Stripe Billing Portal Link |
 | `/api/stripe/webhook` | POST | Stripe-Webhooks (Signatur-Verifizierung) |
 | `/api/cleanup-requests` | GET | Anfragen > 3 Jahre löschen (Cron, Bearer-Token) |
+| `/api/admin/nuki` | GET/POST/DELETE | Nuki-Konfiguration verwalten |
 
 ### Sicherheitsschichten
 
@@ -610,7 +621,47 @@ Fehler werden automatisch an Sentry gemeldet, wenn `SENTRY_DSN` gesetzt ist. Kon
 
 ---
 
-## 16. Datenschutz & DSGVO
+## 16. Schlüsselloses Einchecken (Nuki, Pro+)
+
+### Übersicht
+
+Gäste erhalten nach einer Sofortbuchung automatisch einen 6-stelligen Zugangscode per E-Mail. Der Code ist zeitlich begrenzt (Anreise bis Abreise) und öffnet die konfigurierten Nuki-Schlösser direkt vor Ort.
+
+### Einrichtung (Admin)
+
+1. `/admin/nuki` → Nuki Web API-Token eingeben (aus [web.nuki.io → Account → API](https://web.nuki.io/#/account))
+2. Token wird gegen Nuki API geprüft — bei Erfolg werden verfügbare Schlösser angezeigt
+3. Pro Apartment in `/admin/apartments/[id]` → Schloss zuweisen
+
+### Buchungsablauf
+
+```
+Sofortbuchung (bookingType='booking')
+  → prisma.request.create()
+  → für jedes Apartment mit nukiSmartlockId:
+      → createNukiCode(apiToken, smartlockId, guestName, arrival, departure, code)
+      → authId speichern (für spätere Löschung)
+  → nukiCode + nukiAuthIds in Request speichern
+  → Code in Gast-E-Mail einbetten (grüne Box)
+```
+
+### Nuki Web API (`src/lib/nuki.ts`)
+
+| Funktion | Endpoint | Beschreibung |
+|---|---|---|
+| `getNukiLocks(token)` | `GET /smartlock` | Alle Schlösser des Kontos |
+| `createNukiCode(...)` | `POST /smartlock/{id}/auth` | Zeitlich begrenzten Code erstellen (type 13) |
+| `deleteNukiCode(...)` | `DELETE /smartlock/{id}/auth/{authId}` | Code deaktivieren |
+
+**Hinweis:** Codes werden bei Buchung erstellt. Automatische Löschung nach Abreise ist noch nicht implementiert (manuell via Nuki-App oder als zukünftiger Cron).
+
+### Plan-Gate
+
+`/admin/nuki` ist Pro+ (NAV_PLAN_GATES). Die Code-Generierung in `/api/request` prüft zusätzlich `hasPlanAccess(hotel.plan, 'pro')`. Starter-Hotels generieren keine Codes, auch wenn Schlösser konfiguriert wären.
+
+---
+
+## 17. Datenschutz & DSGVO
 
 ### Datenspeicherung
 
