@@ -263,6 +263,9 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          <p style={{ textAlign: 'center', marginTop: 32, fontSize: 14, color: '#888' }}>
+            Datenspeicherung in der EU 🇪🇺
+          </p>
         </div>
       </section>
 
