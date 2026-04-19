@@ -70,6 +70,8 @@ export async function POST(req: Request) {
     const message = String(body.message || '').trim();
     const newsletter = Boolean(body.newsletter);
     const bookingType: 'request' | 'booking' = body.bookingType === 'booking' ? 'booking' : 'request';
+    const browserLang = String(body.browserLanguage || '').toLowerCase();
+    const autoLang: Lang = browserLang.startsWith('de') ? 'de' : browserLang.startsWith('it') ? 'it' : 'en';
 
     if (!hotelSlug || !arrivalRaw || !departureRaw || !nights || !adults || !selectedApartmentIdsRaw || !lastname || !email) {
       return Response.json({ success: false, message: 'Pflichtfelder fehlen.' }, { status: 400, headers: corsHeaders });
@@ -135,7 +137,7 @@ export async function POST(req: Request) {
     const guestCount = adults + children;
 
     // i18n setup (needed for guest labels)
-    const lang = 'de' as Lang;
+    const lang = autoLang;
     const i18n = getEmailTranslations(lang);
     const locale = dateLocale[lang];
 
@@ -182,7 +184,7 @@ export async function POST(req: Request) {
         salutation, firstname, lastname, email, country,
         message: message || null, newsletter,
         status: bookingType === 'booking' ? 'confirmed' : 'new',
-        language: 'de',
+        language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
       },
     });
