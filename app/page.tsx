@@ -194,6 +194,9 @@ export default function LandingPage() {
           to { opacity: 1; transform: translateY(0); }
         }
         .lp-hero { animation: lp-fadeUp 0.6s ease-out; }
+        @media (max-width: 480px) {
+          .lp-hero-badges { flex-direction: column; align-items: center; }
+        }
       `}</style>
 
       {/* Nav */}
@@ -213,10 +216,10 @@ export default function LandingPage() {
         <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
           Das Buchungssystem für Hotels und Apartments
         </h1>
-        <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 580, margin: '0 auto 12px' }}>
+        <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 580, margin: '0 auto 32px' }}>
           Anfragen und Buchungen direkt auf Ihrer Website – ohne Provision, ohne Drittplattform.
         </p>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'nowrap', marginBottom: 48 }}>
+        <div className="lp-hero-badges" style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
           {['Anpassbares Design', 'Einbauen in 5 Minuten', 'Kein Entwickler nötig'].map((label) => (
             <span key={label} style={{ padding: '6px 14px', borderRadius: 999, border: '1px solid #e0e0e0', fontSize: 13, color: '#555', background: '#fafafa', whiteSpace: 'nowrap' }}>
               {label}
