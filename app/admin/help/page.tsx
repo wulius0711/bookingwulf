@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
+
+const NavigateCtx = createContext<(id: string) => void>(() => {});
 
 const sections = [
   { id: 'uebersicht',    title: 'Übersicht',            plan: null,       content: UebersichtSection },
@@ -85,7 +87,9 @@ export default function HelpPage() {
           borderRadius: 16,
           padding: '32px 40px',
         }}>
-          <Content />
+          <NavigateCtx.Provider value={setActive}>
+            <Content />
+          </NavigateCtx.Provider>
         </div>
       </div>
     </main>
@@ -117,6 +121,18 @@ function Tip({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+function InternalLink({ id, children }: { id: string; children: React.ReactNode }) {
+  const navigate = useContext(NavigateCtx);
+  return (
+    <button
+      onClick={() => navigate(id)}
+      style={{ background: 'none', border: 'none', padding: 0, color: '#2563eb', fontSize: 'inherit', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 2 }}
+    >
+      {children}
+    </button>
+  );
+}
+
 function Code({ children }: { children: React.ReactNode }) {
   return (
     <code style={{ background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 4, padding: '2px 6px', fontSize: 12, fontFamily: 'monospace', color: '#111' }}>
@@ -367,7 +383,7 @@ function ApartmentsSection() {
       <H3>Basispreis vs. Saisons</H3>
       <P>
         Der Basispreis gilt das ganze Jahr, sofern keine Preissaison für den jeweiligen Zeitraum
-        definiert ist. Saisons haben immer Vorrang. Weitere Details unter <strong>Preise & Saisons</strong>.
+        definiert ist. Saisons haben immer Vorrang. Weitere Details unter <InternalLink id="preise">Preise & Saisons</InternalLink>.
       </P>
 
       <Note>
@@ -431,7 +447,7 @@ function PreiseSection() {
       </Step>
       <Note>
         <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
-        unter <strong>Sperrzeiten</strong> verwaltet.
+        unter <InternalLink id="sperrzeiten">Sperrzeiten</InternalLink> verwaltet.
       </Note>
     </div>
   );
@@ -556,7 +572,7 @@ function EinstellungenSection() {
         sich anpassen. Änderungen werden in der Live-Vorschau rechts sofort sichtbar.
       </P>
       <H3>Erweitertes Branding</H3>
-      <PlanNote plan="Pro" feature="Erweitertes Branding (Logo, eigene Farben)" />
+      <PlanNote plan="Pro" feature="Erweiterte Farbsteuerung (Hintergrund, Karten, Text, Rahmen)" />
       <H3>Volles Branding & kein bookingwulf-Logo</H3>
       <PlanNote plan="Business" feature="Volles Branding ohne bookingwulf-Hinweis im Widget" />
       <H3>Benachrichtigungs-E-Mail</H3>
@@ -569,7 +585,7 @@ function EinstellungenSection() {
       <P>
         Mit dem Pro-Plan können mehrere Widget-Varianten erstellt werden — jeweils mit eigenen
         Einstellungen. So kann z.B. eine Variante für Anfragen und eine für direkte Buchungen
-        auf verschiedenen Unterseiten eingebunden werden.
+        auf verschiedenen Unterseiten eingebunden werden. Weitere Details unter <InternalLink id="einbindung">Widget einbinden</InternalLink>.
       </P>
       <H3>Features</H3>
       <P>
@@ -596,7 +612,7 @@ function EinstellungenSection() {
       <H3>Embed-Code</H3>
       <P>
         Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.
-        Weitere Details unter <strong>Widget einbinden</strong>.
+        Weitere Details unter <InternalLink id="einbindung">Widget einbinden</InternalLink>.
       </P>
     </div>
   );
