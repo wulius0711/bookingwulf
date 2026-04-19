@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml, buildPriceTable, buildInfoBlock, buildDivider, eur } from '@/src/lib/email';
+import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18n';
 import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 const corsHeaders = {
@@ -24,8 +25,8 @@ function getNightsBetween(arrival: Date, departure: Date) {
   return Math.round((normalizeDate(departure).getTime() - normalizeDate(arrival).getTime()) / 86400000);
 }
 
-function formatDate(d: Date): string {
-  return new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(d);
+function formatDate(d: Date, locale = 'de-AT'): string {
+  return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(d);
 }
 
 export async function POST(req: Request) {
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
       select: {
-        id: true, name: true, email: true, accentColor: true,
+        id: true, name: true, email: true, accentColor: true, language: true,
         emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
         extras: {
           where: { isActive: true },
@@ -184,13 +185,16 @@ export async function POST(req: Request) {
     // Build email content
     const accent = hotel.accentColor || '#111827';
     const apartmentNames = apartments.map(a => a.name).join(', ');
+    const lang = (hotel.language || 'de') as Lang;
+    const i18n = getEmailTranslations(lang);
+    const locale = dateLocale[lang];
 
     const tplVars: Record<string, string> = {
       '{{guestName}}': firstname,
       '{{guestLastName}}': lastname,
       '{{hotelName}}': hotel.name,
-      '{{arrival}}': formatDate(arrival),
-      '{{departure}}': formatDate(departure),
+      '{{arrival}}': formatDate(arrival, locale),
+      '{{departure}}': formatDate(departure, locale),
       '{{nights}}': String(nights),
       '{{apartmentName}}': apartmentNames,
       '{{bookingId}}': String(requestEntry.id),
@@ -246,7 +250,7 @@ export async function POST(req: Request) {
       const receiverEmail = hotel.email || process.env.BOOKING_RECEIVER_EMAIL!;
       const fromEmail = getFromEmail();
 
-      // Hotel notification
+      // Hotel notification (always German)
       const hotelTpl = getTpl('request_hotel');
       const hotelSubject = hotelTpl
         ? fillTpl(hotelTpl.subject)
@@ -281,26 +285,29 @@ export async function POST(req: Request) {
         }),
       });
 
-      // Guest confirmation
+      // Guest confirmation (in hotel's configured language)
       try {
         const guestTplType = bookingType === 'booking' ? 'booking_guest' : 'request_guest';
         const guestTpl = getTpl(guestTplType);
         const guestSubject = guestTpl
           ? fillTpl(guestTpl.subject)
           : bookingType === 'booking'
-            ? `Buchungsbestätigung bei ${hotel.name}`
-            : `Ihre Buchungsanfrage bei ${hotel.name}`;
+            ? i18n.bookingSubject(hotel.name)
+            : i18n.requestSubject(hotel.name);
         const guestBodyText = guestTpl
           ? fillTpl(guestTpl.body)
           : bookingType === 'booking'
-            ? 'Ihre Buchung ist <strong>bestätigt</strong>. Wir freuen uns auf Ihren Besuch!'
-            : 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.';
+            ? i18n.bookingBody
+            : i18n.requestBody;
         const guestGreeting = guestTpl?.greeting
           ? fillTpl(guestTpl.greeting)
-          : firstname ? `Hallo ${firstname},` : 'Hallo,';
+          : i18n.greeting(firstname);
         const guestSignoff = guestTpl?.signoff
           ? fillTpl(guestTpl.signoff)
-          : 'Mit freundlichen Grüßen';
+          : i18n.signoff;
+
+        const guestsText = i18n.adults(adults) + (children ? i18n.children(children) : '');
+        const periodText = `${formatDate(arrival, locale)} — ${formatDate(departure, locale)} (${i18n.nights(nights)})`;
 
         await resend.emails.send({
           from: fromEmail,
@@ -309,29 +316,30 @@ export async function POST(req: Request) {
           html: buildEmailHtml({
             hotelName: hotel.name,
             accentColor: accent,
-            title: bookingType === 'booking' ? 'Buchungsbestätigung' : 'Vielen Dank für Ihre Anfrage',
-            preheader: `${apartmentNames} — ${formatDate(arrival)} bis ${formatDate(departure)}`,
+            title: bookingType === 'booking' ? i18n.bookingTitle : i18n.requestTitle,
+            preheader: `${apartmentNames} — ${formatDate(arrival, locale)} bis ${formatDate(departure, locale)}`,
+            autoReplyText: i18n.autoReply,
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
                 ${guestGreeting}<br/><br/>
                 ${guestBodyText}
               </p>
               ${buildDivider()}
-              ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}
-              ${buildInfoBlock('Gäste', `${adults} Erwachsene${children ? `, ${children} Kinder` : ''}`)}
-              ${buildInfoBlock('Apartments', apartmentNames)}
+              ${buildInfoBlock(i18n.period, periodText)}
+              ${buildInfoBlock(i18n.guests, guestsText)}
+              ${buildInfoBlock(i18n.apartments, apartmentNames)}
               ${buildDivider()}
-              <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Zusatzleistungen</div>
+              <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">${i18n.extras}</div>
               ${buildExtrasSection()}
               ${buildDivider()}
               ${priceTable}
-              ${message ? buildDivider() + buildInfoBlock('Ihre Nachricht', message) : ''}
+              ${message ? buildDivider() + buildInfoBlock(i18n.yourMessage, message) : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
                 ${guestSignoff}<br/>
                 <strong>${hotel.name}</strong>
               </p>
             `,
-            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${requestEntry.id}</p>`,
+            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(requestEntry.id)}</p>`,
           }),
         });
       } catch {

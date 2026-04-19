@@ -19,11 +19,14 @@ type EmailTemplateOptions = {
   preheader?: string;
   body: string;
   footer?: string;
+  autoReplyText?: string;
 };
 
 export function buildEmailHtml(opts: EmailTemplateOptions): string {
   const accent = opts.accentColor || '#111827';
   const footer = opts.footer || '';
+
+  const autoReply = opts.autoReplyText ?? 'Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht direkt auf diese Nachricht.';
 
   return `<!DOCTYPE html>
 <html lang="de">
@@ -53,7 +56,7 @@ ${opts.body}
 <tr><td style="padding:20px 32px;background:#fafafa;border-top:1px solid #eee;">
 ${footer}
 <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;line-height:1.5;">
-Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht direkt auf diese Nachricht.
+${autoReply}
 </p>
 </td></tr>
 

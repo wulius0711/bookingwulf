@@ -324,6 +324,19 @@ export default async function Page({ searchParams }: PageProps) {
                   style={inputStyle}
                 />
               </div>
+
+              <div className="settings-row" style={rowStyle}>
+                <label style={labelStyle}>Sprache der Gast-Mails</label>
+                <select
+                  name="language"
+                  defaultValue={selected.language ?? 'de'}
+                  style={{ ...inputStyle, width: 200 }}
+                >
+                  <option value="de">Deutsch</option>
+                  <option value="en">English</option>
+                  <option value="it">Italiano</option>
+                </select>
+              </div>
             </div>
 
             {/* RECHTLICHES */}
