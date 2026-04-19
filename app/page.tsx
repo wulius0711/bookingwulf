@@ -215,9 +215,9 @@ export default function LandingPage() {
         <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 580, margin: '0 auto 12px' }}>
           Anfragen und Buchungen direkt auf Ihrer Website – ohne Provision, ohne Drittplattform.
         </p>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 32 }}>
-          {['Anpassbares Design', 'Einbauen in 5 Minuten'].map((label) => (
-            <span key={label} style={{ padding: '6px 14px', borderRadius: 999, border: '1px solid #e0e0e0', fontSize: 13, color: '#555', background: '#fafafa' }}>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'nowrap', marginBottom: 48 }}>
+          {['Anpassbares Design', 'Einbauen in 5 Minuten', 'Kein Entwickler nötig'].map((label) => (
+            <span key={label} style={{ padding: '6px 14px', borderRadius: 999, border: '1px solid #e0e0e0', fontSize: 13, color: '#555', background: '#fafafa', whiteSpace: 'nowrap' }}>
               {label}
             </span>
           ))}
