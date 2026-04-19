@@ -1683,6 +1683,7 @@
           map[type].textContent = text;
           map[type].style.display = "block";
           window.scrollTo({ top: 0, behavior: "smooth" });
+          window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
         }
 
         function toInputDate(d) {
