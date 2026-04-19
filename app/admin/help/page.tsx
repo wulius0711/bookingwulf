@@ -8,6 +8,7 @@ const sections = [
   { id: 'uebersicht',    title: 'Übersicht',            plan: null,       content: UebersichtSection },
   { id: 'buchungen',     title: 'Buchungen & Anfragen',  plan: null,       content: BuchungenSection },
   { id: 'kalender',      title: 'Kalender',              plan: null,       content: KalenderSection },
+  { id: 'zimmerplan',   title: 'Zimmerplan',            plan: null,       content: ZimmerplanSection },
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
   { id: 'preise',        title: 'Preise & Saisons',      plan: 'Pro',      content: PreiseSection },
@@ -325,6 +326,47 @@ function KalenderSection() {
       <Tip>
         <strong>Tipp:</strong> Klicken Sie auf einen Eintrag im Kalender um direkt zur Anfragenübersicht
         zu gelangen.
+      </Tip>
+    </div>
+  );
+}
+
+function ZimmerplanSection() {
+  return (
+    <div>
+      <H2>Zimmerplan</H2>
+      <P>
+        Der Zimmerplan zeigt den Belegungsstatus aller Apartments für einen bestimmten Tag auf einen Blick —
+        ideal für den täglichen Betrieb und Check-in-Management.
+      </P>
+      <H3>Statusfarben</H3>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { color: '#86efac', bg: '#f0fdf4', label: 'Grün – Frei' },
+          { color: '#fca5a5', bg: '#fff5f5', label: 'Rot – Belegt' },
+          { color: '#fcd34d', bg: '#fffbeb', label: 'Gelb – Blockiert' },
+        ].map((c) => (
+          <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 14, height: 14, borderRadius: 3, background: c.bg, border: `2px solid ${c.color}`, flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: '#374151' }}>{c.label}</span>
+          </div>
+        ))}
+      </div>
+      <H3>Datumswahl</H3>
+      <P>
+        Standardmäßig wird der heutige Tag angezeigt. Mit dem Datumsfeld oben rechts können Sie
+        jeden beliebigen Tag prüfen — vergangene und zukünftige Termine. Der Button
+        <strong> „Heute"</strong> bringt Sie jederzeit zum aktuellen Tag zurück.
+      </P>
+      <H3>Belegte Apartments</H3>
+      <P>
+        Bei belegten Apartments werden Gastname, Anreise- und Abreisedatum angezeigt.
+        Wenn die Abreise auf den gewählten Tag fällt, erscheint ein <strong>„Check-out heute"</strong>-Badge.
+        Über den Link <em>„Anfrage ansehen"</em> gelangen Sie direkt zur Buchungsdetailansicht.
+      </P>
+      <Tip>
+        <strong>Tipp:</strong> Der Zimmerplan ergänzt den Kalender — der Kalender gibt einen
+        Überblick über Wochen und Monate, der Zimmerplan zeigt den Status für genau einen Tag.
       </Tip>
     </div>
   );

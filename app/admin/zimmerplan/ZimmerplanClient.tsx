@@ -1,0 +1,163 @@
+'use client';
+
+import { useState } from 'react';
+
+type ApartmentStatus =
+  | { kind: 'frei' }
+  | { kind: 'belegt'; guestName: string; arrival: string; departure: string; requestId: number; checkoutToday: boolean }
+  | { kind: 'blockiert'; note?: string | null };
+
+type ApartmentCard = {
+  id: number;
+  name: string;
+  status: ApartmentStatus;
+};
+
+function todayIso() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function formatDate(iso: string) {
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+export default function ZimmerplanClient({ initialDate, initialCards }: { initialDate: string; initialCards: ApartmentCard[] }) {
+  const [date, setDate] = useState(initialDate);
+  const [cards, setCards] = useState(initialCards);
+  const [loading, setLoading] = useState(false);
+
+  async function loadDate(newDate: string) {
+    setLoading(true);
+    const res = await fetch(`/api/admin/zimmerplan?date=${newDate}`);
+    const data = await res.json();
+    setCards(data.apartments);
+    setLoading(false);
+  }
+
+  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setDate(val);
+    if (val) loadDate(val);
+  }
+
+  const freieCount = cards.filter((c) => c.status.kind === 'frei').length;
+  const belegtCount = cards.filter((c) => c.status.kind === 'belegt').length;
+  const blockiertCount = cards.filter((c) => c.status.kind === 'blockiert').length;
+  const isToday = date === todayIso();
+
+  return (
+    <div style={{ padding: '32px 32px 64px', maxWidth: 1100, margin: '0 auto' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 32 }}>
+        <div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>Zimmerplan</h1>
+          <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 14 }}>
+            Belegungsstatus aller Apartments auf einen Blick
+          </p>
+        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+          {!isToday && (
+            <button
+              onClick={() => { setDate(todayIso()); loadDate(todayIso()); }}
+              style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}
+            >
+              Heute
+            </button>
+          )}
+          <input
+            type="date"
+            value={date}
+            onChange={handleDateChange}
+            style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 14, background: '#fff', color: '#111827', cursor: 'pointer' }}
+          />
+        </div>
+      </div>
+
+      {/* Summary badges */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
+        <Badge color="#dcfce7" text="#16a34a" label={`${freieCount} Frei`} />
+        <Badge color="#fee2e2" text="#dc2626" label={`${belegtCount} Belegt`} />
+        <Badge color="#fef3c7" text="#d97706" label={`${blockiertCount} Blockiert`} />
+      </div>
+
+      {/* Grid */}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Lädt…</div>
+      ) : cards.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Keine Apartments gefunden.</div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+          {cards.map((card) => (
+            <ApartmentCardEl key={card.id} card={card} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Badge({ color, text, label }: { color: string; text: string; label: string }) {
+  return (
+    <span style={{ background: color, color: text, fontSize: 13, fontWeight: 600, padding: '4px 12px', borderRadius: 20 }}>
+      {label}
+    </span>
+  );
+}
+
+function ApartmentCardEl({ card }: { card: ApartmentCard }) {
+  const s = card.status;
+
+  const borderColor = s.kind === 'frei' ? '#86efac' : s.kind === 'belegt' ? '#fca5a5' : '#fcd34d';
+  const bgColor = s.kind === 'frei' ? '#f0fdf4' : s.kind === 'belegt' ? '#fff5f5' : '#fffbeb';
+  const dotColor = s.kind === 'frei' ? '#16a34a' : s.kind === 'belegt' ? '#dc2626' : '#d97706';
+  const statusLabel = s.kind === 'frei' ? 'Frei' : s.kind === 'belegt' ? 'Belegt' : 'Blockiert';
+
+  return (
+    <div style={{
+      background: bgColor,
+      border: `2px solid ${borderColor}`,
+      borderRadius: 12,
+      padding: '18px 18px 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      minHeight: 140,
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <span style={{ fontWeight: 700, fontSize: 15, color: '#111827', lineHeight: 1.3 }}>{card.name}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: dotColor, whiteSpace: 'nowrap' }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, display: 'inline-block' }} />
+          {statusLabel}
+        </span>
+      </div>
+
+      {s.kind === 'belegt' && (
+        <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
+          <div style={{ fontWeight: 600 }}>{s.guestName}</div>
+          <div style={{ color: '#6b7280' }}>{formatDate(s.arrival)} – {formatDate(s.departure)}</div>
+          {s.checkoutToday && (
+            <div style={{ marginTop: 6, background: '#fef9c3', color: '#854d0e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, display: 'inline-block' }}>
+              Check-out heute
+            </div>
+          )}
+          <a
+            href={`/admin/requests/${s.requestId}`}
+            style={{ display: 'inline-block', marginTop: 8, fontSize: 12, color: '#4f46e5', textDecoration: 'none', fontWeight: 500 }}
+          >
+            Anfrage ansehen →
+          </a>
+        </div>
+      )}
+
+      {s.kind === 'blockiert' && s.note && (
+        <div style={{ fontSize: 13, color: '#6b7280' }}>{s.note}</div>
+      )}
+
+      {s.kind === 'frei' && (
+        <div style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>Verfügbar</div>
+      )}
+    </div>
+  );
+}

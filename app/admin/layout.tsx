@@ -48,6 +48,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: '/admin/analytics', label: 'Analytics' },
     { href: '/admin/requests', label: 'Anfragen' },
     { href: '/admin/calendar', label: 'Kalender' },
+    { href: '/admin/zimmerplan', label: 'Zimmerplan' },
     { href: '/admin/apartments', label: 'Apartments' },
     { href: '/admin/price-seasons', label: 'Preissaisons' },
     { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
