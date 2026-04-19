@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
+import { settingsPresetSchema } from '@/src/lib/schemas';
 
 const MAX_PRESETS = 3;
 
@@ -41,8 +42,10 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await verifySession();
-    const body = await req.json();
-    const hotelId = await getHotelId(session, Number(body.hotelId || 0) || undefined);
+    const parsed = settingsPresetSchema.safeParse(await req.json());
+    if (!parsed.success) return NextResponse.json({ error: 'Ungültige Eingabe.' }, { status: 400 });
+    const body = parsed.data;
+    const hotelId = await getHotelId(session, body.hotelId);
     if (!hotelId) return NextResponse.json({ error: 'Zugriff verweigert.' }, { status: 403 });
 
     const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { plan: true } });
@@ -55,19 +58,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Maximal ${MAX_PRESETS} Presets erlaubt.` }, { status: 400 });
     }
 
-    const name = String(body.name || '').trim() || 'Preset';
+    const name = (body.name ?? '').trim() || 'Preset';
     const preset = await prisma.hotelSettingsPreset.create({
       data: {
         hotelId,
         name,
-        accentColor: body.accentColor || null,
-        backgroundColor: body.backgroundColor || null,
-        cardBackground: body.cardBackground || null,
-        textColor: body.textColor || null,
-        mutedTextColor: body.mutedTextColor || null,
-        borderColor: body.borderColor || null,
-        cardRadius: body.cardRadius ? Number(body.cardRadius) : null,
-        buttonRadius: body.buttonRadius ? Number(body.buttonRadius) : null,
+        accentColor: body.accentColor ?? null,
+        backgroundColor: body.backgroundColor ?? null,
+        cardBackground: body.cardBackground ?? null,
+        textColor: body.textColor ?? null,
+        mutedTextColor: body.mutedTextColor ?? null,
+        borderColor: body.borderColor ?? null,
+        cardRadius: body.cardRadius ?? null,
+        buttonRadius: body.buttonRadius ?? null,
       },
     });
 

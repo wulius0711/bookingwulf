@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml, buildPriceTable, buildInfoBlock, buildDivider, eur } from '@/src/lib/email';
 import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18n';
 import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
+import { bookingRequestSchema } from '@/src/lib/schemas';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -31,51 +32,51 @@ function formatDate(d: Date, locale = 'de-AT'): string {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+    const parsed = bookingRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return Response.json({ success: false, message: 'Ungültige Eingabe.' }, { status: 400, headers: corsHeaders });
+    }
+    const body = parsed.data;
 
-    const hotelSlug = String(body.hotel || '').trim();
-    const email = String(body.email || '').trim();
+    const hotelSlug = body.hotel.trim();
+    const email = body.email.trim();
 
     // Rate limit: 10 bookings per IP per 15 min, 3 per email per 5 min
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     const { ok: ipOk } = rateLimit(`booking:ip:${ip}`, 10, 15 * 60 * 1000);
     if (!ipOk) return rateLimitResponse();
-    if (email) {
-      const { ok: emailOk } = rateLimit(`booking:email:${email}`, 3, 5 * 60 * 1000);
-      if (!emailOk) return rateLimitResponse();
-    }
-    const arrivalRaw = String(body.arrival || '').trim();
-    const departureRaw = String(body.departure || '').trim();
-    const nights = Number(body.nights || 0);
-    const adults = Number(body.adults || 0);
-    const children = Number(body.children || 0);
-    const selectedApartmentIdsRaw = String(body.selected_apartments || '').trim();
+    const { ok: emailOk } = rateLimit(`booking:email:${email}`, 3, 5 * 60 * 1000);
+    if (!emailOk) return rateLimitResponse();
+
+    const arrivalRaw = body.arrival.trim();
+    const departureRaw = body.departure.trim();
+    const nights = body.nights;
+    const adults = body.adults;
+    const children = body.children;
+    const selectedApartmentIdsRaw = body.selected_apartments.trim();
 
     // Support both object format {key: true/false} and array format [key1, key2]
     let selectedExtrasKeys: string[] = [];
     if (body.extras) {
       if (Array.isArray(body.extras)) {
-        selectedExtrasKeys = body.extras.map((k: unknown) => String(k));
-      } else if (typeof body.extras === 'object') {
+        selectedExtrasKeys = body.extras;
+      } else {
         selectedExtrasKeys = Object.entries(body.extras)
           .filter(([, v]) => v === true)
           .map(([k]) => k);
       }
     }
 
-    const salutation = String(body.salutation || '').trim();
-    const firstname = String(body.firstname || '').trim();
-    const lastname = String(body.lastname || '').trim();
-    const country = String(body.country || '').trim();
-    const message = String(body.message || '').trim();
-    const newsletter = Boolean(body.newsletter);
-    const bookingType: 'request' | 'booking' = body.bookingType === 'booking' ? 'booking' : 'request';
-    const browserLang = String(body.browserLanguage || '').toLowerCase();
+    const salutation = body.salutation.trim();
+    const firstname = body.firstname.trim();
+    const lastname = body.lastname.trim();
+    const country = body.country.trim();
+    const message = body.message.trim();
+    const newsletter = body.newsletter;
+    const bookingType = body.bookingType;
+    const browserLang = body.browserLanguage.toLowerCase();
     const autoLang: Lang = browserLang.startsWith('de') ? 'de' : browserLang.startsWith('it') ? 'it' : 'en';
-
-    if (!hotelSlug || !arrivalRaw || !departureRaw || !nights || !adults || !selectedApartmentIdsRaw || !lastname || !email) {
-      return Response.json({ success: false, message: 'Pflichtfelder fehlen.' }, { status: 400, headers: corsHeaders });
-    }
 
     const arrival = new Date(arrivalRaw);
     const departure = new Date(departureRaw);

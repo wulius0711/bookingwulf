@@ -2,13 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { PLANS, PlanKey } from '@/src/lib/plans';
+import { switchPlanSchema } from '@/src/lib/schemas';
 
 export async function POST(req: Request) {
   try {
     const session = await verifySession();
     if (!session.hotelId) return NextResponse.json({ error: 'Hotel fehlt.' }, { status: 400 });
 
-    const { plan } = await req.json();
+    const parsed = switchPlanSchema.safeParse(await req.json());
+    if (!parsed.success) return NextResponse.json({ error: 'Ungültige Eingabe.' }, { status: 400 });
+    const { plan } = parsed.data;
     if (!(plan in PLANS)) return NextResponse.json({ error: 'Ungültiger Plan.' }, { status: 400 });
 
     const hotel = await prisma.hotel.findUnique({

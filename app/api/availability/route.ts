@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { availabilitySchema } from '@/src/lib/schemas';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,19 +26,14 @@ function getNights(arrival: Date, departure: Date) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-
-    const hotelSlug = String(body.hotel || '').trim();
-    const arrivalRaw = String(body.arrival || '').trim();
-    const departureRaw = String(body.departure || '').trim();
-    const selectedApartmentsRaw = String(body.selected_apartments || '').trim();
-
-    if (!hotelSlug || !arrivalRaw || !departureRaw || !selectedApartmentsRaw) {
+    const parsed = availabilitySchema.safeParse(await req.json());
+    if (!parsed.success) {
       return Response.json(
-        { success: false, message: 'Pflichtfelder fehlen.' },
+        { success: false, message: 'Ungültige Eingabe.' },
         { status: 400, headers: corsHeaders },
       );
     }
+    const { hotel: hotelSlug, arrival: arrivalRaw, departure: departureRaw, selected_apartments: selectedApartmentsRaw } = parsed.data;
 
     const arrival = new Date(arrivalRaw);
     const departure = new Date(departureRaw);

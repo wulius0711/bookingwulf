@@ -3,20 +3,23 @@ import { stripe, getPriceId } from '@/src/lib/stripe';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { checkoutSchema } from '@/src/lib/schemas';
 
 export async function POST(req: Request) {
   try {
     const session = await verifySession();
-    const { plan, hotelId: bodyHotelId, interval } = await req.json();
+    const parsed = checkoutSchema.safeParse(await req.json());
+    if (!parsed.success) return NextResponse.json({ error: 'Ungültige Eingabe.' }, { status: 400 });
+    const { plan, hotelId: bodyHotelId, interval } = parsed.data;
 
-    const hotelId = session.hotelId ?? Number(bodyHotelId);
+    const hotelId = session.hotelId ?? bodyHotelId;
     if (!hotelId) return NextResponse.json({ error: 'Hotel fehlt.' }, { status: 400 });
     if (session.hotelId !== null && session.hotelId !== hotelId) {
       return NextResponse.json({ error: 'Zugriff verweigert.' }, { status: 403 });
     }
 
     const planKey = (plan as PlanKey) in PLANS ? (plan as PlanKey) : 'starter';
-    const billingInterval: 'month' | 'year' = interval === 'year' ? 'year' : 'month';
+    const billingInterval = interval;
     const priceId = getPriceId(planKey, billingInterval);
 
     const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { id: true, name: true, email: true, stripeCustomerId: true } });
