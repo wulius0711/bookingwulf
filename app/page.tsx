@@ -243,9 +243,6 @@ export default function LandingPage() {
             title="Widget Preview"
           />
         </div>
-        <p style={{ textAlign: 'center', fontSize: 13, color: '#999', marginTop: 12 }}>
-          Live-Vorschau des Buchungssystems
-        </p>
       </section>
 
       {/* Features */}
