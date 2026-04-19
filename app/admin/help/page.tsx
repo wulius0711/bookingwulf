@@ -571,6 +571,28 @@ function EinstellungenSection() {
         Einstellungen. So kann z.B. eine Variante für Anfragen und eine für direkte Buchungen
         auf verschiedenen Unterseiten eingebunden werden.
       </P>
+      <H3>Features</H3>
+      <P>
+        Im Abschnitt <strong>Features</strong> steuern Sie Verhalten und Umfang des Widgets.
+        Jede Option lässt sich unabhängig ein- oder ausschalten:
+      </P>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { label: 'Preise anzeigen',               desc: 'Zeigt Preise pro Nacht und den Gesamtbetrag im Widget an.' },
+          { label: 'Ausstattung anzeigen',           desc: 'Zeigt Ausstattungsmerkmale der Apartments (z.B. WLAN, Parkplatz).' },
+          { label: 'Zusatzleistungen anzeigen',      desc: 'Blendet den Extras-Schritt im Buchungsprozess ein oder aus.' },
+          { label: 'Telefonfeld anzeigen',           desc: 'Fügt ein optionales Telefon-Eingabefeld im Kontaktformular hinzu.' },
+          { label: 'Nachrichtenfeld anzeigen',       desc: 'Ermöglicht Gästen, beim Buchen eine freie Nachricht mitzuschicken.' },
+          { label: 'Image Slider aktivieren',        desc: 'Zeigt mehrere Bilder pro Apartment als Slider statt als Einzelbild.' },
+          { label: 'Verbindliche Buchung anbieten',  desc: 'Gäste können direkt verbindlich buchen statt nur eine Anfrage zu senden.' },
+        ].map((f) => (
+          <div key={f.label} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 220, color: '#111', flexShrink: 0 }}>{f.label}</span>
+            <span style={{ fontSize: 13, color: '#6b7280' }}>{f.desc}</span>
+          </div>
+        ))}
+      </div>
+
       <H3>Embed-Code</H3>
       <P>
         Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.
