@@ -1828,6 +1828,23 @@
             }
             if (s.cardRadius) document.documentElement.style.setProperty('--radius', parseInt(s.cardRadius) + 'px');
             if (s.buttonRadius) document.documentElement.style.setProperty('--button-radius', parseInt(s.buttonRadius) + 'px');
+            if (s.headlineFont || s.bodyFont) {
+              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(function(f) { return f && f !== 'Inter'; });
+              var unique = fontsToLoad.filter(function(f, i, arr) { return arr.indexOf(f) === i; });
+              if (unique.length > 0) {
+                var families = unique.map(function(f) { return 'family=' + f.replace(/ /g, '+') + ':wght@300;400;500;600;700'; }).join('&');
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?' + families + '&display=swap';
+                document.head.appendChild(link);
+              }
+            }
+            if (s.headlineFont) document.documentElement.style.setProperty('--font-headline', "'" + s.headlineFont + "', serif");
+            if (s.bodyFont) document.documentElement.style.setProperty('--font-body', "'" + s.bodyFont + "', sans-serif");
+            if (s.headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', parseInt(s.headlineFontSize) + 'px');
+            if (s.bodyFontSize) document.documentElement.style.setProperty('--font-size-body', parseInt(s.bodyFontSize) + 'px');
+            if (s.headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(s.headlineFontWeight));
+            if (s.bodyFontWeight) document.documentElement.style.setProperty('--font-weight-body', String(s.bodyFontWeight));
           }
         });
 

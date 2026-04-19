@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const FIELDS = ['accentColor', 'backgroundColor', 'cardBackground', 'textColor', 'mutedTextColor', 'borderColor', 'cardRadius', 'buttonRadius'];
+const FIELDS = ['accentColor', 'backgroundColor', 'cardBackground', 'textColor', 'mutedTextColor', 'borderColor', 'cardRadius', 'buttonRadius', 'headlineFont', 'bodyFont', 'headlineFontSize', 'bodyFontSize', 'headlineFontWeight', 'bodyFontWeight'];
 
 function collectSettings() {
   const result: Record<string, string> = {};
