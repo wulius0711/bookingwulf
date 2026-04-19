@@ -123,6 +123,65 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: 1fr 1fr;
 }
 
+/* Help handbook layout */
+.help-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.help-sidebar {
+  flex-shrink: 0;
+  width: 200px;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.help-content {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 32px 40px;
+}
+
+.help-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .help-layout {
+    display: block;
+  }
+
+  .help-sidebar {
+    display: none;
+  }
+
+  .help-content {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .help-mobile-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .help-mobile-nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Calendar responsive */
 .calendar-page {
   padding: 32px;

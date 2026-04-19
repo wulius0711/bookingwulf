@@ -37,17 +37,33 @@ export default function HelpPage() {
         Alles was Sie wissen müssen, um Bookingwulf optimal zu nutzen.
       </p>
 
-      <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
-        {/* Sidebar nav */}
-        <nav style={{
-          flexShrink: 0,
-          width: 200,
-          position: 'sticky',
-          top: 24,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-        }}>
+      {/* Mobile: horizontal scrollable nav */}
+      <div className="help-mobile-nav">
+        {sections.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => navigate(s.id)}
+            style={{
+              flexShrink: 0,
+              padding: '6px 12px',
+              borderRadius: 999,
+              border: `1px solid ${active === s.id ? '#111' : '#e5e7eb'}`,
+              background: active === s.id ? '#111' : '#fff',
+              color: active === s.id ? '#fff' : '#6b7280',
+              fontWeight: active === s.id ? 600 : 400,
+              fontSize: 13,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {s.title}{s.plan ? ` (${s.plan})` : ''}
+          </button>
+        ))}
+      </div>
+
+      <div className="help-layout">
+        {/* Desktop sidebar nav */}
+        <nav className="help-sidebar">
           {sections.map((s) => (
             <button
               key={s.id}
@@ -85,14 +101,7 @@ export default function HelpPage() {
         </nav>
 
         {/* Content */}
-        <div ref={contentRef} style={{
-          flex: 1,
-          minWidth: 0,
-          background: '#fff',
-          border: '1px solid #e5e7eb',
-          borderRadius: 16,
-          padding: '32px 40px',
-        }}>
+        <div ref={contentRef} className="help-content">
           <NavigateCtx.Provider value={navigate}>
             <Content />
           </NavigateCtx.Provider>
