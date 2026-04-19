@@ -1,6 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { NextResponse } from 'next/server';
-import { hasPlanAccess } from '@/src/lib/plan-gates';
+import { hasPlanAccess, hasFullBranding, hasAdvancedTypography } from '@/src/lib/plan-gates';
 import type { PlanKey } from '@/src/lib/plans';
 
 function withCors(response: NextResponse) {
@@ -76,7 +76,33 @@ export async function GET(req: Request) {
         }
       : settings;
 
-    const canUseExtras = hasPlanAccess((hotel.plan as PlanKey) ?? 'starter', 'pro');
+    const plan = (hotel.plan as PlanKey) ?? 'starter';
+    const fullBranding = hasFullBranding(plan);
+    const advancedTypography = hasAdvancedTypography(plan);
+
+    // Strip settings that aren't available on this plan
+    if (mergedSettings) {
+      if (!fullBranding) {
+        mergedSettings.backgroundColor = null;
+        mergedSettings.cardBackground = null;
+        mergedSettings.textColor = null;
+        mergedSettings.mutedTextColor = null;
+        mergedSettings.borderColor = null;
+        mergedSettings.cardRadius = null;
+        mergedSettings.buttonRadius = null;
+        mergedSettings.buttonColor = null;
+        mergedSettings.headlineFont = null;
+        mergedSettings.bodyFont = null;
+      }
+      if (!advancedTypography) {
+        mergedSettings.headlineFontSize = null;
+        mergedSettings.bodyFontSize = null;
+        mergedSettings.headlineFontWeight = null;
+        mergedSettings.bodyFontWeight = null;
+      }
+    }
+
+    const canUseExtras = hasPlanAccess(plan, 'pro');
     const extras = await prisma.hotelExtra.findMany({
       where: {
         hotelId: hotel.id,

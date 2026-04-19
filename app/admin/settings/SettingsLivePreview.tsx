@@ -12,8 +12,9 @@ function collectSettings() {
     if (el?.value) result[name] = el.value;
   });
   // Font fields: always include (even if empty, to allow reset)
+  // Also check disabled versions so locked fields send defaults (e.g. Starter plan → Inter)
   FONT_FIELDS.forEach((name) => {
-    const el = document.querySelector(`[name="${name}"]`) as HTMLInputElement | null;
+    const el = (document.querySelector(`[name="${name}"]`) ?? document.querySelector(`[name="_disabled_${name}"]`)) as HTMLInputElement | null;
     if (el) result[name] = el.value;
   });
   return result;
