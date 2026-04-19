@@ -824,7 +824,7 @@ function EinbindungSection() {
       <Step num={1} title="Embed-Code kopieren">
         Gehen Sie zu <strong>Einstellungen</strong> und scrollen Sie zum Abschnitt <strong>„Embed-Code"</strong>.
         Dort finden Sie Ihren persönlichen Code:
-        <CodeBlock>{`<script src="https://www.bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug"></script>`}</CodeBlock>
+        <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug"></script>`}</CodeBlock>
         Klicken Sie auf <strong>„Kopieren"</strong>.
       </Step>
       <Step num={2} title="Code auf Ihrer Website einfügen">
