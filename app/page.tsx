@@ -12,7 +12,7 @@ export default function LandingPage() {
     { icon: '📅', title: 'Live-Verfügbarkeit', desc: 'Echtzeit-Prüfung der Verfügbarkeit mit Sperrzeiten und Preissaisons.' },
     { icon: '🎨', title: 'Individuelles Branding', desc: 'Farben, Formen und Funktionen passend zu Ihrem Hotel-Auftritt.' },
     { icon: '📧', title: 'E-Mail-Benachrichtigungen', desc: 'Automatische Bestätigungen an Gäste und Benachrichtigungen an Sie.' },
-    { icon: '🔀', title: 'Doppelt einsetzbar', desc: 'Gleichzeitig für Buchung und Anfrage verwenden.' },
+    { icon: '♊', title: 'Doppelt einsetzbar', desc: 'Gleichzeitig für Buchung und Anfrage verwenden.' },
     { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich per iCal — keine Doppelbuchungen mehr.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
     { icon: '💶', title: 'Preissaisons', desc: 'Saisonale Preise automatisch anwenden — Haupt-, Neben- und Feiertagspreise.' },
