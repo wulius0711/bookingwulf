@@ -215,9 +215,13 @@ export default function LandingPage() {
         <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 580, margin: '0 auto 12px' }}>
           Anfragen und Buchungen direkt auf Ihrer Website – ohne Provision, ohne Drittplattform.
         </p>
-        <p style={{ fontSize: 16, color: '#888', margin: '0 auto 32px' }}>
-          Anpassbares Design. Einbauen in 5 Minuten.
-        </p>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 32 }}>
+          {['Anpassbares Design', 'Einbauen in 5 Minuten'].map((label) => (
+            <span key={label} style={{ padding: '6px 14px', borderRadius: 999, border: '1px solid #e0e0e0', fontSize: 13, color: '#555', background: '#fafafa' }}>
+              {label}
+            </span>
+          ))}
+        </div>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/register" className="lp-btn lp-btn-primary">
             Jetzt starten
