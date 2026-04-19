@@ -15,7 +15,7 @@ export const PLANS = {
     maxApartments: 20,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons', 'Widget-Konfigurationen'],
+    features: ['Bis zu 20 Apartments', '3 Admin-User', 'Volles Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons', 'Widget doppelt einsetzbar – für Anfrage & Buchung'],
   },
   business: {
     name: 'Business',
