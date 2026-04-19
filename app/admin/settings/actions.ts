@@ -95,3 +95,35 @@ export async function saveHotelSettings(formData: FormData) {
   revalidatePath('/');
   redirect(`/admin/settings?hotel=${hotelId}&saved=1`);
 }
+
+export async function resetHotelSettings(formData: FormData) {
+  const session = await verifySession();
+  const hotelId = Number(formData.get('hotelId') || 0);
+
+  if (!hotelId) throw new Error('Hotel fehlt');
+  if (session.hotelId !== null && hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+
+  await prisma.hotelSettings.upsert({
+    where: { hotelId },
+    update: {
+      // Features → defaults
+      showPrices: true, allowMultiSelect: false, showAmenities: true,
+      showExtrasStep: true, showPhoneField: true, showMessageField: true,
+      enableImageSlider: true, instantBooking: false, enableInstantBooking: false,
+      // Colors → null (widget CSS defaults)
+      accentColor: null, backgroundColor: null, cardBackground: null,
+      textColor: null, mutedTextColor: null, borderColor: null,
+      // Shape → null
+      cardRadius: null, buttonRadius: null, buttonColor: null,
+      // Typography → null (Inter, 14px/24px, 400/700)
+      headlineFont: null, bodyFont: null,
+      headlineFontSize: null, bodyFontSize: null,
+      headlineFontWeight: null, bodyFontWeight: null,
+    },
+    create: { hotelId },
+  });
+
+  revalidatePath('/admin/settings');
+  revalidatePath('/');
+  redirect(`/admin/settings?hotel=${hotelId}`);
+}

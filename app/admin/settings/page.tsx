@@ -11,6 +11,7 @@ import SettingsLivePreview from './SettingsLivePreview';
 import ProLockOverlay from '../components/ProLockOverlay';
 import WidgetConfigs from './WidgetConfigs';
 import InfoTooltip from '../components/InfoTooltip';
+import StandardButton from './StandardButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -558,13 +559,7 @@ export default async function Page({ searchParams }: PageProps) {
                 Speichern
               </button>
 
-              <a
-                className="btn-secondary"
-                href={`/admin/settings?hotel=${selected.id}`}
-                style={secondaryButtonStyle}
-              >
-                Reset
-              </a>
+              <StandardButton hotelId={selected.id} style={secondaryButtonStyle} />
             </div>
 
             {saved === '1' && (
