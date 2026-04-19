@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { saveWidgetConfig, deleteWidgetConfig } from './widget-config-actions';
 import InfoTooltip from '../components/InfoTooltip';
 import { EmbedCode } from './EmbedCode';
@@ -47,17 +47,10 @@ const defaults: Omit<Config, 'id' | 'name' | 'slug'> = {
 
 export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Props) {
   const [editing, setEditing] = useState<Config | 'new' | null>(null);
-  const [extraCount, setExtraCount] = useState(0);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Omit<Config, 'id' | 'slug'>>(
     { name: '', ...defaults }
   );
-
-  // Reset extraCount when server reflects the new data
-  useEffect(() => {
-    setExtraCount(0);
-  }, [configs.length]);
-
-  const totalCount = configs.length + extraCount;
 
   function openNew() {
     setForm({ name: '', ...defaults });
@@ -103,7 +96,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
         <div style={{ border: '1px solid #111', borderRadius: 12, padding: '20px 24px', background: '#fff', display: 'grid', gap: 16 }}>
           <strong style={{ fontSize: 15 }}>{editing === 'new' ? 'Neue Konfiguration' : `„${(editing as Config).name}" bearbeiten`}</strong>
 
-          <form action={saveWidgetConfig} onSubmit={() => { if (editing === 'new') setExtraCount((n) => n + 1); setEditing(null); }}>
+          <form onSubmit={async (e) => { e.preventDefault(); setSaving(true); await saveWidgetConfig(new FormData(e.currentTarget)); setSaving(false); setEditing(null); }}>
             <input type="hidden" name="hotelId" value={hotelId} />
             {configId && <input type="hidden" name="configId" value={configId} />}
 
@@ -136,13 +129,13 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
               </div>
 
               <div style={{ display: 'flex', gap: 10 }}>
-                <button type="submit" style={{ padding: '10px 20px', borderRadius: 8, background: '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
+                <button type="submit" disabled={saving} style={{ padding: '10px 20px', borderRadius: 8, background: saving ? '#6b7280' : '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer' }}>{saving ? 'Speichern…' : 'Speichern'}</button>
                 <button type="button" onClick={() => setEditing(null)} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px solid #d1d5db', fontSize: 14, cursor: 'pointer' }}>Abbrechen</button>
               </div>
             </div>
           </form>
         </div>
-      ) : totalCount < 2 ? (
+      ) : configs.length < 2 ? (
         <button type="button" onClick={openNew} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px dashed #d1d5db', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}>
           + Neue Konfiguration
         </button>

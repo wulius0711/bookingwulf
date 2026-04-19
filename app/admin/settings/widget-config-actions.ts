@@ -4,6 +4,10 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { revalidatePath } from 'next/cache';
 
+export async function getWidgetConfigCount(hotelId: number): Promise<number> {
+  return prisma.widgetConfig.count({ where: { hotelId } });
+}
+
 function slugify(name: string): string {
   return name
     .toLowerCase()
