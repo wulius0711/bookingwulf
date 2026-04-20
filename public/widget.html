@@ -1820,6 +1820,10 @@
                 </div>
               </div>
 
+              <div id="requestHint" style="display:none;margin-top:18px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);font-size:13px;color:var(--muted);line-height:1.5;">
+                Keine Bezahlung vorab notwendig. Sie erhalten ein unverbindliches Angebot, welches Sie zu einem späteren Zeitpunkt annehmen können.
+              </div>
+
               <div id="termsCheckboxWrap" style="margin-top: 18px; display: none;"></div>
 
               <div class="nav-row">
@@ -3053,16 +3057,18 @@ sortedApartments.forEach((ap) => {
 
         function renderPaymentAccordion() {
           const accordion = document.getElementById('paymentAccordion');
-          if (!accordion) return;
-          if (!state.settings.enableInstantBooking) {
-            accordion.style.display = 'none';
-            return;
+          const hint = document.getElementById('requestHint');
+          const isBooking = state.settings.enableInstantBooking;
+
+          if (accordion) accordion.style.display = isBooking ? '' : 'none';
+          if (hint) hint.style.display = '';
+
+          if (isBooking) {
+            const total = getTotal();
+            const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
+            const el = document.getElementById('depositAmount');
+            if (el) el.textContent = deposit > 0 ? '€\u00a0' + deposit.toFixed(2).replace('.', ',') : '—';
           }
-          accordion.style.display = '';
-          const total = getTotal();
-          const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
-          const el = document.getElementById('depositAmount');
-          if (el) el.textContent = deposit > 0 ? '€\u00a0' + deposit.toFixed(2).replace('.', ',') : '—';
         }
 
         function renderAll() {
