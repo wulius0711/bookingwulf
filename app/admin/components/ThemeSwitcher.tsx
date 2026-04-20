@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 const THEMES = [
   { key: 'indigo',  label: 'Indigo',   color: '#4f46e5' },
   { key: 'classic', label: 'Classic',  color: '#111827' },
-  { key: 'emerald', label: 'Emerald',  color: '#059669' },
+  { key: 'teal',    label: 'Teal',     color: '#0d9488' },
 ] as const;
 
 type ThemeKey = typeof THEMES[number]['key'];
 
 function applyTheme(key: ThemeKey) {
-  document.documentElement.classList.remove('theme-classic', 'theme-emerald');
+  document.documentElement.classList.remove('theme-classic', 'theme-teal');
   if (key !== 'indigo') document.documentElement.classList.add(`theme-${key}`);
   localStorage.setItem('admin-theme', key);
 }
@@ -39,9 +39,9 @@ export default function ThemeSwitcher() {
             onClick={() => handleChange(t.key)}
             title={t.label}
             style={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
+              width: 16,
+              height: 16,
+              borderRadius: 4,
               background: t.color,
               border: 'none',
               padding: 0,
