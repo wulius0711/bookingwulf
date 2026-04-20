@@ -1505,11 +1505,6 @@
           gap: 10px;
         }
 
-        #submitBtnWrap {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
         .btn, .btn-light {
           min-height: 44px;
           padding: 0 20px;
@@ -1796,42 +1791,12 @@
 
 
 
-              <div id="paymentAccordion" style="display:none;" class="payment-accordion">
-                <button type="button" class="payment-accordion-toggle" id="paymentAccordionToggle">
-                  Ihre Zahlungsoptionen
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <div class="payment-accordion-body" id="paymentAccordionBody">
-                  <div class="payment-option-title">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/></svg>
-                    Standard Buchung
-                  </div>
-                  <div class="payment-benefit">✓ Keine Kreditkarte nötig</div>
-                  <div class="payment-desc">
-                    Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von <strong id="depositAmount">—</strong> innerhalb von 7 Tagen.
-                  </div>
-                  <div class="field-block">
-                    <label class="label" for="paymentMethod">Zahlungsmethode<span class="required">*</span></label>
-                    <select id="paymentMethod">
-                      <option value="">Bitte wählen</option>
-                      <option value="Banküberweisung">Banküberweisung</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div id="requestHint" style="display:none;margin-top:18px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);font-size:13px;color:var(--muted);line-height:1.5;">
-                Keine Bezahlung vorab notwendig. Sie erhalten ein unverbindliches Angebot, welches Sie zu einem späteren Zeitpunkt annehmen können.
-              </div>
-
               <div id="termsCheckboxWrap" style="margin-top: 18px; display: none;"></div>
 
-              <div class="nav-row">
+              <div id="submitArea"></div>
+
+              <div class="nav-row" style="margin-top:18px;">
                 <button class="btn-light" data-prev>Zurück</button>
-                <div id="submitBtnWrap" style="display:flex;gap:10px;flex-wrap:wrap;">
-                  <button class="btn-light" id="submitRequestBtn" style="display:none;">Anfragen</button>
-                  <button class="btn" id="submitBtn">Buchungsanfrage senden</button>
-                </div>
               </div>
             </div>
           </section>
@@ -2020,17 +1985,6 @@
             if (phoneWrap) phoneWrap.style.display = state.settings.showPhoneField ? "" : "none";
             const notesWrap = document.getElementById("notes")?.closest("div");
             if (notesWrap) notesWrap.style.display = state.settings.showMessageField ? "" : "none";
-
-            // Submit buttons
-            const submitBtn = document.getElementById("submitBtn");
-            const submitRequestBtn = document.getElementById("submitRequestBtn");
-            if (state.settings.enableInstantBooking) {
-              if (submitRequestBtn) submitRequestBtn.style.display = "";
-              if (submitBtn) submitBtn.textContent = "Verbindlich buchen";
-            } else {
-              if (submitRequestBtn) submitRequestBtn.style.display = "none";
-              if (submitBtn) submitBtn.textContent = "Buchungsanfrage senden";
-            }
 
             if (data.extras && Array.isArray(data.extras)) {
               state.availableExtras = data.extras;
@@ -2809,8 +2763,6 @@ sortedApartments.forEach((ap) => {
           document.getElementById("summaryTotal").textContent = eur(getTotal());
 
           renderExtras();
-
-                document.getElementById("submitBtn").disabled = state.submitting;
               }
 
         function renderExtras() {
@@ -3055,20 +3007,60 @@ sortedApartments.forEach((ap) => {
           }
         }
 
-        function renderPaymentAccordion() {
-          const accordion = document.getElementById('paymentAccordion');
-          const hint = document.getElementById('requestHint');
+        function renderSubmitArea() {
+          const area = document.getElementById('submitArea');
+          if (!area) return;
           const isBooking = state.settings.enableInstantBooking;
-
-          if (accordion) accordion.style.display = isBooking ? '' : 'none';
-          if (hint) hint.style.display = '';
+          const disabled = state.submitting ? ' disabled' : '';
 
           if (isBooking) {
             const total = getTotal();
             const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
-            const el = document.getElementById('depositAmount');
-            if (el) el.textContent = deposit > 0 ? '€\u00a0' + deposit.toFixed(2).replace('.', ',') : '—';
+            const depositText = deposit > 0 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',') : '\u2014';
+            area.innerHTML =
+              '<div style="margin-top:16px;padding:12px 14px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">' +
+                'Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.' +
+              '</div>' +
+              '<button type="button" id="submitRequestBtn" class="btn-light" style="width:100%;margin-top:12px;"' + disabled + '>Anfragen</button>' +
+              '<div class="payment-accordion" style="margin-top:14px;">' +
+                '<button type="button" class="payment-accordion-toggle" id="paymentAccordionToggle">' +
+                  'Ihre Zahlungsoptionen ' +
+                  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                '</button>' +
+                '<div class="payment-accordion-body" id="paymentAccordionBody">' +
+                  '<div class="payment-option-title">' +
+                    '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/></svg>' +
+                    'Standard Buchung' +
+                  '</div>' +
+                  '<div class="payment-benefit">\u2713 Keine Kreditkarte n\u00f6tig</div>' +
+                  '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' + depositText + '</strong> innerhalb von 7 Tagen.</div>' +
+                  '<div class="field-block">' +
+                    '<label class="label" for="paymentMethod">Zahlungsmethode<span class="required">*</span></label>' +
+                    '<select id="paymentMethod">' +
+                      '<option value="">Bitte w\u00e4hlen</option>' +
+                      '<option value="Banküberweisung">Bank\u00fcberweisung</option>' +
+                    '</select>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<button type="button" id="submitBtn" style="width:100%;margin-top:14px;"' + disabled + '>Verbindlich buchen</button>';
+
+            document.getElementById('paymentAccordionToggle').addEventListener('click', function () {
+              const body = document.getElementById('paymentAccordionBody');
+              const isOpen = body.classList.toggle('open');
+              this.classList.toggle('open', isOpen);
+            });
+          } else {
+            area.innerHTML =
+              '<button type="button" id="submitBtn" style="width:100%;margin-top:18px;"' + disabled + '>Buchungsanfrage senden</button>';
           }
+
+          document.getElementById('submitBtn')?.addEventListener('click', () =>
+            submitRequest(state.settings.enableInstantBooking ? 'booking' : 'request')
+          );
+          document.getElementById('submitRequestBtn')?.addEventListener('click', () =>
+            submitRequest('request')
+          );
         }
 
         function renderAll() {
@@ -3080,7 +3072,7 @@ sortedApartments.forEach((ap) => {
           renderTermsCheckbox();
           renderChildBirthdays();
           renderGuestFields();
-          renderPaymentAccordion();
+          renderSubmitArea();
         }
 
         function validateStep(step) {
@@ -3320,6 +3312,7 @@ sortedApartments.forEach((ap) => {
 
           state.submitting = true;
           renderSummary();
+          renderSubmitArea();
           showMessage("info", bookingType === "booking" ? "Buchung wird bestätigt …" : "Anfrage wird gesendet …");
 
           const nights = getNights();
@@ -3416,6 +3409,7 @@ sortedApartments.forEach((ap) => {
           } finally {
             state.submitting = false;
             renderSummary();
+            renderSubmitArea();
           }
         }
 
@@ -3521,25 +3515,11 @@ sortedApartments.forEach((ap) => {
         });
 
         document
-          .getElementById("submitBtn")
-          .addEventListener("click", () => submitRequest(state.settings.enableInstantBooking ? "booking" : "request"));
-
-        document
-          .getElementById("submitRequestBtn")
-          .addEventListener("click", () => submitRequest("request"));
-
-        document
           .getElementById("lightboxClose")
           .addEventListener("click", closeLightbox);
 
         document.getElementById('guestAccordionToggle').addEventListener('click', function () {
           const body = document.getElementById('guestAccordionBody');
-          const isOpen = body.classList.toggle('open');
-          this.classList.toggle('open', isOpen);
-        });
-
-        document.getElementById('paymentAccordionToggle').addEventListener('click', function () {
-          const body = document.getElementById('paymentAccordionBody');
           const isOpen = body.classList.toggle('open');
           this.classList.toggle('open', isOpen);
         });
