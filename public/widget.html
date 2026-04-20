@@ -2899,7 +2899,7 @@ sortedApartments.forEach((ap) => {
           if (state.privacyPolicyUrl) links.push('<a href="' + state.privacyPolicyUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>');
 
           const text = links.length > 0
-            ? 'Ich akzeptiere die ' + links.join(' und die ') + '.'
+            ? 'Ich akzeptiere die ' + links.join(' und die ') + '.<span class="required">*</span>'
             : 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
 
           wrap.innerHTML = '<label style="display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
