@@ -5,15 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Booking Desktop</title>
     <style>
-      @property --accent { syntax: '<color>'; inherits: true; initial-value: #111111; }
-      @property --bg { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
-      @property --surface-2 { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
-      @property --text { syntax: '<color>'; inherits: true; initial-value: #111111; }
-      @property --muted { syntax: '<color>'; inherits: true; initial-value: #6b7280; }
-      @property --line { syntax: '<color>'; inherits: true; initial-value: #e5e7eb; }
-      @property --line-strong { syntax: '<color>'; inherits: true; initial-value: #d1d5db; }
-      @property --radius { syntax: '<length>'; inherits: true; initial-value: 8px; }
-      @property --button-radius { syntax: '<length>'; inherits: true; initial-value: 8px; }
+      @property --accent {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #111111;
+      }
+      @property --bg {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #f5f5f5;
+      }
+      @property --surface-2 {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #ffffff;
+      }
+      @property --text {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #111111;
+      }
+      @property --muted {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #6b7280;
+      }
+      @property --line {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #e5e7eb;
+      }
+      @property --line-strong {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: #d1d5db;
+      }
+      @property --radius {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 8px;
+      }
+      @property --button-radius {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 8px;
+      }
 
       :root {
         font-size: var(--font-size-body);
@@ -77,7 +113,10 @@
         font-weight: var(--font-weight-body);
       }
 
-      h1, h2, h3, .headline {
+      h1,
+      h2,
+      h3,
+      .headline {
         font-family: var(--font-headline);
         font-weight: var(--font-weight-headline);
         font-size: var(--font-size-headline);
@@ -789,8 +828,10 @@
         line-height: 1;
         cursor: pointer;
         z-index: 3;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        transition: transform 0.15s ease, background 0.15s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition:
+          transform 0.15s ease,
+          background 0.15s ease;
         opacity: 0;
       }
 
@@ -817,7 +858,7 @@
         right: 8px;
         padding: 3px 8px;
         border-radius: 6px;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         color: #fff;
         font-size: 0.786rem;
         font-weight: 600;
@@ -886,7 +927,9 @@
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: color 0.2s ease, transform 0.2s ease;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
       }
 
       .apt-amenities-toggle:hover {
@@ -1231,8 +1274,12 @@
       }
 
       @keyframes lbFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       .lightbox-inner {
@@ -1244,13 +1291,19 @@
         background: #fff;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
         animation: lbSlideUp 0.25s ease;
       }
 
       @keyframes lbSlideUp {
-        from { opacity: 0; transform: translateY(20px) scale(0.97); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       .lightbox-image-wrap {
@@ -1278,7 +1331,7 @@
         height: 40px;
         border-radius: 999px;
         border: none;
-        background: rgba(255,255,255,0.15);
+        background: rgba(255, 255, 255, 0.15);
         color: #fff;
         font-size: 1.571rem;
         cursor: pointer;
@@ -1290,7 +1343,7 @@
       }
 
       .lightbox-close:hover {
-        background: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.3);
       }
 
       .lightbox-nav {
@@ -1301,7 +1354,7 @@
         height: 44px;
         border-radius: 999px;
         border: none;
-        background: rgba(255,255,255,0.15);
+        background: rgba(255, 255, 255, 0.15);
         color: #fff;
         font-size: 1.429rem;
         cursor: pointer;
@@ -1309,11 +1362,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.15s ease, transform 0.15s ease;
+        transition:
+          background 0.15s ease,
+          transform 0.15s ease;
       }
 
       .lightbox-nav:hover {
-        background: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.3);
         transform: translateY(-50%) scale(1.05);
       }
 
@@ -1331,7 +1386,7 @@
         bottom: 12px;
         padding: 6px 12px;
         border-radius: 8px;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         color: #fff;
         font-size: 0.857rem;
         font-weight: 600;
@@ -1355,7 +1410,9 @@
         background: #f5f5f5;
         cursor: pointer;
         opacity: 0.6;
-        transition: opacity 0.15s ease, border-color 0.15s ease;
+        transition:
+          opacity 0.15s ease,
+          border-color 0.15s ease;
         flex-shrink: 0;
       }
 
@@ -1388,8 +1445,12 @@
           font-size: 1.143rem;
         }
 
-        .lightbox-nav.prev { left: 8px; }
-        .lightbox-nav.next { right: 8px; }
+        .lightbox-nav.prev {
+          left: 8px;
+        }
+        .lightbox-nav.next {
+          right: 8px;
+        }
 
         .lightbox-thumb img {
           width: 56px;
@@ -1398,20 +1459,44 @@
       }
 
       @keyframes cardPop {
-        0% { transform: scale(0.985); }
-        50% { transform: scale(1.008); }
-        100% { transform: scale(1); }
+        0% {
+          transform: scale(0.985);
+        }
+        50% {
+          transform: scale(1.008);
+        }
+        100% {
+          transform: scale(1);
+        }
       }
 
       @media (max-width: 1080px) {
-        #apartments.masonry { columns: 1; }
-        .booking-shell.sidebar-layout { display: block; }
-        .booking-shell.sidebar-layout .top { position: static; margin-bottom: 30px; }
-        .booking-shell.sidebar-layout .steps { grid-template-columns: repeat(2, 1fr); }
-        .booking-shell.sidebar-layout .layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; }
-        .booking-shell.sidebar-layout .layout > aside.summary { display: block; }
-        .booking-shell.sidebar-layout .top > aside.summary { display: none; }
-        .view-toggle { display: none; }
+        #apartments.masonry {
+          columns: 1;
+        }
+        .booking-shell.sidebar-layout {
+          display: block;
+        }
+        .booking-shell.sidebar-layout .top {
+          position: static;
+          margin-bottom: 30px;
+        }
+        .booking-shell.sidebar-layout .steps {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .booking-shell.sidebar-layout .layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 340px;
+        }
+        .booking-shell.sidebar-layout .layout > aside.summary {
+          display: block;
+        }
+        .booking-shell.sidebar-layout .top > aside.summary {
+          display: none;
+        }
+        .view-toggle {
+          display: none;
+        }
 
         .top,
         .layout,
@@ -1505,7 +1590,8 @@
           gap: 10px;
         }
 
-        .btn, .btn-light {
+        .btn,
+        .btn-light {
           min-height: 44px;
           padding: 0 20px;
           font-size: 1rem;
@@ -1543,7 +1629,7 @@
           grid-template-columns: 1fr;
         }
 
-        [style*="grid-template-columns:40%"] {
+        [style*='grid-template-columns:40%'] {
           grid-template-columns: 1fr !important;
         }
 
@@ -1564,11 +1650,33 @@
   <body>
     <div class="view-toggle">
       <button id="viewTop" class="active" title="Schritte oben">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="14" height="4" rx="1" fill="currentColor"/><rect x="0" y="6" width="14" height="8" rx="1" fill="currentColor" opacity=".4"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="0" y="0" width="14" height="4" rx="1" fill="currentColor" />
+          <rect
+            x="0"
+            y="6"
+            width="14"
+            height="8"
+            rx="1"
+            fill="currentColor"
+            opacity=".4"
+          />
+        </svg>
         Oben
       </button>
       <button id="viewSidebar" title="Schritte links">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="4" height="14" rx="1" fill="currentColor"/><rect x="6" y="0" width="8" height="14" rx="1" fill="currentColor" opacity=".4"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="0" y="0" width="4" height="14" rx="1" fill="currentColor" />
+          <rect
+            x="6"
+            y="0"
+            width="8"
+            height="14"
+            rx="1"
+            fill="currentColor"
+            opacity=".4"
+          />
+        </svg>
         Sidebar
       </button>
     </div>
@@ -1593,7 +1701,7 @@
           </div>
           <div class="step" data-step="4">
             <span class="step-index">4</span>
-            <span class="step-label">Buchung</span>
+            <span class="step-label">Anfrage</span>
             <span class="step-sub">Daten eingeben und absenden</span>
           </div>
         </div>
@@ -1602,7 +1710,6 @@
           <small>Aktuelle Gesamtsumme</small>
           <strong id="totalBox">€ 0,00</strong>
         </div>
-
       </div>
 
       <div id="globalInfo" class="msg info"></div>
@@ -1616,8 +1723,8 @@
               <h2 class="title">Reisedaten</h2>
               <p class="intro">
                 Wählen Sie Ihren gewünschten Zeitraum und geben Sie an, mit wie
-                vielen Gästen Sie reisen. Auf Basis dieser Daten zeigen wir Ihnen
-                passende Apartments und die aktuelle Preiskalkulation.
+                vielen Gästen Sie reisen. Auf Basis dieser Daten zeigen wir
+                Ihnen passende Apartments und die aktuelle Preiskalkulation.
               </p>
 
               <div class="grid-2">
@@ -1670,17 +1777,75 @@
             <div class="content-card">
               <h2 class="title">Apartments auswählen</h2>
               <p class="intro">
-                Wählen Sie ihre passende Kategorie. Nicht
-                passende oder nicht verfügbare Optionen werden entsprechend markiert.
+                Wählen Sie ihre passende Kategorie. Nicht passende oder nicht
+                verfügbare Optionen werden entsprechend markiert.
               </p>
 
-              <div class="layout-toggle" style="display:none">
+              <div class="layout-toggle" style="display: none">
                 <button id="layoutList" class="active" title="Liste">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="1" width="14" height="2" rx="1" fill="currentColor"/><rect x="0" y="6" width="14" height="2" rx="1" fill="currentColor"/><rect x="0" y="11" width="14" height="2" rx="1" fill="currentColor"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <rect
+                      x="0"
+                      y="1"
+                      width="14"
+                      height="2"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="0"
+                      y="6"
+                      width="14"
+                      height="2"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="0"
+                      y="11"
+                      width="14"
+                      height="2"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                  </svg>
                   Liste
                 </button>
                 <button id="layoutMasonry" title="Masonry">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="6" height="8" rx="1" fill="currentColor"/><rect x="8" y="0" width="6" height="5" rx="1" fill="currentColor"/><rect x="0" y="10" width="6" height="4" rx="1" fill="currentColor"/><rect x="8" y="7" width="6" height="7" rx="1" fill="currentColor"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <rect
+                      x="0"
+                      y="0"
+                      width="6"
+                      height="8"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="8"
+                      y="0"
+                      width="6"
+                      height="5"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="0"
+                      y="10"
+                      width="6"
+                      height="4"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="8"
+                      y="7"
+                      width="6"
+                      height="7"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                  </svg>
                   Masonry
                 </button>
               </div>
@@ -1713,11 +1878,9 @@
           <section class="screen" data-screen="4">
             <div class="content-card">
               <h2 class="title">Persönliche Angaben</h2>
-              <p class="intro">
-                Bitte füllen Sie alle Pflichtfelder aus.
-              </p>
+              <p class="intro">Bitte füllen Sie alle Pflichtfelder aus.</p>
 
-              <div class="grid-2" style="margin-bottom:18px;">
+              <div class="grid-2" style="margin-bottom: 18px">
                 <div class="field-block">
                   <label class="label" for="salutation">Anrede</label>
                   <select id="salutation">
@@ -1731,24 +1894,43 @@
 
               <div class="grid-2">
                 <div class="field-block">
-                  <label class="label" for="firstName">Vorname<span class="required">*</span></label>
+                  <label class="label" for="firstName"
+                    >Vorname<span class="required">*</span></label
+                  >
                   <input id="firstName" type="text" placeholder="Max" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="lastName">Nachname<span class="required">*</span></label>
+                  <label class="label" for="lastName"
+                    >Nachname<span class="required">*</span></label
+                  >
                   <input id="lastName" type="text" placeholder="Mustermann" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="email">E-Mail<span class="required">*</span></label>
-                  <input id="email" type="email" placeholder="max@mustermann.com" />
+                  <label class="label" for="email"
+                    >E-Mail<span class="required">*</span></label
+                  >
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="max@mustermann.com"
+                  />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="phone">Telefon<span class="required">*</span></label>
+                  <label class="label" for="phone"
+                    >Telefon<span class="required">*</span></label
+                  >
                   <input id="phone" type="tel" placeholder="+43 123456789" />
                 </div>
               </div>
 
-              <div style="display:grid;grid-template-columns:40% 15% 25% 20%;gap:12px;margin-top:18px;">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 40% 15% 25% 20%;
+                  gap: 12px;
+                  margin-top: 18px;
+                "
+              >
                 <div class="field-block">
                   <label class="label" for="street">Straße, Hausnummer</label>
                   <input id="street" type="text" placeholder="Musterstraße 1" />
@@ -1774,36 +1956,77 @@
                     <option value="Polen">Polen</option>
                     <option value="Tschechien">Tschechien</option>
                     <option value="Spanien">Spanien</option>
-                    <option value="Vereinigtes Königreich">Vereinigtes Königreich</option>
+                    <option value="Vereinigtes Königreich">
+                      Vereinigtes Königreich
+                    </option>
                     <option value="Sonstige">Sonstige</option>
                   </select>
                 </div>
               </div>
 
-              <hr id="guestDividerBefore" style="display:none;border:none;border-top:1px solid var(--line);margin:22px 0;" />
-              <div id="guestDataAccordion" style="display:none;" class="guest-accordion">
-                <button type="button" class="guest-accordion-toggle" id="guestAccordionToggle">
+              <hr
+                id="guestDividerBefore"
+                style="
+                  display: none;
+                  border: none;
+                  border-top: 1px solid var(--line);
+                  margin: 22px 0;
+                "
+              />
+              <div
+                id="guestDataAccordion"
+                style="display: none"
+                class="guest-accordion"
+              >
+                <button
+                  type="button"
+                  class="guest-accordion-toggle"
+                  id="guestAccordionToggle"
+                >
                   Gäste Daten
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
                 </button>
                 <div class="guest-accordion-body" id="guestAccordionBody">
                   <div id="guestFieldsWrap"></div>
                 </div>
               </div>
-              <hr id="guestDividerAfter" style="display:none;border:none;border-top:1px solid var(--line);margin:22px 0;" />
+              <hr
+                id="guestDividerAfter"
+                style="
+                  display: none;
+                  border: none;
+                  border-top: 1px solid var(--line);
+                  margin: 22px 0;
+                "
+              />
 
               <div style="margin-top: 18px">
                 <label class="label" for="notes">Anmerkungen</label>
-                <textarea id="notes" placeholder="Besondere Wünsche, Anreisezeit, weitere Hinweise"></textarea>
+                <textarea
+                  id="notes"
+                  placeholder="Besondere Wünsche, Anreisezeit, weitere Hinweise"
+                ></textarea>
               </div>
 
-
-
-              <div id="termsCheckboxWrap" style="margin-top: 18px; display: none;"></div>
+              <div
+                id="termsCheckboxWrap"
+                style="margin-top: 18px; display: none"
+              ></div>
 
               <div id="submitArea"></div>
 
-              <div class="nav-row" style="margin-top:18px;">
+              <div class="nav-row" style="margin-top: 18px">
                 <button class="btn-light" data-prev>Zurück</button>
               </div>
             </div>
@@ -1812,11 +2035,13 @@
 
         <aside class="summary">
           <span class="summary-eyebrow">Ihre Auswahl</span>
-          <h3>Buchungsdetails</h3>
+          <h3>Anfragedetails</h3>
 
           <div class="summary-block">
             <div class="summary-block-title">Apartments</div>
-            <div id="summaryApartment" class="summary-main">Keine Apartments gewählt</div>
+            <div id="summaryApartment" class="summary-main">
+              Keine Apartments gewählt
+            </div>
             <div id="summaryDates" class="summary-sub">Zeitraum: –</div>
             <div id="summaryGuests" class="summary-sub">2 Erwachsene</div>
           </div>
@@ -1834,7 +2059,8 @@
             <span>Apartments</span><span id="summaryAptPrice">€ 0,00</span>
           </div>
           <div class="summary-row">
-            <span>Zusatzleistungen</span><span id="summaryExtraPrice">€ 0,00</span>
+            <span>Zusatzleistungen</span
+            ><span id="summaryExtraPrice">€ 0,00</span>
           </div>
           <div class="summary-row summary-total">
             <span>Gesamt</span><span id="summaryTotal">€ 0,00</span>
@@ -1843,19 +2069,51 @@
       </div>
     </div>
 
-    <div id="bw-branding" style="display:none;text-align:center;padding:16px 0 8px;opacity:0.9;">
-      <a href="https://www.bookingwulf.com/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:inherit;">
-        <span style="font-size:12px;font-family:Inter,sans-serif;color:#999;">powered by</span>
-        <img src="/bookingwulf-logo.png" alt="bookingwulf" style="height:24px;opacity:0.6;" />
+    <div
+      id="bw-branding"
+      style="
+        display: none;
+        text-align: center;
+        padding: 16px 0 8px;
+        opacity: 0.9;
+      "
+    >
+      <a
+        href="https://www.bookingwulf.com/"
+        target="_blank"
+        rel="noopener"
+        style="
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          color: inherit;
+        "
+      >
+        <span
+          style="font-size: 12px; font-family: Inter, sans-serif; color: #999"
+          >powered by</span
+        >
+        <img
+          src="/bookingwulf-logo.png"
+          alt="bookingwulf"
+          style="height: 24px; opacity: 0.6"
+        />
       </a>
     </div>
 
     <div class="lightbox" id="lightbox">
       <div class="lightbox-inner">
-        <button type="button" class="lightbox-close" id="lightboxClose">×</button>
+        <button type="button" class="lightbox-close" id="lightboxClose">
+          ×
+        </button>
         <div class="lightbox-image-wrap">
-          <button type="button" class="lightbox-nav prev" id="lightboxPrev">‹</button>
-          <button type="button" class="lightbox-nav next" id="lightboxNext">›</button>
+          <button type="button" class="lightbox-nav prev" id="lightboxPrev">
+            ‹
+          </button>
+          <button type="button" class="lightbox-nav next" id="lightboxNext">
+            ›
+          </button>
           <img id="lightboxImage" class="lightbox-image" src="" alt="" />
           <div id="lightboxCounter" class="lightbox-counter"></div>
         </div>
@@ -1865,14 +2123,16 @@
 
     <script>
       (() => {
-        const API_BASE = "";
-        const HOTEL_SLUG = new URLSearchParams(window.location.search).get("hotel") || "default";
-        const WIDGET_CONFIG = new URLSearchParams(window.location.search).get("config") || "";
+        const API_BASE = '';
+        const HOTEL_SLUG =
+          new URLSearchParams(window.location.search).get('hotel') || 'default';
+        const WIDGET_CONFIG =
+          new URLSearchParams(window.location.search).get('config') || '';
 
         const state = {
           step: 1,
-          arrival: "",
-          departure: "",
+          arrival: '',
+          departure: '',
           adults: 2,
           children: 0,
           selectedApartmentIds: [],
@@ -1909,39 +2169,79 @@
 
         function getPriceLabel(billingType, price) {
           const p = eur(price);
-          if (billingType === "per_night") return `${p} / Nacht`;
-          if (billingType === "per_person_per_night") return `${p} / Person / Nacht`;
-          if (billingType === "per_person_per_stay") return `${p} / Person`;
+          if (billingType === 'per_night') return `${p} / Nacht`;
+          if (billingType === 'per_person_per_night')
+            return `${p} / Person / Nacht`;
+          if (billingType === 'per_person_per_stay') return `${p} / Person`;
           return `${p} / Aufenthalt`;
         }
 
         const eur = (n) =>
-          new Intl.NumberFormat("de-AT", {
-            style: "currency",
-            currency: "EUR",
+          new Intl.NumberFormat('de-AT', {
+            style: 'currency',
+            currency: 'EUR',
           }).format(Number(n || 0));
 
         async function loadHotelSettings() {
           try {
-            const res = await fetch(`${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}`);
+            const res = await fetch(
+              `${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}`,
+            );
             const data = await res.json();
 
             if (!data.success) return;
 
             const settings = data.settings || {};
 
-            document.documentElement.style.setProperty("--accent", settings.accentColor || "#111111");
-            document.documentElement.style.setProperty("--bg", settings.backgroundColor || "#f5f5f5");
-            document.documentElement.style.setProperty("--surface-2", settings.cardBackground || "#ffffff");
-            document.documentElement.style.setProperty("--surface-3", settings.cardBackground || "rgba(255,255,255,0.85)");
-            document.documentElement.style.setProperty("--text", settings.textColor || "#111111");
-            document.documentElement.style.setProperty("--muted", settings.mutedTextColor || "#6b7280");
-            document.documentElement.style.setProperty("--muted-2", settings.mutedTextColor || "#9ca3af");
-            document.documentElement.style.setProperty("--line", settings.borderColor || "#e5e7eb");
-            document.documentElement.style.setProperty("--line-strong", settings.borderColor || "#d1d5db");
-            document.documentElement.style.setProperty("--radius", `${settings.cardRadius ?? 8}px`);
-            document.documentElement.style.setProperty("--button-radius", `${settings.buttonRadius ?? 8}px`);
-            if (settings.buttonColor) document.documentElement.style.setProperty("--btn-color", settings.buttonColor);
+            document.documentElement.style.setProperty(
+              '--accent',
+              settings.accentColor || '#111111',
+            );
+            document.documentElement.style.setProperty(
+              '--bg',
+              settings.backgroundColor || '#f5f5f5',
+            );
+            document.documentElement.style.setProperty(
+              '--surface-2',
+              settings.cardBackground || '#ffffff',
+            );
+            document.documentElement.style.setProperty(
+              '--surface-3',
+              settings.cardBackground || 'rgba(255,255,255,0.85)',
+            );
+            document.documentElement.style.setProperty(
+              '--text',
+              settings.textColor || '#111111',
+            );
+            document.documentElement.style.setProperty(
+              '--muted',
+              settings.mutedTextColor || '#6b7280',
+            );
+            document.documentElement.style.setProperty(
+              '--muted-2',
+              settings.mutedTextColor || '#9ca3af',
+            );
+            document.documentElement.style.setProperty(
+              '--line',
+              settings.borderColor || '#e5e7eb',
+            );
+            document.documentElement.style.setProperty(
+              '--line-strong',
+              settings.borderColor || '#d1d5db',
+            );
+            document.documentElement.style.setProperty(
+              '--radius',
+              `${settings.cardRadius ?? 8}px`,
+            );
+            document.documentElement.style.setProperty(
+              '--button-radius',
+              `${settings.buttonRadius ?? 8}px`,
+            );
+            if (settings.buttonColor)
+              document.documentElement.style.setProperty(
+                '--btn-color',
+                settings.buttonColor,
+              );
 
             // Fonts
             const headlineFont = settings.headlineFont || 'Inter';
@@ -1952,9 +2252,16 @@
             const bodyFontWeight = settings.bodyFontWeight;
 
             // Load Google Fonts
-            const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(f => f);
+            const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(
+              (f) => f,
+            );
             if (fontsToLoad.length > 0) {
-              const families = fontsToLoad.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`).join('&');
+              const families = fontsToLoad
+                .map(
+                  (f) =>
+                    `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`,
+                )
+                .join('&');
               const link = document.createElement('link');
               link.rel = 'stylesheet';
               link.href = `https://fonts.googleapis.com/css2?${families}&display=swap`;
@@ -1962,12 +2269,38 @@
             }
 
             // Set CSS variables
-            document.documentElement.style.setProperty('--font-headline', headlineFont === 'Inter' ? 'Inter, sans-serif' : `'${headlineFont}', serif`);
-            document.documentElement.style.setProperty('--font-body', bodyFont === 'Inter' ? 'Inter, sans-serif' : `'${bodyFont}', sans-serif`);
-            if (headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', headlineFontSize + 'px');
-            if (bodyFontSize) document.documentElement.style.setProperty('--font-size-body', bodyFontSize + 'px');
-            if (headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(headlineFontWeight));
-            if (bodyFontWeight) document.documentElement.style.setProperty('--font-weight-body', String(bodyFontWeight));
+            document.documentElement.style.setProperty(
+              '--font-headline',
+              headlineFont === 'Inter'
+                ? 'Inter, sans-serif'
+                : `'${headlineFont}', serif`,
+            );
+            document.documentElement.style.setProperty(
+              '--font-body',
+              bodyFont === 'Inter'
+                ? 'Inter, sans-serif'
+                : `'${bodyFont}', sans-serif`,
+            );
+            if (headlineFontSize)
+              document.documentElement.style.setProperty(
+                '--font-size-headline',
+                headlineFontSize + 'px',
+              );
+            if (bodyFontSize)
+              document.documentElement.style.setProperty(
+                '--font-size-body',
+                bodyFontSize + 'px',
+              );
+            if (headlineFontWeight)
+              document.documentElement.style.setProperty(
+                '--font-weight-headline',
+                String(headlineFontWeight),
+              );
+            if (bodyFontWeight)
+              document.documentElement.style.setProperty(
+                '--font-weight-body',
+                String(bodyFontWeight),
+              );
 
             if (data.hotel) {
               state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;
@@ -1991,51 +2324,61 @@
             state.settings.hideRequestOption = !!ft.hideRequestOption;
 
             // Apply DOM toggles for static fields
-            const phoneWrap = document.getElementById("phone")?.closest(".field-block");
-            if (phoneWrap) phoneWrap.style.display = state.settings.showPhoneField ? "" : "none";
-            const notesWrap = document.getElementById("notes")?.closest("div");
-            if (notesWrap) notesWrap.style.display = state.settings.showMessageField ? "" : "none";
+            const phoneWrap = document
+              .getElementById('phone')
+              ?.closest('.field-block');
+            if (phoneWrap)
+              phoneWrap.style.display = state.settings.showPhoneField
+                ? ''
+                : 'none';
+            const notesWrap = document.getElementById('notes')?.closest('div');
+            if (notesWrap)
+              notesWrap.style.display = state.settings.showMessageField
+                ? ''
+                : 'none';
 
             if (data.extras && Array.isArray(data.extras)) {
               state.availableExtras = data.extras;
               state.selectedExtras = {};
-              data.extras.forEach((ex) => { state.selectedExtras[ex.key] = false; });
+              data.extras.forEach((ex) => {
+                state.selectedExtras[ex.key] = false;
+              });
             }
           } catch (e) {
-            console.error("Settings load failed", e);
+            console.error('Settings load failed', e);
           }
         }
 
         function showMessage(type, text) {
-          const info = document.getElementById("globalInfo");
-          const error = document.getElementById("globalError");
-          const success = document.getElementById("globalSuccess");
+          const info = document.getElementById('globalInfo');
+          const error = document.getElementById('globalError');
+          const success = document.getElementById('globalSuccess');
 
-          info.style.display = "none";
-          error.style.display = "none";
-          success.style.display = "none";
+          info.style.display = 'none';
+          error.style.display = 'none';
+          success.style.display = 'none';
 
           if (!text) return;
           const map = { info, error, success };
           map[type].textContent = text;
-          map[type].style.display = "block";
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+          map[type].style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.parent.postMessage({ type: 'booking-widget-scroll-top' }, '*');
         }
 
         function toInputDate(d) {
           const y = d.getFullYear();
-          const m = String(d.getMonth() + 1).padStart(2, "0");
-          const day = String(d.getDate()).padStart(2, "0");
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
           return `${y}-${m}-${day}`;
         }
 
         function formatDate(d) {
-          if (!d) return "–";
-          return new Intl.DateTimeFormat("de-AT", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
+          if (!d) return '–';
+          return new Intl.DateTimeFormat('de-AT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
           }).format(new Date(d));
         }
 
@@ -2049,7 +2392,7 @@
 
         function getSelectedApartments() {
           return state.apartments.filter((a) =>
-            state.selectedApartmentIds.includes(a.id)
+            state.selectedApartmentIds.includes(a.id),
           );
         }
 
@@ -2080,15 +2423,15 @@
             .map((ex) => {
               const price = Number(ex.price);
               let total = 0;
-              let detail = "";
+              let detail = '';
 
-              if (ex.billingType === "per_night") {
+              if (ex.billingType === 'per_night') {
                 total = price * nights;
                 detail = `${ex.name} (${nights} Nächte)`;
-              } else if (ex.billingType === "per_person_per_night") {
+              } else if (ex.billingType === 'per_person_per_night') {
                 total = price * guests * nights;
                 detail = `${ex.name} (${guests} Pers., ${nights} Nächte)`;
-              } else if (ex.billingType === "per_person_per_stay") {
+              } else if (ex.billingType === 'per_person_per_stay') {
                 total = price * guests;
                 detail = `${ex.name} (${guests} Personen)`;
               } else {
@@ -2101,7 +2444,10 @@
         }
 
         function getExtrasTotal() {
-          return getSelectedExtrasDetailed().reduce((sum, item) => sum + item.total, 0);
+          return getSelectedExtrasDetailed().reduce(
+            (sum, item) => sum + item.total,
+            0,
+          );
         }
 
         function getTotal() {
@@ -2115,8 +2461,8 @@
           return [
             {
               imageUrl:
-                "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
-              altText: apartment.name || "Apartment",
+                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+              altText: apartment.name || 'Apartment',
             },
           ];
         }
@@ -2143,7 +2489,9 @@
         }
 
         function startAutoplay(apartmentId) {
-          const apartment = state.apartments.find((item) => item.id === apartmentId);
+          const apartment = state.apartments.find(
+            (item) => item.id === apartmentId,
+          );
           if (!apartment) return;
 
           const images = getApartmentImages(apartment);
@@ -2152,14 +2500,16 @@
           clearAutoplay(apartmentId);
 
           state.autoplayTimers[apartmentId] = setInterval(() => {
-            const latestApartment = state.apartments.find((item) => item.id === apartmentId);
+            const latestApartment = state.apartments.find(
+              (item) => item.id === apartmentId,
+            );
             if (!latestApartment) return;
 
             const length = getApartmentImages(latestApartment).length;
             setImageIndex(
               apartmentId,
               getImageIndex(apartmentId, length) + 1,
-              length
+              length,
             );
             renderApartments();
           }, 5000);
@@ -2178,54 +2528,138 @@
         }
 
         // Listen for parent closing the lightbox
-        window.addEventListener('message', function(e) {
+        window.addEventListener('message', function (e) {
           if (e.data && e.data.type === 'booking-widget-lightbox-closed') {
             closeLightbox();
           }
           if (e.data && e.data.type === 'booking-widget-preview-settings') {
             const s = e.data.settings || {};
-            if (s.accentColor) document.documentElement.style.setProperty('--accent', s.accentColor);
-            if (s.backgroundColor) document.documentElement.style.setProperty('--bg', s.backgroundColor);
+            if (s.accentColor)
+              document.documentElement.style.setProperty(
+                '--accent',
+                s.accentColor,
+              );
+            if (s.backgroundColor)
+              document.documentElement.style.setProperty(
+                '--bg',
+                s.backgroundColor,
+              );
             if (s.cardBackground) {
-              document.documentElement.style.setProperty('--surface-2', s.cardBackground);
-              document.documentElement.style.setProperty('--surface-3', s.cardBackground);
+              document.documentElement.style.setProperty(
+                '--surface-2',
+                s.cardBackground,
+              );
+              document.documentElement.style.setProperty(
+                '--surface-3',
+                s.cardBackground,
+              );
             }
-            if (s.textColor) document.documentElement.style.setProperty('--text', s.textColor);
+            if (s.textColor)
+              document.documentElement.style.setProperty('--text', s.textColor);
             if (s.mutedTextColor) {
-              document.documentElement.style.setProperty('--muted', s.mutedTextColor);
-              document.documentElement.style.setProperty('--muted-2', s.mutedTextColor);
+              document.documentElement.style.setProperty(
+                '--muted',
+                s.mutedTextColor,
+              );
+              document.documentElement.style.setProperty(
+                '--muted-2',
+                s.mutedTextColor,
+              );
             }
             if (s.borderColor) {
-              document.documentElement.style.setProperty('--line', s.borderColor);
-              document.documentElement.style.setProperty('--line-strong', s.borderColor);
+              document.documentElement.style.setProperty(
+                '--line',
+                s.borderColor,
+              );
+              document.documentElement.style.setProperty(
+                '--line-strong',
+                s.borderColor,
+              );
             }
-            if (s.cardRadius) document.documentElement.style.setProperty('--radius', parseInt(s.cardRadius) + 'px');
-            if (s.buttonRadius) document.documentElement.style.setProperty('--button-radius', parseInt(s.buttonRadius) + 'px');
-            if (s.buttonColor) document.documentElement.style.setProperty('--btn-color', s.buttonColor);
+            if (s.cardRadius)
+              document.documentElement.style.setProperty(
+                '--radius',
+                parseInt(s.cardRadius) + 'px',
+              );
+            if (s.buttonRadius)
+              document.documentElement.style.setProperty(
+                '--button-radius',
+                parseInt(s.buttonRadius) + 'px',
+              );
+            if (s.buttonColor)
+              document.documentElement.style.setProperty(
+                '--btn-color',
+                s.buttonColor,
+              );
             if (s.headlineFont || s.bodyFont) {
-              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(function(f) { return !!f; });
-              var unique = fontsToLoad.filter(function(f, i, arr) { return arr.indexOf(f) === i; });
+              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(
+                function (f) {
+                  return !!f;
+                },
+              );
+              var unique = fontsToLoad.filter(function (f, i, arr) {
+                return arr.indexOf(f) === i;
+              });
               if (unique.length > 0) {
-                var families = unique.map(function(f) { return 'family=' + f.replace(/ /g, '+') + ':wght@300;400;500;600;700'; }).join('&');
+                var families = unique
+                  .map(function (f) {
+                    return (
+                      'family=' +
+                      f.replace(/ /g, '+') +
+                      ':wght@300;400;500;600;700'
+                    );
+                  })
+                  .join('&');
                 var link = document.createElement('link');
                 link.rel = 'stylesheet';
-                link.href = 'https://fonts.googleapis.com/css2?' + families + '&display=swap';
+                link.href =
+                  'https://fonts.googleapis.com/css2?' +
+                  families +
+                  '&display=swap';
                 document.head.appendChild(link);
               }
             }
-            if (s.headlineFont !== undefined) { var hf = (s.headlineFont === 'Inter') ? '' : s.headlineFont; document.documentElement.style.setProperty('--font-headline', hf ? "'" + hf + "', serif" : 'Inter, sans-serif'); }
-            if (s.bodyFont !== undefined) { var bf = (s.bodyFont === 'Inter') ? '' : s.bodyFont; document.documentElement.style.setProperty('--font-body', bf ? "'" + bf + "', sans-serif" : 'Inter, sans-serif'); }
-            if (s.headlineFontSize) document.documentElement.style.setProperty('--font-size-headline', parseInt(s.headlineFontSize) + 'px');
-            if (s.bodyFontSize) document.documentElement.style.setProperty('--font-size-body', parseInt(s.bodyFontSize) + 'px');
-            if (s.headlineFontWeight) document.documentElement.style.setProperty('--font-weight-headline', String(s.headlineFontWeight));
-            if (s.bodyFontWeight) document.documentElement.style.setProperty('--font-weight-body', String(s.bodyFontWeight));
+            if (s.headlineFont !== undefined) {
+              var hf = s.headlineFont === 'Inter' ? '' : s.headlineFont;
+              document.documentElement.style.setProperty(
+                '--font-headline',
+                hf ? "'" + hf + "', serif" : 'Inter, sans-serif',
+              );
+            }
+            if (s.bodyFont !== undefined) {
+              var bf = s.bodyFont === 'Inter' ? '' : s.bodyFont;
+              document.documentElement.style.setProperty(
+                '--font-body',
+                bf ? "'" + bf + "', sans-serif" : 'Inter, sans-serif',
+              );
+            }
+            if (s.headlineFontSize)
+              document.documentElement.style.setProperty(
+                '--font-size-headline',
+                parseInt(s.headlineFontSize) + 'px',
+              );
+            if (s.bodyFontSize)
+              document.documentElement.style.setProperty(
+                '--font-size-body',
+                parseInt(s.bodyFontSize) + 'px',
+              );
+            if (s.headlineFontWeight)
+              document.documentElement.style.setProperty(
+                '--font-weight-headline',
+                String(s.headlineFontWeight),
+              );
+            if (s.bodyFontWeight)
+              document.documentElement.style.setProperty(
+                '--font-weight-body',
+                String(s.bodyFontWeight),
+              );
           }
         });
 
         function lightboxNext() {
           if (!state.lightbox.open || !state.lightbox.apartmentId) return;
           const apartment = state.apartments.find(
-            (item) => item.id === state.lightbox.apartmentId
+            (item) => item.id === state.lightbox.apartmentId,
           );
           if (!apartment) return;
           const length = getApartmentImages(apartment).length;
@@ -2238,7 +2672,7 @@
         function lightboxPrev() {
           if (!state.lightbox.open || !state.lightbox.apartmentId) return;
           const apartment = state.apartments.find(
-            (item) => item.id === state.lightbox.apartmentId
+            (item) => item.id === state.lightbox.apartmentId,
           );
           if (!apartment) return;
           const length = getApartmentImages(apartment).length;
@@ -2249,24 +2683,24 @@
         }
 
         function renderLightbox() {
-          const lightbox = document.getElementById("lightbox");
-          const image = document.getElementById("lightboxImage");
-          const counter = document.getElementById("lightboxCounter");
-          const prev = document.getElementById("lightboxPrev");
-          const next = document.getElementById("lightboxNext");
-          const thumbs = document.getElementById("lightboxThumbs");
+          const lightbox = document.getElementById('lightbox');
+          const image = document.getElementById('lightboxImage');
+          const counter = document.getElementById('lightboxCounter');
+          const prev = document.getElementById('lightboxPrev');
+          const next = document.getElementById('lightboxNext');
+          const thumbs = document.getElementById('lightboxThumbs');
 
           if (!state.lightbox.open || !state.lightbox.apartmentId) {
-            lightbox.classList.remove("open");
-            image.src = "";
-            image.alt = "";
-            counter.textContent = "";
-            thumbs.innerHTML = "";
+            lightbox.classList.remove('open');
+            image.src = '';
+            image.alt = '';
+            counter.textContent = '';
+            thumbs.innerHTML = '';
             return;
           }
 
           const apartment = state.apartments.find(
-            (item) => item.id === state.lightbox.apartmentId
+            (item) => item.id === state.lightbox.apartmentId,
           );
           if (!apartment) {
             closeLightbox();
@@ -2287,31 +2721,33 @@
           image.src = active.imageUrl;
           image.alt = active.altText || apartment.name;
           counter.textContent = `${state.lightbox.index + 1} / ${length}`;
-          prev.style.display = length > 1 ? "inline-flex" : "none";
-          next.style.display = length > 1 ? "inline-flex" : "none";
+          prev.style.display = length > 1 ? 'inline-flex' : 'none';
+          next.style.display = length > 1 ? 'inline-flex' : 'none';
 
           thumbs.innerHTML = images
             .map(
               (img, index) => `
                 <button
                   type="button"
-                  class="lightbox-thumb ${index === state.lightbox.index ? "active" : ""}"
+                  class="lightbox-thumb ${index === state.lightbox.index ? 'active' : ''}"
                   data-lightbox-thumb="${index}"
                 >
                   <img src="${img.imageUrl}" alt="${img.altText || apartment.name}" />
                 </button>
-              `
+              `,
             )
-            .join("");
+            .join('');
 
-          thumbs.querySelectorAll("[data-lightbox-thumb]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              state.lightbox.index = Number(btn.getAttribute("data-lightbox-thumb"));
+          thumbs.querySelectorAll('[data-lightbox-thumb]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              state.lightbox.index = Number(
+                btn.getAttribute('data-lightbox-thumb'),
+              );
               renderLightbox();
             });
           });
 
-          lightbox.classList.add("open");
+          lightbox.classList.add('open');
         }
 
         function setDefaultDates() {
@@ -2324,8 +2760,8 @@
           state.arrival = toInputDate(start);
           state.departure = toInputDate(end);
 
-          const arrivalInput = document.getElementById("arrival");
-          const departureInput = document.getElementById("departure");
+          const arrivalInput = document.getElementById('arrival');
+          const departureInput = document.getElementById('departure');
           const today = toInputDate(new Date());
 
           arrivalInput.min = today;
@@ -2337,8 +2773,8 @@
         }
 
         function applyDateRules() {
-          const arrivalInput = document.getElementById("arrival");
-          const departureInput = document.getElementById("departure");
+          const arrivalInput = document.getElementById('arrival');
+          const departureInput = document.getElementById('departure');
 
           if (!state.arrival) return;
 
@@ -2367,8 +2803,8 @@
         function getApartmentStatus(apartment) {
           if (!isApartmentMatchingGuests(apartment)) {
             return {
-              type: "not-matching",
-              label: "Nicht passend",
+              type: 'not-matching',
+              label: 'Nicht passend',
               message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${apartment.maxChildren || 0} Kinder`,
             };
           }
@@ -2376,22 +2812,23 @@
           const pricing = state.pricingMap[String(apartment.id)];
 
           if (!state.arrival || !state.departure) {
-            return { type: "idle", label: "", message: "" };
+            return { type: 'idle', label: '', message: '' };
           }
 
           if (!pricing) {
-            return { type: "loading", label: "", message: "Wird geprüft …" };
+            return { type: 'loading', label: '', message: 'Wird geprüft …' };
           }
 
           if (!pricing.available) {
             return {
-              type: "unavailable",
-              label: "Nicht verfügbar",
-              message: pricing.message || "Im gewählten Zeitraum nicht verfügbar",
+              type: 'unavailable',
+              label: 'Nicht verfügbar',
+              message:
+                pricing.message || 'Im gewählten Zeitraum nicht verfügbar',
             };
           }
 
-          return { type: "available", label: "", message: "" };
+          return { type: 'available', label: '', message: '' };
         }
 
         function toggleApartmentSelection(id) {
@@ -2404,8 +2841,8 @@
         }
 
         function renderApartments() {
-          const wrap = document.getElementById("apartments");
-          wrap.innerHTML = "";
+          const wrap = document.getElementById('apartments');
+          wrap.innerHTML = '';
 
           if (state.loadingApartments) {
             wrap.innerHTML = `<div class="loading">Apartments werden geladen …</div>`;
@@ -2418,28 +2855,28 @@
           }
 
           const sortedApartments = [...state.apartments].sort((a, b) => {
-  const statusA = getApartmentStatus(a);
-  const statusB = getApartmentStatus(b);
+            const statusA = getApartmentStatus(a);
+            const statusB = getApartmentStatus(b);
 
-  const isAvailableA = statusA.type === "available" ? 0 : 1;
-  const isAvailableB = statusB.type === "available" ? 0 : 1;
+            const isAvailableA = statusA.type === 'available' ? 0 : 1;
+            const isAvailableB = statusB.type === 'available' ? 0 : 1;
 
-  return isAvailableA - isAvailableB;
-});
+            return isAvailableA - isAvailableB;
+          });
 
-sortedApartments.forEach((ap) => {
+          sortedApartments.forEach((ap) => {
             const selected = isSelectedApartment(ap.id);
             const pricing = state.pricingMap[String(ap.id)];
             const status = getApartmentStatus(ap);
             const expanded = !!state.expandedDescriptions[ap.id];
             const amenitiesExpanded = !!state.expandedAmenities[ap.id];
 
-            let priceHtml = "";
+            let priceHtml = '';
             if (state.settings.showPrices) {
               priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
               if (pricing && pricing.available) {
                 priceHtml = `<div class="apt-price">${eur(pricing.totalPrice)}</div>`;
-              } else if (status.type === "unavailable") {
+              } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
             }
@@ -2449,28 +2886,31 @@ sortedApartments.forEach((ap) => {
             const imageIndex = getImageIndex(ap.id, imageCount);
 
             const metaParts = [];
-            if (ap.size) metaParts.push(ap.size + " m²");
+            if (ap.size) metaParts.push(ap.size + ' m²');
             metaParts.push(`${ap.maxAdults || 0} Erw.`);
-            if ((ap.maxChildren || 0) > 0) metaParts.push(`${ap.maxChildren} Kinder`);
+            if ((ap.maxChildren || 0) > 0)
+              metaParts.push(`${ap.maxChildren} Kinder`);
 
             const description =
               ap.description ||
-              "Apartment mit ruhiger Atmosphäre und klarem Boutique-Charakter.";
+              'Apartment mit ruhiger Atmosphäre und klarem Boutique-Charakter.';
 
             const amenitiesHtml =
-              ap.amenities && ap.amenities.length && state.settings.showAmenities
+              ap.amenities &&
+              ap.amenities.length &&
+              state.settings.showAmenities
                 ? `
                   <div class="apt-amenities-wrap">
                     <button
                       type="button"
-                      class="apt-amenities-toggle ${amenitiesExpanded ? "open" : ""}"
+                      class="apt-amenities-toggle ${amenitiesExpanded ? 'open' : ''}"
                       data-toggle-amenities="${ap.id}"
                     >
                       <span class="apt-amenities-toggle-label">Ausstattung</span>
                       <span class="apt-amenities-toggle-chevron">⌄</span>
                     </button>
 
-                    <div class="apt-amenities-panel ${amenitiesExpanded ? "open" : ""}">
+                    <div class="apt-amenities-panel ${amenitiesExpanded ? 'open' : ''}">
                       <div class="apt-amenities-inner">
                         <div class="apt-amenities">
                           ${ap.amenities
@@ -2480,31 +2920,31 @@ sortedApartments.forEach((ap) => {
                                   <span class="apt-amenity-icon">✓</span>
                                   <span class="apt-amenity-text">${item}</span>
                                 </div>
-                              `
+                              `,
                             )
-                            .join("")}
+                            .join('')}
                         </div>
                       </div>
                     </div>
                   </div>
                 `
-                : "";
+                : '';
 
-            const div = document.createElement("div");
-            div.className = `apt-card ${selected ? "selected" : ""} ${
-              status.type === "unavailable" || status.type === "not-matching"
-                ? "disabled"
-                : ""
+            const div = document.createElement('div');
+            div.className = `apt-card ${selected ? 'selected' : ''} ${
+              status.type === 'unavailable' || status.type === 'not-matching'
+                ? 'disabled'
+                : ''
             }`;
 
             div.innerHTML = `
               <div class="apt-badge ${
-                status.type === "unavailable"
-                  ? "unavailable"
-                  : status.type === "not-matching"
-                    ? "not-matching"
-                    : ""
-              }" style="${status.label ? "display:block" : "display:none"}">
+                status.type === 'unavailable'
+                  ? 'unavailable'
+                  : status.type === 'not-matching'
+                    ? 'not-matching'
+                    : ''
+              }" style="${status.label ? 'display:block' : 'display:none'}">
                 ${status.label}
               </div>
 
@@ -2527,9 +2967,9 @@ sortedApartments.forEach((ap) => {
                             data-open-lightbox-index="${idx}"
                           />
                         </div>
-                      `
+                      `,
                     )
-                    .join("")}
+                    .join('')}
                 </div>
 
                 ${
@@ -2539,23 +2979,23 @@ sortedApartments.forEach((ap) => {
                       <button type="button" class="apt-image-nav next" data-image-next="${ap.id}">&#8250;</button>
                       <div class="apt-image-counter">${imageIndex + 1} / ${imageCount}</div>
                     `
-                    : ""
+                    : ''
                 }
               </div>
 
               <div class="apt-copy">
                 <h3 class="apt-name">${ap.name}</h3>
-                <div class="apt-meta">${metaParts.join(" · ")}</div>
+                <div class="apt-meta">${metaParts.join(' · ')}</div>
 
-                <div class="apt-desc ${expanded ? "" : "is-clamped"}">
+                <div class="apt-desc ${expanded ? '' : 'is-clamped'}">
                   ${description}
                 </div>
                 ${
                   description.length > 140
                     ? `<button type="button" class="apt-more" data-toggle-desc="${ap.id}">
-                        ${expanded ? "Weniger" : "Mehr lesen"}
+                        ${expanded ? 'Weniger' : 'Mehr lesen'}
                       </button>`
-                    : ""
+                    : ''
                 }
 
                 ${amenitiesHtml}
@@ -2564,30 +3004,30 @@ sortedApartments.forEach((ap) => {
                   <div class="apt-status-copy">
                     ${
                       status.message &&
-                      (status.type === "unavailable" ||
-                        status.type === "not-matching")
+                      (status.type === 'unavailable' ||
+                        status.type === 'not-matching')
                         ? status.message
                         : pricing && pricing.available
                           ? `${pricing.nights} Nächte · ${
                               pricing.cleaningFee
                                 ? `inkl. Reinigung ${eur(pricing.cleaningFee)}`
-                                : "Preis aktuell berechnet"
+                                : 'Preis aktuell berechnet'
                             }`
-                          : " "
+                          : ' '
                     }
                   </div>
 
                   <div class="apt-actions">
                     ${priceHtml}
                     ${
-                      status.type === "available"
+                      status.type === 'available'
                         ? `<button type="button" class="apt-select-btn ${
-                            selected ? "remove" : ""
+                            selected ? 'remove' : ''
                           }" data-select="${ap.id}">
-                            ${selected ? "Entfernen" : "Auswählen"}
+                            ${selected ? 'Entfernen' : 'Auswählen'}
                           </button>
-                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ""}`
-                        : ""
+                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ''}`
+                        : ''
                     }
                   </div>
                 </div>
@@ -2597,47 +3037,50 @@ sortedApartments.forEach((ap) => {
             wrap.appendChild(div);
           });
 
-          wrap.querySelectorAll("[data-toggle-desc]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-toggle-desc]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
               e.stopPropagation();
-              const id = Number(btn.getAttribute("data-toggle-desc"));
+              const id = Number(btn.getAttribute('data-toggle-desc'));
               state.expandedDescriptions[id] = !state.expandedDescriptions[id];
               renderApartments();
             });
           });
 
-          wrap.querySelectorAll("[data-toggle-amenities]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-toggle-amenities]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
               e.stopPropagation();
-              const id = Number(btn.getAttribute("data-toggle-amenities"));
+              const id = Number(btn.getAttribute('data-toggle-amenities'));
               state.expandedAmenities[id] = !state.expandedAmenities[id];
               renderApartments();
             });
           });
 
-          wrap.querySelectorAll("[data-select]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-select]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
               e.stopPropagation();
-              const id = Number(btn.getAttribute("data-select"));
+              const id = Number(btn.getAttribute('data-select'));
               toggleApartmentSelection(id);
             });
           });
 
-          wrap.querySelectorAll("[data-next-step]").forEach((link) => {
-            link.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-next-step]').forEach((link) => {
+            link.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
               if (!validateStep(state.step)) return;
               state.step = Math.min(4, state.step + 1);
               renderAll();
-              window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+              window.parent.postMessage(
+                { type: 'booking-widget-scroll-top' },
+                '*',
+              );
             });
           });
 
-          wrap.querySelectorAll("[data-image-prev]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-image-prev]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
               e.stopPropagation();
-              const id = Number(btn.getAttribute("data-image-prev"));
+              const id = Number(btn.getAttribute('data-image-prev'));
               const apartment = state.apartments.find((item) => item.id === id);
               if (!apartment) return;
               const length = getApartmentImages(apartment).length;
@@ -2646,10 +3089,10 @@ sortedApartments.forEach((ap) => {
             });
           });
 
-          wrap.querySelectorAll("[data-image-next]").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+          wrap.querySelectorAll('[data-image-next]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
               e.stopPropagation();
-              const id = Number(btn.getAttribute("data-image-next"));
+              const id = Number(btn.getAttribute('data-image-next'));
               const apartment = state.apartments.find((item) => item.id === id);
               if (!apartment) return;
               const length = getApartmentImages(apartment).length;
@@ -2658,76 +3101,90 @@ sortedApartments.forEach((ap) => {
             });
           });
 
-          wrap.querySelectorAll("[data-open-lightbox]").forEach((img) => {
-            img.addEventListener("click", () => {
-              const id = Number(img.getAttribute("data-open-lightbox"));
-              const index = Number(img.getAttribute("data-open-lightbox-index") || "0");
+          wrap.querySelectorAll('[data-open-lightbox]').forEach((img) => {
+            img.addEventListener('click', () => {
+              const id = Number(img.getAttribute('data-open-lightbox'));
+              const index = Number(
+                img.getAttribute('data-open-lightbox-index') || '0',
+              );
               openLightbox(id, index);
             });
           });
 
-          wrap.querySelectorAll(".apt-image-wrap").forEach((el) => {
+          wrap.querySelectorAll('.apt-image-wrap').forEach((el) => {
             let startX = 0;
             let deltaX = 0;
 
             el.addEventListener(
-              "touchstart",
+              'touchstart',
               (e) => {
                 startX = e.touches[0].clientX;
                 deltaX = 0;
               },
-              { passive: true }
+              { passive: true },
             );
 
             el.addEventListener(
-              "touchmove",
+              'touchmove',
               (e) => {
                 deltaX = e.touches[0].clientX - startX;
               },
-              { passive: true }
+              { passive: true },
             );
 
-            el.addEventListener("touchend", () => {
-              const image = el.querySelector("[data-open-lightbox]");
+            el.addEventListener('touchend', () => {
+              const image = el.querySelector('[data-open-lightbox]');
               if (!image) return;
 
-              const apartmentId = Number(image.getAttribute("data-open-lightbox"));
-              const apartment = state.apartments.find((item) => item.id === apartmentId);
+              const apartmentId = Number(
+                image.getAttribute('data-open-lightbox'),
+              );
+              const apartment = state.apartments.find(
+                (item) => item.id === apartmentId,
+              );
               if (!apartment) return;
 
               const length = getApartmentImages(apartment).length;
               if (length <= 1) return;
 
               if (deltaX < -40) {
-                setImageIndex(apartmentId, getImageIndex(apartmentId, length) + 1, length);
+                setImageIndex(
+                  apartmentId,
+                  getImageIndex(apartmentId, length) + 1,
+                  length,
+                );
                 renderApartments();
               } else if (deltaX > 40) {
-                setImageIndex(apartmentId, getImageIndex(apartmentId, length) - 1, length);
+                setImageIndex(
+                  apartmentId,
+                  getImageIndex(apartmentId, length) - 1,
+                  length,
+                );
                 renderApartments();
               }
             });
           });
 
           const count = state.selectedApartmentIds.length;
-          document.getElementById("selectionCountNote").textContent =
+          document.getElementById('selectionCountNote').textContent =
             count === 0
-              ? "Noch keine Kategorie ausgewählt."
+              ? 'Noch keine Kategorie ausgewählt.'
               : count === 1
-                ? "1 Apartment ausgewählt."
+                ? '1 Apartment ausgewählt.'
                 : `${count} Apartments ausgewählt.`;
         }
 
         function renderSteps() {
-          document.querySelectorAll(".step").forEach((el) => {
+          document.querySelectorAll('.step').forEach((el) => {
             const step = Number(el.dataset.step);
-            el.classList.toggle("active", step === state.step);
-            el.classList.toggle("done", step < state.step);
+            el.classList.toggle('active', step === state.step);
+            el.classList.toggle('done', step < state.step);
           });
 
-          document.querySelectorAll(".screen").forEach((el) => {
+          document.querySelectorAll('.screen').forEach((el) => {
             el.classList.toggle(
-              "active",
-              Number(el.dataset.screen) === state.step
+              'active',
+              Number(el.dataset.screen) === state.step,
             );
           });
         }
@@ -2736,72 +3193,79 @@ sortedApartments.forEach((ap) => {
           const selectedApts = getSelectedApartments();
           const apartmentText =
             selectedApts.length === 0
-              ? "Keine Apartments gewählt"
-              : selectedApts.map((a) => a.name).join(", ");
+              ? 'Keine Apartments gewählt'
+              : selectedApts.map((a) => a.name).join(', ');
 
           const guests = `${state.adults} Erwachsene${
-            state.children ? `, ${state.children} Kinder` : ""
+            state.children ? `, ${state.children} Kinder` : ''
           }`;
           const selectedExtras = getSelectedExtrasDetailed();
           const extrasNormal = selectedExtras.filter((item) => {
             const ex = state.availableExtras.find((e) => e.key === item.key);
-            return ex && ex.type !== "insurance";
+            return ex && ex.type !== 'insurance';
           });
           const extrasInsurance = selectedExtras.filter((item) => {
             const ex = state.availableExtras.find((e) => e.key === item.key);
-            return ex && ex.type === "insurance";
+            return ex && ex.type === 'insurance';
           });
           const extrasSorted = [...extrasNormal, ...extrasInsurance];
           const extras =
             extrasSorted.length > 0
-              ? `<ul style="margin:0;padding-left:18px;">${extrasSorted.map((item) => `<li>${item.detail}</li>`).join("")}</ul>`
-              : "Keine ausgewählt";
+              ? `<ul style="margin:0;padding-left:18px;">${extrasSorted.map((item) => `<li>${item.detail}</li>`).join('')}</ul>`
+              : 'Keine ausgewählt';
 
-          document.getElementById("totalBox").textContent = eur(getTotal());
-          document.getElementById("summaryApartment").textContent = apartmentText;
-          document.getElementById("summaryDates").textContent = `Zeitraum: ${formatDate(
-            state.arrival
-          )} - ${formatDate(state.departure)}`;
-          document.getElementById("summaryGuests").textContent = guests;
-          document.getElementById("summaryExtras").innerHTML = extras;
-          document.getElementById("summaryAptPrice").textContent = eur(
-            getApartmentsTotal()
-          );
-          document.getElementById("summaryExtraPrice").textContent = eur(
-            getExtrasTotal()
-          );
-          document.getElementById("summaryTotal").textContent = eur(getTotal());
+          document.getElementById('totalBox').textContent = eur(getTotal());
+          document.getElementById('summaryApartment').textContent =
+            apartmentText;
+          document.getElementById('summaryDates').textContent =
+            `Zeitraum: ${formatDate(
+              state.arrival,
+            )} - ${formatDate(state.departure)}`;
+          document.getElementById('summaryGuests').textContent = guests;
+          document.getElementById('summaryExtras').innerHTML = extras;
+          document.getElementById('summaryAptPrice').textContent =
+            eur(getApartmentsTotal());
+          document.getElementById('summaryExtraPrice').textContent =
+            eur(getExtrasTotal());
+          document.getElementById('summaryTotal').textContent = eur(getTotal());
 
           renderExtras();
-              }
+        }
 
         function renderExtras() {
-          const wrap = document.getElementById("extrasContainer");
+          const wrap = document.getElementById('extrasContainer');
           if (!wrap) return;
-          wrap.innerHTML = "";
+          wrap.innerHTML = '';
 
-          const allRegularExtras = state.availableExtras.filter((ex) => ex.type !== "insurance");
-          const regularExtras = state.settings.showExtrasStep ? allRegularExtras : [];
-          const insuranceExtras = state.availableExtras.filter((ex) => ex.type === "insurance");
+          const allRegularExtras = state.availableExtras.filter(
+            (ex) => ex.type !== 'insurance',
+          );
+          const regularExtras = state.settings.showExtrasStep
+            ? allRegularExtras
+            : [];
+          const insuranceExtras = state.availableExtras.filter(
+            (ex) => ex.type === 'insurance',
+          );
 
           if (!regularExtras.length && !insuranceExtras.length) {
-            wrap.innerHTML = '<div style="color:var(--muted);padding:8px 0;">Keine Zusatzleistungen verfügbar.</div>';
+            wrap.innerHTML =
+              '<div style="color:var(--muted);padding:8px 0;">Keine Zusatzleistungen verfügbar.</div>';
             return;
           }
 
           // Regular extras as toggle cards
           regularExtras.forEach((ex) => {
             const selected = !!state.selectedExtras[ex.key];
-            const div = document.createElement("div");
-            div.className = "toggle-card" + (selected ? " selected" : "");
+            const div = document.createElement('div');
+            div.className = 'toggle-card' + (selected ? ' selected' : '');
             div.innerHTML = `
-              <div class="toggle-indicator">${selected ? "Ausgewählt" : "Nicht ausgewählt"}</div>
+              <div class="toggle-indicator">${selected ? 'Ausgewählt' : 'Nicht ausgewählt'}</div>
               <div style="flex:1;">
                 <h3 class="apt-name">${ex.name}</h3>
                 <div class="toggle-price">${getPriceLabel(ex.billingType, Number(ex.price))}</div>
               </div>
             `;
-            div.addEventListener("click", () => {
+            div.addEventListener('click', () => {
               state.selectedExtras[ex.key] = !state.selectedExtras[ex.key];
               renderAll();
             });
@@ -2810,56 +3274,74 @@ sortedApartments.forEach((ap) => {
 
           // Insurance as radio group (required)
           if (insuranceExtras.length > 0) {
-            const section = document.createElement("div");
-            section.style.cssText = "margin-top:24px;border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);padding:22px 24px;background:var(--surface-2);";
+            const section = document.createElement('div');
+            section.style.cssText =
+              'margin-top:24px;border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);padding:22px 24px;background:var(--surface-2);';
 
-            const heading = document.createElement("div");
-            heading.style.cssText = "font-size:1.286rem;font-weight:700;margin-bottom:6px;color:var(--text);";
-            heading.textContent = "Reiserücktrittsversicherung";
+            const heading = document.createElement('div');
+            heading.style.cssText =
+              'font-size:1.286rem;font-weight:700;margin-bottom:6px;color:var(--text);';
+            heading.textContent = 'Reiserücktrittsversicherung';
             section.appendChild(heading);
 
-            const intro = document.createElement("div");
-            intro.style.cssText = "font-size:1rem;color:var(--muted);line-height:1.5;margin-bottom:18px;";
-            intro.textContent = "Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.";
+            const intro = document.createElement('div');
+            intro.style.cssText =
+              'font-size:1rem;color:var(--muted);line-height:1.5;margin-bottom:18px;';
+            intro.textContent =
+              'Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.';
             section.appendChild(intro);
 
             insuranceExtras.forEach((ex) => {
               const selected = state.selectedInsurance === ex.key;
-              const label = document.createElement("label");
-              label.style.cssText = "display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid " + (selected ? "var(--accent)" : "var(--line)") + ";border-radius:calc(var(--radius) + 2px);margin-bottom:10px;cursor:pointer;background:" + (selected ? "var(--accent-soft, rgba(220,20,60,0.05))" : "var(--surface-2)") + ";transition:border-color 0.2s ease,background 0.2s ease;";
+              const label = document.createElement('label');
+              label.style.cssText =
+                'display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid ' +
+                (selected ? 'var(--accent)' : 'var(--line)') +
+                ';border-radius:calc(var(--radius) + 2px);margin-bottom:10px;cursor:pointer;background:' +
+                (selected
+                  ? 'var(--accent-soft, rgba(220,20,60,0.05))'
+                  : 'var(--surface-2)') +
+                ';transition:border-color 0.2s ease,background 0.2s ease;';
 
-              const radio = document.createElement("input");
-              radio.type = "radio";
-              radio.name = "insurance";
+              const radio = document.createElement('input');
+              radio.type = 'radio';
+              radio.name = 'insurance';
               radio.checked = selected;
-              radio.style.cssText = "width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;";
-              radio.addEventListener("change", () => {
+              radio.style.cssText =
+                'width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;';
+              radio.addEventListener('change', () => {
                 state.selectedInsurance = ex.key;
                 // Deselect all insurance from selectedExtras, select this one
-                insuranceExtras.forEach((ins) => { state.selectedExtras[ins.key] = false; });
+                insuranceExtras.forEach((ins) => {
+                  state.selectedExtras[ins.key] = false;
+                });
                 state.selectedExtras[ex.key] = true;
                 renderAll();
               });
 
-              const text = document.createElement("div");
-              text.style.cssText = "flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;";
-              const nameSpan = document.createElement("span");
-              nameSpan.style.cssText = "font-weight:600;font-size:1.071rem;color:var(--text);";
+              const text = document.createElement('div');
+              text.style.cssText =
+                'flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;';
+              const nameSpan = document.createElement('span');
+              nameSpan.style.cssText =
+                'font-weight:600;font-size:1.071rem;color:var(--text);';
               nameSpan.textContent = ex.name;
-              const priceSpan = document.createElement("span");
-              priceSpan.style.cssText = "font-weight:700;font-size:1.071rem;color:var(--text);";
+              const priceSpan = document.createElement('span');
+              priceSpan.style.cssText =
+                'font-weight:700;font-size:1.071rem;color:var(--text);';
               priceSpan.textContent = eur(Number(ex.price));
               text.appendChild(nameSpan);
               text.appendChild(priceSpan);
 
               if (ex.linkUrl) {
-                const link = document.createElement("a");
+                const link = document.createElement('a');
                 link.href = ex.linkUrl;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-                link.textContent = "mehr Infos";
-                link.style.cssText = "font-size:0.929rem;color:var(--accent);text-decoration:underline;";
-                link.addEventListener("click", (e) => e.stopPropagation());
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = 'mehr Infos';
+                link.style.cssText =
+                  'font-size:0.929rem;color:var(--accent);text-decoration:underline;';
+                link.addEventListener('click', (e) => e.stopPropagation());
                 text.appendChild(link);
               }
 
@@ -2869,24 +3351,35 @@ sortedApartments.forEach((ap) => {
             });
 
             // Decline option
-            const declineSelected = state.selectedInsurance === "_decline";
-            const declineLabel = document.createElement("label");
-            declineLabel.style.cssText = "display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid " + (declineSelected ? "var(--accent)" : "var(--line)") + ";border-radius:calc(var(--radius) + 2px);cursor:pointer;background:" + (declineSelected ? "var(--accent-soft, rgba(220,20,60,0.05))" : "var(--surface-2)") + ";transition:border-color 0.2s ease,background 0.2s ease;";
+            const declineSelected = state.selectedInsurance === '_decline';
+            const declineLabel = document.createElement('label');
+            declineLabel.style.cssText =
+              'display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid ' +
+              (declineSelected ? 'var(--accent)' : 'var(--line)') +
+              ';border-radius:calc(var(--radius) + 2px);cursor:pointer;background:' +
+              (declineSelected
+                ? 'var(--accent-soft, rgba(220,20,60,0.05))'
+                : 'var(--surface-2)') +
+              ';transition:border-color 0.2s ease,background 0.2s ease;';
 
-            const declineRadio = document.createElement("input");
-            declineRadio.type = "radio";
-            declineRadio.name = "insurance";
+            const declineRadio = document.createElement('input');
+            declineRadio.type = 'radio';
+            declineRadio.name = 'insurance';
             declineRadio.checked = declineSelected;
-            declineRadio.style.cssText = "width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;";
-            declineRadio.addEventListener("change", () => {
-              state.selectedInsurance = "_decline";
-              insuranceExtras.forEach((ins) => { state.selectedExtras[ins.key] = false; });
+            declineRadio.style.cssText =
+              'width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;';
+            declineRadio.addEventListener('change', () => {
+              state.selectedInsurance = '_decline';
+              insuranceExtras.forEach((ins) => {
+                state.selectedExtras[ins.key] = false;
+              });
               renderAll();
             });
 
-            const declineText = document.createElement("span");
-            declineText.style.cssText = "font-size:1rem;color:var(--muted);";
-            declineText.textContent = "Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.";
+            const declineText = document.createElement('span');
+            declineText.style.cssText = 'font-size:1rem;color:var(--muted);';
+            declineText.textContent =
+              'Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.';
 
             declineLabel.appendChild(declineRadio);
             declineLabel.appendChild(declineText);
@@ -2897,24 +3390,44 @@ sortedApartments.forEach((ap) => {
         }
 
         function renderTermsCheckbox() {
-          const wrap = document.getElementById("termsCheckboxWrap");
+          const wrap = document.getElementById('termsCheckboxWrap');
           if (!wrap) return;
 
-          wrap.style.display = "block";
+          wrap.style.display = 'block';
 
-          const checked = document.getElementById("termsCheckbox")?.checked ? ' checked' : '';
+          const checked = document.getElementById('termsCheckbox')?.checked
+            ? ' checked'
+            : '';
 
           const links = [];
-          if (state.bookingTermsUrl) links.push('<a href="' + state.bookingTermsUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>');
-          if (state.privacyPolicyUrl) links.push('<a href="' + state.privacyPolicyUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>');
+          if (state.bookingTermsUrl)
+            links.push(
+              '<a href="' +
+                state.bookingTermsUrl +
+                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Anfragebedingungen</a>',
+            );
+          if (state.privacyPolicyUrl)
+            links.push(
+              '<a href="' +
+                state.privacyPolicyUrl +
+                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>',
+            );
 
-          const text = links.length > 0
-            ? 'Ich akzeptiere die ' + links.join(' und die ') + '.<span class="required">*</span>'
-            : 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
+          const text =
+            links.length > 0
+              ? 'Ich akzeptiere die ' +
+                links.join(' und die ') +
+                '.<span class="required">*</span>'
+              : 'Ich habe die Anfragebedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
 
-          wrap.innerHTML = '<label style="display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
-            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;"' + checked + ' />' +
-            '<span>' + text + '</span>' +
+          wrap.innerHTML =
+            '<label style="display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
+            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;"' +
+            checked +
+            ' />' +
+            '<span>' +
+            text +
+            '</span>' +
             '</label>';
         }
 
@@ -2922,9 +3435,12 @@ sortedApartments.forEach((ap) => {
           const wrap = document.getElementById('childBirthdaysWrap');
           if (!wrap) return;
           const count = state.children || 0;
-          if (count === 0) { wrap.innerHTML = ''; return; }
+          if (count === 0) {
+            wrap.innerHTML = '';
+            return;
+          }
           const existing = wrap.querySelectorAll('input[type="date"]');
-          const currentValues = Array.from(existing).map(el => el.value);
+          const currentValues = Array.from(existing).map((el) => el.value);
           wrap.innerHTML = '';
           for (let i = 0; i < count; i++) {
             const div = document.createElement('div');
@@ -2932,7 +3448,8 @@ sortedApartments.forEach((ap) => {
             const label = document.createElement('label');
             label.className = 'label';
             label.setAttribute('for', `childBirthday_${i}`);
-            label.textContent = count === 1 ? 'Geburtsdatum Kind' : `Geburtsdatum Kind ${i + 1}`;
+            label.textContent =
+              count === 1 ? 'Geburtsdatum Kind' : `Geburtsdatum Kind ${i + 1}`;
             const input = document.createElement('input');
             input.type = 'date';
             input.id = `childBirthday_${i}`;
@@ -2960,7 +3477,9 @@ sortedApartments.forEach((ap) => {
 
           // Preserve existing values before rebuilding
           const saved = {};
-          wrap.querySelectorAll('input').forEach(el => { if (el.id) saved[el.id] = el.value; });
+          wrap.querySelectorAll('input').forEach((el) => {
+            if (el.id) saved[el.id] = el.value;
+          });
 
           wrap.innerHTML = '';
 
@@ -2996,7 +3515,9 @@ sortedApartments.forEach((ap) => {
             wrap.appendChild(ct);
             for (let i = 0; i < state.children; i++) {
               const bdEl = document.getElementById(`childBirthday_${i}`);
-              const bdVal = bdEl ? bdEl.value : (saved[`guestChild_${i}_bd`] || '');
+              const bdVal = bdEl
+                ? bdEl.value
+                : saved[`guestChild_${i}_bd`] || '';
               const row = document.createElement('div');
               row.className = 'grid-3';
               row.style.marginBottom = '12px';
@@ -3028,63 +3549,93 @@ sortedApartments.forEach((ap) => {
 
           if (isBooking) {
             const total = getTotal();
-            const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
-            const depositText = deposit > 0 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',') : '\u2014';
-            const cardStyle = 'position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 14px;margin-top:20px;';
-            const labelStyle = 'position:absolute;top:-10px;left:12px;background:var(--surface-2,var(--surface,#fff));padding:0 6px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;';
+            const deposit =
+              total > 0 ? Math.round((total * 0.25) / 10) * 10 : 0;
+            const depositText =
+              deposit > 0
+                ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',')
+                : '\u2014';
+            const cardStyle =
+              'position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 14px;margin-top:20px;';
+            const labelStyle =
+              'position:absolute;top:-10px;left:12px;background:var(--surface-2,var(--surface,#fff));padding:0 6px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;';
             const hideRequest = state.settings.hideRequestOption;
             area.innerHTML =
               (!hideRequest
-                ? '<div style="' + cardStyle + '">' +
-                    '<span style="' + labelStyle + '">Anfrage</span>' +
-                    '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
-                      '<div style="font-size:13px;color:var(--muted);">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</div>' +
-                      '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
-                    '</div>' +
+                ? '<div style="' +
+                  cardStyle +
+                  '">' +
+                  '<span style="' +
+                  labelStyle +
+                  '">Anfrage</span>' +
+                  '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
+                  '<div style="font-size:13px;color:var(--muted);">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</div>' +
+                  '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' +
+                  disabled +
+                  '>Anfragen</button>' +
+                  '</div>' +
                   '</div>'
                 : '') +
-              '<div style="' + cardStyle + '">' +
-                '<span style="' + labelStyle + '">Buchung</span>' +
-                '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;">' +
-                  'Zahlungsoptionen' +
-                  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-                '</div>' +
-                '<div class="payment-accordion-body" id="paymentAccordionBody">' +
-                  '<div class="payment-benefit" style="margin-top:10px;">\u2713 Keine Kreditkarte n\u00f6tig</div>' +
-                  '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' + depositText + '</strong> innerhalb von 7 Tagen.</div>' +
-                  '<div class="field-block">' +
-                    '<label class="label" for="paymentMethod">Zahlungsmethode<span class="required">*</span></label>' +
-                    '<select id="paymentMethod">' +
-                      '<option value="">Bitte w\u00e4hlen</option>' +
-                      '<option value="Bank\u00fcberweisung">Bank\u00fcberweisung</option>' +
-                    '</select>' +
-                  '</div>' +
-                '</div>' +
-                '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
-                  '<button type="button" id="submitBtn" class="btn"' + disabled + '>Verbindlich buchen</button>' +
-                '</div>' +
+              '<div style="' +
+              cardStyle +
+              '">' +
+              '<span style="' +
+              labelStyle +
+              '">Anfrage</span>' +
+              '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;">' +
+              'Zahlungsoptionen' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+              '</div>' +
+              '<div class="payment-accordion-body" id="paymentAccordionBody">' +
+              '<div class="payment-benefit" style="margin-top:10px;">\u2713 Keine Kreditkarte n\u00f6tig</div>' +
+              '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' +
+              depositText +
+              '</strong> innerhalb von 7 Tagen.</div>' +
+              '<div class="field-block">' +
+              '<label class="label" for="paymentMethod">Zahlungsmethode<span class="required">*</span></label>' +
+              '<select id="paymentMethod">' +
+              '<option value="">Bitte w\u00e4hlen</option>' +
+              '<option value="Bank\u00fcberweisung">Bank\u00fcberweisung</option>' +
+              '</select>' +
+              '</div>' +
+              '</div>' +
+              '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
+              '<button type="button" id="submitBtn" class="btn"' +
+              disabled +
+              '>Verbindlich buchen</button>' +
+              '</div>' +
               '</div>';
 
-            document.getElementById('paymentAccordionToggle').addEventListener('click', function () {
-              const body = document.getElementById('paymentAccordionBody');
-              const isOpen = body.classList.toggle('open');
-              this.querySelector('svg').style.transform = isOpen ? 'rotate(180deg)' : '';
-            });
+            document
+              .getElementById('paymentAccordionToggle')
+              .addEventListener('click', function () {
+                const body = document.getElementById('paymentAccordionBody');
+                const isOpen = body.classList.toggle('open');
+                this.querySelector('svg').style.transform = isOpen
+                  ? 'rotate(180deg)'
+                  : '';
+              });
           } else {
             area.innerHTML =
               '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</span></div>' +
               '<div class="nav-row" style="margin-top:14px;">' +
-                '<button class="btn-light" data-prev>Zur\u00fcck</button>' +
-                '<button type="button" id="submitBtn" class="btn"' + disabled + '>Anfrage senden</button>' +
+              '<button class="btn-light" data-prev>Zur\u00fcck</button>' +
+              '<button type="button" id="submitBtn" class="btn"' +
+              disabled +
+              '>Anfrage senden</button>' +
               '</div>';
           }
 
-          document.getElementById('submitBtn')?.addEventListener('click', () =>
-            submitRequest(state.settings.enableInstantBooking ? 'booking' : 'request')
-          );
-          document.getElementById('submitRequestBtn')?.addEventListener('click', () =>
-            submitRequest('request')
-          );
+          document
+            .getElementById('submitBtn')
+            ?.addEventListener('click', () =>
+              submitRequest(
+                state.settings.enableInstantBooking ? 'booking' : 'request',
+              ),
+            );
+          document
+            .getElementById('submitRequestBtn')
+            ?.addEventListener('click', () => submitRequest('request'));
         }
 
         function renderAll() {
@@ -3102,13 +3653,13 @@ sortedApartments.forEach((ap) => {
         function validateStep(step) {
           if (step === 1) {
             if (!state.arrival || !state.departure) {
-              showMessage("error", "Bitte An- und Abreisedatum wählen.");
+              showMessage('error', 'Bitte An- und Abreisedatum wählen.');
               return false;
             }
             if (new Date(state.departure) <= new Date(state.arrival)) {
               showMessage(
-                "error",
-                "Das Abreisedatum muss nach dem Anreisedatum liegen."
+                'error',
+                'Das Abreisedatum muss nach dem Anreisedatum liegen.',
               );
               return false;
             }
@@ -3120,7 +3671,8 @@ sortedApartments.forEach((ap) => {
               if (!errEl) {
                 errEl = document.createElement('div');
                 errEl.id = errId;
-                errEl.style.cssText = 'color:var(--danger);font-size:12px;margin-top:4px;';
+                errEl.style.cssText =
+                  'color:var(--danger);font-size:12px;margin-top:4px;';
                 el && el.parentNode && el.parentNode.appendChild(errEl);
               }
               if (!el || !el.value) {
@@ -3135,7 +3687,7 @@ sortedApartments.forEach((ap) => {
 
           if (step === 2) {
             if (state.selectedApartmentIds.length === 0) {
-              showMessage("error", "Bitte mindestens ein Apartment auswählen.");
+              showMessage('error', 'Bitte mindestens ein Apartment auswählen.');
               return false;
             }
 
@@ -3146,22 +3698,27 @@ sortedApartments.forEach((ap) => {
 
             if (invalidSelection) {
               showMessage(
-                "error",
-                "Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar."
+                'error',
+                'Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar.',
               );
               return false;
             }
           }
 
           if (step === 3) {
-            const hasInsurance = state.availableExtras.some((ex) => ex.type === "insurance");
+            const hasInsurance = state.availableExtras.some(
+              (ex) => ex.type === 'insurance',
+            );
             if (hasInsurance && !state.selectedInsurance) {
-              showMessage("error", "Bitte wählen Sie eine Versicherungsoption.");
+              showMessage(
+                'error',
+                'Bitte wählen Sie eine Versicherungsoption.',
+              );
               return false;
             }
           }
 
-          showMessage("", "");
+          showMessage('', '');
           return true;
         }
 
@@ -3170,31 +3727,36 @@ sortedApartments.forEach((ap) => {
           renderApartments();
 
           try {
-            const res = await fetch(`${API_BASE}/api/apartments?hotel=${HOTEL_SLUG}`);
+            const res = await fetch(
+              `${API_BASE}/api/apartments?hotel=${HOTEL_SLUG}`,
+            );
             if (!res.ok) {
-              throw new Error(`HTTP ${res.status}: Apartments konnten nicht geladen werden.`);
+              throw new Error(
+                `HTTP ${res.status}: Apartments konnten nicht geladen werden.`,
+              );
             }
 
             const apartments = await res.json();
             state.apartments = Array.isArray(apartments) ? apartments : [];
 
             const sortedApartments = [...state.apartments].sort((a, b) => {
-                const statusA = getApartmentStatus(a);
-                const statusB = getApartmentStatus(b);
+              const statusA = getApartmentStatus(a);
+              const statusB = getApartmentStatus(b);
 
-                const priority = (status) => {
-                  if (status.type === "available") return 0;
-                  if (status.type === "idle" || status.type === "loading") return 1;
-                  if (status.type === "not-matching") return 2;
-                  if (status.type === "unavailable") return 3;
-                  return 4;
-                };
+              const priority = (status) => {
+                if (status.type === 'available') return 0;
+                if (status.type === 'idle' || status.type === 'loading')
+                  return 1;
+                if (status.type === 'not-matching') return 2;
+                if (status.type === 'unavailable') return 3;
+                return 4;
+              };
 
-                return priority(statusA) - priority(statusB);
-              });
+              return priority(statusA) - priority(statusB);
+            });
 
-              sortedApartments.forEach((ap) => {
-              if (typeof state.imageIndexMap[ap.id] !== "number") {
+            sortedApartments.forEach((ap) => {
+              if (typeof state.imageIndexMap[ap.id] !== 'number') {
                 state.imageIndexMap[ap.id] = 0;
               }
             });
@@ -3205,7 +3767,7 @@ sortedApartments.forEach((ap) => {
           } catch (error) {
             console.error(error);
             state.apartments = [];
-            showMessage("error", String(error));
+            showMessage('error', String(error));
           } finally {
             state.loadingApartments = false;
             renderAll();
@@ -3226,76 +3788,90 @@ sortedApartments.forEach((ap) => {
               state.pricingMap[String(apartment.id)] = {
                 available: false,
                 message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${apartment.maxChildren || 0} Kinder`,
-                status: "not-matching",
+                status: 'not-matching',
               };
             }
           });
 
           // Check availability in parallel for matching apartments
-          const toCheck = state.apartments.filter((a) => isApartmentMatchingGuests(a));
+          const toCheck = state.apartments.filter((a) =>
+            isApartmentMatchingGuests(a),
+          );
 
-          await Promise.all(toCheck.map(async (apartment) => {
-            try {
-              const res = await fetch(`${API_BASE}/api/availability`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  hotel: HOTEL_SLUG,
-                  arrival: state.arrival,
-                  departure: state.departure,
-                  selected_apartments: apartment.name,
-                }),
-              });
+          await Promise.all(
+            toCheck.map(async (apartment) => {
+              try {
+                const res = await fetch(`${API_BASE}/api/availability`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    hotel: HOTEL_SLUG,
+                    arrival: state.arrival,
+                    departure: state.departure,
+                    selected_apartments: apartment.name,
+                  }),
+                });
 
-              const data = await res.json();
+                const data = await res.json();
 
-              if (!data.success || !data.available) {
+                if (!data.success || !data.available) {
+                  state.pricingMap[String(apartment.id)] = {
+                    available: false,
+                    message:
+                      data.message || 'Im gewählten Zeitraum nicht verfügbar',
+                    status: 'unavailable',
+                  };
+                  state.selectedApartmentIds =
+                    state.selectedApartmentIds.filter(
+                      (id) => id !== apartment.id,
+                    );
+                  return;
+                }
+
+                state.pricingMap[String(apartment.id)] = {
+                  available: true,
+                  totalPrice: data.totalPrice,
+                  nights: data.nights,
+                  pricePerNight: data.pricePerNight,
+                  cleaningFee: data.cleaningFee || 0,
+                  status: 'available',
+                };
+              } catch (error) {
+                console.error(error);
                 state.pricingMap[String(apartment.id)] = {
                   available: false,
-                  message: data.message || "Im gewählten Zeitraum nicht verfügbar",
-                  status: "unavailable",
+                  message: 'Prüfung aktuell nicht möglich',
+                  status: 'unknown',
                 };
-                state.selectedApartmentIds = state.selectedApartmentIds.filter((id) => id !== apartment.id);
-                return;
               }
-
-              state.pricingMap[String(apartment.id)] = {
-                available: true,
-                totalPrice: data.totalPrice,
-                nights: data.nights,
-                pricePerNight: data.pricePerNight,
-                cleaningFee: data.cleaningFee || 0,
-                status: "available",
-              };
-            } catch (error) {
-              console.error(error);
-              state.pricingMap[String(apartment.id)] = {
-                available: false,
-                message: "Prüfung aktuell nicht möglich",
-                status: "unknown",
-              };
-            }
-          }));
+            }),
+          );
 
           renderAll();
         }
 
-        async function submitRequest(bookingType = "request") {
-          const paymentMethod = document.getElementById("paymentMethod")?.value.trim() || '';
-          const salutation = document.getElementById("salutation")?.value.trim() || '';
-          const firstName = document.getElementById("firstName").value.trim();
-          const lastName = document.getElementById("lastName").value.trim();
-          const email = document.getElementById("email").value.trim();
-          const phone = document.getElementById("phone").value.trim();
-          const street = document.getElementById("street")?.value.trim() || '';
-          const zip = document.getElementById("zip")?.value.trim() || '';
-          const city = document.getElementById("city")?.value.trim() || '';
-          const country = document.getElementById("country")?.value.trim() || '';
-          const notes = document.getElementById("notes").value.trim();
+        async function submitRequest(bookingType = 'request') {
+          const paymentMethod =
+            document.getElementById('paymentMethod')?.value.trim() || '';
+          const salutation =
+            document.getElementById('salutation')?.value.trim() || '';
+          const firstName = document.getElementById('firstName').value.trim();
+          const lastName = document.getElementById('lastName').value.trim();
+          const email = document.getElementById('email').value.trim();
+          const phone = document.getElementById('phone').value.trim();
+          const street = document.getElementById('street')?.value.trim() || '';
+          const zip = document.getElementById('zip')?.value.trim() || '';
+          const city = document.getElementById('city')?.value.trim() || '';
+          const country =
+            document.getElementById('country')?.value.trim() || '';
+          const notes = document.getElementById('notes').value.trim();
 
           const selectedApts = getSelectedApartments();
           if (!selectedApts.length) {
-            showMessage("error", "Bitte zuerst mindestens ein Apartment auswählen.");
+            showMessage(
+              'error',
+              'Bitte zuerst mindestens ein Apartment auswählen.',
+            );
             return;
           }
 
@@ -3306,30 +3882,30 @@ sortedApartments.forEach((ap) => {
 
           if (invalidSelection) {
             showMessage(
-              "error",
-              "Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar."
+              'error',
+              'Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar.',
             );
             return;
           }
 
           if (!firstName || !lastName || !email || !phone) {
             showMessage(
-              "error",
-              "Bitte alle Pflichtfelder ausfüllen (Vorname, Nachname, E-Mail, Telefon)."
+              'error',
+              'Bitte alle Pflichtfelder ausfüllen (Vorname, Nachname, E-Mail, Telefon).',
             );
             return;
           }
 
           if (bookingType === 'booking' && !paymentMethod) {
-            showMessage("error", "Bitte eine Zahlungsmethode auswählen.");
+            showMessage('error', 'Bitte eine Zahlungsmethode auswählen.');
             return;
           }
 
-          const termsCheckbox = document.getElementById("termsCheckbox");
+          const termsCheckbox = document.getElementById('termsCheckbox');
           if (termsCheckbox && !termsCheckbox.checked) {
             showMessage(
-              "error",
-              "Bitte akzeptieren Sie die Buchungsbedingungen."
+              'error',
+              'Bitte akzeptieren Sie die Anfragebedingungen.',
             );
             return;
           }
@@ -3337,34 +3913,63 @@ sortedApartments.forEach((ap) => {
           state.submitting = true;
           renderSummary();
           renderSubmitArea();
-          showMessage("info", bookingType === "booking" ? "Buchung wird bestätigt …" : "Anfrage wird gesendet …");
+          showMessage(
+            'info',
+            bookingType === 'booking'
+              ? 'Anfrage wird bestätigt …'
+              : 'Anfrage wird gesendet …',
+          );
 
           const nights = getNights();
-          const apartmentIds = selectedApts.map((a) => a.id).join(",");
-          const message = notes || "";
-          const childBirthdays = Array.from({ length: state.children || 0 }, (_, i) => {
-            const el = document.getElementById(`childBirthday_${i}`);
-            return el ? el.value : '';
-          }).filter(Boolean);
+          const apartmentIds = selectedApts.map((a) => a.id).join(',');
+          const message = notes || '';
+          const childBirthdays = Array.from(
+            { length: state.children || 0 },
+            (_, i) => {
+              const el = document.getElementById(`childBirthday_${i}`);
+              return el ? el.value : '';
+            },
+          ).filter(Boolean);
 
           const additionalGuests = [];
           for (let i = 1; i < (state.adults || 0); i++) {
-            const fn = (document.getElementById(`guestAdult_${i}_fn`)?.value || '').trim();
-            const ln = (document.getElementById(`guestAdult_${i}_ln`)?.value || '').trim();
-            if (fn || ln) additionalGuests.push({ type: 'adult', firstname: fn, lastname: ln });
+            const fn = (
+              document.getElementById(`guestAdult_${i}_fn`)?.value || ''
+            ).trim();
+            const ln = (
+              document.getElementById(`guestAdult_${i}_ln`)?.value || ''
+            ).trim();
+            if (fn || ln)
+              additionalGuests.push({
+                type: 'adult',
+                firstname: fn,
+                lastname: ln,
+              });
           }
           for (let i = 0; i < (state.children || 0); i++) {
-            const fn = (document.getElementById(`guestChild_${i}_fn`)?.value || '').trim();
-            const ln = (document.getElementById(`guestChild_${i}_ln`)?.value || '').trim();
-            const bd = (document.getElementById(`guestChild_${i}_bd`)?.value || '').trim();
-            if (fn || ln || bd) additionalGuests.push({ type: 'child', firstname: fn, lastname: ln, birthday: bd });
+            const fn = (
+              document.getElementById(`guestChild_${i}_fn`)?.value || ''
+            ).trim();
+            const ln = (
+              document.getElementById(`guestChild_${i}_ln`)?.value || ''
+            ).trim();
+            const bd = (
+              document.getElementById(`guestChild_${i}_bd`)?.value || ''
+            ).trim();
+            if (fn || ln || bd)
+              additionalGuests.push({
+                type: 'child',
+                firstname: fn,
+                lastname: ln,
+                birthday: bd,
+              });
           }
 
           try {
             const res = await fetch(`${API_BASE}/api/request`, {
-              method: "POST",
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 hotel: HOTEL_SLUG,
@@ -3398,37 +4003,42 @@ sortedApartments.forEach((ap) => {
 
             if (!res.ok || !result.success) {
               throw new Error(
-                result.message || "Fehler beim Senden der Buchung."
+                result.message || 'Fehler beim Senden der Anfrage.',
               );
             }
 
             showMessage(
-              "success",
-              bookingType === "booking"
-                ? "Ihre Buchung ist bestätigt – Sie erhalten eine Bestätigung per E-Mail."
-                : "Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet."
+              'success',
+              bookingType === 'booking'
+                ? 'Ihre Buchung ist bestätigt – Sie erhalten eine Bestätigung per E-Mail.'
+                : 'Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet.',
             );
 
-            document.getElementById("salutation").value = "";
-            document.getElementById("firstName").value = "";
-            document.getElementById("lastName").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("phone").value = "";
-            const streetEl = document.getElementById("street"); if (streetEl) streetEl.value = "";
-            const zipEl = document.getElementById("zip"); if (zipEl) zipEl.value = "";
-            const cityEl = document.getElementById("city"); if (cityEl) cityEl.value = "";
-            document.getElementById("notes").value = "";
+            document.getElementById('salutation').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            const streetEl = document.getElementById('street');
+            if (streetEl) streetEl.value = '';
+            const zipEl = document.getElementById('zip');
+            if (zipEl) zipEl.value = '';
+            const cityEl = document.getElementById('city');
+            if (cityEl) cityEl.value = '';
+            document.getElementById('notes').value = '';
 
             state.selectedApartmentIds = [];
-            Object.keys(state.selectedExtras).forEach((k) => { state.selectedExtras[k] = false; });
+            Object.keys(state.selectedExtras).forEach((k) => {
+              state.selectedExtras[k] = false;
+            });
             state.selectedInsurance = null;
             state.step = 1;
             renderAll();
           } catch (error) {
             console.error(error);
             showMessage(
-              "error",
-              error.message || "Serverfehler. Bitte versuchen Sie es erneut."
+              'error',
+              error.message || 'Serverfehler. Bitte versuchen Sie es erneut.',
             );
           } finally {
             state.submitting = false;
@@ -3438,32 +4048,32 @@ sortedApartments.forEach((ap) => {
         }
 
         document
-          .getElementById("arrival")
-          .addEventListener("change", async (e) => {
+          .getElementById('arrival')
+          .addEventListener('change', async (e) => {
             state.arrival = e.target.value;
             applyDateRules();
             await updateAvailabilityForApartments();
           });
 
         document
-          .getElementById("departure")
-          .addEventListener("change", async (e) => {
+          .getElementById('departure')
+          .addEventListener('change', async (e) => {
             state.departure = e.target.value;
             renderAll();
             await updateAvailabilityForApartments();
           });
 
         document
-          .getElementById("adults")
-          .addEventListener("change", async (e) => {
+          .getElementById('adults')
+          .addEventListener('change', async (e) => {
             state.adults = Number(e.target.value);
             renderAll();
             await updateAvailabilityForApartments();
           });
 
         document
-          .getElementById("children")
-          .addEventListener("change", async (e) => {
+          .getElementById('children')
+          .addEventListener('change', async (e) => {
             state.children = Number(e.target.value);
             renderAll();
             renderChildBirthdays();
@@ -3472,126 +4082,148 @@ sortedApartments.forEach((ap) => {
 
         // Extras event listeners are attached dynamically in renderExtras()
 
-        document.querySelectorAll("[data-next]").forEach((btn) => {
-          btn.addEventListener("click", () => {
+        document.querySelectorAll('[data-next]').forEach((btn) => {
+          btn.addEventListener('click', () => {
             if (!validateStep(state.step)) return;
             state.step = Math.min(4, state.step + 1);
             renderAll();
-            window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+            window.parent.postMessage(
+              { type: 'booking-widget-scroll-top' },
+              '*',
+            );
           });
         });
 
-        document.querySelectorAll("[data-prev]").forEach((btn) => {
-          btn.addEventListener("click", () => {
+        document.querySelectorAll('[data-prev]').forEach((btn) => {
+          btn.addEventListener('click', () => {
             state.step = Math.max(1, state.step - 1);
             renderAll();
-            window.parent.postMessage({ type: "booking-widget-scroll-top" }, "*");
+            window.parent.postMessage(
+              { type: 'booking-widget-scroll-top' },
+              '*',
+            );
           });
         });
 
-        document.querySelectorAll(".step").forEach((el) => {
-          el.addEventListener("click", () => {
+        document.querySelectorAll('.step').forEach((el) => {
+          el.addEventListener('click', () => {
             const target = Number(el.dataset.step);
             if (target <= state.step || validateStep(state.step)) {
               state.step = target;
               renderAll();
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }
           });
         });
 
         // View toggle (top vs sidebar) — move the real summary element, never clone
         var summaryEl = document.querySelector('.layout > aside.summary');
-        var layoutEl  = document.querySelector('.layout');
-        var topEl     = document.querySelector('.top');
+        var layoutEl = document.querySelector('.layout');
+        var topEl = document.querySelector('.top');
 
         var viewToggleEl = document.querySelector('.view-toggle');
-        document.getElementById('viewTop').addEventListener('click', function() {
-          document.querySelector('.booking-shell').classList.remove('sidebar-layout');
-          document.getElementById('viewTop').classList.add('active');
-          document.getElementById('viewSidebar').classList.remove('active');
-          if (viewToggleEl) viewToggleEl.classList.remove('sidebar-active');
-          if (summaryEl && layoutEl) layoutEl.appendChild(summaryEl);
-          var stepsEl = topEl && topEl.querySelector('.steps');
-          var priceBox = topEl && topEl.querySelector('.price-box');
-          if (stepsEl && priceBox) stepsEl.insertAdjacentElement('afterend', priceBox);
-        });
-        document.getElementById('viewSidebar').addEventListener('click', function() {
-          document.querySelector('.booking-shell').classList.add('sidebar-layout');
-          document.getElementById('viewSidebar').classList.add('active');
-          document.getElementById('viewTop').classList.remove('active');
-          if (viewToggleEl) viewToggleEl.classList.add('sidebar-active');
-          if (summaryEl && topEl) topEl.appendChild(summaryEl);
-          var priceBox = topEl && topEl.querySelector('.price-box');
-          if (priceBox && topEl) topEl.insertBefore(priceBox, topEl.firstChild);
-        });
+        document
+          .getElementById('viewTop')
+          .addEventListener('click', function () {
+            document
+              .querySelector('.booking-shell')
+              .classList.remove('sidebar-layout');
+            document.getElementById('viewTop').classList.add('active');
+            document.getElementById('viewSidebar').classList.remove('active');
+            if (viewToggleEl) viewToggleEl.classList.remove('sidebar-active');
+            if (summaryEl && layoutEl) layoutEl.appendChild(summaryEl);
+            var stepsEl = topEl && topEl.querySelector('.steps');
+            var priceBox = topEl && topEl.querySelector('.price-box');
+            if (stepsEl && priceBox)
+              stepsEl.insertAdjacentElement('afterend', priceBox);
+          });
+        document
+          .getElementById('viewSidebar')
+          .addEventListener('click', function () {
+            document
+              .querySelector('.booking-shell')
+              .classList.add('sidebar-layout');
+            document.getElementById('viewSidebar').classList.add('active');
+            document.getElementById('viewTop').classList.remove('active');
+            if (viewToggleEl) viewToggleEl.classList.add('sidebar-active');
+            if (summaryEl && topEl) topEl.appendChild(summaryEl);
+            var priceBox = topEl && topEl.querySelector('.price-box');
+            if (priceBox && topEl)
+              topEl.insertBefore(priceBox, topEl.firstChild);
+          });
 
         // Layout toggle
-        document.getElementById('layoutList').addEventListener('click', function() {
-          document.getElementById('apartments').classList.remove('masonry');
-          document.getElementById('layoutList').classList.add('active');
-          document.getElementById('layoutMasonry').classList.remove('active');
-        });
-        document.getElementById('layoutMasonry').addEventListener('click', function() {
-          document.getElementById('apartments').classList.add('masonry');
-          document.getElementById('layoutMasonry').classList.add('active');
-          document.getElementById('layoutList').classList.remove('active');
-        });
+        document
+          .getElementById('layoutList')
+          .addEventListener('click', function () {
+            document.getElementById('apartments').classList.remove('masonry');
+            document.getElementById('layoutList').classList.add('active');
+            document.getElementById('layoutMasonry').classList.remove('active');
+          });
+        document
+          .getElementById('layoutMasonry')
+          .addEventListener('click', function () {
+            document.getElementById('apartments').classList.add('masonry');
+            document.getElementById('layoutMasonry').classList.add('active');
+            document.getElementById('layoutList').classList.remove('active');
+          });
 
         document
-          .getElementById("lightboxClose")
-          .addEventListener("click", closeLightbox);
-
-        document.getElementById('guestAccordionToggle').addEventListener('click', function () {
-          const body = document.getElementById('guestAccordionBody');
-          const isOpen = body.classList.toggle('open');
-          this.classList.toggle('open', isOpen);
-        });
+          .getElementById('lightboxClose')
+          .addEventListener('click', closeLightbox);
 
         document
-          .getElementById("lightboxNext")
-          .addEventListener("click", lightboxNext);
+          .getElementById('guestAccordionToggle')
+          .addEventListener('click', function () {
+            const body = document.getElementById('guestAccordionBody');
+            const isOpen = body.classList.toggle('open');
+            this.classList.toggle('open', isOpen);
+          });
 
         document
-          .getElementById("lightboxPrev")
-          .addEventListener("click", lightboxPrev);
+          .getElementById('lightboxNext')
+          .addEventListener('click', lightboxNext);
 
-        document.getElementById("lightbox").addEventListener("click", (e) => {
-          if (e.target.id === "lightbox") {
+        document
+          .getElementById('lightboxPrev')
+          .addEventListener('click', lightboxPrev);
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+          if (e.target.id === 'lightbox') {
             closeLightbox();
           }
         });
 
-        document.addEventListener("keydown", (e) => {
+        document.addEventListener('keydown', (e) => {
           if (!state.lightbox.open) return;
-          if (e.key === "Escape") closeLightbox();
-          if (e.key === "ArrowRight") lightboxNext();
-          if (e.key === "ArrowLeft") lightboxPrev();
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowRight') lightboxNext();
+          if (e.key === 'ArrowLeft') lightboxPrev();
         });
 
         (() => {
-          const lightboxEl = document.getElementById("lightbox");
+          const lightboxEl = document.getElementById('lightbox');
           let startX = 0;
           let deltaX = 0;
 
           lightboxEl.addEventListener(
-            "touchstart",
+            'touchstart',
             (e) => {
               startX = e.touches[0].clientX;
               deltaX = 0;
             },
-            { passive: true }
+            { passive: true },
           );
 
           lightboxEl.addEventListener(
-            "touchmove",
+            'touchmove',
             (e) => {
               deltaX = e.touches[0].clientX - startX;
             },
-            { passive: true }
+            { passive: true },
           );
 
-          lightboxEl.addEventListener("touchend", () => {
+          lightboxEl.addEventListener('touchend', () => {
             if (!state.lightbox.open) return;
             if (deltaX < -40) lightboxNext();
             if (deltaX > 40) lightboxPrev();
@@ -3615,15 +4247,26 @@ sortedApartments.forEach((ap) => {
           if (!shell) return;
           var branding = document.getElementById('bw-branding');
           var toggle = document.querySelector('.view-toggle');
-          var h = (toggle ? toggle.offsetHeight : 0) + shell.offsetHeight + (branding ? branding.offsetHeight : 0) + 56;
+          var h =
+            (toggle ? toggle.offsetHeight : 0) +
+            shell.offsetHeight +
+            (branding ? branding.offsetHeight : 0) +
+            56;
           if (h > 100) {
-            window.parent.postMessage({ type: 'booking-widget-resize', height: h }, '*');
+            window.parent.postMessage(
+              { type: 'booking-widget-resize', height: h },
+              '*',
+            );
           }
         }
 
-        new ResizeObserver(postHeight).observe(document.querySelector('.booking-shell'));
+        new ResizeObserver(postHeight).observe(
+          document.querySelector('.booking-shell'),
+        );
         new MutationObserver(postHeight).observe(document.body, {
-          childList: true, subtree: true, attributes: true
+          childList: true,
+          subtree: true,
+          attributes: true,
         });
         window.addEventListener('resize', postHeight);
         setInterval(postHeight, 1000);
