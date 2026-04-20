@@ -189,7 +189,7 @@ export default function LandingPage() {
 
         @media (max-width: 640px) {
           .lp-logo { height: 32px; }
-          .lp-nav-btn { padding: 6px 12px; font-size: 12px; }
+          .lp-nav-btn { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
           .lp-btn { padding: 12px 24px; font-size: 15px; }
         }
 
