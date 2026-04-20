@@ -280,6 +280,8 @@ Weitere Prüfungen per `hasPlanAccess(hotelPlan, minPlan)`:
 - Nutzer-Limit
 - Branding-Features (Farben, Schriften)
 - Messaging (Gast-Kommunikation)
+- **Pro**: Last-Minute Rabatt, Mindestaufenthalt pro Saison (`/api/pricing` prüft Plan vor Anwendung)
+- **Business**: Belegungsbasierter Preisaufschlag (`/api/pricing`)
 
 In der Navigation werden gesperrte Einträge mit 🔒 und Tooltip angezeigt.
 
@@ -526,6 +528,7 @@ Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
 | `/api/hotel-settings` | GET | Widget-Konfiguration per Hotel-Slug |
 | `/api/apartments` | GET | Apartment-Liste per Hotel-Slug |
 | `/api/availability` | POST | Verfügbarkeit + Preis für Zeitraum |
+| `/api/pricing` | GET | Dynamische Preisberechnung (Last-Minute, Belegung, minStay) — Pro/Business |
 | `/api/request` | POST | Buchungsanfrage absenden |
 | `/api/ical` | GET | iCal-Feed eines Apartments |
 | `/api/booking-ical` | GET | iCal-Datei für eine Buchung (HMAC-Token) |

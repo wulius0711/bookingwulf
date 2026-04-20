@@ -15,7 +15,7 @@ export const PLANS = {
     maxApartments: 20,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Alles aus Starter', 'Bis zu 20 Apartments', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons', 'Nuki-Integration', 'Widget doppelt einsetzbar – für Anfrage & Buchung'],
+    features: ['Alles aus Starter', 'Bis zu 20 Apartments', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons & Mindestaufenthalt', 'Last-Minute Rabatt', 'Nuki-Integration', 'Widget doppelt einsetzbar – für Anfrage & Buchung'],
   },
   business: {
     name: 'Business',
@@ -24,7 +24,7 @@ export const PLANS = {
     maxApartments: Infinity,
     maxUsers: Infinity,
     maxHotels: 2,
-    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Priority Support'],
   },
 } as const;
 
