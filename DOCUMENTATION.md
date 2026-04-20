@@ -432,6 +432,10 @@ Importiert externe Kalender (Airbnb, Booking.com) als `BlockedRange`-Einträge.
 - **Automatisch:** Vercel Cron, alle 30 Minuten (`GET /api/ical-sync` mit Bearer-Token)
 - **Manuell:** Admin klickt "Jetzt synchronisieren" → `POST /api/ical-sync` mit `feedId`
 
+### Skalierung
+
+`syncAllFeeds()` verarbeitet alle Feeds in parallelen Batches à 10 (`Promise.allSettled`). Ein fehlgeschlagener Feed unterbricht nicht die übrigen. Timeout pro Feed: 15 Sekunden.
+
 ---
 
 ## 11. Stripe-Integration
@@ -599,6 +603,18 @@ Deployment via GitHub-Integration. Jeder Push auf `main` löst ein Deployment au
 |---|---|---|
 | `/api/ical-sync` | alle 30 Min | Externe Kalender synchronisieren |
 | `/api/cleanup-requests` | 1. des Monats, 3:00 Uhr | Anfragen > 3 Jahre löschen |
+
+### Rate Limits (öffentliche Endpunkte)
+
+| Endpunkt | Limit |
+|---|---|
+| `POST /api/request` | 10/IP/15min + 3/E-Mail/5min |
+| `GET /api/apartments` | 60/IP/min |
+| `GET /api/availability` | — |
+| `GET /api/blocked-dates` | 30/IP/min |
+| `GET /api/ical` | 20/IP/min |
+
+Rate Limiting ist in-memory (`src/lib/rate-limit.ts`) — resettet bei Serverrestart. Für Multi-Instance-Deployments wäre Redis nötig.
 
 ### Datenbank
 
