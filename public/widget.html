@@ -2890,20 +2890,21 @@ sortedApartments.forEach((ap) => {
           const wrap = document.getElementById("termsCheckboxWrap");
           if (!wrap) return;
 
-          if (!state.bookingTermsUrl && !state.privacyPolicyUrl) {
-            wrap.style.display = "none";
-            return;
-          }
-
           wrap.style.display = "block";
+
+          const checked = document.getElementById("termsCheckbox")?.checked ? ' checked' : '';
 
           const links = [];
           if (state.bookingTermsUrl) links.push('<a href="' + state.bookingTermsUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>');
           if (state.privacyPolicyUrl) links.push('<a href="' + state.privacyPolicyUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>');
 
+          const text = links.length > 0
+            ? 'Ich akzeptiere die ' + links.join(' und die ') + '.'
+            : 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
+
           wrap.innerHTML = '<label style="display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
-            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;" />' +
-            '<span>Ich akzeptiere die ' + links.join(' und die ') + '.</span>' +
+            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;"' + checked + ' />' +
+            '<span>' + text + '</span>' +
             '</label>';
         }
 
@@ -3302,7 +3303,7 @@ sortedApartments.forEach((ap) => {
             return;
           }
 
-          if (state.settings.enableInstantBooking && !paymentMethod) {
+          if (bookingType === 'booking' && !paymentMethod) {
             showMessage("error", "Bitte eine Zahlungsmethode auswählen.");
             return;
           }
