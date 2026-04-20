@@ -171,6 +171,33 @@ export default function BillingPage() {
           </div>
         )}
 
+        {/* Info box */}
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 28px', display: 'grid', gap: 16 }}>
+          {status === 'trialing' && (
+            <div style={{ padding: '12px 16px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 14, color: '#1d4ed8', lineHeight: 1.6 }}>
+              Du befindest dich noch in der kostenlosen Testphase. Du kannst jederzeit zwischen den Paketen wechseln — die Änderung ist sofort wirksam und es entstehen keine Kosten bis zum Ende der Testphase.
+            </div>
+          )}
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#6b7280', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Pakete im Überblick</div>
+            <div style={{ display: 'grid', gap: 10 }}>
+              {([
+                ['Starter', '€ 49 / Monat', 'Buchungswidget, Anfrageverwaltung, E-Mail-Benachrichtigungen, iCal-Sync, Versicherungsoptionen.'],
+                ['Pro', '€ 99 / Monat', 'Alles aus Starter plus: vollständiges Branding, Zusatzleistungen, Nuki-Integration, mehrere Widget-Konfigurationen.'],
+                ['Business', '€ 199 / Monat', 'Alles aus Pro plus: mehrere Hotels unter einem Konto, Priority Support.'],
+              ] as [string, string, string][]).map(([name, price, desc]) => (
+                <div key={name} style={{ display: 'grid', gridTemplateColumns: '90px 1fr', gap: '4px 16px', alignItems: 'start', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{name}</div>
+                    <div style={{ fontSize: 12, color: '#6b7280' }}>{price}</div>
+                  </div>
+                  <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.6 }}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Billing interval toggle */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
           <span style={{ fontSize: 14, color: billingInterval === 'month' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
