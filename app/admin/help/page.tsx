@@ -500,7 +500,7 @@ function PreiseSection() {
       <H2>Preise & Saisons</H2>
       <PlanNote plan="Pro" />
       <P>
-        Unter <strong>Preissaisons</strong> können Sie für bestimmte Zeiträume abweichende Preise
+        Unter <strong>Preise → Preiszeiträume</strong> können Sie für bestimmte Zeiträume abweichende Preise
         pro Nacht festlegen — z.B. für Hochsaison, Weihnachten oder Messen.
       </P>
       <H3>Saison anlegen</H3>
@@ -521,7 +521,7 @@ function PreiseSection() {
       <H2>Dynamische Preise</H2>
       <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
       <P>
-        Unter <strong>Einstellungen → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
+        Unter <strong>Preise → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
         aktivieren, der automatisch greift, wenn die Anreise innerhalb einer konfigurierbaren Anzahl
         an Tagen liegt (z.B. 10 % Rabatt bei Anreise in den nächsten 7 Tagen). Im Widget wird der
         Rabatt als grünes Badge angezeigt.
@@ -718,7 +718,7 @@ function AbonnementSection() {
           },
           {
             name: 'Pro', price: '€ 109 / Monat (€ 99 bei Jahreszahlung)',
-            features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preissaisons', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Widget-Konfigurationen'],
+            features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Widget-Konfigurationen'],
           },
           {
             name: 'Business', price: '€ 217 / Monat (€ 199 bei Jahreszahlung)',
