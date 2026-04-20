@@ -1543,6 +1543,10 @@
           grid-template-columns: 1fr;
         }
 
+        [style*="grid-template-columns:40%"] {
+          grid-template-columns: 1fr !important;
+        }
+
         .apt-name {
           font-size: var(--font-size-headline);
         }
@@ -1713,14 +1717,16 @@
                 Bitte füllen Sie alle Pflichtfelder aus.
               </p>
 
-              <div class="field-block" style="max-width:50%;margin-bottom:18px;">
-                <label class="label" for="salutation">Anrede</label>
-                <select id="salutation">
-                  <option value="">Bitte wählen</option>
-                  <option value="Herr">Herr</option>
-                  <option value="Frau">Frau</option>
-                  <option value="Divers">Divers</option>
-                </select>
+              <div class="grid-2" style="margin-bottom:18px;">
+                <div class="field-block">
+                  <label class="label" for="salutation">Anrede</label>
+                  <select id="salutation">
+                    <option value="">Bitte wählen</option>
+                    <option value="Herr">Herr</option>
+                    <option value="Frau">Frau</option>
+                    <option value="Divers">Divers</option>
+                  </select>
+                </div>
               </div>
 
               <div class="grid-2">
@@ -1742,7 +1748,7 @@
                 </div>
               </div>
 
-              <div class="grid-4" style="margin-top:18px;">
+              <div style="display:grid;grid-template-columns:40% 15% 25% 20%;gap:12px;margin-top:18px;">
                 <div class="field-block">
                   <label class="label" for="street">Straße, Hausnummer</label>
                   <input id="street" type="text" placeholder="Musterstraße 1" />
