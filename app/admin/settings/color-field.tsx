@@ -51,45 +51,47 @@ export function ColorField({
   }, [combined, name]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
-      <span style={{ ...labelStyle, flex: 1, minWidth: 0, margin: 0 }}>{label}</span>
+    <div style={{ padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ ...labelStyle, flex: 1, minWidth: 0, margin: 0 }}>{label}</span>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-        {/* Swatch */}
-        <label style={{ position: 'relative', display: 'block', width: 36, height: 36, borderRadius: 8, border: '1px solid #d1d5db', background: combined, cursor: 'pointer', flexShrink: 0, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          {/* Swatch */}
+          <label style={{ position: 'relative', display: 'block', width: 36, height: 36, borderRadius: 8, border: '1px solid #d1d5db', background: combined, cursor: 'pointer', flexShrink: 0, overflow: 'hidden' }}>
+            <input
+              type="color"
+              value={hex}
+              onChange={(e) => setHex(e.target.value)}
+              style={{ position: 'absolute', inset: 0, opacity: 0, width: '100%', height: '100%', cursor: 'pointer', padding: 0, border: 'none' }}
+            />
+          </label>
+
+          {/* Hex input */}
           <input
-            type="color"
             value={hex}
             onChange={(e) => setHex(e.target.value)}
-            style={{ position: 'absolute', inset: 0, opacity: 0, width: '100%', height: '100%', cursor: 'pointer', padding: 0, border: 'none' }}
+            style={{ width: 88, padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontFamily: 'monospace', background: '#fff', color: '#111', outline: 'none' }}
           />
-        </label>
 
-        {/* Hex input */}
-        <input
-          value={hex}
-          onChange={(e) => setHex(e.target.value)}
-          style={{ width: 88, padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontFamily: 'monospace', background: '#fff', color: '#111', outline: 'none' }}
-        />
-
-        {/* Opacity slider + value */}
-        {showOpacity && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={alpha}
-              onChange={(e) => setAlpha(Number(e.target.value))}
-              style={{ width: 60, accentColor: '#111', cursor: 'pointer' }}
-            />
-            <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
-          </div>
-        )}
-
-        {/* Hidden input carries the combined value */}
-        <input type="hidden" name={name} value={combined} />
+          <input type="hidden" name={name} value={combined} />
+        </div>
       </div>
+
+      {/* Opacity slider below */}
+      {showOpacity && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, paddingLeft: 2 }}>
+          <span style={{ fontSize: 11, color: '#9ca3af', whiteSpace: 'nowrap' }}>Deckkraft</span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={alpha}
+            onChange={(e) => setAlpha(Number(e.target.value))}
+            style={{ flex: 1, accentColor: '#111', cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
+        </div>
+      )}
     </div>
   );
 }
