@@ -8,6 +8,9 @@ export const bookingRequestSchema = z.object({
   nights: z.number().int().min(1).max(365),
   adults: z.number().int().min(1).max(50),
   children: z.number().int().min(0).max(50).optional().default(0),
+  street: z.string().max(200).optional().default(''),
+  zip: z.string().max(20).optional().default(''),
+  city: z.string().max(100).optional().default(''),
   child_birthdays: z.array(z.string().max(20)).optional().default([]),
   additional_guests: z.array(z.object({
     type: z.enum(['adult', 'child']),

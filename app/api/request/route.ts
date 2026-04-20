@@ -75,6 +75,9 @@ export async function POST(req: Request) {
     const salutation = body.salutation.trim();
     const firstname = body.firstname.trim();
     const lastname = body.lastname.trim();
+    const street = body.street.trim();
+    const zip = body.zip.trim();
+    const city = body.city.trim();
     const country = body.country.trim();
     const message = body.message.trim();
     const newsletter = body.newsletter;
@@ -351,7 +354,7 @@ export async function POST(req: Request) {
             ${buildDivider()}
             ${priceTable}
             ${buildDivider()}
-            ${buildInfoBlock('Kontakt', `${salutation ? salutation + ' ' : ''}${firstname} ${lastname}<br/>${email}${country ? '<br/>' + country : ''}`)}
+            ${buildInfoBlock('Kontakt', `${salutation ? salutation + ' ' : ''}${firstname} ${lastname}<br/>${email}<br/>${[street, [zip, city].filter(Boolean).join(' '), country].filter(Boolean).join('<br/>')}`)}
             ${message ? buildInfoBlock('Nachricht', message) : ''}
             <div style="font-size:12px;color:#9ca3af;margin-top:8px;">Newsletter: ${newsletter ? 'Ja' : 'Nein'}</div>
           `,

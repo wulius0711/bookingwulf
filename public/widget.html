@@ -518,6 +518,12 @@
         gap: 18px;
       }
 
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 18px;
+      }
+
       .guest-accordion {
         margin-top: 18px;
         border: 1px solid var(--line);
@@ -1342,7 +1348,8 @@
         .top,
         .layout,
         .grid-2,
-        .grid-3 {
+        .grid-3,
+        .grid-4 {
           grid-template-columns: 1fr;
         }
 
@@ -1468,7 +1475,8 @@
           display: none;
         }
 
-        .grid-2 {
+        .grid-2,
+        .grid-4 {
           grid-template-columns: 1fr;
         }
 
@@ -1637,12 +1645,22 @@
             <div class="content-card">
               <h2 class="title">Persönliche Angaben</h2>
               <p class="intro">
-                Bitte geben Sie mindestens Nachname und E-Mail Adresse ein.
+                Bitte füllen Sie alle Pflichtfelder aus.
               </p>
+
+              <div class="field-block" style="max-width:50%;margin-bottom:18px;">
+                <label class="label" for="salutation">Anrede</label>
+                <select id="salutation">
+                  <option value="">Bitte wählen</option>
+                  <option value="Herr">Herr</option>
+                  <option value="Frau">Frau</option>
+                  <option value="Divers">Divers</option>
+                </select>
+              </div>
 
               <div class="grid-2">
                 <div class="field-block">
-                  <label class="label" for="firstName">Vorname</label>
+                  <label class="label" for="firstName">Vorname<span class="required">*</span></label>
                   <input id="firstName" type="text" placeholder="Max" />
                 </div>
                 <div class="field-block">
@@ -1654,8 +1672,40 @@
                   <input id="email" type="email" placeholder="max@mustermann.com" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="phone">Telefon</label>
-                  <input id="phone" type="tel" placeholder="+49 123456789" />
+                  <label class="label" for="phone">Telefon<span class="required">*</span></label>
+                  <input id="phone" type="tel" placeholder="+43 123456789" />
+                </div>
+              </div>
+
+              <div class="grid-4" style="margin-top:18px;">
+                <div class="field-block">
+                  <label class="label" for="street">Straße, Hausnummer</label>
+                  <input id="street" type="text" placeholder="Musterstraße 1" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="zip">PLZ</label>
+                  <input id="zip" type="text" placeholder="1010" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="city">Ort</label>
+                  <input id="city" type="text" placeholder="Wien" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="country">Land</label>
+                  <select id="country">
+                    <option value="Österreich">Österreich</option>
+                    <option value="Deutschland">Deutschland</option>
+                    <option value="Schweiz">Schweiz</option>
+                    <option value="Italien">Italien</option>
+                    <option value="Frankreich">Frankreich</option>
+                    <option value="Niederlande">Niederlande</option>
+                    <option value="Belgien">Belgien</option>
+                    <option value="Polen">Polen</option>
+                    <option value="Tschechien">Tschechien</option>
+                    <option value="Spanien">Spanien</option>
+                    <option value="Vereinigtes Königreich">Vereinigtes Königreich</option>
+                    <option value="Sonstige">Sonstige</option>
+                  </select>
                 </div>
               </div>
 
@@ -3095,10 +3145,15 @@ sortedApartments.forEach((ap) => {
         }
 
         async function submitRequest(bookingType = "request") {
+          const salutation = document.getElementById("salutation")?.value.trim() || '';
           const firstName = document.getElementById("firstName").value.trim();
           const lastName = document.getElementById("lastName").value.trim();
           const email = document.getElementById("email").value.trim();
           const phone = document.getElementById("phone").value.trim();
+          const street = document.getElementById("street")?.value.trim() || '';
+          const zip = document.getElementById("zip")?.value.trim() || '';
+          const city = document.getElementById("city")?.value.trim() || '';
+          const country = document.getElementById("country")?.value.trim() || '';
           const notes = document.getElementById("notes").value.trim();
 
           const selectedApts = getSelectedApartments();
@@ -3120,10 +3175,10 @@ sortedApartments.forEach((ap) => {
             return;
           }
 
-          if (!lastName || !email) {
+          if (!firstName || !lastName || !email || !phone) {
             showMessage(
               "error",
-              "Bitte mindestens Nachname und E-Mail ausfüllen."
+              "Bitte alle Pflichtfelder ausfüllen (Vorname, Nachname, E-Mail, Telefon)."
             );
             return;
           }
@@ -3177,10 +3232,15 @@ sortedApartments.forEach((ap) => {
                 children: state.children,
                 child_birthdays: childBirthdays,
                 selected_apartments: apartmentIds,
+                salutation,
                 firstname: firstName,
                 lastname: lastName,
                 email,
                 phone,
+                street,
+                zip,
+                city,
+                country,
                 message,
                 extras: state.selectedExtras,
                 additional_guests: additionalGuests,
@@ -3205,10 +3265,14 @@ sortedApartments.forEach((ap) => {
                 : "Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet."
             );
 
+            document.getElementById("salutation").value = "";
             document.getElementById("firstName").value = "";
             document.getElementById("lastName").value = "";
             document.getElementById("email").value = "";
             document.getElementById("phone").value = "";
+            const streetEl = document.getElementById("street"); if (streetEl) streetEl.value = "";
+            const zipEl = document.getElementById("zip"); if (zipEl) zipEl.value = "";
+            const cityEl = document.getElementById("city"); if (cityEl) cityEl.value = "";
             document.getElementById("notes").value = "";
 
             state.selectedApartmentIds = [];
