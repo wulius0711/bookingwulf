@@ -511,9 +511,27 @@ function PreiseSection() {
         Dieser Preis gilt für alle Apartments in diesem Zeitraum, sofern kein apartmentspezifischer
         Preis angegeben ist.
       </Step>
-      <Step num={3} title="Speichern">
+      <Step num={3} title="Mindestaufenthalt (optional)">
+        Sie können pro Saison eine Mindestanzahl an Nächten festlegen. Apartments mit zu kurzem
+        Aufenthalt werden im Widget als nicht buchbar markiert.
+      </Step>
+      <Step num={4} title="Speichern">
         Die Saison ist sofort aktiv. Bei Überschneidungen gilt die spezifischere Saison.
       </Step>
+      <H2>Dynamische Preise</H2>
+      <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
+      <P>
+        Unter <strong>Einstellungen → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
+        aktivieren, der automatisch greift, wenn die Anreise innerhalb einer konfigurierbaren Anzahl
+        an Tagen liegt (z.B. 10 % Rabatt bei Anreise in den nächsten 7 Tagen). Im Widget wird der
+        Rabatt als grünes Badge angezeigt.
+      </P>
+      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
+      <P>
+        Wenn die Auslastung einen konfigurierbaren Schwellwert überschreitet (z.B. 80 % der
+        Apartments belegt), wird automatisch ein prozentualer Aufschlag auf den Preis angewendet.
+        Im Widget erscheint ein gelbes Badge mit dem Aufschlag.
+      </P>
       <Note>
         <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
         unter <InternalLink id="sperrzeiten">Sperrzeiten</InternalLink> verwaltet.
@@ -700,11 +718,11 @@ function AbonnementSection() {
           },
           {
             name: 'Pro', price: '€ 109 / Monat (€ 99 bei Jahreszahlung)',
-            features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preissaisons', 'Zusatzleistungen', 'Widget-Konfigurationen'],
+            features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preissaisons', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Widget-Konfigurationen'],
           },
           {
             name: 'Business', price: '€ 217 / Monat (€ 199 bei Jahreszahlung)',
-            features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Volles Branding', 'Priority Support'],
+            features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
           <div key={p.name} style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 18px' }}>

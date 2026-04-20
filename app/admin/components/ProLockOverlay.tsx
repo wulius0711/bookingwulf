@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ProLockOverlay() {
+export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'business' }) {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const router = useRouter();
+  const planLabel = plan === 'business' ? 'Business' : 'Pro';
 
   return (
     <>
@@ -32,7 +33,7 @@ export default function ProLockOverlay() {
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             zIndex: 9999,
           }}>
-            Ab Pro Plan verfügbar
+            Ab {planLabel} Plan verfügbar
           </span>
         )}
       </div>
@@ -65,10 +66,10 @@ export default function ProLockOverlay() {
           >
             <div style={{ fontSize: 36, marginBottom: 12 }}>🔒</div>
             <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>
-              Pro Feature
+              {planLabel} Feature
             </h2>
             <p style={{ margin: '0 0 24px', fontSize: 14, color: '#475569', lineHeight: 1.6 }}>
-              Dieses Feature ist ab dem Pro Plan verfügbar. Upgrade jetzt und schalte alle Pro-Features frei.
+              Dieses Feature ist ab dem {planLabel} Plan verfügbar. Upgrade jetzt und schalte alle {planLabel}-Features frei.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button

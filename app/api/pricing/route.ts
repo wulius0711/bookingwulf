@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
   if (nights <= 0) return NextResponse.json({ error: 'Invalid dates' }, { status: 400 });
 
-  const [apartment, settings] = await Promise.all([
+  const [apartment, settings, hotel] = await Promise.all([
     prisma.apartment.findUnique({
       where: { id: apartmentId },
       select: {
@@ -44,14 +44,20 @@ export async function GET(req: Request) {
         occupancySurchargeThreshold: true,
       },
     }),
+    prisma.hotel.findUnique({ where: { id: hotelId }, select: { plan: true } }),
   ]);
+
+  const planLevel: Record<string, number> = { starter: 0, pro: 1, business: 2 };
+  const plan = hotel?.plan ?? 'starter';
+  const hasPro = (planLevel[plan] ?? 0) >= 1;
+  const hasBusiness = (planLevel[plan] ?? 0) >= 2;
 
   if (!apartment) return NextResponse.json({ error: 'Apartment not found' }, { status: 404 });
 
   // Base price: use first matching season, else apartment base price
   const season = apartment.priceSeasons[0] ?? null;
   const pricePerNight = season ? Number(season.pricePerNight) : Number(apartment.basePrice ?? 0);
-  const minStay = season?.minStay ?? 1;
+  const minStay = hasPro ? (season?.minStay ?? 1) : 1;
   const cleaningFee = Number(apartment.cleaningFee ?? 0);
 
   let subtotal = pricePerNight * nights;
@@ -63,9 +69,9 @@ export async function GET(req: Request) {
     breakdown.push({ label: 'Reinigungsgebühr', amount: cleaningFee });
   }
 
-  // Last-minute discount
+  // Last-minute discount (Pro+)
   let discountPercent = 0;
-  if (settings?.lastMinuteDiscountPercent && settings.lastMinuteDiscountPercent > 0) {
+  if (hasPro && settings?.lastMinuteDiscountPercent && settings.lastMinuteDiscountPercent > 0) {
     const daysUntilArrival = Math.ceil((arrivalDate.getTime() - Date.now()) / 86400000);
     if (daysUntilArrival <= settings.lastMinuteDiscountDays && daysUntilArrival >= 0) {
       discountPercent = settings.lastMinuteDiscountPercent;
@@ -75,9 +81,9 @@ export async function GET(req: Request) {
     }
   }
 
-  // Occupancy surcharge
+  // Occupancy surcharge (Business only)
   let surchargePercent = 0;
-  if (settings?.occupancySurchargePercent && settings.occupancySurchargePercent > 0) {
+  if (hasBusiness && settings?.occupancySurchargePercent && settings.occupancySurchargePercent > 0) {
     const [allApartments, blockedCount] = await Promise.all([
       prisma.apartment.count({ where: { hotelId, isActive: true } }),
       prisma.blockedRange.count({
