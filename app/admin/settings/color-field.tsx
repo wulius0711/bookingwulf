@@ -32,11 +32,13 @@ export function ColorField({
   name,
   defaultValue,
   labelStyle,
+  showOpacity = false,
 }: {
   label: string;
   name: string;
   defaultValue: string;
   labelStyle: React.CSSProperties;
+  showOpacity?: boolean;
 }) {
   const parsed = parseColor(defaultValue);
   const [hex, setHex] = useState(parsed.hex);
@@ -71,17 +73,19 @@ export function ColorField({
         />
 
         {/* Opacity slider + value */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={alpha}
-            onChange={(e) => setAlpha(Number(e.target.value))}
-            style={{ width: 72, accentColor: '#111', cursor: 'pointer' }}
-          />
-          <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
-        </div>
+        {showOpacity && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={alpha}
+              onChange={(e) => setAlpha(Number(e.target.value))}
+              style={{ width: 72, accentColor: '#111', cursor: 'pointer' }}
+            />
+            <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
+          </div>
+        )}
 
         {/* Hidden input carries the combined value */}
         <input type="hidden" name={name} value={combined} />

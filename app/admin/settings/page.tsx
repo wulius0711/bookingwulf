@@ -389,6 +389,7 @@ export default async function Page({ searchParams }: PageProps) {
                       name={enabled ? name : `_disabled_${name}`}
                       defaultValue={value}
                       labelStyle={labelStyle}
+                      showOpacity={name === 'backgroundColor' || name === 'cardBackground'}
                     />
                   </div>
                   {!enabled && <ProLockOverlay />}
