@@ -87,13 +87,18 @@ export async function syncIcalFeed(feedId: number): Promise<{ synced: number; er
   }
 }
 
+const BATCH_SIZE = 10;
+
 export async function syncAllFeeds(): Promise<{ total: number; errors: number }> {
-  const feeds = await prisma.icalFeed.findMany();
+  const feeds = await prisma.icalFeed.findMany({ select: { id: true } });
   let errors = 0;
 
-  for (const feed of feeds) {
-    const result = await syncIcalFeed(feed.id);
-    if (result.error) errors++;
+  for (let i = 0; i < feeds.length; i += BATCH_SIZE) {
+    const batch = feeds.slice(i, i + BATCH_SIZE);
+    const results = await Promise.allSettled(batch.map((f) => syncIcalFeed(f.id)));
+    for (const r of results) {
+      if (r.status === 'rejected' || (r.status === 'fulfilled' && r.value.error)) errors++;
+    }
   }
 
   return { total: feeds.length, errors };

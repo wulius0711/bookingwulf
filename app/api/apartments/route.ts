@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -14,6 +15,9 @@ export async function OPTIONS() {
 }
 
 export async function GET(req: Request) {
+  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+  if (!rateLimit(`apartments:${ip}`, 60, 60_000).ok) return rateLimitResponse();
+
   try {
     const { searchParams } = new URL(req.url);
     const hotelSlug = searchParams.get('hotel');

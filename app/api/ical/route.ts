@@ -8,7 +8,12 @@ function escapeIcal(s: string): string {
   return s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 }
 
+import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
+
 export async function GET(req: Request) {
+  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+  if (!rateLimit(`ical:${ip}`, 20, 60_000).ok) return rateLimitResponse();
+
   const { searchParams } = new URL(req.url);
   const apartmentId = Number(searchParams.get('apartment') || 0);
   const hotelSlug = searchParams.get('hotel') || '';

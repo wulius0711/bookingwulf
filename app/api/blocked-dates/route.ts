@@ -1,4 +1,5 @@
 import { prisma } from '@/src/lib/prisma';
+import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,15 +14,22 @@ export async function OPTIONS() {
   });
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+  if (!rateLimit(`blocked-dates:${ip}`, 30, 60_000).ok) return rateLimitResponse();
+
   try {
     const blockedRanges = await prisma.blockedRange.findMany({
-      include: {
-        apartment: true,
+      select: {
+        id: true,
+        apartmentId: true,
+        startDate: true,
+        endDate: true,
+        type: true,
+        note: true,
+        apartment: { select: { name: true } },
       },
-      orderBy: {
-        startDate: 'asc',
-      },
+      orderBy: { startDate: 'asc' },
     });
 
     const formatted = blockedRanges.map((item) => ({

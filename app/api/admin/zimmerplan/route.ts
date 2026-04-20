@@ -12,6 +12,11 @@ export async function GET(request: Request) {
     return Response.json({ error: 'Invalid date' }, { status: 400 });
   }
 
-  const apartments = await buildZimmerplan(session.hotelId, date);
-  return Response.json({ apartments });
+  try {
+    const apartments = await buildZimmerplan(session.hotelId, date);
+    return Response.json({ apartments });
+  } catch (err) {
+    console.error('[zimmerplan]', err);
+    return Response.json({ error: 'Fehler beim Laden des Zimmerplans.' }, { status: 500 });
+  }
 }
