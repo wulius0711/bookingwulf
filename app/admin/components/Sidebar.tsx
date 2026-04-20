@@ -122,7 +122,7 @@ export default function Sidebar({ navItems, email, activeHotelId, userHotels, is
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ hotelId }),
     });
-    window.location.href = '/admin';
+    window.location.reload();
   }
 
   return (
