@@ -1709,6 +1709,7 @@
                 </div>
               </div>
 
+              <hr id="guestDividerBefore" style="display:none;border:none;border-top:1px solid var(--line);margin:22px 0;" />
               <div id="guestDataAccordion" style="display:none;" class="guest-accordion">
                 <button type="button" class="guest-accordion-toggle" id="guestAccordionToggle">
                   Gäste Daten
@@ -1718,6 +1719,7 @@
                   <div id="guestFieldsWrap"></div>
                 </div>
               </div>
+              <hr id="guestDividerAfter" style="display:none;border:none;border-top:1px solid var(--line);margin:22px 0;" />
 
               <div style="margin-top: 18px">
                 <label class="label" for="notes">Anmerkungen</label>
@@ -2886,7 +2888,12 @@ sortedApartments.forEach((ap) => {
           const accordion = document.getElementById('guestDataAccordion');
           if (!accordion) return;
           const totalGuests = (state.adults || 0) + (state.children || 0);
-          accordion.style.display = totalGuests > 1 ? '' : 'none';
+          const show = totalGuests > 1 ? '' : 'none';
+          accordion.style.display = show;
+          const divBefore = document.getElementById('guestDividerBefore');
+          const divAfter = document.getElementById('guestDividerAfter');
+          if (divBefore) divBefore.style.display = show;
+          if (divAfter) divAfter.style.display = show;
           if (totalGuests <= 1) return;
 
           const wrap = document.getElementById('guestFieldsWrap');
