@@ -1595,6 +1595,8 @@
                 </div>
               </div>
 
+              <div id="childBirthdaysWrap"></div>
+
               <div style="margin-top: 18px">
                 <label class="label" for="notes">Anmerkungen</label>
                 <textarea id="notes" placeholder="Besondere Wünsche, Anreisezeit, weitere Hinweise"></textarea>
@@ -2733,6 +2735,31 @@ sortedApartments.forEach((ap) => {
             '</label>';
         }
 
+        function renderChildBirthdays() {
+          const wrap = document.getElementById('childBirthdaysWrap');
+          if (!wrap) return;
+          const count = state.children || 0;
+          if (count === 0) { wrap.innerHTML = ''; return; }
+          const existing = wrap.querySelectorAll('input[type="date"]');
+          const currentValues = Array.from(existing).map(el => el.value);
+          wrap.innerHTML = '';
+          for (let i = 0; i < count; i++) {
+            const div = document.createElement('div');
+            div.style.marginTop = '18px';
+            const label = document.createElement('label');
+            label.className = 'label';
+            label.setAttribute('for', `childBirthday_${i}`);
+            label.textContent = count === 1 ? 'Geburtsdatum Kind' : `Geburtsdatum Kind ${i + 1}`;
+            const input = document.createElement('input');
+            input.type = 'date';
+            input.id = `childBirthday_${i}`;
+            input.value = currentValues[i] || '';
+            div.appendChild(label);
+            div.appendChild(input);
+            wrap.appendChild(div);
+          }
+        }
+
         function renderAll() {
           renderSteps();
           renderApartments();
@@ -2740,6 +2767,7 @@ sortedApartments.forEach((ap) => {
           renderSummary();
           renderLightbox();
           renderTermsCheckbox();
+          renderChildBirthdays();
         }
 
         function validateStep(step) {
@@ -2954,6 +2982,10 @@ sortedApartments.forEach((ap) => {
           const nights = getNights();
           const apartmentIds = selectedApts.map((a) => a.id).join(",");
           const message = notes || "";
+          const childBirthdays = Array.from({ length: state.children || 0 }, (_, i) => {
+            const el = document.getElementById(`childBirthday_${i}`);
+            return el ? el.value : '';
+          }).filter(Boolean);
 
           try {
             const res = await fetch(`${API_BASE}/api/request`, {
@@ -2968,6 +3000,7 @@ sortedApartments.forEach((ap) => {
                 nights,
                 adults: state.adults,
                 children: state.children,
+                child_birthdays: childBirthdays,
                 selected_apartments: apartmentIds,
                 firstname: firstName,
                 lastname: lastName,
@@ -3048,6 +3081,7 @@ sortedApartments.forEach((ap) => {
           .addEventListener("change", async (e) => {
             state.children = Number(e.target.value);
             renderAll();
+            renderChildBirthdays();
             await updateAvailabilityForApartments();
           });
 

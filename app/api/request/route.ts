@@ -56,6 +56,7 @@ export async function POST(req: Request) {
     const nights = body.nights;
     const adults = body.adults;
     const children = body.children;
+    const childBirthdays: string[] = Array.isArray(body.child_birthdays) ? body.child_birthdays.filter((v: unknown) => typeof v === 'string' && v) : [];
     const selectedApartmentIdsRaw = body.selected_apartments.trim();
 
     // Support both object format {key: true/false} and array format [key1, key2]
@@ -336,6 +337,7 @@ export async function POST(req: Request) {
           body: `
             ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}
             ${buildInfoBlock('Gäste', `${adults} Erwachsene${children ? `, ${children} Kinder` : ''}`)}
+            ${childBirthdays.length ? buildInfoBlock('Geburtstage Kinder', childBirthdays.map((d, i) => `Kind ${i + 1}: ${d}`).join('<br/>')) : ''}
             ${buildInfoBlock('Apartments', apartmentNames)}
             ${buildDivider()}
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Zusatzleistungen</div>
