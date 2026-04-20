@@ -3030,7 +3030,7 @@ sortedApartments.forEach((ap) => {
                 ? '<div style="' + cardStyle + '">' +
                     '<span style="' + labelStyle + '">Anfrage</span>' +
                     '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
-                      '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Ihre Anfrage ist unverbindlich.</div>' +
+                      '<div style="font-size:13px;color:var(--muted);">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</div>' +
                       '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
                     '</div>' +
                   '</div>'
@@ -3064,7 +3064,7 @@ sortedApartments.forEach((ap) => {
             });
           } else {
             area.innerHTML =
-              '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Keine Bezahlung vorab notwendig. Ihre Anfrage ist unverbindlich.</span></div>' +
+              '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</span></div>' +
               '<div class="nav-row" style="margin-top:14px;">' +
                 '<button class="btn-light" data-prev>Zur\u00fcck</button>' +
                 '<button type="button" id="submitBtn" class="btn"' + disabled + '>Anfrage senden</button>' +
