@@ -38,6 +38,7 @@ export async function saveWidgetConfig(formData: FormData) {
     showMessageField: formData.get('showMessageField') === 'on',
     enableImageSlider: formData.get('enableImageSlider') === 'on',
     enableInstantBooking: formData.get('enableInstantBooking') === 'on',
+    hideRequestOption: formData.get('hideRequestOption') === 'on',
   };
 
   if (configId) {

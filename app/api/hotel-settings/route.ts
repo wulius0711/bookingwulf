@@ -73,6 +73,7 @@ export async function GET(req: Request) {
           enableImageSlider: widgetConfig.enableImageSlider,
           enableInstantBooking: widgetConfig.enableInstantBooking,
           instantBooking: widgetConfig.enableInstantBooking,
+          hideRequestOption: widgetConfig.hideRequestOption,
         }
       : settings;
 

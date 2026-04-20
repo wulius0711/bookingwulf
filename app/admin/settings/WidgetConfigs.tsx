@@ -19,6 +19,7 @@ type Config = {
   showMessageField: boolean;
   enableImageSlider: boolean;
   enableInstantBooking: boolean;
+  hideRequestOption: boolean;
 };
 
 type Props = {
@@ -46,6 +47,7 @@ const defaults: Omit<Config, 'id' | 'name' | 'slug'> = {
   showMessageField: true,
   enableImageSlider: true,
   enableInstantBooking: false,
+  hideRequestOption: false,
 };
 
 export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Props) {
@@ -64,7 +66,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
   }
 
   function openEdit(c: Config) {
-    setForm({ name: c.name, showPrices: c.showPrices, showAmenities: c.showAmenities, showExtrasStep: c.showExtrasStep, showPhoneField: c.showPhoneField, showMessageField: c.showMessageField, enableImageSlider: c.enableImageSlider, enableInstantBooking: c.enableInstantBooking });
+    setForm({ name: c.name, showPrices: c.showPrices, showAmenities: c.showAmenities, showExtrasStep: c.showExtrasStep, showPhoneField: c.showPhoneField, showMessageField: c.showMessageField, enableImageSlider: c.enableImageSlider, enableInstantBooking: c.enableInstantBooking, hideRequestOption: c.hideRequestOption });
     setEditing(c);
   }
 
@@ -142,6 +144,17 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
                     {key === 'enableInstantBooking' && <InfoTooltip text="Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt." />}
                   </label>
                 ))}
+                {form.enableInstantBooking && (
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 10, background: '#fffbeb', cursor: 'pointer', fontSize: 14, marginLeft: 20 }}>
+                    <input
+                      type="checkbox"
+                      name="hideRequestOption"
+                      checked={form.hideRequestOption}
+                      onChange={() => toggle('hideRequestOption')}
+                    />
+                    <span style={{ flex: 1 }}>Nur Buchung — Anfrage ausblenden</span>
+                  </label>
+                )}
               </div>
 
               <div style={{ display: 'flex', gap: 10 }}>

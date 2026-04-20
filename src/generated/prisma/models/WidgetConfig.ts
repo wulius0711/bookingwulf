@@ -48,6 +48,7 @@ export type WidgetConfigMinAggregateOutputType = {
   showMessageField: boolean | null
   enableImageSlider: boolean | null
   enableInstantBooking: boolean | null
+  hideRequestOption: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +65,7 @@ export type WidgetConfigMaxAggregateOutputType = {
   showMessageField: boolean | null
   enableImageSlider: boolean | null
   enableInstantBooking: boolean | null
+  hideRequestOption: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -80,6 +82,7 @@ export type WidgetConfigCountAggregateOutputType = {
   showMessageField: number
   enableImageSlider: number
   enableInstantBooking: number
+  hideRequestOption: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -108,6 +111,7 @@ export type WidgetConfigMinAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableInstantBooking?: true
+  hideRequestOption?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +128,7 @@ export type WidgetConfigMaxAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableInstantBooking?: true
+  hideRequestOption?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -140,6 +145,7 @@ export type WidgetConfigCountAggregateInputType = {
   showMessageField?: true
   enableImageSlider?: true
   enableInstantBooking?: true
+  hideRequestOption?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -243,6 +249,7 @@ export type WidgetConfigGroupByOutputType = {
   showMessageField: boolean
   enableImageSlider: boolean
   enableInstantBooking: boolean
+  hideRequestOption: boolean
   createdAt: Date
   updatedAt: Date
   _count: WidgetConfigCountAggregateOutputType | null
@@ -282,6 +289,7 @@ export type WidgetConfigWhereInput = {
   showMessageField?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableImageSlider?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableInstantBooking?: Prisma.BoolFilter<"WidgetConfig"> | boolean
+  hideRequestOption?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -299,6 +307,7 @@ export type WidgetConfigOrderByWithRelationInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableInstantBooking?: Prisma.SortOrder
+  hideRequestOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
@@ -320,6 +329,7 @@ export type WidgetConfigWhereUniqueInput = Prisma.AtLeast<{
   showMessageField?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableImageSlider?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableInstantBooking?: Prisma.BoolFilter<"WidgetConfig"> | boolean
+  hideRequestOption?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -337,6 +347,7 @@ export type WidgetConfigOrderByWithAggregationInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableInstantBooking?: Prisma.SortOrder
+  hideRequestOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.WidgetConfigCountOrderByAggregateInput
@@ -361,6 +372,7 @@ export type WidgetConfigScalarWhereWithAggregatesInput = {
   showMessageField?: Prisma.BoolWithAggregatesFilter<"WidgetConfig"> | boolean
   enableImageSlider?: Prisma.BoolWithAggregatesFilter<"WidgetConfig"> | boolean
   enableInstantBooking?: Prisma.BoolWithAggregatesFilter<"WidgetConfig"> | boolean
+  hideRequestOption?: Prisma.BoolWithAggregatesFilter<"WidgetConfig"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WidgetConfig"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WidgetConfig"> | Date | string
 }
@@ -375,6 +387,7 @@ export type WidgetConfigCreateInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel: Prisma.HotelCreateNestedOneWithoutWidgetConfigsInput
@@ -392,6 +405,7 @@ export type WidgetConfigUncheckedCreateInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -406,6 +420,7 @@ export type WidgetConfigUpdateInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneRequiredWithoutWidgetConfigsNestedInput
@@ -423,6 +438,7 @@ export type WidgetConfigUncheckedUpdateInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -439,6 +455,7 @@ export type WidgetConfigCreateManyInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -453,6 +470,7 @@ export type WidgetConfigUpdateManyMutationInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -469,6 +487,7 @@ export type WidgetConfigUncheckedUpdateManyInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -500,6 +519,7 @@ export type WidgetConfigCountOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableInstantBooking?: Prisma.SortOrder
+  hideRequestOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -521,6 +541,7 @@ export type WidgetConfigMaxOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableInstantBooking?: Prisma.SortOrder
+  hideRequestOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -537,6 +558,7 @@ export type WidgetConfigMinOrderByAggregateInput = {
   showMessageField?: Prisma.SortOrder
   enableImageSlider?: Prisma.SortOrder
   enableInstantBooking?: Prisma.SortOrder
+  hideRequestOption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -598,6 +620,7 @@ export type WidgetConfigCreateWithoutHotelInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -613,6 +636,7 @@ export type WidgetConfigUncheckedCreateWithoutHotelInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -658,6 +682,7 @@ export type WidgetConfigScalarWhereInput = {
   showMessageField?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableImageSlider?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   enableInstantBooking?: Prisma.BoolFilter<"WidgetConfig"> | boolean
+  hideRequestOption?: Prisma.BoolFilter<"WidgetConfig"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WidgetConfig"> | Date | string
 }
@@ -673,6 +698,7 @@ export type WidgetConfigCreateManyHotelInput = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -687,6 +713,7 @@ export type WidgetConfigUpdateWithoutHotelInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -702,6 +729,7 @@ export type WidgetConfigUncheckedUpdateWithoutHotelInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -717,6 +745,7 @@ export type WidgetConfigUncheckedUpdateManyWithoutHotelInput = {
   showMessageField?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableImageSlider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableInstantBooking?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hideRequestOption?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -735,6 +764,7 @@ export type WidgetConfigSelect<ExtArgs extends runtime.Types.Extensions.Internal
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -752,6 +782,7 @@ export type WidgetConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -769,6 +800,7 @@ export type WidgetConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -786,11 +818,12 @@ export type WidgetConfigSelectScalar = {
   showMessageField?: boolean
   enableImageSlider?: boolean
   enableInstantBooking?: boolean
+  hideRequestOption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WidgetConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "slug" | "name" | "showPrices" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableInstantBooking" | "createdAt" | "updatedAt", ExtArgs["result"]["widgetConfig"]>
+export type WidgetConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "slug" | "name" | "showPrices" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableInstantBooking" | "hideRequestOption" | "createdAt" | "updatedAt", ExtArgs["result"]["widgetConfig"]>
 export type WidgetConfigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -818,6 +851,7 @@ export type $WidgetConfigPayload<ExtArgs extends runtime.Types.Extensions.Intern
     showMessageField: boolean
     enableImageSlider: boolean
     enableInstantBooking: boolean
+    hideRequestOption: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["widgetConfig"]>
@@ -1255,6 +1289,7 @@ export interface WidgetConfigFieldRefs {
   readonly showMessageField: Prisma.FieldRef<"WidgetConfig", 'Boolean'>
   readonly enableImageSlider: Prisma.FieldRef<"WidgetConfig", 'Boolean'>
   readonly enableInstantBooking: Prisma.FieldRef<"WidgetConfig", 'Boolean'>
+  readonly hideRequestOption: Prisma.FieldRef<"WidgetConfig", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"WidgetConfig", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WidgetConfig", 'DateTime'>
 }

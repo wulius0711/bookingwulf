@@ -1895,6 +1895,7 @@
             enableImageSlider: true,
             instantBooking: false,
             enableInstantBooking: false,
+            hideRequestOption: false,
           },
         };
 
@@ -1979,6 +1980,7 @@
             state.settings.enableImageSlider = ft.enableImageSlider !== false;
             state.settings.instantBooking = !!ft.instantBooking;
             state.settings.enableInstantBooking = !!ft.enableInstantBooking;
+            state.settings.hideRequestOption = !!ft.hideRequestOption;
 
             // Apply DOM toggles for static fields
             const phoneWrap = document.getElementById("phone")?.closest(".field-block");
@@ -3020,14 +3022,17 @@ sortedApartments.forEach((ap) => {
             const depositText = deposit > 0 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',') : '\u2014';
             const cardStyle = 'position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 14px;margin-top:20px;';
             const labelStyle = 'position:absolute;top:-10px;left:12px;background:var(--surface-2,var(--surface,#fff));padding:0 6px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;';
+            const hideRequest = state.settings.hideRequestOption;
             area.innerHTML =
-              '<div style="' + cardStyle + '">' +
-                '<span style="' + labelStyle + '">Anfrage</span>' +
-                '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
-                  '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
-                  '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
-                '</div>' +
-              '</div>' +
+              (!hideRequest
+                ? '<div style="' + cardStyle + '">' +
+                    '<span style="' + labelStyle + '">Anfrage</span>' +
+                    '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
+                      '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
+                      '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
+                    '</div>' +
+                  '</div>'
+                : '') +
               '<div style="' + cardStyle + '">' +
                 '<span style="' + labelStyle + '">Buchung</span>' +
                 '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:500;font-size:14px;">' +

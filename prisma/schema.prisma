@@ -57,6 +57,7 @@ model HotelSettings {
   enableLightbox       Boolean @default(true)
   instantBooking       Boolean @default(false)
   enableInstantBooking Boolean @default(false)
+  hideRequestOption    Boolean @default(false)
 
   // 🎨 Colors
   accentColor      String?  // Primary highlight
@@ -102,6 +103,7 @@ model WidgetConfig {
   showMessageField     Boolean @default(true)
   enableImageSlider    Boolean @default(true)
   enableInstantBooking Boolean @default(false)
+  hideRequestOption    Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

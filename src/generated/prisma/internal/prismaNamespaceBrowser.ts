@@ -121,6 +121,7 @@ export const HotelSettingsScalarFieldEnum = {
   enableLightbox: 'enableLightbox',
   instantBooking: 'instantBooking',
   enableInstantBooking: 'enableInstantBooking',
+  hideRequestOption: 'hideRequestOption',
   accentColor: 'accentColor',
   backgroundColor: 'backgroundColor',
   cardBackground: 'cardBackground',
@@ -155,6 +156,7 @@ export const WidgetConfigScalarFieldEnum = {
   showMessageField: 'showMessageField',
   enableImageSlider: 'enableImageSlider',
   enableInstantBooking: 'enableInstantBooking',
+  hideRequestOption: 'hideRequestOption',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
