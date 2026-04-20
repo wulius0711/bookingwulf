@@ -48,9 +48,12 @@ export default async function NukiPage() {
         <h1 style={{ margin: 0 }}>Schlüsselloses Einchecken</h1>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>
       </div>
-      <p style={{ margin: '0 0 32px', fontSize: 14, color: '#6b7280' }}>
+      <p style={{ margin: '0 0 16px', fontSize: 14, color: '#6b7280' }}>
         Verbinden Sie Ihre Nuki-Schlösser. Bei Sofortbuchungen erhalten Gäste automatisch einen zeitlich begrenzten Zugangscode per E-Mail.
       </p>
+      <div style={{ margin: '0 0 32px', padding: '12px 16px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 13, color: '#1d4ed8', lineHeight: 1.6 }}>
+        Falls die Code-Generierung fehlschlägt (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert und Sie erhalten automatisch eine E-Mail-Benachrichtigung, um den Zugang manuell bereitzustellen.
+      </div>
 
       <NukiClient
         initialConnected={connected}

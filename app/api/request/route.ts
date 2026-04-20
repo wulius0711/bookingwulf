@@ -244,6 +244,23 @@ export async function POST(req: Request) {
         }
       } catch (nukiErr) {
         console.error('Nuki code generation failed:', nukiErr);
+        try {
+          const resend = getResend();
+          const receiverEmail = hotel.email || process.env.BOOKING_RECEIVER_EMAIL;
+          if (resend && receiverEmail) {
+            await resend.emails.send({
+              from: getFromEmail(),
+              to: receiverEmail,
+              subject: `Nuki-Fehler: Zugangscode für Buchung #${requestEntry.id} konnte nicht erstellt werden`,
+              html: `<p>Hallo,</p>
+<p>bei der Buchung <strong>#${requestEntry.id}</strong> von <strong>${firstname} ${lastname}</strong> (${formatDate(arrival)} – ${formatDate(departure)}) konnte kein Nuki-Zugangscode generiert werden.</p>
+<p>Bitte stellen Sie dem Gast den Zugang manuell bereit.</p>
+<p style="color:#6b7280;font-size:13px;">Technischer Fehler: ${nukiErr instanceof Error ? nukiErr.message : String(nukiErr)}</p>`,
+            });
+          }
+        } catch (mailErr) {
+          console.error('Failed to send Nuki error email:', mailErr);
+        }
       }
     }
 

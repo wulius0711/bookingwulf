@@ -801,7 +801,7 @@ function NukiSection() {
         <li>Pro Apartment kann genau ein Schloss zugewiesen werden.</li>
         <li>Der Code läuft nach der Abreise automatisch ab (wird von Nuki deaktiviert).</li>
         <li>Bei reinen Anfragen (kein Sofortbuchungs-Modus) wird kein Code generiert.</li>
-        <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code.</li>
+        <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code. Sie erhalten in diesem Fall automatisch eine E-Mail-Benachrichtigung, damit Sie den Zugang manuell bereitstellen können.</li>
         <li>Den API-Token können Sie jederzeit aktualisieren oder die Verbindung trennen.</li>
       </ul>
     </div>
