@@ -217,6 +217,7 @@ type ToggleKey =
   | 'showMessageField'
   | 'enableImageSlider'
   | 'enableInstantBooking'
+  | 'hideRequestOption'
 
 const featureToggles: [ToggleKey, string][] = [
   ['showPrices', 'Preise anzeigen'],
@@ -553,6 +554,24 @@ export default async function Page({ searchParams }: PageProps) {
                   </label>
                 </div>
               ))}
+              {(() => {
+                const instantOn = !!selected.settings?.enableInstantBooking;
+                return (
+                  <div className="settings-row" style={{ ...checkboxRowStyle, opacity: instantOn ? 1 : 0.4, paddingLeft: 20 }}>
+                    <label style={labelStyle}>Nur Buchung — Anfrage ausblenden</label>
+                    <label style={checkboxBoxStyle}>
+                      <input
+                        key={String(selected.settings?.hideRequestOption ?? false)}
+                        type="checkbox"
+                        name="hideRequestOption"
+                        defaultChecked={!!selected.settings?.hideRequestOption}
+                        disabled={!instantOn}
+                      />
+                      Aktiv
+                    </label>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* ACTIONS */}
