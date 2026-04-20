@@ -580,6 +580,74 @@
         margin-top: 0;
       }
 
+      .payment-accordion {
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .payment-accordion-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: var(--surface-2);
+        cursor: pointer;
+        user-select: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: none;
+        width: 100%;
+        text-align: left;
+        color: var(--text);
+      }
+
+      .payment-accordion-toggle svg {
+        transition: transform 0.2s;
+        flex-shrink: 0;
+      }
+
+      .payment-accordion-toggle.open svg {
+        transform: rotate(180deg);
+      }
+
+      .payment-accordion-body {
+        display: none;
+        padding: 20px 16px;
+        border-top: 1px solid var(--line);
+        background: var(--surface-2);
+      }
+
+      .payment-accordion-body.open {
+        display: block;
+      }
+
+      .payment-option-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .payment-benefit {
+        font-size: 13px;
+        color: var(--success);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .payment-desc {
+        font-size: 14px;
+        color: var(--text);
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+
       .apt-card {
         position: relative;
         display: flex;
@@ -1727,6 +1795,30 @@
               </div>
 
 
+
+              <div id="paymentAccordion" style="display:none;" class="payment-accordion">
+                <button type="button" class="payment-accordion-toggle" id="paymentAccordionToggle">
+                  Ihre Zahlungsoptionen
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="payment-accordion-body" id="paymentAccordionBody">
+                  <div class="payment-option-title">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/></svg>
+                    Standard Buchung
+                  </div>
+                  <div class="payment-benefit">✓ Keine Kreditkarte nötig</div>
+                  <div class="payment-desc">
+                    Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von <strong id="depositAmount">—</strong> innerhalb von 7 Tagen.
+                  </div>
+                  <div class="field-block">
+                    <label class="label" for="paymentMethod">Zahlungsmethode<span class="required">*</span></label>
+                    <select id="paymentMethod">
+                      <option value="">Bitte wählen</option>
+                      <option value="Banküberweisung">Banküberweisung</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
               <div id="termsCheckboxWrap" style="margin-top: 18px; display: none;"></div>
 
@@ -2959,6 +3051,20 @@ sortedApartments.forEach((ap) => {
           }
         }
 
+        function renderPaymentAccordion() {
+          const accordion = document.getElementById('paymentAccordion');
+          if (!accordion) return;
+          if (!state.settings.enableInstantBooking) {
+            accordion.style.display = 'none';
+            return;
+          }
+          accordion.style.display = '';
+          const total = getTotal();
+          const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
+          const el = document.getElementById('depositAmount');
+          if (el) el.textContent = deposit > 0 ? '€\u00a0' + deposit.toFixed(2).replace('.', ',') : '—';
+        }
+
         function renderAll() {
           renderSteps();
           renderApartments();
@@ -2968,6 +3074,7 @@ sortedApartments.forEach((ap) => {
           renderTermsCheckbox();
           renderChildBirthdays();
           renderGuestFields();
+          renderPaymentAccordion();
         }
 
         function validateStep(step) {
@@ -3152,6 +3259,7 @@ sortedApartments.forEach((ap) => {
         }
 
         async function submitRequest(bookingType = "request") {
+          const paymentMethod = document.getElementById("paymentMethod")?.value.trim() || '';
           const salutation = document.getElementById("salutation")?.value.trim() || '';
           const firstName = document.getElementById("firstName").value.trim();
           const lastName = document.getElementById("lastName").value.trim();
@@ -3187,6 +3295,11 @@ sortedApartments.forEach((ap) => {
               "error",
               "Bitte alle Pflichtfelder ausfüllen (Vorname, Nachname, E-Mail, Telefon)."
             );
+            return;
+          }
+
+          if (state.settings.enableInstantBooking && !paymentMethod) {
+            showMessage("error", "Bitte eine Zahlungsmethode auswählen.");
             return;
           }
 
@@ -3240,6 +3353,7 @@ sortedApartments.forEach((ap) => {
                 child_birthdays: childBirthdays,
                 selected_apartments: apartmentIds,
                 salutation,
+                payment_method: paymentMethod,
                 firstname: firstName,
                 lastname: lastName,
                 email,
@@ -3414,6 +3528,12 @@ sortedApartments.forEach((ap) => {
 
         document.getElementById('guestAccordionToggle').addEventListener('click', function () {
           const body = document.getElementById('guestAccordionBody');
+          const isOpen = body.classList.toggle('open');
+          this.classList.toggle('open', isOpen);
+        });
+
+        document.getElementById('paymentAccordionToggle').addEventListener('click', function () {
+          const body = document.getElementById('paymentAccordionBody');
           const isOpen = body.classList.toggle('open');
           this.classList.toggle('open', isOpen);
         });
