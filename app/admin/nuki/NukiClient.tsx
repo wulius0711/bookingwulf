@@ -35,7 +35,7 @@ const btnPrimary: React.CSSProperties = {
   padding: '10px 20px',
   borderRadius: 8,
   border: 'none',
-  background: '#111',
+  background: '#4f46e5',
   color: '#fff',
   fontSize: 14,
   fontWeight: 600,

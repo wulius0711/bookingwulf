@@ -183,7 +183,7 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
               </div>
 
               <div>
-                <button type="submit" style={{ padding: '11px 20px', borderRadius: 8, background: '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                <button type="submit" style={{ padding: '11px 20px', borderRadius: 8, background: '#4f46e5', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                   Anlegen
                 </button>
               </div>

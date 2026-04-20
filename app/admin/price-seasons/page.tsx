@@ -61,7 +61,7 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
         <h1 style={{ margin: 0 }}>Preiszeiträume</h1>
 
         <Link href="/admin/price-seasons/new">
-          <button style={{ padding: '10px 16px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
+          <button style={{ padding: '10px 16px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
             Neu anlegen
           </button>
         </Link>
@@ -96,7 +96,7 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
       {seasons.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 20px', marginTop: 20 }}>
           <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Keine Preiszeiträume vorhanden.</p>
-          <a href="/admin/price-seasons/new" style={{ padding: '10px 20px', borderRadius: 8, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+          <a href="/admin/price-seasons/new" style={{ padding: '10px 20px', borderRadius: 8, background: '#4f46e5', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
             Neue Preissaison anlegen
           </a>
         </div>

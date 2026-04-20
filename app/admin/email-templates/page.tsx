@@ -204,7 +204,7 @@ export default async function EmailTemplatesPage() {
             <div>
               <button
                 type="submit"
-                style={{ padding: '11px 24px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}
+                style={{ padding: '11px 24px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}
               >
                 Speichern
               </button>

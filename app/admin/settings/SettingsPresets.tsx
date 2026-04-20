@@ -102,7 +102,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={labelStyle}>Gespeicherte Presets ({presets.length}/3)</span>
         {presets.length < 3 && !showNameInput && (
-          <button type="button" onClick={() => setShowNameInput(true)} style={{ ...presetBtnStyle, background: '#111827', color: '#fff', border: 'none' }}>
+          <button type="button" onClick={() => setShowNameInput(true)} style={{ ...presetBtnStyle, background: '#4f46e5', color: '#fff', border: 'none' }}>
             + Speichern
           </button>
         )}
@@ -118,7 +118,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
             placeholder="Preset-Name"
             style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }}
           />
-          <button type="button" onClick={savePreset} disabled={saving || !nameInput.trim()} style={{ ...presetBtnStyle, background: '#111827', color: '#fff', border: 'none' }}>
+          <button type="button" onClick={savePreset} disabled={saving || !nameInput.trim()} style={{ ...presetBtnStyle, background: '#4f46e5', color: '#fff', border: 'none' }}>
             {saving ? '…' : 'OK'}
           </button>
           <button type="button" onClick={() => setShowNameInput(false)} style={presetBtnStyle}>Abbrechen</button>

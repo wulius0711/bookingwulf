@@ -165,7 +165,7 @@ const actionRowStyle: React.CSSProperties = {
 const primaryButtonStyle: React.CSSProperties = {
   padding: '10px 16px',
   borderRadius: 8,
-  background: '#111111',
+  background: '#4f46e5',
   color: '#ffffff',
   border: '1px solid #ffffff',
   cursor: 'pointer',

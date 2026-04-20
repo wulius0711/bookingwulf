@@ -44,7 +44,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
               style={{
                 display: 'inline-block',
                 padding: '11px 24px',
-                background: '#111',
+                background: '#4f46e5',
                 color: '#fff',
                 borderRadius: 8,
                 fontSize: 14,
@@ -126,7 +126,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
             style={{
               display: 'inline-block',
               padding: '12px 28px',
-              background: '#111',
+              background: '#4f46e5',
               color: '#fff',
               borderRadius: 8,
               fontSize: 15,
@@ -220,7 +220,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
                   padding: '10px 24px',
                   borderRadius: 8,
                   border: 'none',
-                  background: '#111',
+                  background: '#4f46e5',
                   color: '#fff',
                   fontSize: 14,
                   fontWeight: 600,

@@ -73,7 +73,7 @@ export default function ProLockOverlay() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button
                 onClick={() => router.push('/admin/billing')}
-                style={{ padding: '10px 20px', borderRadius: 8, background: '#111827', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+                style={{ padding: '10px 20px', borderRadius: 8, background: '#4f46e5', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
               >
                 Zu den Plänen
               </button>
