@@ -616,7 +616,7 @@ function EmailsSection() {
       <P>
         Templates werden immer auf Deutsch bearbeitet. Die tatsächlich versendete E-Mail wird
         automatisch in die Sprache übersetzt, die für die jeweilige Buchung eingestellt ist
-        (Deutsch, Englisch oder Italienisch).
+        (Deutsch, Englisch, Italienisch, Französisch, Niederländisch, Spanisch, Polnisch, Tschechisch oder Russisch).
       </P>
       <Note>
         <strong>Hinweis:</strong> Wenn Sie den Status auf <strong>„Beantwortet"</strong> setzen,
