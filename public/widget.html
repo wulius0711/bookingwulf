@@ -3017,12 +3017,18 @@ sortedApartments.forEach((ap) => {
             const total = getTotal();
             const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
             const depositText = deposit > 0 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',') : '\u2014';
+            const cardStyle = 'position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 14px;margin-top:20px;';
+            const labelStyle = 'position:absolute;top:-10px;left:12px;background:var(--surface-2,var(--surface,#fff));padding:0 6px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;';
             area.innerHTML =
-              '<div style="border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
-                '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
-                '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
+              '<div style="' + cardStyle + '">' +
+                '<span style="' + labelStyle + '">Anfrage</span>' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
+                  '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
+                  '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
+                '</div>' +
               '</div>' +
-              '<div style="border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:10px;">' +
+              '<div style="' + cardStyle + '">' +
+                '<span style="' + labelStyle + '">Buchung</span>' +
                 '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:500;font-size:14px;">' +
                   'Zahlungsoptionen' +
                   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
@@ -3039,7 +3045,7 @@ sortedApartments.forEach((ap) => {
                   '</div>' +
                 '</div>' +
                 '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
-                  '<button type="button" id="submitBtn"' + disabled + '>Verbindlich buchen</button>' +
+                  '<button type="button" id="submitBtn" class="btn"' + disabled + '>Verbindlich buchen</button>' +
                 '</div>' +
               '</div>';
 
