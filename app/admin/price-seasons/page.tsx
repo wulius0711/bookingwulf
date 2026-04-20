@@ -1,8 +1,11 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { writeAuditLog } from '@/src/lib/audit';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Link from 'next/link';
+import { revalidatePath } from 'next/cache';
 import PriceSeasonList from './PriceSeasonList';
+import ProLockOverlay from '../components/ProLockOverlay';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +36,33 @@ async function deleteSeason(formData: FormData) {
   }
 }
 
+async function saveDynamicPricing(formData: FormData) {
+  'use server';
+  const session = await verifySession();
+  const hotelId = Number(formData.get('hotelId') || 0);
+  if (!hotelId) return;
+  if (session.hotelId !== null && hotelId !== session.hotelId) return;
+
+  await prisma.hotelSettings.upsert({
+    where: { hotelId },
+    update: {
+      lastMinuteDiscountPercent: parseInt(String(formData.get('lastMinuteDiscountPercent') || '0')) || 0,
+      lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
+      occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
+      occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
+    },
+    create: {
+      hotelId,
+      lastMinuteDiscountPercent: parseInt(String(formData.get('lastMinuteDiscountPercent') || '0')) || 0,
+      lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
+      occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
+      occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
+    },
+  });
+
+  revalidatePath('/admin/price-seasons');
+}
+
 export default async function PriceSeasonsPage({ searchParams }: PageProps) {
   const session = await verifySession();
   const { hotel } = await searchParams;
@@ -46,6 +76,14 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
   const selectedHotelId = isSuperAdmin
     ? (hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : null)
     : session.hotelId;
+
+  const hotelData = selectedHotelId !== null
+    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true } } } })
+    : null;
+
+  const hasPro = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
+  const hasBusiness = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'business');
+  const s = hotelData?.settings;
 
   const seasons = await prisma.priceSeason.findMany({
     where: selectedHotelId !== null
@@ -103,6 +141,64 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
       ) : (
         <div style={{ marginTop: 20 }}>
           <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} isSuperAdmin={isSuperAdmin} />
+        </div>
+      )}
+
+      {/* DYNAMIC PRICING */}
+      {selectedHotelId !== null && (
+        <div style={{ marginTop: 40 }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 700 }}>Dynamische Preise</h2>
+          <p style={{ margin: '0 0 20px', fontSize: 14, color: '#6b7280' }}>Automatische Rabatte und Aufschläge basierend auf Buchungszeitpunkt und Auslastung.</p>
+
+          <form action={saveDynamicPricing} style={{ display: 'grid', gap: 16 }}>
+            <input type="hidden" name="hotelId" value={selectedHotelId} />
+
+            <div style={{ position: 'relative', padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+              {!hasPro && <ProLockOverlay />}
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Last-Minute Rabatt</div>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
+                  <input name="lastMinuteDiscountPercent" type="number" min="0" max="100"
+                    defaultValue={s?.lastMinuteDiscountPercent ?? 0}
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Tage vor Anreise</label>
+                  <input name="lastMinuteDiscountDays" type="number" min="1" max="90"
+                    defaultValue={s?.lastMinuteDiscountDays ?? 7}
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
+            </div>
+
+            <div style={{ position: 'relative', padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12, opacity: hasBusiness ? 1 : 0.45, filter: hasBusiness ? 'none' : 'grayscale(0.3)' }}>
+              {!hasBusiness && <ProLockOverlay plan="business" />}
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Nachfrageaufschlag</div>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Aufschlag %</label>
+                  <input name="occupancySurchargePercent" type="number" min="0" max="100"
+                    defaultValue={s?.occupancySurchargePercent ?? 0}
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Ab Auslastung %</label>
+                  <input name="occupancySurchargeThreshold" type="number" min="1" max="100"
+                    defaultValue={s?.occupancySurchargeThreshold ?? 70}
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
+            </div>
+
+            <div>
+              <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                Speichern
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </main>

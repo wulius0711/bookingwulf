@@ -1768,6 +1768,10 @@ export const HotelSettingsScalarFieldEnum = {
   bodyFontSize: 'bodyFontSize',
   headlineFontWeight: 'headlineFontWeight',
   bodyFontWeight: 'bodyFontWeight',
+  lastMinuteDiscountPercent: 'lastMinuteDiscountPercent',
+  lastMinuteDiscountDays: 'lastMinuteDiscountDays',
+  occupancySurchargePercent: 'occupancySurchargePercent',
+  occupancySurchargeThreshold: 'occupancySurchargeThreshold',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

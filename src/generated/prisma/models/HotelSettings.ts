@@ -35,6 +35,10 @@ export type HotelSettingsAvgAggregateOutputType = {
   bodyFontSize: number | null
   headlineFontWeight: number | null
   bodyFontWeight: number | null
+  lastMinuteDiscountPercent: number | null
+  lastMinuteDiscountDays: number | null
+  occupancySurchargePercent: number | null
+  occupancySurchargeThreshold: number | null
 }
 
 export type HotelSettingsSumAggregateOutputType = {
@@ -46,6 +50,10 @@ export type HotelSettingsSumAggregateOutputType = {
   bodyFontSize: number | null
   headlineFontWeight: number | null
   bodyFontWeight: number | null
+  lastMinuteDiscountPercent: number | null
+  lastMinuteDiscountDays: number | null
+  occupancySurchargePercent: number | null
+  occupancySurchargeThreshold: number | null
 }
 
 export type HotelSettingsMinAggregateOutputType = {
@@ -77,6 +85,10 @@ export type HotelSettingsMinAggregateOutputType = {
   bodyFontSize: number | null
   headlineFontWeight: number | null
   bodyFontWeight: number | null
+  lastMinuteDiscountPercent: number | null
+  lastMinuteDiscountDays: number | null
+  occupancySurchargePercent: number | null
+  occupancySurchargeThreshold: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -110,6 +122,10 @@ export type HotelSettingsMaxAggregateOutputType = {
   bodyFontSize: number | null
   headlineFontWeight: number | null
   bodyFontWeight: number | null
+  lastMinuteDiscountPercent: number | null
+  lastMinuteDiscountDays: number | null
+  occupancySurchargePercent: number | null
+  occupancySurchargeThreshold: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -143,6 +159,10 @@ export type HotelSettingsCountAggregateOutputType = {
   bodyFontSize: number
   headlineFontWeight: number
   bodyFontWeight: number
+  lastMinuteDiscountPercent: number
+  lastMinuteDiscountDays: number
+  occupancySurchargePercent: number
+  occupancySurchargeThreshold: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -158,6 +178,10 @@ export type HotelSettingsAvgAggregateInputType = {
   bodyFontSize?: true
   headlineFontWeight?: true
   bodyFontWeight?: true
+  lastMinuteDiscountPercent?: true
+  lastMinuteDiscountDays?: true
+  occupancySurchargePercent?: true
+  occupancySurchargeThreshold?: true
 }
 
 export type HotelSettingsSumAggregateInputType = {
@@ -169,6 +193,10 @@ export type HotelSettingsSumAggregateInputType = {
   bodyFontSize?: true
   headlineFontWeight?: true
   bodyFontWeight?: true
+  lastMinuteDiscountPercent?: true
+  lastMinuteDiscountDays?: true
+  occupancySurchargePercent?: true
+  occupancySurchargeThreshold?: true
 }
 
 export type HotelSettingsMinAggregateInputType = {
@@ -200,6 +228,10 @@ export type HotelSettingsMinAggregateInputType = {
   bodyFontSize?: true
   headlineFontWeight?: true
   bodyFontWeight?: true
+  lastMinuteDiscountPercent?: true
+  lastMinuteDiscountDays?: true
+  occupancySurchargePercent?: true
+  occupancySurchargeThreshold?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -233,6 +265,10 @@ export type HotelSettingsMaxAggregateInputType = {
   bodyFontSize?: true
   headlineFontWeight?: true
   bodyFontWeight?: true
+  lastMinuteDiscountPercent?: true
+  lastMinuteDiscountDays?: true
+  occupancySurchargePercent?: true
+  occupancySurchargeThreshold?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -266,6 +302,10 @@ export type HotelSettingsCountAggregateInputType = {
   bodyFontSize?: true
   headlineFontWeight?: true
   bodyFontWeight?: true
+  lastMinuteDiscountPercent?: true
+  lastMinuteDiscountDays?: true
+  occupancySurchargePercent?: true
+  occupancySurchargeThreshold?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -386,6 +426,10 @@ export type HotelSettingsGroupByOutputType = {
   bodyFontSize: number | null
   headlineFontWeight: number | null
   bodyFontWeight: number | null
+  lastMinuteDiscountPercent: number
+  lastMinuteDiscountDays: number
+  occupancySurchargePercent: number
+  occupancySurchargeThreshold: number
   createdAt: Date
   updatedAt: Date
   _count: HotelSettingsCountAggregateOutputType | null
@@ -442,6 +486,10 @@ export type HotelSettingsWhereInput = {
   bodyFontSize?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   headlineFontWeight?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   bodyFontWeight?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFilter<"HotelSettings"> | number
+  lastMinuteDiscountDays?: Prisma.IntFilter<"HotelSettings"> | number
+  occupancySurchargePercent?: Prisma.IntFilter<"HotelSettings"> | number
+  occupancySurchargeThreshold?: Prisma.IntFilter<"HotelSettings"> | number
   createdAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -476,6 +524,10 @@ export type HotelSettingsOrderByWithRelationInput = {
   bodyFontSize?: Prisma.SortOrderInput | Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   hotel?: Prisma.HotelOrderByWithRelationInput
@@ -513,6 +565,10 @@ export type HotelSettingsWhereUniqueInput = Prisma.AtLeast<{
   bodyFontSize?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   headlineFontWeight?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
   bodyFontWeight?: Prisma.IntNullableFilter<"HotelSettings"> | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFilter<"HotelSettings"> | number
+  lastMinuteDiscountDays?: Prisma.IntFilter<"HotelSettings"> | number
+  occupancySurchargePercent?: Prisma.IntFilter<"HotelSettings"> | number
+  occupancySurchargeThreshold?: Prisma.IntFilter<"HotelSettings"> | number
   createdAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HotelSettings"> | Date | string
   hotel?: Prisma.XOR<Prisma.HotelScalarRelationFilter, Prisma.HotelWhereInput>
@@ -547,6 +603,10 @@ export type HotelSettingsOrderByWithAggregationInput = {
   bodyFontSize?: Prisma.SortOrderInput | Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HotelSettingsCountOrderByAggregateInput
@@ -588,6 +648,10 @@ export type HotelSettingsScalarWhereWithAggregatesInput = {
   bodyFontSize?: Prisma.IntNullableWithAggregatesFilter<"HotelSettings"> | number | null
   headlineFontWeight?: Prisma.IntNullableWithAggregatesFilter<"HotelSettings"> | number | null
   bodyFontWeight?: Prisma.IntNullableWithAggregatesFilter<"HotelSettings"> | number | null
+  lastMinuteDiscountPercent?: Prisma.IntWithAggregatesFilter<"HotelSettings"> | number
+  lastMinuteDiscountDays?: Prisma.IntWithAggregatesFilter<"HotelSettings"> | number
+  occupancySurchargePercent?: Prisma.IntWithAggregatesFilter<"HotelSettings"> | number
+  occupancySurchargeThreshold?: Prisma.IntWithAggregatesFilter<"HotelSettings"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HotelSettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HotelSettings"> | Date | string
 }
@@ -619,6 +683,10 @@ export type HotelSettingsCreateInput = {
   bodyFontSize?: number | null
   headlineFontWeight?: number | null
   bodyFontWeight?: number | null
+  lastMinuteDiscountPercent?: number
+  lastMinuteDiscountDays?: number
+  occupancySurchargePercent?: number
+  occupancySurchargeThreshold?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   hotel: Prisma.HotelCreateNestedOneWithoutSettingsInput
@@ -653,6 +721,10 @@ export type HotelSettingsUncheckedCreateInput = {
   bodyFontSize?: number | null
   headlineFontWeight?: number | null
   bodyFontWeight?: number | null
+  lastMinuteDiscountPercent?: number
+  lastMinuteDiscountDays?: number
+  occupancySurchargePercent?: number
+  occupancySurchargeThreshold?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -684,6 +756,10 @@ export type HotelSettingsUpdateInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hotel?: Prisma.HotelUpdateOneRequiredWithoutSettingsNestedInput
@@ -718,6 +794,10 @@ export type HotelSettingsUncheckedUpdateInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -751,6 +831,10 @@ export type HotelSettingsCreateManyInput = {
   bodyFontSize?: number | null
   headlineFontWeight?: number | null
   bodyFontWeight?: number | null
+  lastMinuteDiscountPercent?: number
+  lastMinuteDiscountDays?: number
+  occupancySurchargePercent?: number
+  occupancySurchargeThreshold?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -782,6 +866,10 @@ export type HotelSettingsUpdateManyMutationInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -815,6 +903,10 @@ export type HotelSettingsUncheckedUpdateManyInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -853,6 +945,10 @@ export type HotelSettingsCountOrderByAggregateInput = {
   bodyFontSize?: Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -866,6 +962,10 @@ export type HotelSettingsAvgOrderByAggregateInput = {
   bodyFontSize?: Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
 }
 
 export type HotelSettingsMaxOrderByAggregateInput = {
@@ -897,6 +997,10 @@ export type HotelSettingsMaxOrderByAggregateInput = {
   bodyFontSize?: Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -930,6 +1034,10 @@ export type HotelSettingsMinOrderByAggregateInput = {
   bodyFontSize?: Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -943,6 +1051,10 @@ export type HotelSettingsSumOrderByAggregateInput = {
   bodyFontSize?: Prisma.SortOrder
   headlineFontWeight?: Prisma.SortOrder
   bodyFontWeight?: Prisma.SortOrder
+  lastMinuteDiscountPercent?: Prisma.SortOrder
+  lastMinuteDiscountDays?: Prisma.SortOrder
+  occupancySurchargePercent?: Prisma.SortOrder
+  occupancySurchargeThreshold?: Prisma.SortOrder
 }
 
 export type HotelSettingsCreateNestedOneWithoutHotelInput = {
@@ -1012,6 +1124,10 @@ export type HotelSettingsCreateWithoutHotelInput = {
   bodyFontSize?: number | null
   headlineFontWeight?: number | null
   bodyFontWeight?: number | null
+  lastMinuteDiscountPercent?: number
+  lastMinuteDiscountDays?: number
+  occupancySurchargePercent?: number
+  occupancySurchargeThreshold?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1044,6 +1160,10 @@ export type HotelSettingsUncheckedCreateWithoutHotelInput = {
   bodyFontSize?: number | null
   headlineFontWeight?: number | null
   bodyFontWeight?: number | null
+  lastMinuteDiscountPercent?: number
+  lastMinuteDiscountDays?: number
+  occupancySurchargePercent?: number
+  occupancySurchargeThreshold?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1091,6 +1211,10 @@ export type HotelSettingsUpdateWithoutHotelInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1123,6 +1247,10 @@ export type HotelSettingsUncheckedUpdateWithoutHotelInput = {
   bodyFontSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   headlineFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bodyFontWeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastMinuteDiscountPercent?: Prisma.IntFieldUpdateOperationsInput | number
+  lastMinuteDiscountDays?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargePercent?: Prisma.IntFieldUpdateOperationsInput | number
+  occupancySurchargeThreshold?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1158,6 +1286,10 @@ export type HotelSettingsSelect<ExtArgs extends runtime.Types.Extensions.Interna
   bodyFontSize?: boolean
   headlineFontWeight?: boolean
   bodyFontWeight?: boolean
+  lastMinuteDiscountPercent?: boolean
+  lastMinuteDiscountDays?: boolean
+  occupancySurchargePercent?: boolean
+  occupancySurchargeThreshold?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -1192,6 +1324,10 @@ export type HotelSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   bodyFontSize?: boolean
   headlineFontWeight?: boolean
   bodyFontWeight?: boolean
+  lastMinuteDiscountPercent?: boolean
+  lastMinuteDiscountDays?: boolean
+  occupancySurchargePercent?: boolean
+  occupancySurchargeThreshold?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -1226,6 +1362,10 @@ export type HotelSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   bodyFontSize?: boolean
   headlineFontWeight?: boolean
   bodyFontWeight?: boolean
+  lastMinuteDiscountPercent?: boolean
+  lastMinuteDiscountDays?: boolean
+  occupancySurchargePercent?: boolean
+  occupancySurchargeThreshold?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
@@ -1260,11 +1400,15 @@ export type HotelSettingsSelectScalar = {
   bodyFontSize?: boolean
   headlineFontWeight?: boolean
   bodyFontWeight?: boolean
+  lastMinuteDiscountPercent?: boolean
+  lastMinuteDiscountDays?: boolean
+  occupancySurchargePercent?: boolean
+  occupancySurchargeThreshold?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "instantBooking" | "enableInstantBooking" | "hideRequestOption" | "accentColor" | "backgroundColor" | "cardBackground" | "textColor" | "mutedTextColor" | "borderColor" | "cardRadius" | "buttonRadius" | "buttonColor" | "headlineFont" | "bodyFont" | "headlineFontSize" | "bodyFontSize" | "headlineFontWeight" | "bodyFontWeight" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
+export type HotelSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hotelId" | "showPrices" | "allowMultiSelect" | "showAmenities" | "showExtrasStep" | "showPhoneField" | "showMessageField" | "enableImageSlider" | "enableLightbox" | "instantBooking" | "enableInstantBooking" | "hideRequestOption" | "accentColor" | "backgroundColor" | "cardBackground" | "textColor" | "mutedTextColor" | "borderColor" | "cardRadius" | "buttonRadius" | "buttonColor" | "headlineFont" | "bodyFont" | "headlineFontSize" | "bodyFontSize" | "headlineFontWeight" | "bodyFontWeight" | "lastMinuteDiscountPercent" | "lastMinuteDiscountDays" | "occupancySurchargePercent" | "occupancySurchargeThreshold" | "createdAt" | "updatedAt", ExtArgs["result"]["hotelSettings"]>
 export type HotelSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hotel?: boolean | Prisma.HotelDefaultArgs<ExtArgs>
 }
@@ -1309,6 +1453,10 @@ export type $HotelSettingsPayload<ExtArgs extends runtime.Types.Extensions.Inter
     bodyFontSize: number | null
     headlineFontWeight: number | null
     bodyFontWeight: number | null
+    lastMinuteDiscountPercent: number
+    lastMinuteDiscountDays: number
+    occupancySurchargePercent: number
+    occupancySurchargeThreshold: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["hotelSettings"]>
@@ -1763,6 +1911,10 @@ export interface HotelSettingsFieldRefs {
   readonly bodyFontSize: Prisma.FieldRef<"HotelSettings", 'Int'>
   readonly headlineFontWeight: Prisma.FieldRef<"HotelSettings", 'Int'>
   readonly bodyFontWeight: Prisma.FieldRef<"HotelSettings", 'Int'>
+  readonly lastMinuteDiscountPercent: Prisma.FieldRef<"HotelSettings", 'Int'>
+  readonly lastMinuteDiscountDays: Prisma.FieldRef<"HotelSettings", 'Int'>
+  readonly occupancySurchargePercent: Prisma.FieldRef<"HotelSettings", 'Int'>
+  readonly occupancySurchargeThreshold: Prisma.FieldRef<"HotelSettings", 'Int'>
   readonly createdAt: Prisma.FieldRef<"HotelSettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HotelSettings", 'DateTime'>
 }
