@@ -124,7 +124,7 @@ export default function BillingPage() {
   const isActive = status === 'active' || status === 'trialing';
 
   return (
-    <main className="admin-page" style={{ background: '#f5f5f7', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         <div>

@@ -151,7 +151,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#f5f5f7',
+        background: 'var(--page-bg)',
         padding: 24,
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif',
       }}
