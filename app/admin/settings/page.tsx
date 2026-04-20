@@ -12,6 +12,7 @@ import ProLockOverlay from '../components/ProLockOverlay';
 import WidgetConfigs from './WidgetConfigs';
 import InfoTooltip from '../components/InfoTooltip';
 import StandardButton from './StandardButton';
+import FeatureToggles from './FeatureToggles';
 
 export const dynamic = 'force-dynamic';
 
@@ -537,35 +538,21 @@ export default async function Page({ searchParams }: PageProps) {
                 </p>
               </div>
 
-              {featureToggles.map(([key, label]) => (
-                <div key={key} className="settings-row" style={checkboxRowStyle}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <label style={labelStyle}>{label}</label>
-                    {key === 'enableInstantBooking' && <InfoTooltip text="Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt." />}
-                  </div>
-                  <label style={checkboxBoxStyle}>
-                    <input
-                      key={String(selected.settings?.[key] ?? true)}
-                      type="checkbox"
-                      name={key}
-                      defaultChecked={selected.settings?.[key] ?? true}
-                    />
-                    Aktiv
-                  </label>
-                </div>
-              ))}
-              <div className="settings-row" style={{ ...checkboxRowStyle, paddingLeft: 20 }}>
-                <label style={labelStyle}>Nur Buchung — Anfrage ausblenden</label>
-                <label style={checkboxBoxStyle}>
-                  <input
-                    key={String(selected.settings?.hideRequestOption ?? false)}
-                    type="checkbox"
-                    name="hideRequestOption"
-                    defaultChecked={!!selected.settings?.hideRequestOption}
-                  />
-                  Aktiv
-                </label>
-              </div>
+              <FeatureToggles
+                initialValues={{
+                  showPrices: selected.settings?.showPrices ?? true,
+                  showAmenities: selected.settings?.showAmenities ?? true,
+                  showExtrasStep: selected.settings?.showExtrasStep ?? true,
+                  showPhoneField: selected.settings?.showPhoneField ?? true,
+                  showMessageField: selected.settings?.showMessageField ?? true,
+                  enableImageSlider: selected.settings?.enableImageSlider ?? true,
+                  enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
+                  hideRequestOption: selected.settings?.hideRequestOption ?? false,
+                }}
+                checkboxRowStyle={checkboxRowStyle}
+                checkboxBoxStyle={checkboxBoxStyle}
+                labelStyle={labelStyle}
+              />
             </div>
 
             {/* ACTIONS */}
