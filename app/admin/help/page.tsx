@@ -545,10 +545,6 @@ function SperrzeitenSection() {
         <strong>Tipp:</strong> Sperrzeiten eignen sich auch dafür, extern (z.B. über Booking.com)
         gebuchte Zeiträume einzutragen und so Doppelbuchungen zu vermeiden.
       </Tip>
-      <Note>
-        <strong>Unterschied zu Preissaisons:</strong> Sperrzeiten blockieren die Verfügbarkeit
-        komplett. Preissaisons ändern nur den Preis, das Apartment bleibt buchbar.
-      </Note>
     </div>
   );
 }
