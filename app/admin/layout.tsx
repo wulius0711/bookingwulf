@@ -78,13 +78,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   })
 
   // Load user's assigned hotels for the switcher
-  const userHotels = session.role !== 'super_admin'
-    ? await prisma.adminUserHotel.findMany({
+  const userHotels = session.role === 'super_admin'
+    ? (await prisma.hotel.findMany({ select: { id: true, name: true }, orderBy: { id: 'asc' } }))
+        .map((h) => ({ hotelId: h.id, hotel: { name: h.name } }))
+    : await prisma.adminUserHotel.findMany({
         where: { userId: session.userId },
         select: { hotelId: true, hotel: { select: { name: true } } },
         orderBy: { hotelId: 'asc' },
-      })
-    : [];
+      });
 
   return (
     <div

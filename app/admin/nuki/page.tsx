@@ -9,6 +9,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function NukiPage() {
   const session = await verifySession();
+  const isSuperAdmin = session.role === 'super_admin';
+
   if (!session.hotelId) redirect('/admin');
 
   const hotel = await prisma.hotel.findUnique({
@@ -16,7 +18,7 @@ export default async function NukiPage() {
     select: { plan: true, nukiConfig: { select: { apiToken: true } } },
   });
 
-  if (!hotel || (session.role !== 'super_admin' && !hasPlanAccess(hotel.plan ?? 'starter', 'pro'))) {
+  if (!hotel || (!isSuperAdmin && !hasPlanAccess(hotel.plan ?? 'starter', 'pro'))) {
     redirect('/admin/billing');
   }
 
