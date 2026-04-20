@@ -51,17 +51,11 @@ function calcApartmentPrice(
 export default async function AnalyticsPage({ searchParams }: PageProps) {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
-  const { hotel, period: periodParam } = await searchParams;
+  const { period: periodParam } = await searchParams;
   const periodKey = PERIODS.find(p => p.value === periodParam) ? periodParam! : '12';
   const periodDef = PERIODS.find(p => p.value === periodKey)!;
 
-  const hotels = isSuperAdmin
-    ? await prisma.hotel.findMany({ where: { isActive: true }, orderBy: { name: 'asc' }, select: { id: true, name: true, slug: true } })
-    : await prisma.hotel.findMany({ where: { id: session.hotelId!, isActive: true }, select: { id: true, name: true, slug: true } });
-
-  const selectedId = isSuperAdmin
-    ? hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : null
-    : session.hotelId!;
+  const selectedId = session.hotelId ?? null;
 
   const hotelFilter = selectedId ? { hotelId: selectedId } : {};
 
@@ -215,20 +209,14 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Analytics</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
-              {periodDef.label}{selectedId ? ` · ${hotels.find((h) => h.id === selectedId)?.name}` : ''}
+              {periodDef.label}
             </p>
           </div>
-          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', flex: '1 1 auto', minWidth: 140 }}>
+          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', minWidth: 140 }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-            {isSuperAdmin && (
-              <select name="hotel" defaultValue={String(selectedId ?? '')} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', flex: '1 1 auto', minWidth: 140 }}>
-                <option value="">Alle Hotels</option>
-                {hotels.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
-              </select>
-            )}
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer', flexShrink: 0 }}>Laden</button>
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
           </form>
         </div>
 

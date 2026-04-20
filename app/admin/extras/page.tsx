@@ -7,8 +7,7 @@ import ExtraRow from './ExtraRow';
 
 export const dynamic = 'force-dynamic';
 
-type SearchParams = Promise<{ hotel?: string }>;
-type PageProps = { searchParams: SearchParams };
+type PageProps = { searchParams?: unknown };
 
 const BILLING_LABELS: Record<string, string> = {
   per_night: 'pro Nacht',
@@ -25,24 +24,19 @@ const TYPE_LABELS: Record<string, string> = {
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' };
 const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' as const, padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' };
 
-export default async function ExtrasPage({ searchParams }: PageProps) {
+export default async function ExtrasPage() {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
-  const { hotel } = await searchParams;
 
-  const hotels = isSuperAdmin
-    ? await prisma.hotel.findMany({ where: { isActive: true }, orderBy: { name: 'asc' }, select: { id: true, name: true, slug: true } })
-    : await prisma.hotel.findMany({ where: { id: session.hotelId!, isActive: true }, select: { id: true, name: true, slug: true } });
-
-  const selectedId = isSuperAdmin
-    ? hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : hotels[0]?.id
-    : session.hotelId!;
+  const selectedId = session.hotelId ?? undefined;
 
   const extras = selectedId
     ? await prisma.hotelExtra.findMany({ where: { hotelId: selectedId }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] })
     : [];
 
-  const selectedHotel = hotels.find((h) => h.id === selectedId);
+  const selectedHotel = selectedId
+    ? await prisma.hotel.findUnique({ where: { id: selectedId }, select: { id: true, name: true } })
+    : null;
 
   let hotelPlan: PlanKey = 'starter';
   if (!isSuperAdmin && selectedId) {
@@ -64,18 +58,6 @@ export default async function ExtrasPage({ searchParams }: PageProps) {
             </p>
           </div>
 
-          {isSuperAdmin && (
-            <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <select name="hotel" defaultValue={String(selectedId)} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}>
-                {hotels.map((h) => (
-                  <option key={h.id} value={h.id}>{h.name}</option>
-                ))}
-              </select>
-              <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>
-                Laden
-              </button>
-            </form>
-          )}
         </div>
 
         {!canUseExtras && (
