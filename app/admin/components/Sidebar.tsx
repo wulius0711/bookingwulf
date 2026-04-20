@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { logout } from '../login/actions';
+import ThemeSwitcher from './ThemeSwitcher';
 
 type NavItemDef = {
   href: string;
@@ -102,10 +103,10 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
         borderRadius: 8,
         fontSize: 13,
         fontWeight: active ? 600 : 500,
-        color: active ? '#4f46e5' : '#555',
+        color: active ? 'var(--accent)' : '#555',
         textDecoration: 'none',
-        background: active ? '#eef2ff' : 'transparent',
-        borderLeft: active ? '3px solid #4f46e5' : '3px solid transparent',
+        background: active ? 'var(--accent-light)' : 'transparent',
+        borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
         transition: 'background 0.12s ease, color 0.12s ease',
       }}
     >
@@ -161,7 +162,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
           {navGroups.map((group, i) => (
             <div key={group.label} style={{ marginTop: i === 0 ? 0 : 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#a5b4fc', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--nav-group)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
                 {group.label}
               </div>
               {group.items.map((item) => (
@@ -195,6 +196,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
               </select>
             </div>
           )}
+          <ThemeSwitcher />
           <span style={{ fontSize: 12, color: '#9ca3af', wordBreak: 'break-all' }}>{email}</span>
           <form action={logout}>
             <button

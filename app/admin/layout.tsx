@@ -92,6 +92,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       });
 
   return (
+    <>
+      <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo')document.documentElement.classList.add('theme-'+t);})();` }} />
     <div
       className="admin-layout"
       style={{
@@ -128,5 +130,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
       <GuidedTour />
     </div>
+    </>
   )
 }

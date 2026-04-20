@@ -255,7 +255,7 @@ export default function BillingPage() {
                     style={{
                       padding: '10px 16px',
                       borderRadius: 8,
-                      background: '#4f46e5',
+                      background: 'var(--accent)',
                       color: '#fff',
                       border: 'none',
                       fontSize: 14,
@@ -340,7 +340,7 @@ export default function BillingPage() {
                 width: '100%',
                 padding: '12px 20px',
                 borderRadius: 8,
-                background: '#4f46e5',
+                background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
                 fontSize: 15,
