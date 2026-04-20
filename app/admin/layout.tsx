@@ -99,6 +99,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         email={session.email}
         activeHotelId={session.hotelId}
         userHotels={userHotels.map((h) => ({ id: h.hotelId, name: h.hotel.name }))}
+        isSuperAdmin={isSuperAdmin}
       />
 
       <div className="admin-main">

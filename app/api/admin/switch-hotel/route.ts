@@ -11,15 +11,16 @@ export async function POST(req: NextRequest) {
 
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const parsed = switchHotelSchema.safeParse(await req.json());
-  if (!parsed.success) return NextResponse.json({ error: 'Invalid hotelId' }, { status: 400 });
-  const { hotelId } = parsed.data;
+  const body = await req.json();
+  const hotelId: number | null = body.hotelId === null ? null : Number(body.hotelId) || null;
 
-  // Verify user has access to this hotel
-  const entry = await prisma.adminUserHotel.findUnique({
-    where: { userId_hotelId: { userId: session.userId, hotelId } },
-  });
-  if (!entry) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (session.role !== 'super_admin') {
+    if (!hotelId) return NextResponse.json({ error: 'Invalid hotelId' }, { status: 400 });
+    const entry = await prisma.adminUserHotel.findUnique({
+      where: { userId_hotelId: { userId: session.userId, hotelId } },
+    });
+    if (!entry) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   await createSession({ ...session, hotelId });
 

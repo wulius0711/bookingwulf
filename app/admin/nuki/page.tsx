@@ -11,7 +11,15 @@ export default async function NukiPage() {
   const session = await verifySession();
   const isSuperAdmin = session.role === 'super_admin';
 
-  if (!session.hotelId) redirect('/admin');
+  if (!session.hotelId) {
+    if (isSuperAdmin) return (
+      <main className="admin-page">
+        <h1>Schlüsselloses Einchecken</h1>
+        <p style={{ color: '#6b7280', fontSize: 14 }}>Bitte zuerst eine Anlage in der Sidebar auswählen.</p>
+      </main>
+    );
+    redirect('/admin');
+  }
 
   const hotel = await prisma.hotel.findUnique({
     where: { id: session.hotelId },

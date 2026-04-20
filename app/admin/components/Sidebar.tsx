@@ -18,6 +18,7 @@ type Props = {
   email: string;
   activeHotelId: number | null;
   userHotels: HotelOption[];
+  isSuperAdmin?: boolean;
 };
 
 function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
@@ -108,11 +109,12 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
   );
 }
 
-export default function Sidebar({ navItems, email, activeHotelId, userHotels }: Props) {
+export default function Sidebar({ navItems, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
 
-  async function handleHotelSwitch(hotelId: number) {
+  async function handleHotelSwitch(value: string) {
+    const hotelId = value === '' ? null : Number(value);
     if (hotelId === activeHotelId) return;
     setSwitching(true);
     await fetch('/api/admin/switch-hotel', {
@@ -165,15 +167,16 @@ export default function Sidebar({ navItems, email, activeHotelId, userHotels }: 
           flexDirection: 'column',
           gap: 8,
         }}>
-          {userHotels.length > 1 && (
+          {(isSuperAdmin ? userHotels.length > 0 : userHotels.length > 1) && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</span>
               <select
                 value={activeHotelId ?? ''}
                 disabled={switching}
-                onChange={(e) => handleHotelSwitch(Number(e.target.value))}
+                onChange={(e) => handleHotelSwitch(e.target.value)}
                 style={{ padding: '6px 8px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, color: '#111', background: '#fafafa', cursor: 'pointer', opacity: switching ? 0.5 : 1 }}
               >
+                {isSuperAdmin && <option value="">Alle</option>}
                 {userHotels.map((h) => (
                   <option key={h.id} value={h.id}>{h.name}</option>
                 ))}
