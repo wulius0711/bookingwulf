@@ -181,6 +181,8 @@ model IcalFeed {
   lastError   String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([apartmentId])
 }
 
 model ApartmentImage {
@@ -192,6 +194,8 @@ model ApartmentImage {
   createdAt   DateTime @default(now())
 
   apartment Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  @@index([apartmentId])
 }
 
 model PriceSeason {
@@ -206,6 +210,8 @@ model PriceSeason {
   updatedAt     DateTime @updatedAt
 
   apartment Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  @@index([apartmentId, startDate, endDate])
 }
 
 model BlockedRange {
@@ -221,6 +227,9 @@ model BlockedRange {
   type      String
   note      String?
   createdAt DateTime @default(now())
+
+  @@index([hotelId, startDate, endDate])
+  @@index([apartmentId, startDate, endDate])
 }
 
 model Request {
@@ -251,6 +260,10 @@ model Request {
   nukiAuthIds String?
 
   messages RequestMessage[]
+
+  @@index([hotelId])
+  @@index([hotelId, status])
+  @@index([arrival, departure])
 }
 
 model RequestMessage {
@@ -260,6 +273,8 @@ model RequestMessage {
   sender    String   // 'hotel' | 'guest'
   body      String
   createdAt DateTime @default(now())
+
+  @@index([requestId])
 }
 
 model HotelExtra {
