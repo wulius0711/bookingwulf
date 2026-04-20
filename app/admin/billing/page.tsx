@@ -314,7 +314,7 @@ export default function BillingPage() {
             style={{
               background: '#fff',
               borderRadius: 20,
-              padding: '36px 32px',
+              padding: 'clamp(20px, 5vw, 36px) clamp(16px, 4vw, 32px)',
               maxWidth: 480,
               width: '100%',
               boxShadow: '0 20px 60px rgba(0,0,0,0.2)',

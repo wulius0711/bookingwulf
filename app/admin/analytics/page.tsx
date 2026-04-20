@@ -213,7 +213,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             </p>
           </div>
           <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', minWidth: 140 }}>
+            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
             <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>

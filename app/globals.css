@@ -254,6 +254,42 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: minmax(0, 760px) minmax(340px, 1fr);
 }
 
+/* Apartment edit form: label + input rows */
+.apt-edit-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+/* Calendar: horizontal scroll on mobile */
+.calendar-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.calendar-grid {
+  min-width: 480px;
+}
+
+/* Zimmerplan grid */
+.zimmerplan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Hotel select in superadmin filter rows */
+.hotel-filter-select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  color: #111;
+  max-width: 100%;
+}
+
 .settings-row {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
@@ -272,6 +308,14 @@ button, a[role="button"], input[type="submit"] {
 }
 
 @media (max-width: 768px) {
+  .apt-edit-row {
+    grid-template-columns: 1fr;
+  }
+
+  .zimmerplan-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
   .plan-grid {
     grid-template-columns: 1fr;
   }

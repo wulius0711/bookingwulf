@@ -113,7 +113,7 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
           <select
             name="hotel"
             defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
-            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', minWidth: 200 }}
+            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
           >
             <option value="">Alle Hotels</option>
             {hotels.map((h) => (
@@ -157,13 +157,13 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
               {!hasPro && <ProLockOverlay />}
               <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Last-Minute Rabatt</div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
                   <input name="lastMinuteDiscountPercent" type="number" min="0" max="100"
                     defaultValue={s?.lastMinuteDiscountPercent ?? 0}
                     style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                 </div>
-                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Tage vor Anreise</label>
                   <input name="lastMinuteDiscountDays" type="number" min="1" max="90"
                     defaultValue={s?.lastMinuteDiscountDays ?? 7}
@@ -177,13 +177,13 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
               {!hasBusiness && <ProLockOverlay plan="business" />}
               <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Nachfrageaufschlag</div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Aufschlag %</label>
                   <input name="occupancySurchargePercent" type="number" min="0" max="100"
                     defaultValue={s?.occupancySurchargePercent ?? 0}
                     style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                 </div>
-                <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Ab Auslastung %</label>
                   <input name="occupancySurchargeThreshold" type="number" min="1" max="100"
                     defaultValue={s?.occupancySurchargeThreshold ?? 70}

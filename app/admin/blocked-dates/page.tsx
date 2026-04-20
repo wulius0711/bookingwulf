@@ -66,7 +66,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
           <select
             name="hotel"
             defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
-            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', minWidth: 200 }}
+            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
           >
             <option value="">Alle Hotels</option>
             {hotels.map((h) => (

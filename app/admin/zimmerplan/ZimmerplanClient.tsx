@@ -48,7 +48,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
   const isToday = date === todayIso();
 
   return (
-    <div style={{ padding: '32px 32px 64px', maxWidth: 1100, margin: '0 auto' }}>
+    <div className="admin-page" style={{ maxWidth: 1100, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 32 }}>
         <div>
@@ -88,7 +88,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
       ) : cards.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Keine Apartments gefunden.</div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+        <div className="zimmerplan-grid">
           {cards.map((card) => (
             <ApartmentCardEl key={card.id} card={card} date={date} />
           ))}

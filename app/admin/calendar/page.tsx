@@ -148,7 +148,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', margin: 0 }}>Kalender</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
-          <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: '#111', minWidth: 210, textAlign: 'center' }}>
+          <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: '#111', textAlign: 'center' }}>
             {MONTH_NAMES[month]} {year}
           </span>
           <Link href={nextLink} style={linkStyle}>→</Link>
@@ -182,7 +182,8 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       </div>
 
       {/* Calendar grid */}
-      <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+      <div className="calendar-scroll" style={{ background: '#fff', borderRadius: 16, border: '1px solid #e5e7eb' }}>
+        <div className="calendar-grid">
         {/* Weekday headers */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '2px solid #e5e7eb' }}>
           {WEEKDAYS.map((day, i) => (
@@ -302,6 +303,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
             })}
           </div>
         ))}
+        </div>{/* /calendar-grid */}
       </div>
 
       {requests.length === 0 && cancelledCount === 0 && (

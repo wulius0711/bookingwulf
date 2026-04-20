@@ -16,12 +16,7 @@ type PageProps = {
   }>;
 };
 
-const row: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '180px 1fr',
-  alignItems: 'start',
-  gap: 16,
-};
+const row = 'apt-edit-row';
 
 const labelStyle: React.CSSProperties = {
   fontSize: 14,
@@ -205,13 +200,13 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
       <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
 
       <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
         <input type="hidden" name="hotelId" value={apartment.hotelId} />
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Name</label>
           <input
             name="name"
@@ -223,7 +218,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
         <input type="hidden" name="slug" value={apartment.slug} />
 
-        <div style={{ ...row, alignItems: 'center' }}>
+        <div className={row} style={{ alignItems: 'center' }}>
           <label style={labelStyle}>Status</label>
           <label
             style={{
@@ -242,7 +237,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           </label>
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Max. Erwachsene</label>
           <input
             type="number"
@@ -253,7 +248,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Max. Kinder</label>
           <input
             type="number"
@@ -264,7 +259,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Größe (m²)</label>
           <input
             type="number"
@@ -275,7 +270,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Schlafzimmer</label>
           <input
             type="number"
@@ -286,7 +281,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Ausblick</label>
           <input
             name="view"
@@ -296,7 +291,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Preis pro Nacht (€)</label>
           <input
             type="number"
@@ -307,7 +302,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Reinigungsgebühr (€)</label>
           <input
             type="number"
@@ -318,7 +313,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Sortierung</label>
           <input
             type="number"
@@ -328,7 +323,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Beschreibung</label>
           <textarea
             name="description"
@@ -337,7 +332,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           />
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Ausstattung</label>
           <div>
             <textarea
@@ -355,7 +350,7 @@ Kaffeemaschine`}
           </div>
         </div>
 
-        <div style={row}>
+        <div className={row}>
           <label style={labelStyle}>Bilder</label>
           <div style={{ display: 'grid', gap: 12 }}>
             {[0, 1, 2, 3, 4, 5].map((index) => (
