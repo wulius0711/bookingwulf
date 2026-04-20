@@ -102,10 +102,10 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
         borderRadius: 8,
         fontSize: 13,
         fontWeight: active ? 600 : 500,
-        color: active ? '#111' : '#555',
+        color: active ? '#4f46e5' : '#555',
         textDecoration: 'none',
-        background: active ? '#f0f0f0' : 'transparent',
-        borderLeft: active ? '3px solid #111' : '3px solid transparent',
+        background: active ? '#eef2ff' : 'transparent',
+        borderLeft: active ? '3px solid #4f46e5' : '3px solid transparent',
         transition: 'background 0.12s ease, color 0.12s ease',
       }}
     >
@@ -151,9 +151,9 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
       )}
 
       {/* Sidebar */}
-      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`}>
+      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} style={{ background: '#f8f9fc' }}>
         {/* Logo */}
-        <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #eaecf0' }}>
           <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />
         </div>
 
@@ -161,7 +161,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
           {navGroups.map((group, i) => (
             <div key={group.label} style={{ marginTop: i === 0 ? 0 : 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#b0b7c3', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#a5b4fc', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
                 {group.label}
               </div>
               {group.items.map((item) => (
@@ -173,7 +173,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
 
         {/* User + logout */}
         <div style={{
-          borderTop: '1px solid #f0f0f0',
+          borderTop: '1px solid #eaecf0',
           padding: '12px 16px',
           display: 'flex',
           flexDirection: 'column',

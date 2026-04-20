@@ -314,7 +314,7 @@ button, a[role="button"], input[type="submit"] {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #f5f5f7;
+  background: #f0f2f8;
 }
 
 .admin-sidebar {
@@ -339,8 +339,8 @@ button, a[role="button"], input[type="submit"] {
 }
 
 .sidebar-nav-item:hover {
-  background: #f5f5f7 !important;
-  color: #111 !important;
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
 }
 
 .mobile-topbar {
@@ -445,11 +445,11 @@ button, a[role="button"], input[type="submit"] {
   transform: scale(0.97);
 }
 
-/* Subtle gradient for primary dark buttons */
+/* Subtle gradient for primary buttons */
 .btn-primary {
-  background: linear-gradient(to bottom, #1f2937, #111827) !important;
+  background: linear-gradient(to bottom, #4f46e5, #4338ca) !important;
 }
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(to bottom, #374151, #1f2937) !important;
+  background: linear-gradient(to bottom, #6366f1, #4f46e5) !important;
 }
 
