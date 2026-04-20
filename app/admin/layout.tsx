@@ -43,39 +43,43 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const isSuperAdmin = session.role === 'super_admin'
 
-  const navItemDefs = [
-    { href: '/admin', label: 'Übersicht' },
-    { href: '/admin/analytics', label: 'Analytics' },
-    { href: '/admin/requests', label: 'Anfragen' },
-    { href: '/admin/calendar', label: 'Kalender' },
-    { href: '/admin/zimmerplan', label: 'Zimmerplan' },
-    { href: '/admin/apartments', label: 'Apartments' },
-    { href: '/admin/price-seasons', label: 'Preissaisons' },
-    { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
-    { href: '/admin/extras', label: 'Zusatzleistungen' },
-    { href: '/admin/email-templates', label: 'E-Mail Templates' },
-    { href: '/admin/nuki', label: 'Schlüsselloses Einchecken' },
-    { href: '/admin/settings', label: 'Einstellungen' },
-    { href: '/admin/billing', label: 'Abonnement' },
-    { href: '/admin/help', label: 'Handbuch' },
-    ...(isSuperAdmin
-      ? [
-          { href: '/admin/hotels', label: 'Hotels' },
-          { href: '/admin/users', label: 'Benutzer' },
-        ]
-      : []),
+  const navGroupDefs = [
+    { label: 'Betrieb', items: [
+      { href: '/admin', label: 'Übersicht' },
+      { href: '/admin/requests', label: 'Anfragen' },
+      { href: '/admin/calendar', label: 'Kalender' },
+      { href: '/admin/zimmerplan', label: 'Zimmerplan' },
+    ]},
+    { label: 'Verwaltung', items: [
+      { href: '/admin/apartments', label: 'Apartments' },
+      { href: '/admin/price-seasons', label: 'Preissaisons' },
+      { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
+      { href: '/admin/extras', label: 'Zusatzleistungen' },
+    ]},
+    { label: 'Einstellungen', items: [
+      { href: '/admin/email-templates', label: 'E-Mail Templates' },
+      { href: '/admin/nuki', label: 'Schlüsselloses Einchecken' },
+      { href: '/admin/settings', label: 'Einstellungen' },
+    ]},
+    { label: 'Konto', items: [
+      { href: '/admin/analytics', label: 'Analytics' },
+      { href: '/admin/billing', label: 'Abonnement' },
+      { href: '/admin/help', label: 'Handbuch' },
+      ...(isSuperAdmin ? [
+        { href: '/admin/hotels', label: 'Hotels' },
+        { href: '/admin/users', label: 'Benutzer' },
+      ] : []),
+    ]},
   ]
 
-  const navItems = navItemDefs.map(({ href, label }) => {
-    const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
-    const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
-    return {
-      href,
-      label,
-      locked,
-      upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined,
-    }
-  })
+  const navGroups = navGroupDefs.map(({ label, items }) => ({
+    label,
+    items: items.map(({ href, label }) => {
+      const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
+      const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
+      return { href, label, locked, upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined }
+    }),
+  }))
 
   // Load user's assigned hotels for the switcher
   const userHotels = session.role === 'super_admin'
@@ -95,7 +99,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       }}
     >
       <Sidebar
-        navItems={navItems}
+        navGroups={navGroups}
         email={session.email}
         activeHotelId={session.hotelId}
         userHotels={userHotels.map((h) => ({ id: h.hotelId, name: h.hotel.name }))}

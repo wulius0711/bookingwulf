@@ -13,8 +13,13 @@ type NavItemDef = {
 
 type HotelOption = { id: number; name: string };
 
+type NavGroup = {
+  label: string;
+  items: NavItemDef[];
+};
+
 type Props = {
-  navItems: NavItemDef[];
+  navGroups: NavGroup[];
   email: string;
   activeHotelId: number | null;
   userHotels: HotelOption[];
@@ -109,7 +114,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
   );
 }
 
-export default function Sidebar({ navItems, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
+export default function Sidebar({ navGroups, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
 
@@ -154,8 +159,15 @@ export default function Sidebar({ navItems, email, activeHotelId, userHotels, is
 
         {/* Nav items */}
         <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
-          {navItems.map((item) => (
-            <SidebarNavItem key={item.href} {...item} />
+          {navGroups.map((group, i) => (
+            <div key={group.label} style={{ marginTop: i === 0 ? 0 : 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#b0b7c3', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
+                {group.label}
+              </div>
+              {group.items.map((item) => (
+                <SidebarNavItem key={item.href} {...item} />
+              ))}
+            </div>
           ))}
         </nav>
 
