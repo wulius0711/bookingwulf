@@ -3015,6 +3015,8 @@ sortedApartments.forEach((ap) => {
           if (!area) return;
           const isBooking = state.settings.enableInstantBooking;
           const disabled = state.submitting ? ' disabled' : '';
+          const staticNav = document.querySelector('#submitArea ~ .nav-row');
+          if (staticNav) staticNav.style.display = isBooking ? '' : 'none';
 
           if (isBooking) {
             const total = getTotal();
@@ -3062,7 +3064,8 @@ sortedApartments.forEach((ap) => {
             });
           } else {
             area.innerHTML =
-              '<div style="display:flex;justify-content:flex-end;margin-top:18px;">' +
+              '<div class="nav-row" style="margin-top:18px;">' +
+                '<button class="btn-light" data-prev>Zur\u00fcck</button>' +
                 '<button type="button" id="submitBtn" class="btn"' + disabled + '>Anfrage senden</button>' +
               '</div>';
           }
