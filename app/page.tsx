@@ -34,7 +34,7 @@ export default function LandingPage() {
     { icon: '💶', title: 'Preissaisons', desc: 'Saisonale Preise automatisch anwenden — Haupt-, Neben- und Feiertagspreise.' },
     { icon: '⚡', title: 'Einbau in 1 Minute', desc: 'Eine Zeile Code auf Ihre Website — kein Entwickler nötig.' },
     { icon: '🌍', title: 'Mehrsprachige Kommunikation', desc: 'Gäste-E-Mails in 9 Sprachen — automatisch erkannt, manuell anpassbar.' },
-    { icon: '🔑', title: 'Nuki-Integration', desc: 'Schlüsselloses Einchecken — kein Schlüssel, kein Aufwand.' },
+    { icon: '🔑', title: 'Nuki-Integration', desc: 'Schlüsselloses Einchecken — kein Schlüssel, kein Aufwand. Ab Pro.' },
     { icon: '🇪🇺', title: 'Alle Daten in der EU', desc: 'Gespeichert auf Servern in Deutschland.' },
   ];
 
