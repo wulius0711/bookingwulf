@@ -80,9 +80,11 @@ model HotelSettings {
   headlineFontWeight Int?
   bodyFontWeight     Int?
 
-  // 🧩 Optional später
-  // buttonStyle   String? // 'filled' | 'outline'
-  // spacingScale  String? // 'tight' | 'normal' | 'airy'
+  // 💸 Dynamic Pricing
+  lastMinuteDiscountPercent   Int @default(0)  // 0 = disabled
+  lastMinuteDiscountDays      Int @default(7)
+  occupancySurchargePercent   Int @default(0)  // 0 = disabled
+  occupancySurchargeThreshold Int @default(70) // % occupancy to trigger surcharge
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

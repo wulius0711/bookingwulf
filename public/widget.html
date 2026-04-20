@@ -1036,6 +1036,29 @@
         white-space: nowrap;
       }
 
+      .apt-price-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 3px;
+      }
+
+      .apt-price-badge {
+        font-size: 0.71rem;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .apt-price-badge.discount {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .apt-price-badge.surcharge {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+
       .apt-badge {
         position: absolute;
         top: 14px;
@@ -2303,6 +2326,7 @@
               );
 
             if (data.hotel) {
+              state.hotelId = data.hotel.hotelId || null;
               state.bookingTermsUrl = data.hotel.bookingTermsUrl || null;
               state.privacyPolicyUrl = data.hotel.privacyPolicyUrl || null;
               if (data.hotel.plan !== 'business') {
@@ -2875,7 +2899,13 @@
             if (state.settings.showPrices) {
               priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
               if (pricing && pricing.available) {
-                priceHtml = `<div class="apt-price">${eur(pricing.totalPrice)}</div>`;
+                let priceBadge = '';
+                if (pricing.discountPercent > 0) {
+                  priceBadge = `<span class="apt-price-badge discount">-${pricing.discountPercent}% Last-Minute</span>`;
+                } else if (pricing.surchargePercent > 0) {
+                  priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
+                }
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)}</div></div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
@@ -3008,7 +3038,7 @@
                         status.type === 'not-matching')
                         ? status.message
                         : pricing && pricing.available
-                          ? `${pricing.nights} Nächte · ${
+                          ? `${pricing.nights} Nächte${pricing.seasonName ? ` · ${pricing.seasonName}` : ''} · ${
                               pricing.cleaningFee
                                 ? `inkl. Reinigung ${eur(pricing.cleaningFee)}`
                                 : 'Preis aktuell berechnet'
@@ -3828,7 +3858,7 @@
                   return;
                 }
 
-                state.pricingMap[String(apartment.id)] = {
+                const baseEntry = {
                   available: true,
                   totalPrice: data.totalPrice,
                   nights: data.nights,
@@ -3836,6 +3866,44 @@
                   cleaningFee: data.cleaningFee || 0,
                   status: 'available',
                 };
+                state.pricingMap[String(apartment.id)] = baseEntry;
+
+                // Fetch dynamic pricing (last-minute discount, occupancy surcharge, minStay)
+                if (state.hotelId) {
+                  try {
+                    const pricingRes = await fetch(
+                      `${API_BASE}/api/pricing?hotelId=${state.hotelId}&arrival=${state.arrival}&departure=${state.departure}&apartmentId=${apartment.id}`
+                    );
+                    if (pricingRes.ok) {
+                      const pd = await pricingRes.json();
+                      const nights = pd.nights || data.nights || 1;
+                      if (pd.minStay && nights < pd.minStay) {
+                        state.pricingMap[String(apartment.id)] = {
+                          available: false,
+                          message: `Mindestaufenthalt: ${pd.minStay} Nächte`,
+                          status: 'unavailable',
+                        };
+                        state.selectedApartmentIds = state.selectedApartmentIds.filter(
+                          (id) => id !== apartment.id,
+                        );
+                      } else {
+                        state.pricingMap[String(apartment.id)] = {
+                          ...baseEntry,
+                          totalPrice: pd.total ?? baseEntry.totalPrice,
+                          pricePerNight: pd.pricePerNight ?? baseEntry.pricePerNight,
+                          cleaningFee: pd.cleaningFee ?? baseEntry.cleaningFee,
+                          breakdown: pd.breakdown || null,
+                          discountPercent: pd.discountPercent || 0,
+                          surchargePercent: pd.surchargePercent || 0,
+                          seasonName: pd.seasonName || null,
+                          minStay: pd.minStay || 1,
+                        };
+                      }
+                    }
+                  } catch (pricingErr) {
+                    console.warn('Pricing API failed, using base price', pricingErr);
+                  }
+                }
               } catch (error) {
                 console.error(error);
                 state.pricingMap[String(apartment.id)] = {

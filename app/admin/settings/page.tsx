@@ -556,6 +556,54 @@ export default async function Page({ searchParams }: PageProps) {
               />
             </div>
 
+            {/* DYNAMIC PRICING */}
+            <div style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Dynamische Preise</h2>
+                <p style={sectionIntroStyle}>Automatische Rabatte und Aufschläge basierend auf Buchungszeitpunkt und Auslastung.</p>
+              </div>
+
+              <div style={{ display: 'grid', gap: 16 }}>
+                <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Last-Minute Rabatt</div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                      <label style={labelStyle}>Rabatt %</label>
+                      <input name="lastMinuteDiscountPercent" type="number" min="0" max="100"
+                        defaultValue={selected.settings?.lastMinuteDiscountPercent ?? 0}
+                        style={inputStyle} />
+                    </div>
+                    <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                      <label style={labelStyle}>Tage vor Anreise</label>
+                      <input name="lastMinuteDiscountDays" type="number" min="1" max="90"
+                        defaultValue={selected.settings?.lastMinuteDiscountDays ?? 7}
+                        style={inputStyle} />
+                    </div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
+                </div>
+
+                <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Nachfrageaufschlag</div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                      <label style={labelStyle}>Aufschlag %</label>
+                      <input name="occupancySurchargePercent" type="number" min="0" max="100"
+                        defaultValue={selected.settings?.occupancySurchargePercent ?? 0}
+                        style={inputStyle} />
+                    </div>
+                    <div style={{ display: 'grid', gap: 6, flex: 1, minWidth: 120 }}>
+                      <label style={labelStyle}>Ab Auslastung %</label>
+                      <input name="occupancySurchargeThreshold" type="number" min="1" max="100"
+                        defaultValue={selected.settings?.occupancySurchargeThreshold ?? 70}
+                        style={inputStyle} />
+                    </div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
+                </div>
+              </div>
+            </div>
+
             {/* ACTIONS */}
             <div style={actionRowStyle}>
               <button className="btn-primary" type="submit" style={primaryButtonStyle}>

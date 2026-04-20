@@ -75,6 +75,11 @@ export async function saveHotelSettings(formData: FormData) {
       bodyFontSize: parseInt(String(formData.get('bodyFontSize') || '0')) || null,
       headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
+
+      lastMinuteDiscountPercent: parseInt(String(formData.get('lastMinuteDiscountPercent') || '0')) || 0,
+      lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
+      occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
+      occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
     },
     create: {
       hotelId,
@@ -106,6 +111,11 @@ export async function saveHotelSettings(formData: FormData) {
       bodyFontSize: parseInt(String(formData.get('bodyFontSize') || '0')) || null,
       headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
+
+      lastMinuteDiscountPercent: parseInt(String(formData.get('lastMinuteDiscountPercent') || '0')) || 0,
+      lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
+      occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
+      occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
     },
   });
 
