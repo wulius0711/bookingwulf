@@ -69,33 +69,16 @@ async function duplicateApartment(formData: FormData) {
   redirect('/admin/apartments');
 }
 
-type SearchParams = Promise<{ hotel?: string }>;
-type PageProps = { searchParams: SearchParams };
-
-export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
+export default async function ApartmentsAdminPage() {
   const session = await verifySession();
   const isSuperAdmin = session.hotelId === null;
 
-  const { hotel } = await searchParams;
-  const selectedHotelSlug = isSuperAdmin ? (hotel?.trim() || '') : '';
-
-  const hotels = isSuperAdmin
-    ? await prisma.hotel.findMany({
-        where: { isActive: true },
-        select: { id: true, name: true, slug: true, accentColor: true },
-        orderBy: { name: 'asc' },
-      })
-    : await prisma.hotel.findMany({
-        where: { id: session.hotelId!, isActive: true },
-        select: { id: true, name: true, slug: true, accentColor: true },
-      });
+  const hotelName = session.hotelId
+    ? (await prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { name: true } }))?.name || ''
+    : '';
 
   const apartments = await prisma.apartment.findMany({
-    where: session.hotelId !== null
-      ? { hotelId: session.hotelId }
-      : selectedHotelSlug
-      ? { hotel: { slug: selectedHotelSlug } }
-      : undefined,
+    where: session.hotelId !== null ? { hotelId: session.hotelId } : undefined,
     include: {
       hotel: { select: { id: true, name: true, slug: true, accentColor: true } },
       images: { orderBy: { sortOrder: 'asc' } },
@@ -118,75 +101,11 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
         <div>
           <h1 style={{ margin: 0 }}>Apartments</h1>
           <div style={{ marginTop: 8, fontSize: 13, color: '#666' }}>
-            {!isSuperAdmin
-              ? hotels[0]?.name || ''
-              : selectedHotelSlug
-              ? `Gefiltert nach Hotel: ${hotels.find((h) => h.slug === selectedHotelSlug)?.name || selectedHotelSlug}`
-              : 'Alle Hotels'}
+            {isSuperAdmin ? 'Alle Hotels' : hotelName}
           </div>
         </div>
 
         <div style={{ display: 'flex', gap: 12, alignItems: 'end', flexWrap: 'wrap' }}>
-          {isSuperAdmin && (
-            <form method="GET">
-              <label style={{ display: 'grid', gap: 8, fontSize: 13, color: '#666' }}>
-                Hotel filtern
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <select
-                    name="hotel"
-                    defaultValue={selectedHotelSlug}
-                    style={{
-                      minWidth: 220,
-                      padding: '10px 12px',
-                      border: '1px solid #d1d5db',
-                      borderRadius: 10,
-                      background: '#fff',
-                      fontSize: 14,
-                      color: '#111',
-                    }}
-                  >
-                    <option value="">Alle Hotels</option>
-                    {hotels.map((hotel) => (
-                      <option key={hotel.id} value={hotel.slug}>
-                        {hotel.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '10px 14px',
-                      borderRadius: 8,
-                      border: '1px solid #111',
-                      background: '#111',
-                      color: '#fff',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Anwenden
-                  </button>
-
-                  {selectedHotelSlug ? (
-                    <Link
-                      href="/admin/apartments"
-                      style={{
-                        padding: '10px 14px',
-                        borderRadius: 8,
-                        border: '1px solid #ccc',
-                        background: '#fff',
-                        color: '#111',
-                        textDecoration: 'none',
-                      }}
-                    >
-                      Reset
-                    </Link>
-                  ) : null}
-                </div>
-              </label>
-            </form>
-          )}
-
           {apartments.length > 0 && (
             <Link
               className="btn-primary"
@@ -204,38 +123,6 @@ export default async function ApartmentsAdminPage({ searchParams }: PageProps) {
           )}
         </div>
       </div>
-
-      {isSuperAdmin && hotels.length > 0 && (
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-          {hotels.map((hotel) => (
-            <div
-              key={hotel.id}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '6px 10px',
-                borderRadius: 8,
-                border: '1px solid #eee',
-                background: '#fff',
-                fontSize: 12,
-                color: '#444',
-              }}
-            >
-              <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 8,
-                  background: hotel.accentColor || '#bbb',
-                  display: 'inline-block',
-                }}
-              />
-              {hotel.name}
-            </div>
-          ))}
-        </div>
-      )}
 
       {apartments.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
