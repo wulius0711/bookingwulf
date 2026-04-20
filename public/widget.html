@@ -3018,15 +3018,13 @@ sortedApartments.forEach((ap) => {
             const deposit = total > 0 ? Math.round(total * 0.25 / 10) * 10 : 0;
             const depositText = deposit > 0 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',') : '\u2014';
             area.innerHTML =
-              '<div style="border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:16px;">' +
-                '<div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
-                '<div style="display:flex;justify-content:flex-end;">' +
-                  '<button type="button" id="submitRequestBtn" class="btn-light"' + disabled + '>Anfragen</button>' +
-                '</div>' +
+              '<div style="border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
+                '<div style="font-size:13px;color:var(--muted);">Keine Bezahlung vorab notwendig. Eine Anfrage ist unverbindlich.</div>' +
+                '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' + disabled + '>Anfragen</button>' +
               '</div>' +
               '<div style="border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:10px;">' +
-                '<div class="payment-accordion-toggle" id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:500;font-size:14px;">' +
-                  'Verbindlich buchen' +
+                '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:500;font-size:14px;">' +
+                  'Zahlungsoptionen' +
                   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
                 '</div>' +
                 '<div class="payment-accordion-body" id="paymentAccordionBody">' +
@@ -3039,9 +3037,9 @@ sortedApartments.forEach((ap) => {
                       '<option value="Bank\u00fcberweisung">Bank\u00fcberweisung</option>' +
                     '</select>' +
                   '</div>' +
-                  '<div style="display:flex;justify-content:flex-end;margin-top:12px;">' +
-                    '<button type="button" id="submitBtn"' + disabled + '>Verbindlich buchen</button>' +
-                  '</div>' +
+                '</div>' +
+                '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
+                  '<button type="button" id="submitBtn"' + disabled + '>Verbindlich buchen</button>' +
                 '</div>' +
               '</div>';
 
