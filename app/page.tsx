@@ -31,7 +31,7 @@ export default function LandingPage() {
     { icon: '♊', title: 'Doppelt einsetzbar', desc: 'Gleichzeitig für Buchung und Anfrage verwenden.' },
     { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich mit Airbnb & Booking.com via iCal.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
-    { icon: '💶', title: 'Preissaisons', desc: 'Saisonale Preise automatisch anwenden — Haupt-, Neben- und Feiertagspreise.' },
+    { icon: '💶', title: 'Dynamic Pricing', desc: 'Last-Minute-Rabatte, Mindestaufenthalte und belegungsbasierte Preise – automatisch.' },
     { icon: '⚡', title: 'Einbau in 1 Minute', desc: 'Eine Zeile Code auf Ihre Website — kein Entwickler nötig.' },
     { icon: '🌍', title: 'Mehrsprachige Kommunikation', desc: 'Gäste-E-Mails in 9 Sprachen — automatisch erkannt, manuell anpassbar.' },
     { icon: '🔑', title: 'Nuki-Integration', desc: 'Schlüsselloses Einchecken — kein Schlüssel, kein Aufwand.' },
