@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 const THEMES = [
   { key: 'indigo',  label: 'Indigo',   color: '#4f46e5' },
   { key: 'classic', label: 'Classic',  color: '#111827' },
-  { key: 'teal',    label: 'Teal',     color: '#0d9488' },
+  { key: 'orange',  label: 'Orange',   color: '#EA5605' },
 ] as const;
 
 type ThemeKey = typeof THEMES[number]['key'];
 
 function applyTheme(key: ThemeKey) {
-  document.documentElement.classList.remove('theme-classic', 'theme-teal');
+  document.documentElement.classList.remove('theme-classic', 'theme-orange');
   if (key !== 'indigo') document.documentElement.classList.add(`theme-${key}`);
   localStorage.setItem('admin-theme', key);
 }

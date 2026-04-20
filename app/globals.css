@@ -20,13 +20,13 @@
   --nav-group: #b0b7c3;
 }
 
-.theme-teal {
-  --accent: #0d9488;
-  --accent-gradient: linear-gradient(to bottom, #0d9488, #0f766e);
-  --accent-gradient-hover: linear-gradient(to bottom, #14b8a6, #0d9488);
-  --accent-light: #f0fdfa;
-  --page-bg: #f0fdfb;
-  --nav-group: #5eead4;
+.theme-orange {
+  --accent: #EA5605;
+  --accent-gradient: linear-gradient(to bottom, #EA5605, #c44a04);
+  --accent-gradient-hover: linear-gradient(to bottom, #f26a1a, #EA5605);
+  --accent-light: #fff7ed;
+  --page-bg: #fdf6f0;
+  --nav-group: #fdba74;
 }
 
 @theme inline {
