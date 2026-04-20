@@ -184,7 +184,7 @@ export default function BillingPage() {
               {([
                 ['Starter', '€ 49 / Monat', 'Buchungswidget, Anfrageverwaltung, E-Mail-Benachrichtigungen, iCal-Sync, Versicherungsoptionen.'],
                 ['Pro', '€ 99 / Monat', 'Alles aus Starter plus: vollständiges Branding, Zusatzleistungen, Nuki-Integration, mehrere Widget-Konfigurationen.'],
-                ['Business', '€ 199 / Monat', 'Alles aus Pro plus: mehrere Hotels unter einem Konto, Priority Support.'],
+                ['Business', '€ 199 / Monat', 'Alles aus Pro plus: mehrere Hotels unter einem Konto, Analytics, Priority Support.'],
               ] as [string, string, string][]).map(([name, price, desc]) => (
                 <div key={name} style={{ display: 'grid', gridTemplateColumns: '90px 1fr', gap: '4px 16px', alignItems: 'start', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
                   <div>
