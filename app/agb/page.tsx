@@ -86,6 +86,7 @@ export default function AGBPage() {
       <h2 style={h2}>§ 7 Pflichten des Kunden</h2>
       <ul style={ul}>
         <li>Der Kunde ist für die Inhalte seiner Apartments (Beschreibungen, Bilder, Preise) selbst verantwortlich.</li>
+        <li>Der Kunde ist dafür verantwortlich, alle für den Betrieb des Widgets erforderlichen Angaben vollständig und korrekt zu hinterlegen (z. B. Buchungsbedingungen, Datenschutzerklärung, Preise, Verfügbarkeiten). bookingwulf übernimmt keine Haftung für Schäden, die aus unvollständigen oder fehlerhaften Kundendaten entstehen.</li>
         <li>Der Kunde stellt sicher, dass die über bookingwulf erhobenen Gästedaten gemäß DSGVO verarbeitet werden.</li>
         <li>Der Kunde informiert seine Gäste über die Datenverarbeitung durch bookingwulf, z. B. durch Verlinkung der Datenschutzerklärung im Widget.</li>
         <li>Der Kunde darf den Dienst nicht für rechtswidrige Zwecke nutzen.</li>
