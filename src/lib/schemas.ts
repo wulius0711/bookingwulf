@@ -9,6 +9,12 @@ export const bookingRequestSchema = z.object({
   adults: z.number().int().min(1).max(50),
   children: z.number().int().min(0).max(50).optional().default(0),
   child_birthdays: z.array(z.string().max(20)).optional().default([]),
+  additional_guests: z.array(z.object({
+    type: z.enum(['adult', 'child']),
+    firstname: z.string().max(100).optional().default(''),
+    lastname: z.string().max(100).optional().default(''),
+    birthday: z.string().max(20).optional().default(''),
+  })).optional().default([]),
   selected_apartments: z.string().min(1).max(500),
   salutation: z.string().max(20).optional().default(''),
   firstname: z.string().max(100).optional().default(''),

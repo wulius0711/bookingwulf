@@ -57,6 +57,7 @@ export async function POST(req: Request) {
     const adults = body.adults;
     const children = body.children;
     const childBirthdays = body.child_birthdays;
+    const additionalGuests = body.additional_guests;
     const selectedApartmentIdsRaw = body.selected_apartments.trim();
 
     // Support both object format {key: true/false} and array format [key1, key2]
@@ -338,6 +339,11 @@ export async function POST(req: Request) {
             ${buildInfoBlock('Zeitraum', `${formatDate(arrival)} — ${formatDate(departure)} (${nights} Nächte)`)}
             ${buildInfoBlock('Gäste', `${adults} Erwachsene${children ? `, ${children} Kinder` : ''}`)}
             ${childBirthdays.length ? buildInfoBlock('Geburtstage Kinder', childBirthdays.map((d, i) => `Kind ${i + 1}: ${d}`).join('<br/>')) : ''}
+            ${additionalGuests.length ? buildInfoBlock('Weitere Gäste', additionalGuests.map((g, i) => {
+              const name = [g.firstname, g.lastname].filter(Boolean).join(' ') || '—';
+              const bd = g.birthday ? `, geb. ${g.birthday}` : '';
+              return `${i + 1}. ${name}${bd}`;
+            }).join('<br/>')) : ''}
             ${buildInfoBlock('Apartments', apartmentNames)}
             ${buildDivider()}
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Zusatzleistungen</div>

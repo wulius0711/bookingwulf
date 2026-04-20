@@ -512,6 +512,68 @@
         gap: 18px;
       }
 
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 18px;
+      }
+
+      .guest-accordion {
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .guest-accordion-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: var(--surface-2);
+        cursor: pointer;
+        user-select: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: none;
+        width: 100%;
+        text-align: left;
+        color: var(--text);
+      }
+
+      .guest-accordion-toggle svg {
+        transition: transform 0.2s;
+        flex-shrink: 0;
+      }
+
+      .guest-accordion-toggle.open svg {
+        transform: rotate(180deg);
+      }
+
+      .guest-accordion-body {
+        display: none;
+        padding: 16px;
+        border-top: 1px solid var(--line);
+        background: var(--surface-2);
+      }
+
+      .guest-accordion-body.open {
+        display: block;
+      }
+
+      .guest-section-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin: 16px 0 10px;
+      }
+
+      .guest-section-title:first-child {
+        margin-top: 0;
+      }
+
       .apt-card {
         position: relative;
         display: flex;
@@ -1279,7 +1341,8 @@
 
         .top,
         .layout,
-        .grid-2 {
+        .grid-2,
+        .grid-3 {
           grid-template-columns: 1fr;
         }
 
@@ -1593,6 +1656,16 @@
                 <div class="field-block">
                   <label class="label" for="phone">Telefon</label>
                   <input id="phone" type="tel" placeholder="+49 123456789" />
+                </div>
+              </div>
+
+              <div id="guestDataAccordion" style="display:none;" class="guest-accordion">
+                <button type="button" class="guest-accordion-toggle" id="guestAccordionToggle">
+                  Gäste Daten
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="guest-accordion-body" id="guestAccordionBody">
+                  <div id="guestFieldsWrap"></div>
                 </div>
               </div>
 
@@ -2759,6 +2832,76 @@ sortedApartments.forEach((ap) => {
           }
         }
 
+        function renderGuestFields() {
+          const accordion = document.getElementById('guestDataAccordion');
+          if (!accordion) return;
+          const totalGuests = (state.adults || 0) + (state.children || 0);
+          accordion.style.display = totalGuests > 1 ? '' : 'none';
+          if (totalGuests <= 1) return;
+
+          const wrap = document.getElementById('guestFieldsWrap');
+          if (!wrap) return;
+
+          // Preserve existing values before rebuilding
+          const saved = {};
+          wrap.querySelectorAll('input').forEach(el => { if (el.id) saved[el.id] = el.value; });
+
+          wrap.innerHTML = '';
+
+          // Adults (skip first — already captured as main contact)
+          if (state.adults > 1) {
+            const at = document.createElement('div');
+            at.className = 'guest-section-title';
+            at.textContent = 'Erwachsene';
+            wrap.appendChild(at);
+            for (let i = 1; i < state.adults; i++) {
+              const row = document.createElement('div');
+              row.className = 'grid-2';
+              row.style.marginBottom = '12px';
+              row.innerHTML = `
+                <div class="field-block">
+                  <label class="label" for="guestAdult_${i}_fn">Vorname</label>
+                  <input type="text" id="guestAdult_${i}_fn" placeholder="Vorname" value="${saved[`guestAdult_${i}_fn`] || ''}" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="guestAdult_${i}_ln">Nachname</label>
+                  <input type="text" id="guestAdult_${i}_ln" placeholder="Nachname" value="${saved[`guestAdult_${i}_ln`] || ''}" />
+                </div>`;
+              wrap.appendChild(row);
+            }
+          }
+
+          // Children
+          if (state.children > 0) {
+            const ct = document.createElement('div');
+            ct.className = 'guest-section-title';
+            ct.style.marginTop = state.adults > 1 ? '16px' : '0';
+            ct.textContent = 'Kinder';
+            wrap.appendChild(ct);
+            for (let i = 0; i < state.children; i++) {
+              const bdEl = document.getElementById(`childBirthday_${i}`);
+              const bdVal = bdEl ? bdEl.value : (saved[`guestChild_${i}_bd`] || '');
+              const row = document.createElement('div');
+              row.className = 'grid-3';
+              row.style.marginBottom = '12px';
+              row.innerHTML = `
+                <div class="field-block">
+                  <label class="label" for="guestChild_${i}_fn">Vorname</label>
+                  <input type="text" id="guestChild_${i}_fn" placeholder="Vorname" value="${saved[`guestChild_${i}_fn`] || ''}" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="guestChild_${i}_ln">Nachname</label>
+                  <input type="text" id="guestChild_${i}_ln" placeholder="Nachname" value="${saved[`guestChild_${i}_ln`] || ''}" />
+                </div>
+                <div class="field-block">
+                  <label class="label" for="guestChild_${i}_bd">Geburtsdatum</label>
+                  <input type="date" id="guestChild_${i}_bd" value="${bdVal}" />
+                </div>`;
+              wrap.appendChild(row);
+            }
+          }
+        }
+
         function renderAll() {
           renderSteps();
           renderApartments();
@@ -2767,6 +2910,7 @@ sortedApartments.forEach((ap) => {
           renderLightbox();
           renderTermsCheckbox();
           renderChildBirthdays();
+          renderGuestFields();
         }
 
         function validateStep(step) {
@@ -3005,6 +3149,19 @@ sortedApartments.forEach((ap) => {
             return el ? el.value : '';
           }).filter(Boolean);
 
+          const additionalGuests = [];
+          for (let i = 1; i < (state.adults || 0); i++) {
+            const fn = (document.getElementById(`guestAdult_${i}_fn`)?.value || '').trim();
+            const ln = (document.getElementById(`guestAdult_${i}_ln`)?.value || '').trim();
+            if (fn || ln) additionalGuests.push({ type: 'adult', firstname: fn, lastname: ln });
+          }
+          for (let i = 0; i < (state.children || 0); i++) {
+            const fn = (document.getElementById(`guestChild_${i}_fn`)?.value || '').trim();
+            const ln = (document.getElementById(`guestChild_${i}_ln`)?.value || '').trim();
+            const bd = (document.getElementById(`guestChild_${i}_bd`)?.value || '').trim();
+            if (fn || ln || bd) additionalGuests.push({ type: 'child', firstname: fn, lastname: ln, birthday: bd });
+          }
+
           try {
             const res = await fetch(`${API_BASE}/api/request`, {
               method: "POST",
@@ -3026,6 +3183,7 @@ sortedApartments.forEach((ap) => {
                 phone,
                 message,
                 extras: state.selectedExtras,
+                additional_guests: additionalGuests,
                 newsletter: false,
                 bookingType,
                 browserLanguage: navigator.language || '',
@@ -3182,6 +3340,12 @@ sortedApartments.forEach((ap) => {
         document
           .getElementById("lightboxClose")
           .addEventListener("click", closeLightbox);
+
+        document.getElementById('guestAccordionToggle').addEventListener('click', function () {
+          const body = document.getElementById('guestAccordionBody');
+          const isOpen = body.classList.toggle('open');
+          this.classList.toggle('open', isOpen);
+        });
 
         document
           .getElementById("lightboxNext")
