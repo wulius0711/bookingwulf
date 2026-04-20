@@ -306,6 +306,19 @@ button, a[role="button"], input[type="submit"] {
   .extras-form-grid {
     grid-template-columns: 1fr;
   }
+
+  .settings-left-panel {
+    padding: 16px !important;
+    gap: 16px !important;
+  }
+
+  .settings-section {
+    padding: 16px !important;
+  }
+
+  .settings-color-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }
 
 .admin-page h1 {

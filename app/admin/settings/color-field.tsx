@@ -54,7 +54,7 @@ export function ColorField({
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
       <span style={{ ...labelStyle, flex: 1, minWidth: 0, margin: 0 }}>{label}</span>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
         {/* Swatch */}
         <label style={{ position: 'relative', display: 'block', width: 36, height: 36, borderRadius: 8, border: '1px solid #d1d5db', background: combined, cursor: 'pointer', flexShrink: 0, overflow: 'hidden' }}>
           <input
@@ -74,14 +74,14 @@ export function ColorField({
 
         {/* Opacity slider + value */}
         {showOpacity && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
             <input
               type="range"
               min={0}
               max={100}
               value={alpha}
               onChange={(e) => setAlpha(Number(e.target.value))}
-              style={{ width: 72, accentColor: '#111', cursor: 'pointer' }}
+              style={{ width: 60, accentColor: '#111', cursor: 'pointer' }}
             />
             <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
           </div>

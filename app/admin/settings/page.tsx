@@ -135,7 +135,7 @@ const inputStyle: React.CSSProperties = {
 
 const smallInputStyle: React.CSSProperties = {
   ...inputStyle,
-  width: 120,
+  width: '100%',
 };
 
 const checkboxRowStyle: React.CSSProperties = {
@@ -271,7 +271,7 @@ export default async function Page({ searchParams }: PageProps) {
     <main className="admin-page" style={pageStyle}>
       <div className="settings-shell" style={shellStyle}>
         {/* LEFT */}
-        <div style={leftPanelStyle}>
+        <div className="settings-left-panel" style={leftPanelStyle}>
           <div style={topBarStyle}>
             <div>
               <h1 style={headlineStyle}>Hotel Settings</h1>
@@ -308,7 +308,7 @@ export default async function Page({ searchParams }: PageProps) {
             <input type="hidden" name="hotelId" value={selected.id} />
 
             {/* BENACHRICHTIGUNGEN */}
-            <div style={sectionStyle}>
+            <div className="settings-section" style={sectionStyle}>
               <div>
                 <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
                 <p style={sectionIntroStyle}>
@@ -331,7 +331,7 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* RECHTLICHES */}
-            <div style={sectionStyle}>
+            <div className="settings-section" style={sectionStyle}>
               <div>
                 <h2 style={sectionTitleStyle}>Rechtliches</h2>
                 <p style={sectionIntroStyle}>
@@ -363,7 +363,7 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* DESIGN */}
-            <div style={sectionStyle}>
+            <div className="settings-section" style={sectionStyle}>
               <div>
                 <h2 style={sectionTitleStyle}>Design</h2>
                 <p style={sectionIntroStyle}>
@@ -422,7 +422,7 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* TYPOGRAFIE */}
-            <div style={sectionStyle}>
+            <div className="settings-section" style={sectionStyle}>
               <div>
                 <h2 style={sectionTitleStyle}>Typografie</h2>
                 <p style={sectionIntroStyle}>Schriftarten, Größen und Gewichtungen für das Widget.</p>
@@ -498,7 +498,7 @@ export default async function Page({ searchParams }: PageProps) {
                         <select
                           name={hasTypography ? field : `_disabled_${field}`}
                           defaultValue={String(currentVal)}
-                          style={{ ...inputStyle, width: 160 }}
+                          style={{ ...inputStyle, width: '100%' }}
                         >
                           <option value="">Standard</option>
                           <option value="300">300 – Light</option>
@@ -531,7 +531,7 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* FEATURES */}
-            <div style={sectionStyle}>
+            <div className="settings-section" style={sectionStyle}>
               <div>
                 <h2 style={sectionTitleStyle}>Features</h2>
                 <p style={sectionIntroStyle}>
@@ -573,7 +573,7 @@ export default async function Page({ searchParams }: PageProps) {
           </form>
 
           {/* EMBED CODE */}
-          <div style={sectionStyle}>
+          <div className="settings-section" style={sectionStyle}>
             <div>
               <h2 style={sectionTitleStyle}>Embed-Code</h2>
               <p style={sectionIntroStyle}>
