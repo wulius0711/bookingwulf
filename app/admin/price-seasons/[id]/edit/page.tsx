@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { writeAuditLog } from '@/src/lib/audit';
 import { redirect, notFound } from 'next/navigation';
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -39,15 +40,22 @@ export default async function EditPriceSeasonPage({ params }: PageProps) {
     if (!apartmentId || !pricePerNight) throw new Error('Fehlende Daten');
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
-    if (session.hotelId !== null) {
-      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
-      if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
-    }
+    const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
+    if (session.hotelId !== null && (!apt || apt.hotelId !== session.hotelId)) throw new Error('Zugriff verweigert.');
+
+    const prev = await prisma.priceSeason.findUnique({ where: { id: seasonId }, select: { name: true, startDate: true, endDate: true, pricePerNight: true, minStay: true } });
 
     await prisma.priceSeason.update({
       where: { id: seasonId },
       data: { name: name || null, apartmentId, startDate, endDate, pricePerNight, minStay },
     });
+
+    if (apt && prev) {
+      await writeAuditLog(apt.hotelId,
+        { price_season_name: prev.name, price_season_start: prev.startDate.toISOString().slice(0, 10), price_season_end: prev.endDate.toISOString().slice(0, 10), price_season_price: String(prev.pricePerNight), price_season_minstay: String(prev.minStay) },
+        { price_season_name: name || null, price_season_start: startDate.toISOString().slice(0, 10), price_season_end: endDate.toISOString().slice(0, 10), price_season_price: String(pricePerNight), price_season_minstay: String(minStay) },
+      );
+    }
 
     redirect('/admin/price-seasons');
   }

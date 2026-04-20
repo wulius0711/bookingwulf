@@ -97,3 +97,8 @@ export type EmailTemplate = Prisma.EmailTemplateModel
  * 
  */
 export type NukiConfig = Prisma.NukiConfigModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

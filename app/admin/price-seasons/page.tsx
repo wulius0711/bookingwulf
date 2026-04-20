@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { writeAuditLog } from '@/src/lib/audit';
 import Link from 'next/link';
 import PriceSeasonList from './PriceSeasonList';
 
@@ -14,15 +15,22 @@ async function deleteSeason(formData: FormData) {
   const id = Number(formData.get('id'));
   if (!id) return;
 
-  if (session.hotelId !== null) {
-    const season = await prisma.priceSeason.findUnique({
-      where: { id },
-      include: { apartment: { select: { hotelId: true } } },
-    });
-    if (!season || season.apartment?.hotelId !== session.hotelId) return;
-  }
+  const season = await prisma.priceSeason.findUnique({
+    where: { id },
+    include: { apartment: { select: { hotelId: true, name: true } } },
+  });
+  if (!season) return;
+  if (session.hotelId !== null && season.apartment?.hotelId !== session.hotelId) return;
 
   await prisma.priceSeason.delete({ where: { id } });
+
+  if (season.apartment) {
+    await writeAuditLog(season.apartment.hotelId, {
+      price_season_deleted: `${season.name || 'Saison'} | ${season.apartment.name} | ${season.startDate.toISOString().slice(0, 10)}–${season.endDate.toISOString().slice(0, 10)} | €${season.pricePerNight}/Nacht`,
+    }, {
+      price_season_deleted: null,
+    });
+  }
 }
 
 export default async function PriceSeasonsPage({ searchParams }: PageProps) {

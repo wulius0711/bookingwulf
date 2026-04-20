@@ -66,7 +66,8 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   AdminUserHotel: 'AdminUserHotel',
   EmailTemplate: 'EmailTemplate',
-  NukiConfig: 'NukiConfig'
+  NukiConfig: 'NukiConfig',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -364,6 +365,18 @@ export const NukiConfigScalarFieldEnum = {
 } as const
 
 export type NukiConfigScalarFieldEnum = (typeof NukiConfigScalarFieldEnum)[keyof typeof NukiConfigScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  hotelId: 'hotelId',
+  field: 'field',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  changedAt: 'changedAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

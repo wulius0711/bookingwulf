@@ -315,6 +315,7 @@ export type HotelWhereInput = {
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
   extras?: Prisma.HotelExtraListRelationFilter
   nukiConfig?: Prisma.XOR<Prisma.NukiConfigNullableScalarRelationFilter, Prisma.NukiConfigWhereInput> | null
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type HotelOrderByWithRelationInput = {
@@ -345,6 +346,7 @@ export type HotelOrderByWithRelationInput = {
   blockedRanges?: Prisma.BlockedRangeOrderByRelationAggregateInput
   extras?: Prisma.HotelExtraOrderByRelationAggregateInput
   nukiConfig?: Prisma.NukiConfigOrderByWithRelationInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type HotelWhereUniqueInput = Prisma.AtLeast<{
@@ -378,6 +380,7 @@ export type HotelWhereUniqueInput = Prisma.AtLeast<{
   blockedRanges?: Prisma.BlockedRangeListRelationFilter
   extras?: Prisma.HotelExtraListRelationFilter
   nukiConfig?: Prisma.XOR<Prisma.NukiConfigNullableScalarRelationFilter, Prisma.NukiConfigWhereInput> | null
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "slug" | "stripeCustomerId" | "stripeSubscriptionId">
 
 export type HotelOrderByWithAggregationInput = {
@@ -453,6 +456,7 @@ export type HotelCreateInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateInput = {
@@ -483,6 +487,7 @@ export type HotelUncheckedCreateInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUpdateInput = {
@@ -512,6 +517,7 @@ export type HotelUpdateInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateInput = {
@@ -542,6 +548,7 @@ export type HotelUncheckedUpdateInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateManyInput = {
@@ -863,6 +870,20 @@ export type HotelUpdateOneRequiredWithoutNukiConfigNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HotelUpdateToOneWithWhereWithoutNukiConfigInput, Prisma.HotelUpdateWithoutNukiConfigInput>, Prisma.HotelUncheckedUpdateWithoutNukiConfigInput>
 }
 
+export type HotelCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.HotelCreateWithoutAuditLogsInput, Prisma.HotelUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.HotelCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.HotelWhereUniqueInput
+}
+
+export type HotelUpdateOneRequiredWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.HotelCreateWithoutAuditLogsInput, Prisma.HotelUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.HotelCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.HotelUpsertWithoutAuditLogsInput
+  connect?: Prisma.HotelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HotelUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.HotelUpdateWithoutAuditLogsInput>, Prisma.HotelUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type HotelCreateWithoutSettingsInput = {
   name: string
   slug: string
@@ -889,6 +910,7 @@ export type HotelCreateWithoutSettingsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutSettingsInput = {
@@ -918,6 +940,7 @@ export type HotelUncheckedCreateWithoutSettingsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutSettingsInput = {
@@ -962,6 +985,7 @@ export type HotelUpdateWithoutSettingsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutSettingsInput = {
@@ -991,6 +1015,7 @@ export type HotelUncheckedUpdateWithoutSettingsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutWidgetConfigsInput = {
@@ -1019,6 +1044,7 @@ export type HotelCreateWithoutWidgetConfigsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutWidgetConfigsInput = {
@@ -1048,6 +1074,7 @@ export type HotelUncheckedCreateWithoutWidgetConfigsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutWidgetConfigsInput = {
@@ -1092,6 +1119,7 @@ export type HotelUpdateWithoutWidgetConfigsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutWidgetConfigsInput = {
@@ -1121,6 +1149,7 @@ export type HotelUncheckedUpdateWithoutWidgetConfigsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutSettingsPresetsInput = {
@@ -1149,6 +1178,7 @@ export type HotelCreateWithoutSettingsPresetsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutSettingsPresetsInput = {
@@ -1178,6 +1208,7 @@ export type HotelUncheckedCreateWithoutSettingsPresetsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutSettingsPresetsInput = {
@@ -1222,6 +1253,7 @@ export type HotelUpdateWithoutSettingsPresetsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutSettingsPresetsInput = {
@@ -1251,6 +1283,7 @@ export type HotelUncheckedUpdateWithoutSettingsPresetsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutApartmentsInput = {
@@ -1279,6 +1312,7 @@ export type HotelCreateWithoutApartmentsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutApartmentsInput = {
@@ -1308,6 +1342,7 @@ export type HotelUncheckedCreateWithoutApartmentsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutApartmentsInput = {
@@ -1352,6 +1387,7 @@ export type HotelUpdateWithoutApartmentsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutApartmentsInput = {
@@ -1381,6 +1417,7 @@ export type HotelUncheckedUpdateWithoutApartmentsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutBlockedRangesInput = {
@@ -1409,6 +1446,7 @@ export type HotelCreateWithoutBlockedRangesInput = {
   userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutBlockedRangesInput = {
@@ -1438,6 +1476,7 @@ export type HotelUncheckedCreateWithoutBlockedRangesInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutBlockedRangesInput = {
@@ -1482,6 +1521,7 @@ export type HotelUpdateWithoutBlockedRangesInput = {
   userHotels?: Prisma.AdminUserHotelUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
@@ -1511,6 +1551,7 @@ export type HotelUncheckedUpdateWithoutBlockedRangesInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutRequestsInput = {
@@ -1539,6 +1580,7 @@ export type HotelCreateWithoutRequestsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutRequestsInput = {
@@ -1568,6 +1610,7 @@ export type HotelUncheckedCreateWithoutRequestsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutRequestsInput = {
@@ -1612,6 +1655,7 @@ export type HotelUpdateWithoutRequestsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutRequestsInput = {
@@ -1641,6 +1685,7 @@ export type HotelUncheckedUpdateWithoutRequestsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutExtrasInput = {
@@ -1669,6 +1714,7 @@ export type HotelCreateWithoutExtrasInput = {
   userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutExtrasInput = {
@@ -1698,6 +1744,7 @@ export type HotelUncheckedCreateWithoutExtrasInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutExtrasInput = {
@@ -1742,6 +1789,7 @@ export type HotelUpdateWithoutExtrasInput = {
   userHotels?: Prisma.AdminUserHotelUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutExtrasInput = {
@@ -1771,6 +1819,7 @@ export type HotelUncheckedUpdateWithoutExtrasInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutAdminUsersInput = {
@@ -1799,6 +1848,7 @@ export type HotelCreateWithoutAdminUsersInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutAdminUsersInput = {
@@ -1828,6 +1878,7 @@ export type HotelUncheckedCreateWithoutAdminUsersInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutAdminUsersInput = {
@@ -1872,6 +1923,7 @@ export type HotelUpdateWithoutAdminUsersInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutAdminUsersInput = {
@@ -1901,6 +1953,7 @@ export type HotelUncheckedUpdateWithoutAdminUsersInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutUserHotelsInput = {
@@ -1929,6 +1982,7 @@ export type HotelCreateWithoutUserHotelsInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutUserHotelsInput = {
@@ -1958,6 +2012,7 @@ export type HotelUncheckedCreateWithoutUserHotelsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutUserHotelsInput = {
@@ -2002,6 +2057,7 @@ export type HotelUpdateWithoutUserHotelsInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutUserHotelsInput = {
@@ -2031,6 +2087,7 @@ export type HotelUncheckedUpdateWithoutUserHotelsInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutEmailTemplatesInput = {
@@ -2059,6 +2116,7 @@ export type HotelCreateWithoutEmailTemplatesInput = {
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutEmailTemplatesInput = {
@@ -2088,6 +2146,7 @@ export type HotelUncheckedCreateWithoutEmailTemplatesInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
   nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutEmailTemplatesInput = {
@@ -2132,6 +2191,7 @@ export type HotelUpdateWithoutEmailTemplatesInput = {
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutEmailTemplatesInput = {
@@ -2161,6 +2221,7 @@ export type HotelUncheckedUpdateWithoutEmailTemplatesInput = {
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
   nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelCreateWithoutNukiConfigInput = {
@@ -2189,6 +2250,7 @@ export type HotelCreateWithoutNukiConfigInput = {
   userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutHotelInput
 }
 
 export type HotelUncheckedCreateWithoutNukiConfigInput = {
@@ -2218,6 +2280,7 @@ export type HotelUncheckedCreateWithoutNukiConfigInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutHotelInput
   blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
   extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutHotelInput
 }
 
 export type HotelCreateOrConnectWithoutNukiConfigInput = {
@@ -2262,6 +2325,7 @@ export type HotelUpdateWithoutNukiConfigInput = {
   userHotels?: Prisma.AdminUserHotelUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutHotelNestedInput
 }
 
 export type HotelUncheckedUpdateWithoutNukiConfigInput = {
@@ -2291,6 +2355,141 @@ export type HotelUncheckedUpdateWithoutNukiConfigInput = {
   userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutHotelNestedInput
   blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
   extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutHotelNestedInput
+}
+
+export type HotelCreateWithoutAuditLogsInput = {
+  name: string
+  slug: string
+  accentColor?: string | null
+  email?: string | null
+  phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
+  trialEndsAt?: Date | string | null
+  settings?: Prisma.HotelSettingsCreateNestedOneWithoutHotelInput
+  settingsPresets?: Prisma.HotelSettingsPresetCreateNestedManyWithoutHotelInput
+  widgetConfigs?: Prisma.WidgetConfigCreateNestedManyWithoutHotelInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutHotelInput
+  apartments?: Prisma.ApartmentCreateNestedManyWithoutHotelInput
+  requests?: Prisma.RequestCreateNestedManyWithoutHotelInput
+  adminUsers?: Prisma.AdminUserCreateNestedManyWithoutHotelInput
+  userHotels?: Prisma.AdminUserHotelCreateNestedManyWithoutHotelInput
+  blockedRanges?: Prisma.BlockedRangeCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraCreateNestedManyWithoutHotelInput
+  nukiConfig?: Prisma.NukiConfigCreateNestedOneWithoutHotelInput
+}
+
+export type HotelUncheckedCreateWithoutAuditLogsInput = {
+  id?: number
+  name: string
+  slug: string
+  accentColor?: string | null
+  email?: string | null
+  phone?: string | null
+  bookingTermsUrl?: string | null
+  privacyPolicyUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  plan?: string
+  stripeCustomerId?: string | null
+  stripeSubscriptionId?: string | null
+  subscriptionStatus?: string
+  trialEndsAt?: Date | string | null
+  settings?: Prisma.HotelSettingsUncheckedCreateNestedOneWithoutHotelInput
+  settingsPresets?: Prisma.HotelSettingsPresetUncheckedCreateNestedManyWithoutHotelInput
+  widgetConfigs?: Prisma.WidgetConfigUncheckedCreateNestedManyWithoutHotelInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutHotelInput
+  apartments?: Prisma.ApartmentUncheckedCreateNestedManyWithoutHotelInput
+  requests?: Prisma.RequestUncheckedCreateNestedManyWithoutHotelInput
+  adminUsers?: Prisma.AdminUserUncheckedCreateNestedManyWithoutHotelInput
+  userHotels?: Prisma.AdminUserHotelUncheckedCreateNestedManyWithoutHotelInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedCreateNestedManyWithoutHotelInput
+  extras?: Prisma.HotelExtraUncheckedCreateNestedManyWithoutHotelInput
+  nukiConfig?: Prisma.NukiConfigUncheckedCreateNestedOneWithoutHotelInput
+}
+
+export type HotelCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.HotelWhereUniqueInput
+  create: Prisma.XOR<Prisma.HotelCreateWithoutAuditLogsInput, Prisma.HotelUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type HotelUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.HotelUpdateWithoutAuditLogsInput, Prisma.HotelUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.HotelCreateWithoutAuditLogsInput, Prisma.HotelUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.HotelWhereInput
+}
+
+export type HotelUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.HotelWhereInput
+  data: Prisma.XOR<Prisma.HotelUpdateWithoutAuditLogsInput, Prisma.HotelUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type HotelUpdateWithoutAuditLogsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  settings?: Prisma.HotelSettingsUpdateOneWithoutHotelNestedInput
+  settingsPresets?: Prisma.HotelSettingsPresetUpdateManyWithoutHotelNestedInput
+  widgetConfigs?: Prisma.WidgetConfigUpdateManyWithoutHotelNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutHotelNestedInput
+  apartments?: Prisma.ApartmentUpdateManyWithoutHotelNestedInput
+  requests?: Prisma.RequestUpdateManyWithoutHotelNestedInput
+  adminUsers?: Prisma.AdminUserUpdateManyWithoutHotelNestedInput
+  userHotels?: Prisma.AdminUserHotelUpdateManyWithoutHotelNestedInput
+  blockedRanges?: Prisma.BlockedRangeUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUpdateManyWithoutHotelNestedInput
+  nukiConfig?: Prisma.NukiConfigUpdateOneWithoutHotelNestedInput
+}
+
+export type HotelUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  accentColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingTermsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  trialEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  settings?: Prisma.HotelSettingsUncheckedUpdateOneWithoutHotelNestedInput
+  settingsPresets?: Prisma.HotelSettingsPresetUncheckedUpdateManyWithoutHotelNestedInput
+  widgetConfigs?: Prisma.WidgetConfigUncheckedUpdateManyWithoutHotelNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutHotelNestedInput
+  apartments?: Prisma.ApartmentUncheckedUpdateManyWithoutHotelNestedInput
+  requests?: Prisma.RequestUncheckedUpdateManyWithoutHotelNestedInput
+  adminUsers?: Prisma.AdminUserUncheckedUpdateManyWithoutHotelNestedInput
+  userHotels?: Prisma.AdminUserHotelUncheckedUpdateManyWithoutHotelNestedInput
+  blockedRanges?: Prisma.BlockedRangeUncheckedUpdateManyWithoutHotelNestedInput
+  extras?: Prisma.HotelExtraUncheckedUpdateManyWithoutHotelNestedInput
+  nukiConfig?: Prisma.NukiConfigUncheckedUpdateOneWithoutHotelNestedInput
 }
 
 
@@ -2308,6 +2507,7 @@ export type HotelCountOutputType = {
   userHotels: number
   blockedRanges: number
   extras: number
+  auditLogs: number
 }
 
 export type HotelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2320,6 +2520,7 @@ export type HotelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   userHotels?: boolean | HotelCountOutputTypeCountUserHotelsArgs
   blockedRanges?: boolean | HotelCountOutputTypeCountBlockedRangesArgs
   extras?: boolean | HotelCountOutputTypeCountExtrasArgs
+  auditLogs?: boolean | HotelCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -2395,6 +2596,13 @@ export type HotelCountOutputTypeCountExtrasArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.HotelExtraWhereInput
 }
 
+/**
+ * HotelCountOutputType without action
+ */
+export type HotelCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
 
 export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2424,6 +2632,7 @@ export type HotelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   blockedRanges?: boolean | Prisma.Hotel$blockedRangesArgs<ExtArgs>
   extras?: boolean | Prisma.Hotel$extrasArgs<ExtArgs>
   nukiConfig?: boolean | Prisma.Hotel$nukiConfigArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Hotel$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.HotelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hotel"]>
 
@@ -2497,6 +2706,7 @@ export type HotelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   blockedRanges?: boolean | Prisma.Hotel$blockedRangesArgs<ExtArgs>
   extras?: boolean | Prisma.Hotel$extrasArgs<ExtArgs>
   nukiConfig?: boolean | Prisma.Hotel$nukiConfigArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Hotel$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.HotelCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HotelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2516,6 +2726,7 @@ export type $HotelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     blockedRanges: Prisma.$BlockedRangePayload<ExtArgs>[]
     extras: Prisma.$HotelExtraPayload<ExtArgs>[]
     nukiConfig: Prisma.$NukiConfigPayload<ExtArgs> | null
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2939,6 +3150,7 @@ export interface Prisma__HotelClient<T, Null = never, ExtArgs extends runtime.Ty
   blockedRanges<T extends Prisma.Hotel$blockedRangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$blockedRangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockedRangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   extras<T extends Prisma.Hotel$extrasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$extrasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HotelExtraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nukiConfig<T extends Prisma.Hotel$nukiConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$nukiConfigArgs<ExtArgs>>): Prisma.Prisma__NukiConfigClient<runtime.Types.Result.GetResult<Prisma.$NukiConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  auditLogs<T extends Prisma.Hotel$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hotel$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3628,6 +3840,30 @@ export type Hotel$nukiConfigArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.NukiConfigInclude<ExtArgs> | null
   where?: Prisma.NukiConfigWhereInput
+}
+
+/**
+ * Hotel.auditLogs
+ */
+export type Hotel$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

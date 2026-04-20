@@ -2,6 +2,7 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { writeAuditLog } from '@/src/lib/audit';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -22,10 +23,26 @@ export async function saveHotelSettings(formData: FormData) {
   const notificationEmail = String(formData.get('notificationEmail') || '').trim() || null;
   const bookingTermsUrl = String(formData.get('bookingTermsUrl') || '').trim() || null;
   const privacyPolicyUrl = String(formData.get('privacyPolicyUrl') || '').trim() || null;
+  const enableInstantBooking = getBool('enableInstantBooking');
+
+  const prevHotel = await prisma.hotel.findUnique({
+    where: { id: hotelId },
+    select: { bookingTermsUrl: true, privacyPolicyUrl: true },
+  });
+  const prevSettings = await prisma.hotelSettings.findUnique({
+    where: { hotelId },
+    select: { enableInstantBooking: true },
+  });
+
   await prisma.hotel.update({
     where: { id: hotelId },
     data: { email: notificationEmail, bookingTermsUrl, privacyPolicyUrl },
   });
+
+  await writeAuditLog(hotelId,
+    { bookingTermsUrl: prevHotel?.bookingTermsUrl, privacyPolicyUrl: prevHotel?.privacyPolicyUrl, enableInstantBooking: String(prevSettings?.enableInstantBooking ?? false) },
+    { bookingTermsUrl, privacyPolicyUrl, enableInstantBooking: String(enableInstantBooking) },
+  );
 
   await prisma.hotelSettings.upsert({
     where: { hotelId },

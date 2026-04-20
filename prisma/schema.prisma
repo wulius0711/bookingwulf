@@ -38,6 +38,7 @@ model Hotel {
   blockedRanges BlockedRange[]
   extras        HotelExtra[]
   nukiConfig    NukiConfig?
+  auditLogs     AuditLog[]
 }
 
 model HotelSettings {
@@ -345,4 +346,16 @@ model NukiConfig {
   apiToken  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  field     String
+  oldValue  String?
+  newValue  String?
+  changedAt DateTime @default(now())
+
+  @@index([hotelId, changedAt])
 }

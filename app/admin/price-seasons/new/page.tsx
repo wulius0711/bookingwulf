@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { writeAuditLog } from '@/src/lib/audit';
 import { redirect } from 'next/navigation';
 
 export default async function NewPriceSeasonPage() {
@@ -25,20 +26,20 @@ export default async function NewPriceSeasonPage() {
     const minStay = Number(formData.get('minStay') || 1);
 
     if (!apartmentId || !pricePerNight) throw new Error('Fehlende Daten');
-
-    if (session.hotelId !== null) {
-      const apt = await prisma.apartment.findUnique({
-        where: { id: apartmentId },
-        select: { hotelId: true },
-      });
-      if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
-    }
-
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
+
+    const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true, name: true } });
+    if (session.hotelId !== null && (!apt || apt.hotelId !== session.hotelId)) throw new Error('Zugriff verweigert.');
 
     await prisma.priceSeason.create({
       data: { apartmentId, name: name || null, startDate, endDate, pricePerNight, minStay },
     });
+
+    if (apt) {
+      await writeAuditLog(apt.hotelId, {}, {
+        price_season_created: `${name || 'Saison'} | ${apt.name} | ${startDate.toISOString().slice(0, 10)}–${endDate.toISOString().slice(0, 10)} | €${pricePerNight}/Nacht`,
+      });
+    }
 
     redirect('/admin/price-seasons');
   }
