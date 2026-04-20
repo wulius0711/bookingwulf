@@ -16,7 +16,7 @@ export default async function NukiPage() {
     select: { plan: true, nukiConfig: { select: { apiToken: true } } },
   });
 
-  if (!hotel || !hasPlanAccess(hotel.plan ?? 'starter', 'pro')) {
+  if (!hotel || (session.role !== 'super_admin' && !hasPlanAccess(hotel.plan ?? 'starter', 'pro'))) {
     redirect('/admin/billing');
   }
 
