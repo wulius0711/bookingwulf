@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     const nights = body.nights;
     const adults = body.adults;
     const children = body.children;
-    const childBirthdays: string[] = Array.isArray(body.child_birthdays) ? body.child_birthdays.filter((v: unknown) => typeof v === 'string' && v) : [];
+    const childBirthdays = body.child_birthdays;
     const selectedApartmentIdsRaw = body.selected_apartments.trim();
 
     // Support both object format {key: true/false} and array format [key1, key2]
