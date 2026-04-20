@@ -2782,6 +2782,15 @@ sortedApartments.forEach((ap) => {
               );
               return false;
             }
+            for (let i = 0; i < (state.children || 0); i++) {
+              const el = document.getElementById(`childBirthday_${i}`);
+              if (!el || !el.value) {
+                if (el) el.setCustomValidity('Dieses Feld darf nicht leer bleiben.');
+                showMessage("error", "Dieses Feld darf nicht leer bleiben.");
+                return false;
+              }
+              el.setCustomValidity('');
+            }
           }
 
           if (step === 2) {
