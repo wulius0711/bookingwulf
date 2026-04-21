@@ -14,7 +14,7 @@ const sections = [
   { id: 'preise',        title: 'Preise & Saisons',      plan: 'Pro',      content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
-  { id: 'child-pricing', title: 'Kinderpreise',          plan: 'Pro',      content: ChildPricingSection },
+  { id: 'child-pricing', title: 'Kinderpreise',          plan: null,       content: ChildPricingSection },
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
   { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
