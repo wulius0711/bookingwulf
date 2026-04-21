@@ -55,7 +55,14 @@ async function updateBookingStatus(formData: FormData) {
 
   const request = await prisma.request.findUnique({
     where: { id },
-    include: { hotel: { select: { id: true, name: true, accentColor: true, email: true } } },
+    include: {
+      hotel: {
+        select: {
+          id: true, name: true, accentColor: true, email: true,
+          emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
+        },
+      },
+    },
   });
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
@@ -78,10 +85,37 @@ async function updateBookingStatus(formData: FormData) {
         const icalUrl = status === 'booked' ? bookingIcalUrl(request.id, request.createdAt) : null;
         const hotelName = request.hotel?.name || 'Hotel';
 
+        const tplVars: Record<string, string> = {
+          '{{guestName}}': request.firstname || '',
+          '{{guestLastName}}': request.lastname,
+          '{{hotelName}}': hotelName,
+          '{{arrival}}': arrivalDate,
+          '{{departure}}': departureDate,
+          '{{nights}}': String(request.nights),
+          '{{bookingId}}': String(request.id),
+        };
+        const fillTpl = (str: string) => Object.entries(tplVars).reduce((s, [k, v]) => s.replaceAll(k, v), str);
+        const cancelTpl = status === 'cancelled'
+          ? request.hotel?.emailTemplates.find(t => t.type === 'cancellation_guest')
+          : null;
+
+        const subject = cancelTpl
+          ? fillTpl(cancelTpl.subject)
+          : `${statusMsg.subject} — ${hotelName}`;
+        const greeting = cancelTpl?.greeting
+          ? fillTpl(cancelTpl.greeting)
+          : i18n.greeting(request.firstname || '');
+        const bodyText = cancelTpl
+          ? fillTpl(cancelTpl.body)
+          : statusMsg.message;
+        const signoff = cancelTpl?.signoff
+          ? fillTpl(cancelTpl.signoff)
+          : i18n.signoff;
+
         await resend.emails.send({
           from: getFromEmail(),
           to: request.email,
-          subject: `${statusMsg.subject} — ${hotelName}`,
+          subject,
           html: buildEmailHtml({
             hotelName,
             accentColor: request.hotel?.accentColor || undefined,
@@ -89,8 +123,8 @@ async function updateBookingStatus(formData: FormData) {
             autoReplyText: i18n.autoReply,
             body: `
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                ${i18n.greeting(request.firstname || '')}<br/><br/>
-                ${statusMsg.message}
+                ${greeting}<br/><br/>
+                ${bodyText}
               </p>
               ${buildDivider()}
               ${buildInfoBlock(i18n.period, `${arrivalDate} — ${departureDate} (${i18n.nights(request.nights)})`)}
@@ -102,7 +136,7 @@ async function updateBookingStatus(formData: FormData) {
                 </a>
               </div>` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
-                ${i18n.signoff}<br/>
+                ${signoff}<br/>
                 <strong>${hotelName}</strong>
               </p>
               ${request.hotel?.email ? `<p style="font-size:13px;color:#6b7280;margin:8px 0 0;">${i18n.contactLine(request.hotel.email)}</p>` : ''}

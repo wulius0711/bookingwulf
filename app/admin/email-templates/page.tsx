@@ -22,6 +22,13 @@ const TEMPLATE_TYPES = [
     defaultBody: 'Ihre Buchung ist bestätigt. Wir freuen uns auf Ihren Besuch!',
   },
   {
+    type: 'cancellation_guest',
+    label: 'Stornobestätigung — Bestätigung an Gast',
+    description: 'Wird gesendet wenn eine Buchung storniert wird.',
+    defaultSubject: 'Ihre Buchung wurde storniert — {{hotelName}}',
+    defaultBody: 'Ihre Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
+  },
+  {
     type: 'request_hotel',
     label: 'Neue Anfrage — Benachrichtigung an Hotel',
     description: 'Wird an die Hotel-E-Mail gesendet bei jeder neuen Anfrage.',
