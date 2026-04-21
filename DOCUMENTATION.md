@@ -23,7 +23,8 @@
 14. [Umgebungsvariablen](#14-umgebungsvariablen)
 15. [Deployment](#15-deployment)
 16. [Schlüsselloses Einchecken (Nuki)](#16-schlüsselloses-einchecken-nuki-pro)
-17. [Datenschutz & DSGVO](#17-datenschutz--dsgvo)
+17. [Beds24 Channel Manager](#17-beds24-channel-manager-pro-in-vorbereitung)
+18. [Datenschutz & DSGVO](#18-datenschutz--dsgvo)
 
 ---
 
@@ -713,7 +714,54 @@ Sofortbuchung (bookingType='booking')
 
 ---
 
-## 17. Datenschutz & DSGVO
+## 17. Beds24 Channel Manager (Pro+, In Vorbereitung)
+
+### Übersicht
+
+Beds24 ist ein zertifizierter Channel Manager mit direkter API-Anbindung an Airbnb und Booking.com. bookingwulf dockt an Beds24 an, statt selbst Plattform-Zertifizierungen zu durchlaufen. Beds24 kostet ~€9/Monat pro Property beim Hotelier.
+
+### Architektur
+
+```
+Airbnb ←→ Beds24 ←→ bookingwulf ←→ DB
+Booking.com ←→ Beds24 ↗
+```
+
+- **Inbound (Echtzeit):** Beds24 → Webhook → `/api/beds24-webhook` → `BlockedRange` anlegen
+- **Outbound (sofort):** Buchung in bookingwulf → `pushBooking()` → Beds24 → Airbnb/Booking.com sperren
+
+### Datenbankmodelle
+
+- `Beds24Config` — Credentials (`propKey`, `accountKey`) + `isEnabled`-Kill-Switch pro Hotel
+- `Beds24ApartmentMapping` — verknüpft lokale `Apartment.id` mit `beds24RoomId`
+
+### Implementierungsstand
+
+| Komponente | Status |
+|---|---|
+| DB-Schema + Prisma-Client | ✅ fertig |
+| `src/lib/beds24.ts` — `testConnection()` | ✅ implementiert |
+| `src/lib/beds24.ts` — `pushBooking()`, `setAvailability()` etc. | 🔲 Stub (wirft `NotImplemented`) |
+| `/api/admin/beds24` — Credentials-CRUD + Toggle | ✅ fertig |
+| `/api/admin/beds24-mappings` — Room-Mapping-CRUD | ✅ fertig |
+| `/api/beds24-webhook` — Inbound, Token-Auth, loggt Payload | ✅ Stub (noch kein BlockedRange-Write) |
+| Admin UI `/admin/beds24` | ✅ fertig |
+| Outbound Sync-Hook in `/api/request` | ✅ Stub (non-blocking, loggt) |
+
+### Aktivierung
+
+1. `BEDS24_WEBHOOK_SECRET` als Umgebungsvariable in Vercel setzen
+2. Webhook-URL in Beds24 eintragen: `https://domain/api/beds24-webhook?token=<SECRET>`
+3. `pushBooking()` in `src/lib/beds24.ts` implementieren
+4. Stub-Hook in `/api/request/route.ts` entkommentieren
+
+### Sync-Frequenz
+
+Airbnb verarbeitet eingehende Sperrzeiten mit ~1–5 Min. Eigendelay. End-to-End circa 1–2 Minuten (vs. 30 Minuten via iCal). Doppelbuchungsrisiko nahezu null.
+
+---
+
+## 18. Datenschutz & DSGVO
 
 ### Datenspeicherung
 

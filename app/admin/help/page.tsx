@@ -18,6 +18,7 @@ const sections = [
   { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
+  { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
 ];
 
@@ -837,6 +838,74 @@ function NukiSection() {
         <li>Bei reinen Anfragen (kein Sofortbuchungs-Modus) wird kein Code generiert.</li>
         <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code. Sie erhalten in diesem Fall automatisch eine E-Mail-Benachrichtigung, damit Sie den Zugang manuell bereitstellen können.</li>
         <li>Den API-Token können Sie jederzeit aktualisieren oder die Verbindung trennen.</li>
+      </ul>
+    </div>
+  );
+}
+
+function Beds24Section() {
+  return (
+    <div>
+      <H2>Beds24 Channel Manager</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Beds24 ist ein zertifizierter Channel Manager mit direkter Anbindung an Airbnb und Booking.com.
+        Durch die Verbindung werden Buchungen automatisch synchronisiert — Doppelbuchungen werden nahezu ausgeschlossen.
+      </P>
+      <div style={{ background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 12, padding: '14px 18px', marginBottom: 20, fontSize: 14, color: '#92400e', lineHeight: 1.6 }}>
+        <strong>In Vorbereitung</strong> — Die Verbindung kann bereits konfiguriert werden. Der vollautomatische Sync wird mit einem kommenden Update aktiviert.
+      </div>
+
+      <H3>Wie es funktioniert</H3>
+      <P>
+        bookingwulf kommuniziert direkt mit Beds24. Beds24 ist bei Airbnb und Booking.com als Channel Manager
+        zertifiziert und übermittelt Verfügbarkeiten in beide Richtungen:
+      </P>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.9, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li><strong>Buchung bei Ihnen</strong> → bookingwulf meldet sie an Beds24 → Airbnb/Booking.com wird sofort gesperrt</li>
+        <li><strong>Buchung auf Airbnb/Booking.com</strong> → Beds24 schickt Webhook → bookingwulf sperrt sofort</li>
+      </ul>
+
+      <H3>Voraussetzungen</H3>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li>Beds24-Account (ca. €9/Monat pro Property — <strong>beds24.com</strong>)</li>
+        <li>Airbnb und/oder Booking.com bereits in Beds24 verbunden</li>
+        <li>Pro-Plan in bookingwulf</li>
+      </ul>
+
+      <H3>Einrichtung</H3>
+      <Step num={1} title="Beds24-Account anlegen & Kanäle verbinden">
+        <P>
+          Registrieren Sie sich unter <strong>beds24.com</strong> und verbinden Sie dort Airbnb und/oder
+          Booking.com über das Beds24-Dashboard (Einstellungen → Kanäle).
+        </P>
+      </Step>
+      <Step num={2} title="API-Keys in bookingwulf eingeben">
+        <P>
+          Im Admin-Bereich unter <strong>Beds24 Channel Manager</strong> tragen Sie Ihren
+          <strong> Prop Key</strong> und <strong>Account Key</strong> ein (zu finden in Beds24 unter
+          Einstellungen → API). bookingwulf testet die Verbindung automatisch.
+        </P>
+      </Step>
+      <Step num={3} title="Zimmer zuordnen">
+        <P>
+          Ordnen Sie jedem Apartment die entsprechende <strong>Beds24 Room ID</strong> zu
+          (sichtbar in Beds24 unter Einstellungen → Zimmer).
+        </P>
+      </Step>
+      <Step num={4} title="Webhook eintragen">
+        <P>
+          Tragen Sie die angezeigte Webhook-URL in Beds24 unter
+          <strong> Einstellungen → Benachrichtigungen</strong> ein.
+          Damit werden externe Buchungen in Echtzeit übermittelt.
+        </P>
+      </Step>
+
+      <H3>Sync-Geschwindigkeit</H3>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li>Buchung bei Ihnen → Airbnb gesperrt: <strong>~1–2 Minuten</strong></li>
+        <li>Buchung auf Airbnb → bei Ihnen gesperrt: <strong>Echtzeit via Webhook</strong></li>
+        <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
       </ul>
     </div>
   );
