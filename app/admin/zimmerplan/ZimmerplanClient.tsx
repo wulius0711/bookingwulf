@@ -50,7 +50,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
   return (
     <div className="admin-page" style={{ maxWidth: 1100, margin: '0 auto' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>Zimmerplan</h1>
           <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 14 }}>
@@ -75,25 +75,28 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
         </div>
       </div>
 
-      {/* Summary badges */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
-        <Badge color="#dcfce7" text="#16a34a" label={`${freieCount} Frei`} />
-        <Badge color="#fee2e2" text="#dc2626" label={`${belegtCount} Belegt`} />
-        <Badge color="#fef3c7" text="#d97706" label={`${blockiertCount} Blockiert`} />
-      </div>
-
-      {/* Grid */}
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Lädt…</div>
-      ) : cards.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Keine Apartments gefunden.</div>
-      ) : (
-        <div className="zimmerplan-grid">
-          {cards.map((card) => (
-            <ApartmentCardEl key={card.id} card={card} date={date} />
-          ))}
+      {/* Card wrapper */}
+      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+        {/* Summary badges */}
+        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+          <Badge color="#dcfce7" text="#16a34a" label={`${freieCount} Frei`} />
+          <Badge color="#fee2e2" text="#dc2626" label={`${belegtCount} Belegt`} />
+          <Badge color="#fef3c7" text="#d97706" label={`${blockiertCount} Blockiert`} />
         </div>
-      )}
+
+        {/* Grid */}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Lädt…</div>
+        ) : cards.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: 80, color: '#9ca3af', fontSize: 14 }}>Keine Apartments gefunden.</div>
+        ) : (
+          <div className="zimmerplan-grid">
+            {cards.map((card) => (
+              <ApartmentCardEl key={card.id} card={card} date={date} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
