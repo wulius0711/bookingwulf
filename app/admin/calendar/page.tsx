@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Link from 'next/link';
 import CalendarGrid, { type BookingChip, type BlockedChip } from './CalendarGrid';
 
@@ -47,6 +48,12 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   const prevLink = `/admin/calendar?year=${prevDate.getFullYear()}&month=${prevDate.getMonth() + 1}`;
   const nextLink = `/admin/calendar?year=${nextDate.getFullYear()}&month=${nextDate.getMonth() + 1}`;
   const todayLink = `/admin/calendar?year=${now.getFullYear()}&month=${now.getMonth() + 1}`;
+
+  const isSuperAdmin = session.hotelId === null;
+  const hotelData = session.hotelId
+    ? await prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { plan: true } })
+    : null;
+  const hasPro = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
 
   const requests = await prisma.request.findMany({
     where: {
@@ -223,7 +230,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       </div>
 
       {/* Calendar grid */}
-      <CalendarGrid weeks={weeks} todayKey={todayKey} dayBookings={dayBookings} dayBlocked={dayBlocked} apartments={apartments.map(a => ({ id: a.id, name: a.name }))} />
+      <CalendarGrid weeks={weeks} todayKey={todayKey} dayBookings={dayBookings} dayBlocked={dayBlocked} apartments={apartments.map(a => ({ id: a.id, name: a.name }))} hasPro={hasPro} />
 
       {requests.length === 0 && cancelledCount === 0 && (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 14 }}>

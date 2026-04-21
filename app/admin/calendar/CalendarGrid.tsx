@@ -41,6 +41,7 @@ type Props = {
   dayBookings: Record<string, BookingChip[]>;
   dayBlocked: Record<string, BlockedChip[]>;
   apartments: ApartmentOption[];
+  hasPro: boolean;
 };
 
 type TabType = 'blocked' | 'season' | 'booking';
@@ -76,7 +77,7 @@ const TAB_LABELS: Record<TabType, string> = {
   booking: 'Buchung',
 };
 
-export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked, apartments }: Props) {
+export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked, apartments, hasPro }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -260,11 +261,14 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
               {formatDisplay(selLo)}{selLo !== selHi ? ` – ${formatDisplay(selHi)}` : ''}
             </span>
             <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-              {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => (
-                <button key={tab} onClick={() => { setActiveTab(tab); setError(null); }} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid #334155', cursor: 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : '#94a3b8', transition: 'all 0.15s' }}>
-                  {TAB_LABELS[tab]}
-                </button>
-              ))}
+              {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
+                const isSeasonLocked = tab === 'season' && !hasPro;
+                return (
+                  <button key={tab} onClick={() => { if (!isSeasonLocked) { setActiveTab(tab); setError(null); } }} disabled={isSeasonLocked} title={isSeasonLocked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid #334155', cursor: isSeasonLocked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : isSeasonLocked ? '#475569' : '#94a3b8', transition: 'all 0.15s', opacity: isSeasonLocked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {TAB_LABELS[tab]}{isSeasonLocked && <span style={{ fontSize: 10, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>Pro</span>}
+                  </button>
+                );
+              })}
               <button onClick={closePopup} style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
           </div>
