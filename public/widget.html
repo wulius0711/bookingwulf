@@ -1306,24 +1306,27 @@
         font-size: 1rem;
       }
 
+      .toggle-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
       .toggle-card {
         position: relative;
         display: flex;
-        gap: 16px;
+        gap: 0;
         border: 1px solid var(--line);
         border-radius: calc(var(--radius) + 4px);
-        padding: 18px;
+        padding: 0;
         background: var(--surface-2);
         cursor: pointer;
+        overflow: hidden;
         transition:
           border-color 0.2s ease,
           box-shadow 0.2s ease,
           transform 0.2s ease;
         box-shadow: var(--shadow-soft);
-      }
-
-      .toggle-card + .toggle-card {
-        margin-top: 18px;
       }
 
       .toggle-card:hover {
@@ -1337,11 +1340,16 @@
       }
 
       .toggle-card img {
-        width: 220px;
-        height: 150px;
+        width: 88px;
+        align-self: stretch;
         object-fit: cover;
-        border-radius: var(--radius);
         flex-shrink: 0;
+        border-radius: 0;
+      }
+
+      .toggle-card-body {
+        flex: 1;
+        padding: 16px;
       }
 
       .toggle-kicker {
@@ -1697,13 +1705,15 @@
           grid-template-columns: repeat(2, 1fr);
         }
 
-        .apt-card,
-        .toggle-card {
+        .apt-card {
           flex-direction: column;
         }
 
-        .apt-image-wrap,
-        .toggle-card img {
+        .toggle-cards-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .apt-image-wrap {
           width: 100%;
           height: 240px;
         }
@@ -3833,14 +3843,33 @@
             return;
           }
 
-          // Regular extras as toggle cards
+          // Regular extras as toggle cards in 2-column grid
+          const extrasGrid = document.createElement('div');
+          extrasGrid.className = 'toggle-cards-grid';
+
+          // Placeholder images for demo (keyed by extra name keywords)
+          const demoImages = {
+            'frühstück': 'https://images.unsplash.com/photo-1533089860892-a7c6f10a081a?w=200&q=70',
+            'hund':      'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&q=70',
+            'fahrrad':   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=70',
+            'parken':    'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=200&q=70',
+            'transfer':  'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=200&q=70',
+          };
+
           regularExtras.forEach((ex) => {
             const selected = !!state.selectedExtras[ex.key];
             const div = document.createElement('div');
             div.className = 'toggle-card' + (selected ? ' selected' : '');
+
+            const imgSrc = ex.imageUrl || (() => {
+              const key = Object.keys(demoImages).find(k => ex.name.toLowerCase().includes(k));
+              return key ? demoImages[key] : null;
+            })();
+
             div.innerHTML = `
-              <div class="toggle-indicator">${selected ? 'Ausgewählt' : 'Nicht ausgewählt'}</div>
-              <div style="flex:1;">
+              ${imgSrc ? `<img src="${imgSrc}" alt="${ex.name}" loading="lazy">` : ''}
+              <div class="toggle-card-body">
+                <div class="toggle-indicator">${selected ? 'Ausgewählt' : 'Nicht ausgewählt'}</div>
                 <h3 class="apt-name">${ex.name}</h3>
                 <div class="toggle-price">${getPriceLabel(ex.billingType, Number(ex.price))}</div>
               </div>
@@ -3849,8 +3878,9 @@
               state.selectedExtras[ex.key] = !state.selectedExtras[ex.key];
               renderAll();
             });
-            wrap.appendChild(div);
+            extrasGrid.appendChild(div);
           });
+          wrap.appendChild(extrasGrid);
 
           // Insurance as radio group (required)
           if (insuranceExtras.length > 0) {
