@@ -897,12 +897,15 @@ function EinbindungSection() {
       </P>
       <ul style={{ margin: '10px 0 16px', paddingLeft: 20, lineHeight: 1.7, fontSize: 14, color: '#374151' }}>
         <li><strong>Schritt 1 – Reisedaten:</strong> Visueller Kalender-Datepicker (2-Monats-Ansicht). Gäste wählen Anreise durch Klick, dann Abreise — mit farbiger Range-Vorschau beim Hover. Nächte werden live angezeigt.</li>
-        <li><strong>Schritt 2 – Apartment:</strong> Nur passende Apartments werden angezeigt; nicht verfügbare sind als solche markiert.</li>
+        <li><strong>Schritt 2 – Apartment:</strong> Nur passende Apartments werden angezeigt; nicht verfügbare sind markiert. Jede Karte zeigt Gesamtpreis, Preis pro Nacht und Endreinigung separat — keine versteckten Gebühren.</li>
         <li><strong>Schritt 3 – Zusatzleistungen:</strong> (falls aktiviert)</li>
         <li><strong>Schritt 4 – Persönliche Angaben:</strong> Pflichtfelder: Vorname, Nachname, E-Mail. Telefon und Adresse sind optional.</li>
       </ul>
       <Note>
         Pflichtfelder werden bei leerem Absenden direkt am Feld rot markiert — Gäste sehen sofort, was fehlt.
+      </Note>
+      <Note>
+        Die Preisaufschlüsselung (Nächte × Rate, Endreinigung, Extras) ist in der rechten Sidebar jederzeit sichtbar und wird live aktualisiert.
       </Note>
       <H3>Mehrere Widget-Konfigurationen</H3>
       <PlanNote plan="Pro" feature="Mehrere Widget-Varianten auf verschiedenen Seiten einbinden" />

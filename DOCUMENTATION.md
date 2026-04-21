@@ -364,6 +364,8 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 
 **Formular-Friction-Reduktion:** Telefon ist optional (kein `*`, kein required-Check). Adresse (Straße, PLZ, Ort, Land) ist in einem `.addr-accordion` „Adresse (optional)" versteckt. Inline-Feldvalidierung markiert leere Pflichtfelder (Vorname, Nachname, E-Mail) rot mit Fehlermeldung direkt unter dem Feld statt nur globaler Fehlermeldung.
 
+**Preistransparenz:** Apartment-Karte zeigt Gesamtpreis + `€X / Nacht` + `+ €X Endreinigung` separat (`.apt-price-per-night`, `.apt-price-cleaning`). Summary-Sidebar zeigt aufgeschlüsselte Preistabelle: `X Nächte × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Extras — jeweils als eigene Zeile. Cleaning Fee erscheint nicht mehr im Status-Copy der Karte (Redundanz entfernt).
+
 ### CSS-Custom-Properties
 
 Das Widget verwendet CSS-Variablen, die von `/api/hotel-settings` befüllt werden:
