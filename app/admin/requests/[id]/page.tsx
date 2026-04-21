@@ -275,162 +275,107 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
 
   const badge = getStatusBadge(request.status);
 
+  const fmtDate = (d: Date) =>
+    new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
+
+  const rowLabel: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#9ca3af', letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 };
+  const rowValue: React.CSSProperties = { fontSize: 14, color: '#111', lineHeight: 1.5 };
+
   return (
     <main
       className="admin-page"
-      style={{
-        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
-        maxWidth: 900,
-      }}
+      style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 760 }}
     >
-      {/* 🔙 Back */}
+      {/* Back + delete */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
-        <Link
-          href="/admin/requests"
-          style={{ display: 'inline-block', padding: '8px 14px', borderRadius: 8, border: '1px solid #ccc', textDecoration: 'none', color: '#111', background: '#fff' }}
-        >
-          ← Zurück zur Übersicht
+        <Link href="/admin/requests" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid #e5e7eb', textDecoration: 'none', color: '#374151', background: '#fff', fontSize: 13, fontWeight: 500 }}>
+          ← Zurück
         </Link>
         {isSuperAdmin && <DeleteRequestButton requestId={request.id} />}
       </div>
 
-      <h1 style={{ marginBottom: 24 }}>Buchung #{request.id}</h1>
-
-      <div
-        style={{
-          display: 'grid',
-          gap: 18,
-          border: `1px solid ${borderColor}`,
-          borderRadius: cardRadius,
-          padding: 24,
-          background: cardBackground,
-          color: textColor,
-        }}
-      >
-        {/* 🔥 HEADER ROW */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 16,
-            flexWrap: 'wrap',
-          }}
-        >
-          {/* Name */}
-          <div>
-            <strong>Name:</strong> {request.firstname || ''} {request.lastname}
-          </div>
-
-          {/* Hotel Badge */}
+      {/* Title row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Buchung #{request.id}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {isSuperAdmin && (
-            <div
-              style={{
-                padding: '6px 12px',
-                borderRadius: 8,
-                background: request.hotel?.accentColor || '#f5f5f5',
-                fontSize: 12,
-                fontWeight: 600,
-                color: '#fafafa',
-              }}
-            >
+            <div style={{ padding: '4px 10px', borderRadius: 6, background: request.hotel?.accentColor || '#f5f5f5', fontSize: 12, fontWeight: 600, color: '#fff' }}>
               {request.hotel?.name || '—'}
             </div>
           )}
-
-          {/* Status Badge */}
-          <div
-            style={{
-              padding: '8px 12px',
-              borderRadius: 8,
-              background: badge.bg,
-              color: badge.color,
-              border: `1px solid ${badge.border}`,
-              fontSize: 12,
-              fontWeight: 700,
-              textTransform: 'uppercase',
-            }}
-          >
+          <div style={{ padding: '5px 12px', borderRadius: 999, background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
             {badge.label}
           </div>
         </div>
+      </div>
 
-        <div>
-          <strong>Email:</strong> {request.email}
-        </div>
+      {/* Main card */}
+      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
 
-        <div>
-          <strong>Land:</strong> {request.country}
-        </div>
+        {/* Info grid */}
+        <div style={{ padding: '24px 28px', display: 'grid', gap: 16 }}>
+          {[
+            { label: 'Name', value: `${request.firstname || ''} ${request.lastname}`.trim() },
+            { label: 'E-Mail', value: request.email },
+            ...(request.country ? [{ label: 'Land', value: request.country }] : []),
+            { label: 'Zeitraum', value: `${fmtDate(request.arrival)} – ${fmtDate(request.departure)}` },
+            { label: 'Nächte', value: String(request.nights) },
+            { label: 'Gäste', value: `${request.adults} Erwachsene${request.children ? `, ${request.children} Kinder` : ''}` },
+            { label: 'Apartment', value: apartmentNames || '—' },
+          ].map(({ label, value }) => (
+            <div key={label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+              <span style={rowLabel}>{label}</span>
+              <span style={rowValue}>{value}</span>
+            </div>
+          ))}
 
-        <div>
-          <strong>Zeitraum:</strong>{' '}
-          {new Date(request.arrival).toLocaleDateString()} –{' '}
-          {new Date(request.departure).toLocaleDateString()}
-        </div>
+          {request.message && (
+            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+              <span style={rowLabel}>Mitteilung</span>
+              <span style={{ ...rowValue, background: '#f9fafb', padding: '10px 12px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>{request.message}</span>
+            </div>
+          )}
 
-        <div>
-          <strong>Nächte:</strong> {request.nights}
-        </div>
-
-        <div>
-          <strong>Gäste:</strong> {request.adults} Erwachsene
-          {request.children ? `, ${request.children} Kinder` : ''}
-        </div>
-
-        <div>
-          <strong>Apartments:</strong> {apartmentNames || '—'}
-        </div>
-
-        {request.message && (
-          <div>
-            <strong>Mitteilung:</strong>
-            <div style={{ marginTop: 6 }}>{request.message}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+            <span style={rowLabel}>Erstellt</span>
+            <span style={{ ...rowValue, color: '#9ca3af' }}>{new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(request.createdAt))}</span>
           </div>
-        )}
-
-        {/* 🌐 Sprache */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <strong>Mail-Sprache:</strong>
-          <form action={updateLanguage} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input type="hidden" name="id" value={request.id} />
-            <select
-              name="language"
-              defaultValue={request.language || 'de'}
-              style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, background: '#fff' }}
-            >
-              <option value="de">Deutsch</option>
-              <option value="en">English</option>
-              <option value="it">Italiano</option>
-              <option value="fr">Français</option>
-              <option value="nl">Nederlands</option>
-              <option value="es">Español</option>
-              <option value="pl">Polski</option>
-              <option value="cs">Čeština</option>
-              <option value="ru">Русский</option>
-            </select>
-            <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer' }}>
-              Speichern
-            </button>
-            {saved === 'language' && (
-              <span style={{ fontSize: 12, color: '#16a34a' }}>Gespeichert</span>
-            )}
-          </form>
         </div>
 
-        {/* 🔘 Status Buttons */}
-        <div>
-          <strong>Status ändern:</strong>
-          <StatusButtons
-            requestId={request.id}
-            currentStatus={request.status}
-            guestEmail={request.email}
-            action={updateBookingStatus}
-          />
-        </div>
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid #f3f4f6' }} />
 
-<div style={{ fontSize: 12, color: '#666' }}>
-          Erstellt: {new Date(request.createdAt).toLocaleString()}
+        {/* Actions */}
+        <div style={{ padding: '20px 28px', display: 'grid', gap: 20 }}>
+
+          {/* Mail language */}
+          <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
+            <span style={rowLabel}>Mail-Sprache</span>
+            <form action={updateLanguage} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input type="hidden" name="id" value={request.id} />
+              <select name="language" defaultValue={request.language || 'de'} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111' }}>
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+                <option value="it">Italiano</option>
+                <option value="fr">Français</option>
+                <option value="nl">Nederlands</option>
+                <option value="es">Español</option>
+                <option value="pl">Polski</option>
+                <option value="cs">Čeština</option>
+                <option value="ru">Русский</option>
+              </select>
+              <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151', fontWeight: 500 }}>
+                Speichern
+              </button>
+              {saved === 'language' && <span style={{ fontSize: 12, color: '#16a34a' }}>✓ Gespeichert</span>}
+            </form>
+          </div>
+
+          {/* Status */}
+          <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+            <span style={{ ...rowLabel, paddingTop: 8 }}>Status</span>
+            <StatusButtons requestId={request.id} currentStatus={request.status} guestEmail={request.email} action={updateBookingStatus} />
+          </div>
         </div>
       </div>
 
