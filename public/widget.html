@@ -1124,7 +1124,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 3px;
+        gap: 6px;
       }
 
       .apt-price-per-night {
@@ -3369,7 +3369,7 @@
                 const cleaningLine = pricing.cleaningFee > 0
                   ? `<div class="apt-price-cleaning">+ ${eur(pricing.cleaningFee)} Endreinigung</div>`
                   : '';
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)} gesamt</div>${perNightLine}${cleaningLine}</div>`;
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)} <span style="font-size:0.55em;font-weight:500;color:var(--muted);vertical-align:middle;">gesamt</span></div>${perNightLine}${cleaningLine}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
