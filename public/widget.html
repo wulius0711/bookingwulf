@@ -2355,7 +2355,7 @@
               <p class="intro">Bitte füllen Sie alle Pflichtfelder aus.</p>
 
               <div class="grid-2">
-                <div class="field-block" style="grid-column: 1 / -1;">
+                <div class="field-block">
                   <label class="label" for="salutation">Anrede</label>
                   <select id="salutation">
                     <option value="">Bitte wählen</option>
@@ -2860,6 +2860,9 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
+            const lastNameWrap = document.getElementById('lastNameFieldWrap');
+            if (lastNameWrap)
+              lastNameWrap.style.gridColumn = state.settings.showPhoneField ? '1 / -1' : '';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
