@@ -115,6 +115,55 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
   );
 }
 
+function NavGroup({ group, defaultOpen }: { group: NavGroup; defaultOpen: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 14px',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: 14,
+          fontWeight: 700,
+          color: '#6b7280',
+          letterSpacing: 0,
+          textTransform: 'none',
+        }}
+      >
+        {group.label}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+      {open && (
+        <div style={{ padding: '2px 4px 6px' }}>
+          {group.items.map((item) => (
+            <SidebarNavItem key={item.href} {...item} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Sidebar({ navGroups, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
@@ -173,16 +222,9 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         </div>
 
         {/* Nav items */}
-        <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
+        <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
           {navGroups.map((group, i) => (
-            <div key={group.label} style={{ marginTop: i === 0 ? 0 : 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--nav-group)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 16px 2px' }}>
-                {group.label}
-              </div>
-              {group.items.map((item) => (
-                <SidebarNavItem key={item.href} {...item} />
-              ))}
-            </div>
+            <NavGroup key={group.label} group={group} defaultOpen={i === 0} />
           ))}
         </nav>
 
