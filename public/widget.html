@@ -3851,14 +3851,15 @@
               : 'Ich habe die Anfragebedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
 
           wrap.innerHTML =
-            '<label style="display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
-            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;"' +
+            '<label style="display:flex;align-items:flex-start;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
+            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;margin-top:2px;"' +
             checked +
             ' />' +
             '<span>' +
             text +
             '</span>' +
-            '</label>';
+            '</label>' +
+            '<div id="termsCheckboxErr" class="field-error" style="margin-top:6px;' + (!checked ? '' : 'display:none;') + '"></div>';
         }
 
         function renderChildBirthdays() {
@@ -3901,6 +3902,14 @@
           if (divBefore) divBefore.style.display = show;
           if (divAfter) divAfter.style.display = show;
           if (totalGuests <= 1) return;
+
+          // Auto-open when shown
+          const toggleBtn = document.getElementById('guestAccordionToggle');
+          const body = document.getElementById('guestAccordionBody');
+          if (body && !body.classList.contains('open')) {
+            body.classList.add('open');
+            if (toggleBtn) toggleBtn.classList.add('open');
+          }
 
           const wrap = document.getElementById('guestFieldsWrap');
           if (!wrap) return;
@@ -4394,11 +4403,13 @@
 
           const termsCheckbox = document.getElementById('termsCheckbox');
           if (termsCheckbox && !termsCheckbox.checked) {
-            showMessage(
-              'error',
-              'Bitte akzeptieren Sie die Anfragebedingungen.',
-            );
+            const termsErr = document.getElementById('termsCheckboxErr');
+            if (termsErr) { termsErr.textContent = 'Bitte akzeptieren Sie die Anfragebedingungen.'; termsErr.style.display = 'block'; }
+            showMessage('error', 'Bitte akzeptieren Sie die Anfragebedingungen.');
             return;
+          } else {
+            const termsErr = document.getElementById('termsCheckboxErr');
+            if (termsErr) termsErr.style.display = 'none';
           }
 
           state.submitting = true;
