@@ -153,13 +153,11 @@ function NavGroup({ group, defaultOpen }: { group: NavGroup; defaultOpen: boolea
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      {open && (
-        <div style={{ padding: '2px 4px 6px' }}>
-          {group.items.map((item) => (
-            <SidebarNavItem key={item.href} {...item} />
-          ))}
-        </div>
-      )}
+      <div style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease' }}>
+        {group.items.map((item) => (
+          <SidebarNavItem key={item.href} {...item} />
+        ))}
+      </div>
     </div>
   );
 }

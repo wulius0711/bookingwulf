@@ -513,9 +513,17 @@ Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
 - Mobile: Sidebar ausgeblendet, Hamburger-Menü in Top-Bar
 - Footer: Impressum, Datenschutz, AGB, AVV, Support
 
+### Sidebar-Navigation
+
+Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgeteilt. Jede Gruppe ist eine eigene Card mit Akkordeon:
+- Erste Gruppe standardmäßig aufgeklappt, alle anderen zu
+- Mehrere Gruppen können gleichzeitig offen sein
+- Items werden immer gerendert (nur per `maxHeight` versteckt), damit `data-tour`-Attribute für die Geführte Tour im DOM erreichbar bleiben
+- Logout-Icon im Sidebar-Header (oben rechts)
+
 ### Geführte Tour
 
-`GuidedTour`-Komponente (`app/admin/components/GuidedTour.tsx`) — schrittweise Einführung für neue Nutzer mit `data-tour`-Attributen an Nav-Elementen.
+`GuidedTour`-Komponente (`app/admin/components/GuidedTour.tsx`) — schrittweise Einführung für neue Nutzer mit `data-tour`-Attributen an Nav-Elementen. Da Items immer im DOM sind (auch bei zugeklappter Gruppe), funktioniert die Tour unabhängig vom Akkordeon-Zustand.
 
 ---
 
