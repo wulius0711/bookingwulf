@@ -578,7 +578,7 @@ export default async function Page({ searchParams }: PageProps) {
                     step="0.01"
                     defaultValue={Number(selected.settings?.ortstaxePerPersonPerNight ?? 0) || ''}
                     placeholder="z. B. 2.50"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 160 }}
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 160, background: '#fff' }}
                   />
                 </div>
                 <div style={{ display: 'grid', gap: 6 }}>
@@ -590,7 +590,7 @@ export default async function Page({ searchParams }: PageProps) {
                     step="1"
                     defaultValue={selected.settings?.ortstaxeMinAge ?? ''}
                     placeholder="z. B. 14 (leer = alle zahlen)"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200 }}
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
                   />
                 </div>
               </div>
