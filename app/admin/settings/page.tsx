@@ -276,8 +276,9 @@ export default async function Page({ searchParams }: PageProps) {
             <div>
               <h1 style={headlineStyle}>Hotel Settings</h1>
               <p style={sublineStyle}>
-                Farben, Radius und Funktionen pro Hotel steuern – mit direkter
-                Widget-Vorschau.{' '}
+                Farben, Schriften, Radius, Funktionen und Embed-Code pro Hotel konfigurieren.
+              </p>
+              <p style={{ ...sublineStyle, marginTop: 4 }}>
                 <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
                   Hier finden Sie den Code zum Einbauen auf Ihre Website.
                 </a>
