@@ -744,7 +744,6 @@
         max-height: 800px;
         padding: 20px 16px;
         border-top-width: 1px;
-        overflow: visible;
       }
 
       .payment-option-title {
@@ -772,68 +771,66 @@
         line-height: 1.5;
       }
 
-      .pm-select { position: relative; }
+      .pm-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
 
-      .pm-trigger {
+      .pm-card {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 14px 14px 8px;
-        padding-top: 22px;
+        gap: 10px;
+        padding: 12px 14px;
         border: 1px solid var(--line);
         border-radius: var(--radius);
         background: var(--surface);
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: var(--text);
-        text-align: left;
-        transition: border-color 0.15s ease;
-        box-sizing: border-box;
+        font-weight: 500;
+        transition: border-color 0.15s ease, background 0.15s ease;
+        user-select: none;
       }
 
-      .pm-trigger:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(220,20,60,.12); }
-      .pm-trigger.placeholder { color: var(--muted); }
-
-      .pm-trigger svg { transition: transform 0.2s ease; flex-shrink: 0; }
-      .pm-trigger.open svg { transform: rotate(180deg); }
-
-      .pm-options {
-        position: absolute;
-        top: calc(100% + 4px);
-        left: 0; right: 0;
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        z-index: 200;
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 0.22s cubic-bezier(0.4,0,0.2,1);
-      }
-
-      .pm-options.open { max-height: 300px; }
-
-      .pm-option {
-        padding: 13px 14px;
-        cursor: pointer;
-        font-size: 1rem;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: background 0.1s ease;
-      }
-
-      .pm-option:hover { background: #f4f4f5; }
-
-      .pm-option.selected {
+      .pm-card.selected {
+        border-color: var(--accent);
         background: color-mix(in srgb, var(--accent) 8%, #fff);
-        color: var(--accent);
-        font-weight: 600;
       }
 
-      .pm-option-check { color: var(--accent); font-size: 14px; width: 16px; }
+      .pm-card.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .pm-radio {
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        border: 2px solid var(--line);
+        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        transition: border-color 0.15s ease;
+      }
+
+      .pm-card.selected .pm-radio {
+        border-color: var(--accent);
+        background: var(--accent);
+      }
+
+      .pm-card.selected .pm-radio::after {
+        content: '';
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .pm-badge {
+        margin-left: auto;
+        font-size: 10px;
+        font-weight: 600;
+        color: #9ca3af;
+        background: #f3f4f6;
+        border-radius: 4px;
+        padding: 2px 6px;
+        letter-spacing: 0.02em;
+      }
 
       .apt-card {
         position: relative;
@@ -4180,26 +4177,21 @@
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</div>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
-              '<div class="payment-benefit" style="margin-top:10px;">\u2713 Keine Kreditkarte n\u00f6tig</div>' +
               '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' +
               depositText +
               '</strong> innerhalb von 7 Tagen.</div>' +
-              '<div class="field-block pm-select" id="pmSelectWrap">' +
-              '<label class="label floated" style="pointer-events:none;">Zahlungsmethode<span class="required">*</span></label>' +
-              '<button type="button" class="pm-trigger placeholder" id="pmTrigger" aria-haspopup="listbox">' +
-              '<span id="pmTriggerLabel">Bitte w\u00e4hlen</span>' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-              '</button>' +
-              '<div class="pm-options" id="pmOptions" role="listbox">' +
-              '<div class="pm-option" data-value="Bank\u00fcberweisung" role="option"><span class="pm-option-check"></span>Bank\u00fcberweisung</div>' +
+              '<div class="pm-cards">' +
+              '<div class="pm-card selected" id="pmCardBank">' +
+              '<span class="pm-radio"></span>Banküberweisung' +
               '</div>' +
-              '<input type="hidden" id="paymentMethod" value="" />' +
+              '<div class="pm-card disabled">' +
+              '<span class="pm-radio"></span>Kreditkarte<span class="pm-badge">Bald</span>' +
               '</div>' +
+              '</div>' +
+              '<input type="hidden" id="paymentMethod" value="Bank\u00fcberweisung" />' +
               '</div>' +
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
-              '<button type="button" id="submitBtn" class="btn"' +
-              disabled +
-              '>Verbindlich buchen</button>' +
+              '<button type="button" id="submitBtn" class="btn">Verbindlich buchen</button>' +
               '</div>' +
               '</div>';
 
@@ -4211,39 +4203,8 @@
               this.querySelector('svg').style.transform = isOpen ? 'rotate(180deg)' : '';
             });
 
-            // Custom payment method dropdown
-            const pmTrigger = document.getElementById('pmTrigger');
-            const pmOptions = document.getElementById('pmOptions');
-            const pmHidden = document.getElementById('paymentMethod');
-            const pmTriggerLabel = document.getElementById('pmTriggerLabel');
-            const submitBtn = document.getElementById('submitBtn');
-
-            pmTrigger.addEventListener('click', () => {
-              const isOpen = pmOptions.classList.toggle('open');
-              pmTrigger.classList.toggle('open', isOpen);
-            });
-
-            pmOptions.querySelectorAll('.pm-option').forEach(opt => {
-              opt.addEventListener('click', () => {
-                const val = opt.getAttribute('data-value');
-                pmHidden.value = val;
-                pmTriggerLabel.textContent = val;
-                pmTrigger.classList.remove('placeholder', 'open');
-                pmOptions.classList.remove('open');
-                pmOptions.querySelectorAll('.pm-option').forEach(o => {
-                  o.classList.toggle('selected', o === opt);
-                  o.querySelector('.pm-option-check').textContent = o === opt ? '✓' : '';
-                });
-                if (submitBtn) submitBtn.removeAttribute('disabled');
-              });
-            });
-
-            document.addEventListener('click', (e) => {
-              if (!document.getElementById('pmSelectWrap')?.contains(e.target)) {
-                pmOptions.classList.remove('open');
-                pmTrigger.classList.remove('open');
-              }
-            }, { capture: true });
+            // Payment method is pre-selected (Banküberweisung), enable submit immediately
+            document.getElementById('submitBtn')?.removeAttribute('disabled');
           } else {
             area.innerHTML =
               '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</span></div>' +
