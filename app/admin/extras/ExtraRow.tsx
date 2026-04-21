@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { upload } from '@vercel/blob/client';
 
 const BILLING_LABELS: Record<string, string> = {
   per_night: 'pro Nacht',
@@ -57,8 +56,12 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
     setUploading(true);
     setUploadError('');
     try {
-      const blob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
-      setImageUrl(blob.url);
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload-single', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload fehlgeschlagen.');
+      setImageUrl(data.url);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload fehlgeschlagen.');
     } finally {

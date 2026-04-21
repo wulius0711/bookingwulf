@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { upload } from '@vercel/blob/client';
 import { createExtra } from './actions';
 
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' };
@@ -18,8 +17,12 @@ export default function CreateExtraForm({ hotelId }: { hotelId: number }) {
     setUploading(true);
     setUploadError('');
     try {
-      const blob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
-      setImageUrl(blob.url);
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload-single', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload fehlgeschlagen.');
+      setImageUrl(data.url);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload fehlgeschlagen.');
     } finally {
