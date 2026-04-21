@@ -3084,7 +3084,7 @@
             btn.addEventListener('mouseenter', () => {
               if (state.arrival && !state.departure) {
                 state.calendarHover = btn.getAttribute('data-date');
-                renderCalendar();
+                updateCalendarRangeClasses();
               }
             });
           });
@@ -3092,7 +3092,7 @@
           wrap.addEventListener('mouseleave', () => {
             if (state.calendarHover) {
               state.calendarHover = null;
-              renderCalendar();
+              updateCalendarRangeClasses();
             }
           });
 
@@ -3109,6 +3109,41 @@
             else state.calendarMonth++;
             renderCalendar();
           });
+        }
+
+        function updateCalendarRangeClasses() {
+          const wrap = document.getElementById('cal-picker');
+          if (!wrap) return;
+          const todayStr = toInputDate(new Date());
+          const arr = state.arrival;
+          const dep = state.departure;
+          const hover = state.calendarHover;
+          const effectiveEnd = dep || (arr && hover && hover > arr ? hover : null);
+
+          wrap.querySelectorAll('.cal-day[data-date]').forEach(btn => {
+            const ds = btn.getAttribute('data-date');
+            btn.classList.remove('selected-start', 'selected-end', 'in-range');
+            if (ds < todayStr) return;
+            if (arr && ds === arr) {
+              btn.classList.add('selected-start');
+              if (!effectiveEnd || effectiveEnd === arr) btn.classList.add('selected-end');
+            }
+            if (effectiveEnd && ds === effectiveEnd && effectiveEnd !== arr) {
+              btn.classList.add('selected-end');
+            }
+            if (arr && effectiveEnd && ds > arr && ds < effectiveEnd) {
+              btn.classList.add('in-range');
+            }
+          });
+
+          const hintEl = wrap.querySelector('.cal-nights-hint');
+          if (hintEl) {
+            const nights = getNights();
+            let hint = 'Anreisedatum wählen';
+            if (arr && !dep) hint = 'Abreisedatum wählen …';
+            if (arr && dep) hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(arr)} – ${formatDate(dep)}`;
+            hintEl.innerHTML = hint;
+          }
         }
 
         async function handleCalendarDayClick(dateStr) {
