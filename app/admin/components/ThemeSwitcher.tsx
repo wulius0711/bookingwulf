@@ -16,27 +16,41 @@ function applyTheme(key: ThemeKey) {
   localStorage.setItem('admin-theme', key);
 }
 
+function applyDark(dark: boolean) {
+  document.documentElement.classList.toggle('dark', dark);
+  localStorage.setItem('admin-dark', dark ? 'true' : 'false');
+}
+
 export default function ThemeSwitcher() {
   const [theme, setTheme] = useState<ThemeKey>('indigo');
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin-theme') as ThemeKey | null;
-    if (saved && THEMES.some(t => t.key === saved)) setTheme(saved);
+    const savedTheme = localStorage.getItem('admin-theme') as ThemeKey | null;
+    if (savedTheme && THEMES.some(t => t.key === savedTheme)) setTheme(savedTheme);
+    const savedDark = localStorage.getItem('admin-dark');
+    setDark(savedDark === 'true');
   }, []);
 
-  function handleChange(key: ThemeKey) {
+  function handleTheme(key: ThemeKey) {
     setTheme(key);
     applyTheme(key);
   }
 
+  function handleDark() {
+    const next = !dark;
+    setDark(next);
+    applyDark(next);
+  }
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontSize: 12, color: '#9ca3af', fontWeight: 500 }}>Design</span>
-      <div style={{ display: 'flex', gap: 6 }}>
+      <span style={{ fontSize: 12, color: 'var(--text-subtle)', fontWeight: 500 }}>Design</span>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         {THEMES.map((t) => (
           <button
             key={t.key}
-            onClick={() => handleChange(t.key)}
+            onClick={() => handleTheme(t.key)}
             title={t.label}
             style={{
               width: 16,
@@ -48,11 +62,31 @@ export default function ThemeSwitcher() {
               cursor: 'pointer',
               outline: theme === t.key ? `2px solid ${t.color}` : 'none',
               outlineOffset: 2,
-              boxShadow: theme === t.key ? '0 0 0 1px #fff inset' : 'none',
+              boxShadow: theme === t.key ? '0 0 0 1px var(--surface) inset' : 'none',
               transition: 'outline 0.15s ease',
             }}
           />
         ))}
+        <button
+          onClick={handleDark}
+          title={dark ? 'Helles Design' : 'Dunkles Design'}
+          style={{
+            width: 24,
+            height: 16,
+            borderRadius: 8,
+            border: '1px solid var(--border)',
+            background: dark ? '#334155' : 'var(--surface-3)',
+            cursor: 'pointer',
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 10,
+            transition: 'background 0.2s',
+          }}
+        >
+          {dark ? '🌙' : '☀️'}
+        </button>
       </div>
     </div>
   );

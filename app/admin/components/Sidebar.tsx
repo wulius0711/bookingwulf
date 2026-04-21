@@ -126,7 +126,7 @@ function NavGroup({ group }: { group: NavGroup }) {
     if (hasActive) setOpen(true);
   }, [hasActive]);
   return (
-    <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
       <button
         onClick={() => setOpen((v) => !v)}
         style={{
@@ -207,9 +207,9 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
       )}
 
       {/* Sidebar */}
-      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} style={{ background: '#f8f9fc' }}>
+      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} style={{ background: 'var(--sidebar-bg)' }}>
         {/* Logo */}
-        <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid #eaecf0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid var(--sidebar-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />
           <form action={logout}>
             <button
@@ -236,7 +236,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
 
         {/* User + logout */}
         <div style={{
-          borderTop: '1px solid #eaecf0',
+          borderTop: '1px solid var(--sidebar-border)',
           padding: '12px 16px',
           display: 'flex',
           flexDirection: 'column',

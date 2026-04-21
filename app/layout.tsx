@@ -41,7 +41,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);})();` }} />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);if(localStorage.getItem('admin-dark')==='true')document.documentElement.classList.add('dark');})();` }} />
         {children}
       </body>
     </html>
