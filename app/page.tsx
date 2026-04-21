@@ -289,8 +289,8 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="pricing" style={{ background: '#fafafa', padding: '80px 24px' }}>
         <div style={{ maxWidth: 950, margin: '0 auto' }}>
-          <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#16a34a', margin: '0 0 10px' }}>Keine Provision. Keine versteckten Kosten.</p>
-          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 24px' }}>Der richtige Plan für Ihren Betrieb</h2>
+          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Der richtige Plan für Ihren Betrieb</h2>
+          <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 24px' }}>Keine Provision. Keine versteckten Kosten.</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 40 }}>
             <span style={{ fontSize: 14, color: billingInterval === 'month' ? '#111' : '#999', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
             <button
