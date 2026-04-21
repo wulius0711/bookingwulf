@@ -1214,7 +1214,7 @@
         background: var(--surface, #fff);
         border: 1px solid var(--line);
         border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
         padding: 14px 16px;
         min-width: 230px;
         z-index: 100;
@@ -1338,8 +1338,14 @@
       }
 
       @keyframes aptLinkIn {
-        from { opacity: 0; transform: translateY(-5px); }
-        to   { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .apt-next-link {
@@ -2180,7 +2186,7 @@
           </div>
           <div class="step" data-step="4">
             <span class="step-index">4</span>
-            <span class="step-label">Anfrage</span>
+            <span class="step-label">Anfrage/Buchung</span>
             <span class="step-sub">Daten eingeben und absenden</span>
           </div>
         </div>
@@ -2192,9 +2198,17 @@
       </div>
 
       <div class="layout">
-        <div id="globalInfo" class="msg info" style="grid-column: 1 / -1;"></div>
-        <div id="globalError" class="msg error" style="grid-column: 1 / -1;"></div>
-        <div id="globalSuccess" class="msg success" style="grid-column: 1 / -1;"></div>
+        <div id="globalInfo" class="msg info" style="grid-column: 1 / -1"></div>
+        <div
+          id="globalError"
+          class="msg error"
+          style="grid-column: 1 / -1"
+        ></div>
+        <div
+          id="globalSuccess"
+          class="msg success"
+          style="grid-column: 1 / -1"
+        ></div>
         <div>
           <section class="screen active" data-screen="1">
             <div class="content-card">
@@ -2554,7 +2568,7 @@
 
         <aside class="summary">
           <span class="summary-eyebrow">Ihre Auswahl</span>
-          <h3>Buchungsdetails</h3>
+          <h3 id="summaryHeadline">Buchungsdetails</h3>
 
           <div class="summary-block">
             <div class="summary-block-title">Apartments</div>
@@ -2860,10 +2874,16 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
-            const salutationWrap = document.getElementById('salutation')?.closest('.field-block');
+            const salutationWrap = document
+              .getElementById('salutation')
+              ?.closest('.field-block');
             if (salutationWrap) {
-              salutationWrap.style.gridColumn = state.settings.showPhoneField ? '1 / -1' : '';
-              salutationWrap.style.maxWidth = state.settings.showPhoneField ? '33%' : '';
+              salutationWrap.style.gridColumn = state.settings.showPhoneField
+                ? '1 / -1'
+                : '';
+              salutationWrap.style.maxWidth = state.settings.showPhoneField
+                ? '33%'
+                : '';
             }
             const lastNameWrap = document.getElementById('lastNameFieldWrap');
             if (lastNameWrap) lastNameWrap.style.gridColumn = '';
@@ -2884,7 +2904,9 @@
               state.childPriceRanges = data.childPriceRanges;
             }
             if (data.settings) {
-              state.ortstaxePerPersonPerNight = Number(data.settings.ortstaxePerPersonPerNight || 0);
+              state.ortstaxePerPersonPerNight = Number(
+                data.settings.ortstaxePerPersonPerNight || 0,
+              );
               state.ortstaxeMinAge = data.settings.ortstaxeMinAge ?? null;
             }
           } catch (e) {
@@ -2995,7 +3017,12 @@
 
         function getTotal() {
           const nights = getNights() || 1;
-          return getApartmentsTotal() + getExtrasTotal() + calcChildSurcharge(nights) + calcOrtstaxe(nights);
+          return (
+            getApartmentsTotal() +
+            getExtrasTotal() +
+            calcChildSurcharge(nights) +
+            calcOrtstaxe(nights)
+          );
         }
 
         function getApartmentImages(apartment) {
@@ -3547,10 +3574,12 @@
           if (!state.childPriceRanges.length || !state.children) return 0;
           const birthdays = getChildBirthdays();
           let total = 0;
-          birthdays.forEach(bd => {
+          birthdays.forEach((bd) => {
             const age = getChildAge(bd, state.arrival);
             if (age === null) return;
-            const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+            const range = state.childPriceRanges.find(
+              (r) => age >= r.minAge && age <= r.maxAge,
+            );
             if (range) total += Number(range.pricePerNight) * nights;
           });
           return total;
@@ -3566,7 +3595,7 @@
               eligible += state.children;
             } else {
               const birthdays = getChildBirthdays();
-              birthdays.forEach(bd => {
+              birthdays.forEach((bd) => {
                 const age = getChildAge(bd, state.arrival);
                 if (age !== null && age >= minAge) eligible++;
               });
@@ -3662,46 +3691,60 @@
                 } else if (pricing.surchargePercent > 0) {
                   priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
                 }
-                const basePrice = (pricing.totalPrice || 0) - (pricing.cleaningFee || 0);
+                const basePrice =
+                  (pricing.totalPrice || 0) - (pricing.cleaningFee || 0);
                 const nightsLabel = `${pricing.nights} Nacht${pricing.nights !== 1 ? 'e' : ''}${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`;
-                const cleaningRow = pricing.cleaningFee > 0
-                  ? `<div class="apt-price-popover-row"><span>Endreinigung</span><span>${eur(pricing.cleaningFee)}</span></div>`
-                  : '';
-                const discountRow = pricing.discountPercent > 0
-                  ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
-                  : '';
+                const cleaningRow =
+                  pricing.cleaningFee > 0
+                    ? `<div class="apt-price-popover-row"><span>Endreinigung</span><span>${eur(pricing.cleaningFee)}</span></div>`
+                    : '';
+                const discountRow =
+                  pricing.discountPercent > 0
+                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
+                    : '';
                 const childSurcharge = calcChildSurcharge(pricing.nights);
                 const childRows = (() => {
-                  if (!state.childPriceRanges.length || !state.children) return '';
+                  if (!state.childPriceRanges.length || !state.children)
+                    return '';
                   const birthdays = getChildBirthdays();
-                  return birthdays.map((bd, i) => {
-                    const age = getChildAge(bd, state.arrival);
-                    if (age === null) return '';
-                    const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
-                    if (!range) return '';
-                    const label = range.label || `Kind ${i + 1}`;
-                    const cost = Number(range.pricePerNight) * pricing.nights;
-                    return Number(range.pricePerNight) === 0
-                      ? `<div class="apt-price-popover-row"><span>${label} (${age} J.) · Gratis</span><span style="color:#16a34a">Gratis</span></div>`
-                      : `<div class="apt-price-popover-row"><span>${label} (${age} J.) ${pricing.nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
-                  }).join('');
+                  return birthdays
+                    .map((bd, i) => {
+                      const age = getChildAge(bd, state.arrival);
+                      if (age === null) return '';
+                      const range = state.childPriceRanges.find(
+                        (r) => age >= r.minAge && age <= r.maxAge,
+                      );
+                      if (!range) return '';
+                      const label = range.label || `Kind ${i + 1}`;
+                      const cost = Number(range.pricePerNight) * pricing.nights;
+                      return Number(range.pricePerNight) === 0
+                        ? `<div class="apt-price-popover-row"><span>${label} (${age} J.) · Gratis</span><span style="color:#16a34a">Gratis</span></div>`
+                        : `<div class="apt-price-popover-row"><span>${label} (${age} J.) ${pricing.nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
+                    })
+                    .join('');
                 })();
                 const ortstaxeAmount = calcOrtstaxe(pricing.nights);
-                const ortstaxeRow = ortstaxeAmount > 0 ? (() => {
-                  const minAge = state.ortstaxeMinAge;
-                  const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
-                  return `<div class="apt-price-popover-row"><span>Ortstaxe${minAgeNote}</span><span>${eur(ortstaxeAmount)}</span></div>`;
-                })() : '';
-                const grandTotal = pricing.totalPrice + childSurcharge + ortstaxeAmount;
+                const ortstaxeRow =
+                  ortstaxeAmount > 0
+                    ? (() => {
+                        const minAge = state.ortstaxeMinAge;
+                        const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
+                        return `<div class="apt-price-popover-row"><span>Ortstaxe${minAgeNote}</span><span>${eur(ortstaxeAmount)}</span></div>`;
+                      })()
+                    : '';
+                const grandTotal =
+                  pricing.totalPrice + childSurcharge + ortstaxeAmount;
                 const popoverOpen = state.openPricePopover === ap.id;
-                const popoverHtml = popoverOpen ? `
+                const popoverHtml = popoverOpen
+                  ? `
                   <div class="apt-price-popover">
                     <div class="apt-price-popover-caret"></div>
                     <div class="apt-price-popover-header">${nightsLabel}</div>
                     <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
                     ${childRows}${cleaningRow}${discountRow}${ortstaxeRow}
                     <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(grandTotal)}</span></div>
-                  </div>` : '';
+                  </div>`
+                  : '';
                 priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
@@ -3831,7 +3874,8 @@
                   <div class="apt-status-copy">
                     ${
                       status.message &&
-                      (status.type === 'unavailable' || status.type === 'not-matching')
+                      (status.type === 'unavailable' ||
+                        status.type === 'not-matching')
                         ? status.message
                         : ''
                     }
@@ -3880,7 +3924,8 @@
             btn.addEventListener('click', (e) => {
               e.stopPropagation();
               const id = Number(btn.getAttribute('data-price-popover'));
-              state.openPricePopover = state.openPricePopover === id ? null : id;
+              state.openPricePopover =
+                state.openPricePopover === id ? null : id;
               renderApartments();
             });
           });
@@ -4047,15 +4092,24 @@
           const showPrices = state.settings.showPrices;
           document.getElementById('totalBox').textContent = eur(getTotal());
           const totalBoxWrap = document.querySelector('.price-box');
-          if (totalBoxWrap) totalBoxWrap.style.display = showPrices ? '' : 'none';
-          document.getElementById('summaryApartment').textContent = apartmentText;
+          if (totalBoxWrap)
+            totalBoxWrap.style.display = showPrices ? '' : 'none';
+          const summaryHeadline = document.getElementById('summaryHeadline');
+          if (summaryHeadline)
+            summaryHeadline.textContent = state.settings.enableInstantBooking ? 'Buchungsdetails' : 'Anfragedetails';
+          document.getElementById('summaryApartment').textContent =
+            apartmentText;
           document.getElementById('summaryDates').textContent =
             `Zeitraum: ${formatDate(state.arrival)} - ${formatDate(state.departure)}`;
           document.getElementById('summaryGuests').textContent = guests;
           document.getElementById('summaryExtras').innerHTML = extras;
           document.getElementById('summaryTotal').textContent = eur(getTotal());
-          const summaryPriceEls = document.querySelectorAll('#summaryBreakdown, .summary-total');
-          summaryPriceEls.forEach(el => { el.style.display = showPrices ? '' : 'none'; });
+          const summaryPriceEls = document.querySelectorAll(
+            '#summaryBreakdown, .summary-total',
+          );
+          summaryPriceEls.forEach((el) => {
+            el.style.display = showPrices ? '' : 'none';
+          });
 
           // Build price breakdown
           const breakdownEl = document.getElementById('summaryBreakdown');
@@ -4080,7 +4134,9 @@
                     birthdays.forEach((bd, i) => {
                       const age = getChildAge(bd, state.arrival);
                       if (age === null) return;
-                      const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+                      const range = state.childPriceRanges.find(
+                        (r) => age >= r.minAge && age <= r.maxAge,
+                      );
                       if (!range) return;
                       const label = range.label || `Kind ${i + 1}`;
                       const cost = Number(range.pricePerNight) * nights;
