@@ -4090,9 +4090,6 @@
                     });
                   }
 
-                  if (p.cleaningFee > 0) {
-                    rows += `<div style="${rowStyle}"><span style="${muteStyle}">Endreinigung</span><span>${eur(p.cleaningFee)}</span></div>`;
-                  }
                   if (p.discountPercent > 0) {
                     rows += `<div style="${rowStyle}"><span style="color:#166534;">Last-Minute -${p.discountPercent}%</span><span style="color:#166534;">inklusive</span></div>`;
                   } else if (p.surchargePercent > 0) {
@@ -4108,6 +4105,15 @@
             if (extrasTotal > 0) {
               rows += `<div style="${rowStyle}"><span style="${muteStyle}">Zusatzleistungen</span><span>${eur(extrasTotal)}</span></div>`;
             }
+
+            // Endreinigung after extras, before Ortstaxe
+            const selectedAptsForCleaning = getSelectedApartments();
+            selectedAptsForCleaning.forEach((apt) => {
+              const p = state.pricingMap[String(apt.id)];
+              if (p && p.available && p.cleaningFee > 0) {
+                rows += `<div style="${rowStyle}"><span style="${muteStyle}">Endreinigung</span><span>${eur(p.cleaningFee)}</span></div>`;
+              }
+            });
 
             const ortstaxe = calcOrtstaxe(nights);
             if (ortstaxe > 0) {
