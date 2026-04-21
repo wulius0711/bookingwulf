@@ -217,6 +217,24 @@ export async function POST(req: Request) {
       });
     }
 
+    // Beds24 outbound sync — IN VORBEREITUNG
+    // When fully implemented: push booking to Beds24 so Airbnb/Booking.com get blocked
+    if (bookingType === 'booking') {
+      try {
+        const beds24Config = await prisma.beds24Config.findUnique({
+          where: { hotelId: hotel.id },
+          select: { isEnabled: true, propKey: true, accountKey: true },
+        });
+        if (beds24Config?.isEnabled) {
+          // TODO: await pushBooking(beds24Config.propKey, beds24Config.accountKey, { ... })
+          console.log('[Beds24] sync stub — booking', requestEntry.id, '(not yet implemented)');
+        }
+      } catch (beds24Err) {
+        // Non-blocking: booking proceeds regardless of Beds24 failures
+        console.error('[Beds24] outbound sync failed:', beds24Err);
+      }
+    }
+
     // Generate Nuki access code for instant bookings (Pro+)
     let nukiCode: string | null = null;
     if (bookingType === 'booking' && hotel.nukiConfig && hasPlanAccess(hotel.plan ?? 'starter', 'pro')) {

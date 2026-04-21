@@ -38,6 +38,7 @@ model Hotel {
   blockedRanges BlockedRange[]
   extras        HotelExtra[]
   nukiConfig    NukiConfig?
+  beds24Config  Beds24Config?
   auditLogs     AuditLog[]
 }
 
@@ -171,7 +172,8 @@ model Apartment {
   images        ApartmentImage[]
   blockedRanges BlockedRange[]
   priceSeasons  PriceSeason[]
-  icalFeeds     IcalFeed[]
+  icalFeeds       IcalFeed[]
+  beds24Mapping   Beds24ApartmentMapping?
 
   @@unique([hotelId, slug])
 }
@@ -350,6 +352,26 @@ model NukiConfig {
   apiToken  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Beds24Config {
+  id          Int      @id @default(autoincrement())
+  hotelId     Int      @unique
+  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  propKey     String
+  accountKey  String
+  isEnabled   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Beds24ApartmentMapping {
+  id            Int       @id @default(autoincrement())
+  apartmentId   Int       @unique
+  apartment     Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  beds24RoomId  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model AuditLog {
