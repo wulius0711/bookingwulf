@@ -354,9 +354,9 @@ export default function LandingPage() {
           { q: 'Funktioniert es mit meiner bestehenden Website?', a: 'Ja – das Widget funktioniert mit jeder Website, egal ob WordPress, Squarespace, Wix oder einer individuellen Lösung.' },
           { q: 'Kann ich das Widget für Anfragen und Buchungen gleichzeitig nutzen?', a: 'Ja – das Widget ist zweifach konfigurierbar. Sie können es gleichzeitig als Buchungs- und Anfrageformular einsetzen.' },
           { q: 'Gibt es versteckte Kosten oder Provisionen?', a: 'Nein. Sie zahlen nur den monatlichen Fixpreis – keine Provision, keine versteckten Gebühren, egal wie viele Buchungen eingehen.' },
-          { q: 'Was passiert nach dem 14-tägigen Testzeitraum?', a: 'Sie wählen ein Paket und starten regulär. Keine automatische Verlängerung ohne Ihre Bestätigung.' },
+          { q: 'Was passiert nach dem 14-tägigen Testzeitraum?', a: 'Sie wählen ein Paket und starten regulär. Das Abonnement verlängert sich monatlich oder jährlich automatisch – Sie können jederzeit kündigen.' },
           { q: 'Wo werden meine Daten gespeichert?', a: 'Alle Daten werden auf Servern in Deutschland gespeichert – sicher und DSGVO-konform.' },
-          { q: 'Wie zuverlässig ist das System?', a: 'bookingwulf ist auf modernster Infrastruktur gebaut – schnelle Ladezeiten, hohe Verfügbarkeit und keine Wartungsausfälle. Das System aktualisiert sich automatisch im Hintergrund, ohne dass Sie etwas tun müssen.' },
+          { q: 'Wie zuverlässig ist das System?', a: 'bookingwulf ist auf modernster Infrastruktur gebaut – für schnelle Ladezeiten und hohe Verfügbarkeit. Updates werden automatisch im Hintergrund eingespielt, ohne dass Sie etwas tun müssen.' },
         ].map(({ q, a }, i) => (
           <FaqItem key={i} question={q} answer={a} />
         ))}
