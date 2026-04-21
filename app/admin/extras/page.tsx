@@ -2,8 +2,9 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import type { PlanKey } from '@/src/lib/plans';
-import { createExtra, updateExtra, toggleExtra, deleteExtra } from './actions';
+import { updateExtra, toggleExtra, deleteExtra } from './actions';
 import ExtraRow from './ExtraRow';
+import CreateExtraForm from './CreateExtraForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -120,56 +121,7 @@ export default async function ExtrasPage() {
         {selectedId && (
           <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: 24 }}>
             <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 600, color: '#111827', letterSpacing: '-0.02em' }}>Neue Zusatzleistung anlegen</h2>
-
-            <form action={createExtra} style={{ display: 'grid', gap: 16 }}>
-              <input type="hidden" name="hotelId" value={selectedId} />
-
-              <div className="extras-form-grid">
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Name *</label>
-                  <input name="name" required placeholder="z. B. Frühstück" style={inputStyle} />
-                </div>
-
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Typ</label>
-                  <select name="type" style={inputStyle}>
-                    <option value="extra">Zusatzleistung</option>
-                    <option value="insurance">Versicherung</option>
-                  </select>
-                </div>
-
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Abrechnung *</label>
-                  <select name="billingType" required style={inputStyle}>
-                    <option value="per_stay">pro Aufenthalt</option>
-                    <option value="per_night">pro Nacht</option>
-                    <option value="per_person_per_night">pro Person / Nacht</option>
-                    <option value="per_person_per_stay">pro Person / Aufenthalt</option>
-                  </select>
-                </div>
-
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Preis ({'\u20AC'}) *</label>
-                  <input name="price" type="number" min="0" step="0.01" required placeholder="0.00" style={inputStyle} />
-                </div>
-
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Nr.</label>
-                  <input name="sortOrder" type="number" min="0" defaultValue={0} style={inputStyle} />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gap: 6 }}>
-                <label style={labelStyle}>Link-URL (optional, z. B. für Versicherungsdetails)</label>
-                <input name="linkUrl" type="url" placeholder="https://..." style={inputStyle} />
-              </div>
-
-              <div>
-                <button type="submit" style={{ padding: '11px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                  Anlegen
-                </button>
-              </div>
-            </form>
+            <CreateExtraForm hotelId={selectedId} />
           </div>
         )}
 

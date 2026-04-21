@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { upload } from '@vercel/blob/client';
 
 const BILLING_LABELS: Record<string, string> = {
   per_night: 'pro Nacht',
@@ -46,6 +47,24 @@ const inputStyle: React.CSSProperties = {
 
 export default function ExtraRow({ extra, updateAction, toggleAction, deleteAction }: Props) {
   const [editing, setEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(extra.imageUrl || '');
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError('');
+    try {
+      const blob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
+      setImageUrl(blob.url);
+    } catch {
+      setUploadError('Upload fehlgeschlagen.');
+    } finally {
+      setUploading(false);
+    }
+  }
 
   if (editing) {
     return (
@@ -90,15 +109,27 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
               <input name="description" defaultValue={extra.description || ''} placeholder="Kurze Beschreibung (optional)" style={inputStyle} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Bild-URL</label>
-                <input name="imageUrl" type="url" defaultValue={extra.imageUrl || ''} placeholder="https://..." style={inputStyle} />
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Bild <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 10, color: '#9ca3af' }}>(optional)</span></label>
+              <input type="hidden" name="imageUrl" value={imageUrl} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                {imageUrl && (
+                  <div style={{ position: 'relative' }}>
+                    <img src={imageUrl} alt="" style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 6, border: '1px solid #e5e7eb', display: 'block' }} />
+                    <button type="button" onClick={() => setImageUrl('')} style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: '#374151', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                  </div>
+                )}
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 12, cursor: uploading ? 'not-allowed' : 'pointer', opacity: uploading ? 0.6 : 1 }}>
+                  {uploading ? 'Lädt…' : imageUrl ? 'Anderes Bild' : 'Hochladen'}
+                  <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFile} disabled={uploading} style={{ display: 'none' }} />
+                </label>
+                {uploadError && <span style={{ fontSize: 11, color: '#dc2626' }}>{uploadError}</span>}
               </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Link-URL</label>
-                <input name="linkUrl" type="url" defaultValue={extra.linkUrl || ''} placeholder="https://..." style={inputStyle} />
-              </div>
+            </div>
+
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Link-URL <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 10, color: '#9ca3af' }}>(optional)</span></label>
+              <input name="linkUrl" type="url" defaultValue={extra.linkUrl || ''} placeholder="https://..." style={inputStyle} />
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
