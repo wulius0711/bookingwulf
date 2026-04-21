@@ -69,7 +69,7 @@ export default function HelpPage() {
 
       <div className="help-layout">
         {/* Desktop sidebar nav */}
-        <nav className="help-sidebar">
+        <nav className="help-sidebar" style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '12px 8px', alignSelf: 'start' }}>
           {sections.map((s) => (
             <button
               key={s.id}
