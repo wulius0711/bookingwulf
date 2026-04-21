@@ -975,13 +975,13 @@
         font-size: 1.071rem;
         max-width: 62ch;
         margin-bottom: 6px;
+        overflow: hidden;
+        max-height: 600px;
+        transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .apt-desc.is-clamped {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        max-height: 4.85em;
       }
 
       .apt-more {
@@ -3531,8 +3531,11 @@
             btn.addEventListener('click', (e) => {
               e.stopPropagation();
               const id = Number(btn.getAttribute('data-toggle-desc'));
-              state.expandedDescriptions[id] = !state.expandedDescriptions[id];
-              renderApartments();
+              const isExpanded = !state.expandedDescriptions[id];
+              state.expandedDescriptions[id] = isExpanded;
+              const desc = btn.previousElementSibling;
+              if (desc) desc.classList.toggle('is-clamped', !isExpanded);
+              btn.textContent = isExpanded ? 'Weniger' : 'Mehr lesen';
             });
           });
 
