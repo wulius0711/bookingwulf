@@ -24,6 +24,11 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'Ungültige Anmeldedaten.' }
   }
 
+  // Only block users created after email verification was introduced (emailVerifyToken was set on creation)
+  if (!user.isEmailVerified && user.emailVerifyToken !== null) {
+    return { error: 'Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse. Prüfen Sie Ihr Postfach.' }
+  }
+
   const valid = await verifyPassword(password, user.passwordHash)
   if (!valid) {
     return { error: 'Ungültige Anmeldedaten.' }

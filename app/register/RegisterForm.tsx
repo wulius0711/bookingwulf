@@ -54,6 +54,8 @@ export default function RegisterForm() {
 
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 20, padding: 32 }}>
           <form action={action} style={{ display: 'grid', gap: 18 }}>
+            {/* Honeypot: hidden from real users, bots fill it */}
+            <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
 
             {state?.error && (
               <div style={{ padding: '12px 16px', background: '#fee2e2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 14, color: '#dc2626' }}>

@@ -3,9 +3,9 @@
 import { prisma } from '@/src/lib/prisma';
 import { hashPassword } from '@/src/lib/password';
 import { PLANS, PlanKey } from '@/src/lib/plans';
-import { createSession } from '@/src/lib/session';
-import { getResend, getFromEmail, buildEmailHtml, buildDivider } from '@/src/lib/email';
+import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
 import { redirect } from 'next/navigation';
+import { randomBytes } from 'crypto';
 
 export type RegisterState = { error: string } | undefined;
 
@@ -13,6 +13,10 @@ export async function registerHotel(
   _state: RegisterState,
   formData: FormData,
 ): Promise<RegisterState> {
+  // Honeypot: bots fill this, humans don't
+  const honeypot = formData.get('website')?.toString() ?? '';
+  if (honeypot) return undefined; // silently ignore
+
   const hotelName = formData.get('hotelName')?.toString().trim() ?? '';
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-') ?? '';
   const email = formData.get('email')?.toString().trim().toLowerCase() ?? '';
@@ -34,8 +38,10 @@ export async function registerHotel(
   if (emailConflict) return { error: 'Diese E-Mail wird bereits verwendet.' };
 
   const passwordHash = await hashPassword(password);
+  const verifyToken = randomBytes(32).toString('hex');
+  const verifyExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
 
-  const hotel = await prisma.hotel.create({
+  await prisma.hotel.create({
     data: {
       name: hotelName,
       slug,
@@ -44,62 +50,53 @@ export async function registerHotel(
       subscriptionStatus: 'trialing',
       trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       adminUsers: {
-        create: { email, passwordHash, role: 'hotel_admin', isActive: true },
+        create: {
+          email,
+          passwordHash,
+          role: 'hotel_admin',
+          isActive: true,
+          isEmailVerified: false,
+          emailVerifyToken: verifyToken,
+          emailVerifyTokenExpiresAt: verifyExpires,
+        },
       },
     },
-    include: { adminUsers: { take: 1 } },
   });
 
-  const adminUser = hotel.adminUsers[0];
-  await createSession({
-    userId: adminUser.id,
-    email: adminUser.email,
-    role: adminUser.role,
-    hotelId: hotel.id,
-  });
+  // Send verification email
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://bookingwulf.com';
+  const verifyUrl = `${baseUrl}/api/auth/verify-email?token=${verifyToken}`;
 
-  // Welcome email
   try {
     const resend = getResend();
     if (resend) {
       await resend.emails.send({
         from: getFromEmail(),
         to: email,
-        subject: `Willkommen bei bookingwulf — Ihre Testphase hat begonnen`,
+        subject: 'bookingwulf — Bitte bestätigen Sie Ihre E-Mail-Adresse',
         html: buildEmailHtml({
           hotelName: 'bookingwulf',
-          title: 'Willkommen bei bookingwulf!',
+          title: 'E-Mail-Adresse bestätigen',
           body: `
             <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
               Hallo,<br/><br/>
-              vielen Dank, dass Sie bookingwulf testen! Ihr Hotel <strong>${hotelName}</strong> wurde erfolgreich angelegt.
+              vielen Dank für Ihre Registrierung bei bookingwulf! Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren.
             </p>
-            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-              Sie haben <strong>14 Tage</strong> kostenlosen Zugang zu allen Funktionen. In dieser Zeit können Sie:
+            <p style="margin:0 0 28px;">
+              <a href="${verifyUrl}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
+                E-Mail bestätigen
+              </a>
             </p>
-            <ul style="font-size:14px;color:#374151;line-height:1.8;margin:0 0 20px;padding-left:20px;">
-              <li>Apartments mit Bildern und Preisen anlegen</li>
-              <li>Das Buchungssystem auf Ihrer Website einbauen</li>
-              <li>Design und Farben anpassen</li>
-              <li>Buchungsanfragen entgegennehmen und verwalten</li>
-            </ul>
-            ${buildDivider()}
-            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 4px;">
-              <strong>Testphase endet am:</strong> ${new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(Date.now() + 14 * 86400000))}
-            </p>
-            <p style="font-size:14px;color:#6b7280;line-height:1.6;margin:0 0 20px;">
-              Nach Ablauf können Sie ein Abonnement abschließen, um bookingwulf weiter zu nutzen.
-            </p>
-            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0;">
-              Bei Fragen stehen wir Ihnen jederzeit unter <strong>support@bookingwulf.com</strong> zur Verfügung.
+            <p style="font-size:13px;color:#9ca3af;line-height:1.5;margin:0;">
+              Dieser Link ist 24 Stunden gültig. Falls Sie sich nicht registriert haben, können Sie diese E-Mail ignorieren.
             </p>
           `,
         }),
       });
     }
   } catch (e) {
-    console.error('Welcome mail error:', e);
+    console.error('Verification mail error:', e);
   }
 
-  redirect('/admin/onboarding');
+  redirect('/register/check-email');
 }
