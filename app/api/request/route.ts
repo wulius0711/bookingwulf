@@ -115,6 +115,7 @@ export async function POST(req: Request) {
           select: { key: true, name: true, type: true, billingType: true, price: true },
         },
         nukiConfig: { select: { apiToken: true } },
+        settings: { select: { ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } },
       },
     });
 
@@ -189,7 +190,29 @@ export async function POST(req: Request) {
       extrasLineItems.push({ key: extra.key, name: extra.name, type: extra.type, billingType: extra.billingType, unitPrice, quantity, subtotal, label, guestLabel });
     }
 
-    const totalBookingPrice = apartmentsTotal + extrasTotal;
+    // Calculate Ortstaxe
+    let ortstaxeTotal = 0;
+    const ortstaxeRate = Number(hotel.settings?.ortstaxePerPersonPerNight || 0);
+    if (ortstaxeRate > 0) {
+      const minAge = hotel.settings?.ortstaxeMinAge ?? null;
+      let eligiblePersons = adults;
+      if (children > 0) {
+        if (minAge === null || minAge === 0) {
+          eligiblePersons += children;
+        } else {
+          for (const bd of childBirthdays) {
+            if (!bd) continue;
+            const bDate = new Date(bd);
+            const diff = arrival.getTime() - bDate.getTime();
+            const age = Math.floor(diff / (365.25 * 24 * 60 * 60 * 1000));
+            if (age >= minAge) eligiblePersons++;
+          }
+        }
+      }
+      ortstaxeTotal = parseFloat((ortstaxeRate * eligiblePersons * nights).toFixed(2));
+    }
+
+    const totalBookingPrice = apartmentsTotal + extrasTotal + ortstaxeTotal;
 
     // Save to DB
     const requestEntry = await prisma.request.create({
@@ -342,11 +365,13 @@ export async function POST(req: Request) {
     // Hotel price table (German)
     const priceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
     if (extrasTotal > 0) priceRows.push({ label: 'Zusatzleistungen', amount: eur(extrasTotal) });
+    if (ortstaxeTotal > 0) priceRows.push({ label: 'Ortstaxe', amount: eur(ortstaxeTotal) });
     const priceTable = buildPriceTable(priceRows, 'Gesamtbetrag', eur(totalBookingPrice), accent);
 
     // Guest price table (translated)
     const guestPriceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
     if (extrasTotal > 0) guestPriceRows.push({ label: i18n.extrasTotal, amount: eur(extrasTotal) });
+    if (ortstaxeTotal > 0) guestPriceRows.push({ label: 'Ortstaxe', amount: eur(ortstaxeTotal) });
     const guestPriceTable = buildPriceTable(guestPriceRows, i18n.total, eur(totalBookingPrice), accent);
 
     // Send emails

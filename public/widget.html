@@ -2673,6 +2673,8 @@
           selectedInsurance: null,
           availableExtras: [],
           childPriceRanges: [],
+          ortstaxePerPersonPerNight: 0,
+          ortstaxeMinAge: null,
           apartments: [],
           pricingMap: {},
           loadingApartments: false,
@@ -2883,6 +2885,10 @@
             if (data.childPriceRanges && Array.isArray(data.childPriceRanges)) {
               state.childPriceRanges = data.childPriceRanges;
             }
+            if (data.settings) {
+              state.ortstaxePerPersonPerNight = Number(data.settings.ortstaxePerPersonPerNight || 0);
+              state.ortstaxeMinAge = data.settings.ortstaxeMinAge ?? null;
+            }
           } catch (e) {
             console.error('Settings load failed', e);
           }
@@ -2991,7 +2997,7 @@
 
         function getTotal() {
           const nights = getNights() || 1;
-          return getApartmentsTotal() + getExtrasTotal() + calcChildSurcharge(nights);
+          return getApartmentsTotal() + getExtrasTotal() + calcChildSurcharge(nights) + calcOrtstaxe(nights);
         }
 
         function getApartmentImages(apartment) {
@@ -3552,6 +3558,25 @@
           return total;
         }
 
+        function calcOrtstaxe(nights) {
+          const rate = state.ortstaxePerPersonPerNight || 0;
+          if (!rate || !nights) return 0;
+          const minAge = state.ortstaxeMinAge;
+          let eligible = state.adults;
+          if (state.children > 0) {
+            if (minAge === null || minAge === 0) {
+              eligible += state.children;
+            } else {
+              const birthdays = getChildBirthdays();
+              birthdays.forEach(bd => {
+                const age = getChildAge(bd, state.arrival);
+                if (age !== null && age >= minAge) eligible++;
+              });
+            }
+          }
+          return rate * eligible * nights;
+        }
+
         function isApartmentMatchingGuests(apartment) {
           const maxAdults = Number(apartment.maxAdults || 0);
           const maxChildren = Number(apartment.maxChildren || 0);
@@ -4075,6 +4100,14 @@
             const extrasTotal = getExtrasTotal();
             if (extrasTotal > 0) {
               rows += `<div style="${rowStyle}"><span style="${muteStyle}">Zusatzleistungen</span><span>${eur(extrasTotal)}</span></div>`;
+            }
+
+            const nights = getNights();
+            const ortstaxe = calcOrtstaxe(nights);
+            if (ortstaxe > 0) {
+              const minAge = state.ortstaxeMinAge;
+              const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
+              rows += `<div style="${rowStyle}"><span style="${muteStyle}">Ortstaxe${minAgeNote}</span><span>${eur(ortstaxe)}</span></div>`;
             }
 
             breakdownEl.innerHTML = rows;

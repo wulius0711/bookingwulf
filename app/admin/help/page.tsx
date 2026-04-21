@@ -752,6 +752,14 @@ function EinstellungenSection() {
         ))}
       </div>
 
+      <H3>Ortstaxe / Kurtaxe</H3>
+      <P>
+        Im Abschnitt <strong>Ortstaxe / Kurtaxe</strong> können Sie eine Abgabe pro Person und Nacht hinterlegen.
+        Der Betrag wird automatisch zur Buchungssumme addiert und in der Buchungsübersicht sowie den
+        Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich ein Mindestalter festlegen —
+        Kinder unter diesem Alter sind automatisch von der Abgabe befreit.
+      </P>
+
       <H3>Embed-Code</H3>
       <P>
         Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.

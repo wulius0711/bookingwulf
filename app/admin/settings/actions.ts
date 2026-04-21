@@ -76,6 +76,9 @@ export async function saveHotelSettings(formData: FormData) {
       headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
 
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
+
     },
     create: {
       hotelId,
@@ -107,6 +110,9 @@ export async function saveHotelSettings(formData: FormData) {
       bodyFontSize: parseInt(String(formData.get('bodyFontSize') || '0')) || null,
       headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
+
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
 
     },
   });

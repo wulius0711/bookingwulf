@@ -560,6 +560,42 @@ export default async function Page({ searchParams }: PageProps) {
               />
             </div>
 
+            {/* ORTSTAXE */}
+            <div className="settings-section" style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Ortstaxe / Kurtaxe</h2>
+                <p style={sectionIntroStyle}>
+                  Wird pro Person und Nacht zur Buchungssumme addiert und in der Buchungsübersicht sowie den E-Mails ausgewiesen.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gap: 16 }}>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Betrag pro Person / Nacht (€)</label>
+                  <input
+                    type="number"
+                    name="ortstaxePerPersonPerNight"
+                    min="0"
+                    step="0.01"
+                    defaultValue={Number(selected.settings?.ortstaxePerPersonPerNight ?? 0) || ''}
+                    placeholder="z. B. 2.50"
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 160 }}
+                  />
+                </div>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Mindestalter (Kinder darunter frei)</label>
+                  <input
+                    type="number"
+                    name="ortstaxeMinAge"
+                    min="0"
+                    step="1"
+                    defaultValue={selected.settings?.ortstaxeMinAge ?? ''}
+                    placeholder="z. B. 14 (leer = alle zahlen)"
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200 }}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* ACTIONS */}
             <div style={actionRowStyle}>
               <button className="btn-primary" type="submit" style={primaryButtonStyle}>
