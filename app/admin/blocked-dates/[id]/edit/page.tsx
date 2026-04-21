@@ -77,9 +77,10 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
   const fieldWrap: React.CSSProperties = { display: 'grid', gap: 4 };
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
+    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 560 }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Sperrzeit bearbeiten</h1>
 
+      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '28px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
       <form action={updateBlockedDate} style={{ display: 'grid', gap: 16 }}>
         <div style={fieldWrap}>
           <label style={labelStyle}>Apartment</label>
@@ -141,6 +142,7 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
           </a>
         </div>
       </form>
+      </div>
     </main>
   );
 }
