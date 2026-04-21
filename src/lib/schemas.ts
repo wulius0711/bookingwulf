@@ -27,6 +27,7 @@ export const bookingRequestSchema = z.object({
   message: z.string().max(3000).optional().default(''),
   newsletter: z.boolean().optional().default(false),
   bookingType: z.enum(['request', 'booking']).optional().default('request'),
+  showPrices: z.boolean().optional().default(true),
   browserLanguage: z.string().max(10).optional().default(''),
   extras: z.union([
     z.array(z.string().max(100)),

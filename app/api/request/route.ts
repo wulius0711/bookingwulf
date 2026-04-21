@@ -83,6 +83,7 @@ export async function POST(req: Request) {
     const message = body.message.trim();
     const newsletter = body.newsletter;
     const bookingType = body.bookingType;
+    const showPrices = body.showPrices !== false;
     const browserLang = body.browserLanguage.toLowerCase();
     const LANG_PREFIXES: [string, Lang][] = [
       ['de', 'de'], ['it', 'it'], ['fr', 'fr'], ['nl', 'nl'],
@@ -366,13 +367,13 @@ export async function POST(req: Request) {
     const priceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
     if (extrasTotal > 0) priceRows.push({ label: 'Zusatzleistungen', amount: eur(extrasTotal) });
     if (ortstaxeTotal > 0) priceRows.push({ label: 'Ortstaxe', amount: eur(ortstaxeTotal) });
-    const priceTable = buildPriceTable(priceRows, 'Gesamtbetrag', eur(totalBookingPrice), accent);
+    const priceTable = showPrices ? buildPriceTable(priceRows, 'Gesamtbetrag', eur(totalBookingPrice), accent) : '';
 
     // Guest price table (translated)
     const guestPriceRows = apartmentPricing.map(a => ({ label: a.apartmentName, amount: eur(a.totalPrice) }));
     if (extrasTotal > 0) guestPriceRows.push({ label: i18n.extrasTotal, amount: eur(extrasTotal) });
     if (ortstaxeTotal > 0) guestPriceRows.push({ label: 'Ortstaxe', amount: eur(ortstaxeTotal) });
-    const guestPriceTable = buildPriceTable(guestPriceRows, i18n.total, eur(totalBookingPrice), accent);
+    const guestPriceTable = showPrices ? buildPriceTable(guestPriceRows, i18n.total, eur(totalBookingPrice), accent) : '';
 
     // Send emails
     try {
