@@ -2186,7 +2186,7 @@
           </div>
           <div class="step" data-step="4">
             <span class="step-index">4</span>
-            <span class="step-label">Anfrage/Buchung</span>
+            <span class="step-label" id="stepLabelContact">Anfrage/Buchung</span>
             <span class="step-sub">Daten eingeben und absenden</span>
           </div>
         </div>
@@ -4097,6 +4097,9 @@
           const summaryHeadline = document.getElementById('summaryHeadline');
           if (summaryHeadline)
             summaryHeadline.textContent = state.settings.enableInstantBooking ? 'Buchungsdetails' : 'Anfragedetails';
+          const stepLabelContact = document.getElementById('stepLabelContact');
+          if (stepLabelContact)
+            stepLabelContact.textContent = state.settings.enableInstantBooking ? 'Buchung' : 'Anfrage';
           document.getElementById('summaryApartment').textContent =
             apartmentText;
           document.getElementById('summaryDates').textContent =
