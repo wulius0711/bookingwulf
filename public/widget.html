@@ -1275,9 +1275,10 @@
 
       .apt-actions {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 16px;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        flex-shrink: 0;
       }
 
       @keyframes aptLinkIn {
@@ -1753,9 +1754,7 @@
         }
 
         .apt-actions {
-          flex-direction: column;
           align-items: flex-start;
-          gap: 8px;
         }
 
         .apt-amenities {
@@ -3688,18 +3687,14 @@
                     }
                   </div>
 
-                  ${priceHtml}
                   <div class="apt-actions">
+                    ${priceHtml}
                     ${
                       status.type === 'available'
-                        ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-                            <button type="button" class="apt-select-btn ${
-                              selected ? 'remove' : ''
-                            }" data-select="${ap.id}">
-                              ${selected ? 'Entfernen' : 'Auswählen'}
-                            </button>
-                            ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ''}
-                          </div>`
+                        ? `<button type="button" class="apt-select-btn ${selected ? 'remove' : ''}" data-select="${ap.id}">
+                            ${selected ? 'Entfernen' : 'Auswählen'}
+                          </button>
+                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ''}`
                         : ''
                     }
                   </div>
