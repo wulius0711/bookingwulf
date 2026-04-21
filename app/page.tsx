@@ -350,7 +350,7 @@ export default function LandingPage() {
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '80px 24px' }}>
         <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 48px' }}>Häufige Fragen</h2>
         {[
-          { q: 'Wie baue ich das Widget ein?', a: 'Eine Zeile Code auf Ihrer Website einfügen – fertig. Kein Entwickler nötig.' },
+          { q: 'Wie baue ich das Widget ein?', a: 'Sie müssen nur eine Zeile Code auf Ihrer Website einfügen – fertig. Es ist kein Entwickler nötig.' },
           { q: 'Funktioniert es mit meiner bestehenden Website?', a: 'Ja – das Widget funktioniert mit jeder Website, egal ob WordPress, Squarespace, Wix oder einer individuellen Lösung.' },
           { q: 'Kann ich das Widget für Anfragen und Buchungen gleichzeitig nutzen?', a: 'Ja – das Widget ist zweifach konfigurierbar. Sie können es gleichzeitig als Buchungs- und Anfrageformular einsetzen.' },
           { q: 'Gibt es versteckte Kosten oder Provisionen?', a: 'Nein. Sie zahlen nur den monatlichen Fixpreis – keine Provision, keine versteckten Gebühren, egal wie viele Buchungen eingehen.' },
