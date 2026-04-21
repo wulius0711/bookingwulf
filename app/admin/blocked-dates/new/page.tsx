@@ -2,8 +2,11 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 
-export default async function NewBlockedDatePage() {
+type PageProps = { searchParams: Promise<{ start?: string; end?: string }> };
+
+export default async function NewBlockedDatePage({ searchParams }: PageProps) {
   const session = await verifySession();
+  const { start, end } = await searchParams;
 
   const apartments = await prisma.apartment.findMany({
     where: {
@@ -67,11 +70,11 @@ export default async function NewBlockedDatePage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div style={fieldWrap}>
                   <label style={labelStyle}>Startdatum</label>
-                  <input type="date" name="startDate" required style={inputStyle} />
+                  <input type="date" name="startDate" required style={inputStyle} defaultValue={start ?? ''} />
                 </div>
                 <div style={fieldWrap}>
                   <label style={labelStyle}>Enddatum</label>
-                  <input type="date" name="endDate" required style={inputStyle} />
+                  <input type="date" name="endDate" required style={inputStyle} defaultValue={end ?? ''} />
                 </div>
               </div>
               <div style={fieldWrap}>

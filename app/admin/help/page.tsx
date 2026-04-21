@@ -313,6 +313,23 @@ function KalenderSection() {
           </div>
         ))}
       </div>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 2, background: '#ef4444', flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: '#374151' }}>Rot – Sperrzeit</span>
+        </div>
+      </div>
+      <H3>Zeitraum per Drag anlegen</H3>
+      <P>
+        Halten Sie die Maustaste gedrückt und ziehen Sie über mehrere Tage, um einen Zeitraum zu markieren.
+        Nach dem Loslassen öffnet sich ein Formular zum direkten Anlegen von:
+      </P>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, paddingLeft: 20, margin: '6px 0 12px' }}>
+        <li><strong style={{ color: '#ef4444' }}>Sperrzeit</strong> – Apartment für einen Zeitraum sperren</li>
+        <li><strong style={{ color: '#3b82f6' }}>Preiszeitraum</strong> – Saisonalen Preis festlegen</li>
+        <li><strong style={{ color: '#10b981' }}>Buchung</strong> – Manuelle Buchung erfassen</li>
+      </ul>
+      <P>Start- und Enddatum sind im Formular editierbar, falls der gewünschte Zeitraum über einen Monatswechsel hinausgeht.</P>
       <H3>Navigation</H3>
       <P>
         Mit den Pfeilen links und rechts wechseln Sie den Monat. Der Button <strong>„Heute"</strong> bringt
@@ -324,8 +341,7 @@ function KalenderSection() {
         Stornierungen für den gewählten Monat zusammengefasst.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Klicken Sie auf einen Eintrag im Kalender um direkt zur Anfragenübersicht
-        zu gelangen.
+        <strong>Tipp:</strong> Klicken Sie auf einen Eintrag im Kalender um direkt zur entsprechenden Übersicht zu gelangen.
       </Tip>
     </div>
   );

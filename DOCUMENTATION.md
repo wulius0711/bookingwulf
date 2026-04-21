@@ -521,6 +521,14 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 - Items werden immer gerendert (nur per `maxHeight` versteckt), damit `data-tour`-Attribute für die Geführte Tour im DOM erreichbar bleiben
 - Logout-Icon im Sidebar-Header (oben rechts)
 
+### Kalender — Drag-to-Create
+
+Klick-Drag über Tageszellen markiert einen Zeitraum (lila Highlight). Nach dem Loslassen öffnet sich ein modales Inline-Formular (Lightbox mit Backdrop) zum direkten Anlegen von Sperrzeiten, Preiszeiträumen oder manuellen Buchungen — ohne Seitennavigation. Datumfelder sind im Formular editierbar. Nach dem Speichern wird die Seite per `router.refresh()` aktualisiert.
+
+Sperrzeiten werden im Kalender als roter Chip `🚫` angezeigt (neben den Buchungs-Chips).
+
+Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt aufrufbar).
+
 ### Geführte Tour
 
 `GuidedTour`-Komponente (`app/admin/components/GuidedTour.tsx`) — schrittweise Einführung für neue Nutzer mit `data-tour`-Attributen an Nav-Elementen. Da Items immer im DOM sind (auch bei zugeklappter Gruppe), funktioniert die Tour unabhängig vom Akkordeon-Zustand.
@@ -548,6 +556,9 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 |---|---|---|
 | `/api/upload` | POST | Bild-Upload (Vercel Blob, max. 10 MB) |
 | `/api/ical-sync` | POST | iCal-Feed manuell synchronisieren |
+| `/api/admin/blocked-date` | POST | Sperrzeit anlegen (Kalender-Inline-Formular) |
+| `/api/admin/price-season` | POST | Preiszeitraum anlegen (Kalender-Inline-Formular) |
+| `/api/admin/booking` | POST | Manuelle Buchung anlegen (Kalender-Inline-Formular) |
 | `/api/admin/switch-hotel` | POST | Aktives Hotel wechseln |
 | `/api/admin/switch-plan` | POST | Plan wechseln (nur in Trial) |
 | `/api/admin/reset-trial` | POST | Trial zurücksetzen (nur Super-Admin) |

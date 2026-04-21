@@ -3,8 +3,11 @@ import { verifySession } from '@/src/lib/session';
 import { writeAuditLog } from '@/src/lib/audit';
 import { redirect } from 'next/navigation';
 
-export default async function NewPriceSeasonPage() {
+type PageProps = { searchParams: Promise<{ start?: string; end?: string }> };
+
+export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
   const session = await verifySession();
+  const { start, end } = await searchParams;
 
   const apartments = await prisma.apartment.findMany({
     where: {
@@ -79,11 +82,11 @@ export default async function NewPriceSeasonPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div style={field}>
                   <label style={label}>Von</label>
-                  <input type="date" name="startDate" required style={input} />
+                  <input type="date" name="startDate" required style={input} defaultValue={start ?? ''} />
                 </div>
                 <div style={field}>
                   <label style={label}>Bis</label>
-                  <input type="date" name="endDate" required style={input} />
+                  <input type="date" name="endDate" required style={input} defaultValue={end ?? ''} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>

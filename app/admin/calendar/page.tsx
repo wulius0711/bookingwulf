@@ -1,25 +1,12 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
+import CalendarGrid, { type BookingChip, type BlockedChip } from './CalendarGrid';
 
 export const dynamic = 'force-dynamic';
 
 type SearchParams = Promise<{ year?: string; month?: string }>;
 type PageProps = { searchParams: SearchParams };
-
-const STATUS_COLORS: Record<string, string> = {
-  new: '#3b82f6',
-  answered: '#f59e0b',
-  booked: '#10b981',
-  cancelled: '#ef4444',
-};
-
-const STATUS_BG: Record<string, string> = {
-  new: '#dbeafe',
-  answered: '#fef3c7',
-  booked: '#bbf7d0',
-  cancelled: '#fee2e2',
-};
 
 const STATUS_LABELS: Record<string, string> = {
   new: 'Neu',
@@ -28,7 +15,13 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Storniert',
 };
 
-const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+const STATUS_COLORS: Record<string, string> = {
+  new: '#3b82f6',
+  answered: '#f59e0b',
+  booked: '#10b981',
+  cancelled: '#ef4444',
+};
+
 const MONTH_NAMES = [
   'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
   'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember',
@@ -94,8 +87,8 @@ export default async function CalendarPage({ searchParams }: PageProps) {
 
   const apartmentMap = new Map(apartments.map((a) => [a.id, a.name]));
 
-  // Build day → bookings map
-  const dayBookings = new Map<string, typeof requests>();
+  // Build day → bookings map (serializable for client component)
+  const dayBookingsMap = new Map<string, BookingChip[]>();
   for (const req of requests) {
     const arrival = new Date(req.arrival);
     const departure = new Date(req.departure);
@@ -103,22 +96,58 @@ export default async function CalendarPage({ searchParams }: PageProps) {
     while (cur < departure) {
       if (cur.getFullYear() === year && cur.getMonth() === month) {
         const key = dateKey(cur);
-        if (!dayBookings.has(key)) dayBookings.set(key, []);
-        dayBookings.get(key)!.push(req);
+        if (!dayBookingsMap.has(key)) dayBookingsMap.set(key, []);
+        const aptIds = req.selectedApartmentIds.split(',').map(Number).filter(Boolean);
+        dayBookingsMap.get(key)!.push({
+          id: req.id,
+          firstname: req.firstname,
+          lastname: req.lastname,
+          arrival: req.arrival.toISOString(),
+          departure: req.departure.toISOString(),
+          nights: req.nights,
+          status: req.status,
+          aptName: aptIds.length > 0 ? (apartmentMap.get(aptIds[0]) ?? '') : '',
+          isArrival: dateKey(arrival) === key,
+        });
       }
       cur.setDate(cur.getDate() + 1);
     }
   }
+  const dayBookings = Object.fromEntries(dayBookingsMap);
 
-  // Build calendar grid (Mon=0)
+  // Build day → blocked ranges map
+  const blockedRanges = await prisma.blockedRange.findMany({
+    where: {
+      ...(session.hotelId ? { apartment: { hotelId: session.hotelId } } : {}),
+      startDate: { lte: lastDay },
+      endDate: { gt: firstDay },
+    },
+    include: { apartment: { select: { name: true } } },
+  });
+
+  const dayBlockedMap = new Map<string, BlockedChip[]>();
+  for (const r of blockedRanges) {
+    const cur = new Date(r.startDate);
+    while (cur < r.endDate) {
+      if (cur.getFullYear() === year && cur.getMonth() === month) {
+        const key = dateKey(cur);
+        if (!dayBlockedMap.has(key)) dayBlockedMap.set(key, []);
+        dayBlockedMap.get(key)!.push({ id: r.id, aptName: r.apartment?.name ?? '', note: r.note ?? '', type: r.type });
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+  }
+  const dayBlocked = Object.fromEntries(dayBlockedMap);
+
+  // Build calendar grid (Mon=0) — serializable as (string | null)[][]
   const firstDayOfWeek = (firstDay.getDay() + 6) % 7;
   const totalDays = lastDay.getDate();
-  const days: Array<Date | null> = [];
+  const days: Array<string | null> = [];
   for (let i = 0; i < firstDayOfWeek; i++) days.push(null);
-  for (let d = 1; d <= totalDays; d++) days.push(new Date(year, month, d));
+  for (let d = 1; d <= totalDays; d++) days.push(dateKey(new Date(year, month, d)));
   while (days.length % 7 !== 0) days.push(null);
 
-  const weeks: Array<Array<Date | null>> = [];
+  const weeks: Array<Array<string | null>> = [];
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
 
   const todayKey = dateKey(now);
@@ -156,6 +185,18 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         </div>
       </div>
 
+      {/* Drag-select hint */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 10, fontSize: 13, color: '#6b7280', marginBottom: 8, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 16 }}>💡</span>
+        <span>Zeitraum im Kalender per Drag markieren, dann:</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ background: '#10b981', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Buchung</span>
+          <span style={{ background: '#3b82f6', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Preiszeitraum</span>
+          <span style={{ background: '#ef4444', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Sperrzeit</span>
+          anlegen
+        </span>
+      </div>
+
       {/* KPI row */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
         {[
@@ -182,129 +223,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       </div>
 
       {/* Calendar grid */}
-      <div className="calendar-scroll" style={{ background: '#fff', borderRadius: 16, border: '1px solid #e5e7eb' }}>
-        <div className="calendar-grid">
-        {/* Weekday headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '2px solid #e5e7eb' }}>
-          {WEEKDAYS.map((day, i) => (
-            <div key={day} style={{
-              padding: '10px 8px',
-              textAlign: 'center',
-              fontSize: 11,
-              fontWeight: 700,
-              color: i >= 5 ? '#ef4444' : '#9ca3af',
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-            }}>
-              {day}
-            </div>
-          ))}
-        </div>
-
-        {/* Weeks */}
-        {weeks.map((week, wi) => (
-          <div
-            key={wi}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              borderBottom: wi < weeks.length - 1 ? '1px solid #f3f4f6' : 'none',
-            }}
-          >
-            {week.map((day, di) => {
-              if (!day) {
-                return (
-                  <div
-                    key={di}
-                    className="calendar-cell-empty"
-                    style={{
-                      background: '#fafafa',
-                      borderRight: di < 6 ? '1px solid #f3f4f6' : 'none',
-                    }}
-                  />
-                );
-              }
-
-              const key = dateKey(day);
-              const bookings = dayBookings.get(key) ?? [];
-              const isToday = key === todayKey;
-              const isWeekend = di >= 5;
-
-              return (
-                <div
-                  key={di}
-                  className="calendar-cell"
-                  style={{
-                    background: isWeekend ? '#fafafa' : '#fff',
-                    borderRight: di < 6 ? '1px solid #f3f4f6' : 'none',
-                  }}
-                >
-                  {/* Day number */}
-                  <div style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: '50%',
-                    background: isToday ? '#111' : 'transparent',
-                    color: isToday ? '#fff' : isWeekend ? '#ef4444' : '#374151',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 12,
-                    fontWeight: isToday ? 700 : 400,
-                    marginBottom: 4,
-                    flexShrink: 0,
-                  }}>
-                    {day.getDate()}
-                  </div>
-
-                  {/* Booking chips — sorted by priority so booked shows first */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {[...bookings].sort((a, b) => {
-                      const p: Record<string, number> = { booked: 0, answered: 1, new: 2 };
-                      return (p[a.status] ?? 3) - (p[b.status] ?? 3);
-                    }).slice(0, 4).map((req) => {
-                      const aptIds = req.selectedApartmentIds.split(',').map(Number).filter(Boolean);
-                      const aptName = aptIds.length > 0 ? (apartmentMap.get(aptIds[0]) ?? 'Apt') : '';
-                      const isArrival = dateKey(new Date(req.arrival)) === key;
-                      const name = `${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}`;
-
-                      return (
-                        <Link
-                          key={req.id}
-                          href={`/admin/requests`}
-                          style={{
-                            display: 'block',
-                            padding: '2px 5px',
-                            borderRadius: 3,
-                            background: STATUS_BG[req.status] ?? '#f3f4f6',
-                            borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`,
-                            fontSize: 10,
-                            color: '#111',
-                            textDecoration: 'none',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            lineHeight: 1.5,
-                          }}
-                          title={`${name}${aptName ? ' · ' + aptName : ''} | ${req.nights} Nächte`}
-                        >
-                          <span className="calendar-chip-label">{isArrival ? '↘ ' : ''}{name}{aptName ? ` · ${aptName}` : ''}</span>
-                        </Link>
-                      );
-                    })}
-                    {bookings.length > 4 && (
-                      <div className="calendar-chip-label" style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>
-                        +{bookings.length - 4} weitere
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
-        </div>{/* /calendar-grid */}
-      </div>
+      <CalendarGrid weeks={weeks} todayKey={todayKey} dayBookings={dayBookings} dayBlocked={dayBlocked} apartments={apartments.map(a => ({ id: a.id, name: a.name }))} />
 
       {requests.length === 0 && cancelledCount === 0 && (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 14 }}>
