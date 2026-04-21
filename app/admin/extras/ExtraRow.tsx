@@ -59,8 +59,8 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
     try {
       const blob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
       setImageUrl(blob.url);
-    } catch {
-      setUploadError('Upload fehlgeschlagen.');
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload fehlgeschlagen.');
     } finally {
       setUploading(false);
     }
