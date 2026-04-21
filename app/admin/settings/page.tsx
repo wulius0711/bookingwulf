@@ -277,7 +277,10 @@ export default async function Page({ searchParams }: PageProps) {
               <h1 style={headlineStyle}>Hotel Settings</h1>
               <p style={sublineStyle}>
                 Farben, Radius und Funktionen pro Hotel steuern – mit direkter
-                Widget-Vorschau.
+                Widget-Vorschau.{' '}
+                <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
+                  Hier finden Sie den Code zum Einbauen auf Ihre Website.
+                </a>
               </p>
             </div>
 
@@ -573,7 +576,7 @@ export default async function Page({ searchParams }: PageProps) {
           </form>
 
           {/* EMBED CODE */}
-          <div className="settings-section" style={sectionStyle}>
+          <div id="embed-code" className="settings-section" style={sectionStyle}>
             <div>
               <h2 style={sectionTitleStyle}>Embed-Code</h2>
               <p style={sectionIntroStyle}>
