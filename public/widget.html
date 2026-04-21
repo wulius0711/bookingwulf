@@ -2866,8 +2866,7 @@
               salutationWrap.style.maxWidth = state.settings.showPhoneField ? '33%' : '';
             }
             const lastNameWrap = document.getElementById('lastNameFieldWrap');
-            if (lastNameWrap)
-              lastNameWrap.style.gridColumn = state.settings.showPhoneField ? '' : '1 / -1';
+            if (lastNameWrap) lastNameWrap.style.gridColumn = '';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
