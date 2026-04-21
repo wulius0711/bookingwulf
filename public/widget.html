@@ -933,8 +933,8 @@
 
       .apt-image-wrap {
         position: relative;
-        width: 280px;
-        height: 200px;
+        width: 320px;
+        height: 220px;
         flex-shrink: 0;
         border-radius: calc(var(--radius) + 2px);
         overflow: hidden;
@@ -1172,14 +1172,17 @@
       .apt-bottom {
         display: flex;
         justify-content: space-between;
-        align-items: end;
+        align-items: center;
         gap: 16px;
         margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
       }
 
       .apt-status-copy {
         color: var(--muted);
-        font-size: 1rem;
+        font-size: 0.929rem;
+        font-weight: 500;
       }
 
       .apt-price {
@@ -1271,9 +1274,9 @@
 
       .apt-actions {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
       }
 
       .apt-next-link {
@@ -1743,7 +1746,9 @@
         }
 
         .apt-actions {
+          flex-direction: column;
           align-items: flex-start;
+          gap: 8px;
         }
 
         .apt-amenities {
