@@ -2376,7 +2376,7 @@
                   />
                   <div id="firstName-err" class="field-error"></div>
                 </div>
-                <div class="field-block">
+                <div class="field-block" id="lastNameFieldWrap">
                   <label class="label" for="lastName"
                     >Nachname<span class="required">*</span></label
                   >
@@ -2860,6 +2860,9 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
+            const lastNameWrap = document.getElementById('lastNameFieldWrap');
+            if (lastNameWrap)
+              lastNameWrap.style.gridColumn = state.settings.showPhoneField ? '1 / -1' : '';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
