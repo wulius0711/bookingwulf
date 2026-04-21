@@ -4071,6 +4071,25 @@
                 if (p && p.available) {
                   const basePrice = (p.totalPrice || 0) - (p.cleaningFee || 0);
                   rows += `<div style="${rowStyle}"><span style="${muteStyle}">${nights} Nacht${nights !== 1 ? 'e' : ''} × ${eur(p.pricePerNight)}</span><span>${eur(basePrice)}</span></div>`;
+
+                  // Child pricing right after nights
+                  if (state.childPriceRanges.length > 0 && state.children > 0) {
+                    const birthdays = getChildBirthdays();
+                    birthdays.forEach((bd, i) => {
+                      const age = getChildAge(bd, state.arrival);
+                      if (age === null) return;
+                      const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+                      if (!range) return;
+                      const label = range.label || `Kind ${i + 1}`;
+                      const cost = Number(range.pricePerNight) * nights;
+                      if (Number(range.pricePerNight) === 0) {
+                        rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) · Gratis</span><span style="color:#16a34a;">Gratis</span></div>`;
+                      } else {
+                        rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) ${nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
+                      }
+                    });
+                  }
+
                   if (p.cleaningFee > 0) {
                     rows += `<div style="${rowStyle}"><span style="${muteStyle}">Endreinigung</span><span>${eur(p.cleaningFee)}</span></div>`;
                   }
@@ -4083,24 +4102,6 @@
               });
             } else if (selectedAptsList.length === 0) {
               rows = `<div style="${rowStyle} ${muteStyle}"><span>Kein Apartment gewählt</span></div>`;
-            }
-
-            // Child pricing rows
-            if (state.childPriceRanges.length > 0 && state.children > 0) {
-              const birthdays = getChildBirthdays();
-              birthdays.forEach((bd, i) => {
-                const age = getChildAge(bd, state.arrival);
-                if (age === null) return;
-                const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
-                if (!range) return;
-                const label = range.label || `Kind ${i + 1}`;
-                const cost = Number(range.pricePerNight) * nights;
-                if (Number(range.pricePerNight) === 0) {
-                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) · Gratis</span><span style="color:#16a34a;">Gratis</span></div>`;
-                } else {
-                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) ${nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
-                }
-              });
             }
 
             const extrasTotal = getExtrasTotal();
