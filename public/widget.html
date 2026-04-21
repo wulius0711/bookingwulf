@@ -471,11 +471,6 @@
         margin-top: 0;
         margin-bottom: 12px;
       }
-      .booking-shell.sidebar-layout #globalInfo,
-      .booking-shell.sidebar-layout #globalError,
-      .booking-shell.sidebar-layout #globalSuccess {
-        grid-column: 2;
-      }
       .booking-shell.sidebar-layout .layout {
         grid-column: 2;
         grid-row: 1;
@@ -2196,11 +2191,10 @@
         </div>
       </div>
 
-      <div id="globalInfo" class="msg info"></div>
-      <div id="globalError" class="msg error"></div>
-      <div id="globalSuccess" class="msg success"></div>
-
       <div class="layout">
+        <div id="globalInfo" class="msg info" style="grid-column: 1 / -1;"></div>
+        <div id="globalError" class="msg error" style="grid-column: 1 / -1;"></div>
+        <div id="globalSuccess" class="msg success" style="grid-column: 1 / -1;"></div>
         <div>
           <section class="screen active" data-screen="1">
             <div class="content-card">
