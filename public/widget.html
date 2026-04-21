@@ -4020,12 +4020,12 @@
               '">' +
               '<span style="' +
               labelStyle +
-              '">Anfrage</span>' +
+              '">Buchung</span>' +
               '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;">' +
-              'Zahlungsoptionen' +
+              'Zahlungsoptionen<span class="required">*</span>' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</div>' +
-              '<div class="payment-accordion-body" id="paymentAccordionBody">' +
+              '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
               '<div class="payment-benefit" style="margin-top:10px;">\u2713 Keine Kreditkarte n\u00f6tig</div>' +
               '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' +
               depositText +
@@ -4045,15 +4045,13 @@
               '</div>' +
               '</div>';
 
-            document
-              .getElementById('paymentAccordionToggle')
-              .addEventListener('click', function () {
-                const body = document.getElementById('paymentAccordionBody');
-                const isOpen = body.classList.toggle('open');
-                this.querySelector('svg').style.transform = isOpen
-                  ? 'rotate(180deg)'
-                  : '';
-              });
+            const payToggle = document.getElementById('paymentAccordionToggle');
+            payToggle.querySelector('svg').style.transform = 'rotate(180deg)';
+            payToggle.addEventListener('click', function () {
+              const body = document.getElementById('paymentAccordionBody');
+              const isOpen = body.classList.toggle('open');
+              this.querySelector('svg').style.transform = isOpen ? 'rotate(180deg)' : '';
+            });
           } else {
             area.innerHTML =
               '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</span></div>' +
