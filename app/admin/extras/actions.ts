@@ -16,6 +16,8 @@ export async function createExtra(formData: FormData) {
   const type = String(formData.get('type') || 'extra');
   const billingType = String(formData.get('billingType') || 'per_stay');
   const price = parseFloat(String(formData.get('price') || '0'));
+  const description = String(formData.get('description') || '').trim() || null;
+  const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
 
@@ -29,7 +31,7 @@ export async function createExtra(formData: FormData) {
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
   await prisma.hotelExtra.create({
-    data: { hotelId, name, key, type, billingType, price, linkUrl, sortOrder },
+    data: { hotelId, name, key, type, billingType, price, description, imageUrl, linkUrl, sortOrder },
   });
 
   revalidatePath('/admin/extras');
@@ -61,6 +63,8 @@ export async function updateExtra(formData: FormData) {
   const type = String(formData.get('type') || 'extra');
   const billingType = String(formData.get('billingType') || 'per_stay');
   const price = parseFloat(String(formData.get('price') || '0'));
+  const description = String(formData.get('description') || '').trim() || null;
+  const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
 
@@ -69,7 +73,7 @@ export async function updateExtra(formData: FormData) {
 
   await prisma.hotelExtra.update({
     where: { id },
-    data: { name, type, billingType, price, linkUrl, sortOrder },
+    data: { name, type, billingType, price, description, imageUrl, linkUrl, sortOrder },
   });
 
   revalidatePath('/admin/extras');

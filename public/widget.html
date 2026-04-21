@@ -3871,6 +3871,7 @@
               <div class="toggle-card-body">
                 <div class="toggle-indicator">${selected ? 'Ausgewählt' : 'Nicht ausgewählt'}</div>
                 <h3 class="apt-name">${ex.name}</h3>
+                ${ex.description ? `<div style="font-size:0.9rem;color:var(--muted);margin-top:4px;line-height:1.4;">${ex.description}</div>` : ''}
                 <div class="toggle-price">${getPriceLabel(ex.billingType, Number(ex.price))}</div>
               </div>
             `;

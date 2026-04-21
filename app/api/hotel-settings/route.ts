@@ -112,7 +112,7 @@ export async function GET(req: Request) {
         ...(!canUseExtras ? { type: 'insurance' } : {}),
       },
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-      select: { key: true, name: true, type: true, billingType: true, price: true, linkUrl: true },
+      select: { key: true, name: true, type: true, billingType: true, price: true, description: true, imageUrl: true, linkUrl: true },
     });
 
     return withCors(

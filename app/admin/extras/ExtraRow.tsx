@@ -20,6 +20,8 @@ type Extra = {
   type: string;
   billingType: string;
   price: number;
+  description: string | null;
+  imageUrl: string | null;
   linkUrl: string | null;
   isActive: boolean;
   sortOrder: number;
@@ -84,8 +86,19 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
             </div>
 
             <div style={{ display: 'grid', gap: 4 }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Link-URL</label>
-              <input name="linkUrl" type="url" defaultValue={extra.linkUrl || ''} placeholder="https://..." style={inputStyle} />
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Beschreibung</label>
+              <input name="description" defaultValue={extra.description || ''} placeholder="Kurze Beschreibung (optional)" style={inputStyle} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Bild-URL</label>
+                <input name="imageUrl" type="url" defaultValue={extra.imageUrl || ''} placeholder="https://..." style={inputStyle} />
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Link-URL</label>
+                <input name="linkUrl" type="url" defaultValue={extra.linkUrl || ''} placeholder="https://..." style={inputStyle} />
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
@@ -104,7 +117,17 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
 
   return (
     <tr style={{ borderBottom: '1px solid #f9fafb' }}>
-      <td style={{ padding: '12px 16px', fontWeight: 500, color: '#111827' }}>{extra.name}</td>
+      <td style={{ padding: '12px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {extra.imageUrl && (
+            <img src={extra.imageUrl} alt="" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+          )}
+          <div>
+            <div style={{ fontWeight: 500, color: '#111827' }}>{extra.name}</div>
+            {extra.description && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{extra.description}</div>}
+          </div>
+        </div>
+      </td>
       <td style={{ padding: '12px 16px' }}>
         <span style={{
           padding: '2px 8px', borderRadius: 8, fontSize: 11, fontWeight: 600,
