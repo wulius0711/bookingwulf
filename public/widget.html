@@ -2860,9 +2860,6 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
-            const emailWrap = document.getElementById('emailFieldWrap');
-            if (emailWrap)
-              emailWrap.style.gridColumn = state.settings.showPhoneField ? '' : '1 / -1';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
