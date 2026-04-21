@@ -1196,8 +1196,69 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 6px;
+        gap: 4px;
         flex-shrink: 0;
+        position: relative;
+      }
+
+      .apt-price-details-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 0.857rem;
+        color: var(--accent);
+        text-decoration: underline;
+        cursor: pointer;
+        text-align: right;
+      }
+
+      .apt-price-popover {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        right: 0;
+        background: var(--surface, #fff);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+        padding: 14px 16px;
+        min-width: 230px;
+        z-index: 100;
+        font-size: 0.929rem;
+      }
+
+      .apt-price-popover-caret {
+        position: absolute;
+        bottom: -6px;
+        right: 18px;
+        width: 11px;
+        height: 11px;
+        background: var(--surface, #fff);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        transform: rotate(45deg);
+      }
+
+      .apt-price-popover-header {
+        font-size: 0.857rem;
+        color: var(--muted);
+        padding-bottom: 8px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .apt-price-popover-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 3px 0;
+        color: var(--text);
+      }
+
+      .apt-price-popover-row.total {
+        font-weight: 700;
+        border-top: 1px solid var(--line);
+        margin-top: 6px;
+        padding-top: 8px;
       }
 
       .apt-price-per-night {
@@ -2618,6 +2679,7 @@
           expandedDescriptions: {},
           expandedAmenities: {},
           imageIndexMap: {},
+          openPricePopover: null,
           lightbox: {
             open: false,
             apartmentId: null,
@@ -3542,14 +3604,24 @@
                 } else if (pricing.surchargePercent > 0) {
                   priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
                 }
-                const perNightLine = pricing.pricePerNight
-                  ? `<div class="apt-price-per-night">${eur(pricing.pricePerNight)} / Nacht</div>`
+                const basePrice = (pricing.totalPrice || 0) - (pricing.cleaningFee || 0);
+                const nightsLabel = `${pricing.nights} Nacht${pricing.nights !== 1 ? 'e' : ''}${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`;
+                const cleaningRow = pricing.cleaningFee > 0
+                  ? `<div class="apt-price-popover-row"><span>Endreinigung</span><span>${eur(pricing.cleaningFee)}</span></div>`
                   : '';
-                const cleaningLine =
-                  pricing.cleaningFee > 0
-                    ? `<div class="apt-price-cleaning">+ ${eur(pricing.cleaningFee)} Endreinigung</div>`
-                    : '';
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)} <span style="font-size:0.55em;font-weight:500;color:var(--muted);vertical-align:middle;">gesamt</span></div>${perNightLine}${cleaningLine}</div>`;
+                const discountRow = pricing.discountPercent > 0
+                  ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
+                  : '';
+                const popoverOpen = state.openPricePopover === ap.id;
+                const popoverHtml = popoverOpen ? `
+                  <div class="apt-price-popover">
+                    <div class="apt-price-popover-caret"></div>
+                    <div class="apt-price-popover-header">${nightsLabel}</div>
+                    <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
+                    ${cleaningRow}${discountRow}
+                    <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(pricing.totalPrice)}</span></div>
+                  </div>` : '';
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
@@ -3678,12 +3750,9 @@
                   <div class="apt-status-copy">
                     ${
                       status.message &&
-                      (status.type === 'unavailable' ||
-                        status.type === 'not-matching')
+                      (status.type === 'unavailable' || status.type === 'not-matching')
                         ? status.message
-                        : pricing && pricing.available
-                          ? `${pricing.nights} Nächte${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`
-                          : ' '
+                        : ''
                     }
                   </div>
 
@@ -3722,6 +3791,15 @@
               e.stopPropagation();
               const id = Number(btn.getAttribute('data-toggle-amenities'));
               state.expandedAmenities[id] = !state.expandedAmenities[id];
+              renderApartments();
+            });
+          });
+
+          wrap.querySelectorAll('[data-price-popover]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const id = Number(btn.getAttribute('data-price-popover'));
+              state.openPricePopover = state.openPricePopover === id ? null : id;
               renderApartments();
             });
           });
@@ -5001,6 +5079,13 @@
         document.getElementById('lightbox').addEventListener('click', (e) => {
           if (e.target.id === 'lightbox') {
             closeLightbox();
+          }
+        });
+
+        document.addEventListener('click', () => {
+          if (state.openPricePopover !== null) {
+            state.openPricePopover = null;
+            renderApartments();
           }
         });
 
