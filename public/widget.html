@@ -672,9 +672,10 @@
         overflow: hidden;
         border-top: 0px solid var(--line);
         background: var(--surface-2);
-        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    border-top-width 0.1s ease;
+        transition:
+          max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          border-top-width 0.1s ease;
         padding: 0 16px;
       }
 
@@ -734,9 +735,10 @@
         overflow: hidden;
         border-top: 0px solid var(--line);
         background: var(--surface-2);
-        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    border-top-width 0.1s ease;
+        transition:
+          max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          border-top-width 0.1s ease;
         padding: 0 16px;
       }
 
@@ -771,7 +773,12 @@
         line-height: 1.5;
       }
 
-      .pm-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+      .pm-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 4px;
+      }
 
       .pm-card {
         display: flex;
@@ -785,13 +792,15 @@
         font-size: 0.95rem;
         color: var(--text);
         font-weight: 500;
-        transition: border-color 0.15s ease, background 0.15s ease;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
         user-select: none;
       }
 
       .pm-card.selected {
         border-color: var(--accent);
-        background: var(--accent-soft, rgba(220,20,60,0.05));
+        background: var(--accent-soft, rgba(220, 20, 60, 0.05));
       }
 
       .pm-card.disabled {
@@ -801,11 +810,14 @@
       }
 
       .pm-radio {
-        width: 16px; height: 16px;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
         border: 2px solid var(--line);
         flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: border-color 0.15s ease;
       }
 
@@ -816,7 +828,8 @@
 
       .pm-card.selected .pm-radio::after {
         content: '';
-        width: 6px; height: 6px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
         background: #fff;
       }
@@ -1867,7 +1880,9 @@
         color: var(--muted);
         font-size: 13px;
         line-height: 1;
-        transition: background 0.15s, color 0.15s;
+        transition:
+          background 0.15s,
+          color 0.15s;
         padding: 0;
       }
 
@@ -1913,12 +1928,16 @@
         border: none;
         background: none;
         color: var(--text);
-        transition: background 0.1s, color 0.1s;
+        transition:
+          background 0.1s,
+          color 0.1s;
         font-family: inherit;
         position: relative;
       }
 
-      .cal-day:hover:not([disabled]):not(.in-range):not(.selected-start):not(.selected-end) {
+      .cal-day:hover:not([disabled]):not(.in-range):not(.selected-start):not(
+          .selected-end
+        ) {
         background: var(--accent-soft);
       }
 
@@ -2013,9 +2032,10 @@
         overflow: hidden;
         border-top: 0px solid var(--line);
         background: var(--surface-2);
-        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-                    border-top-width 0.1s ease;
+        transition:
+          max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+          border-top-width 0.1s ease;
         padding: 0 16px;
       }
 
@@ -2285,14 +2305,24 @@
                   <label class="label" for="firstName"
                     >Vorname<span class="required">*</span></label
                   >
-                  <input id="firstName" type="text" placeholder="Max" autocomplete="given-name" />
+                  <input
+                    id="firstName"
+                    type="text"
+                    placeholder="Max"
+                    autocomplete="given-name"
+                  />
                   <div id="firstName-err" class="field-error"></div>
                 </div>
                 <div class="field-block">
                   <label class="label" for="lastName"
                     >Nachname<span class="required">*</span></label
                   >
-                  <input id="lastName" type="text" placeholder="Mustermann" autocomplete="family-name" />
+                  <input
+                    id="lastName"
+                    type="text"
+                    placeholder="Mustermann"
+                    autocomplete="family-name"
+                  />
                   <div id="lastName-err" class="field-error"></div>
                 </div>
                 <div class="field-block">
@@ -2309,14 +2339,34 @@
                 </div>
                 <div class="field-block">
                   <label class="label" for="phone">Telefon</label>
-                  <input id="phone" type="tel" placeholder="+43 123456789" autocomplete="tel" />
+                  <input
+                    id="phone"
+                    type="tel"
+                    placeholder="+43 123456789"
+                    autocomplete="tel"
+                  />
                 </div>
               </div>
 
               <div class="addr-accordion">
-                <button type="button" class="addr-accordion-toggle" id="addrAccordionToggle">
+                <button
+                  type="button"
+                  class="addr-accordion-toggle"
+                  id="addrAccordionToggle"
+                >
                   Adresse (optional)
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
                 </button>
                 <div class="addr-accordion-body" id="addrAccordionBody">
                   <div
@@ -2327,8 +2377,14 @@
                     "
                   >
                     <div class="field-block">
-                      <label class="label" for="street">Straße, Hausnummer</label>
-                      <input id="street" type="text" placeholder="Musterstraße 1" />
+                      <label class="label" for="street"
+                        >Straße, Hausnummer</label
+                      >
+                      <input
+                        id="street"
+                        type="text"
+                        placeholder="Musterstraße 1"
+                      />
                     </div>
                     <div class="field-block">
                       <label class="label" for="zip">PLZ</label>
@@ -2380,7 +2436,10 @@
                   class="guest-accordion-toggle"
                   id="guestAccordionToggle"
                 >
-                  <span>weitere Gäste Daten <span style="color:var(--text)">*</span></span>
+                  <span
+                    >weitere Gäste Daten
+                    <span style="color: var(--text)">*</span></span
+                  >
                   <svg
                     width="16"
                     height="16"
@@ -2432,7 +2491,7 @@
 
         <aside class="summary">
           <span class="summary-eyebrow">Ihre Auswahl</span>
-          <h3>Anfragedetails</h3>
+          <h3>Buchungsdetails</h3>
 
           <div class="summary-block">
             <div class="summary-block-title">Apartments</div>
@@ -2453,7 +2512,14 @@
           <div class="summary-line"></div>
 
           <div id="summaryBreakdown"></div>
-          <div class="summary-row summary-total" style="border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px;">
+          <div
+            class="summary-row summary-total"
+            style="
+              border-top: 1px solid var(--line);
+              padding-top: 14px;
+              margin-top: 4px;
+            "
+          >
             <span>Gesamt</span><span id="summaryTotal">€ 0,00</span>
           </div>
         </aside>
@@ -3163,8 +3229,21 @@
           renderCalendar();
         }
 
-        const CAL_MONTHS_DE = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-        const CAL_WEEKDAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+        const CAL_MONTHS_DE = [
+          'Januar',
+          'Februar',
+          'März',
+          'April',
+          'Mai',
+          'Juni',
+          'Juli',
+          'August',
+          'September',
+          'Oktober',
+          'November',
+          'Dezember',
+        ];
+        const CAL_WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
         function renderCalendar() {
           const wrap = document.getElementById('cal-picker');
@@ -3179,22 +3258,25 @@
             const lastDay = new Date(year, month + 1, 0);
             const startDow = (firstDay.getDay() + 6) % 7;
 
-            const weekdaysHTML = CAL_WEEKDAYS.map(w =>
-              `<div class="cal-weekday">${w}</div>`
+            const weekdaysHTML = CAL_WEEKDAYS.map(
+              (w) => `<div class="cal-weekday">${w}</div>`,
             ).join('');
 
             const days = [];
             for (let i = 0; i < startDow; i++) {
-              days.push('<button class="cal-day empty" tabindex="-1" disabled></button>');
+              days.push(
+                '<button class="cal-day empty" tabindex="-1" disabled></button>',
+              );
             }
 
             const arr = state.arrival;
             const dep = state.departure;
             const hover = state.calendarHover;
-            const effectiveEnd = dep || (arr && hover && hover > arr ? hover : null);
+            const effectiveEnd =
+              dep || (arr && hover && hover > arr ? hover : null);
 
             for (let d = 1; d <= lastDay.getDate(); d++) {
-              const ds = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+              const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
               const isPast = ds < todayStr;
               const classes = ['cal-day'];
 
@@ -3203,14 +3285,19 @@
               } else {
                 if (ds === arr && arr !== dep) classes.push('selected-start');
                 if (ds === dep && arr !== dep) classes.push('selected-end');
-                if (ds === arr && ds === dep) { classes.push('selected-start'); classes.push('selected-end'); }
-                if (ds === arr && !dep) classes.push('selected-start', 'selected-end');
-                if (effectiveEnd && ds > arr && ds < effectiveEnd) classes.push('in-range');
+                if (ds === arr && ds === dep) {
+                  classes.push('selected-start');
+                  classes.push('selected-end');
+                }
+                if (ds === arr && !dep)
+                  classes.push('selected-start', 'selected-end');
+                if (effectiveEnd && ds > arr && ds < effectiveEnd)
+                  classes.push('in-range');
               }
               if (ds === todayStr) classes.push('today');
 
               days.push(
-                `<button class="cal-day ${classes.join(' ')}" data-date="${ds}" ${isPast ? 'disabled' : ''}>${d}</button>`
+                `<button class="cal-day ${classes.join(' ')}" data-date="${ds}" ${isPast ? 'disabled' : ''}>${d}</button>`,
               );
             }
 
@@ -3234,7 +3321,8 @@
           const nights = getNights();
           let hint = 'Anreisedatum wählen';
           if (state.arrival && !state.departure) hint = 'Abreisedatum wählen …';
-          if (state.arrival && state.departure) hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
+          if (state.arrival && state.departure)
+            hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
 
           wrap.innerHTML = `
             <div class="cal-months">
@@ -3243,8 +3331,10 @@
             </div>
             <div class="cal-nights-hint">${hint}</div>`;
 
-          wrap.querySelectorAll('.cal-day[data-date]').forEach(btn => {
-            btn.addEventListener('click', () => handleCalendarDayClick(btn.getAttribute('data-date')));
+          wrap.querySelectorAll('.cal-day[data-date]').forEach((btn) => {
+            btn.addEventListener('click', () =>
+              handleCalendarDayClick(btn.getAttribute('data-date')),
+            );
             btn.addEventListener('mouseenter', () => {
               if (state.arrival && !state.departure) {
                 state.calendarHover = btn.getAttribute('data-date');
@@ -3260,17 +3350,21 @@
             }
           });
 
-          document.getElementById('calPrev')?.addEventListener('click', e => {
+          document.getElementById('calPrev')?.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (state.calendarMonth === 0) { state.calendarYear--; state.calendarMonth = 11; }
-            else state.calendarMonth--;
+            if (state.calendarMonth === 0) {
+              state.calendarYear--;
+              state.calendarMonth = 11;
+            } else state.calendarMonth--;
             renderCalendar();
           });
 
-          document.getElementById('calNext')?.addEventListener('click', e => {
+          document.getElementById('calNext')?.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (state.calendarMonth === 11) { state.calendarYear++; state.calendarMonth = 0; }
-            else state.calendarMonth++;
+            if (state.calendarMonth === 11) {
+              state.calendarYear++;
+              state.calendarMonth = 0;
+            } else state.calendarMonth++;
             renderCalendar();
           });
         }
@@ -3282,15 +3376,17 @@
           const arr = state.arrival;
           const dep = state.departure;
           const hover = state.calendarHover;
-          const effectiveEnd = dep || (arr && hover && hover > arr ? hover : null);
+          const effectiveEnd =
+            dep || (arr && hover && hover > arr ? hover : null);
 
-          wrap.querySelectorAll('.cal-day[data-date]').forEach(btn => {
+          wrap.querySelectorAll('.cal-day[data-date]').forEach((btn) => {
             const ds = btn.getAttribute('data-date');
             btn.classList.remove('selected-start', 'selected-end', 'in-range');
             if (ds < todayStr) return;
             if (arr && ds === arr) {
               btn.classList.add('selected-start');
-              if (!effectiveEnd || effectiveEnd === arr) btn.classList.add('selected-end');
+              if (!effectiveEnd || effectiveEnd === arr)
+                btn.classList.add('selected-end');
             }
             if (effectiveEnd && ds === effectiveEnd && effectiveEnd !== arr) {
               btn.classList.add('selected-end');
@@ -3305,13 +3401,18 @@
             const nights = getNights();
             let hint = 'Anreisedatum wählen';
             if (arr && !dep) hint = 'Abreisedatum wählen …';
-            if (arr && dep) hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(arr)} – ${formatDate(dep)}`;
+            if (arr && dep)
+              hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(arr)} – ${formatDate(dep)}`;
             hintEl.innerHTML = hint;
           }
         }
 
         async function handleCalendarDayClick(dateStr) {
-          if (!state.arrival || (state.arrival && state.departure) || dateStr < state.arrival) {
+          if (
+            !state.arrival ||
+            (state.arrival && state.departure) ||
+            dateStr < state.arrival
+          ) {
             state.arrival = dateStr;
             state.departure = '';
           } else if (dateStr === state.arrival) {
@@ -3433,9 +3534,10 @@
                 const perNightLine = pricing.pricePerNight
                   ? `<div class="apt-price-per-night">${eur(pricing.pricePerNight)} / Nacht</div>`
                   : '';
-                const cleaningLine = pricing.cleaningFee > 0
-                  ? `<div class="apt-price-cleaning">+ ${eur(pricing.cleaningFee)} Endreinigung</div>`
-                  : '';
+                const cleaningLine =
+                  pricing.cleaningFee > 0
+                    ? `<div class="apt-price-cleaning">+ ${eur(pricing.cleaningFee)} Endreinigung</div>`
+                    : '';
                 priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)} <span style="font-size:0.55em;font-weight:500;color:var(--muted);vertical-align:middle;">gesamt</span></div>${perNightLine}${cleaningLine}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
@@ -3775,7 +3877,8 @@
               : 'Keine ausgewählt';
 
           document.getElementById('totalBox').textContent = eur(getTotal());
-          document.getElementById('summaryApartment').textContent = apartmentText;
+          document.getElementById('summaryApartment').textContent =
+            apartmentText;
           document.getElementById('summaryDates').textContent =
             `Zeitraum: ${formatDate(state.arrival)} - ${formatDate(state.departure)}`;
           document.getElementById('summaryGuests').textContent = guests;
@@ -3786,13 +3889,14 @@
           const breakdownEl = document.getElementById('summaryBreakdown');
           if (breakdownEl) {
             const nights = getNights();
-            const rowStyle = 'display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:0.95rem;color:var(--text);';
+            const rowStyle =
+              'display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:0.95rem;color:var(--text);';
             const muteStyle = 'color:var(--muted);';
             let rows = '';
 
             const selectedAptsList = getSelectedApartments();
             if (selectedAptsList.length > 0 && nights > 0) {
-              selectedAptsList.forEach(apt => {
+              selectedAptsList.forEach((apt) => {
                 const p = state.pricingMap[String(apt.id)];
                 if (p && p.available) {
                   const basePrice = (p.totalPrice || 0) - (p.cleaningFee || 0);
@@ -4003,7 +4107,7 @@
             links.push(
               '<a href="' +
                 state.bookingTermsUrl +
-                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Anfragebedingungen</a>',
+                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>',
             );
           if (state.privacyPolicyUrl)
             links.push(
@@ -4017,7 +4121,7 @@
               ? 'Ich akzeptiere die ' +
                 links.join(' und die ') +
                 '.<span class="required">*</span>'
-              : 'Ich habe die Anfragebedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
+              : 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
 
           wrap.innerHTML =
             '<label style="display:flex;flex-direction:row;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
@@ -4028,7 +4132,9 @@
             text +
             '</span>' +
             '</label>' +
-            '<div id="termsCheckboxErr" class="field-error" style="margin-top:6px;' + (!checked ? '' : 'display:none;') + '"></div>';
+            '<div id="termsCheckboxErr" class="field-error" style="margin-top:6px;' +
+            (!checked ? '' : 'display:none;') +
+            '"></div>';
         }
 
         function renderChildBirthdays() {
@@ -4220,7 +4326,9 @@
             payToggle.addEventListener('click', function () {
               const body = document.getElementById('paymentAccordionBody');
               const isOpen = body.classList.toggle('open');
-              this.querySelector('svg').style.transform = isOpen ? 'rotate(180deg)' : '';
+              this.querySelector('svg').style.transform = isOpen
+                ? 'rotate(180deg)'
+                : '';
             });
 
             // Payment method is pre-selected (Banküberweisung), enable submit immediately
@@ -4454,7 +4562,7 @@
                 if (state.hotelId) {
                   try {
                     const pricingRes = await fetch(
-                      `${API_BASE}/api/pricing?hotelId=${state.hotelId}&arrival=${state.arrival}&departure=${state.departure}&apartmentId=${apartment.id}`
+                      `${API_BASE}/api/pricing?hotelId=${state.hotelId}&arrival=${state.arrival}&departure=${state.departure}&apartmentId=${apartment.id}`,
                     );
                     if (pricingRes.ok) {
                       const pd = await pricingRes.json();
@@ -4465,14 +4573,16 @@
                           message: `Mindestaufenthalt: ${pd.minStay} Nächte`,
                           status: 'unavailable',
                         };
-                        state.selectedApartmentIds = state.selectedApartmentIds.filter(
-                          (id) => id !== apartment.id,
-                        );
+                        state.selectedApartmentIds =
+                          state.selectedApartmentIds.filter(
+                            (id) => id !== apartment.id,
+                          );
                       } else {
                         state.pricingMap[String(apartment.id)] = {
                           ...baseEntry,
                           totalPrice: pd.total ?? baseEntry.totalPrice,
-                          pricePerNight: pd.pricePerNight ?? baseEntry.pricePerNight,
+                          pricePerNight:
+                            pd.pricePerNight ?? baseEntry.pricePerNight,
                           cleaningFee: pd.cleaningFee ?? baseEntry.cleaningFee,
                           breakdown: pd.breakdown || null,
                           discountPercent: pd.discountPercent || 0,
@@ -4483,7 +4593,10 @@
                       }
                     }
                   } catch (pricingErr) {
-                    console.warn('Pricing API failed, using base price', pricingErr);
+                    console.warn(
+                      'Pricing API failed, using base price',
+                      pricingErr,
+                    );
                   }
                 }
               } catch (error) {
@@ -4577,8 +4690,15 @@
           const termsCheckbox = document.getElementById('termsCheckbox');
           if (termsCheckbox && !termsCheckbox.checked) {
             const termsErr = document.getElementById('termsCheckboxErr');
-            if (termsErr) { termsErr.textContent = 'Bitte akzeptieren Sie die Anfragebedingungen.'; termsErr.style.display = 'block'; }
-            showMessage('error', 'Bitte akzeptieren Sie die Anfragebedingungen.');
+            if (termsErr) {
+              termsErr.textContent =
+                'Bitte akzeptieren Sie die Anfragebedingungen.';
+              termsErr.style.display = 'block';
+            }
+            showMessage(
+              'error',
+              'Bitte akzeptieren Sie die Anfragebedingungen.',
+            );
             return;
           } else {
             const termsErr = document.getElementById('termsCheckboxErr');
@@ -4690,9 +4810,12 @@
             );
 
             document.getElementById('salutation').value = '';
-            ['firstName','lastName','email'].forEach(id => {
+            ['firstName', 'lastName', 'email'].forEach((id) => {
               const el = document.getElementById(id);
-              if (el) { el.value = ''; el.style.borderColor = ''; }
+              if (el) {
+                el.value = '';
+                el.style.borderColor = '';
+              }
               const errEl = document.getElementById(`${id}-err`);
               if (errEl) errEl.style.display = 'none';
             });
@@ -4850,7 +4973,7 @@
             this.classList.toggle('open', isOpen);
           });
 
-        ['firstName', 'lastName', 'email'].forEach(id => {
+        ['firstName', 'lastName', 'email'].forEach((id) => {
           document.getElementById(id)?.addEventListener('input', function () {
             this.style.borderColor = '';
             const errEl = document.getElementById(`${id}-err`);
@@ -4910,16 +5033,20 @@
 
         function initFloatingLabels(root) {
           const scope = root || document;
-          scope.querySelectorAll('.field-block').forEach(block => {
+          scope.querySelectorAll('.field-block').forEach((block) => {
             if (block._floatInit) return;
             const label = block.querySelector('.label');
-            const input = block.querySelector('input:not([type="hidden"]), select, textarea');
+            const input = block.querySelector(
+              'input:not([type="hidden"]), select, textarea',
+            );
             if (!label || !input) return;
             block._floatInit = true;
-            if (input.tagName === 'TEXTAREA') block.classList.add('has-textarea');
+            if (input.tagName === 'TEXTAREA')
+              block.classList.add('has-textarea');
 
             function checkFloated() {
-              const hasValue = input.tagName === 'SELECT' ? true : input.value !== '';
+              const hasValue =
+                input.tagName === 'SELECT' ? true : input.value !== '';
               const isFocused = document.activeElement === input;
               label.classList.toggle('floated', isFocused || hasValue);
               label.classList.toggle('focused', isFocused);

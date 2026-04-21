@@ -190,6 +190,8 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | | `per_stay` | Pauschal |
 | | `per_person_per_stay` | Preis × Personen |
 
+Optionale Felder: `imageUrl` (Thumbnail im Widget), `description` (Kurztext unter dem Namen).
+
 ### AdminUser *(Login-Account)*
 
 - Passwort: `scrypt` mit 16-Byte-Salt (nicht umkehrbar)
