@@ -395,7 +395,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         <span style={{ fontSize: 20, color: '#9ca3af', flexShrink: 0, transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s ease' }}>+</span>
       </button>
       <div style={{ overflow: 'hidden', maxHeight: open ? 200 : 0, transition: 'max-height 0.28s cubic-bezier(0.4,0,0.2,1)' }}>
-        <p style={{ margin: '0 0 20px', fontSize: 15, color: '#6b7280', lineHeight: 1.7 }}>{answer}</p>
+        <p style={{ margin: '0 0 20px', fontSize: 15, color: '#374151', lineHeight: 1.7 }}>{answer}</p>
       </div>
     </div>
   );
