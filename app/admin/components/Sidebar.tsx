@@ -228,11 +228,13 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         </div>
 
         {/* Nav items */}
-        <nav style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {navGroups.map((group) => (
-            <NavGroup key={group.label} group={group} />
-          ))}
-        </nav>
+        <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+          <nav style={{ position: 'absolute', inset: 0, overflowY: 'auto', padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {navGroups.map((group) => (
+              <NavGroup key={group.label} group={group} />
+            ))}
+          </nav>
+        </div>
 
         {/* User + logout */}
         <div style={{
