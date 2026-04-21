@@ -1,8 +1,8 @@
 export const PLANS = {
   starter: {
     name: 'Starter',
-    priceMonthly: 55,
-    priceYearly: 49,
+    priceMonthly: 59,
+    priceYearly: 54,
     maxApartments: 5,
     maxUsers: 1,
     maxHotels: 1,
@@ -10,8 +10,8 @@ export const PLANS = {
   },
   pro: {
     name: 'Pro',
-    priceMonthly: 109,
-    priceYearly: 99,
+    priceMonthly: 119,
+    priceYearly: 109,
     maxApartments: 20,
     maxUsers: 3,
     maxHotels: 1,
@@ -19,8 +19,8 @@ export const PLANS = {
   },
   business: {
     name: 'Business',
-    priceMonthly: 217,
-    priceYearly: 199,
+    priceMonthly: 249,
+    priceYearly: 229,
     maxApartments: Infinity,
     maxUsers: Infinity,
     maxHotels: 2,
