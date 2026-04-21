@@ -366,6 +366,10 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 
 **Preistransparenz:** Apartment-Karte zeigt Gesamtpreis + `€X / Nacht` + `+ €X Endreinigung` separat (`.apt-price-per-night`, `.apt-price-cleaning`). Summary-Sidebar zeigt aufgeschlüsselte Preistabelle: `X Nächte × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Extras — jeweils als eigene Zeile. Cleaning Fee erscheint nicht mehr im Status-Copy der Karte (Redundanz entfernt).
 
+**Floating Labels:** Alle Formularfelder im Widget verwenden das Floating-Label-Pattern (`.field-block` + `.label`): Label startet als Placeholder zentriert im Input, schwebt bei Fokus/Wert nach oben. Selects haben das Label immer in der gefloateten Position (da sie immer sichtbaren Text zeigen). Initialisierung via `initFloatingLabels(root)` mit `_floatInit`-Guard gegen doppelte Listener.
+
+**Smooth Animationen:** Alle Accordions (Gäste Daten, Adresse, Zahlungsoptionen) verwenden `max-height` + `padding`-Transition statt `display:none/block`. „Mehr lesen" expandiert via `max-height`-Animation ohne DOM-Rebuild (`renderApartments()` wird nicht aufgerufen — nur CSS-Klasse direkt toggle). Ausstattung-Chevron ist SVG statt Unicode für pixelgenaue Ausrichtung.
+
 ### CSS-Custom-Properties
 
 Das Widget verwendet CSS-Variablen, die von `/api/hotel-settings` befüllt werden:
@@ -519,9 +523,13 @@ Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
 - Mobile: Sidebar ausgeblendet, Hamburger-Menü in Top-Bar
 - Footer: Impressum, Datenschutz, AGB, AVV, Support
 
+### Admin-Seiten UI
+
+Detailseiten (Buchung `[id]`, Sperrzeit-Edit, Zimmerplan) nutzen ein einheitliches Card-Design: weißer Hintergrund, `border: 1px solid #e5e7eb`, `borderRadius: 16`, `boxShadow: 0 4px 16px rgba(15,23,42,0.06)`. Die Buchungsdetail-Seite zeigt Infos als 2-Spalten-Grid (Muted Label | Wert) mit deutschen Datumsformaten (`de-AT`) und separater Aktions-Sektion (Mail-Sprache + Status) unterhalb einer Trennlinie. Leere Felder (z. B. Land) werden ausgeblendet.
+
 ### Sidebar-Navigation
 
-Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgeteilt. Jede Gruppe ist eine eigene Card mit Akkordeon:
+Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgeteilt. Betrieb-Gruppe: Übersicht, Anfragen, Kalender, Zimmerplan, Analytics. Jede Gruppe ist eine eigene Card mit Akkordeon:
 - Erste Gruppe standardmäßig aufgeklappt, alle anderen zu
 - Mehrere Gruppen können gleichzeitig offen sein
 - Items werden immer gerendert (nur per `maxHeight` versteckt), damit `data-tour`-Attribute für die Geführte Tour im DOM erreichbar bleiben

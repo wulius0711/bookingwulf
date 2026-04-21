@@ -63,7 +63,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/settings', label: 'Einstellungen' },
     ]},
     { label: 'Konto', items: [
-      { href: '/admin/analytics', label: 'Analytics' },
       { href: '/admin/billing', label: 'Abonnement' },
       { href: '/admin/help', label: 'Handbuch' },
       ...(isSuperAdmin ? [
