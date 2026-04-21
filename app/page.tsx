@@ -170,11 +170,11 @@ export default function LandingPage() {
 
         .lp-badge {
           display: inline-block; padding: 6px 16px; border-radius: 999px;
-          background: #eef0e6; color: #3d5c3a; font-size: 13px; font-weight: 600;
+          background: #f0fdf4; color: #16a34a; font-size: 13px; font-weight: 600;
           animation: lp-pulse 2s ease-in-out infinite;
         }
         @keyframes lp-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(61,92,58,0.2); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,106,0.2); }
           50% { box-shadow: 0 0 0 8px rgba(22,163,106,0); }
         }
 
