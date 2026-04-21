@@ -1371,26 +1371,23 @@
 
       .toggle-indicator {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        min-width: 138px;
-        height: 42px;
-        padding: 0 18px;
-        border-radius: var(--button-radius);
-        border: 1px solid var(--line-strong);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--muted);
-        background: var(--surface-2);
+        top: 12px;
+        right: 12px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--line-strong);
+        background: var(--surface);
+        flex-shrink: 0;
       }
 
       .toggle-card.selected .toggle-indicator {
         border-color: var(--accent);
-        background: rgba(220, 20, 60, 0.08);
-        color: var(--accent);
+        background: var(--accent);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='2 6 5 9 10 3'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 12px;
       }
 
       .nav-row {
@@ -1767,10 +1764,8 @@
         }
 
         .toggle-indicator {
-          min-width: auto;
-          height: 34px;
-          padding: 0 12px;
-          font-size: 0.857rem;
+          width: 20px;
+          height: 20px;
         }
 
         .nav-row {
@@ -3847,29 +3842,17 @@
           const extrasGrid = document.createElement('div');
           extrasGrid.className = 'toggle-cards-grid';
 
-          // Placeholder images for demo (keyed by extra name keywords)
-          const demoImages = {
-            'frühstück': 'https://images.unsplash.com/photo-1533089860892-a7c6f10a081a?w=200&q=70',
-            'hund':      'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&q=70',
-            'fahrrad':   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=70',
-            'parken':    'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=200&q=70',
-            'transfer':  'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=200&q=70',
-          };
-
           regularExtras.forEach((ex) => {
             const selected = !!state.selectedExtras[ex.key];
             const div = document.createElement('div');
             div.className = 'toggle-card' + (selected ? ' selected' : '');
 
-            const imgSrc = ex.imageUrl || (() => {
-              const key = Object.keys(demoImages).find(k => ex.name.toLowerCase().includes(k));
-              return key ? demoImages[key] : null;
-            })();
+            const imgSrc = ex.imageUrl || null;
 
             div.innerHTML = `
               ${imgSrc ? `<img src="${imgSrc}" alt="${ex.name}" loading="lazy">` : ''}
               <div class="toggle-card-body">
-                <div class="toggle-indicator">${selected ? 'Ausgewählt' : 'Nicht ausgewählt'}</div>
+                <div class="toggle-indicator"></div>
                 <h3 class="apt-name">${ex.name}</h3>
                 ${ex.description ? `<div style="font-size:0.9rem;color:var(--muted);margin-top:4px;line-height:1.4;">${ex.description}</div>` : ''}
                 <div class="toggle-price">${getPriceLabel(ex.billingType, Number(ex.price))}</div>
