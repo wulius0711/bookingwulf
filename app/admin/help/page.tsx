@@ -11,7 +11,7 @@ const sections = [
   { id: 'zimmerplan',   title: 'Zimmerplan',            plan: null,       content: ZimmerplanSection },
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
-  { id: 'preise',        title: 'Preise & Saisons',      plan: 'Pro',      content: PreiseSection },
+  { id: 'preise',        title: 'Preisanpassungen',       plan: 'Pro',      content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'child-pricing', title: 'Kinderpreise',          plan: null,       content: ChildPricingSection },
@@ -470,7 +470,7 @@ function ApartmentsSection() {
       <H3>Basispreis vs. Saisons</H3>
       <P>
         Der Basispreis gilt das ganze Jahr, sofern keine Preissaison für den jeweiligen Zeitraum
-        definiert ist. Saisons haben immer Vorrang. Weitere Details unter <InternalLink id="preise">Preise & Saisons</InternalLink>.
+        definiert ist. Saisons haben immer Vorrang. Weitere Details unter <InternalLink id="preise">Preisanpassungen</InternalLink>.
       </P>
 
       <Note>
@@ -515,10 +515,10 @@ function ApartmentsSection() {
 function PreiseSection() {
   return (
     <div>
-      <H2>Preise & Saisons</H2>
+      <H2>Preisanpassungen</H2>
       <PlanNote plan="Pro" />
       <P>
-        Unter <strong>Preise → Preiszeiträume</strong> können Sie für bestimmte Zeiträume abweichende Preise
+        Unter <strong>Preisanpassungen → Preiszeiträume</strong> können Sie für bestimmte Zeiträume abweichende Preise
         pro Nacht festlegen — z.B. für Hochsaison, Weihnachten oder Messen.
       </P>
       <H3>Saison anlegen</H3>
@@ -539,7 +539,7 @@ function PreiseSection() {
       <H2>Dynamische Preise</H2>
       <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
       <P>
-        Unter <strong>Preise → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
+        Unter <strong>Preisanpassungen → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
         aktivieren, der automatisch greift, wenn die Anreise innerhalb einer konfigurierbaren Anzahl
         an Tagen liegt (z.B. 10 % Rabatt bei Anreise in den nächsten 7 Tagen). Im Widget wird der
         Rabatt als grünes Badge angezeigt.
