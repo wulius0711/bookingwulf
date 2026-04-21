@@ -320,7 +320,7 @@ export default function LandingPage() {
                 )}
                 <h3 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px' }}>{plan.name}</h3>
                 <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', margin: '8px 0' }}>
-                  {'\u20AC'}{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}<span style={{ fontSize: 16, fontWeight: 400, color: '#999' }}>/Mo</span>
+                  {'€ '}{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}<span style={{ fontSize: 16, fontWeight: 400, color: '#999' }}>{' / Mo'}</span>
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 24px', display: 'grid', gap: 10 }}>
                   {plan.features.map((f) => (
