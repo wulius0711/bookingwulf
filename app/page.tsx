@@ -346,6 +346,22 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section style={{ maxWidth: 720, margin: '0 auto', padding: '80px 24px' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 48px' }}>Häufige Fragen</h2>
+        {[
+          { q: 'Wie baue ich das Widget ein?', a: 'Eine Zeile Code auf Ihrer Website einfügen – fertig. Kein Entwickler nötig.' },
+          { q: 'Funktioniert es mit meiner bestehenden Website?', a: 'Ja – das Widget funktioniert mit jeder Website, egal ob WordPress, Squarespace, Wix oder einer individuellen Lösung.' },
+          { q: 'Kann ich das Widget für Anfragen und Buchungen gleichzeitig nutzen?', a: 'Ja – das Widget ist zweifach konfigurierbar. Sie können es gleichzeitig als Buchungs- und Anfrageformular einsetzen.' },
+          { q: 'Gibt es versteckte Kosten oder Provisionen?', a: 'Nein. Sie zahlen nur den monatlichen Fixpreis – keine Provision, keine versteckten Gebühren, egal wie viele Buchungen eingehen.' },
+          { q: 'Was passiert nach dem 14-tägigen Testzeitraum?', a: 'Sie wählen ein Paket und starten regulär. Keine automatische Verlängerung ohne Ihre Bestätigung.' },
+          { q: 'Wo werden meine Daten gespeichert?', a: 'Alle Daten werden auf Servern in Deutschland gespeichert – sicher und DSGVO-konform.' },
+          { q: 'Wie zuverlässig ist das System?', a: 'bookingwulf ist auf modernster Infrastruktur gebaut – schnelle Ladezeiten, hohe Verfügbarkeit und keine Wartungsausfälle. Das System aktualisiert sich automatisch im Hintergrund, ohne dass Sie etwas tun müssen.' },
+        ].map(({ q, a }, i) => (
+          <FaqItem key={i} question={q} answer={a} />
+        ))}
+      </section>
+
       {/* CTA */}
       <section style={{ textAlign: 'center', padding: '80px 24px' }}>
         <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 16px' }}>Bereit loszulegen?</h2>
@@ -363,6 +379,24 @@ export default function LandingPage() {
         <a href="/avv" className="lp-footer-link">AVV</a>
         <a href="mailto:support@bookingwulf.com" className="lp-footer-link">Support</a>
       </footer>
+    </div>
+  );
+}
+
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ borderBottom: '1px solid #e5e7eb' }}>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: 16 }}
+      >
+        <span style={{ fontSize: 16, fontWeight: 600, color: '#111', lineHeight: 1.4 }}>{question}</span>
+        <span style={{ fontSize: 20, color: '#9ca3af', flexShrink: 0, transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s ease' }}>+</span>
+      </button>
+      <div style={{ overflow: 'hidden', maxHeight: open ? 200 : 0, transition: 'max-height 0.28s cubic-bezier(0.4,0,0.2,1)' }}>
+        <p style={{ margin: '0 0 20px', fontSize: 15, color: '#6b7280', lineHeight: 1.7 }}>{answer}</p>
+      </div>
     </div>
   );
 }
