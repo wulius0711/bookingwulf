@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { logout } from '../login/actions';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -115,8 +115,16 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
   );
 }
 
-function NavGroup({ group, defaultOpen }: { group: NavGroup; defaultOpen: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
+function NavGroup({ group }: { group: NavGroup }) {
+  const pathname = usePathname();
+  const hasActive = group.items.some((item) =>
+    item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href)
+  );
+  const [open, setOpen] = useState(hasActive);
+
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
   return (
     <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
       <button
@@ -221,8 +229,8 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
 
         {/* Nav items */}
         <nav style={{ flex: 1, overflowY: 'auto', padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {navGroups.map((group, i) => (
-            <NavGroup key={group.label} group={group} defaultOpen={i === 0} />
+          {navGroups.map((group) => (
+            <NavGroup key={group.label} group={group} />
           ))}
         </nav>
 
