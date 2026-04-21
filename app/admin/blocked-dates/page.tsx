@@ -48,54 +48,66 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
   });
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ margin: 0, color: '#111' }}>Sperrzeiten</h1>
-        <Link href="/admin/blocked-dates/new">
-          <button style={{ padding: '10px 16px', border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', borderRadius: 8, fontSize: 14, fontWeight: 600 }}>
-            Neu anlegen
-          </button>
-        </Link>
-      </div>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Sperrzeiten</h1>
+            <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Zeiträume für Apartments sperren.</p>
+          </div>
+          <Link href="/admin/blocked-dates/new">
+            <button style={{ padding: '10px 16px', border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', borderRadius: 8, fontSize: 14, fontWeight: 600 }}>
+              Neu anlegen
+            </button>
+          </Link>
+        </div>
 
-      {isSuperAdmin && (
-        <form method="GET" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
-          <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
-            Hotel
-          </label>
-          <select
-            name="hotel"
-            defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
-            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
-          >
-            <option value="">Alle Hotels</option>
-            {hotels.map((h) => (
-              <option key={h.id} value={h.id}>{h.name}</option>
-            ))}
-          </select>
-          <button type="submit" style={{ padding: '8px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#111', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            Filtern
-          </button>
-          {selectedHotelId !== null && (
-            <a href="/admin/blocked-dates" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>
-              Zurücksetzen
-            </a>
+        {isSuperAdmin && (
+          <form method="GET" style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+              Hotel
+            </label>
+            <select
+              name="hotel"
+              defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
+              style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
+            >
+              <option value="">Alle Hotels</option>
+              {hotels.map((h) => (
+                <option key={h.id} value={h.id}>{h.name}</option>
+              ))}
+            </select>
+            <button type="submit" style={{ padding: '8px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#111', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              Filtern
+            </button>
+            {selectedHotelId !== null && (
+              <a href="/admin/blocked-dates" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>
+                Zurücksetzen
+              </a>
+            )}
+          </form>
+        )}
+
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>
+              {ranges.length} {ranges.length === 1 ? 'Sperrzeit' : 'Sperrzeiten'}
+            </h2>
+          </div>
+          {ranges.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+              <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
+              <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+                Neue Sperrzeit anlegen
+              </a>
+            </div>
+          ) : (
+            <div style={{ padding: '16px 20px' }}>
+              <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} isSuperAdmin={isSuperAdmin} />
+            </div>
           )}
-        </form>
-      )}
-
-      {ranges.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px', marginTop: 20 }}>
-          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
-          <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
-            Neue Sperrzeit anlegen
-          </a>
         </div>
-      ) : (
-        <div style={{ marginTop: 20 }}>
-          <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} isSuperAdmin={isSuperAdmin} />
-        </div>
-      )}
+      </div>
     </main>
   );
 }

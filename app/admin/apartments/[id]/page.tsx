@@ -16,33 +16,14 @@ type PageProps = {
   }>;
 };
 
-const row = 'apt-edit-row';
+const card: React.CSSProperties = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' };
+const cardHeader: React.CSSProperties = { background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' };
+const cardTitle: React.CSSProperties = { margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' };
+const cardBody: React.CSSProperties = { padding: '20px 20px', display: 'grid', gap: 16 };
 
-const labelStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#666',
-  paddingTop: 10,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 12px',
-  border: '1px solid #d1d5db',
-  borderRadius: 6,
-  fontSize: 14,
-  color: '#111',
-};
-
-const buttonStyle: React.CSSProperties = {
-  marginTop: 20,
-  padding: '12px 18px',
-  borderRadius: 8,
-  border: 'none',
-  background: '#111',
-  color: '#fff',
-  cursor: 'pointer',
-  width: 'fit-content',
-};
+const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
+const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, color: '#111', background: '#f9fafb', boxSizing: 'border-box' };
+const fieldWrap: React.CSSProperties = { display: 'grid', gap: 4 };
 
 export default async function EditApartmentPage({ params }: PageProps) {
   const session = await verifySession();
@@ -200,174 +181,131 @@ export default async function EditApartmentPage({ params }: PageProps) {
   }
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
-      <h1 style={{ marginBottom: 30 }}>Apartment bearbeiten</h1>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
 
-      <form action={updateApartment} style={{ display: 'grid', gap: 18 }}>
-        <input type="hidden" name="hotelId" value={apartment.hotelId} />
-
-        <div className={row}>
-          <label style={labelStyle}>Name</label>
-          <input
-            name="name"
-            defaultValue={apartment.name}
-            style={inputStyle}
-            required
-          />
+        {/* Header */}
+        <div>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Apartment bearbeiten</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>{apartment.name}</p>
         </div>
 
-        <input type="hidden" name="slug" value={apartment.slug} />
+        <form action={updateApartment} style={{ display: 'grid', gap: 16 }}>
+          <input type="hidden" name="hotelId" value={apartment.hotelId} />
+          <input type="hidden" name="slug" value={apartment.slug} />
 
-        <div className={row} style={{ alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label
-            style={{
-              display: 'flex',
-              gap: 8,
-              alignItems: 'center',
-              paddingTop: 8,
-            }}
-          >
-            <input
-              type="checkbox"
-              name="isActive"
-              defaultChecked={apartment.isActive}
-            />
-            Aktiv
-          </label>
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Max. Erwachsene</label>
-          <input
-            type="number"
-            name="maxAdults"
-            min="1"
-            defaultValue={apartment.maxAdults}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Max. Kinder</label>
-          <input
-            type="number"
-            name="maxChildren"
-            min="0"
-            defaultValue={apartment.maxChildren}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Größe (m²)</label>
-          <input
-            type="number"
-            name="size"
-            min="0"
-            defaultValue={apartment.size ?? ''}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Schlafzimmer</label>
-          <input
-            type="number"
-            name="bedrooms"
-            min="0"
-            defaultValue={apartment.bedrooms ?? ''}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Ausblick</label>
-          <input
-            name="view"
-            defaultValue={apartment.view ?? ''}
-            placeholder="z. B. Bergblick"
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Preis pro Nacht (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="basePrice"
-            defaultValue={apartment.basePrice ?? ''}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Reinigungsgebühr (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="cleaningFee"
-            defaultValue={apartment.cleaningFee ?? ''}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Sortierung</label>
-          <input
-            type="number"
-            name="sortOrder"
-            defaultValue={apartment.sortOrder}
-            style={inputStyle}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Beschreibung</label>
-          <textarea
-            name="description"
-            defaultValue={apartment.description || ''}
-            style={{ ...inputStyle, minHeight: 120 }}
-          />
-        </div>
-
-        <div className={row}>
-          <label style={labelStyle}>Ausstattung</label>
-          <div>
-            <textarea
-              name="amenities"
-              defaultValue={(apartment.amenities || []).join('\n')}
-              placeholder={`Eine Ausstattung pro Zeile, z. B.
-WLAN
-Balkon
-Kaffeemaschine`}
-              style={{ ...inputStyle, minHeight: 140 }}
-            />
-            <div style={{ marginTop: 8, fontSize: 12, color: '#777' }}>
-              Bitte eine Ausstattung pro Zeile eingeben.
+          {/* Allgemein */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Allgemein</h2></div>
+            <div style={cardBody}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Name</label>
+                <input name="name" defaultValue={apartment.name} style={inputStyle} required />
+              </div>
+              <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+                <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: '#374151', cursor: 'pointer' }}>
+                  <input type="checkbox" name="isActive" defaultChecked={apartment.isActive} />
+                  Aktiv
+                </label>
+              </div>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Sortierung</label>
+                <input type="number" name="sortOrder" defaultValue={apartment.sortOrder} style={inputStyle} />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className={row}>
-          <label style={labelStyle}>Bilder</label>
-          <div style={{ display: 'grid', gap: 12 }}>
-            {[0, 1, 2, 3, 4, 5].map((index) => (
-              <ImageUploadField
-                key={index}
-                index={index}
-                defaultUrl={apartment.images[index]?.imageUrl || ''}
-                defaultAlt={apartment.images[index]?.altText || ''}
-              />
-            ))}
+          {/* Kapazität */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Kapazität</h2></div>
+            <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Max. Erwachsene</label>
+                <input type="number" name="maxAdults" min="1" defaultValue={apartment.maxAdults} style={inputStyle} />
+              </div>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Max. Kinder</label>
+                <input type="number" name="maxChildren" min="0" defaultValue={apartment.maxChildren} style={inputStyle} />
+              </div>
+            </div>
           </div>
-        </div>
 
-        <button type="submit" style={buttonStyle}>
-          Änderungen speichern
-        </button>
-      </form>
+          {/* Details */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Details</h2></div>
+            <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Größe (m²)</label>
+                <input type="number" name="size" min="0" defaultValue={apartment.size ?? ''} style={inputStyle} />
+              </div>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Schlafzimmer</label>
+                <input type="number" name="bedrooms" min="0" defaultValue={apartment.bedrooms ?? ''} style={inputStyle} />
+              </div>
+              <div style={{ ...fieldWrap, gridColumn: '1 / -1' }}>
+                <label style={labelStyle}>Ausblick</label>
+                <input name="view" defaultValue={apartment.view ?? ''} placeholder="z. B. Bergblick" style={inputStyle} />
+              </div>
+            </div>
+          </div>
+
+          {/* Preise */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Preise</h2></div>
+            <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Preis pro Nacht (€)</label>
+                <input type="number" step="0.01" name="basePrice" defaultValue={apartment.basePrice ?? ''} style={inputStyle} />
+              </div>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Reinigungsgebühr (€)</label>
+                <input type="number" step="0.01" name="cleaningFee" defaultValue={apartment.cleaningFee ?? ''} style={inputStyle} />
+              </div>
+            </div>
+          </div>
+
+          {/* Beschreibung & Ausstattung */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Beschreibung & Ausstattung</h2></div>
+            <div style={cardBody}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Beschreibung</label>
+                <textarea name="description" defaultValue={apartment.description || ''} style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }} />
+              </div>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Ausstattung</label>
+                <textarea
+                  name="amenities"
+                  defaultValue={(apartment.amenities || []).join('\n')}
+                  placeholder={`WLAN\nBalkon\nKaffeemaschine`}
+                  style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
+                />
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>Eine Ausstattung pro Zeile</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bilder */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Bilder</h2></div>
+            <div style={cardBody}>
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <ImageUploadField
+                  key={index}
+                  index={index}
+                  defaultUrl={apartment.images[index]?.imageUrl || ''}
+                  defaultAlt={apartment.images[index]?.altText || ''}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" style={{ padding: '11px 24px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
+              Änderungen speichern
+            </button>
+          </div>
+        </form>
 
       {showNuki && (
         <NukiLockSection
@@ -420,6 +358,7 @@ Kaffeemaschine`}
           redirect(`/admin/apartments/${feed.apartment.id}`);
         }}
       />
+      </div>{/* /maxWidth */}
     </main>
   );
 }

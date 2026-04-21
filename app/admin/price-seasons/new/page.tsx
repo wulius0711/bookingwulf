@@ -44,108 +44,68 @@ export default async function NewPriceSeasonPage() {
     redirect('/admin/price-seasons');
   }
 
-  const fieldStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '10px 12px',
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
-    fontSize: 14,
-    background: '#ffffff',
-    color: '#111',
-    boxSizing: 'border-box',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 12,
-    fontWeight: 700,
-    color: '#4b5563',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
-    marginBottom: 4,
-    display: 'block',
-  };
-
-  const fieldWrap: React.CSSProperties = {
-    display: 'grid',
-    gap: 4,
-  };
+  const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
+  const input: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: '#f9fafb', color: '#111', boxSizing: 'border-box' };
+  const field: React.CSSProperties = { display: 'grid', gap: 4 };
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Neuer Preiszeitraum</h1>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', display: 'grid', gap: 24 }}>
 
-      <form action={createSeason} style={{ display: 'grid', gap: 16 }}>
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Name / Bezeichnung</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="z. B. Hochsaison, Weihnachten …"
-            required
-            style={fieldStyle}
-          />
+        <div>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neuer Preiszeitraum</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Saisonalen Preis für ein Apartment festlegen.</p>
         </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Apartment</label>
-          <select name="apartmentId" required style={fieldStyle}>
-            <option value="">Apartment wählen</option>
-            {apartments.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Details</h2>
+          </div>
+          <div style={{ padding: '20px', display: 'grid', gap: 16 }}>
+            <form action={createSeason} style={{ display: 'grid', gap: 16 }}>
+              <div style={field}>
+                <label style={label}>Name / Bezeichnung</label>
+                <input type="text" name="name" placeholder="z. B. Hochsaison, Weihnachten …" required style={input} />
+              </div>
+              <div style={field}>
+                <label style={label}>Apartment</label>
+                <select name="apartmentId" required style={input}>
+                  <option value="">Apartment wählen</option>
+                  {apartments.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={field}>
+                  <label style={label}>Von</label>
+                  <input type="date" name="startDate" required style={input} />
+                </div>
+                <div style={field}>
+                  <label style={label}>Bis</label>
+                  <input type="date" name="endDate" required style={input} />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={field}>
+                  <label style={label}>Preis pro Nacht (€)</label>
+                  <input type="number" step="0.01" name="pricePerNight" placeholder="0.00" required style={input} />
+                </div>
+                <div style={field}>
+                  <label style={label}>Mindestaufenthalt (Nächte)</label>
+                  <input type="number" name="minStay" defaultValue={1} min={1} style={input} />
+                </div>
+              </div>
+              <div style={{ paddingTop: 4 }}>
+                <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
+                  Speichern
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Von</label>
-          <input type="date" name="startDate" required style={fieldStyle} />
-        </div>
-
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Bis</label>
-          <input type="date" name="endDate" required style={fieldStyle} />
-        </div>
-
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Preis pro Nacht (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="pricePerNight"
-            placeholder="0.00"
-            required
-            style={fieldStyle}
-          />
-        </div>
-
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Mindestaufenthalt (Nächte)</label>
-          <input
-            type="number"
-            name="minStay"
-            defaultValue={1}
-            min={1}
-            style={fieldStyle}
-          />
-        </div>
-
-        <button
-          type="submit"
-          style={{
-            marginTop: 4,
-            padding: '12px',
-            background: '#111',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontSize: 15,
-            fontWeight: 600,
-          }}
-        >
-          Speichern
-        </button>
-      </form>
+      </div>
     </main>
   );
 }
