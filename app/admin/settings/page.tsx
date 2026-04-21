@@ -485,7 +485,7 @@ export default async function Page({ searchParams }: PageProps) {
                         />
                       </div>
                     </div>
-                    {!hasTypography && <ProLockOverlay />}
+                    {!hasTypography && <ProLockOverlay plan="business" />}
                   </div>
                 );
               })}
@@ -513,7 +513,7 @@ export default async function Page({ searchParams }: PageProps) {
                         </select>
                       </div>
                     </div>
-                    {!hasTypography && <ProLockOverlay />}
+                    {!hasTypography && <ProLockOverlay plan="business" />}
                   </div>
                 );
               })}
