@@ -3923,8 +3923,8 @@
               : 'Ich habe die Anfragebedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
 
           wrap.innerHTML =
-            '<label style="display:flex;align-items:flex-start;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
-            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;margin-top:2px;"' +
+            '<label style="display:flex;flex-direction:row;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
+            '<input type="checkbox" id="termsCheckbox" style="accent-color:var(--accent);width:18px;height:18px;flex-shrink:0;"' +
             checked +
             ' />' +
             '<span>' +
@@ -4820,7 +4820,7 @@
             if (input.tagName === 'TEXTAREA') block.classList.add('has-textarea');
 
             function checkFloated() {
-              const hasValue = input.value !== '';
+              const hasValue = input.tagName === 'SELECT' ? true : input.value !== '';
               const isFocused = document.activeElement === input;
               label.classList.toggle('floated', isFocused || hasValue);
               label.classList.toggle('focused', isFocused);
