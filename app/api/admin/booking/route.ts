@@ -45,3 +45,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Fehler beim Speichern' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await verifySession();
+    const { id } = await req.json();
+    if (!id) return NextResponse.json({ error: 'ID fehlt' }, { status: 400 });
+    if (session.hotelId !== null) {
+      const r = await prisma.request.findUnique({ where: { id }, select: { hotelId: true } });
+      if (!r || r.hotelId !== session.hotelId) return NextResponse.json({ error: 'Zugriff verweigert' }, { status: 403 });
+    }
+    await prisma.request.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: 'Fehler beim Löschen' }, { status: 500 });
+  }
+}

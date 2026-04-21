@@ -132,7 +132,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       if (cur.getFullYear() === year && cur.getMonth() === month) {
         const key = dateKey(cur);
         if (!dayBlockedMap.has(key)) dayBlockedMap.set(key, []);
-        dayBlockedMap.get(key)!.push({ id: r.id, aptName: r.apartment?.name ?? '', note: r.note ?? '', type: r.type });
+        dayBlockedMap.get(key)!.push({ id: r.id, aptName: r.apartment?.name ?? '', note: r.note ?? '', type: r.type, startDate: r.startDate.toISOString().slice(0,10), endDate: r.endDate.toISOString().slice(0,10) });
       }
       cur.setDate(cur.getDate() + 1);
     }
