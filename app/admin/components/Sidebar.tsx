@@ -161,7 +161,7 @@ function NavGroup({ group }: { group: NavGroup }) {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <div style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease' }}>
+      <div style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {group.items.map((item) => (
           <SidebarNavItem key={item.href} {...item} />
         ))}
