@@ -67,26 +67,7 @@ export default function ThemeSwitcher() {
             }}
           />
         ))}
-        <button
-          onClick={handleDark}
-          title={dark ? 'Helles Design' : 'Dunkles Design'}
-          style={{
-            width: 24,
-            height: 16,
-            borderRadius: 8,
-            border: '1px solid var(--border)',
-            background: dark ? '#334155' : 'var(--surface-3)',
-            cursor: 'pointer',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            transition: 'background 0.2s',
-          }}
-        >
-          {dark ? '🌙' : '☀️'}
-        </button>
+        {/* Dark mode toggle — hidden until fully implemented */}
       </div>
     </div>
   );
