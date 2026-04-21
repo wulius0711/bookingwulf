@@ -245,7 +245,7 @@ export default function LandingPage() {
         <div className="lp-preview">
           <iframe
             ref={iframeRef}
-            src="/widget.html?hotel=beimoser"
+            src="/widget.html?hotel=beiwumoser"
             style={{ width: '100%', height: 680, border: 'none', display: 'block', pointerEvents: 'none' }}
             scrolling="no"
             title="Widget Preview"
