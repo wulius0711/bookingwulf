@@ -276,7 +276,7 @@ export default async function Page({ searchParams }: PageProps) {
             <div>
               <h1 style={headlineStyle}>Hotel Settings</h1>
               <p style={sublineStyle}>
-                Farben, Schriften, Radius, Funktionen und Embed-Code pro Hotel konfigurieren.
+                Daten, Design, Funktionen und Embed-Code pro Hotel konfigurieren.
               </p>
               <p style={{ ...sublineStyle, marginTop: 4 }}>
                 <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
