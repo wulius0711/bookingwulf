@@ -354,11 +354,15 @@ In der Navigation werden gesperrte Einträge mit 🔒 und Tooltip angezeigt.
 Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 1. `GET /api/hotel-settings` → Styling + Feature-Toggles laden
 2. `GET /api/apartments` → Apartment-Liste laden
-3. Formular anzeigen (Datum, Apartment, Gäste)
+3. Visueller Kalender-Datepicker (Schritt 1): 2-Monats-Ansicht, Drag-Range-Auswahl mit Hover-Preview
 4. `POST /api/availability` → Preis berechnen
 5. Extras-Schritt (falls aktiviert)
-6. Gast-Formular (Name, E-Mail, etc.)
+6. Gast-Formular (Name, E-Mail Pflicht; Telefon optional; Adresse im aufklappbaren Accordion)
 7. `POST /api/request` → Buchung absenden
+
+**Kalender-Datepicker:** Ersetzt native `<input type="date">` durch einen eigenen Kalender (`.cal-picker`). Zeigt 2 Monate nebeneinander (1 auf Mobile). Erster Klick = Anreise, zweiter Klick = Abreise. Hover zeigt Range-Preview. Vergangene Tage deaktiviert. Nächte-Zahl wird live angezeigt. Die ursprünglichen Inputs bleiben als `type="hidden"` erhalten.
+
+**Formular-Friction-Reduktion:** Telefon ist optional (kein `*`, kein required-Check). Adresse (Straße, PLZ, Ort, Land) ist in einem `.addr-accordion` „Adresse (optional)" versteckt. Inline-Feldvalidierung markiert leere Pflichtfelder (Vorname, Nachname, E-Mail) rot mit Fehlermeldung direkt unter dem Feld statt nur globaler Fehlermeldung.
 
 ### CSS-Custom-Properties
 
