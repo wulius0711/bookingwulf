@@ -1043,6 +1043,19 @@
         gap: 3px;
       }
 
+      .apt-price-per-night {
+        font-size: 0.857rem;
+        color: var(--muted);
+        white-space: nowrap;
+        font-weight: 400;
+      }
+
+      .apt-price-cleaning {
+        font-size: 0.786rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
       .apt-price-badge {
         font-size: 0.71rem;
         font-weight: 600;
@@ -2282,14 +2295,8 @@
 
           <div class="summary-line"></div>
 
-          <div class="summary-row">
-            <span>Apartments</span><span id="summaryAptPrice">€ 0,00</span>
-          </div>
-          <div class="summary-row">
-            <span>Zusatzleistungen</span
-            ><span id="summaryExtraPrice">€ 0,00</span>
-          </div>
-          <div class="summary-row summary-total">
+          <div id="summaryBreakdown"></div>
+          <div class="summary-row summary-total" style="border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px;">
             <span>Gesamt</span><span id="summaryTotal">€ 0,00</span>
           </div>
         </aside>
@@ -3266,7 +3273,13 @@
                 } else if (pricing.surchargePercent > 0) {
                   priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
                 }
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)}</div></div>`;
+                const perNightLine = pricing.pricePerNight
+                  ? `<div class="apt-price-per-night">${eur(pricing.pricePerNight)} / Nacht</div>`
+                  : '';
+                const cleaningLine = pricing.cleaningFee > 0
+                  ? `<div class="apt-price-cleaning">+ ${eur(pricing.cleaningFee)} Endreinigung</div>`
+                  : '';
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)} gesamt</div>${perNightLine}${cleaningLine}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
@@ -3399,11 +3412,7 @@
                         status.type === 'not-matching')
                         ? status.message
                         : pricing && pricing.available
-                          ? `${pricing.nights} Nächte${pricing.seasonName ? ` · ${pricing.seasonName}` : ''} · ${
-                              pricing.cleaningFee
-                                ? `inkl. Reinigung ${eur(pricing.cleaningFee)}`
-                                : 'Preis aktuell berechnet'
-                            }`
+                          ? `${pricing.nights} Nächte${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`
                           : ' '
                     }
                   </div>
@@ -3606,19 +3615,49 @@
               : 'Keine ausgewählt';
 
           document.getElementById('totalBox').textContent = eur(getTotal());
-          document.getElementById('summaryApartment').textContent =
-            apartmentText;
+          document.getElementById('summaryApartment').textContent = apartmentText;
           document.getElementById('summaryDates').textContent =
-            `Zeitraum: ${formatDate(
-              state.arrival,
-            )} - ${formatDate(state.departure)}`;
+            `Zeitraum: ${formatDate(state.arrival)} - ${formatDate(state.departure)}`;
           document.getElementById('summaryGuests').textContent = guests;
           document.getElementById('summaryExtras').innerHTML = extras;
-          document.getElementById('summaryAptPrice').textContent =
-            eur(getApartmentsTotal());
-          document.getElementById('summaryExtraPrice').textContent =
-            eur(getExtrasTotal());
           document.getElementById('summaryTotal').textContent = eur(getTotal());
+
+          // Build price breakdown
+          const breakdownEl = document.getElementById('summaryBreakdown');
+          if (breakdownEl) {
+            const nights = getNights();
+            const rowStyle = 'display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:0.95rem;color:var(--text);';
+            const muteStyle = 'color:var(--muted);';
+            let rows = '';
+
+            const selectedAptsList = getSelectedApartments();
+            if (selectedAptsList.length > 0 && nights > 0) {
+              selectedAptsList.forEach(apt => {
+                const p = state.pricingMap[String(apt.id)];
+                if (p && p.available) {
+                  const basePrice = (p.totalPrice || 0) - (p.cleaningFee || 0);
+                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${nights} Nacht${nights !== 1 ? 'e' : ''} × ${eur(p.pricePerNight)}</span><span>${eur(basePrice)}</span></div>`;
+                  if (p.cleaningFee > 0) {
+                    rows += `<div style="${rowStyle}"><span style="${muteStyle}">Endreinigung</span><span>${eur(p.cleaningFee)}</span></div>`;
+                  }
+                  if (p.discountPercent > 0) {
+                    rows += `<div style="${rowStyle}"><span style="color:#166534;">Last-Minute -${p.discountPercent}%</span><span style="color:#166534;">inklusive</span></div>`;
+                  } else if (p.surchargePercent > 0) {
+                    rows += `<div style="${rowStyle}"><span style="color:#854d0e;">Nachfragezuschlag +${p.surchargePercent}%</span><span style="color:#854d0e;">inklusive</span></div>`;
+                  }
+                }
+              });
+            } else if (selectedAptsList.length === 0) {
+              rows = `<div style="${rowStyle} ${muteStyle}"><span>Kein Apartment gewählt</span></div>`;
+            }
+
+            const extrasTotal = getExtrasTotal();
+            if (extrasTotal > 0) {
+              rows += `<div style="${rowStyle}"><span style="${muteStyle}">Zusatzleistungen</span><span>${eur(extrasTotal)}</span></div>`;
+            }
+
+            breakdownEl.innerHTML = rows;
+          }
 
           renderExtras();
         }
