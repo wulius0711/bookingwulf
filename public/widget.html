@@ -4102,7 +4102,6 @@
               rows += `<div style="${rowStyle}"><span style="${muteStyle}">Zusatzleistungen</span><span>${eur(extrasTotal)}</span></div>`;
             }
 
-            const nights = getNights();
             const ortstaxe = calcOrtstaxe(nights);
             if (ortstaxe > 0) {
               const minAge = state.ortstaxeMinAge;
