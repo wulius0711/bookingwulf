@@ -53,7 +53,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ]},
     { label: 'Verwaltung', items: [
       { href: '/admin/apartments', label: 'Apartments' },
-      { href: '/admin/price-seasons', label: 'Preise' },
+      { href: '/admin/price-seasons', label: 'Preisanpassungen' },
       { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
       { href: '/admin/extras', label: 'Zusatzleistungen' },
       { href: '/admin/child-pricing', label: 'Kinderpreise' },
