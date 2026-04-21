@@ -205,7 +205,9 @@ Pro Hotel definierbare Altersgruppen mit Preis pro Kind/Nacht. Felder: `minAge`,
 
 ### EmailTemplate *(Benutzerdefinierte E-Mails, Pro+)*
 
-Pro Hotel und Typ (`request_guest`, `booking_guest`, `request_hotel`) speicherbare Vorlage mit Template-Variablen: `{{guestName}}`, `{{guestLastName}}`, `{{arrival}}`, `{{departure}}`, `{{nights}}`, `{{apartmentName}}`, `{{hotelName}}`, `{{bookingId}}`.
+Pro Hotel und Typ (`request_guest`, `booking_guest`, `cancellation_guest`, `request_hotel`) speicherbare Vorlage mit Template-Variablen: `{{guestName}}`, `{{guestLastName}}`, `{{arrival}}`, `{{departure}}`, `{{nights}}`, `{{apartmentName}}`, `{{hotelName}}`, `{{bookingId}}`.
+
+`cancellation_guest` wird beim Setzen des Status auf `cancelled` verwendet (Fallback auf i18n-Standard wenn nicht gesetzt).
 
 ### IcalFeed
 

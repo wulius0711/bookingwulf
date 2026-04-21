@@ -676,7 +676,7 @@ function EmailsSection() {
         {[
           { name: 'Eingangsbestätigung',   desc: 'An den Gast sobald eine Anfrage eingeht.' },
           { name: 'Buchungsbestätigung',   desc: 'An den Gast wenn Status auf „Gebucht" gesetzt wird.' },
-          { name: 'Stornobestätigung',     desc: 'An den Gast wenn Status auf „Storniert" gesetzt wird.' },
+          { name: 'Stornobestätigung',     desc: 'An den Gast wenn Status auf „Storniert" gesetzt wird. Individuell anpassbar.' },
           { name: 'Nachricht',             desc: 'Wenn Sie in der Detailansicht eine Nachricht senden. (Business)' },
           { name: 'Interne Benachrichtigung', desc: 'An Sie, wenn eine neue Anfrage eingeht.' },
         ].map((e) => (
