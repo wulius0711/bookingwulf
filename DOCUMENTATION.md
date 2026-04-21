@@ -376,7 +376,7 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 
 **Formular-Friction-Reduktion:** Telefon ist optional (kein `*`, kein required-Check). Adresse (Straße, PLZ, Ort, Land) ist in einem `.addr-accordion` „Adresse (optional)" versteckt. Inline-Feldvalidierung markiert leere Pflichtfelder (Vorname, Nachname, E-Mail) rot mit Fehlermeldung direkt unter dem Feld statt nur globaler Fehlermeldung.
 
-**Preistransparenz:** Apartment-Karte zeigt Gesamtpreis + `€X / Nacht` + `+ €X Endreinigung` separat (`.apt-price-per-night`, `.apt-price-cleaning`). Summary-Sidebar zeigt aufgeschlüsselte Preistabelle: `X Nächte × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Extras — jeweils als eigene Zeile. Cleaning Fee erscheint nicht mehr im Status-Copy der Karte (Redundanz entfernt).
+**Preistransparenz:** Apartment-Karte zeigt den Gesamtpreis prominent. Klick auf „Preis Details" (`.apt-price-details-btn`) öffnet ein Popover (`.apt-price-popover`) mit vollständiger Aufschlüsselung: Anzahl Nächte + Saison, `X × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Gesamtbetrag fett. Popover schließt sich bei Klick außerhalb. State: `state.openPricePopover` (Apartment-ID oder null). Summary-Sidebar zeigt dieselbe Aufschlüsselung nochmals als Tabelle.
 
 **Floating Labels:** Alle Formularfelder im Widget verwenden das Floating-Label-Pattern (`.field-block` + `.label`): Label startet als Placeholder zentriert im Input, schwebt bei Fokus/Wert nach oben. Selects haben das Label immer in der gefloateten Position (da sie immer sichtbaren Text zeigen). Initialisierung via `initFloatingLabels(root)` mit `_floatInit`-Guard gegen doppelte Listener.
 
