@@ -219,19 +219,28 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 ### Registrierung
 
 1. Formular: Hotelname, Slug (auto-generiert), E-Mail, Passwort
-2. Server Action erstellt `Hotel` + `AdminUser` in einer Transaktion
-3. `subscriptionStatus = 'trialing'`, `trialEndsAt = jetzt + 14 Tage`
-4. JWT-Session-Cookie wird gesetzt
-5. Welcome-E-Mail wird versandt
-6. Weiterleitung zu `/admin/onboarding`
+2. **Honeypot-Feld** (`name="website"`, visuell versteckt) — Bot-Submissions werden lautlos ignoriert
+3. Server Action erstellt `Hotel` + `AdminUser`; `isEmailVerified = false`, `emailVerifyToken` (32-Byte Hex, 24h gültig) gesetzt
+4. `subscriptionStatus = 'trialing'`, `trialEndsAt = jetzt + 14 Tage`
+5. **Bestätigungs-E-Mail** mit Link zu `/api/auth/verify-email?token=...` wird versandt
+6. Weiterleitung zu `/register/check-email` (Hinweisseite, kein Session-Cookie)
+
+### E-Mail-Verifizierung
+
+- Route: `GET /api/auth/verify-email?token=<token>`
+- Token wird in `AdminUser.emailVerifyToken` (unique) gesucht
+- Abgelaufen (`emailVerifyTokenExpiresAt < now`) → Redirect zu `/register?error=token_expired`
+- Gültig → `isEmailVerified = true`, Token-Felder geleert, Session-Cookie gesetzt, Redirect zu `/admin/onboarding`
+- **Bestehende Konten** (vor Einführung der Verifizierung): `emailVerifyToken = null` → Login weiterhin möglich ohne Verifizierung
 
 ### Login
 
 1. E-Mail + Passwort → Server Action `login()`
 2. Rate Limit: 5 Versuche / 15 Minuten pro E-Mail
 3. `AdminUser` per E-Mail suchen, Passwort via `scrypt` + Timing-Safe-Vergleich prüfen
-4. JWT-Cookie setzen (httpOnly, secure, sameSite=lax, 24h TTL)
-5. Client-seitige Navigation zu `/admin` (verhindert Cache-Artefakte)
+4. Falls `!isEmailVerified && emailVerifyToken !== null` → Fehlermeldung (Verifizierung ausstehend)
+5. JWT-Cookie setzen (httpOnly, secure, sameSite=lax, 24h TTL)
+6. Client-seitige Navigation zu `/admin` (verhindert Cache-Artefakte)
 
 ### Session-Payload
 
