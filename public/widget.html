@@ -2860,9 +2860,14 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
+            const salutationWrap = document.getElementById('salutation')?.closest('.field-block');
+            if (salutationWrap) {
+              salutationWrap.style.gridColumn = state.settings.showPhoneField ? '1 / -1' : '';
+              salutationWrap.style.maxWidth = state.settings.showPhoneField ? '33%' : '';
+            }
             const lastNameWrap = document.getElementById('lastNameFieldWrap');
             if (lastNameWrap)
-              lastNameWrap.style.gridColumn = state.settings.showPhoneField ? '1 / -1' : '';
+              lastNameWrap.style.gridColumn = state.settings.showPhoneField ? '' : '1 / -1';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
