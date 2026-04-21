@@ -2354,7 +2354,7 @@
               <h2 class="title">Persönliche Angaben</h2>
               <p class="intro">Bitte füllen Sie alle Pflichtfelder aus.</p>
 
-              <div class="grid-2" style="margin-bottom: 18px">
+              <div class="grid-2">
                 <div class="field-block">
                   <label class="label" for="salutation">Anrede</label>
                   <select id="salutation">
@@ -2364,9 +2364,6 @@
                     <option value="Divers">Divers</option>
                   </select>
                 </div>
-              </div>
-
-              <div class="grid-2">
                 <div class="field-block">
                   <label class="label" for="firstName"
                     >Vorname<span class="required">*</span></label
@@ -2391,7 +2388,7 @@
                   />
                   <div id="lastName-err" class="field-error"></div>
                 </div>
-                <div class="field-block">
+                <div class="field-block" id="emailFieldWrap">
                   <label class="label" for="email"
                     >E-Mail<span class="required">*</span></label
                   >
@@ -2863,6 +2860,9 @@
               phoneWrap.style.display = state.settings.showPhoneField
                 ? ''
                 : 'none';
+            const emailWrap = document.getElementById('emailFieldWrap');
+            if (emailWrap)
+              emailWrap.style.gridColumn = state.settings.showPhoneField ? '' : '1 / -1';
             const notesWrap = document.getElementById('notes')?.closest('div');
             if (notesWrap)
               notesWrap.style.display = state.settings.showMessageField
