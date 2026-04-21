@@ -87,9 +87,9 @@ const selectorWrapStyle: React.CSSProperties = {
 };
 
 const sectionStyle: React.CSSProperties = {
-  border: '1px solid #eceef2',
+  border: '1px solid #e5e7eb',
   borderRadius: 18,
-  background: '#ffffff',
+  background: '#f9fafb',
   padding: '26px 28px',
   display: 'grid',
   gap: 18,
