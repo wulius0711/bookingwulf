@@ -4434,7 +4434,7 @@
           const accordion = document.getElementById('guestDataAccordion');
           if (!accordion) return;
           const totalGuests = (state.adults || 0) + (state.children || 0);
-          const show = totalGuests > 1 ? '' : 'none';
+          const show = totalGuests > 1 && state.settings.enableInstantBooking ? '' : 'none';
           accordion.style.display = show;
           const divBefore = document.getElementById('guestDividerBefore');
           const divAfter = document.getElementById('guestDividerAfter');
