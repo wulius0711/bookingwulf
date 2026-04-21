@@ -201,6 +201,78 @@
       .field-block {
         display: flex;
         flex-direction: column;
+        position: relative;
+      }
+
+      /* Floating label */
+      .field-block .label {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-bottom: 0;
+        padding: 0 4px;
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: normal;
+        color: var(--muted);
+        pointer-events: none;
+        background: var(--surface-2);
+        line-height: 1.2;
+        white-space: nowrap;
+        transition:
+          top 0.15s ease,
+          transform 0.15s ease,
+          font-size 0.15s ease,
+          font-weight 0.15s ease,
+          color 0.15s ease;
+        z-index: 1;
+      }
+
+      .field-block.has-textarea .label {
+        top: 20px;
+        transform: none;
+      }
+
+      .field-block .label.floated {
+        top: 10px;
+        transform: none;
+        font-size: 0.714rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+
+      .field-block.has-textarea .label.floated {
+        top: 10px;
+      }
+
+      .field-block .label.floated.focused {
+        color: var(--accent);
+      }
+
+      .field-block input,
+      .field-block select,
+      .field-block textarea {
+        padding-top: 22px;
+        padding-bottom: 8px;
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .field-block select {
+        padding-right: 44px;
+      }
+
+      .field-block input::placeholder,
+      .field-block textarea::placeholder {
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+
+      .field-block input:focus::placeholder,
+      .field-block textarea:focus::placeholder {
+        opacity: 0.35;
       }
 
       .btn {
@@ -3889,6 +3961,7 @@
             div.appendChild(input);
             wrap.appendChild(div);
           }
+          initFloatingLabels(wrap);
         }
 
         function renderGuestFields() {
@@ -3976,6 +4049,7 @@
               wrap.appendChild(row);
             }
           }
+          initFloatingLabels(document.getElementById('guestDataAccordion'));
         }
 
         function renderSubmitArea() {
@@ -4073,6 +4147,8 @@
           document
             .getElementById('submitRequestBtn')
             ?.addEventListener('click', () => submitRequest('request'));
+
+          initFloatingLabels(document.getElementById('submitArea'));
         }
 
         function renderAll() {
@@ -4733,12 +4809,38 @@
           });
         })();
 
+        function initFloatingLabels(root) {
+          const scope = root || document;
+          scope.querySelectorAll('.field-block').forEach(block => {
+            if (block._floatInit) return;
+            const label = block.querySelector('.label');
+            const input = block.querySelector('input:not([type="hidden"]), select, textarea');
+            if (!label || !input) return;
+            block._floatInit = true;
+            if (input.tagName === 'TEXTAREA') block.classList.add('has-textarea');
+
+            function checkFloated() {
+              const hasValue = input.value !== '';
+              const isFocused = document.activeElement === input;
+              label.classList.toggle('floated', isFocused || hasValue);
+              label.classList.toggle('focused', isFocused);
+            }
+
+            input.addEventListener('focus', checkFloated);
+            input.addEventListener('blur', checkFloated);
+            input.addEventListener('input', checkFloated);
+            input.addEventListener('change', checkFloated);
+            checkFloated();
+          });
+        }
+
         async function init() {
           await loadHotelSettings();
           window.parent.postMessage({ type: 'booking-widget-ready' }, '*');
           setDefaultDates();
           applyDateRules();
           renderAll();
+          initFloatingLabels();
           await loadApartmentsFromApi();
           await updateAvailabilityForApartments();
         }
