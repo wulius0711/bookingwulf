@@ -115,9 +115,15 @@ export async function GET(req: Request) {
       select: { key: true, name: true, type: true, billingType: true, price: true, description: true, imageUrl: true, linkUrl: true },
     });
 
+    const childPriceRanges = await prisma.childPriceRange.findMany({
+      where: { hotelId: hotel.id },
+      orderBy: [{ sortOrder: 'asc' }, { minAge: 'asc' }],
+      select: { id: true, label: true, minAge: true, maxAge: true, pricePerNight: true },
+    });
+
     return withCors(
       NextResponse.json(
-        { success: true, hotel, settings: mergedSettings, extras },
+        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges },
         { headers: { 'Cache-Control': 'no-store' } },
       ),
     );

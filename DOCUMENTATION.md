@@ -192,6 +192,10 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 
 Optionale Felder: `imageUrl` (Thumbnail im Widget), `description` (Kurztext unter dem Namen).
 
+### ChildPriceRange *(Kinderpreise nach Altersgruppe)*
+
+Pro Hotel definierbare Altersgruppen mit Preis pro Kind/Nacht. Felder: `minAge`, `maxAge`, `pricePerNight` (0 = Gratis), `label` (optional, z.B. "Kleinkind"), `sortOrder`. Das Widget berechnet den Kinderaufschlag aus den Geburtsdaten der Kinder (Schritt 1) und zeigt ihn im Preis-Popover und der Summary-Sidebar auf. Kinder ohne passende Altersgruppe sind kostenlos.
+
 ### AdminUser *(Login-Account)*
 
 - Passwort: `scrypt` mit 16-Byte-Salt (nicht umkehrbar)

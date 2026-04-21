@@ -36,7 +36,8 @@ model Hotel {
   adminUsers    AdminUser[]
   userHotels    AdminUserHotel[]
   blockedRanges BlockedRange[]
-  extras        HotelExtra[]
+  extras            HotelExtra[]
+  childPriceRanges  ChildPriceRange[]
   nukiConfig    NukiConfig?
   beds24Config  Beds24Config?
   auditLogs     AuditLog[]
@@ -390,4 +391,18 @@ model AuditLog {
   changedAt DateTime @default(now())
 
   @@index([hotelId, changedAt])
+}
+
+model ChildPriceRange {
+  id            Int      @id @default(autoincrement())
+  hotelId       Int
+  hotel         Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  label         String?
+  minAge        Int
+  maxAge        Int
+  pricePerNight Decimal  @db.Decimal(10, 2)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  @@index([hotelId])
 }

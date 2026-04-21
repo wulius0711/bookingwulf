@@ -2672,6 +2672,7 @@
           selectedExtras: {},
           selectedInsurance: null,
           availableExtras: [],
+          childPriceRanges: [],
           apartments: [],
           pricingMap: {},
           loadingApartments: false,
@@ -2879,6 +2880,9 @@
                 state.selectedExtras[ex.key] = false;
               });
             }
+            if (data.childPriceRanges && Array.isArray(data.childPriceRanges)) {
+              state.childPriceRanges = data.childPriceRanges;
+            }
           } catch (e) {
             console.error('Settings load failed', e);
           }
@@ -2986,7 +2990,8 @@
         }
 
         function getTotal() {
-          return getApartmentsTotal() + getExtrasTotal();
+          const nights = getNights() || 1;
+          return getApartmentsTotal() + getExtrasTotal() + calcChildSurcharge(nights);
         }
 
         function getApartmentImages(apartment) {
@@ -3517,6 +3522,36 @@
           renderCalendar();
         }
 
+        function getChildAge(birthdayStr, arrivalStr) {
+          if (!birthdayStr || !arrivalStr) return null;
+          const birth = new Date(birthdayStr);
+          const arrival = new Date(arrivalStr);
+          let age = arrival.getFullYear() - birth.getFullYear();
+          const m = arrival.getMonth() - birth.getMonth();
+          if (m < 0 || (m === 0 && arrival.getDate() < birth.getDate())) age--;
+          return age;
+        }
+
+        function getChildBirthdays() {
+          return Array.from({ length: state.children || 0 }, (_, i) => {
+            const el = document.getElementById(`childBirthday_${i}`);
+            return el ? el.value : '';
+          });
+        }
+
+        function calcChildSurcharge(nights) {
+          if (!state.childPriceRanges.length || !state.children) return 0;
+          const birthdays = getChildBirthdays();
+          let total = 0;
+          birthdays.forEach(bd => {
+            const age = getChildAge(bd, state.arrival);
+            if (age === null) return;
+            const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+            if (range) total += Number(range.pricePerNight) * nights;
+          });
+          return total;
+        }
+
         function isApartmentMatchingGuests(apartment) {
           const maxAdults = Number(apartment.maxAdults || 0);
           const maxChildren = Number(apartment.maxChildren || 0);
@@ -3612,16 +3647,33 @@
                 const discountRow = pricing.discountPercent > 0
                   ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
                   : '';
+                const childSurcharge = calcChildSurcharge(pricing.nights);
+                const childRows = (() => {
+                  if (!state.childPriceRanges.length || !state.children) return '';
+                  const birthdays = getChildBirthdays();
+                  return birthdays.map((bd, i) => {
+                    const age = getChildAge(bd, state.arrival);
+                    if (age === null) return '';
+                    const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+                    if (!range) return '';
+                    const label = range.label || `Kind ${i + 1}`;
+                    const cost = Number(range.pricePerNight) * pricing.nights;
+                    return Number(range.pricePerNight) === 0
+                      ? `<div class="apt-price-popover-row"><span>${label} (${age} J.) · Gratis</span><span style="color:#16a34a">Gratis</span></div>`
+                      : `<div class="apt-price-popover-row"><span>${label} (${age} J.) ${pricing.nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
+                  }).join('');
+                })();
+                const grandTotal = pricing.totalPrice + childSurcharge;
                 const popoverOpen = state.openPricePopover === ap.id;
                 const popoverHtml = popoverOpen ? `
                   <div class="apt-price-popover">
                     <div class="apt-price-popover-caret"></div>
                     <div class="apt-price-popover-header">${nightsLabel}</div>
                     <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
-                    ${cleaningRow}${discountRow}
-                    <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(pricing.totalPrice)}</span></div>
+                    ${cleaningRow}${discountRow}${childRows}
+                    <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(grandTotal)}</span></div>
                   </div>` : '';
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(pricing.totalPrice)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
               }
@@ -4000,6 +4052,24 @@
               });
             } else if (selectedAptsList.length === 0) {
               rows = `<div style="${rowStyle} ${muteStyle}"><span>Kein Apartment gewählt</span></div>`;
+            }
+
+            // Child pricing rows
+            if (state.childPriceRanges.length > 0 && state.children > 0) {
+              const birthdays = getChildBirthdays();
+              birthdays.forEach((bd, i) => {
+                const age = getChildAge(bd, state.arrival);
+                if (age === null) return;
+                const range = state.childPriceRanges.find(r => age >= r.minAge && age <= r.maxAge);
+                if (!range) return;
+                const label = range.label || `Kind ${i + 1}`;
+                const cost = Number(range.pricePerNight) * nights;
+                if (Number(range.pricePerNight) === 0) {
+                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) · Gratis</span><span style="color:#16a34a;">Gratis</span></div>`;
+                } else {
+                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) ${nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
+                }
+              });
             }
 
             const extrasTotal = getExtrasTotal();

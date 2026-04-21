@@ -14,6 +14,7 @@ const sections = [
   { id: 'preise',        title: 'Preise & Saisons',      plan: 'Pro',      content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
+  { id: 'child-pricing', title: 'Kinderpreise',          plan: 'Pro',      content: ChildPricingSection },
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
   { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
@@ -634,6 +635,33 @@ function ExtrasSection() {
   );
 }
 
+function ChildPricingSection() {
+  return (
+    <div>
+      <H2>Kinderpreise</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Definieren Sie Preise pro Kind und Nacht nach Altersgruppen — ohne Saisonbindung.
+        Kinder deren Alter keiner Gruppe entspricht, sind automatisch kostenlos.
+      </P>
+      <H3>Altersgruppen anlegen</H3>
+      <P>
+        Tragen Sie für jede Gruppe ein: Bezeichnung (optional, z.B. „Kleinkind"), Alter von, Alter bis und Preis pro Nacht.
+        Für kostenlose Gruppen (z.B. 0–6 Jahre) einfach Preis 0 eingeben.
+      </P>
+      <Tip>
+        <strong>Beispiel:</strong> 0–6 Jahre → € 0, 7–16 Jahre → € 15 / Nacht.<br />
+        Das Widget berechnet den Aufschlag automatisch anhand des Geburtsdatums, das Gäste bei der Buchung angeben.
+      </Tip>
+      <H3>Anzeige im Widget</H3>
+      <P>
+        Der Kinderaufschlag wird im Preis-Popover je Kind einzeln ausgewiesen (Name, Alter, Preis × Nächte)
+        und in den Gesamtbetrag eingerechnet. Gratis-Kinder erscheinen mit dem Hinweis „Gratis".
+      </P>
+    </div>
+  );
+}
+
 function EmailsSection() {
   return (
     <div>
@@ -745,15 +773,15 @@ function AbonnementSection() {
       <div style={{ display: 'grid', gap: 12, margin: '12px 0 20px' }}>
         {[
           {
-            name: 'Starter', price: '€ 55 / Monat (€ 49 bei Jahreszahlung)',
-            features: ['Bis zu 5 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
+            name: 'Starter', price: '€ 59 / Monat (€ 54 bei Jahreszahlung)',
+            features: ['Bis zu 3 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
           },
           {
-            name: 'Pro', price: '€ 109 / Monat (€ 99 bei Jahreszahlung)',
-            features: ['Bis zu 20 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Widget-Konfigurationen'],
+            name: 'Pro', price: '€ 119 / Monat (€ 109 bei Jahreszahlung)',
+            features: ['Bis zu 15 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Kinderpreise', 'Widget-Konfigurationen'],
           },
           {
-            name: 'Business', price: '€ 217 / Monat (€ 199 bei Jahreszahlung)',
+            name: 'Business', price: '€ 249 / Monat (€ 229 bei Jahreszahlung)',
             features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
