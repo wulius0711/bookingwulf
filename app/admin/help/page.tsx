@@ -593,6 +593,21 @@ function ExtrasSection() {
         Zusatzleistungen sind optionale Leistungen, die Gäste bei der Buchung dazubuchen können —
         z.B. Frühstück, Haustier, Parkplatz oder Endreinigung.
       </P>
+      <H3>Felder</H3>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { label: 'Name',        desc: 'Wird im Widget als Titel der Karte angezeigt.' },
+          { label: 'Beschreibung', desc: 'Optionaler Kurztext unter dem Namen (z.B. "inkl. Kaffee und Saft").' },
+          { label: 'Bild',        desc: 'Optionales Bild — wird als Thumbnail links in der Karte angezeigt. Per Klick hochladen (JPEG, PNG, WebP).' },
+          { label: 'Link-URL',    desc: 'Optionaler externer Link (z.B. zur Versicherungsseite).' },
+          { label: 'Nr.',         desc: 'Reihenfolge im Widget (aufsteigend sortiert).' },
+        ].map((t) => (
+          <div key={t.label} style={{ display: 'flex', gap: 10 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: '#111' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+          </div>
+        ))}
+      </div>
       <H3>Abrechnungsarten</H3>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
         {[

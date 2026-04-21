@@ -1197,6 +1197,7 @@
         flex-direction: column;
         align-items: flex-end;
         gap: 6px;
+        flex-shrink: 0;
       }
 
       .apt-price-per-night {
@@ -3685,7 +3686,7 @@
                     ${priceHtml}
                     ${
                       status.type === 'available'
-                        ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+                        ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
                             <button type="button" class="apt-select-btn ${
                               selected ? 'remove' : ''
                             }" data-select="${ap.id}">
