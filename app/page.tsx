@@ -15,7 +15,7 @@ const LP_BASE = {
 
 const LP_PRESETS = [
   { accentColor: '#1a56db', backgroundColor: '#eff6ff', cardBackground: '#f8fbff', textColor: '#0f1941', borderColor: '#c3d9f8', cardRadius: '2',  buttonRadius: '2'  },
-  { accentColor: '#065f46', backgroundColor: '#ecfdf5', cardBackground: '#f6fdf9', textColor: '#022c22', borderColor: '#a7f3d0', cardRadius: '20', buttonRadius: '44' },
+  { accentColor: '#3d5c3a', backgroundColor: '#f0f2e8', cardBackground: '#f6f7f0', textColor: '#1a2418', borderColor: '#c5cbb0', cardRadius: '20', buttonRadius: '44' },
   { accentColor: '#7c3aed', backgroundColor: '#f5f3ff', cardBackground: '#faf9ff', textColor: '#1e0a4a', borderColor: '#ddd6fe', cardRadius: '0',  buttonRadius: '32' },
   { accentColor: '#111827', backgroundColor: '#f9fafb', cardBackground: '#ffffff', textColor: '#111827', borderColor: '#e5e7eb', cardRadius: '8',  buttonRadius: '8'  },
 ];
@@ -170,11 +170,11 @@ export default function LandingPage() {
 
         .lp-badge {
           display: inline-block; padding: 6px 16px; border-radius: 999px;
-          background: #f0fdf4; color: #16a34a; font-size: 13px; font-weight: 600;
+          background: #eef0e6; color: #3d5c3a; font-size: 13px; font-weight: 600;
           animation: lp-pulse 2s ease-in-out infinite;
         }
         @keyframes lp-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,106,0.2); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(61,92,58,0.2); }
           50% { box-shadow: 0 0 0 8px rgba(22,163,106,0); }
         }
 
