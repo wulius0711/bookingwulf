@@ -338,7 +338,9 @@ export async function POST(req: Request) {
         html += `<div style="margin-bottom:12px;">`;
         regularExtras.forEach(e => {
           const lbl = useGuestLabels ? e.guestLabel : e.label;
-          html += `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;"><span style="color:#374151;">${lbl}</span><span style="font-weight:600;color:#111827;">${eur(e.subtotal)}</span></div>`;
+          html += showPrices
+            ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;"><span style="color:#374151;">${lbl}</span><span style="font-weight:600;color:#111827;">${eur(e.subtotal)}</span></div>`
+            : `<div style="padding:6px 0;font-size:14px;color:#374151;">${lbl}</div>`;
         });
         html += `</div>`;
       }
@@ -347,7 +349,9 @@ export async function POST(req: Request) {
         html += `<div style="padding:12px 16px;background:#fefce8;border:1px solid #fef08a;border-radius:8px;margin-bottom:12px;">`;
         html += `<div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">${insuranceLabel}</div>`;
         insuranceExtras.forEach(e => {
-          html += `<div style="font-size:14px;color:#111827;">${e.name} — <strong>${eur(e.subtotal)}</strong></div>`;
+          html += showPrices
+            ? `<div style="font-size:14px;color:#111827;">${e.name} — <strong>${eur(e.subtotal)}</strong></div>`
+            : `<div style="font-size:14px;color:#111827;">${e.name}</div>`;
         });
         html += `</div>`;
       } else if (declinedInsurance) {
