@@ -668,14 +668,20 @@
       }
 
       .guest-accordion-body {
-        display: none;
-        padding: 16px;
-        border-top: 1px solid var(--line);
+        max-height: 0;
+        overflow: hidden;
+        border-top: 0px solid var(--line);
         background: var(--surface-2);
+        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-top-width 0.1s ease;
+        padding: 0 16px;
       }
 
       .guest-accordion-body.open {
-        display: block;
+        max-height: 800px;
+        padding: 16px;
+        border-top-width: 1px;
       }
 
       .guest-section-title {
@@ -724,14 +730,20 @@
       }
 
       .payment-accordion-body {
-        display: none;
-        padding: 20px 16px;
-        border-top: 1px solid var(--line);
+        max-height: 0;
+        overflow: hidden;
+        border-top: 0px solid var(--line);
         background: var(--surface-2);
+        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-top-width 0.1s ease;
+        padding: 0 16px;
       }
 
       .payment-accordion-body.open {
-        display: block;
+        max-height: 800px;
+        padding: 20px 16px;
+        border-top-width: 1px;
       }
 
       .payment-option-title {
@@ -1930,14 +1942,20 @@
       }
 
       .addr-accordion-body {
-        display: none;
-        padding: 16px;
-        border-top: 1px solid var(--line);
+        max-height: 0;
+        overflow: hidden;
+        border-top: 0px solid var(--line);
         background: var(--surface-2);
+        transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-top-width 0.1s ease;
+        padding: 0 16px;
       }
 
       .addr-accordion-body.open {
-        display: block;
+        max-height: 600px;
+        padding: 16px;
+        border-top-width: 1px;
       }
 
       .field-error {
