@@ -3688,14 +3688,20 @@
                       : `<div class="apt-price-popover-row"><span>${label} (${age} J.) ${pricing.nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
                   }).join('');
                 })();
-                const grandTotal = pricing.totalPrice + childSurcharge;
+                const ortstaxeAmount = calcOrtstaxe(pricing.nights);
+                const ortstaxeRow = ortstaxeAmount > 0 ? (() => {
+                  const minAge = state.ortstaxeMinAge;
+                  const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
+                  return `<div class="apt-price-popover-row"><span>Ortstaxe${minAgeNote}</span><span>${eur(ortstaxeAmount)}</span></div>`;
+                })() : '';
+                const grandTotal = pricing.totalPrice + childSurcharge + ortstaxeAmount;
                 const popoverOpen = state.openPricePopover === ap.id;
                 const popoverHtml = popoverOpen ? `
                   <div class="apt-price-popover">
                     <div class="apt-price-popover-caret"></div>
                     <div class="apt-price-popover-header">${nightsLabel}</div>
                     <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
-                    ${cleaningRow}${discountRow}${childRows}
+                    ${childRows}${cleaningRow}${discountRow}${ortstaxeRow}
                     <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(grandTotal)}</span></div>
                   </div>` : '';
                 priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
