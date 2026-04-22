@@ -59,11 +59,45 @@ export async function POST(req: Request) {
       select: { id: true },
     });
 
+
     if (!hotel) {
       return Response.json(
         { success: false, message: 'Hotel nicht gefunden.' },
         { status: 404, headers: corsHeaders },
       );
+    }
+
+    const hotelSettings = await prisma.hotelSettings.findUnique({
+      where: { hotelId: hotel.id },
+      select: { gapNightDiscount: true, gapNightMaxLength: true },
+    });
+
+    // Pre-fetch gap bookings if gap-night feature is configured
+    const gapEnabled = hotelSettings?.gapNightDiscount && hotelSettings?.gapNightMaxLength && nights <= hotelSettings.gapNightMaxLength;
+    let gapBeforeIds = new Set<number>();
+    let gapAfterIds = new Set<number>();
+
+    if (gapEnabled) {
+      const arrivalNorm = normalizeDate(arrival);
+      const departureNorm = normalizeDate(departure);
+      const nextDay = (d: Date) => new Date(d.getTime() + 24 * 60 * 60 * 1000);
+
+      const [beforeBookings, afterBookings] = await Promise.all([
+        prisma.request.findMany({
+          where: { hotelId: hotel.id, status: 'booked', departure: { gte: arrivalNorm, lt: nextDay(arrivalNorm) } },
+          select: { selectedApartmentIds: true },
+        }),
+        prisma.request.findMany({
+          where: { hotelId: hotel.id, status: 'booked', arrival: { gte: departureNorm, lt: nextDay(departureNorm) } },
+          select: { selectedApartmentIds: true },
+        }),
+      ]);
+
+      const parseIds = (bookings: { selectedApartmentIds: string }[]) =>
+        new Set(bookings.flatMap((b) => b.selectedApartmentIds.split(',').map((s) => Number(s.trim())).filter(Boolean)));
+
+      gapBeforeIds = parseIds(beforeBookings);
+      gapAfterIds = parseIds(afterBookings);
     }
 
     const apartmentNames = selectedApartmentsRaw
@@ -161,13 +195,20 @@ export async function POST(req: Request) {
         totalPrice += nightlyPrice;
       }
 
-      totalPrice += apartment.cleaningFee ?? 0;
+      const cleaningFee = apartment.cleaningFee ?? 0;
+      totalPrice += cleaningFee;
+
+      // Gap-night discount
+      const isGapNight = gapEnabled && gapBeforeIds.has(apartment.id) && gapAfterIds.has(apartment.id);
+      const gapDiscount = isGapNight ? (hotelSettings?.gapNightDiscount ?? 0) : 0;
+      if (gapDiscount > 0) {
+        const baseOnly = totalPrice - cleaningFee;
+        totalPrice = baseOnly * (1 - gapDiscount / 100) + cleaningFee;
+      }
 
       const averagePricePerNight =
         nights > 0
-          ? Number(
-              ((totalPrice - (apartment.cleaningFee ?? 0)) / nights).toFixed(2),
-            )
+          ? Number(((totalPrice - cleaningFee) / nights).toFixed(2))
           : 0;
 
       return {
@@ -176,7 +217,9 @@ export async function POST(req: Request) {
         available: true,
         totalPrice: Number(totalPrice.toFixed(2)),
         pricePerNight: averagePricePerNight,
-        cleaningFee: apartment.cleaningFee ?? 0,
+        cleaningFee,
+        isGapNight,
+        gapDiscount,
       };
     });
 
@@ -209,6 +252,8 @@ export async function POST(req: Request) {
         totalPrice: Number(totalPrice.toFixed(2)),
         pricePerNight: firstApartment?.pricePerNight ?? 0,
         cleaningFee: firstApartment?.cleaningFee ?? 0,
+        isGapNight: firstApartment?.isGapNight ?? false,
+        gapDiscount: firstApartment?.gapDiscount ?? 0,
         apartments: apartmentResults,
       },
       { headers: corsHeaders },

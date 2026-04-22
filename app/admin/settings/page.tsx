@@ -609,6 +609,44 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
             </div>
 
+            {/* GAP-NIGHT */}
+            <div className="settings-section" style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Lücken-Rabatt</h2>
+                <p style={sectionIntroStyle}>
+                  Kurze freie Lücken zwischen zwei Buchungen werden automatisch vergünstigt — das Widget zeigt den Sonderpreis an.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gap: 16 }}>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Rabatt (%)</label>
+                  <input
+                    type="number"
+                    name="gapNightDiscount"
+                    min="1"
+                    max="80"
+                    step="1"
+                    defaultValue={selected.settings?.gapNightDiscount ?? ''}
+                    placeholder="z. B. 20 (leer = deaktiviert)"
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
+                  />
+                </div>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Max. Lückenlänge (Nächte)</label>
+                  <input
+                    type="number"
+                    name="gapNightMaxLength"
+                    min="1"
+                    max="14"
+                    step="1"
+                    defaultValue={selected.settings?.gapNightMaxLength ?? ''}
+                    placeholder="z. B. 3 (leer = deaktiviert)"
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* ACTIONS */}
             <div style={actionRowStyle}>
               <button className="btn-primary" type="submit" style={primaryButtonStyle}>

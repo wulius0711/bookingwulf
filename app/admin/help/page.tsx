@@ -761,6 +761,14 @@ function EinstellungenSection() {
         Kinder unter diesem Alter sind automatisch von der Abgabe befreit.
       </P>
 
+      <H3>Lücken-Rabatt</H3>
+      <P>
+        Unter <strong>Lücken-Rabatt</strong> können Sie automatisch kurze freie Zeiträume zwischen
+        zwei bestehenden Buchungen vergünstigen. Legen Sie einen Rabatt in Prozent und eine maximale
+        Lückenlänge in Nächten fest. Das Widget erkennt solche Lücken automatisch und zeigt den
+        reduzierten Preis mit einem „Sonderpreis"-Badge an.
+      </P>
+
       <H3>Barrierefreiheits-Check</H3>
       <P>
         Unterhalb der Farbfelder zeigt ein WCAG-Kontrast-Checker automatisch an, ob Ihre Farbkombinationen

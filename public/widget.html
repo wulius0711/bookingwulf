@@ -3736,7 +3736,9 @@
               priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
               if (pricing && pricing.available) {
                 let priceBadge = '';
-                if (pricing.discountPercent > 0) {
+                if (pricing.gapDiscount > 0) {
+                  priceBadge = `<span class="apt-price-badge discount">-${pricing.gapDiscount}% Sonderpreis</span>`;
+                } else if (pricing.discountPercent > 0) {
                   priceBadge = `<span class="apt-price-badge discount">-${pricing.discountPercent}% Last-Minute</span>`;
                 } else if (pricing.surchargePercent > 0) {
                   priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
@@ -3749,7 +3751,9 @@
                     ? `<div class="apt-price-popover-row"><span>Endreinigung</span><span>${eur(pricing.cleaningFee)}</span></div>`
                     : '';
                 const discountRow =
-                  pricing.discountPercent > 0
+                  pricing.gapDiscount > 0
+                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Lücken-Rabatt -${pricing.gapDiscount}%</span><span>inklusive</span></div>`
+                    : pricing.discountPercent > 0
                     ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
                     : '';
                 const childSurcharge = calcChildSurcharge(pricing.nights);
@@ -4877,6 +4881,8 @@
                   nights: data.nights,
                   pricePerNight: data.pricePerNight,
                   cleaningFee: data.cleaningFee || 0,
+                  isGapNight: data.isGapNight || false,
+                  gapDiscount: data.gapDiscount || 0,
                   status: 'available',
                 };
                 state.pricingMap[String(apartment.id)] = baseEntry;

@@ -61,6 +61,8 @@ model HotelSettings {
   enableInstantBooking Boolean @default(false)
   hideRequestOption    Boolean @default(false)
   showUrgencySignals   Boolean @default(false)
+  gapNightDiscount     Int?    // % discount for gap nights (null = disabled)
+  gapNightMaxLength    Int?    // max gap length in nights to qualify
 
   // 🎨 Colors
   accentColor      String?  // Primary highlight

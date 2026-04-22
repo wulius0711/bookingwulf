@@ -80,6 +80,8 @@ export async function saveHotelSettings(formData: FormData) {
       ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
       ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
+      gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
+      gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
 
     },
     create: {
@@ -117,6 +119,8 @@ export async function saveHotelSettings(formData: FormData) {
       ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
       ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
+      gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
+      gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
 
     },
   });

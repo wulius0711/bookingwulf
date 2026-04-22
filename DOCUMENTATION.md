@@ -580,6 +580,17 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 - Logout-Icon im Sidebar-Header (oben rechts)
 - Gesperrte Nav-Items (Plan-Gates) werden als `<button aria-disabled="true">` gerendert (nicht als `<span>`) für Tastaturzugänglichkeit; Akkordeon-Buttons tragen `aria-expanded`; Hotel-Select ist über `<label htmlFor>` beschriftet
 
+### Gap-Night-Preise
+
+Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxLength Int?` (max. Lückenlänge in Nächten). Beide `null` = Feature deaktiviert.
+
+**Erkennung in `/api/availability`:**
+- Feature aktiv wenn beide Felder gesetzt und `nights <= gapNightMaxLength`
+- Prüft ob eine bestätigte (`status: 'booked'`) Buchung für das Apartment exakt am Anreisetag endet (`departure = arrival`)
+- Prüft ob eine bestätigte Buchung exakt am Abreisetag beginnt (`arrival = departure`)
+- Wenn beides zutrifft: Rabatt auf Nächtepreis (nicht Endreinigung), `isGapNight: true`, `gapDiscount: N` in Response
+- Widget zeigt „-N% Sonderpreis"-Badge und Popover-Zeile „Lücken-Rabatt"
+
 ### Urgency-Signale
 
 Feature-Toggle `showUrgencySignals` (HotelSettings + WidgetConfig). Wenn aktiviert:
