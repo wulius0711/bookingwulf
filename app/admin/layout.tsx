@@ -56,7 +56,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/price-seasons', label: 'Preisanpassungen' },
       { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
       { href: '/admin/extras', label: 'Zusatzleistungen' },
-      { href: '/admin/child-pricing', label: 'Kinderpreise' },
     ]},
     { label: 'Einstellungen', items: [
       { href: '/admin/email-templates', label: 'E-Mail Templates' },

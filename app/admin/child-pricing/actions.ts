@@ -20,6 +20,7 @@ export async function createChildPriceRange(formData: FormData) {
     },
   });
   revalidatePath('/admin/child-pricing');
+  revalidatePath('/admin/price-seasons');
 }
 
 export async function updateChildPriceRange(formData: FormData) {
@@ -42,6 +43,7 @@ export async function updateChildPriceRange(formData: FormData) {
     },
   });
   revalidatePath('/admin/child-pricing');
+  revalidatePath('/admin/price-seasons');
 }
 
 export async function deleteChildPriceRange(formData: FormData) {
@@ -55,4 +57,5 @@ export async function deleteChildPriceRange(formData: FormData) {
 
   await prisma.childPriceRange.delete({ where: { id } });
   revalidatePath('/admin/child-pricing');
+  revalidatePath('/admin/price-seasons');
 }
