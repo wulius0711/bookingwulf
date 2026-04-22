@@ -36,6 +36,29 @@ async function deleteSeason(formData: FormData) {
   }
 }
 
+async function saveOrtstaxe(formData: FormData) {
+  'use server';
+  const session = await verifySession();
+  const hotelId = Number(formData.get('hotelId') || 0);
+  if (!hotelId) return;
+  if (session.hotelId !== null && hotelId !== session.hotelId) return;
+
+  await prisma.hotelSettings.upsert({
+    where: { hotelId },
+    update: {
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
+    },
+    create: {
+      hotelId,
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
+    },
+  });
+
+  revalidatePath('/admin/price-seasons');
+}
+
 async function saveDynamicPricing(formData: FormData) {
   'use server';
   const session = await verifySession();
@@ -54,8 +77,6 @@ async function saveDynamicPricing(formData: FormData) {
       urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
       gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
       gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
-      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
-      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
     },
     create: {
       hotelId,
@@ -67,8 +88,6 @@ async function saveDynamicPricing(formData: FormData) {
       urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
       gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
       gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
-      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
-      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
     },
   });
 
@@ -167,6 +186,42 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
         )}
       </div>
 
+      {/* ORTSTAXE */}
+      {selectedHotelId !== null && (
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Ortstaxe / Kurtaxe</h2>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Abgabe pro Person und Nacht — wird zur Buchungssumme addiert.</p>
+          </div>
+          <div style={{ padding: '20px' }}>
+            <form action={saveOrtstaxe} style={{ display: 'grid', gap: 16 }}>
+              <input type="hidden" name="hotelId" value={selectedHotelId} />
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+                  <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
+                    defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
+                    placeholder="z. B. 2.50"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+                  <input name="ortstaxeMinAge" type="number" min="0" step="1"
+                    defaultValue={s?.ortstaxeMinAge ?? ''}
+                    placeholder="leer = alle zahlen"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+              </div>
+              <div>
+                <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  Speichern
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* DYNAMIC PRICING */}
       {selectedHotelId !== null && (
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
@@ -257,27 +312,6 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
                   defaultValue={s?.urgencyThreshold ?? 40}
                   style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 80 }} />
                 <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner wenn weniger als X % der Nächte frei</span>
-              </div>
-            </div>
-
-            {/* ORTSTAXE */}
-            <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Ortstaxe / Kurtaxe</div>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
-                  <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
-                    defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
-                    placeholder="z. B. 2.50"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                </div>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
-                  <input name="ortstaxeMinAge" type="number" min="0" step="1"
-                    defaultValue={s?.ortstaxeMinAge ?? ''}
-                    placeholder="leer = alle zahlen"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                </div>
               </div>
             </div>
 
