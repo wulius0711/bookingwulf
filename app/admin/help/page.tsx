@@ -560,7 +560,7 @@ function PreiseSection() {
         Anzahl Tage liegt (z.B. 10 % bei Anreise in den nächsten 7 Tagen). Im Widget als grünes Badge.
       </P>
 
-      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
+      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#92400e', background: '#fef3c7', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
       <P>
         Wenn die Auslastung einen konfigurierbaren Schwellwert überschreitet (z.B. 80 %), wird
         automatisch ein prozentualer Aufschlag angewendet. Im Widget als gelbes Badge.
