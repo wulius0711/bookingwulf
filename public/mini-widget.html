@@ -244,16 +244,15 @@
             );
             if (!res.ok) return;
             const data = await res.json();
-            const ft = data.featureToggles || {};
-            const theme = data.theme || {};
+            const s = data.settings || {};
 
-            enableInstantBooking = ft.enableInstantBooking === true;
-            hideRequestOption = ft.hideRequestOption === true;
+            enableInstantBooking = s.enableInstantBooking === true;
+            hideRequestOption = s.hideRequestOption === true;
 
-            if (theme.accentColor) accentColor = theme.accentColor;
-            if (theme.backgroundColor) bgColor = theme.backgroundColor;
-            if (theme.buttonRadius != null) buttonRadius = theme.buttonRadius;
-            if (theme.cardRadius != null) cardRadius = theme.cardRadius;
+            if (s.accentColor) accentColor = s.accentColor;
+            if (s.backgroundColor) bgColor = s.backgroundColor;
+            if (s.buttonRadius != null) buttonRadius = s.buttonRadius;
+            if (s.cardRadius != null) cardRadius = s.cardRadius;
 
             // Apply theme
             const root = document.documentElement;
