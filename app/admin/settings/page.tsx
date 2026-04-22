@@ -222,7 +222,6 @@ type ToggleKey =
   | 'enableImageSlider'
   | 'enableInstantBooking'
   | 'hideRequestOption'
-  | 'showUrgencySignals'
 
 const featureToggles: [ToggleKey, string][] = [
   ['showPrices', 'Preise anzeigen'],
@@ -232,7 +231,6 @@ const featureToggles: [ToggleKey, string][] = [
   ['showMessageField', 'Nachrichtenfeld anzeigen'],
   ['enableImageSlider', 'Image Slider aktivieren'],
   ['enableInstantBooking', 'Verbindliche Buchung anbieten'],
-  ['showUrgencySignals', 'Verfügbarkeits-Hinweise anzeigen'],
 ]
 
 /* ---------- PAGE ---------- */
@@ -565,61 +563,17 @@ export default async function Page({ searchParams }: PageProps) {
                   enableImageSlider: selected.settings?.enableImageSlider ?? true,
                   enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
                   hideRequestOption: selected.settings?.hideRequestOption ?? false,
-                  showUrgencySignals: selected.settings?.showUrgencySignals ?? false,
                 }}
                 checkboxRowStyle={checkboxRowStyle}
                 checkboxBoxStyle={checkboxBoxStyle}
                 labelStyle={labelStyle}
               />
-              <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                <label style={{ ...labelStyle, marginBottom: 0, whiteSpace: 'nowrap' }}>Schwellenwert (%)</label>
-                <input
-                  type="number"
-                  name="urgencyThreshold"
-                  min="10"
-                  max="90"
-                  step="5"
-                  defaultValue={selected.settings?.urgencyThreshold ?? 40}
-                  style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 90, background: '#fff' }}
-                />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner erscheint wenn weniger als X % der Nächte frei sind</span>
-              </div>
             </div>
 
-            {/* ORTSTAXE */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Ortstaxe / Kurtaxe</h2>
-                <p style={sectionIntroStyle}>
-                  Wird pro Person und Nacht zur Buchungssumme addiert und in der Buchungsübersicht sowie den E-Mails ausgewiesen.
-                </p>
-              </div>
-              <div style={{ display: 'grid', gap: 16 }}>
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Betrag pro Person / Nacht (€)</label>
-                  <input
-                    type="number"
-                    name="ortstaxePerPersonPerNight"
-                    min="0"
-                    step="0.01"
-                    defaultValue={Number(selected.settings?.ortstaxePerPersonPerNight ?? 0) || ''}
-                    placeholder="z. B. 2.50"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 160, background: '#fff' }}
-                  />
-                </div>
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Mindestalter (Kinder darunter frei)</label>
-                  <input
-                    type="number"
-                    name="ortstaxeMinAge"
-                    min="0"
-                    step="1"
-                    defaultValue={selected.settings?.ortstaxeMinAge ?? ''}
-                    placeholder="z. B. 14 (leer = alle zahlen)"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
-                  />
-                </div>
-              </div>
+            {/* PRICING TOOLS HINT */}
+            <div style={{ padding: '14px 18px', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 12, fontSize: 13, color: '#0369a1' }}>
+              Verfügbarkeits-Hinweise, Lücken-Rabatt und Ortstaxe/Kurtaxe finden Sie jetzt unter{' '}
+              <a href="/admin/pricing-tools" style={{ color: '#0369a1', fontWeight: 600 }}>Preistools</a>.
             </div>
 
             {/* PRE-ARRIVAL */}
@@ -657,45 +611,6 @@ export default async function Page({ searchParams }: PageProps) {
                     defaultValue={selected.settings?.preArrivalHouseRules ?? ''}
                     placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
                     style={{ padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: '#fff', resize: 'vertical', fontFamily: 'inherit' }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* GAP-NIGHT */}
-            <div className="settings-section" style={{ ...sectionStyle, position: 'relative' }}>
-              {!hasPro && <ProLockOverlay />}
-              <div>
-                <h2 style={sectionTitleStyle}>Lücken-Rabatt</h2>
-                <p style={sectionIntroStyle}>
-                  Kurze freie Lücken zwischen zwei Buchungen werden automatisch vergünstigt — das Widget zeigt den Sonderpreis an.
-                </p>
-              </div>
-              <div style={{ display: 'grid', gap: 16 }}>
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Rabatt (%)</label>
-                  <input
-                    type="number"
-                    name="gapNightDiscount"
-                    min="1"
-                    max="80"
-                    step="1"
-                    defaultValue={selected.settings?.gapNightDiscount ?? ''}
-                    placeholder="z. B. 20 (leer = deaktiviert)"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
-                  />
-                </div>
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={labelStyle}>Max. Lückenlänge (Nächte)</label>
-                  <input
-                    type="number"
-                    name="gapNightMaxLength"
-                    min="1"
-                    max="14"
-                    step="1"
-                    defaultValue={selected.settings?.gapNightMaxLength ?? ''}
-                    placeholder="z. B. 3 (leer = deaktiviert)"
-                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 200, background: '#fff' }}
                   />
                 </div>
               </div>

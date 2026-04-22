@@ -57,8 +57,6 @@ export async function saveHotelSettings(formData: FormData) {
       instantBooking: getBool('instantBooking'),
       enableInstantBooking: getBool('enableInstantBooking'),
       hideRequestOption: getBool('hideRequestOption'),
-      showUrgencySignals: getBool('showUrgencySignals'),
-      urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
 
       accentColor: String(formData.get('accentColor') || '') || null,
       backgroundColor: String(formData.get('backgroundColor') || '') || null,
@@ -78,11 +76,7 @@ export async function saveHotelSettings(formData: FormData) {
       headlineFontWeight: parseInt(String(formData.get('headlineFontWeight') || '0')) || null,
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
 
-      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
-      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
-      gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
-      gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
 
       preArrivalEnabled: getBool('preArrivalEnabled'),
       preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,

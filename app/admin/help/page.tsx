@@ -12,6 +12,7 @@ const sections = [
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
   { id: 'preise',        title: 'Preisanpassungen',       plan: 'Pro',      content: PreiseSection },
+  { id: 'preistools',    title: 'Preistools',             plan: null,       content: PreistoolsSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'child-pricing', title: 'Kinderpreise',          plan: null,       content: ChildPricingSection },
@@ -558,6 +559,42 @@ function PreiseSection() {
   );
 }
 
+function PreistoolsSection() {
+  return (
+    <div>
+      <H2>Preistools</H2>
+      <P>
+        Unter <strong>Preistools</strong> (Navigation → Verwaltung) bündeln sich alle automatischen
+        Preisanpassungen und Abgaben für das Widget.
+      </P>
+
+      <H3>Verfügbarkeits-Hinweise</H3>
+      <P>
+        Wenn aktiviert, zeigt das Widget einen 🔥-Banner unterhalb des Kalenders, sobald weniger als
+        X&nbsp;% der Nächte im angezeigten Monat noch frei sind. Der Schwellenwert (Standard&nbsp;40&nbsp;%)
+        ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
+      </P>
+
+      <H3>Lücken-Rabatt</H3>
+      <PlanNote plan="Pro" feature="Lücken-Rabatt" />
+      <P>
+        Kurze freie Zeiträume zwischen zwei bestehenden Buchungen werden automatisch vergünstigt.
+        Legen Sie einen Rabatt in Prozent und eine maximale Lückenlänge in Nächten fest.
+        Das Widget erkennt solche Lücken automatisch und zeigt den reduzierten Preis mit einem
+        „Sonderpreis"-Badge an.
+      </P>
+
+      <H3>Ortstaxe / Kurtaxe</H3>
+      <P>
+        Hinterlegen Sie eine Abgabe pro Person und Nacht. Der Betrag wird automatisch zur
+        Buchungssumme addiert und in der Buchungsübersicht sowie den Bestätigungs-E-Mails separat
+        ausgewiesen. Optional lässt sich ein Mindestalter festlegen — Kinder unter diesem Alter
+        sind automatisch von der Abgabe befreit.
+      </P>
+    </div>
+  );
+}
+
 function SperrzeitenSection() {
   return (
     <div>
@@ -744,7 +781,6 @@ function EinstellungenSection() {
           { label: 'Nachrichtenfeld anzeigen',       desc: 'Ermöglicht Gästen, beim Buchen eine freie Nachricht mitzuschicken.' },
           { label: 'Image Slider aktivieren',        desc: 'Zeigt mehrere Bilder pro Apartment als Slider statt als Einzelbild.' },
           { label: 'Verbindliche Buchung anbieten',  desc: 'Gäste können direkt verbindlich buchen statt nur eine Anfrage zu senden.' },
-          { label: 'Verfügbarkeits-Hinweise anzeigen', desc: 'Zeigt im Kalender einen Hinweis, wenn weniger als X % der Nächte im Monat noch frei sind (Schwellenwert einstellbar, Standard 40 %).' },
         ].map((f) => (
           <div key={f.label} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid #f3f4f6' }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 220, color: '#111', flexShrink: 0 }}>{f.label}</span>
@@ -753,12 +789,10 @@ function EinstellungenSection() {
         ))}
       </div>
 
-      <H3>Ortstaxe / Kurtaxe</H3>
+      <H3>Preistools</H3>
       <P>
-        Im Abschnitt <strong>Ortstaxe / Kurtaxe</strong> können Sie eine Abgabe pro Person und Nacht hinterlegen.
-        Der Betrag wird automatisch zur Buchungssumme addiert und in der Buchungsübersicht sowie den
-        Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich ein Mindestalter festlegen —
-        Kinder unter diesem Alter sind automatisch von der Abgabe befreit.
+        Dynamische Preisanpassungen (Verfügbarkeits-Hinweise, Lücken-Rabatt, Ortstaxe/Kurtaxe)
+        finden Sie unter <InternalLink id="preistools">Preistools</InternalLink> in der Navigation.
       </P>
 
       <H3>Online Check-in</H3>
@@ -771,15 +805,6 @@ function EinstellungenSection() {
         Der Betreiber sieht in der Buchungsdetailansicht, ob der Check-in ausgefüllt wurde (mit Ankunftszeit
         und Hinweisen). Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls das
         Formular bis dahin noch nicht ausgefüllt wurde. Die Anzahl der Tage ist in den Einstellungen konfigurierbar.
-      </P>
-
-      <H3>Lücken-Rabatt</H3>
-      <PlanNote plan="Pro" feature="Lücken-Rabatt" />
-      <P>
-        Unter <strong>Lücken-Rabatt</strong> können Sie automatisch kurze freie Zeiträume zwischen
-        zwei bestehenden Buchungen vergünstigen. Legen Sie einen Rabatt in Prozent und eine maximale
-        Lückenlänge in Nächten fest. Das Widget erkennt solche Lücken automatisch und zeigt den
-        reduzierten Preis mit einem „Sonderpreis"-Badge an.
       </P>
 
       <H3>Barrierefreiheits-Check</H3>

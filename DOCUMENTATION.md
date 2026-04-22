@@ -542,6 +542,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/apartments` | Alle | Apartments anlegen, Bilder hochladen |
 | `/admin/blocked-dates` | Alle | Manuelle Sperrzeiten |
 | `/admin/price-seasons` | Pro | Saisonale Preise |
+| `/admin/pricing-tools` | Alle | Verfügbarkeits-Hinweise, Lücken-Rabatt (Pro), Ortstaxe/Kurtaxe |
 | `/admin/extras` | Pro | Zusatzleistungen & Versicherung |
 | `/admin/email-templates` | Pro | E-Mail-Vorlagen anpassen |
 | `/admin/users` | Pro | Team-Mitglieder einladen |
