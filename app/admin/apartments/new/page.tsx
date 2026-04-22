@@ -79,51 +79,50 @@ async function createApartment(formData: FormData) {
       isActive,
       description: description || null,
       amenities,
-      images:
-        cleanedImages.length > 0
-          ? {
-              create: cleanedImages,
-            }
-          : undefined,
+      images: cleanedImages.length > 0 ? { create: cleanedImages } : undefined,
     },
   });
 
   redirect('/admin/apartments');
 }
 
-const row: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '180px 1fr',
-  alignItems: 'start',
-  gap: 16,
+const lbl: React.CSSProperties = {
+  fontSize: 12,
+  fontWeight: 700,
+  color: '#4b5563',
+  letterSpacing: '0.05em',
+  textTransform: 'uppercase',
+  display: 'block',
+  marginBottom: 4,
 };
 
-const labelStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#111',
-  fontWeight: 500,
-  paddingTop: 10,
-};
-
-const inputStyle: React.CSSProperties = {
+const inp: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #d1d5db',
-  borderRadius: 6,
+  border: '1px solid #e5e7eb',
+  borderRadius: 8,
   fontSize: 14,
+  background: '#f9fafb',
   color: '#111',
+  boxSizing: 'border-box',
 };
 
-const buttonStyle: React.CSSProperties = {
-  marginTop: 20,
-  padding: '12px 18px',
-  borderRadius: 8,
-  border: 'none',
-  background: '#111',
-  color: '#fff',
-  cursor: 'pointer',
-  width: 'fit-content',
+const fld: React.CSSProperties = { display: 'grid', gap: 4 };
+
+const card: React.CSSProperties = {
+  background: '#fff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 16,
+  overflow: 'hidden',
 };
+
+const cardHead: React.CSSProperties = {
+  background: '#fafafa',
+  padding: '14px 20px',
+  borderBottom: '1px solid #f3f4f6',
+};
+
+const cardBody: React.CSSProperties = { padding: '20px', display: 'grid', gap: 16 };
 
 export default async function NewApartmentPage() {
   const session = await verifySession();
@@ -140,155 +139,152 @@ export default async function NewApartmentPage() {
       });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
-      <h1 style={{ marginBottom: 30 }}>Neues Apartment</h1>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
 
-      <form action={createApartment} style={{ display: 'grid', gap: 18 }}>
-        {session.hotelId === null ? (
-          <div style={row}>
-            <label style={labelStyle}>Hotel</label>
-            <select name="hotelId" required style={inputStyle} defaultValue="">
-              <option value="" disabled>
-                Hotel auswählen
-              </option>
-              {hotels.map((hotel) => (
-                <option key={hotel.id} value={hotel.id}>
-                  {hotel.name} ({hotel.slug})
-                </option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <input type="hidden" name="hotelId" value={session.hotelId} />
-        )}
-
-        <NameSlugFields rowStyle={row} labelStyle={labelStyle} inputStyle={inputStyle} />
-
-        <div style={row}>
-          <label style={labelStyle}>Max. Erwachsene</label>
-          <input
-            type="number"
-            name="maxAdults"
-            defaultValue={2}
-            min={1}
-            style={inputStyle}
-          />
+        <div>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neues Apartment</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Apartment anlegen und Basisdaten festlegen.</p>
         </div>
 
-        <div style={row}>
-          <label style={labelStyle}>Max. Kinder</label>
-          <input
-            type="number"
-            name="maxChildren"
-            defaultValue={0}
-            min={0}
-            style={inputStyle}
-          />
-        </div>
+        <form action={createApartment} style={{ display: 'grid', gap: 24 }}>
 
-        <div style={row}>
-          <label style={labelStyle}>Größe (m²)</label>
-          <input type="number" name="size" min={0} style={inputStyle} />
-        </div>
+          {/* Allgemein */}
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Allgemein</h2>
+            </div>
+            <div style={cardBody}>
+              {session.hotelId === null ? (
+                <div style={fld}>
+                  <label style={lbl}>Hotel *</label>
+                  <select name="hotelId" required style={inp} defaultValue="">
+                    <option value="" disabled>Hotel auswählen</option>
+                    {hotels.map((h) => (
+                      <option key={h.id} value={h.id}>{h.name} ({h.slug})</option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <input type="hidden" name="hotelId" value={session.hotelId} />
+              )}
 
-        <div style={row}>
-          <label style={labelStyle}>Schlafzimmer</label>
-          <input type="number" name="bedrooms" min={0} style={inputStyle} />
-        </div>
+              <NameSlugFields fieldStyle={fld} labelStyle={lbl} inputStyle={inp} />
 
-        <div style={row}>
-          <label style={labelStyle}>Ausblick</label>
-          <input name="view" placeholder="z. B. Bergblick" style={inputStyle} />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Preis pro Nacht (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="basePrice"
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Reinigungsgebühr (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="cleaningFee"
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ ...row, alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label
-            style={{
-              display: 'flex',
-              gap: 8,
-              alignItems: 'center',
-              paddingTop: 8,
-            }}
-          >
-            <input type="checkbox" name="isActive" defaultChecked />
-            Aktiv
-          </label>
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Sortierung</label>
-          <input
-            type="number"
-            name="sortOrder"
-            defaultValue={0}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Beschreibung</label>
-          <textarea
-            name="description"
-            style={{ ...inputStyle, minHeight: 120 }}
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Ausstattung</label>
-          <div>
-            <textarea
-              name="amenities"
-              placeholder={`Eine Ausstattung pro Zeile, z. B.
-WLAN
-Balkon
-Kaffeemaschine`}
-              style={{ ...inputStyle, minHeight: 140 }}
-            />
-            <div style={{ marginTop: 8, fontSize: 12, color: '#777' }}>
-              Bitte eine Ausstattung pro Zeile eingeben.
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Sortierung</label>
+                  <input type="number" name="sortOrder" defaultValue={0} style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Status</label>
+                  <label style={{ display: 'flex', gap: 8, alignItems: 'center', paddingTop: 11, fontSize: 14, color: '#111' }}>
+                    <input type="checkbox" name="isActive" defaultChecked />
+                    Aktiv
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style={row}>
-          <label style={labelStyle}>Bilder</label>
-          <div style={{ display: 'grid', gap: 12 }}>
-            {[0, 1, 2, 3, 4, 5].map((index) => (
-              <ImageUploadField key={index} index={index} />
-            ))}
+          {/* Kapazität & Details */}
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Kapazität & Details</h2>
+            </div>
+            <div style={cardBody}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Max. Erwachsene</label>
+                  <input type="number" name="maxAdults" defaultValue={2} min={1} style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Max. Kinder</label>
+                  <input type="number" name="maxChildren" defaultValue={0} min={0} style={inp} />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Schlafzimmer</label>
+                  <input type="number" name="bedrooms" min={0} style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Größe (m²)</label>
+                  <input type="number" name="size" min={0} style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Ausblick</label>
+                  <input name="view" placeholder="z. B. Bergblick" style={inp} />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
-          <button className="btn-primary" type="submit" style={{ ...buttonStyle, marginTop: 0 }}>
-            Speichern
-          </button>
-          <a href="/admin/apartments" style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            Abbrechen
-          </a>
-        </div>
-      </form>
+          {/* Preise */}
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Preise</h2>
+            </div>
+            <div style={cardBody}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Preis pro Nacht (€)</label>
+                  <input type="number" step="0.01" name="basePrice" placeholder="0.00" style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Reinigungsgebühr (€)</label>
+                  <input type="number" step="0.01" name="cleaningFee" placeholder="0.00" style={inp} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Beschreibung & Ausstattung */}
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Beschreibung & Ausstattung</h2>
+            </div>
+            <div style={cardBody}>
+              <div style={fld}>
+                <label style={lbl}>Beschreibung</label>
+                <textarea name="description" rows={4} style={{ ...inp, resize: 'vertical' }} />
+              </div>
+              <div style={fld}>
+                <label style={lbl}>Ausstattung <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: '#9ca3af' }}>(eine pro Zeile)</span></label>
+                <textarea
+                  name="amenities"
+                  rows={6}
+                  placeholder={'WLAN\nBalkon\nKaffeemaschine'}
+                  style={{ ...inp, resize: 'vertical' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Bilder */}
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Bilder</h2>
+            </div>
+            <div style={{ padding: '20px', display: 'grid', gap: 12 }}>
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <ImageUploadField key={index} index={index} />
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
+              Apartment anlegen
+            </button>
+            <a href="/admin/apartments" style={{ padding: '11px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+              Abbrechen
+            </a>
+          </div>
+
+        </form>
+      </div>
     </main>
   );
 }

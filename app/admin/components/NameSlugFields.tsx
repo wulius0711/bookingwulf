@@ -11,31 +11,28 @@ function generateSlug(name: string): string {
 }
 
 interface NameSlugFieldsProps {
-  rowStyle: React.CSSProperties;
+  fieldStyle: React.CSSProperties;
   labelStyle: React.CSSProperties;
   inputStyle: React.CSSProperties;
 }
 
-export function NameSlugFields({ rowStyle, labelStyle, inputStyle }: NameSlugFieldsProps) {
+export function NameSlugFields({ fieldStyle, labelStyle, inputStyle }: NameSlugFieldsProps) {
   const [slug, setSlug] = useState('');
   const [autoSlug, setAutoSlug] = useState(true);
 
   return (
     <>
-      <div style={rowStyle}>
-        <label style={labelStyle}>Name</label>
+      <div style={fieldStyle}>
+        <label style={labelStyle}>Name *</label>
         <input
           name="name"
           required
           style={inputStyle}
           onChange={(e) => {
-            if (autoSlug) {
-              setSlug(generateSlug(e.target.value));
-            }
+            if (autoSlug) setSlug(generateSlug(e.target.value));
           }}
         />
       </div>
-
       <input type="hidden" name="slug" value={slug} />
     </>
   );
