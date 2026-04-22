@@ -536,7 +536,13 @@ function PreiseSection() {
       <Step num={4} title="Speichern">
         Die Saison ist sofort aktiv. Bei Überschneidungen gilt die spezifischere Saison.
       </Step>
-      <H2>Dynamische Preise</H2>
+      <H3>Ortstaxe / Kurtaxe</H3>
+      <P>
+        Direkt unter den Preiszeiträumen können Sie eine Abgabe pro Person und Nacht hinterlegen.
+        Der Betrag wird automatisch zur Buchungssumme addiert und in der Buchungsübersicht sowie den
+        Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich ein Mindestalter festlegen —
+        Kinder unter diesem Alter sind von der Abgabe befreit.
+      </P>
       <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
       <P>
         Unter <strong>Preisanpassungen → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
@@ -564,14 +570,6 @@ function PreiseSection() {
         Wenn aktiviert, zeigt das Widget einen Banner unterhalb des Kalenders, sobald weniger als
         X&nbsp;% der Nächte im angezeigten Monat noch frei sind. Der Schwellenwert (Standard&nbsp;40&nbsp;%)
         ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
-      </P>
-
-      <H3>Ortstaxe / Kurtaxe</H3>
-      <P>
-        Hinterlegen Sie eine Abgabe pro Person und Nacht. Der Betrag wird automatisch zur
-        Buchungssumme addiert und in der Buchungsübersicht sowie den Bestätigungs-E-Mails separat
-        ausgewiesen. Optional lässt sich ein Mindestalter festlegen — Kinder unter diesem Alter
-        sind automatisch von der Abgabe befreit.
       </P>
 
       <Note>
