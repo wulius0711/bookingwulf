@@ -154,14 +154,16 @@ export default function BillingPage() {
             )}
           </div>
           {isActive && (
-            <button
-              className="btn-secondary"
-              onClick={openPortal}
-              disabled={actionLoading}
-              style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#374151' }}
-            >
-              Abonnement verwalten
-            </button>
+            <div title={status === 'trialing' ? 'Verfügbar sobald ein kostenpflichtiges Abonnement aktiv ist.' : undefined} style={{ display: 'inline-block' }}>
+              <button
+                className="btn-secondary"
+                onClick={status === 'trialing' ? undefined : openPortal}
+                disabled={actionLoading || status === 'trialing'}
+                style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, fontWeight: 600, cursor: status === 'trialing' ? 'not-allowed' : 'pointer', color: status === 'trialing' ? '#9ca3af' : '#374151', opacity: status === 'trialing' ? 0.6 : 1 }}
+              >
+                Abonnement verwalten
+              </button>
+            </div>
           )}
         </div>
 
