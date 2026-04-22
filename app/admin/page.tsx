@@ -60,7 +60,8 @@ async function SuperAdminDashboard() {
 
   const totalApartments = hotels.reduce((s, h) => s + h._count.apartments, 0);
   const totalRequests   = hotels.reduce((s, h) => s + h._count.requests, 0);
-  const newRequests     = allRequests.find((r) => r.status === 'new')?._count._all ?? 0;
+  const newRequests     = (allRequests.find((r) => r.status === 'new')?._count._all ?? 0)
+                        + (allRequests.find((r) => r.status === 'confirmed')?._count._all ?? 0);
 
   const stats = [
     { label: 'Hotels',     value: hotels.filter((h) => h.isActive).length, href: '/admin/hotels' },
@@ -290,7 +291,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
 
   const byStatus = Object.fromEntries(requestGroups.map((r) => [r.status, r._count._all]));
   const totalRequests = requestGroups.reduce((s, r) => s + r._count._all, 0);
-  const newCount = byStatus['new'] ?? 0;
+  const newCount = (byStatus['new'] ?? 0) + (byStatus['confirmed'] ?? 0);
 
   const stats = [
     { label: 'Apartments', value: hotel._count.apartments, href: '/admin/apartments' },

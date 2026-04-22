@@ -222,7 +222,7 @@ export async function POST(req: Request) {
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
         message: message || null, newsletter,
-        status: bookingType === 'booking' ? 'confirmed' : 'new',
+        status: 'new',
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
       },
