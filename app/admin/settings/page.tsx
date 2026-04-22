@@ -161,6 +161,8 @@ const actionRowStyle: React.CSSProperties = {
   gap: 12,
   alignItems: 'center',
   flexWrap: 'wrap',
+  marginTop: 24,
+  marginBottom: 48,
 };
 
 const primaryButtonStyle: React.CSSProperties = {
