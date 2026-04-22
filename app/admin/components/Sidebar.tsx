@@ -37,8 +37,10 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
 
   if (locked) {
     return (
-      <span
+      <button
+        type="button"
         className={shaking ? 'shake sidebar-nav-item' : 'sidebar-nav-item'}
+        aria-disabled="true"
         onClick={() => { setShaking(true); setTimeout(() => setShaking(false), 400); }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
@@ -54,11 +56,15 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
           color: '#c0c5ce',
           cursor: 'default',
           userSelect: 'none',
+          background: 'none',
+          border: 'none',
+          width: '100%',
+          textAlign: 'left',
         }}
       >
         {label} 🔒
         {showTooltip && upgradeLabel && (
-          <span style={{
+          <span role="tooltip" style={{
             position: 'fixed',
             left: pos.x + 14,
             top: pos.y + 14,
@@ -86,7 +92,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel }: NavItemDef) {
             Ab {upgradeLabel} Plan verfügbar
           </span>
         )}
-      </span>
+      </button>
     );
   }
 
@@ -129,6 +135,7 @@ function NavGroup({ group }: { group: NavGroup }) {
     <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
         style={{
           width: '100%',
           display: 'flex',
@@ -247,8 +254,9 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         }}>
           {(isSuperAdmin ? userHotels.length > 0 : userHotels.length > 1) && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</span>
+              <label htmlFor="hotel-switcher" style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</label>
               <select
+                id="hotel-switcher"
                 value={activeHotelId ?? ''}
                 disabled={switching}
                 onChange={(e) => handleHotelSwitch(e.target.value)}

@@ -118,14 +118,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             justifyContent: 'center',
             gap: 24,
             fontSize: 12,
-            color: '#9ca3af',
+            color: '#6b7280',
           }}
         >
-          <a href="/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Impressum</a>
-          <a href="/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>Datenschutz</a>
-          <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AGB</a>
-          <a href="/avv" target="_blank" rel="noopener noreferrer" style={{ color: '#9ca3af', textDecoration: 'none' }}>AVV</a>
-          <a href="mailto:support@bookingwulf.com" style={{ color: '#9ca3af', textDecoration: 'none' }}>Support</a>
+          <a href="/impressum" target="_blank" rel="noopener noreferrer" style={{ color: '#6b7280', textDecoration: 'none' }}>Impressum</a>
+          <a href="/datenschutz" target="_blank" rel="noopener noreferrer" style={{ color: '#6b7280', textDecoration: 'none' }}>Datenschutz</a>
+          <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: '#6b7280', textDecoration: 'none' }}>AGB</a>
+          <a href="/avv" target="_blank" rel="noopener noreferrer" style={{ color: '#6b7280', textDecoration: 'none' }}>AVV</a>
+          <a href="mailto:support@bookingwulf.com" style={{ color: '#6b7280', textDecoration: 'none' }}>Support</a>
         </footer>
       </div>
 

@@ -578,6 +578,13 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 - Mehrere Gruppen können gleichzeitig offen sein
 - Items werden immer gerendert (nur per `maxHeight` versteckt), damit `data-tour`-Attribute für die Geführte Tour im DOM erreichbar bleiben
 - Logout-Icon im Sidebar-Header (oben rechts)
+- Gesperrte Nav-Items (Plan-Gates) werden als `<button aria-disabled="true">` gerendert (nicht als `<span>`) für Tastaturzugänglichkeit; Akkordeon-Buttons tragen `aria-expanded`; Hotel-Select ist über `<label htmlFor>` beschriftet
+
+### Barrierefreiheit
+
+- **Widget:** Alle Icon-Buttons (`×` Lightbox-Schließen, `‹›` Lightbox-Navigation, `‹›` Kalender-Monatsnavigation, `‹›` Bild-Slider) haben `aria-label`
+- **Admin:** Footer-Links (`#6b7280` statt `#9ca3af`) — WCAG AA (4.8:1 auf Weiß)
+- **ContrastChecker:** Bei Fail wird die nächstähnliche barrierefreie Farbe per Binary-Search auf HSL-Lightness berechnet und als klickbarer Vorschlag angezeigt. Klick setzt den Wert direkt ins Formular-Input und feuert `settings-color-changed` CustomEvent.
 
 ### Kalender — Drag-to-Create
 

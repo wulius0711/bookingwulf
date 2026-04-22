@@ -760,6 +760,13 @@ function EinstellungenSection() {
         Kinder unter diesem Alter sind automatisch von der Abgabe befreit.
       </P>
 
+      <H3>Barrierefreiheits-Check</H3>
+      <P>
+        Unterhalb der Farbfelder zeigt ein WCAG-Kontrast-Checker automatisch an, ob Ihre Farbkombinationen
+        den Mindestkontrast (AA = 4,5:1) erfüllen. Bei einem Fail erscheint ein Vorschlag für die
+        nächstähnliche barrierefreie Farbe — ein Klick darauf übernimmt sie direkt.
+      </P>
+
       <H3>Embed-Code</H3>
       <P>
         Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.

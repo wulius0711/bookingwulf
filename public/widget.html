@@ -2638,14 +2638,14 @@
 
     <div class="lightbox" id="lightbox">
       <div class="lightbox-inner">
-        <button type="button" class="lightbox-close" id="lightboxClose">
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Schließen">
           ×
         </button>
         <div class="lightbox-image-wrap">
-          <button type="button" class="lightbox-nav prev" id="lightboxPrev">
+          <button type="button" class="lightbox-nav prev" id="lightboxPrev" aria-label="Vorheriges Bild">
             ‹
           </button>
-          <button type="button" class="lightbox-nav next" id="lightboxNext">
+          <button type="button" class="lightbox-nav next" id="lightboxNext" aria-label="Nächstes Bild">
             ›
           </button>
           <img id="lightboxImage" class="lightbox-image" src="" alt="" />
@@ -3427,9 +3427,9 @@
             return `
               <div class="cal-month">
                 <div class="cal-month-header">
-                  ${showPrev ? `<button class="cal-nav-btn" id="calPrev">&#8249;</button>` : '<div class="cal-nav-placeholder"></div>'}
+                  ${showPrev ? `<button class="cal-nav-btn" id="calPrev" aria-label="Vorheriger Monat">&#8249;</button>` : '<div class="cal-nav-placeholder"></div>'}
                   <span>${CAL_MONTHS_DE[month]} ${year}</span>
-                  ${showNext ? `<button class="cal-nav-btn" id="calNext">&#8250;</button>` : '<div class="cal-nav-placeholder"></div>'}
+                  ${showNext ? `<button class="cal-nav-btn" id="calNext" aria-label="Nächster Monat">&#8250;</button>` : '<div class="cal-nav-placeholder"></div>'}
                 </div>
                 <div class="cal-weekdays">${weekdaysHTML}</div>
                 <div class="cal-days">${days.join('')}</div>
@@ -3859,8 +3859,8 @@
                 ${
                   imageCount > 1 && state.settings.enableImageSlider
                     ? `
-                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}">&#8249;</button>
-                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}">&#8250;</button>
+                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}" aria-label="Vorheriges Bild">&#8249;</button>
+                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}" aria-label="Nächstes Bild">&#8250;</button>
                       <div class="apt-image-counter">${imageIndex + 1} / ${imageCount}</div>
                     `
                     : ''

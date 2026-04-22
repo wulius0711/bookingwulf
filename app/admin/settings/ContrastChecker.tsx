@@ -31,6 +31,89 @@ function contrastRatio(hex1: string, hex2: string): number | null {
   return Math.round(((lighter + 0.05) / (darker + 0.05)) * 10) / 10;
 }
 
+function hexToHsl(hex: string): [number, number, number] | null {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return null;
+  const r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return [h * 360, s * 100, l * 100];
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const hN = h / 360, sN = s / 100, lN = l / 100;
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  let r, g, b;
+  if (sN === 0) {
+    r = g = b = lN;
+  } else {
+    const q = lN < 0.5 ? lN * (1 + sN) : lN + sN - lN * sN;
+    const p = 2 * lN - q;
+    r = hue2rgb(p, q, hN + 1 / 3);
+    g = hue2rgb(p, q, hN);
+    b = hue2rgb(p, q, hN - 1 / 3);
+  }
+  return '#' + [r, g, b].map((x) => Math.round(x * 255).toString(16).padStart(2, '0')).join('');
+}
+
+function findAccessibleColor(textHex: string, bgHex: string, minRatio = 4.5): string | null {
+  const hsl = hexToHsl(textHex);
+  const bgRgb = hexToRgb(bgHex);
+  if (!hsl || !bgRgb) return null;
+  const [h, s, currentL] = hsl;
+  const bgLum = relativeLuminance(...bgRgb);
+  const lightenText = bgLum < 0.18;
+
+  if (lightenText) {
+    // dark background → lighten text; find lowest L that still passes
+    let lo = currentL, hi = 100;
+    if ((contrastRatio(hslToHex(h, s, hi), bgHex) ?? 0) < minRatio) return null;
+    for (let i = 0; i < 20; i++) {
+      const mid = (lo + hi) / 2;
+      if ((contrastRatio(hslToHex(h, s, mid), bgHex) ?? 0) >= minRatio) hi = mid;
+      else lo = mid;
+    }
+    return hslToHex(h, s, hi);
+  } else {
+    // light background → darken text; find highest L that still passes
+    let lo = 0, hi = currentL;
+    if ((contrastRatio(hslToHex(h, s, lo), bgHex) ?? 0) < minRatio) return null;
+    for (let i = 0; i < 20; i++) {
+      const mid = (lo + hi) / 2;
+      if ((contrastRatio(hslToHex(h, s, mid), bgHex) ?? 0) >= minRatio) lo = mid;
+      else hi = mid;
+    }
+    return hslToHex(h, s, lo);
+  }
+}
+
+function applyColor(fieldName: string, value: string) {
+  const input = document.querySelector(`input[name="${fieldName}"]`) as HTMLInputElement | null;
+  if (input) {
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  document.dispatchEvent(new CustomEvent('settings-color-changed', { detail: { name: fieldName, value } }));
+}
+
 function Badge({ ratio }: { ratio: number | null }) {
   if (ratio === null) return null;
   const aa = ratio >= 4.5;
@@ -45,6 +128,34 @@ function Badge({ ratio }: { ratio: number | null }) {
     }}>
       {ratio}:1 {aaa ? '✓ AAA' : aa ? '✓ AA' : '✗ Fail'}
     </span>
+  );
+}
+
+function Suggestion({ suggested, fieldName, onApply }: { suggested: string; fieldName: string; onApply: (color: string) => void }) {
+  const [copied, setCopied] = useState(false);
+
+  function apply() {
+    applyColor(fieldName, suggested);
+    onApply(suggested);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={apply}
+      title={`${suggested} übernehmen`}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 6,
+        background: '#fff', border: '1px solid #d1d5db', cursor: 'pointer',
+        color: '#374151',
+      }}
+    >
+      <span style={{ width: 12, height: 12, borderRadius: 3, background: suggested, border: '1px solid rgba(0,0,0,0.1)', flexShrink: 0 }} />
+      {copied ? '✓ Übernommen' : suggested}
+    </button>
   );
 }
 
@@ -77,10 +188,10 @@ export default function ContrastChecker({
     return () => document.removeEventListener('settings-color-changed', handler);
   }, []);
 
-  const pairs = [
-    { label: 'Text auf Hintergrund', a: colors.textColor, b: colors.backgroundColor },
-    { label: 'Button-Text auf Accent', a: colors.buttonColor, b: colors.accentColor },
-    { label: 'Accent auf Hintergrund', a: colors.accentColor, b: colors.backgroundColor },
+  const pairs: { label: string; a: string; aField: string; b: string }[] = [
+    { label: 'Text auf Hintergrund',    a: colors.textColor,   aField: 'textColor',   b: colors.backgroundColor },
+    { label: 'Button-Text auf Accent',  a: colors.buttonColor, aField: 'buttonColor', b: colors.accentColor },
+    { label: 'Accent auf Hintergrund',  a: colors.accentColor, aField: 'accentColor', b: colors.backgroundColor },
   ];
 
   return (
@@ -88,13 +199,29 @@ export default function ContrastChecker({
       <div style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 10 }}>
         Barrierefreiheit (WCAG Kontrast)
       </div>
-      <div style={{ display: 'grid', gap: 8 }}>
-        {pairs.map(({ label, a, b }) => {
-          const ratio = contrastRatio(a.startsWith('#') ? a : '#111111', b.startsWith('#') ? b : '#ffffff');
+      <div style={{ display: 'grid', gap: 10 }}>
+        {pairs.map(({ label, a, aField, b }) => {
+          const aHex = a.startsWith('#') ? a : '#111111';
+          const bHex = b.startsWith('#') ? b : '#ffffff';
+          const ratio = contrastRatio(aHex, bHex);
+          const fails = ratio !== null && ratio < 4.5;
+          const suggested = fails ? findAccessibleColor(aHex, bHex) : null;
           return (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, color: '#374151' }}>{label}</span>
-              <Badge ratio={ratio} />
+            <div key={label} style={{ display: 'grid', gap: 4 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 12, color: '#374151' }}>{label}</span>
+                <Badge ratio={ratio} />
+              </div>
+              {suggested && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingLeft: 2 }}>
+                  <span style={{ fontSize: 11, color: '#6b7280' }}>Vorschlag:</span>
+                  <Suggestion
+                    suggested={suggested}
+                    fieldName={aField}
+                    onApply={(color) => setColors((prev) => ({ ...prev, [aField]: color }))}
+                  />
+                </div>
+              )}
             </div>
           );
         })}
