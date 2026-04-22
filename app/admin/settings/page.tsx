@@ -277,7 +277,7 @@ export default async function Page({ searchParams }: PageProps) {
         <div className="settings-left-panel" style={leftPanelStyle}>
           <div style={topBarStyle}>
             <div>
-              <h1 style={headlineStyle}>Hotel Settings</h1>
+              <h1 style={headlineStyle}>Widget Settings</h1>
               <p style={sublineStyle}>
                 Daten, Design und Funktionen für Ihr Hotel konfigurieren.
               </p>
