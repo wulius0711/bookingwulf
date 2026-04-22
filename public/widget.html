@@ -4660,26 +4660,28 @@
               );
               return false;
             }
-            let birthdayValid = true;
-            for (let i = 0; i < (state.children || 0); i++) {
-              const el = document.getElementById(`childBirthday_${i}`);
-              const errId = `childBirthday_${i}_err`;
-              let errEl = document.getElementById(errId);
-              if (!errEl) {
-                errEl = document.createElement('div');
-                errEl.id = errId;
-                errEl.style.cssText =
-                  'color:var(--danger);font-size:12px;margin-top:4px;';
-                el && el.parentNode && el.parentNode.appendChild(errEl);
+            if (state.settings.enableInstantBooking) {
+              let birthdayValid = true;
+              for (let i = 0; i < (state.children || 0); i++) {
+                const el = document.getElementById(`childBirthday_${i}`);
+                const errId = `childBirthday_${i}_err`;
+                let errEl = document.getElementById(errId);
+                if (!errEl) {
+                  errEl = document.createElement('div');
+                  errEl.id = errId;
+                  errEl.style.cssText =
+                    'color:var(--danger);font-size:12px;margin-top:4px;';
+                  el && el.parentNode && el.parentNode.appendChild(errEl);
+                }
+                if (!el || !el.value) {
+                  errEl.textContent = 'Dieses Feld darf nicht leer bleiben.';
+                  birthdayValid = false;
+                } else {
+                  errEl.textContent = '';
+                }
               }
-              if (!el || !el.value) {
-                errEl.textContent = 'Dieses Feld darf nicht leer bleiben.';
-                birthdayValid = false;
-              } else {
-                errEl.textContent = '';
-              }
+              if (!birthdayValid) return false;
             }
-            if (!birthdayValid) return false;
           }
 
           if (step === 2) {
