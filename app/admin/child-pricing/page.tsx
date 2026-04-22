@@ -42,6 +42,19 @@ export default async function ChildPricingPage() {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <style>{`
+        .child-range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #f9fafb; }
+        .child-range-label { flex: 1 1 120px; color: #374151; font-size: 14px; }
+        .child-range-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+        .child-range-meta span { font-size: 13px; color: #6b7280; white-space: nowrap; }
+        .child-range-meta strong { color: #111827; }
+        .child-form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; gap: 12px; align-items: end; }
+        @media (max-width: 640px) {
+          .child-form-grid { grid-template-columns: 1fr 1fr; }
+          .child-form-label-field { grid-column: 1 / -1; }
+          .child-form-submit { grid-column: 1 / -1; }
+        }
+      `}</style>
       <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         <div>
@@ -65,35 +78,27 @@ export default async function ChildPricingPage() {
                 Noch keine Altersgruppen definiert. Kinder sind standardmäßig kostenlos.
               </div>
             ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                    {['Bezeichnung', 'Alter von', 'Alter bis', 'Preis / Nacht', ''].map(h => (
-                      <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {ranges.map(r => (
-                    <tr key={r.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                      <td style={{ padding: '12px 16px', color: '#374151' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</td>
-                      <td style={{ padding: '12px 16px', color: '#374151' }}>{r.minAge} Jahre</td>
-                      <td style={{ padding: '12px 16px', color: '#374151' }}>{r.maxAge} Jahre</td>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : '#111827' }}>
-                        {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)}`}
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <form action={deleteChildPriceRange}>
-                          <input type="hidden" name="id" value={r.id} />
-                          <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
-                            Löschen
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div>
+                {ranges.map(r => (
+                  <div key={r.id} className="child-range-row">
+                    <div className="child-range-label">
+                      {r.label || <span style={{ color: '#9ca3af' }}>—</span>}
+                    </div>
+                    <div className="child-range-meta">
+                      <span>{r.minAge}–{r.maxAge} Jahre</span>
+                      <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : '#111827' }}>
+                        {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
+                      </span>
+                    </div>
+                    <form action={deleteChildPriceRange} style={{ marginLeft: 'auto' }}>
+                      <input type="hidden" name="id" value={r.id} />
+                      <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626', whiteSpace: 'nowrap' }}>
+                        Löschen
+                      </button>
+                    </form>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}
@@ -111,8 +116,8 @@ export default async function ChildPricingPage() {
             <form action={createChildPriceRange} style={{ display: 'grid', gap: 16 }}>
               <input type="hidden" name="hotelId" value={hotelId} />
 
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 80px', gap: 12, alignItems: 'end' }}>
-                <div>
+              <div className="child-form-grid">
+                <div className="child-form-label-field">
                   <label style={labelStyle}>Bezeichnung <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af' }}>(optional)</span></label>
                   <input name="label" placeholder="z. B. Kleinkind, Kind" style={inputStyle} />
                 </div>
@@ -134,7 +139,7 @@ export default async function ChildPricingPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="child-form-submit">
                 <button type="submit" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                   Hinzufügen
                 </button>
