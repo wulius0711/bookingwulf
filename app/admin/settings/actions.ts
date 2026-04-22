@@ -78,10 +78,6 @@ export async function saveHotelSettings(formData: FormData) {
 
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
 
-      preArrivalEnabled: getBool('preArrivalEnabled'),
-      preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
-      preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
-
     },
     create: {
       hotelId,

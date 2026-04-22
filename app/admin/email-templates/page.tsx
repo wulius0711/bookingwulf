@@ -56,7 +56,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -92,6 +92,29 @@ export default async function EmailTemplatesPage() {
     revalidatePath('/admin/email-templates');
   }
 
+  async function saveCheckinSettings(formData: FormData) {
+    'use server';
+    const session = await verifySession();
+    if (session.hotelId === null) return;
+    await prisma.hotelSettings.upsert({
+      where: { hotelId: session.hotelId },
+      update: {
+        preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
+        preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
+        preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      },
+      create: {
+        hotelId: session.hotelId,
+        preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
+        preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
+        preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      },
+    });
+    revalidatePath('/admin/email-templates');
+  }
+
+  const s = hotel?.settings;
+
   const labelStyle: React.CSSProperties = {
     fontSize: 12,
     fontWeight: 700,
@@ -115,9 +138,9 @@ export default async function EmailTemplatesPage() {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 720 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111', marginBottom: 6 }}>E-Mail Templates</h1>
+      <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111', marginBottom: 6 }}>Benachrichtigungen</h1>
       <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 28 }}>
-        Betreff und Fließtext der automatischen E-Mails anpassen.
+        E-Mail-Vorlagen und automatische Gäste-Benachrichtigungen konfigurieren.
       </p>
 
 
@@ -220,6 +243,42 @@ export default async function EmailTemplatesPage() {
         </div>
         {!hasPro && <ProLockOverlay />}
       </div>
+
+      {/* ONLINE CHECK-IN */}
+      {hotel && (
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', marginTop: 24 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Online Check-in</h2>
+          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
+            Gäste erhalten nach der Buchungsbestätigung einen persönlichen Check-in-Link.
+            Automatische Erinnerung X Tage vor Anreise falls noch nicht ausgefüllt.
+          </p>
+          <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+              <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false}
+                style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+              <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Online Check-in aktivieren</span>
+            </label>
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
+              <input type="number" name="preArrivalReminderDays" min="1" max="14"
+                defaultValue={s?.preArrivalReminderDays ?? 3}
+                style={{ ...inputStyle, width: 120 }} />
+            </div>
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={labelStyle}>Hausordnung <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional — Gast muss bestätigen)</span></label>
+              <textarea name="preArrivalHouseRules" rows={5}
+                defaultValue={s?.preArrivalHouseRules ?? ''}
+                placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
+                style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+            </div>
+            <div>
+              <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
+                Speichern
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </main>
   );
 }

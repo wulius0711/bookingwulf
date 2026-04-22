@@ -14,7 +14,7 @@ const sections = [
   { id: 'preise',        title: 'Preisanpassungen',       plan: null,       content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
-  { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
+  { id: 'emails',        title: 'E-Mails & Check-in',    plan: null,       content: EmailsSection },
   { id: 'einstellungen', title: 'Widget & Design',         plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
@@ -666,12 +666,13 @@ function ExtrasSection() {
 function EmailsSection() {
   return (
     <div>
-      <H2>E-Mail Templates</H2>
-      <PlanNote plan="Pro" />
+      <H2>E-Mails & Check-in</H2>
       <P>
-        Unter <strong>E-Mail Templates</strong> können Sie die automatisch versendeten E-Mails
-        individuell anpassen — Anrede, Inhalt und Signatur.
+        Unter <strong>Konfiguration → E-Mails</strong> passen Sie automatische E-Mails an und
+        konfigurieren den Online Check-in für Gäste.
       </P>
+      <H3>E-Mail Templates <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
+      <P>Betreff, Anrede, Fließtext und Verabschiedung der automatischen E-Mails individuell anpassen.</P>
       <H3>Automatisch versendete E-Mails</H3>
       <div style={{ display: 'grid', gap: 8, margin: '12px 0' }}>
         {[
@@ -698,6 +699,17 @@ function EmailsSection() {
         wird keine automatische Mail ausgelöst — ideal wenn Sie direkt per Telefon oder E-Mail
         geantwortet haben.
       </Note>
+
+      <H3>Online Check-in</H3>
+      <P>
+        Gäste erhalten nach der Buchungsbestätigung einen persönlichen Link zu einem Formular,
+        in dem sie ihre Ankunftszeit und optionale Hinweise angeben können. Falls eine Hausordnung
+        hinterlegt ist, muss der Gast diese bestätigen.
+      </P>
+      <P>
+        Der Betreiber sieht in der Buchungsdetailansicht ob der Check-in ausgefüllt wurde.
+        Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls noch nicht ausgefüllt.
+      </P>
     </div>
   );
 }
@@ -752,24 +764,6 @@ function EinstellungenSection() {
           </div>
         ))}
       </div>
-
-      <H3>Preistools</H3>
-      <P>
-        Dynamische Preisanpassungen (Verfügbarkeits-Hinweise, Lücken-Rabatt, Ortstaxe/Kurtaxe)
-        finden Sie unter <InternalLink id="preise">Preisanpassungen</InternalLink> in der Navigation.
-      </P>
-
-      <H3>Online Check-in</H3>
-      <P>
-        Mit dem <strong>Online Check-in</strong> erhalten Gäste nach der Buchungsbestätigung einen
-        persönlichen Link zu einem Formular, in dem sie ihre geplante Ankunftszeit und optionale
-        Hinweise angeben können. Falls eine Hausordnung hinterlegt ist, muss der Gast diese bestätigen.
-      </P>
-      <P>
-        Der Betreiber sieht in der Buchungsdetailansicht, ob der Check-in ausgefüllt wurde (mit Ankunftszeit
-        und Hinweisen). Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls das
-        Formular bis dahin noch nicht ausgefüllt wurde. Die Anzahl der Tage ist in den Einstellungen konfigurierbar.
-      </P>
 
       <H3>Barrierefreiheits-Check</H3>
       <P>
