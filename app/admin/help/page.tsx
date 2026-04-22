@@ -14,7 +14,6 @@ const sections = [
   { id: 'preise',        title: 'Preisanpassungen',       plan: 'Pro',      content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
-  { id: 'child-pricing', title: 'Kinderpreise',          plan: null,       content: ChildPricingSection },
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
   { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
@@ -572,6 +571,17 @@ function PreiseSection() {
         ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
       </P>
 
+      <H3>Kinderpreise</H3>
+      <P>
+        Direkt unter der Ortstaxe-Karte können Preise pro Kind und Nacht nach Altersgruppen definiert werden — ohne Saisonbindung.
+        Kinder deren Alter keiner Gruppe entspricht, sind automatisch kostenlos.
+        Tragen Sie Bezeichnung (optional), Alter von/bis und Preis pro Nacht ein — für kostenlose Gruppen Preis 0.
+      </P>
+      <Tip>
+        <strong>Beispiel:</strong> 0–6 Jahre → € 0, 7–16 Jahre → € 15 / Nacht.<br />
+        Das Widget berechnet den Aufschlag automatisch und weist ihn im Preis-Popover je Kind aus.
+      </Tip>
+
       <Note>
         <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
         unter <InternalLink id="sperrzeiten">Sperrzeiten</InternalLink> verwaltet.
@@ -653,33 +663,6 @@ function ExtrasSection() {
         <strong>Tipp:</strong> Halten Sie Zusatzleistungen kurz und klar — zu viele Optionen
         können Gäste überfordern.
       </Tip>
-    </div>
-  );
-}
-
-function ChildPricingSection() {
-  return (
-    <div>
-      <H2>Kinderpreise</H2>
-      <PlanNote plan="Pro" />
-      <P>
-        Definieren Sie Preise pro Kind und Nacht nach Altersgruppen — ohne Saisonbindung.
-        Kinder deren Alter keiner Gruppe entspricht, sind automatisch kostenlos.
-      </P>
-      <H3>Altersgruppen anlegen</H3>
-      <P>
-        Tragen Sie für jede Gruppe ein: Bezeichnung (optional, z.B. „Kleinkind"), Alter von, Alter bis und Preis pro Nacht.
-        Für kostenlose Gruppen (z.B. 0–6 Jahre) einfach Preis 0 eingeben.
-      </P>
-      <Tip>
-        <strong>Beispiel:</strong> 0–6 Jahre → € 0, 7–16 Jahre → € 15 / Nacht.<br />
-        Das Widget berechnet den Aufschlag automatisch anhand des Geburtsdatums, das Gäste bei der Buchung angeben.
-      </Tip>
-      <H3>Anzeige im Widget</H3>
-      <P>
-        Der Kinderaufschlag wird im Preis-Popover je Kind einzeln ausgewiesen (Name, Alter, Preis × Nächte)
-        und in den Gesamtbetrag eingerechnet. Gratis-Kinder erscheinen mit dem Hinweis „Gratis".
-      </P>
     </div>
   );
 }
