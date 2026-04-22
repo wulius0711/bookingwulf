@@ -73,7 +73,7 @@ export async function GET(req: Request) {
     }
 
     // Collect blocked nights
-    const blocked = await prisma.blockedDate.findMany({
+    const blocked = await prisma.blockedRange.findMany({
       where: {
         hotelId: hotel.id,
         startDate: { lte: monthEnd },
