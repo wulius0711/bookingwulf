@@ -10,7 +10,6 @@ import { createChildPriceRange, deleteChildPriceRange } from '../child-pricing/a
 
 export const dynamic = 'force-dynamic';
 
-type PageProps = { searchParams: Promise<{ hotel?: string }> };
 
 async function deleteSeason(formData: FormData) {
   'use server';
@@ -95,19 +94,11 @@ async function saveDynamicPricing(formData: FormData) {
   revalidatePath('/admin/price-seasons');
 }
 
-export default async function PriceSeasonsPage({ searchParams }: PageProps) {
+export default async function PriceSeasonsPage() {
   const session = await verifySession();
-  const { hotel } = await searchParams;
 
   const isSuperAdmin = session.hotelId === null;
-
-  const hotels = isSuperAdmin
-    ? await prisma.hotel.findMany({ where: { isActive: true }, orderBy: { name: 'asc' }, select: { id: true, name: true } })
-    : [];
-
-  const selectedHotelId = isSuperAdmin
-    ? (hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : null)
-    : session.hotelId;
+  const selectedHotelId = session.hotelId;
 
   const hotelData = selectedHotelId !== null
     ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } } } })
@@ -136,32 +127,6 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
         <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Preisanpassungen</h1>
         <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
       </div>
-
-      {isSuperAdmin && (
-        <form method="GET" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
-          <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
-            Hotel
-          </label>
-          <select
-            name="hotel"
-            defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
-            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
-          >
-            <option value="">Alle Hotels</option>
-            {hotels.map((h) => (
-              <option key={h.id} value={h.id}>{h.name}</option>
-            ))}
-          </select>
-          <button type="submit" style={{ padding: '8px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#111', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            Filtern
-          </button>
-          {selectedHotelId !== null && (
-            <a href="/admin/price-seasons" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>
-              Zurücksetzen
-            </a>
-          )}
-        </form>
-      )}
 
       {/* Seasons list */}
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
