@@ -57,11 +57,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
       { href: '/admin/extras', label: 'Zusatzleistungen' },
     ]},
-    { label: 'Einstellungen', items: [
+    { label: 'Konfiguration', items: [
       { href: '/admin/email-templates', label: 'E-Mail Templates' },
       { href: '/admin/nuki', label: 'Schlüsselloses Einchecken' },
       { href: '/admin/beds24', label: 'Beds24 Channel Manager' },
-      { href: '/admin/settings', label: 'Einstellungen (Code)' },
+      { href: '/admin/settings', label: 'Widget & Design' },
     ]},
     { label: 'Konto', items: [
       { href: '/admin/billing', label: 'Abonnement' },
