@@ -49,10 +49,10 @@ export async function GET(req: Request) {
     const totalNights = allNights.size;
 
     // Collect booked nights from confirmed/pending bookings
-    const bookings = await prisma.booking.findMany({
+    const bookings = await prisma.request.findMany({
       where: {
         hotelId: hotel.id,
-        status: { in: ['confirmed', 'pending'] },
+        status: { in: ['booked', 'new', 'answered'] },
         arrival: { lte: monthEnd },
         departure: { gt: rangeStart },
       },
