@@ -207,8 +207,7 @@
           url.searchParams.set('arrival', arrivalEl.value);
           url.searchParams.set('departure', departureEl.value);
           url.searchParams.set('type', type);
-          window.parent.postMessage({ type: 'mini-widget-navigate', url: url.toString() }, '*');
-          window.top.location.href = url.toString();
+          window.open(url.toString(), '_top');
         }
 
         function renderButtons() {
