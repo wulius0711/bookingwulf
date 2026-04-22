@@ -769,8 +769,8 @@ function EinstellungenSection() {
       </P>
       <P>
         Der Betreiber sieht in der Buchungsdetailansicht, ob der Check-in ausgefüllt wurde (mit Ankunftszeit
-        und Hinweisen). Eine automatische Erinnerungsmail wird X Tage vor Anreise versandt, falls das
-        Formular noch nicht ausgefüllt ist. Anzahl der Tage in den Einstellungen konfigurierbar.
+        und Hinweisen). Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls das
+        Formular bis dahin noch nicht ausgefüllt wurde. Die Anzahl der Tage ist in den Einstellungen konfigurierbar.
       </P>
 
       <H3>Lücken-Rabatt</H3>

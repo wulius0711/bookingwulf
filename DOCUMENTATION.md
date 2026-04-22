@@ -591,7 +591,7 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 2. Bei Status → `booked`: `crypto.randomUUID()` generiert Token, wird in `Request.checkinToken` gespeichert
 3. Bestätigungsmail enthält zusätzlichen „Jetzt einchecken →"-Button mit Link `/checkin/[token]`
 4. Gast öffnet `/checkin/[token]` (öffentliche Seite, kein Login): Ankunftszeit wählen, Notizen, Hausordnung akzeptieren → speichert `checkinCompletedAt`, `checkinArrivalTime`, `checkinNotes`
-5. Cron `/api/cron/pre-arrival-reminder` läuft täglich 09:00 UTC: sendet Erinnerungsmail an Gäste die X Tage vor Anreise noch nicht eingecheckt haben, setzt `checkinReminderSentAt`
+5. Cron `/api/cron/pre-arrival-reminder` läuft täglich 09:00 UTC und prüft, ob heute = Anreisetag − X Tage ist. Jeder Gast erhält genau eine Erinnerungsmail (Guard: `checkinReminderSentAt IS NULL`), danach wird `checkinReminderSentAt` gesetzt
 6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit und Notizen
 
 ### Gap-Night-Preise
