@@ -280,9 +280,14 @@ Kaffeemaschine`}
           </div>
         </div>
 
-        <button className="btn-primary" type="submit" style={buttonStyle}>
-          Speichern
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+          <button className="btn-primary" type="submit" style={{ ...buttonStyle, marginTop: 0 }}>
+            Speichern
+          </button>
+          <a href="/admin/apartments" style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            Abbrechen
+          </a>
+        </div>
       </form>
     </main>
   );

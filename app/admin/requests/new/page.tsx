@@ -159,10 +159,13 @@ export default async function NewRequestPage({ searchParams }: PageProps) {
                 <textarea name="message" rows={3} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Interne Notiz oder Gästewunsch …" />
               </div>
 
-              <div style={{ paddingTop: 4 }}>
+              <div style={{ paddingTop: 4, display: 'flex', gap: 10 }}>
                 <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
                   Speichern
                 </button>
+                <a href="/admin/requests" style={{ padding: '11px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                  Abbrechen
+                </a>
               </div>
 
             </form>

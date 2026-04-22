@@ -94,24 +94,28 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
           </span>
         </label>
 
-        <button
-          type="submit"
-          disabled={pending}
-          style={{
-            marginTop: 8,
-            padding: '12px 20px',
-            borderRadius: 8,
-            background: '#111',
-            color: '#fff',
-            border: 'none',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: pending ? 'not-allowed' : 'pointer',
-            opacity: pending ? 0.6 : 1,
-          }}
-        >
-          {pending ? 'Wird angelegt…' : 'Benutzer anlegen'}
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+          <button
+            type="submit"
+            disabled={pending}
+            style={{
+              padding: '12px 20px',
+              borderRadius: 8,
+              background: '#111',
+              color: '#fff',
+              border: 'none',
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: pending ? 'not-allowed' : 'pointer',
+              opacity: pending ? 0.6 : 1,
+            }}
+          >
+            {pending ? 'Wird angelegt…' : 'Benutzer anlegen'}
+          </button>
+          <a href="/admin/users" style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            Abbrechen
+          </a>
+        </div>
       </form>
     </main>
   );
