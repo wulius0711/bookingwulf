@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Mini Widget</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --accent: #111111;
+        --bg: #ffffff;
+        --text: #111111;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --radius: 8px;
+        --button-radius: 8px;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+
+      body {
+        background: transparent;
+        padding: 0;
+      }
+
+      .mini-widget {
+        background: var(--bg);
+        border: 1.5px solid var(--line);
+        border-radius: calc(var(--radius) + 8px);
+        padding: 20px 20px 20px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .mini-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: -0.02em;
+      }
+
+      .mini-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .mini-field {
+        position: relative;
+        flex: 1 1 140px;
+        min-width: 120px;
+      }
+
+      .mini-field input[type="date"] {
+        width: 100%;
+        padding: 10px 36px 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .mini-field input[type="date"]:focus {
+        border-color: var(--accent);
+      }
+
+      .mini-field input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0.4;
+        cursor: pointer;
+      }
+
+      .mini-field .field-label {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: var(--muted);
+        pointer-events: none;
+        transition: opacity 0.15s;
+      }
+
+      .mini-field input[type="date"]:not(:placeholder-shown) + .field-label,
+      .mini-field input[type="date"]:focus + .field-label,
+      .mini-field input[type="date"].has-value + .field-label {
+        opacity: 0;
+      }
+
+      .mini-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .mini-btn {
+        flex: 1 1 100px;
+        padding: 10px 18px;
+        border: none;
+        border-radius: var(--button-radius);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--accent);
+        color: #fff;
+        font-family: inherit;
+        transition: opacity 0.15s;
+        white-space: nowrap;
+      }
+
+      .mini-btn:hover { opacity: 0.85; }
+      .mini-btn:disabled { opacity: 0.5; cursor: default; }
+
+      .mini-btn.secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 1.5px solid var(--accent);
+      }
+
+      .mini-error {
+        font-size: 13px;
+        color: #dc2626;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mini-widget">
+      <div class="mini-title" id="miniTitle">Anfragen &amp; Buchen</div>
+      <div class="mini-row">
+        <div class="mini-field">
+          <input type="date" id="miniArrival" placeholder=" " />
+          <span class="field-label">Anreise</span>
+        </div>
+        <div class="mini-field">
+          <input type="date" id="miniDeparture" placeholder=" " />
+          <span class="field-label">Abreise</span>
+        </div>
+        <div class="mini-actions" id="miniActions">
+          <!-- buttons rendered by JS based on settings -->
+        </div>
+      </div>
+      <div class="mini-error" id="miniError">Bitte Anreise und Abreise auswählen.</div>
+    </div>
+
+    <script>
+      (() => {
+        const API_BASE = '';
+        const qp = new URLSearchParams(window.location.search);
+        const HOTEL_SLUG = qp.get('hotel') || 'default';
+        const WIDGET_CONFIG = qp.get('config') || '';
+        const BOOKING_PAGE = qp.get('target') || (API_BASE + '/widget.html');
+
+        let accentColor = null;
+        let bgColor = null;
+        let buttonRadius = null;
+        let cardRadius = null;
+        let enableInstantBooking = false;
+        let hideRequestOption = false;
+        let title = 'Anfragen & Buchen';
+
+        const arrivalEl = document.getElementById('miniArrival');
+        const departureEl = document.getElementById('miniDeparture');
+        const actionsEl = document.getElementById('miniActions');
+        const errorEl = document.getElementById('miniError');
+        const titleEl = document.getElementById('miniTitle');
+
+        // Today as min date
+        const todayStr = new Date().toISOString().slice(0, 10);
+        arrivalEl.min = todayStr;
+        departureEl.min = todayStr;
+
+        arrivalEl.addEventListener('change', () => {
+          arrivalEl.classList.toggle('has-value', !!arrivalEl.value);
+          if (arrivalEl.value) {
+            const next = new Date(arrivalEl.value);
+            next.setDate(next.getDate() + 1);
+            departureEl.min = next.toISOString().slice(0, 10);
+            if (departureEl.value && departureEl.value <= arrivalEl.value) {
+              next.setDate(next.getDate() + 1);
+              departureEl.value = next.toISOString().slice(0, 10);
+              departureEl.classList.add('has-value');
+            }
+          }
+          errorEl.style.display = 'none';
+        });
+
+        departureEl.addEventListener('change', () => {
+          departureEl.classList.toggle('has-value', !!departureEl.value);
+          errorEl.style.display = 'none';
+        });
+
+        function navigate(type) {
+          if (!arrivalEl.value || !departureEl.value) {
+            errorEl.style.display = 'block';
+            return;
+          }
+          const url = new URL(BOOKING_PAGE, window.location.href);
+          url.searchParams.set('hotel', HOTEL_SLUG);
+          if (WIDGET_CONFIG) url.searchParams.set('config', WIDGET_CONFIG);
+          url.searchParams.set('arrival', arrivalEl.value);
+          url.searchParams.set('departure', departureEl.value);
+          url.searchParams.set('type', type);
+          window.parent.postMessage({ type: 'mini-widget-navigate', url: url.toString() }, '*');
+          // Also navigate directly if not in iframe
+          if (window.parent === window) window.location.href = url.toString();
+        }
+
+        function renderButtons() {
+          actionsEl.innerHTML = '';
+          if (!hideRequestOption) {
+            const reqBtn = document.createElement('button');
+            reqBtn.className = 'mini-btn' + (enableInstantBooking ? ' secondary' : '');
+            reqBtn.textContent = 'Anfrage';
+            reqBtn.addEventListener('click', () => navigate('request'));
+            actionsEl.appendChild(reqBtn);
+          }
+          if (enableInstantBooking) {
+            const bookBtn = document.createElement('button');
+            bookBtn.className = 'mini-btn';
+            bookBtn.textContent = 'Buchen';
+            bookBtn.addEventListener('click', () => navigate('booking'));
+            actionsEl.appendChild(bookBtn);
+          }
+          if (!enableInstantBooking && hideRequestOption) {
+            const reqBtn = document.createElement('button');
+            reqBtn.className = 'mini-btn';
+            reqBtn.textContent = 'Anfrage';
+            reqBtn.addEventListener('click', () => navigate('request'));
+            actionsEl.appendChild(reqBtn);
+          }
+        }
+
+        async function loadSettings() {
+          try {
+            const res = await fetch(
+              `${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}`
+            );
+            if (!res.ok) return;
+            const data = await res.json();
+            const ft = data.featureToggles || {};
+            const theme = data.theme || {};
+
+            enableInstantBooking = ft.enableInstantBooking === true;
+            hideRequestOption = ft.hideRequestOption === true;
+
+            if (theme.accentColor) accentColor = theme.accentColor;
+            if (theme.backgroundColor) bgColor = theme.backgroundColor;
+            if (theme.buttonRadius != null) buttonRadius = theme.buttonRadius;
+            if (theme.cardRadius != null) cardRadius = theme.cardRadius;
+
+            // Apply theme
+            const root = document.documentElement;
+            if (accentColor) root.style.setProperty('--accent', accentColor);
+            if (bgColor) root.style.setProperty('--bg', bgColor);
+            if (buttonRadius != null) root.style.setProperty('--button-radius', buttonRadius + 'px');
+            if (cardRadius != null) root.style.setProperty('--radius', cardRadius + 'px');
+
+            renderButtons();
+
+            // Update title based on mode
+            if (enableInstantBooking && hideRequestOption) {
+              titleEl.textContent = 'Jetzt buchen';
+            } else if (enableInstantBooking) {
+              titleEl.textContent = 'Anfragen & Buchen';
+            } else {
+              titleEl.textContent = 'Jetzt anfragen';
+            }
+          } catch (e) {
+            console.error('Mini widget settings error:', e);
+            renderButtons();
+          }
+        }
+
+        // Post height to parent
+        function postHeight() {
+          if (window.parent === window) return;
+          const h = document.body.scrollHeight + 8;
+          window.parent.postMessage({ type: 'mini-widget-height', height: h }, '*');
+        }
+
+        renderButtons();
+        loadSettings().then(() => {
+          postHeight();
+          new ResizeObserver(postHeight).observe(document.body);
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -396,6 +396,29 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 Das Widget verwendet CSS-Variablen, die von `/api/hotel-settings` befüllt werden:
 `--accent`, `--bg`, `--surface-2`, `--text`, `--muted`, `--border`, `--radius`, `--btn-radius`, etc.
 
+### Mini-Widget (`/public/mini-widget.html`)
+
+Kompaktes Datepicker-Bar-Widget für einfache Einbindung auf Landing Pages. Zeigt nur Anreise/Abreise-Felder + Anfrage/Buchen-Buttons. Beim Klick wird auf das Haupt-Widget weitergeleitet mit vorausgefüllten Daten.
+
+**Einbindung:**
+```html
+<iframe src="https://bookingwulf.com/mini-widget.html?hotel=hotel-slug&config=widget-slug"
+  style="width:100%;border:none;height:120px;" scrolling="no"></iframe>
+```
+
+**URL-Parameter:** `hotel`, `config`, `target` (Ziel-URL falls vom Standard abweichend).
+
+**Ablauf:**
+1. Lädt Theme + Feature-Toggles via `/api/hotel-settings`
+2. Passt Buttons an (Anfrage / Buchen / beides je nach `enableInstantBooking` + `hideRequestOption`)
+3. Klick navigiert zu `/widget.html?hotel=...&arrival=...&departure=...&type=request|booking`
+
+**Haupt-Widget URL-Parameter (neu):** `arrival`, `departure`, `type` — Pre-füllen Datepicker und springen direkt zu Schritt 2.
+
+**postMessage an Parent:**
+- `{ type: 'mini-widget-height', height: N }` — für iframe-Resize
+- `{ type: 'mini-widget-navigate', url: '...' }` — Navigation-Event (Elternseite kann eigenes Routing übernehmen)
+
 ### WidgetConfig (Pro+)
 
 Pro Einbettungsort kann ein eigenes `config`-Slug konfiguriert werden mit eigenen Feature-Toggles. Erlaubt z.B. ein Widget nur für Anfragen und ein zweites für Sofortbuchung.

@@ -2663,11 +2663,16 @@
         const WIDGET_CONFIG =
           new URLSearchParams(window.location.search).get('config') || '';
 
+        const _qp = new URLSearchParams(window.location.search);
+        const _preArrival = _qp.get('arrival') || '';
+        const _preDeparture = _qp.get('departure') || '';
+        const _preType = _qp.get('type') || ''; // 'request' | 'booking'
+
         const _now = new Date();
         const state = {
           step: 1,
-          arrival: '',
-          departure: '',
+          arrival: _preArrival,
+          departure: _preDeparture,
           adults: 2,
           children: 0,
           calendarYear: _now.getFullYear(),
@@ -3322,6 +3327,15 @@
         }
 
         function setDefaultDates() {
+          if (state.arrival && state.departure) {
+            const start = new Date(state.arrival);
+            state.calendarYear = start.getFullYear();
+            state.calendarMonth = start.getMonth();
+            document.getElementById('arrival').value = state.arrival;
+            document.getElementById('departure').value = state.departure;
+            renderCalendar();
+            return;
+          }
           const now = new Date();
           const start = new Date(now);
           start.setDate(start.getDate() + 7);
@@ -5336,6 +5350,9 @@
           window.parent.postMessage({ type: 'booking-widget-ready' }, '*');
           setDefaultDates();
           applyDateRules();
+          if (_preType === 'booking' || _preType === 'request') {
+            state.step = 2;
+          }
           renderAll();
           initFloatingLabels();
           await loadApartmentsFromApi();
