@@ -4418,7 +4418,7 @@
           const wrap = document.getElementById('childBirthdaysWrap');
           if (!wrap) return;
           const count = state.children || 0;
-          if (count === 0) {
+          if (count === 0 || !state.settings.enableInstantBooking) {
             wrap.innerHTML = '';
             return;
           }
