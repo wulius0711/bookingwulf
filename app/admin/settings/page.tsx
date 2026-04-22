@@ -6,6 +6,7 @@ import { ColorField } from './color-field';
 import { RadiusField } from './RadiusField';
 import { hasFullBranding, hasPlanAccess, hasAdvancedTypography } from '@/src/lib/plan-gates';
 import { EmbedCode } from './EmbedCode';
+import ContrastChecker from './ContrastChecker';
 import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
 import ProLockOverlay from '../components/ProLockOverlay';
@@ -399,6 +400,13 @@ export default async function Page({ searchParams }: PageProps) {
                   {!enabled && <ProLockOverlay />}
                 </div>
               ))}
+
+              <ContrastChecker
+                defaultAccent={selected.settings?.accentColor || '#111827'}
+                defaultBg={selected.settings?.backgroundColor || '#ffffff'}
+                defaultText={selected.settings?.textColor || '#111111'}
+                defaultButtonColor={selected.settings?.buttonColor || '#ffffff'}
+              />
 
               <div style={{ position: 'relative' }}>
                 <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
