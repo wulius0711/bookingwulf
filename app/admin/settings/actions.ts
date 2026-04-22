@@ -58,6 +58,7 @@ export async function saveHotelSettings(formData: FormData) {
       enableInstantBooking: getBool('enableInstantBooking'),
       hideRequestOption: getBool('hideRequestOption'),
       showUrgencySignals: getBool('showUrgencySignals'),
+      urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
 
       accentColor: String(formData.get('accentColor') || '') || null,
       backgroundColor: String(formData.get('backgroundColor') || '') || null,
@@ -101,6 +102,7 @@ export async function saveHotelSettings(formData: FormData) {
       enableInstantBooking: getBool('enableInstantBooking'),
       hideRequestOption: getBool('hideRequestOption'),
       showUrgencySignals: getBool('showUrgencySignals'),
+      urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
 
       accentColor: String(formData.get('accentColor') || '') || null,
       backgroundColor: String(formData.get('backgroundColor') || '') || null,

@@ -571,6 +571,19 @@ export default async function Page({ searchParams }: PageProps) {
                 checkboxBoxStyle={checkboxBoxStyle}
                 labelStyle={labelStyle}
               />
+              <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <label style={{ ...labelStyle, marginBottom: 0, whiteSpace: 'nowrap' }}>Schwellenwert (%)</label>
+                <input
+                  type="number"
+                  name="urgencyThreshold"
+                  min="10"
+                  max="90"
+                  step="5"
+                  defaultValue={selected.settings?.urgencyThreshold ?? 40}
+                  style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 90, background: '#fff' }}
+                />
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner erscheint wenn weniger als X % der Nächte frei sind</span>
+              </div>
             </div>
 
             {/* ORTSTAXE */}

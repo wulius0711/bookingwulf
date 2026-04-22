@@ -64,6 +64,8 @@ model HotelSettings {
   gapNightDiscount     Int?    // % discount for gap nights (null = disabled)
   gapNightMaxLength    Int?    // max gap length in nights to qualify
 
+  urgencyThreshold       Int     @default(40)  // % free nights below which banner shows
+
   preArrivalEnabled      Boolean @default(false)
   preArrivalHouseRules   String?
   preArrivalReminderDays Int     @default(3)

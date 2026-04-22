@@ -2712,6 +2712,7 @@
             enableInstantBooking: false,
             hideRequestOption: false,
             showUrgencySignals: false,
+            urgencyThreshold: 40,
           },
           urgency: { freeNights: null, totalNights: null, month: null, year: null },
         };
@@ -2873,6 +2874,7 @@
             state.settings.enableInstantBooking = !!ft.enableInstantBooking;
             state.settings.hideRequestOption = !!ft.hideRequestOption;
             state.settings.showUrgencySignals = !!ft.showUrgencySignals;
+            state.settings.urgencyThreshold = ft.urgencyThreshold ?? 40;
 
             // Apply DOM toggles for static fields
             const phoneWrap = document
@@ -3393,7 +3395,8 @@
           }
           if (u.totalNights === 0) return '';
           const pct = (u.freeNights / u.totalNights) * 100;
-          if (pct > 40) return '';
+          const threshold = state.settings.urgencyThreshold ?? 40;
+          if (pct > threshold) return '';
           const CAL_MONTHS_DE_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
           const label = pct <= 15
             ? `Nur noch ${u.freeNights} ${u.freeNights === 1 ? 'Nacht' : 'Nächte'} frei im ${CAL_MONTHS_DE_SHORT[month]}`
