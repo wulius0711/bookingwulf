@@ -208,8 +208,7 @@
           url.searchParams.set('departure', departureEl.value);
           url.searchParams.set('type', type);
           window.parent.postMessage({ type: 'mini-widget-navigate', url: url.toString() }, '*');
-          // Also navigate directly if not in iframe
-          if (window.parent === window) window.location.href = url.toString();
+          window.top.location.href = url.toString();
         }
 
         function renderButtons() {
