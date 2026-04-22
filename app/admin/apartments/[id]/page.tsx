@@ -300,7 +300,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button type="submit" style={{ padding: '11px 24px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
               Änderungen speichern
             </button>

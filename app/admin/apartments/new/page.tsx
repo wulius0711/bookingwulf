@@ -280,7 +280,7 @@ Kaffeemaschine`}
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
           <button className="btn-primary" type="submit" style={{ ...buttonStyle, marginTop: 0 }}>
             Speichern
           </button>

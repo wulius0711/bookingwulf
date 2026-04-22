@@ -99,7 +99,7 @@ export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
                   <input type="number" name="minStay" defaultValue={1} min={1} style={input} />
                 </div>
               </div>
-              <div style={{ paddingTop: 4, display: 'flex', gap: 10 }}>
+              <div style={{ paddingTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
                   Speichern
                 </button>

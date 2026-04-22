@@ -94,7 +94,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
           </span>
         </label>
 
-        <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
           <button
             type="submit"
             disabled={pending}
