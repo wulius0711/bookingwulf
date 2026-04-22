@@ -92,6 +92,9 @@ model HotelSettings {
   ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2)
   ortstaxeMinAge            Int?     // children below this age are exempt (null = all pay)
 
+  // 🔗 Mini-Widget
+  miniWidgetTarget String?  // URL of the page where the full widget is embedded
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

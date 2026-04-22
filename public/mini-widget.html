@@ -155,7 +155,7 @@
         const qp = new URLSearchParams(window.location.search);
         const HOTEL_SLUG = qp.get('hotel') || 'default';
         const WIDGET_CONFIG = qp.get('config') || '';
-        const BOOKING_PAGE = qp.get('target') || (API_BASE + '/widget.html');
+        let BOOKING_PAGE = qp.get('target') || '';
 
         let accentColor = null;
         let bgColor = null;
@@ -201,7 +201,7 @@
             errorEl.style.display = 'block';
             return;
           }
-          const url = new URL(BOOKING_PAGE, window.location.href);
+          const url = new URL(BOOKING_PAGE || (API_BASE + '/widget.html'), window.location.href);
           url.searchParams.set('hotel', HOTEL_SLUG);
           if (WIDGET_CONFIG) url.searchParams.set('config', WIDGET_CONFIG);
           url.searchParams.set('arrival', arrivalEl.value);
@@ -251,6 +251,11 @@
 
             enableInstantBooking = s.enableInstantBooking === true;
             hideRequestOption = s.hideRequestOption === true;
+
+            // Use saved target from settings if not passed via data-target
+            if (!BOOKING_PAGE && data.miniWidgetTarget) {
+              BOOKING_PAGE = data.miniWidgetTarget;
+            }
 
             if (s.accentColor) accentColor = s.accentColor;
             if (s.backgroundColor) bgColor = s.backgroundColor;

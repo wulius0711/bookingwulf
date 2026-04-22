@@ -123,7 +123,7 @@ export async function GET(req: Request) {
 
     return withCors(
       NextResponse.json(
-        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges },
+        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges, miniWidgetTarget: mergedSettings?.miniWidgetTarget ?? null },
         { headers: { 'Cache-Control': 'no-store' } },
       ),
     );

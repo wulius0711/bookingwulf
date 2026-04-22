@@ -24,24 +24,3 @@ export function EmbedCode({ code }: { code: string }) {
   return <CodeBlock code={code} />;
 }
 
-export function MiniEmbedCode({ baseCode }: { baseCode: string }) {
-  const [target, setTarget] = useState('');
-  const code = baseCode + (target ? ` data-target="${target}"` : '') + '></script>';
-  return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <div>
-        <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
-          Ziel-URL <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af' }}>(Seite auf der das Haupt-Widget eingebunden ist)</span>
-        </label>
-        <input
-          type="url"
-          value={target}
-          onChange={e => setTarget(e.target.value)}
-          placeholder="https://ihre-website.de/buchen"
-          style={{ width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111', boxSizing: 'border-box' }}
-        />
-      </div>
-      <CodeBlock code={code} />
-    </div>
-  );
-}

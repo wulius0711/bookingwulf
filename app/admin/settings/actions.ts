@@ -78,6 +78,7 @@ export async function saveHotelSettings(formData: FormData) {
 
       ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
       ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
+      miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
 
     },
     create: {
@@ -113,6 +114,7 @@ export async function saveHotelSettings(formData: FormData) {
 
       ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
       ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
+      miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
 
     },
   });
