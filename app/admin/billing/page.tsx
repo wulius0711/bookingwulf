@@ -173,7 +173,7 @@ export default function BillingPage() {
 
         {/* Trial info */}
         {status === 'trialing' && (
-          <div style={{ padding: '14px 18px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, fontSize: 14, color: '#1d4ed8', lineHeight: 1.6 }}>
+          <div style={{ padding: '14px 18px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, fontSize: 14, color: '#15803d', lineHeight: 1.6 }}>
             Du befindest dich noch in der kostenlosen Testphase. Du kannst jederzeit zwischen den Paketen wechseln — die Änderung ist sofort wirksam und es entstehen keine Kosten bis zum Ende der Testphase.
           </div>
         )}
