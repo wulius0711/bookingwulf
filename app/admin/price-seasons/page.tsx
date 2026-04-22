@@ -127,16 +127,9 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
       <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Preiszeiträume</h1>
-          <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Saisonale Preise und Mindestaufenthalte pro Apartment.</p>
-        </div>
-        <Link href="/admin/price-seasons/new">
-          <button style={{ padding: '10px 16px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-            Neu anlegen
-          </button>
-        </Link>
+      <div>
+        <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Preisanpassungen</h1>
+        <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
       </div>
 
       {isSuperAdmin && (
@@ -167,10 +160,15 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
 
       {/* Seasons list */}
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
           <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>
-            {seasons.length} {seasons.length === 1 ? 'Preiszeitraum' : 'Preiszeiträume'}
+            Preiszeiträume · {seasons.length} {seasons.length === 1 ? 'Eintrag' : 'Einträge'}
           </h2>
+          <Link href="/admin/price-seasons/new">
+            <button style={{ padding: '7px 14px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+              Neu anlegen
+            </button>
+          </Link>
         </div>
         {seasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 20px' }}>
