@@ -625,30 +625,6 @@ export default async function Page({ searchParams }: PageProps) {
               code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
             />
 
-            <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid #f3f4f6', display: 'grid', gap: 12 }}>
-              <div>
-                <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: '#111827' }}>Mini-Widget</h3>
-                <p style={{ margin: 0, fontSize: 13, color: '#6b7280' }}>
-                  Kompakte Datumsleiste — leitet zur Buchungsseite weiter.
-                </p>
-              </div>
-              <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' as const, display: 'block', marginBottom: 6 }}>
-                  Ziel-URL <span style={{ fontWeight: 400, textTransform: 'none' as const, color: '#9ca3af' }}>(Seite auf der das Haupt-Widget eingebunden ist)</span>
-                </label>
-                <input
-                  name="miniWidgetTarget"
-                  type="url"
-                  form="settings-form"
-                  defaultValue={selected.settings?.miniWidgetTarget ?? ''}
-                  placeholder="https://ihre-website.de/buchen"
-                  style={{ width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111', boxSizing: 'border-box' as const }}
-                />
-              </div>
-              <EmbedCode
-                code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/mini-widget.js" data-hotel="${selected.slug}"></script>`}
-              />
-            </div>
 
           </div>
 
