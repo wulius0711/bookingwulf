@@ -207,7 +207,12 @@
           url.searchParams.set('arrival', arrivalEl.value);
           url.searchParams.set('departure', departureEl.value);
           url.searchParams.set('type', type);
-          window.open(url.toString(), '_top');
+          const a = document.createElement('a');
+          a.href = url.toString();
+          a.target = '_top';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         }
 
         function renderButtons() {
