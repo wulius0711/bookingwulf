@@ -596,7 +596,7 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 
 ### Gap-Night-Preise
 
-Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxLength Int?` (max. Lückenlänge in Nächten). Beide `null` = Feature deaktiviert.
+**Plan-Gate: Pro.** Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxLength Int?` (max. Lückenlänge in Nächten). Beide `null` = Feature deaktiviert.
 
 **Erkennung in `/api/availability`:**
 - Feature aktiv wenn beide Felder gesetzt und `nights <= gapNightMaxLength`
@@ -607,10 +607,10 @@ Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxL
 
 ### Urgency-Signale
 
-Feature-Toggle `showUrgencySignals` (HotelSettings + WidgetConfig). Wenn aktiviert:
+Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (HotelSettings). Wenn aktiviert:
 - Widget ruft beim Rendern des Kalenders `/api/urgency?hotel=slug&year=Y&month=M` (0-basiert) auf
 - Response: `{ freeNights, totalNights, bookedNights }` — zählt bestätigte/ausstehende Buchungen + Sperrzeiten im Monat
-- Bei < 40 % freier Nächte erscheint ein Hinweis-Banner unterhalb des Kalenders (🔥)
+- Bei < `urgencyThreshold` % freier Nächte erscheint ein Hinweis-Banner unterhalb des Kalenders (🔥)
 - Schwellenwert ≤ 15 %: genaue Nachtanzahl (`„Nur noch X Nächte frei im Monat"`); 15–40 %: generisch (`„Wenige freie Nächte"`)
 - Urgency-Daten werden pro Monat gecacht (`state.urgency`) — kein doppelter Fetch beim Monatswechsel
 
