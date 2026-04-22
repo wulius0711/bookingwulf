@@ -309,7 +309,7 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
                 <input name="urgencyThreshold" type="number" min="10" max="90" step="5"
                   defaultValue={s?.urgencyThreshold ?? 40}
                   style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 80 }} />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner wenn weniger als X % der Nächte frei</span>
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind</span>
               </div>
             </div>
 
