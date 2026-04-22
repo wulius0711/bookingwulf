@@ -11,7 +11,7 @@ const sections = [
   { id: 'zimmerplan',   title: 'Zimmerplan',            plan: null,       content: ZimmerplanSection },
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
-  { id: 'preise',        title: 'Preisanpassungen',       plan: 'Pro',      content: PreiseSection },
+  { id: 'preise',        title: 'Preisanpassungen',       plan: null,       content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
@@ -515,12 +515,13 @@ function PreiseSection() {
   return (
     <div>
       <H2>Preisanpassungen</H2>
-      <PlanNote plan="Pro" />
       <P>
-        Unter <strong>Preisanpassungen → Preiszeiträume</strong> können Sie für bestimmte Zeiträume abweichende Preise
-        pro Nacht festlegen — z.B. für Hochsaison, Weihnachten oder Messen.
+        Unter <strong>Preisanpassungen</strong> verwalten Sie saisonale Preise, Abgaben, Kinderpreise
+        und automatische Rabatte — alles auf einer Seite.
       </P>
-      <H3>Saison anlegen</H3>
+
+      <H3>Preiszeiträume <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
+      <P>Für bestimmte Zeiträume abweichende Preise pro Nacht festlegen — z.B. für Hochsaison, Weihnachten oder Messen.</P>
       <Step num={1} title="Zeitraum wählen">
         Geben Sie Start- und Enddatum der Saison ein.
       </Step>
@@ -535,52 +536,47 @@ function PreiseSection() {
       <Step num={4} title="Speichern">
         Die Saison ist sofort aktiv. Bei Überschneidungen gilt die spezifischere Saison.
       </Step>
+
       <H3>Ortstaxe / Kurtaxe</H3>
       <P>
-        Direkt unter den Preiszeiträumen können Sie eine Abgabe pro Person und Nacht hinterlegen.
-        Der Betrag wird automatisch zur Buchungssumme addiert und in der Buchungsübersicht sowie den
-        Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich ein Mindestalter festlegen —
-        Kinder unter diesem Alter sind von der Abgabe befreit.
-      </P>
-      <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
-      <P>
-        Unter <strong>Preisanpassungen → Dynamische Preise</strong> können Sie einen prozentualen Rabatt
-        aktivieren, der automatisch greift, wenn die Anreise innerhalb einer konfigurierbaren Anzahl
-        an Tagen liegt (z.B. 10 % Rabatt bei Anreise in den nächsten 7 Tagen). Im Widget wird der
-        Rabatt als grünes Badge angezeigt.
-      </P>
-      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
-      <P>
-        Wenn die Auslastung einen konfigurierbaren Schwellwert überschreitet (z.B. 80 % der
-        Apartments belegt), wird automatisch ein prozentualer Aufschlag auf den Preis angewendet.
-        Im Widget erscheint ein gelbes Badge mit dem Aufschlag.
-      </P>
-      <H3>Lücken-Rabatt</H3>
-      <PlanNote plan="Pro" feature="Lücken-Rabatt" />
-      <P>
-        Kurze freie Zeiträume zwischen zwei bestehenden Buchungen werden automatisch vergünstigt.
-        Legen Sie einen Rabatt in Prozent und eine maximale Lückenlänge in Nächten fest.
-        Das Widget erkennt solche Lücken automatisch und zeigt den reduzierten Preis mit einem
-        „Sonderpreis"-Badge an.
-      </P>
-
-      <H3>Verfügbarkeits-Hinweise (🔥 Banner)</H3>
-      <P>
-        Wenn aktiviert, zeigt das Widget einen Banner unterhalb des Kalenders, sobald weniger als
-        X&nbsp;% der Nächte im angezeigten Monat noch frei sind. Der Schwellenwert (Standard&nbsp;40&nbsp;%)
-        ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
+        Abgabe pro Person und Nacht. Wird automatisch zur Buchungssumme addiert und in der
+        Buchungsübersicht sowie den Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich
+        ein Mindestalter festlegen — Kinder darunter sind befreit.
       </P>
 
       <H3>Kinderpreise</H3>
       <P>
-        Direkt unter der Ortstaxe-Karte können Preise pro Kind und Nacht nach Altersgruppen definiert werden — ohne Saisonbindung.
-        Kinder deren Alter keiner Gruppe entspricht, sind automatisch kostenlos.
-        Tragen Sie Bezeichnung (optional), Alter von/bis und Preis pro Nacht ein — für kostenlose Gruppen Preis 0.
+        Preise pro Kind und Nacht nach Altersgruppen — ohne Saisonbindung. Kinder ohne passende
+        Gruppe sind automatisch kostenlos. Bezeichnung (optional), Alter von/bis und Preis eingeben.
       </P>
       <Tip>
         <strong>Beispiel:</strong> 0–6 Jahre → € 0, 7–16 Jahre → € 15 / Nacht.<br />
         Das Widget berechnet den Aufschlag automatisch und weist ihn im Preis-Popover je Kind aus.
       </Tip>
+
+      <H3>Last-Minute Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
+      <P>
+        Prozentualer Rabatt, der automatisch greift wenn die Anreise innerhalb einer konfigurierbaren
+        Anzahl Tage liegt (z.B. 10 % bei Anreise in den nächsten 7 Tagen). Im Widget als grünes Badge.
+      </P>
+
+      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
+      <P>
+        Wenn die Auslastung einen konfigurierbaren Schwellwert überschreitet (z.B. 80 %), wird
+        automatisch ein prozentualer Aufschlag angewendet. Im Widget als gelbes Badge.
+      </P>
+
+      <H3>Lücken-Rabatt <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
+      <P>
+        Kurze freie Zeiträume zwischen zwei Buchungen werden automatisch vergünstigt. Rabatt in
+        Prozent und maximale Lückenlänge in Nächten festlegen. Im Widget als „Sonderpreis"-Badge.
+      </P>
+
+      <H3>Verfügbarkeits-Hinweise (🔥 Banner)</H3>
+      <P>
+        Zeigt im Widget einen Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind.
+        Schwellenwert frei einstellbar (Standard 40 %, Schritt 5).
+      </P>
 
       <Note>
         <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
