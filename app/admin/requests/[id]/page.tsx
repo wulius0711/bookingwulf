@@ -67,7 +67,18 @@ async function updateBookingStatus(formData: FormData) {
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
 
-  await prisma.request.update({ where: { id }, data: { status } });
+  // Generate checkin token when booking is confirmed
+  let checkinToken: string | null = null;
+  if (status === 'booked' && !request.checkinToken) {
+    const hotelSettings = request.hotelId
+      ? await prisma.hotelSettings.findUnique({ where: { hotelId: request.hotelId }, select: { preArrivalEnabled: true } })
+      : null;
+    if (hotelSettings?.preArrivalEnabled) {
+      checkinToken = crypto.randomUUID();
+    }
+  }
+
+  await prisma.request.update({ where: { id }, data: { status, ...(checkinToken ? { checkinToken } : {}) } });
 
   const lang = (request.language || 'de') as Lang;
   const i18n = getEmailTranslations(lang);
@@ -83,6 +94,8 @@ async function updateBookingStatus(formData: FormData) {
         const arrivalDate = new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.arrival);
         const departureDate = new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(request.departure);
         const icalUrl = status === 'booked' ? bookingIcalUrl(request.id, request.createdAt) : null;
+        const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+        const checkinUrl = (status === 'booked' && checkinToken) ? `${base}/checkin/${checkinToken}` : null;
         const hotelName = request.hotel?.name || 'Hotel';
 
         const tplVars: Record<string, string> = {
@@ -133,6 +146,14 @@ async function updateBookingStatus(formData: FormData) {
               <div style="margin-top:24px;">
                 <a href="${icalUrl}" style="display:inline-block;padding:11px 22px;background:#111827;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
                   📅 ${i18n.addToCalendar}
+                </a>
+              </div>` : ''}
+              ${checkinUrl ? `
+              <div style="margin-top:16px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
+                <p style="margin:0 0 12px;font-size:14px;color:#374151;font-weight:600;">Online Check-in</p>
+                <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Füllen Sie bitte vorab das Online Check-in Formular aus — das spart Zeit bei der Ankunft.</p>
+                <a href="${checkinUrl}" style="display:inline-block;padding:10px 20px;background:${request.hotel?.accentColor || '#111827'};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                  Jetzt einchecken →
                 </a>
               </div>` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
@@ -265,7 +286,6 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
           accentColor: true,
         },
       },
-
     },
   });
 
@@ -367,6 +387,37 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
               <span style={rowLabel}>Mitteilung</span>
               <span style={{ ...rowValue, background: '#f9fafb', padding: '10px 12px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>{request.message}</span>
+            </div>
+          )}
+
+          {request.checkinToken && (
+            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+              <span style={rowLabel}>Check-in</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                {request.checkinCompletedAt ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: '#dcfce7', color: '#15803d', fontSize: 12, fontWeight: 700 }}>
+                    ✓ Ausgefüllt {new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(request.checkinCompletedAt))}
+                    {request.checkinArrivalTime && ` · Ankunft: ${request.checkinArrivalTime}`}
+                  </span>
+                ) : (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: '#fef3c7', color: '#92400e', fontSize: 12, fontWeight: 700 }}>
+                    ⏳ Ausstehend
+                  </span>
+                )}
+                <a
+                  href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/checkin/${request.checkinToken}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}
+                >
+                  Link öffnen
+                </a>
+              </div>
+              {request.checkinNotes && (
+                <div style={{ gridColumn: '2', marginTop: 4, fontSize: 13, color: '#374151', background: '#f9fafb', padding: '8px 10px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>
+                  {request.checkinNotes}
+                </div>
+              )}
             </div>
           )}
 

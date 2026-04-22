@@ -64,6 +64,10 @@ model HotelSettings {
   gapNightDiscount     Int?    // % discount for gap nights (null = disabled)
   gapNightMaxLength    Int?    // max gap length in nights to qualify
 
+  preArrivalEnabled      Boolean @default(false)
+  preArrivalHouseRules   String?
+  preArrivalReminderDays Int     @default(3)
+
   // 🎨 Colors
   accentColor      String?  // Primary highlight
   backgroundColor  String?  // App background
@@ -277,6 +281,12 @@ model Request {
 
   nukiCode    String?
   nukiAuthIds String?
+
+  checkinToken           String?   @unique
+  checkinCompletedAt     DateTime?
+  checkinArrivalTime     String?
+  checkinNotes           String?
+  checkinReminderSentAt  DateTime?
 
   messages RequestMessage[]
 

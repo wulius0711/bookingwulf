@@ -761,6 +761,18 @@ function EinstellungenSection() {
         Kinder unter diesem Alter sind automatisch von der Abgabe befreit.
       </P>
 
+      <H3>Online Check-in</H3>
+      <P>
+        Mit dem <strong>Online Check-in</strong> erhalten Gäste nach der Buchungsbestätigung einen
+        persönlichen Link zu einem Formular, in dem sie ihre geplante Ankunftszeit und optionale
+        Hinweise angeben können. Falls eine Hausordnung hinterlegt ist, muss der Gast diese bestätigen.
+      </P>
+      <P>
+        Der Betreiber sieht in der Buchungsdetailansicht, ob der Check-in ausgefüllt wurde (mit Ankunftszeit
+        und Hinweisen). Eine automatische Erinnerungsmail wird X Tage vor Anreise versandt, falls das
+        Formular noch nicht ausgefüllt ist. Anzahl der Tage in den Einstellungen konfigurierbar.
+      </P>
+
       <H3>Lücken-Rabatt</H3>
       <P>
         Unter <strong>Lücken-Rabatt</strong> können Sie automatisch kurze freie Zeiträume zwischen

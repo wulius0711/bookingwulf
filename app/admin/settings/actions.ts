@@ -83,6 +83,10 @@ export async function saveHotelSettings(formData: FormData) {
       gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
       gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
 
+      preArrivalEnabled: getBool('preArrivalEnabled'),
+      preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
+
     },
     create: {
       hotelId,
@@ -121,6 +125,10 @@ export async function saveHotelSettings(formData: FormData) {
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
       gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
       gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
+
+      preArrivalEnabled: getBool('preArrivalEnabled'),
+      preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
 
     },
   });

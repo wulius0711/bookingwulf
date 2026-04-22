@@ -609,6 +609,46 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
             </div>
 
+            {/* PRE-ARRIVAL */}
+            <div className="settings-section" style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Online Check-in</h2>
+                <p style={sectionIntroStyle}>
+                  Gäste erhalten nach der Buchungsbestätigung einen persönlichen Link zum Online Check-in.
+                  Automatische Erinnerung X Tage vor Anreise falls noch nicht ausgefüllt.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gap: 16 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                  <input type="checkbox" name="preArrivalEnabled" value="true" defaultChecked={selected.settings?.preArrivalEnabled ?? false}
+                    style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+                  <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Online Check-in aktivieren</span>
+                </label>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
+                  <input
+                    type="number"
+                    name="preArrivalReminderDays"
+                    min="1"
+                    max="14"
+                    step="1"
+                    defaultValue={selected.settings?.preArrivalReminderDays ?? 3}
+                    style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, width: 120, background: '#fff' }}
+                  />
+                </div>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <label style={labelStyle}>Hausordnung <span style={{ fontWeight: 400, color: '#9ca3af', fontSize: 11 }}>(optional — Gast muss bestätigen)</span></label>
+                  <textarea
+                    name="preArrivalHouseRules"
+                    rows={5}
+                    defaultValue={selected.settings?.preArrivalHouseRules ?? ''}
+                    placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
+                    style={{ padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: '#fff', resize: 'vertical', fontFamily: 'inherit' }}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* GAP-NIGHT */}
             <div className="settings-section" style={sectionStyle}>
               <div>
