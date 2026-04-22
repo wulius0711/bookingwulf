@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { availabilitySchema } from '@/src/lib/schemas';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
 
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
-      select: { id: true },
+      select: { id: true, plan: true },
     });
 
 
@@ -73,7 +74,8 @@ export async function POST(req: Request) {
     });
 
     // Pre-fetch gap bookings if gap-night feature is configured
-    const gapEnabled = hotelSettings?.gapNightDiscount && hotelSettings?.gapNightMaxLength && nights <= hotelSettings.gapNightMaxLength;
+    const hotelHasPro = hasPlanAccess(hotel.plan ?? 'starter', 'pro');
+    const gapEnabled = hotelHasPro && hotelSettings?.gapNightDiscount && hotelSettings?.gapNightMaxLength && nights <= hotelSettings.gapNightMaxLength;
     let gapBeforeIds = new Set<number>();
     let gapAfterIds = new Set<number>();
 

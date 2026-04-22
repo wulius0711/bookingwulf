@@ -663,7 +663,8 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {/* GAP-NIGHT */}
-            <div className="settings-section" style={sectionStyle}>
+            <div className="settings-section" style={{ ...sectionStyle, position: 'relative' }}>
+              {!hasPro && <ProLockOverlay />}
               <div>
                 <h2 style={sectionTitleStyle}>Lücken-Rabatt</h2>
                 <p style={sectionIntroStyle}>
