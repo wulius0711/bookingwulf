@@ -32,7 +32,7 @@ export default async function ExtrasPage() {
   const selectedId = session.hotelId ?? undefined;
 
   const extras = selectedId
-    ? await prisma.hotelExtra.findMany({ where: { hotelId: selectedId }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] })
+    ? await prisma.hotelExtra.findMany({ where: { hotelId: selectedId }, orderBy: [{ type: 'asc' }, { sortOrder: 'asc' }, { name: 'asc' }] })
     : [];
 
   const selectedHotel = selectedId
