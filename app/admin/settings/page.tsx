@@ -5,7 +5,7 @@ import { saveHotelSettings } from './actions';
 import { ColorField } from './color-field';
 import { RadiusField } from './RadiusField';
 import { hasFullBranding, hasPlanAccess, hasAdvancedTypography } from '@/src/lib/plan-gates';
-import { EmbedCode } from './EmbedCode';
+import { EmbedCode, MiniEmbedCode } from './EmbedCode';
 import SettingsPresets from './SettingsPresets';
 import SettingsLivePreview from './SettingsLivePreview';
 import ProLockOverlay from '../components/ProLockOverlay';
@@ -624,6 +624,16 @@ export default async function Page({ searchParams }: PageProps) {
             <EmbedCode
               code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
             />
+
+            <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid #f3f4f6' }}>
+              <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: '#111827' }}>Mini-Widget</h3>
+              <p style={{ margin: '0 0 14px', fontSize: 13, color: '#6b7280' }}>
+                Kompakte Datumsleiste zum Einbinden auf beliebigen Seiten — leitet zur Buchungsseite weiter.
+              </p>
+              <MiniEmbedCode
+                baseCode={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/mini-widget.js" data-hotel="${selected.slug}"`}
+              />
+            </div>
 
           </div>
 
