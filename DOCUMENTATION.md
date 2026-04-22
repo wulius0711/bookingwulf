@@ -580,6 +580,15 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 - Logout-Icon im Sidebar-Header (oben rechts)
 - Gesperrte Nav-Items (Plan-Gates) werden als `<button aria-disabled="true">` gerendert (nicht als `<span>`) für Tastaturzugänglichkeit; Akkordeon-Buttons tragen `aria-expanded`; Hotel-Select ist über `<label htmlFor>` beschriftet
 
+### Urgency-Signale
+
+Feature-Toggle `showUrgencySignals` (HotelSettings + WidgetConfig). Wenn aktiviert:
+- Widget ruft beim Rendern des Kalenders `/api/urgency?hotel=slug&year=Y&month=M` (0-basiert) auf
+- Response: `{ freeNights, totalNights, bookedNights }` — zählt bestätigte/ausstehende Buchungen + Sperrzeiten im Monat
+- Bei < 40 % freier Nächte erscheint ein Hinweis-Banner unterhalb des Kalenders (🔥)
+- Schwellenwert ≤ 15 %: genaue Nachtanzahl (`„Nur noch X Nächte frei im Monat"`); 15–40 %: generisch (`„Wenige freie Nächte"`)
+- Urgency-Daten werden pro Monat gecacht (`state.urgency`) — kein doppelter Fetch beim Monatswechsel
+
 ### Barrierefreiheit
 
 - **Widget:** Alle Icon-Buttons (`×` Lightbox-Schließen, `‹›` Lightbox-Navigation, `‹›` Kalender-Monatsnavigation, `‹›` Bild-Slider) haben `aria-label`

@@ -744,6 +744,7 @@ function EinstellungenSection() {
           { label: 'Nachrichtenfeld anzeigen',       desc: 'Ermöglicht Gästen, beim Buchen eine freie Nachricht mitzuschicken.' },
           { label: 'Image Slider aktivieren',        desc: 'Zeigt mehrere Bilder pro Apartment als Slider statt als Einzelbild.' },
           { label: 'Verbindliche Buchung anbieten',  desc: 'Gäste können direkt verbindlich buchen statt nur eine Anfrage zu senden.' },
+          { label: 'Verfügbarkeits-Hinweise anzeigen', desc: 'Zeigt im Kalender einen Hinweis, wenn weniger als 40 % der Nächte im Monat noch frei sind — schafft Dringlichkeit.' },
         ].map((f) => (
           <div key={f.label} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid #f3f4f6' }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 220, color: '#111', flexShrink: 0 }}>{f.label}</span>

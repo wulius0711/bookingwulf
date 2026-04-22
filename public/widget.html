@@ -2711,7 +2711,9 @@
             instantBooking: false,
             enableInstantBooking: false,
             hideRequestOption: false,
+            showUrgencySignals: false,
           },
+          urgency: { freeNights: null, totalNights: null, month: null, year: null },
         };
 
         function getPriceLabel(billingType, price) {
@@ -2870,6 +2872,7 @@
             state.settings.instantBooking = !!ft.instantBooking;
             state.settings.enableInstantBooking = !!ft.enableInstantBooking;
             state.settings.hideRequestOption = !!ft.hideRequestOption;
+            state.settings.showUrgencySignals = !!ft.showUrgencySignals;
 
             // Apply DOM toggles for static fields
             const phoneWrap = document
@@ -3368,6 +3371,36 @@
         ];
         const CAL_WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
+        async function loadUrgency(year, month) {
+          if (!state.settings.showUrgencySignals) return;
+          if (state.urgency.year === year && state.urgency.month === month) return;
+          try {
+            const res = await fetch(`${API_BASE}/api/urgency?hotel=${HOTEL_SLUG}&year=${year}&month=${month}`);
+            const data = await res.json();
+            if (data.success) {
+              state.urgency = { freeNights: data.freeNights, totalNights: data.totalNights, month, year };
+              renderCalendar();
+            }
+          } catch (_) {}
+        }
+
+        function buildUrgencyBanner(year, month) {
+          if (!state.settings.showUrgencySignals) return '';
+          const u = state.urgency;
+          if (u.year !== year || u.month !== month) {
+            loadUrgency(year, month);
+            return '';
+          }
+          if (u.totalNights === 0) return '';
+          const pct = (u.freeNights / u.totalNights) * 100;
+          if (pct > 40) return '';
+          const CAL_MONTHS_DE_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+          const label = pct <= 15
+            ? `Nur noch ${u.freeNights} ${u.freeNights === 1 ? 'Nacht' : 'Nächte'} frei im ${CAL_MONTHS_DE_SHORT[month]}`
+            : `Wenige freie Nächte im ${CAL_MONTHS_DE_SHORT[month]}`;
+          return `<div style="margin-top:10px;padding:7px 12px;background:color-mix(in srgb,var(--accent) 10%,white);border:1px solid color-mix(in srgb,var(--accent) 25%,white);border-radius:8px;font-size:12px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:6px;"><span>🔥</span>${label}</div>`;
+        }
+
         function renderCalendar() {
           const wrap = document.getElementById('cal-picker');
           if (!wrap) return;
@@ -3447,12 +3480,15 @@
           if (state.arrival && state.departure)
             hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
 
+          const urgencyBanner = buildUrgencyBanner(y1, m1);
+
           wrap.innerHTML = `
             <div class="cal-months">
               ${buildMonth(y1, m1, true, false)}
               ${buildMonth(y2, m2, false, true)}
             </div>
-            <div class="cal-nights-hint">${hint}</div>`;
+            <div class="cal-nights-hint">${hint}</div>
+            ${urgencyBanner}`;
 
           wrap.querySelectorAll('.cal-day[data-date]').forEach((btn) => {
             btn.addEventListener('click', () =>

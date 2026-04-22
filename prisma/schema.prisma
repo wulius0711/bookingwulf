@@ -60,6 +60,7 @@ model HotelSettings {
   instantBooking       Boolean @default(false)
   enableInstantBooking Boolean @default(false)
   hideRequestOption    Boolean @default(false)
+  showUrgencySignals   Boolean @default(false)
 
   // 🎨 Colors
   accentColor      String?  // Primary highlight
@@ -115,6 +116,7 @@ model WidgetConfig {
   enableImageSlider    Boolean @default(true)
   enableInstantBooking Boolean @default(false)
   hideRequestOption    Boolean @default(false)
+  showUrgencySignals   Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

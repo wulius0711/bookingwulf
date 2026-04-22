@@ -222,6 +222,7 @@ type ToggleKey =
   | 'enableImageSlider'
   | 'enableInstantBooking'
   | 'hideRequestOption'
+  | 'showUrgencySignals'
 
 const featureToggles: [ToggleKey, string][] = [
   ['showPrices', 'Preise anzeigen'],
@@ -231,6 +232,7 @@ const featureToggles: [ToggleKey, string][] = [
   ['showMessageField', 'Nachrichtenfeld anzeigen'],
   ['enableImageSlider', 'Image Slider aktivieren'],
   ['enableInstantBooking', 'Verbindliche Buchung anbieten'],
+  ['showUrgencySignals', 'Verfügbarkeits-Hinweise anzeigen'],
 ]
 
 /* ---------- PAGE ---------- */
@@ -563,6 +565,7 @@ export default async function Page({ searchParams }: PageProps) {
                   enableImageSlider: selected.settings?.enableImageSlider ?? true,
                   enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
                   hideRequestOption: selected.settings?.hideRequestOption ?? false,
+                  showUrgencySignals: selected.settings?.showUrgencySignals ?? false,
                 }}
                 checkboxRowStyle={checkboxRowStyle}
                 checkboxBoxStyle={checkboxBoxStyle}
