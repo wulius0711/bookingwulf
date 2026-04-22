@@ -50,6 +50,12 @@ async function saveDynamicPricing(formData: FormData) {
       lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
       occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
       occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
+      showUrgencySignals: formData.get('showUrgencySignals') === 'on',
+      urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
+      gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
+      gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
     },
     create: {
       hotelId,
@@ -57,6 +63,12 @@ async function saveDynamicPricing(formData: FormData) {
       lastMinuteDiscountDays: parseInt(String(formData.get('lastMinuteDiscountDays') || '7')) || 7,
       occupancySurchargePercent: parseInt(String(formData.get('occupancySurchargePercent') || '0')) || 0,
       occupancySurchargeThreshold: parseInt(String(formData.get('occupancySurchargeThreshold') || '70')) || 70,
+      showUrgencySignals: formData.get('showUrgencySignals') === 'on',
+      urgencyThreshold: parseInt(String(formData.get('urgencyThreshold') || '40')) || 40,
+      gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
+      gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
+      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
+      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
     },
   });
 
@@ -78,7 +90,7 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
     : session.hotelId;
 
   const hotelData = selectedHotelId !== null
-    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true } } } })
+    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } } } })
     : null;
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
@@ -205,6 +217,67 @@ export default async function PriceSeasonsPage({ searchParams }: PageProps) {
                   </div>
                 </div>
                 <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
+              </div>
+            </div>
+
+            {/* LÜCKEN-RABATT */}
+            <div style={{ position: 'relative', padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+              {!hasPro && <ProLockOverlay />}
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Lücken-Rabatt</div>
+              <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
+                  <input name="gapNightDiscount" type="number" min="1" max="80"
+                    defaultValue={s?.gapNightDiscount ?? ''}
+                    placeholder="leer = aus"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Max. Lückenlänge (Nächte)</label>
+                  <input name="gapNightMaxLength" type="number" min="1" max="14"
+                    defaultValue={s?.gapNightMaxLength ?? ''}
+                    placeholder="leer = aus"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+              </div>
+            </div>
+
+            {/* VERFÜGBARKEITS-HINWEISE */}
+            <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+                <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false}
+                  style={{ width: 15, height: 15, accentColor: 'var(--accent)' }} />
+                Aktivieren
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', whiteSpace: 'nowrap' }}>Schwellenwert %</label>
+                <input name="urgencyThreshold" type="number" min="10" max="90" step="5"
+                  defaultValue={s?.urgencyThreshold ?? 40}
+                  style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 80 }} />
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner wenn weniger als X % der Nächte frei</span>
+              </div>
+            </div>
+
+            {/* ORTSTAXE */}
+            <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Ortstaxe / Kurtaxe</div>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+                  <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
+                    defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
+                    placeholder="z. B. 2.50"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+                  <input name="ortstaxeMinAge" type="number" min="0" step="1"
+                    defaultValue={s?.ortstaxeMinAge ?? ''}
+                    placeholder="leer = alle zahlen"
+                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                </div>
               </div>
             </div>
 

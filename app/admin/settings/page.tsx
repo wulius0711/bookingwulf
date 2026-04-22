@@ -573,7 +573,7 @@ export default async function Page({ searchParams }: PageProps) {
             {/* PRICING TOOLS HINT */}
             <div style={{ padding: '14px 18px', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 12, fontSize: 13, color: '#0369a1' }}>
               Verfügbarkeits-Hinweise, Lücken-Rabatt und Ortstaxe/Kurtaxe finden Sie jetzt unter{' '}
-              <a href="/admin/pricing-tools" style={{ color: '#0369a1', fontWeight: 600 }}>Preistools</a>.
+              <a href="/admin/price-seasons" style={{ color: '#0369a1', fontWeight: 600 }}>Preisanpassungen</a>.
             </div>
 
             {/* PRE-ARRIVAL */}

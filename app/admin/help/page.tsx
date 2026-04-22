@@ -12,7 +12,6 @@ const sections = [
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
   { id: 'preise',        title: 'Preisanpassungen',       plan: 'Pro',      content: PreiseSection },
-  { id: 'preistools',    title: 'Preistools',             plan: null,       content: PreistoolsSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'child-pricing', title: 'Kinderpreise',          plan: null,       content: ChildPricingSection },
@@ -551,30 +550,6 @@ function PreiseSection() {
         Apartments belegt), wird automatisch ein prozentualer Aufschlag auf den Preis angewendet.
         Im Widget erscheint ein gelbes Badge mit dem Aufschlag.
       </P>
-      <Note>
-        <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
-        unter <InternalLink id="sperrzeiten">Sperrzeiten</InternalLink> verwaltet.
-      </Note>
-    </div>
-  );
-}
-
-function PreistoolsSection() {
-  return (
-    <div>
-      <H2>Preistools</H2>
-      <P>
-        Unter <strong>Preistools</strong> (Navigation → Verwaltung) bündeln sich alle automatischen
-        Preisanpassungen und Abgaben für das Widget.
-      </P>
-
-      <H3>Verfügbarkeits-Hinweise</H3>
-      <P>
-        Wenn aktiviert, zeigt das Widget einen 🔥-Banner unterhalb des Kalenders, sobald weniger als
-        X&nbsp;% der Nächte im angezeigten Monat noch frei sind. Der Schwellenwert (Standard&nbsp;40&nbsp;%)
-        ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
-      </P>
-
       <H3>Lücken-Rabatt</H3>
       <PlanNote plan="Pro" feature="Lücken-Rabatt" />
       <P>
@@ -584,6 +559,13 @@ function PreistoolsSection() {
         „Sonderpreis"-Badge an.
       </P>
 
+      <H3>Verfügbarkeits-Hinweise (🔥 Banner)</H3>
+      <P>
+        Wenn aktiviert, zeigt das Widget einen Banner unterhalb des Kalenders, sobald weniger als
+        X&nbsp;% der Nächte im angezeigten Monat noch frei sind. Der Schwellenwert (Standard&nbsp;40&nbsp;%)
+        ist frei einstellbar (10&nbsp;–&nbsp;90, Schritt&nbsp;5).
+      </P>
+
       <H3>Ortstaxe / Kurtaxe</H3>
       <P>
         Hinterlegen Sie eine Abgabe pro Person und Nacht. Der Betrag wird automatisch zur
@@ -591,6 +573,11 @@ function PreistoolsSection() {
         ausgewiesen. Optional lässt sich ein Mindestalter festlegen — Kinder unter diesem Alter
         sind automatisch von der Abgabe befreit.
       </P>
+
+      <Note>
+        <strong>Hinweis:</strong> Sperrzeiten (z.B. für Eigennutzung oder Renovierung) werden separat
+        unter <InternalLink id="sperrzeiten">Sperrzeiten</InternalLink> verwaltet.
+      </Note>
     </div>
   );
 }
@@ -792,7 +779,7 @@ function EinstellungenSection() {
       <H3>Preistools</H3>
       <P>
         Dynamische Preisanpassungen (Verfügbarkeits-Hinweise, Lücken-Rabatt, Ortstaxe/Kurtaxe)
-        finden Sie unter <InternalLink id="preistools">Preistools</InternalLink> in der Navigation.
+        finden Sie unter <InternalLink id="preise">Preisanpassungen</InternalLink> in der Navigation.
       </P>
 
       <H3>Online Check-in</H3>
