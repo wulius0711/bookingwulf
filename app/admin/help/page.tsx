@@ -15,7 +15,7 @@ const sections = [
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'emails',        title: 'E-Mail Templates',      plan: 'Pro',      content: EmailsSection },
-  { id: 'einstellungen', title: 'Einstellungen & Design', plan: null,      content: EinstellungenSection },
+  { id: 'einstellungen', title: 'Widget & Design',         plan: null,      content: EinstellungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
@@ -705,10 +705,10 @@ function EmailsSection() {
 function EinstellungenSection() {
   return (
     <div>
-      <H2>Einstellungen & Design</H2>
+      <H2>Widget & Design</H2>
       <P>
-        Unter <strong>Einstellungen</strong> passen Sie das Widget an das Design Ihrer Website an
-        und konfigurieren grundlegende Parameter.
+        Unter <strong>Konfiguration → Widget & Design</strong> passen Sie das Widget an das Design
+        Ihrer Website an und konfigurieren grundlegende Parameter.
       </P>
       <H3>Design</H3>
       <P>
@@ -857,7 +857,7 @@ function NukiSection() {
       <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
         <li>Nuki-Schloss mit verbundenem Keypad (Nuki Keypad oder Keypad 2.0)</li>
         <li>Nuki Web-Konto unter <strong>web.nuki.io</strong></li>
-        <li>Sofortbuchung im Widget aktiviert (<InternalLink id="einstellungen">Einstellungen</InternalLink>)</li>
+        <li>Sofortbuchung im Widget aktiviert (<InternalLink id="einstellungen">Widget & Design</InternalLink>)</li>
         <li>Pro-Plan oder höher</li>
       </ul>
 
@@ -882,7 +882,7 @@ function NukiSection() {
       </Step>
       <Step num={4} title="Sofortbuchung aktivieren">
         <P>
-          Unter <InternalLink id="einstellungen">Einstellungen</InternalLink> die Option
+          Unter <InternalLink id="einstellungen">Widget & Design</InternalLink> die Option
           <strong> Sofortbuchung</strong> aktivieren. Nur bei Sofortbuchungen (nicht bei Anfragen)
           wird automatisch ein Zugangscode generiert.
         </P>
@@ -990,7 +990,7 @@ function EinbindungSection() {
       </P>
       <H3>Schritt-für-Schritt</H3>
       <Step num={1} title="Embed-Code kopieren">
-        Gehen Sie zu <strong>Einstellungen</strong> und scrollen Sie zum Abschnitt <strong>„Embed-Code"</strong>.
+        Gehen Sie zu <strong>Widget & Design</strong> und scrollen Sie zum Abschnitt <strong>„Embed-Code"</strong>.
         Dort finden Sie Ihren persönlichen Code:
         <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug"></script>`}</CodeBlock>
         Klicken Sie auf <strong>„Kopieren"</strong>.
