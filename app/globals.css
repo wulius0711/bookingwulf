@@ -43,29 +43,52 @@
 
 /* ─── Dark mode ───────────────────────────────────────────────────── */
 .dark {
-  --page-bg: #0f172a;
-  --surface: #1e293b;
-  --surface-2: #273548;
-  --surface-3: #1a2740;
-  --border: #334155;
-  --border-2: #273548;
-  --text-primary: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-subtle: #64748b;
-  --sidebar-bg: #0f172a;
-  --sidebar-border: #1e293b;
+  --page-bg: #080c14;
+  --surface: #0f1520;
+  --surface-2: #161d2e;
+  --surface-3: #1e2640;
+  --border: #1e2a3d;
+  --border-2: #161d2e;
+  --text-primary: #f0f4ff;
+  --text-muted: #8896b3;
+  --text-subtle: #4e5a70;
+  --sidebar-bg: #0f1520;
+  --sidebar-border: #1e2a3d;
   --nav-group: #818cf8;
-  --accent-light: rgba(99,102,241,0.18);
-  --background: #0f172a;
-  --foreground: #f1f5f9;
+  --accent-light: rgba(37,99,235,0.15);
+  --background: #080c14;
+  --foreground: #f0f4ff;
 }
 .dark.theme-classic {
-  --accent-light: rgba(255,255,255,0.08);
+  --accent-light: rgba(255,255,255,0.07);
   --nav-group: #9ca3af;
 }
 .dark.theme-orange {
-  --accent-light: rgba(234,86,5,0.18);
+  --accent-light: rgba(234,86,5,0.15);
   --nav-group: #fb923c;
+}
+
+/* Dark mode gradient background */
+.dark body {
+  background-image:
+    radial-gradient(ellipse 70% 40% at 20% -5%, #1a2d5a 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 85% 5%, #2d1a5a 0%, transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Dark mode gradient buttons */
+.dark .btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+}
+.dark .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%) !important;
+}
+
+/* Dark mode card/surface glow */
+.dark .admin-content > *,
+.dark [style*="background: var(--surface)"],
+.dark [style*="background:var(--surface)"] {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
