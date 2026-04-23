@@ -394,6 +394,77 @@ button, a[role="button"], input[type="submit"] {
   border-radius: 4px;
 }
 
+/* ─── Dark mode: comprehensive text overrides ─────────────────────── */
+.dark .admin-page h1,
+.dark .admin-page h2,
+.dark .admin-page h3,
+.dark .admin-page h4,
+.dark .admin-page th,
+.dark .admin-page label {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-page td,
+.dark .admin-page p {
+  color: var(--text-muted) !important;
+}
+
+/* ─── Dark mode: card / surface overrides ────────────────────────── */
+
+/* Stat cards */
+.dark .stat-grid a > div,
+.dark .stat-grid > div {
+  background: linear-gradient(145deg, var(--surface), var(--surface-2)) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.04) inset !important;
+}
+
+/* Generic white card divs inside admin pages */
+.dark .admin-page .two-col div[style*="background"],
+.dark .admin-page > div > div[style*="background"],
+.dark .admin-page > div > section[style*="background"] {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Input / select / textarea */
+.dark .admin-page input:not([type="color"]),
+.dark .admin-page select,
+.dark .admin-page textarea {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Secondary/outline buttons */
+.dark .btn-secondary {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.dark .btn-secondary:hover:not(:disabled) {
+  background: var(--surface-3) !important;
+  border-color: var(--text-subtle) !important;
+}
+
+/* Mobile topbar */
+.dark .mobile-topbar {
+  background: var(--surface) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+/* Tables */
+.dark .admin-page table {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+.dark .admin-page tr {
+  border-color: var(--border) !important;
+}
+.dark .admin-page thead {
+  background: var(--surface-2) !important;
+}
+
 @media (max-width: 1024px) {
   .settings-shell {
     grid-template-columns: 1fr;

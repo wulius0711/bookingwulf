@@ -18,11 +18,11 @@ function statusLabel(s: string) {
 
 function statusColor(s: string) {
   switch (s) {
-    case 'new':       return { bg: '#f4f4f4', color: '#555',   border: '#ddd' };
-    case 'answered':  return { bg: '#eaf2ff', color: '#2457a6', border: '#bfd4fb' };
-    case 'booked':    return { bg: '#e8f5e9', color: '#256029', border: '#b7dfba' };
-    case 'cancelled': return { bg: '#fdecec', color: '#a63b3b', border: '#f3c3c3' };
-    default:          return { bg: '#f4f4f4', color: '#555',   border: '#ddd' };
+    case 'new':       return { bg: 'var(--surface-2)',              color: 'var(--text-muted)',  border: 'var(--border)' };
+    case 'answered':  return { bg: 'rgba(37,99,235,0.12)',          color: '#60a5fa',            border: 'rgba(37,99,235,0.3)' };
+    case 'booked':    return { bg: 'rgba(22,163,74,0.12)',          color: '#4ade80',            border: 'rgba(22,163,74,0.3)' };
+    case 'cancelled': return { bg: 'rgba(220,38,38,0.12)',          color: '#f87171',            border: 'rgba(220,38,38,0.3)' };
+    default:          return { bg: 'var(--surface-2)',              color: 'var(--text-muted)',  border: 'var(--border)' };
   }
 }
 
@@ -424,14 +424,14 @@ const headlineStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 28,
   fontWeight: 700,
-  color: '#111',
+  color: 'var(--text-primary)',
   letterSpacing: '-0.02em',
 };
 
 const sublineStyle: React.CSSProperties = {
   margin: '4px 0 0',
   fontSize: 14,
-  color: '#888',
+  color: 'var(--text-muted)',
 };
 
 const statsRowStyle: React.CSSProperties = {
@@ -440,8 +440,8 @@ const statsRowStyle: React.CSSProperties = {
 };
 
 const statCardStyle: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 14,
   padding: '20px 22px',
   cursor: 'pointer',
@@ -457,13 +457,13 @@ const sectionTitleStyle: React.CSSProperties = {
   margin: '0 0 14px',
   fontSize: 17,
   fontWeight: 700,
-  color: '#111',
+  color: 'var(--text-primary)',
   letterSpacing: '-0.01em',
 };
 
 const cardStyle: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 12,
   padding: '14px 16px',
 };
@@ -472,9 +472,9 @@ const linkBtnStyle: React.CSSProperties = {
   display: 'inline-block',
   padding: '6px 12px',
   borderRadius: 8,
-  border: '1px solid #e5e7eb',
-  background: '#fff',
-  color: '#444',
+  border: '1px solid var(--border)',
+  background: 'var(--surface-2)',
+  color: 'var(--text-muted)',
   fontSize: 12,
   textDecoration: 'none',
 };
