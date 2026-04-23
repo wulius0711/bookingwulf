@@ -67,26 +67,7 @@ export default function ThemeSwitcher() {
             }}
           />
         ))}
-        <button
-          onClick={handleDark}
-          title={dark ? 'Light Mode' : 'Dark Mode'}
-          style={{
-            width: 16,
-            height: 16,
-            borderRadius: 4,
-            background: dark ? '#1e293b' : '#f1f5f9',
-            border: '1px solid var(--border)',
-            padding: 0,
-            cursor: 'pointer',
-            fontSize: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background 0.2s',
-          }}
-        >
-          {dark ? '🌙' : '☀️'}
-        </button>
+        {/* Dark mode toggle — coming soon */}
       </div>
     </div>
   );
