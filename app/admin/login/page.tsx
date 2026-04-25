@@ -138,6 +138,13 @@ export default function LoginPage() {
             {pending ? 'Anmelden…' : 'Anmelden'}
           </button>
         </form>
+
+        <p style={{ marginTop: 24, fontSize: 13, color: '#666', textAlign: 'center' }}>
+          Noch kein Konto?{' '}
+          <a href="/register" style={{ color: '#111', fontWeight: 600, textDecoration: 'none' }}>
+            Kostenlos registrieren →
+          </a>
+        </p>
       </div>
     </div>
   )
