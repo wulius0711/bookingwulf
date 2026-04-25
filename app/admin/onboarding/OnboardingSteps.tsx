@@ -148,6 +148,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
               fontSize: 14,
               fontWeight: 500,
               textDecoration: 'none',
+              border: '1px solid #e5e7eb',
             }}
           >
             Später
@@ -251,11 +252,13 @@ export default function OnboardingSteps({ hotelName }: Props) {
         </div>
 
         {/* Skip */}
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <a href="/admin/billing" style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>
-            Onboarding überspringen
-          </a>
-        </div>
+        {!isLast && (
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <a href="/admin/billing" style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>
+              Onboarding überspringen
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
