@@ -155,9 +155,10 @@ export default function OnboardingSteps({ hotelName }: Props) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--page-bg)',
         padding: 24,
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif',
+        position: 'relative',
+        zIndex: 42,
       }}
     >
       <div style={{ width: '100%', maxWidth: 560 }}>

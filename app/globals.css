@@ -703,16 +703,38 @@ button, a[role="button"], input[type="submit"] {
 }
 
 
-/* Onboarding: dim non-active nav groups */
-body[data-onboarding-group] [data-nav-group] {
-  opacity: 0.25;
+/* Onboarding: lightbox overlay */
+body[data-onboarding-group]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Sidebar and main content above overlay */
+body[data-onboarding-group] .admin-sidebar {
+  position: relative;
+  z-index: 41;
+}
+body[data-onboarding-group] .admin-main {
+  position: relative;
+  z-index: 41;
+}
+
+/* Dim non-active nav groups with internal overlay */
+body[data-onboarding-group] [data-nav-group]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
-body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"],
-body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"],
-body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"],
-body[data-onboarding-group="Konto"] [data-nav-group="Konto"] {
-  opacity: 1;
-  pointer-events: auto;
+body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"]::after,
+body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"]::after,
+body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"]::after,
+body[data-onboarding-group="Konto"] [data-nav-group="Konto"]::after {
+  display: none;
 }
