@@ -16,22 +16,11 @@ export default async function OnboardingPage() {
   const hotel = session.hotelId
     ? await prisma.hotel.findUnique({
         where: { id: session.hotelId },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          _count: { select: { apartments: true } },
-        },
+        select: { name: true },
       })
     : null;
 
-  const hasApartments = (hotel?._count?.apartments ?? 0) > 0;
-
   return (
-    <OnboardingSteps
-      hotelName={hotel?.name || ''}
-      hotelSlug={hotel?.slug || ''}
-      hasApartments={hasApartments}
-    />
+    <OnboardingSteps hotelName={hotel?.name || ''} />
   );
 }

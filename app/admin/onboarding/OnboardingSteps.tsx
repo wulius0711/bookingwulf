@@ -4,122 +4,83 @@ import { useState } from 'react';
 
 type Props = {
   hotelName: string;
-  hotelSlug: string;
-  hasApartments: boolean;
 };
 
-export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }: Props) {
+export default function OnboardingSteps({ hotelName }: Props) {
   const [step, setStep] = useState(0);
+
+  const featureRow = (icon: string, title: string, desc: string) => (
+    <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+      <span style={{ fontSize: 18, lineHeight: 1, marginTop: 1 }}>{icon}</span>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#111', marginBottom: 2 }}>{title}</div>
+        <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5 }}>{desc}</div>
+      </div>
+    </div>
+  );
 
   const steps = [
     {
       title: 'Willkommen!',
       content: (
         <div>
-          <p style={{ fontSize: 18, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
-            <strong>{hotelName}</strong> wurde erfolgreich erstellt.
-          </p>
-          <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 16px' }}>
-            In den nächsten Schritten richten wir Ihr Buchungssystem ein.
-            Das dauert nur wenige Minuten.
+          <p style={{ fontSize: 17, color: '#374151', lineHeight: 1.6, margin: '0 0 16px' }}>
+            <strong>{hotelName}</strong> wurde erfolgreich erstellt. Wir zeigen Ihnen kurz, was bookingwulf alles kann.
           </p>
           <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a', fontWeight: 500 }}>
-            ✓ Sie befinden sich im 14-tägigen kostenlosen Testzeitraum — alle Funktionen inklusive.
+            ✓ 14 Tage kostenlos testen — alle Funktionen inklusive, keine Kreditkarte nötig.
           </div>
         </div>
       ),
     },
     {
-      title: 'Apartment anlegen',
+      title: 'Betrieb',
       content: (
-        <div>
-          <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.6, margin: '0 0 16px' }}>
-            Legen Sie Ihr erstes Apartment an — mit Name, Preis, Fotos und Ausstattung.
-            Ihre Gäste sehen diese Informationen direkt im Widget.
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+            Hier verwalten Sie den laufenden Betrieb — von der ersten Anfrage bis zur Abreise.
           </p>
-          {hasApartments ? (
-            <div style={{ padding: '12px 16px', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a', marginBottom: 12 }}>
-              Sie haben bereits Apartments angelegt.
-            </div>
-          ) : (
-            <a
-              href="/admin/apartments/new"
-              style={{
-                display: 'inline-block',
-                padding: '11px 24px',
-                background: 'var(--accent)',
-                color: '#fff',
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: 'none',
-              }}
-            >
-              Apartment anlegen
-            </a>
-          )}
+          {featureRow('📋', 'Anfragen', 'Alle Gästeanfragen laufen hier ein. Status ändern (Neu → Beantwortet → Gebucht) — die E-Mail an den Gast geht automatisch raus.')}
+          {featureRow('📅', 'Kalender', 'Monatsansicht aller Buchungen und Sperrzeiten. Per Drag & Drop Zeiträume markieren und direkt Buchungen oder Sperrzeiten anlegen.')}
+          {featureRow('🏠', 'Zimmerplan', 'Belegungsstatus aller Apartments auf einen Blick — für jedes Datum abrufbar.')}
+          {featureRow('📊', 'Analytics', 'Buchungsstatistiken: Auslastung, Umsatz, beliebteste Zeiträume (ab Business-Plan).')}
         </div>
       ),
     },
     {
-      title: 'Widget einbauen',
+      title: 'Verwaltung',
       content: (
-        <div>
-          <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.6, margin: '0 0 16px' }}>
-            Kopieren Sie diesen Code und fügen Sie ihn auf Ihrer Hotel-Website ein — z.B. auf der Seite &bdquo;Buchen&ldquo;.
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+            Alles rund um Ihr Angebot — Apartments, Preise und Verfügbarkeiten.
           </p>
-          <div style={{ position: 'relative' }}>
-            <pre
-              style={{
-                padding: '16px 18px',
-                background: '#0f172a',
-                color: '#e2e8f0',
-                borderRadius: 12,
-                fontSize: 13,
-                lineHeight: 1.6,
-                overflowX: 'auto',
-                margin: 0,
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-all',
-              }}
-            >
-              {`<script src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget.js" data-hotel="${hotelSlug}"></script>`}
-            </pre>
-            <button
-              type="button"
-              onClick={() => {
-                const code = `<script src="${window.location.origin}/widget.js" data-hotel="${hotelSlug}"></script>`;
-                navigator.clipboard.writeText(code);
-              }}
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                padding: '6px 14px',
-                borderRadius: 8,
-                border: 'none',
-                background: '#334155',
-                color: '#fff',
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Kopieren
-            </button>
-          </div>
-          <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 10 }}>
-            Das Widget passt sich automatisch an Ihre Seite an.
-          </p>
+          {featureRow('🛏️', 'Apartments', 'Legen Sie Apartments mit Name, Beschreibung, Fotos, Ausstattung und Basispreis an. Alles erscheint direkt im Buchungs-Widget.')}
+          {featureRow('💶', 'Preise', 'Saisonale Preisregeln: Hochsaison, Nebensaison, Wochenend-Aufschläge, Mindestaufenthalte.')}
+          {featureRow('🚫', 'Sperrzeiten', 'Eigennutzung, Renovierung oder andere Blockierungen direkt im Kalender eintragen.')}
+          {featureRow('➕', 'Zusatzleistungen', 'Optionale Extras für Gäste: Frühstück, Parkplatz, Haustier-Aufschlag u.v.m.')}
         </div>
       ),
     },
     {
-      title: 'Plan wählen',
+      title: 'Einstellungen',
+      content: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+            Passen Sie bookingwulf an Ihr Hotel an.
+          </p>
+          {featureRow('🎨', 'Branding', 'Akzentfarbe, Widget-Layout und Schrift festlegen — das Widget übernimmt das Design automatisch.')}
+          {featureRow('⚙️', 'Hotel-Einstellungen', 'Benachrichtigungs-E-Mail, AGB-Link und Datenschutz-URL hinterlegen. Diese erscheinen im Buchungsformular für Gäste.')}
+          {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
+          {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
+        </div>
+      ),
+    },
+    {
+      title: 'Paket wählen',
       content: (
         <div>
-          <p style={{ fontSize: 18, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
-            Fast geschafft!
+          <p style={{ fontSize: 17, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
+            Sie sind startklar!
           </p>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 20px' }}>
             Ihr 14-tägiger Testzeitraum läuft. Wählen Sie jetzt Ihr Paket — Sie werden erst nach Ablauf des Tests belastet.
