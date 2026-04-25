@@ -19,10 +19,13 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
           <p style={{ fontSize: 18, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
             <strong>{hotelName}</strong> wurde erfolgreich erstellt.
           </p>
-          <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 16px' }}>
             In den nächsten Schritten richten wir Ihr Buchungssystem ein.
             Das dauert nur wenige Minuten.
           </p>
+          <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a', fontWeight: 500 }}>
+            ✓ Sie befinden sich im 14-tägigen kostenlosen Testzeitraum — alle Funktionen inklusive.
+          </div>
         </div>
       ),
     },
@@ -112,17 +115,17 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
       ),
     },
     {
-      title: 'Fertig!',
+      title: 'Plan wählen',
       content: (
         <div>
           <p style={{ fontSize: 18, color: '#374151', lineHeight: 1.6, margin: '0 0 12px' }}>
-            Ihr Buchungssystem ist einsatzbereit.
+            Fast geschafft!
           </p>
-          <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 24px' }}>
-            Im Admin-Bereich können Sie jederzeit Apartments bearbeiten, Design anpassen, Extras hinzufügen und Buchungen verwalten.
+          <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 20px' }}>
+            Ihr 14-tägiger Testzeitraum läuft. Wählen Sie jetzt Ihr Paket — Sie werden erst nach Ablauf des Tests belastet.
           </p>
           <a
-            href="/admin"
+            href="/admin/billing"
             style={{
               display: 'inline-block',
               padding: '12px 28px',
@@ -132,9 +135,25 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
               fontSize: 15,
               fontWeight: 600,
               textDecoration: 'none',
+              marginRight: 12,
             }}
           >
-            Zum Dashboard
+            Paket auswählen →
+          </a>
+          <a
+            href="/admin"
+            style={{
+              display: 'inline-block',
+              padding: '12px 20px',
+              background: 'transparent',
+              color: '#6b7280',
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
+          >
+            Später
           </a>
         </div>
       ),
@@ -235,7 +254,7 @@ export default function OnboardingSteps({ hotelName, hotelSlug, hasApartments }:
 
         {/* Skip */}
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <a href="/admin" style={{ fontSize: 13, color: '#999', textDecoration: 'none' }}>
+          <a href="/admin/billing" style={{ fontSize: 13, color: '#999', textDecoration: 'none' }}>
             Onboarding überspringen
           </a>
         </div>
