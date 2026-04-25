@@ -92,8 +92,19 @@ export default function OnboardingSteps({ hotelName }: Props) {
           <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
             Passen Sie bookingwulf an Ihr Hotel an.
           </p>
-          {featureRow('🎨', 'Widget & Design', 'Akzentfarbe, Widget-Layout und Schrift festlegen — das Widget übernimmt das Design automatisch.')}
-          {featureRow('⚙️', 'Hotel-Einstellungen', 'Benachrichtigungs-E-Mail, AGB-Link und Datenschutz-URL hinterlegen. Diese erscheinen im Buchungsformular für Gäste.')}
+          <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>🎨</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Widget & Design</span>
+              <span style={{ fontSize: 11, fontWeight: 600, background: '#111', color: '#fff', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Tipp</span>
+            </div>
+            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
+              Akzentfarbe, Widget-Layout und Schrift festlegen — das Widget übernimmt das Design automatisch.
+            </div>
+            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
+              Benachrichtigungs-E-Mail, AGB-Link und Datenschutz-URL hinterlegen. Diese erscheinen im Buchungsformular für Gäste.
+            </div>
+          </div>
           {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
           {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
         </div>
