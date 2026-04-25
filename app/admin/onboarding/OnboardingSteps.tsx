@@ -86,13 +86,13 @@ export default function OnboardingSteps({ hotelName }: Props) {
       ),
     },
     {
-      title: 'Einstellungen',
+      title: 'Konfiguration',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
             Passen Sie bookingwulf an Ihr Hotel an.
           </p>
-          {featureRow('🎨', 'Branding', 'Akzentfarbe, Widget-Layout und Schrift festlegen — das Widget übernimmt das Design automatisch.')}
+          {featureRow('🎨', 'Widget & Design', 'Akzentfarbe, Widget-Layout und Schrift festlegen — das Widget übernimmt das Design automatisch.')}
           {featureRow('⚙️', 'Hotel-Einstellungen', 'Benachrichtigungs-E-Mail, AGB-Link und Datenschutz-URL hinterlegen. Diese erscheinen im Buchungsformular für Gäste.')}
           {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
           {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
