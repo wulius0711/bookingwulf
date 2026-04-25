@@ -2168,28 +2168,28 @@
 
     <div class="booking-shell">
       <div class="top">
-        <div class="steps">
-          <div class="step active" data-step="1">
-            <span class="step-index">1</span>
+        <ol class="steps" aria-label="Buchungsschritte">
+          <li class="step active" data-step="1" aria-current="step">
+            <span class="step-index" aria-hidden="true">1</span>
             <span class="step-label">Reisedaten</span>
             <span class="step-sub">Zeitraum und Gäste festlegen</span>
-          </div>
-          <div class="step" data-step="2">
-            <span class="step-index">2</span>
+          </li>
+          <li class="step" data-step="2">
+            <span class="step-index" aria-hidden="true">2</span>
             <span class="step-label">Apartments</span>
             <span class="step-sub">Wählen Sie Ihre Unterkunft</span>
-          </div>
-          <div class="step" data-step="3">
-            <span class="step-index">3</span>
+          </li>
+          <li class="step" data-step="3">
+            <span class="step-index" aria-hidden="true">3</span>
             <span class="step-label">Zusatzleistungen</span>
             <span class="step-sub">Leistungen nach Wunsch ergänzen</span>
-          </div>
-          <div class="step" data-step="4">
-            <span class="step-index">4</span>
+          </li>
+          <li class="step" data-step="4">
+            <span class="step-index" aria-hidden="true">4</span>
             <span class="step-label" id="stepLabelContact">Anfrage/Buchung</span>
             <span class="step-sub">Daten eingeben und absenden</span>
-          </div>
-        </div>
+          </li>
+        </ol>
 
         <div class="price-box">
           <small>Aktuelle Gesamtsumme</small>
@@ -2341,7 +2341,7 @@
                   Masonry
                 </button>
               </div>
-              <div id="apartments"></div>
+              <div id="apartments" aria-label="Verfügbare Apartments" aria-live="polite"></div>
               <div class="selection-note" id="selectionCountNote"></div>
 
               <div class="nav-row">
@@ -2384,39 +2384,42 @@
                 </div>
                 <div class="field-block">
                   <label class="label" for="firstName"
-                    >Vorname<span class="required">*</span></label
+                    >Vorname<span class="required" aria-hidden="true">*</span></label
                   >
                   <input
                     id="firstName"
                     type="text"
                     placeholder="Max"
                     autocomplete="given-name"
+                    aria-required="true"
                     aria-describedby="firstName-err"
                   />
                   <div id="firstName-err" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="field-block" id="lastNameFieldWrap">
                   <label class="label" for="lastName"
-                    >Nachname<span class="required">*</span></label
+                    >Nachname<span class="required" aria-hidden="true">*</span></label
                   >
                   <input
                     id="lastName"
                     type="text"
                     placeholder="Mustermann"
                     autocomplete="family-name"
+                    aria-required="true"
                     aria-describedby="lastName-err"
                   />
                   <div id="lastName-err" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="field-block" id="emailFieldWrap">
                   <label class="label" for="email"
-                    >E-Mail<span class="required">*</span></label
+                    >E-Mail<span class="required" aria-hidden="true">*</span></label
                   >
                   <input
                     id="email"
                     type="email"
                     placeholder="max@mustermann.com"
                     autocomplete="email"
+                    aria-required="true"
                     aria-describedby="email-err"
                   />
                   <div id="email-err" class="field-error" role="alert" aria-live="polite"></div>
@@ -3788,9 +3791,11 @@
           wrap.innerHTML = '';
 
           if (state.loadingApartments) {
+            wrap.setAttribute('aria-busy', 'true');
             wrap.innerHTML = `<div class="loading">Apartments werden geladen …</div>`;
             return;
           }
+          wrap.removeAttribute('aria-busy');
 
           if (!state.apartments.length) {
             wrap.innerHTML = `<div class="loading">Keine Apartments verfügbar.</div>`;
@@ -4191,6 +4196,8 @@
             const step = Number(el.dataset.step);
             el.classList.toggle('active', step === state.step);
             el.classList.toggle('done', step < state.step);
+            if (step === state.step) el.setAttribute('aria-current', 'step');
+            else el.removeAttribute('aria-current');
           });
 
           document.querySelectorAll('.screen').forEach((el) => {
@@ -5081,11 +5088,13 @@
             }
             if (!value) {
               el && (el.style.borderColor = 'var(--danger)');
+              el && el.setAttribute('aria-invalid', 'true');
               errEl.textContent = `${label} ist ein Pflichtfeld.`;
               errEl.style.display = 'block';
               hasFieldErrors = true;
             } else {
               el && (el.style.borderColor = '');
+              el && el.removeAttribute('aria-invalid');
               errEl.textContent = '';
               errEl.style.display = 'none';
             }
@@ -5392,6 +5401,7 @@
         ['firstName', 'lastName', 'email'].forEach((id) => {
           document.getElementById(id)?.addEventListener('input', function () {
             this.style.borderColor = '';
+            this.removeAttribute('aria-invalid');
             const errEl = document.getElementById(`${id}-err`);
             if (errEl) errEl.style.display = 'none';
           });
