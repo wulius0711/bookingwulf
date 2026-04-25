@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const STEP_GROUPS = ['', 'Betrieb', 'Verwaltung', 'Konfiguration', 'Konto'];
 
 type Props = {
   hotelName: string;
@@ -8,6 +10,16 @@ type Props = {
 
 export default function OnboardingSteps({ hotelName }: Props) {
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const group = STEP_GROUPS[step] || '';
+    if (group) {
+      document.body.dataset.onboardingGroup = group;
+    } else {
+      delete document.body.dataset.onboardingGroup;
+    }
+    return () => { delete document.body.dataset.onboardingGroup; };
+  }, [step]);
 
   const featureRow = (icon: string, title: string, desc: string) => (
     <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>

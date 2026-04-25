@@ -58,10 +58,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/extras', label: 'Zusatzleistungen' },
     ]},
     { label: 'Konfiguration', items: [
+      { href: '/admin/settings', label: 'Widget & Design' },
       { href: '/admin/email-templates', label: 'E-Mails' },
       { href: '/admin/nuki', label: 'Schlüsselloses Einchecken' },
       { href: '/admin/beds24', label: 'Beds24 Channel Manager' },
-      { href: '/admin/settings', label: 'Widget & Design' },
     ]},
     { label: 'Konto', items: [
       { href: '/admin/billing', label: 'Abonnement' },

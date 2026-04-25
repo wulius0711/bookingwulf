@@ -702,3 +702,17 @@ button, a[role="button"], input[type="submit"] {
   background: var(--accent-gradient-hover) !important;
 }
 
+
+/* Onboarding: dim non-active nav groups */
+body[data-onboarding-group] [data-nav-group] {
+  opacity: 0.25;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"],
+body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"],
+body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"],
+body[data-onboarding-group="Konto"] [data-nav-group="Konto"] {
+  opacity: 1;
+  pointer-events: auto;
+}
