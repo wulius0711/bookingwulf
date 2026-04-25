@@ -2689,6 +2689,7 @@
           calendarYear: _now.getFullYear(),
           calendarMonth: _now.getMonth(),
           calendarHover: null,
+          calendarFocusDate: null,
           selectedApartmentIds: [],
           selectedExtras: {},
           selectedInsurance: null,
@@ -3423,20 +3424,21 @@
           today.setHours(0, 0, 0, 0);
           const todayStr = toInputDate(today);
 
+          const CAL_WEEKDAYS_FULL = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
           function buildMonth(year, month, showPrev, showNext) {
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const startDow = (firstDay.getDay() + 6) % 7;
 
+            const weekdaysFullOrdered = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
             const weekdaysHTML = CAL_WEEKDAYS.map(
-              (w) => `<div class="cal-weekday">${w}</div>`,
+              (w, i) => `<div class="cal-weekday" role="columnheader" aria-label="${weekdaysFullOrdered[i]}">${w}</div>`,
             ).join('');
 
             const days = [];
             for (let i = 0; i < startDow; i++) {
-              days.push(
-                '<button class="cal-day empty" tabindex="-1" disabled></button>',
-              );
+              days.push('<button class="cal-day empty" role="gridcell" tabindex="-1" disabled aria-hidden="true"></button>');
             }
 
             const arr = state.arrival;
@@ -3449,26 +3451,35 @@
               const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
               const isPast = ds < todayStr;
               const classes = ['cal-day'];
+              let isSelected = false;
 
               if (isPast) {
                 classes.push('past');
               } else {
-                if (ds === arr && arr !== dep) classes.push('selected-start');
-                if (ds === dep && arr !== dep) classes.push('selected-end');
-                if (ds === arr && ds === dep) {
-                  classes.push('selected-start');
-                  classes.push('selected-end');
-                }
-                if (ds === arr && !dep)
-                  classes.push('selected-start', 'selected-end');
-                if (effectiveEnd && ds > arr && ds < effectiveEnd)
-                  classes.push('in-range');
+                if (ds === arr && arr !== dep) { classes.push('selected-start'); isSelected = true; }
+                if (ds === dep && arr !== dep) { classes.push('selected-end'); isSelected = true; }
+                if (ds === arr && ds === dep) { classes.push('selected-start', 'selected-end'); isSelected = true; }
+                if (ds === arr && !dep) { classes.push('selected-start', 'selected-end'); isSelected = true; }
+                if (effectiveEnd && ds > arr && ds < effectiveEnd) classes.push('in-range');
               }
               if (ds === todayStr) classes.push('today');
 
+              const dateObj = new Date(year, month, d);
+              const dow = CAL_WEEKDAYS_FULL[dateObj.getDay()];
+              let ariaLabel = `${dow}, ${d}. ${CAL_MONTHS_DE[month]} ${year}`;
+              if (ds === todayStr) ariaLabel += ', heute';
+              if (ds === arr) ariaLabel += ', Anreise ausgewählt';
+              if (ds === dep) ariaLabel += ', Abreise ausgewählt';
+
               days.push(
-                `<button class="cal-day ${classes.join(' ')}" data-date="${ds}" ${isPast ? 'disabled' : ''}>${d}</button>`,
+                `<button class="cal-day ${classes.join(' ')}" role="gridcell" data-date="${ds}" tabindex="-1" aria-selected="${isSelected}" ${ds === todayStr ? 'aria-current="date"' : ''} aria-label="${ariaLabel}" ${isPast ? 'disabled' : ''}>${d}</button>`,
               );
+            }
+
+            // Group days into week rows
+            const rows = [];
+            for (let i = 0; i < days.length; i += 7) {
+              rows.push(`<div role="row">${days.slice(i, i + 7).join('')}</div>`);
             }
 
             return `
@@ -3478,8 +3489,8 @@
                   <span>${CAL_MONTHS_DE[month]} ${year}</span>
                   ${showNext ? `<button class="cal-nav-btn" id="calNext" aria-label="Nächster Monat">&#8250;</button>` : '<div class="cal-nav-placeholder"></div>'}
                 </div>
-                <div class="cal-weekdays">${weekdaysHTML}</div>
-                <div class="cal-days">${days.join('')}</div>
+                <div class="cal-weekdays" role="row">${weekdaysHTML}</div>
+                <div class="cal-days" role="grid" aria-label="${CAL_MONTHS_DE[month]} ${year}">${rows.join('')}</div>
               </div>`;
           }
 
@@ -3496,6 +3507,7 @@
 
           const urgencyBanner = buildUrgencyBanner(y1, m1);
           const isMobile = window.innerWidth <= 600;
+          const hadCalFocus = wrap.contains(document.activeElement);
 
           wrap.innerHTML = `
             <div class="cal-months">
@@ -3503,7 +3515,8 @@
               ${isMobile ? '' : buildMonth(y2, m2, false, true)}
             </div>
             <div class="cal-nights-hint">${hint}</div>
-            ${urgencyBanner}`;
+            ${urgencyBanner}
+            <div id="cal-status" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></div>`;
 
           wrap.querySelectorAll('.cal-day[data-date]').forEach((btn) => {
             btn.addEventListener('click', () =>
@@ -3541,6 +3554,52 @@
             } else state.calendarMonth++;
             renderCalendar();
           });
+
+          // Roving tabindex: one button gets tabindex=0
+          const todayStr2 = toInputDate(new Date());
+          const preferredDate = (state.calendarFocusDate && state.calendarFocusDate >= todayStr2 ? state.calendarFocusDate : null)
+            || (state.arrival && state.arrival >= todayStr2 ? state.arrival : null)
+            || todayStr2;
+          let tabBtn = wrap.querySelector(`.cal-day[data-date="${preferredDate}"]`);
+          if (!tabBtn || tabBtn.disabled) tabBtn = wrap.querySelector('.cal-day[data-date]:not([disabled])');
+          if (tabBtn) tabBtn.tabIndex = 0;
+          if (hadCalFocus && tabBtn) tabBtn.focus();
+
+          // Keyboard navigation (add once)
+          if (!wrap.dataset.keyHandled) {
+            wrap.dataset.keyHandled = '1';
+            wrap.addEventListener('keydown', function (e) {
+              const focused = document.activeElement;
+              if (!focused || !focused.dataset.date) return;
+              const ds = focused.dataset.date;
+              const [fy, fm, fd] = ds.split('-').map(Number);
+              const d = new Date(fy, fm - 1, fd);
+              let moved = true;
+              switch (e.key) {
+                case 'ArrowLeft':  d.setDate(d.getDate() - 1); break;
+                case 'ArrowRight': d.setDate(d.getDate() + 1); break;
+                case 'ArrowUp':    d.setDate(d.getDate() - 7); break;
+                case 'ArrowDown':  d.setDate(d.getDate() + 7); break;
+                case 'PageUp':     d.setMonth(d.getMonth() - 1); break;
+                case 'PageDown':   d.setMonth(d.getMonth() + 1); break;
+                case 'Home':       d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); break;
+                case 'End':        d.setDate(d.getDate() + (6 - (d.getDay() + 6) % 7)); break;
+                case 'Enter': case ' ': handleCalendarDayClick(ds); e.preventDefault(); return;
+                default: moved = false;
+              }
+              if (!moved) return;
+              e.preventDefault();
+              const newDs = toInputDate(d);
+              if (newDs < toInputDate(new Date())) return;
+              state.calendarFocusDate = newDs;
+              const vm = state.calendarMonth, vy = state.calendarYear;
+              const vm2 = vm === 11 ? 0 : vm + 1, vy2 = vm === 11 ? vy + 1 : vy;
+              const inView = (d.getFullYear() === vy && d.getMonth() === vm)
+                || (!isMobile && d.getFullYear() === vy2 && d.getMonth() === vm2);
+              if (!inView) { state.calendarYear = d.getFullYear(); state.calendarMonth = d.getMonth(); }
+              renderCalendar();
+            });
+          }
         }
 
         function updateCalendarRangeClasses() {
@@ -3599,6 +3658,15 @@
           document.getElementById('arrival').value = state.arrival || '';
           document.getElementById('departure').value = state.departure || '';
           renderCalendar();
+          const calStatus = document.getElementById('cal-status');
+          if (calStatus) {
+            if (state.arrival && state.departure)
+              calStatus.textContent = `Anreise ${formatDate(state.arrival)}, Abreise ${formatDate(state.departure)} ausgewählt`;
+            else if (state.arrival)
+              calStatus.textContent = `Anreise ${formatDate(state.arrival)} ausgewählt – bitte Abreisedatum wählen`;
+            else
+              calStatus.textContent = 'Auswahl zurückgesetzt';
+          }
           renderAll();
           if (state.arrival && state.departure) {
             await updateAvailabilityForApartments();
