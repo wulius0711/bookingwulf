@@ -3484,11 +3484,12 @@
             hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
 
           const urgencyBanner = buildUrgencyBanner(y1, m1);
+          const isMobile = window.innerWidth <= 600;
 
           wrap.innerHTML = `
             <div class="cal-months">
-              ${buildMonth(y1, m1, true, false)}
-              ${buildMonth(y2, m2, false, true)}
+              ${buildMonth(y1, m1, true, isMobile)}
+              ${isMobile ? '' : buildMonth(y2, m2, false, true)}
             </div>
             <div class="cal-nights-hint">${hint}</div>
             ${urgencyBanner}`;
