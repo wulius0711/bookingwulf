@@ -252,7 +252,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
 
         {/* Skip */}
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <a href="/admin/billing" style={{ fontSize: 13, color: '#999', textDecoration: 'none' }}>
+          <a href="/admin/billing" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', background: 'rgba(255,255,255,0.9)', padding: '5px 14px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
             Onboarding überspringen
           </a>
         </div>
