@@ -9,10 +9,11 @@
   }
 
   var config = script.getAttribute('data-config') || '';
+  var lang = script.getAttribute('data-lang') || '';
   var base = script.src.replace(/\/widget\.js(\?.*)?$/, '');
 
   var iframe = document.createElement('iframe');
-  iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel) + (config ? '&config=' + encodeURIComponent(config) : '');
+  iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel) + (config ? '&config=' + encodeURIComponent(config) : '') + (lang ? '&lang=' + encodeURIComponent(lang) : '');
   iframe.style.cssText =
     'width:100%;border:none;overflow:hidden;background:transparent;display:block;height:1200px;';
   iframe.scrolling = 'no';

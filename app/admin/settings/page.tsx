@@ -591,15 +591,24 @@ export default async function Page({ searchParams }: PageProps) {
             <div>
               <h2 style={sectionTitleStyle}>Embed-Code</h2>
               <p style={sectionIntroStyle}>
-                Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;.
+                Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
               </p>
             </div>
 
-            <EmbedCode
-              code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
-            />
-
-
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
+                <EmbedCode
+                  code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
+                />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
+                <EmbedCode
+                  code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}" data-lang="en"></script>`}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Widget Configs */}

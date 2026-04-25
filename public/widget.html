@@ -2688,6 +2688,256 @@
         const _preDeparture = _qp.get('departure') || '';
         const _preType = _qp.get('type') || ''; // 'request' | 'booking'
 
+        const LANG = (_qp.get('lang') || 'de') === 'en' ? 'en' : 'de';
+        const TRANSLATIONS = {
+          de: {
+            months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+            months_short: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
+            weekdays_short: ['Mo','Di','Mi','Do','Fr','Sa','So'],
+            weekdays_full: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+            weekdays_ordered: ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
+            cal_prev_month: 'Vorheriger Monat',
+            cal_next_month: 'Nächster Monat',
+            cal_today: 'heute',
+            cal_arrival_selected: 'Anreise ausgewählt',
+            cal_departure_selected: 'Abreise ausgewählt',
+            cal_hint_arrival: 'Anreisedatum wählen',
+            cal_hint_departure: 'Abreisedatum wählen …',
+            cal_reset: 'Auswahl zurückgesetzt',
+            cal_status_both: 'Anreise {from}, Abreise {to} ausgewählt',
+            cal_status_arrival: 'Anreise {from} ausgewählt – bitte Abreisedatum wählen',
+            night_one: 'Nacht',
+            night_other: 'Nächte',
+            urgency_few_remaining: 'Nur noch {n} {nightWord} frei im {month}',
+            urgency_few_nights: 'Wenige freie Nächte im {month}',
+            per_night: '/ Nacht',
+            per_person_per_night: '/ Person / Nacht',
+            per_person_per_stay: '/ Person',
+            per_stay: '/ Aufenthalt',
+            apt_not_matching: 'Nicht passend',
+            apt_max_guests: 'Max. {adults} Erwachsene · {children} Kinder',
+            apt_checking: 'Wird geprüft …',
+            apt_unavailable: 'Nicht verfügbar',
+            apt_unavailable_period: 'Im gewählten Zeitraum nicht verfügbar',
+            apt_loading: 'Apartments werden geladen …',
+            apt_none: 'Keine Apartments verfügbar.',
+            apt_price_on_request: 'Preis auf Anfrage',
+            apt_price_details: 'Preis Details',
+            apt_not_available_price: 'Nicht verfügbar',
+            apt_adults_abbr: 'Erw.',
+            apt_selected_badge: '✓ Ausgewählt',
+            apt_select_btn: 'Auswählen',
+            apt_remove_btn: 'Entfernen',
+            apt_next_step: 'weiter zu Schritt 3',
+            apt_more: 'Mehr lesen',
+            apt_less: 'Weniger',
+            apt_amenities_toggle: 'Ausstattung',
+            apt_default_desc: 'Apartment mit ruhiger Atmosphäre und klarem Boutique-Charakter.',
+            cleaning_fee: 'Endreinigung',
+            gap_discount_row: 'Lücken-Rabatt -{pct}%',
+            last_minute_row: 'Last-Minute -{pct}%',
+            surcharge_row: 'Nachfragezuschlag +{pct}%',
+            gap_discount_badge: '-{pct}% Sonderpreis',
+            last_minute_badge: '-{pct}% Last-Minute',
+            surcharge_badge: '+{pct}% Nachfrage',
+            included: 'inklusive',
+            total_nights: 'Gesamt {n} Nächte',
+            free: 'Gratis',
+            ortstaxe: 'Ortstaxe',
+            ortstaxe_min_age: '(ab {n} J.)',
+            extras_per_night: '{name} ({n} Nächte)',
+            extras_per_person_night: '{name} ({guests} Pers., {n} Nächte)',
+            extras_per_person: '{name} ({guests} Personen)',
+            extras_per_stay: '{name} (pro Aufenthalt)',
+            no_extras: 'Keine Zusatzleistungen verfügbar.',
+            summary_no_apt: 'Keine Apartments gewählt',
+            summary_no_extras: 'Keine ausgewählt',
+            summary_no_apt_row: 'Kein Apartment gewählt',
+            summary_period: 'Zeitraum: {from} - {to}',
+            summary_guests: '{adults} Erwachsene',
+            summary_guests_children: '{adults} Erwachsene, {children} Kinder',
+            summary_booking_details: 'Buchungsdetails',
+            summary_inquiry_details: 'Anfragedetails',
+            summary_extras_row: 'Zusatzleistungen',
+            step_booking: 'Buchung',
+            step_inquiry: 'Anfrage',
+            child_birthday_one: 'Geburtsdatum Kind',
+            child_birthday_n: 'Geburtsdatum Kind {n}',
+            guest_firstname: 'Vorname',
+            guest_lastname: 'Nachname',
+            guest_birthday: 'Geburtsdatum',
+            insurance_heading: 'Reiserücktrittsversicherung',
+            insurance_intro: 'Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.',
+            insurance_decline: 'Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.',
+            insurance_more_info: 'mehr Infos',
+            terms_booking_conditions: 'Buchungsbedingungen',
+            terms_privacy_policy: 'Datenschutzerklärung',
+            terms_accept: 'Ich akzeptiere die {links}.',
+            terms_no_links: 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.',
+            terms_join: ' und die ',
+            submit_request_label: 'Anfrage',
+            submit_request_hint: 'Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.',
+            submit_request_btn: 'Anfragen',
+            submit_booking_label: 'Buchung',
+            submit_payment_options: 'Zahlungsoptionen',
+            submit_payment_desc: 'Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von {amount} innerhalb von 7 Tagen.',
+            submit_bank_transfer: 'Banküberweisung',
+            submit_credit_card: 'Kreditkarte',
+            submit_coming_soon: 'Bald',
+            submit_book_now: 'Verbindlich buchen',
+            submit_send_request: 'Anfrage senden',
+            err_select_dates: 'Bitte An- und Abreisedatum wählen.',
+            err_departure_after_arrival: 'Das Abreisedatum muss nach dem Anreisedatum liegen.',
+            err_birthday_required: 'Dieses Feld darf nicht leer bleiben.',
+            err_select_apartment: 'Bitte mindestens ein Apartment auswählen.',
+            err_apt_unavailable: 'Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar.',
+            err_select_insurance: 'Bitte wählen Sie eine Versicherungsoption.',
+            err_select_apt_first: 'Bitte zuerst mindestens ein Apartment auswählen.',
+            err_field_required: '{label} ist ein Pflichtfeld.',
+            err_fill_required: 'Bitte alle Pflichtfelder ausfüllen.',
+            err_select_payment: 'Bitte eine Zahlungsmethode auswählen.',
+            err_accept_terms: 'Bitte akzeptieren Sie die Anfragebedingungen.',
+            progress_confirming: 'Anfrage wird bestätigt …',
+            progress_sending: 'Anfrage wird gesendet …',
+            success_booking: 'Ihre Buchung ist bestätigt – Sie erhalten eine Bestätigung per E-Mail.',
+            success_request: 'Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet.',
+            error_sending: 'Fehler beim Senden der Anfrage.',
+            error_server: 'Serverfehler. Bitte versuchen Sie es erneut.',
+            error_loading_apartments: 'Apartments konnten nicht geladen werden.',
+            min_stay: 'Mindestaufenthalt: {n} Nächte',
+            field_firstname: 'Vorname',
+            field_lastname: 'Nachname',
+            field_email: 'E-Mail',
+            btn_back: 'Zurück',
+            btn_next: 'Weiter',
+          },
+          en: {
+            months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+            months_short: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            weekdays_short: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+            weekdays_full: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+            weekdays_ordered: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+            cal_prev_month: 'Previous month',
+            cal_next_month: 'Next month',
+            cal_today: 'today',
+            cal_arrival_selected: 'check-in selected',
+            cal_departure_selected: 'check-out selected',
+            cal_hint_arrival: 'Select check-in date',
+            cal_hint_departure: 'Select check-out date …',
+            cal_reset: 'Selection cleared',
+            cal_status_both: 'Check-in {from}, check-out {to} selected',
+            cal_status_arrival: 'Check-in {from} selected – please select check-out date',
+            night_one: 'night',
+            night_other: 'nights',
+            urgency_few_remaining: 'Only {n} {nightWord} left in {month}',
+            urgency_few_nights: 'Few nights available in {month}',
+            per_night: '/ night',
+            per_person_per_night: '/ person / night',
+            per_person_per_stay: '/ person',
+            per_stay: '/ stay',
+            apt_not_matching: 'Not suitable',
+            apt_max_guests: 'Max. {adults} adults · {children} children',
+            apt_checking: 'Checking …',
+            apt_unavailable: 'Not available',
+            apt_unavailable_period: 'Not available for the selected period',
+            apt_loading: 'Loading apartments …',
+            apt_none: 'No apartments available.',
+            apt_price_on_request: 'Price on request',
+            apt_price_details: 'Price details',
+            apt_not_available_price: 'Not available',
+            apt_adults_abbr: 'adults',
+            apt_selected_badge: '✓ Selected',
+            apt_select_btn: 'Select',
+            apt_remove_btn: 'Remove',
+            apt_next_step: 'continue to step 3',
+            apt_more: 'Read more',
+            apt_less: 'Show less',
+            apt_amenities_toggle: 'Amenities',
+            apt_default_desc: 'Apartment with a quiet atmosphere and a clear boutique character.',
+            cleaning_fee: 'Cleaning fee',
+            gap_discount_row: 'Gap discount -{pct}%',
+            last_minute_row: 'Last-minute -{pct}%',
+            surcharge_row: 'Demand surcharge +{pct}%',
+            gap_discount_badge: '-{pct}% special price',
+            last_minute_badge: '-{pct}% last-minute',
+            surcharge_badge: '+{pct}% demand',
+            included: 'included',
+            total_nights: 'Total {n} nights',
+            free: 'Free',
+            ortstaxe: 'City tax',
+            ortstaxe_min_age: '(from {n} y.)',
+            extras_per_night: '{name} ({n} nights)',
+            extras_per_person_night: '{name} ({guests} pers., {n} nights)',
+            extras_per_person: '{name} ({guests} persons)',
+            extras_per_stay: '{name} (per stay)',
+            no_extras: 'No extras available.',
+            summary_no_apt: 'No apartments selected',
+            summary_no_extras: 'None selected',
+            summary_no_apt_row: 'No apartment selected',
+            summary_period: 'Period: {from} - {to}',
+            summary_guests: '{adults} adults',
+            summary_guests_children: '{adults} adults, {children} children',
+            summary_booking_details: 'Booking details',
+            summary_inquiry_details: 'Inquiry details',
+            summary_extras_row: 'Extras',
+            step_booking: 'Booking',
+            step_inquiry: 'Inquiry',
+            child_birthday_one: 'Child\'s date of birth',
+            child_birthday_n: 'Date of birth child {n}',
+            guest_firstname: 'First name',
+            guest_lastname: 'Last name',
+            guest_birthday: 'Date of birth',
+            insurance_heading: 'Travel cancellation insurance',
+            insurance_intro: 'A lot can happen before your trip. The following insurances cover costs in case of cancellation or early departure.',
+            insurance_decline: 'I expressly decline travel cancellation insurance.',
+            insurance_more_info: 'more info',
+            terms_booking_conditions: 'booking conditions',
+            terms_privacy_policy: 'privacy policy',
+            terms_accept: 'I accept the {links}.',
+            terms_no_links: 'I have read and accept the booking conditions.',
+            terms_join: ' and the ',
+            submit_request_label: 'Inquiry',
+            submit_request_hint: 'Your inquiry is non-binding. No payment required upfront.',
+            submit_request_btn: 'Inquire',
+            submit_booking_label: 'Booking',
+            submit_payment_options: 'Payment options',
+            submit_payment_desc: 'To confirm your reservation, we kindly ask for a deposit of {amount} within 7 days.',
+            submit_bank_transfer: 'Bank transfer',
+            submit_credit_card: 'Credit card',
+            submit_coming_soon: 'Soon',
+            submit_book_now: 'Book now',
+            submit_send_request: 'Send inquiry',
+            err_select_dates: 'Please select check-in and check-out dates.',
+            err_departure_after_arrival: 'Check-out date must be after check-in date.',
+            err_birthday_required: 'This field is required.',
+            err_select_apartment: 'Please select at least one apartment.',
+            err_apt_unavailable: 'At least one selected apartment is currently not available.',
+            err_select_insurance: 'Please select an insurance option.',
+            err_select_apt_first: 'Please select at least one apartment first.',
+            err_field_required: '{label} is required.',
+            err_fill_required: 'Please fill in all required fields.',
+            err_select_payment: 'Please select a payment method.',
+            err_accept_terms: 'Please accept the booking conditions.',
+            progress_confirming: 'Confirming booking …',
+            progress_sending: 'Sending inquiry …',
+            success_booking: 'Your booking is confirmed – you will receive a confirmation by email.',
+            success_request: 'Thank you – your inquiry has been sent successfully.',
+            error_sending: 'Error sending the inquiry.',
+            error_server: 'Server error. Please try again.',
+            error_loading_apartments: 'Could not load apartments.',
+            min_stay: 'Minimum stay: {n} nights',
+            field_firstname: 'First name',
+            field_lastname: 'Last name',
+            field_email: 'Email',
+            btn_back: 'Back',
+            btn_next: 'Continue',
+          },
+        };
+        function t(key, vars = {}) {
+          const val = TRANSLATIONS[LANG]?.[key] ?? TRANSLATIONS.de[key] ?? key;
+          return String(val).replace(/\{(\w+)\}/g, (_, k) => vars[k] != null ? String(vars[k]) : `{${k}}`);
+        }
+
         const _now = new Date();
         const state = {
           step: 1,
@@ -2740,15 +2990,15 @@
 
         function getPriceLabel(billingType, price) {
           const p = eur(price);
-          if (billingType === 'per_night') return `${p} / Nacht`;
+          if (billingType === 'per_night') return `${p} ${t('per_night')}`;
           if (billingType === 'per_person_per_night')
-            return `${p} / Person / Nacht`;
-          if (billingType === 'per_person_per_stay') return `${p} / Person`;
-          return `${p} / Aufenthalt`;
+            return `${p} ${t('per_person_per_night')}`;
+          if (billingType === 'per_person_per_stay') return `${p} ${t('per_person_per_stay')}`;
+          return `${p} ${t('per_stay')}`;
         }
 
         const eur = (n) =>
-          new Intl.NumberFormat('de-AT', {
+          new Intl.NumberFormat(LANG === 'en' ? 'en-GB' : 'de-AT', {
             style: 'currency',
             currency: 'EUR',
           }).format(Number(n || 0));
@@ -2971,7 +3221,7 @@
 
         function formatDate(d) {
           if (!d) return '–';
-          return new Intl.DateTimeFormat('de-AT', {
+          return new Intl.DateTimeFormat(LANG === 'en' ? 'en-GB' : 'de-AT', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -3023,16 +3273,16 @@
 
               if (ex.billingType === 'per_night') {
                 total = price * nights;
-                detail = `${ex.name} (${nights} Nächte)`;
+                detail = t('extras_per_night', { name: ex.name, n: nights });
               } else if (ex.billingType === 'per_person_per_night') {
                 total = price * guests * nights;
-                detail = `${ex.name} (${guests} Pers., ${nights} Nächte)`;
+                detail = t('extras_per_person_night', { name: ex.name, guests, n: nights });
               } else if (ex.billingType === 'per_person_per_stay') {
                 total = price * guests;
-                detail = `${ex.name} (${guests} Personen)`;
+                detail = t('extras_per_person', { name: ex.name, guests });
               } else {
                 total = price;
-                detail = `${ex.name} (pro Aufenthalt)`;
+                detail = t('extras_per_stay', { name: ex.name });
               }
 
               return { key: ex.key, label: ex.name, detail, total };
@@ -3378,21 +3628,8 @@
           renderCalendar();
         }
 
-        const CAL_MONTHS_DE = [
-          'Januar',
-          'Februar',
-          'März',
-          'April',
-          'Mai',
-          'Juni',
-          'Juli',
-          'August',
-          'September',
-          'Oktober',
-          'November',
-          'Dezember',
-        ];
-        const CAL_WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+        const CAL_MONTHS_DE = TRANSLATIONS[LANG].months;
+        const CAL_WEEKDAYS = TRANSLATIONS[LANG].weekdays_short;
 
         async function loadUrgency(year, month) {
           if (!state.settings.showUrgencySignals) return;
@@ -3418,10 +3655,10 @@
           const pct = (u.freeNights / u.totalNights) * 100;
           const threshold = state.settings.urgencyThreshold ?? 40;
           if (pct > threshold) return '';
-          const CAL_MONTHS_DE_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+          const monthName = TRANSLATIONS[LANG].months_short[month];
           const label = pct <= 15
-            ? `Nur noch ${u.freeNights} ${u.freeNights === 1 ? 'Nacht' : 'Nächte'} frei im ${CAL_MONTHS_DE_SHORT[month]}`
-            : `Wenige freie Nächte im ${CAL_MONTHS_DE_SHORT[month]}`;
+            ? t('urgency_few_remaining', { n: u.freeNights, nightWord: u.freeNights === 1 ? t('night_one') : t('night_other'), month: monthName })
+            : t('urgency_few_nights', { month: monthName });
           return `<div style="margin-top:10px;padding:7px 12px;background:color-mix(in srgb,var(--accent) 10%,white);border:1px solid color-mix(in srgb,var(--accent) 25%,white);border-radius:8px;font-size:12px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:6px;"><span>🔥</span>${label}</div>`;
         }
 
@@ -3433,14 +3670,14 @@
           today.setHours(0, 0, 0, 0);
           const todayStr = toInputDate(today);
 
-          const CAL_WEEKDAYS_FULL = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+          const CAL_WEEKDAYS_FULL = TRANSLATIONS[LANG].weekdays_full;
 
           function buildMonth(year, month, showPrev, showNext) {
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const startDow = (firstDay.getDay() + 6) % 7;
 
-            const weekdaysFullOrdered = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+            const weekdaysFullOrdered = TRANSLATIONS[LANG].weekdays_ordered;
             const weekdaysHTML = CAL_WEEKDAYS.map(
               (w, i) => `<div class="cal-weekday" role="columnheader" aria-label="${weekdaysFullOrdered[i]}">${w}</div>`,
             ).join('');
@@ -3476,9 +3713,9 @@
               const dateObj = new Date(year, month, d);
               const dow = CAL_WEEKDAYS_FULL[dateObj.getDay()];
               let ariaLabel = `${dow}, ${d}. ${CAL_MONTHS_DE[month]} ${year}`;
-              if (ds === todayStr) ariaLabel += ', heute';
-              if (ds === arr) ariaLabel += ', Anreise ausgewählt';
-              if (ds === dep) ariaLabel += ', Abreise ausgewählt';
+              if (ds === todayStr) ariaLabel += ', ' + t('cal_today');
+              if (ds === arr) ariaLabel += ', ' + t('cal_arrival_selected');
+              if (ds === dep) ariaLabel += ', ' + t('cal_departure_selected');
 
               days.push(
                 `<button class="cal-day ${classes.join(' ')}" role="gridcell" data-date="${ds}" tabindex="-1" aria-selected="${isSelected}" ${ds === todayStr ? 'aria-current="date"' : ''} aria-label="${ariaLabel}" ${isPast ? 'disabled' : ''}>${d}</button>`,
@@ -3494,9 +3731,9 @@
             return `
               <div class="cal-month">
                 <div class="cal-month-header">
-                  ${showPrev ? `<button class="cal-nav-btn" id="calPrev" aria-label="Vorheriger Monat">&#8249;</button>` : '<div class="cal-nav-placeholder"></div>'}
+                  ${showPrev ? `<button class="cal-nav-btn" id="calPrev" aria-label="${t('cal_prev_month')}">&#8249;</button>` : '<div class="cal-nav-placeholder"></div>'}
                   <span>${CAL_MONTHS_DE[month]} ${year}</span>
-                  ${showNext ? `<button class="cal-nav-btn" id="calNext" aria-label="Nächster Monat">&#8250;</button>` : '<div class="cal-nav-placeholder"></div>'}
+                  ${showNext ? `<button class="cal-nav-btn" id="calNext" aria-label="${t('cal_next_month')}">&#8250;</button>` : '<div class="cal-nav-placeholder"></div>'}
                 </div>
                 <div class="cal-weekdays" role="row">${weekdaysHTML}</div>
                 <div class="cal-days" role="grid" aria-label="${CAL_MONTHS_DE[month]} ${year}">${rows.join('')}</div>
@@ -3509,10 +3746,10 @@
           const m2 = m1 === 11 ? 0 : m1 + 1;
 
           const nights = getNights();
-          let hint = 'Anreisedatum wählen';
-          if (state.arrival && !state.departure) hint = 'Abreisedatum wählen …';
+          let hint = t('cal_hint_arrival');
+          if (state.arrival && !state.departure) hint = t('cal_hint_departure');
           if (state.arrival && state.departure)
-            hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
+            hint = `<strong>${nights} ${nights === 1 ? t('night_one') : t('night_other')}</strong> · ${formatDate(state.arrival)} – ${formatDate(state.departure)}`;
 
           const urgencyBanner = buildUrgencyBanner(y1, m1);
           const isMobile = window.innerWidth <= 600;
@@ -3641,10 +3878,10 @@
           const hintEl = wrap.querySelector('.cal-nights-hint');
           if (hintEl) {
             const nights = getNights();
-            let hint = 'Anreisedatum wählen';
-            if (arr && !dep) hint = 'Abreisedatum wählen …';
+            let hint = t('cal_hint_arrival');
+            if (arr && !dep) hint = t('cal_hint_departure');
             if (arr && dep)
-              hint = `<strong>${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}</strong> · ${formatDate(arr)} – ${formatDate(dep)}`;
+              hint = `<strong>${nights} ${nights === 1 ? t('night_one') : t('night_other')}</strong> · ${formatDate(arr)} – ${formatDate(dep)}`;
             hintEl.innerHTML = hint;
           }
         }
@@ -3670,11 +3907,11 @@
           const calStatus = document.getElementById('cal-status');
           if (calStatus) {
             if (state.arrival && state.departure)
-              calStatus.textContent = `Anreise ${formatDate(state.arrival)}, Abreise ${formatDate(state.departure)} ausgewählt`;
+              calStatus.textContent = t('cal_status_both', { from: formatDate(state.arrival), to: formatDate(state.departure) });
             else if (state.arrival)
-              calStatus.textContent = `Anreise ${formatDate(state.arrival)} ausgewählt – bitte Abreisedatum wählen`;
+              calStatus.textContent = t('cal_status_arrival', { from: formatDate(state.arrival) });
             else
-              calStatus.textContent = 'Auswahl zurückgesetzt';
+              calStatus.textContent = t('cal_reset');
           }
           renderAll();
           if (state.arrival && state.departure) {
@@ -3756,8 +3993,8 @@
           if (!isApartmentMatchingGuests(apartment)) {
             return {
               type: 'not-matching',
-              label: 'Nicht passend',
-              message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${apartment.maxChildren || 0} Kinder`,
+              label: t('apt_not_matching'),
+              message: t('apt_max_guests', { adults: apartment.maxAdults || 0, children: apartment.maxChildren || 0 }),
             };
           }
 
@@ -3768,15 +4005,14 @@
           }
 
           if (!pricing) {
-            return { type: 'loading', label: '', message: 'Wird geprüft …' };
+            return { type: 'loading', label: '', message: t('apt_checking') };
           }
 
           if (!pricing.available) {
             return {
               type: 'unavailable',
-              label: 'Nicht verfügbar',
-              message:
-                pricing.message || 'Im gewählten Zeitraum nicht verfügbar',
+              label: t('apt_unavailable'),
+              message: pricing.message || t('apt_unavailable_period'),
             };
           }
 
@@ -3798,13 +4034,13 @@
 
           if (state.loadingApartments) {
             wrap.setAttribute('aria-busy', 'true');
-            wrap.innerHTML = `<div class="loading">Apartments werden geladen …</div>`;
+            wrap.innerHTML = `<div class="loading">${t('apt_loading')}</div>`;
             return;
           }
           wrap.removeAttribute('aria-busy');
 
           if (!state.apartments.length) {
-            wrap.innerHTML = `<div class="loading">Keine Apartments verfügbar.</div>`;
+            wrap.innerHTML = `<div class="loading">${t('apt_none')}</div>`;
             return;
           }
 
@@ -3827,28 +4063,28 @@
 
             let priceHtml = '';
             if (state.settings.showPrices) {
-              priceHtml = `<div class="apt-price">Preis auf Anfrage</div>`;
+              priceHtml = `<div class="apt-price">${t('apt_price_on_request')}</div>`;
               if (pricing && pricing.available) {
                 let priceBadge = '';
                 if (pricing.gapDiscount > 0) {
-                  priceBadge = `<span class="apt-price-badge discount">-${pricing.gapDiscount}% Sonderpreis</span>`;
+                  priceBadge = `<span class="apt-price-badge discount">${t('gap_discount_badge', { pct: pricing.gapDiscount })}</span>`;
                 } else if (pricing.discountPercent > 0) {
-                  priceBadge = `<span class="apt-price-badge discount">-${pricing.discountPercent}% Last-Minute</span>`;
+                  priceBadge = `<span class="apt-price-badge discount">${t('last_minute_badge', { pct: pricing.discountPercent })}</span>`;
                 } else if (pricing.surchargePercent > 0) {
-                  priceBadge = `<span class="apt-price-badge surcharge">+${pricing.surchargePercent}% Nachfrage</span>`;
+                  priceBadge = `<span class="apt-price-badge surcharge">${t('surcharge_badge', { pct: pricing.surchargePercent })}</span>`;
                 }
                 const basePrice =
                   (pricing.totalPrice || 0) - (pricing.cleaningFee || 0);
-                const nightsLabel = `${pricing.nights} Nacht${pricing.nights !== 1 ? 'e' : ''}${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`;
+                const nightsLabel = `${pricing.nights} ${pricing.nights !== 1 ? t('night_other') : t('night_one')}${pricing.seasonName ? ` · ${pricing.seasonName}` : ''}`;
                 const cleaningRow =
                   pricing.cleaningFee > 0
-                    ? `<div class="apt-price-popover-row"><span>Endreinigung</span><span>${eur(pricing.cleaningFee)}</span></div>`
+                    ? `<div class="apt-price-popover-row"><span>${t('cleaning_fee')}</span><span>${eur(pricing.cleaningFee)}</span></div>`
                     : '';
                 const discountRow =
                   pricing.gapDiscount > 0
-                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Lücken-Rabatt -${pricing.gapDiscount}%</span><span>inklusive</span></div>`
+                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>${t('gap_discount_row', { pct: pricing.gapDiscount })}</span><span>${t('included')}</span></div>`
                     : pricing.discountPercent > 0
-                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>Last-Minute -${pricing.discountPercent}%</span><span>inklusive</span></div>`
+                    ? `<div class="apt-price-popover-row" style="color:#166534;"><span>${t('last_minute_row', { pct: pricing.discountPercent })}</span><span>${t('included')}</span></div>`
                     : '';
                 const childSurcharge = calcChildSurcharge(pricing.nights);
                 const childRows = (() => {
@@ -3866,7 +4102,7 @@
                       const label = range.label || `Kind ${i + 1}`;
                       const cost = Number(range.pricePerNight) * pricing.nights;
                       return Number(range.pricePerNight) === 0
-                        ? `<div class="apt-price-popover-row"><span>${label} (${age} J.) · Gratis</span><span style="color:#16a34a">Gratis</span></div>`
+                        ? `<div class="apt-price-popover-row"><span>${label} (${age} J.) · ${t('free')}</span><span style="color:#16a34a">${t('free')}</span></div>`
                         : `<div class="apt-price-popover-row"><span>${label} (${age} J.) ${pricing.nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
                     })
                     .join('');
@@ -3876,8 +4112,8 @@
                   ortstaxeAmount > 0
                     ? (() => {
                         const minAge = state.ortstaxeMinAge;
-                        const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
-                        return `<div class="apt-price-popover-row"><span>Ortstaxe${minAgeNote}</span><span>${eur(ortstaxeAmount)}</span></div>`;
+                        const minAgeNote = minAge ? ' ' + t('ortstaxe_min_age', { n: minAge }) : '';
+                        return `<div class="apt-price-popover-row"><span>${t('ortstaxe')}${minAgeNote}</span><span>${eur(ortstaxeAmount)}</span></div>`;
                       })()
                     : '';
                 const grandTotal =
@@ -3890,12 +4126,12 @@
                     <div class="apt-price-popover-header">${nightsLabel}</div>
                     <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
                     ${childRows}${cleaningRow}${discountRow}${ortstaxeRow}
-                    <div class="apt-price-popover-row total"><span>Gesamt ${pricing.nights} Nächte</span><span>${eur(grandTotal)}</span></div>
+                    <div class="apt-price-popover-row total"><span>${t('total_nights', { n: pricing.nights })}</span><span>${eur(grandTotal)}</span></div>
                   </div>`
                   : '';
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">Preis Details</button>${popoverHtml}</div>`;
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">${t('apt_price_details')}</button>${popoverHtml}</div>`;
               } else if (status.type === 'unavailable') {
-                priceHtml = `<div class="apt-price">Nicht verfügbar</div>`;
+                priceHtml = `<div class="apt-price">${t('apt_not_available_price')}</div>`;
               }
             }
 
@@ -3905,13 +4141,12 @@
 
             const metaParts = [];
             if (ap.size) metaParts.push(ap.size + ' m²');
-            metaParts.push(`${ap.maxAdults || 0} Erw.`);
+            metaParts.push(`${ap.maxAdults || 0} ${t('apt_adults_abbr')}`);
             if ((ap.maxChildren || 0) > 0)
-              metaParts.push(`${ap.maxChildren} Kinder`);
+              metaParts.push(`${ap.maxChildren} ${LANG === 'en' ? 'children' : 'Kinder'}`);
 
             const description =
-              ap.description ||
-              'Apartment mit ruhiger Atmosphäre und klarem Boutique-Charakter.';
+              ap.description || t('apt_default_desc');
 
             const amenitiesHtml =
               ap.amenities &&
@@ -3924,7 +4159,7 @@
                       class="apt-amenities-toggle ${amenitiesExpanded ? 'open' : ''}"
                       data-toggle-amenities="${ap.id}"
                     >
-                      <span class="apt-amenities-toggle-label">Ausstattung</span>
+                      <span class="apt-amenities-toggle-label">${t('apt_amenities_toggle')}</span>
                       <span class="apt-amenities-toggle-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
                     </button>
 
@@ -3966,7 +4201,7 @@
                 ${status.label}
               </div>
 
-              <div class="apt-selected-badge">✓ Ausgewählt</div>
+              <div class="apt-selected-badge">${t('apt_selected_badge')}</div>
 
               <div class="apt-image-wrap" data-image-wrap="${ap.id}">
                 <div
@@ -4011,7 +4246,7 @@
                 ${
                   description.length > 140
                     ? `<button type="button" class="apt-more" data-toggle-desc="${ap.id}">
-                        ${expanded ? 'Weniger' : 'Mehr lesen'}
+                        ${expanded ? t('apt_less') : t('apt_more')}
                       </button>`
                     : ''
                 }
@@ -4034,9 +4269,9 @@
                     ${
                       status.type === 'available'
                         ? `<button type="button" class="apt-select-btn ${selected ? 'remove' : ''}" data-select="${ap.id}">
-                            ${selected ? 'Entfernen' : 'Auswählen'}
+                            ${selected ? t('apt_remove_btn') : t('apt_select_btn')}
                           </button>
-                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>weiter zu Schritt 3</a>` : ''}`
+                          ${selected ? `<a href="#" class="apt-next-link" data-next-step>${t('apt_next_step')}</a>` : ''}`
                         : ''
                     }
                   </div>
@@ -4055,7 +4290,7 @@
               state.expandedDescriptions[id] = isExpanded;
               const desc = btn.previousElementSibling;
               if (desc) desc.classList.toggle('is-clamped', !isExpanded);
-              btn.textContent = isExpanded ? 'Weniger' : 'Mehr lesen';
+              btn.textContent = isExpanded ? t('apt_less') : t('apt_more');
             });
           });
 
@@ -4191,10 +4426,10 @@
           const count = state.selectedApartmentIds.length;
           document.getElementById('selectionCountNote').textContent =
             count === 0
-              ? 'Noch keine Kategorie ausgewählt.'
+              ? (LANG === 'en' ? 'No category selected yet.' : 'Noch keine Kategorie ausgewählt.')
               : count === 1
-                ? '1 Apartment ausgewählt.'
-                : `${count} Apartments ausgewählt.`;
+                ? (LANG === 'en' ? '1 apartment selected.' : '1 Apartment ausgewählt.')
+                : (LANG === 'en' ? `${count} apartments selected.` : `${count} Apartments ausgewählt.`);
         }
 
         function renderSteps() {
@@ -4218,12 +4453,12 @@
           const selectedApts = getSelectedApartments();
           const apartmentText =
             selectedApts.length === 0
-              ? 'Keine Apartments gewählt'
+              ? t('summary_no_apt')
               : selectedApts.map((a) => a.name).join(', ');
 
-          const guests = `${state.adults} Erwachsene${
-            state.children ? `, ${state.children} Kinder` : ''
-          }`;
+          const guests = state.children
+            ? t('summary_guests_children', { adults: state.adults, children: state.children })
+            : t('summary_guests', { adults: state.adults });
           const selectedExtras = getSelectedExtrasDetailed();
           const extrasNormal = selectedExtras.filter((item) => {
             const ex = state.availableExtras.find((e) => e.key === item.key);
@@ -4237,7 +4472,7 @@
           const extras =
             extrasSorted.length > 0
               ? `<ul style="margin:0;padding-left:18px;">${extrasSorted.map((item) => `<li>${item.detail}</li>`).join('')}</ul>`
-              : 'Keine ausgewählt';
+              : t('summary_no_extras');
 
           const showPrices = state.settings.showPrices;
           document.getElementById('totalBox').textContent = eur(getTotal());
@@ -4246,14 +4481,14 @@
             totalBoxWrap.style.display = showPrices ? '' : 'none';
           const summaryHeadline = document.getElementById('summaryHeadline');
           if (summaryHeadline)
-            summaryHeadline.textContent = state.settings.enableInstantBooking ? 'Buchungsdetails' : 'Anfragedetails';
+            summaryHeadline.textContent = state.settings.enableInstantBooking ? t('summary_booking_details') : t('summary_inquiry_details');
           const stepLabelContact = document.getElementById('stepLabelContact');
           if (stepLabelContact)
-            stepLabelContact.textContent = state.settings.enableInstantBooking ? 'Buchung' : 'Anfrage';
+            stepLabelContact.textContent = state.settings.enableInstantBooking ? t('step_booking') : t('step_inquiry');
           document.getElementById('summaryApartment').textContent =
             apartmentText;
           document.getElementById('summaryDates').textContent =
-            `Zeitraum: ${formatDate(state.arrival)} - ${formatDate(state.departure)}`;
+            t('summary_period', { from: formatDate(state.arrival), to: formatDate(state.departure) });
           document.getElementById('summaryGuests').textContent = guests;
           document.getElementById('summaryExtras').innerHTML = extras;
           document.getElementById('summaryTotal').textContent = eur(getTotal());
@@ -4279,7 +4514,7 @@
                 const p = state.pricingMap[String(apt.id)];
                 if (p && p.available) {
                   const basePrice = (p.totalPrice || 0) - (p.cleaningFee || 0);
-                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${nights} Nacht${nights !== 1 ? 'e' : ''} × ${eur(p.pricePerNight)}</span><span>${eur(basePrice)}</span></div>`;
+                  rows += `<div style="${rowStyle}"><span style="${muteStyle}">${nights} ${nights !== 1 ? t('night_other') : t('night_one')} × ${eur(p.pricePerNight)}</span><span>${eur(basePrice)}</span></div>`;
 
                   // Child pricing right after nights
                   if (state.childPriceRanges.length > 0 && state.children > 0) {
@@ -4294,7 +4529,7 @@
                       const label = range.label || `Kind ${i + 1}`;
                       const cost = Number(range.pricePerNight) * nights;
                       if (Number(range.pricePerNight) === 0) {
-                        rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) · Gratis</span><span style="color:#16a34a;">Gratis</span></div>`;
+                        rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) · ${t('free')}</span><span style="color:#16a34a;">${t('free')}</span></div>`;
                       } else {
                         rows += `<div style="${rowStyle}"><span style="${muteStyle}">${label} (${age} J.) ${nights}× ${eur(range.pricePerNight)}</span><span>${eur(cost)}</span></div>`;
                       }
@@ -4302,19 +4537,19 @@
                   }
 
                   if (p.discountPercent > 0) {
-                    rows += `<div style="${rowStyle}"><span style="color:#166534;">Last-Minute -${p.discountPercent}%</span><span style="color:#166534;">inklusive</span></div>`;
+                    rows += `<div style="${rowStyle}"><span style="color:#166534;">${t('last_minute_row', { pct: p.discountPercent })}</span><span style="color:#166534;">${t('included')}</span></div>`;
                   } else if (p.surchargePercent > 0) {
-                    rows += `<div style="${rowStyle}"><span style="color:#854d0e;">Nachfragezuschlag +${p.surchargePercent}%</span><span style="color:#854d0e;">inklusive</span></div>`;
+                    rows += `<div style="${rowStyle}"><span style="color:#854d0e;">${t('surcharge_row', { pct: p.surchargePercent })}</span><span style="color:#854d0e;">${t('included')}</span></div>`;
                   }
                 }
               });
             } else if (selectedAptsList.length === 0) {
-              rows = `<div style="${rowStyle} ${muteStyle}"><span>Kein Apartment gewählt</span></div>`;
+              rows = `<div style="${rowStyle} ${muteStyle}"><span>${t('summary_no_apt_row')}</span></div>`;
             }
 
             const extrasTotal = getExtrasTotal();
             if (extrasTotal > 0) {
-              rows += `<div style="${rowStyle}"><span style="${muteStyle}">Zusatzleistungen</span><span>${eur(extrasTotal)}</span></div>`;
+              rows += `<div style="${rowStyle}"><span style="${muteStyle}">${t('summary_extras_row')}</span><span>${eur(extrasTotal)}</span></div>`;
             }
 
             // Endreinigung after extras, before Ortstaxe
@@ -4322,15 +4557,15 @@
             selectedAptsForCleaning.forEach((apt) => {
               const p = state.pricingMap[String(apt.id)];
               if (p && p.available && p.cleaningFee > 0) {
-                rows += `<div style="${rowStyle}"><span style="${muteStyle}">Endreinigung</span><span>${eur(p.cleaningFee)}</span></div>`;
+                rows += `<div style="${rowStyle}"><span style="${muteStyle}">${t('cleaning_fee')}</span><span>${eur(p.cleaningFee)}</span></div>`;
               }
             });
 
             const ortstaxe = calcOrtstaxe(nights);
             if (ortstaxe > 0) {
               const minAge = state.ortstaxeMinAge;
-              const minAgeNote = minAge ? ` (ab ${minAge} J.)` : '';
-              rows += `<div style="${rowStyle}"><span style="${muteStyle}">Ortstaxe${minAgeNote}</span><span>${eur(ortstaxe)}</span></div>`;
+              const minAgeNote = minAge ? ' ' + t('ortstaxe_min_age', { n: minAge }) : '';
+              rows += `<div style="${rowStyle}"><span style="${muteStyle}">${t('ortstaxe')}${minAgeNote}</span><span>${eur(ortstaxe)}</span></div>`;
             }
 
             breakdownEl.innerHTML = rows;
@@ -4356,7 +4591,7 @@
 
           if (!regularExtras.length && !insuranceExtras.length) {
             wrap.innerHTML =
-              '<div style="color:var(--muted);padding:8px 0;">Keine Zusatzleistungen verfügbar.</div>';
+              `<div style="color:var(--muted);padding:8px 0;">${t('no_extras')}</div>`;
             return;
           }
 
@@ -4397,14 +4632,13 @@
             const heading = document.createElement('div');
             heading.style.cssText =
               'font-size:1.286rem;font-weight:700;margin-bottom:6px;color:var(--text);';
-            heading.textContent = 'Reiserücktrittsversicherung';
+            heading.textContent = t('insurance_heading');
             section.appendChild(heading);
 
             const intro = document.createElement('div');
             intro.style.cssText =
               'font-size:1rem;color:var(--muted);line-height:1.5;margin-bottom:18px;';
-            intro.textContent =
-              'Bevor Sie Ihre Reise antreten, kann noch viel passieren. Die folgenden Versicherungen decken die Kosten bei Stornierung bzw. vorzeitiger Abreise.';
+            intro.textContent = t('insurance_intro');
             section.appendChild(intro);
 
             insuranceExtras.forEach((ex) => {
@@ -4454,7 +4688,7 @@
                 link.href = ex.linkUrl;
                 link.target = '_blank';
                 link.rel = 'noopener noreferrer';
-                link.textContent = 'mehr Infos';
+                link.textContent = t('insurance_more_info');
                 link.style.cssText =
                   'font-size:0.929rem;color:var(--accent);text-decoration:underline;';
                 link.addEventListener('click', (e) => e.stopPropagation());
@@ -4494,8 +4728,7 @@
 
             const declineText = document.createElement('span');
             declineText.style.cssText = 'font-size:1rem;color:var(--muted);';
-            declineText.textContent =
-              'Ich verzichte ausdrücklich auf die Reiserücktrittsversicherung.';
+            declineText.textContent = t('insurance_decline');
 
             declineLabel.appendChild(declineRadio);
             declineLabel.appendChild(declineText);
@@ -4520,21 +4753,19 @@
             links.push(
               '<a href="' +
                 state.bookingTermsUrl +
-                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Buchungsbedingungen</a>',
+                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">' + t('terms_booking_conditions') + '</a>',
             );
           if (state.privacyPolicyUrl)
             links.push(
               '<a href="' +
                 state.privacyPolicyUrl +
-                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Datenschutzerklärung</a>',
+                '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">' + t('terms_privacy_policy') + '</a>',
             );
 
           const text =
             links.length > 0
-              ? 'Ich akzeptiere die ' +
-                links.join(' und die ') +
-                '.<span class="required">*</span>'
-              : 'Ich habe die Buchungsbedingungen gelesen und akzeptiere diese.<span class="required">*</span>';
+              ? t('terms_accept', { links: links.join(t('terms_join')) }) + '<span class="required">*</span>'
+              : t('terms_no_links') + '<span class="required">*</span>';
 
           wrap.innerHTML =
             '<label style="display:flex;flex-direction:row;align-items:center;gap:10px;font-size:1rem;color:var(--text);line-height:1.5;cursor:pointer;">' +
@@ -4568,7 +4799,7 @@
             label.className = 'label';
             label.setAttribute('for', `childBirthday_${i}`);
             label.textContent =
-              count === 1 ? 'Geburtsdatum Kind' : `Geburtsdatum Kind ${i + 1}`;
+              count === 1 ? t('child_birthday_one') : t('child_birthday_n', { n: i + 1 });
             const input = document.createElement('input');
             input.type = 'date';
             input.id = `childBirthday_${i}`;
@@ -4615,7 +4846,7 @@
           if (state.adults > 1) {
             const at = document.createElement('div');
             at.className = 'guest-section-title';
-            at.textContent = 'Erwachsene';
+            at.textContent = LANG === 'en' ? 'Adults' : 'Erwachsene';
             wrap.appendChild(at);
             for (let i = 1; i < state.adults; i++) {
               const row = document.createElement('div');
@@ -4623,12 +4854,12 @@
               row.style.marginBottom = '12px';
               row.innerHTML = `
                 <div class="field-block">
-                  <label class="label" for="guestAdult_${i}_fn">Vorname</label>
-                  <input type="text" id="guestAdult_${i}_fn" placeholder="Vorname" value="${saved[`guestAdult_${i}_fn`] || ''}" />
+                  <label class="label" for="guestAdult_${i}_fn">${t('guest_firstname')}</label>
+                  <input type="text" id="guestAdult_${i}_fn" placeholder="${t('guest_firstname')}" value="${saved[`guestAdult_${i}_fn`] || ''}" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="guestAdult_${i}_ln">Nachname</label>
-                  <input type="text" id="guestAdult_${i}_ln" placeholder="Nachname" value="${saved[`guestAdult_${i}_ln`] || ''}" />
+                  <label class="label" for="guestAdult_${i}_ln">${t('guest_lastname')}</label>
+                  <input type="text" id="guestAdult_${i}_ln" placeholder="${t('guest_lastname')}" value="${saved[`guestAdult_${i}_ln`] || ''}" />
                 </div>`;
               wrap.appendChild(row);
             }
@@ -4639,7 +4870,7 @@
             const ct = document.createElement('div');
             ct.className = 'guest-section-title';
             ct.style.marginTop = state.adults > 1 ? '16px' : '0';
-            ct.textContent = 'Kinder';
+            ct.textContent = LANG === 'en' ? 'Children' : 'Kinder';
             wrap.appendChild(ct);
             for (let i = 0; i < state.children; i++) {
               const bdEl = document.getElementById(`childBirthday_${i}`);
@@ -4651,15 +4882,15 @@
               row.style.marginBottom = '12px';
               row.innerHTML = `
                 <div class="field-block">
-                  <label class="label" for="guestChild_${i}_fn">Vorname</label>
-                  <input type="text" id="guestChild_${i}_fn" placeholder="Vorname" value="${saved[`guestChild_${i}_fn`] || ''}" />
+                  <label class="label" for="guestChild_${i}_fn">${t('guest_firstname')}</label>
+                  <input type="text" id="guestChild_${i}_fn" placeholder="${t('guest_firstname')}" value="${saved[`guestChild_${i}_fn`] || ''}" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="guestChild_${i}_ln">Nachname</label>
-                  <input type="text" id="guestChild_${i}_ln" placeholder="Nachname" value="${saved[`guestChild_${i}_ln`] || ''}" />
+                  <label class="label" for="guestChild_${i}_ln">${t('guest_lastname')}</label>
+                  <input type="text" id="guestChild_${i}_ln" placeholder="${t('guest_lastname')}" value="${saved[`guestChild_${i}_ln`] || ''}" />
                 </div>
                 <div class="field-block">
-                  <label class="label" for="guestChild_${i}_bd">Geburtsdatum</label>
+                  <label class="label" for="guestChild_${i}_bd">${t('guest_birthday')}</label>
                   <input type="date" id="guestChild_${i}_bd" value="${bdVal}" />
                 </div>`;
               wrap.appendChild(row);
@@ -4696,12 +4927,12 @@
                   '">' +
                   '<span style="' +
                   labelStyle +
-                  '">Anfrage</span>' +
+                  '">' + t('submit_request_label') + '</span>' +
                   '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">' +
-                  '<div style="font-size:13px;color:var(--muted);">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</div>' +
+                  '<div style="font-size:13px;color:var(--muted);">' + t('submit_request_hint') + '</div>' +
                   '<button type="button" id="submitRequestBtn" class="btn-light" style="flex-shrink:0;"' +
                   disabled +
-                  '>Anfragen</button>' +
+                  '>' + t('submit_request_btn') + '</button>' +
                   '</div>' +
                   '</div>'
                 : '') +
@@ -4710,27 +4941,25 @@
               '">' +
               '<span style="' +
               labelStyle +
-              '">Buchung</span>' +
+              '">' + t('submit_booking_label') + '</span>' +
               '<button type="button" id="paymentAccordionToggle" aria-expanded="true" aria-controls="paymentAccordionBody" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;background:#f4f4f5;border-radius:8px;padding:10px 12px;width:100%;border:none;">' +
-              'Zahlungsoptionen<span class="required" aria-hidden="true">*</span>' +
+              t('submit_payment_options') + '<span class="required" aria-hidden="true">*</span>' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</button>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
-              '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' +
-              depositText +
-              '</strong> innerhalb von 7 Tagen.</div>' +
+              '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>' }) + '</div>' +
               '<div class="pm-cards">' +
               '<div class="pm-card selected" id="pmCardBank">' +
-              '<span class="pm-radio"></span>Banküberweisung' +
+              '<span class="pm-radio"></span>' + t('submit_bank_transfer') +
               '</div>' +
               '<div class="pm-card disabled">' +
-              '<span class="pm-radio"></span>Kreditkarte<span class="pm-badge">Bald</span>' +
+              '<span class="pm-radio"></span>' + t('submit_credit_card') + '<span class="pm-badge">' + t('submit_coming_soon') + '</span>' +
               '</div>' +
               '</div>' +
-              '<input type="hidden" id="paymentMethod" value="Bank\u00fcberweisung" />' +
+              '<input type="hidden" id="paymentMethod" value="' + t('submit_bank_transfer') + '" />' +
               '</div>' +
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
-              '<button type="button" id="submitBtn" class="btn">Verbindlich buchen</button>' +
+              '<button type="button" id="submitBtn" class="btn">' + t('submit_book_now') + '</button>' +
               '</div>' +
               '</div>';
 
@@ -4749,12 +4978,12 @@
             document.getElementById('submitBtn')?.removeAttribute('disabled');
           } else {
             area.innerHTML =
-              '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">Ihre Anfrage ist unverbindlich. Keine Bezahlung vorab notwendig.</span></div>' +
+              '<div style="margin-top:16px;display:flex;justify-content:flex-end;"><span style="padding:8px 12px;background:var(--accent-soft);border-radius:var(--radius);color:var(--muted);font-size:13px;">' + t('submit_request_hint') + '</span></div>' +
               '<div class="nav-row" style="margin-top:14px;">' +
-              '<button class="btn-light" data-prev>Zur\u00fcck</button>' +
+              '<button class="btn-light" data-prev>' + t('btn_back') + '</button>' +
               '<button type="button" id="submitBtn" class="btn"' +
               disabled +
-              '>Anfrage senden</button>' +
+              '>' + t('submit_send_request') + '</button>' +
               '</div>';
           }
 
@@ -4795,14 +5024,11 @@
         function validateStep(step) {
           if (step === 1) {
             if (!state.arrival || !state.departure) {
-              showMessage('error', 'Bitte An- und Abreisedatum wählen.');
+              showMessage('error', t('err_select_dates'));
               return false;
             }
             if (new Date(state.departure) <= new Date(state.arrival)) {
-              showMessage(
-                'error',
-                'Das Abreisedatum muss nach dem Anreisedatum liegen.',
-              );
+              showMessage('error', t('err_departure_after_arrival'));
               return false;
             }
             if (state.settings.enableInstantBooking) {
@@ -4819,7 +5045,7 @@
                   el && el.parentNode && el.parentNode.appendChild(errEl);
                 }
                 if (!el || !el.value) {
-                  errEl.textContent = 'Dieses Feld darf nicht leer bleiben.';
+                  errEl.textContent = t('err_birthday_required');
                   birthdayValid = false;
                 } else {
                   errEl.textContent = '';
@@ -4831,7 +5057,7 @@
 
           if (step === 2) {
             if (state.selectedApartmentIds.length === 0) {
-              showMessage('error', 'Bitte mindestens ein Apartment auswählen.');
+              showMessage('error', t('err_select_apartment'));
               return false;
             }
 
@@ -4841,10 +5067,7 @@
             });
 
             if (invalidSelection) {
-              showMessage(
-                'error',
-                'Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar.',
-              );
+              showMessage('error', t('err_apt_unavailable'));
               return false;
             }
           }
@@ -4854,10 +5077,7 @@
               (ex) => ex.type === 'insurance',
             );
             if (hasInsurance && !state.selectedInsurance) {
-              showMessage(
-                'error',
-                'Bitte wählen Sie eine Versicherungsoption.',
-              );
+              showMessage('error', t('err_select_insurance'));
               return false;
             }
           }
@@ -4876,7 +5096,7 @@
             );
             if (!res.ok) {
               throw new Error(
-                `HTTP ${res.status}: Apartments konnten nicht geladen werden.`,
+                `HTTP ${res.status}: ${t('error_loading_apartments')}`,
               );
             }
 
@@ -4931,7 +5151,7 @@
             if (!isApartmentMatchingGuests(apartment)) {
               state.pricingMap[String(apartment.id)] = {
                 available: false,
-                message: `Max. ${apartment.maxAdults || 0} Erwachsene · ${apartment.maxChildren || 0} Kinder`,
+                message: t('apt_max_guests', { adults: apartment.maxAdults || 0, children: apartment.maxChildren || 0 }),
                 status: 'not-matching',
               };
             }
@@ -4962,7 +5182,7 @@
                   state.pricingMap[String(apartment.id)] = {
                     available: false,
                     message:
-                      data.message || 'Im gewählten Zeitraum nicht verfügbar',
+                      data.message || t('apt_unavailable_period'),
                     status: 'unavailable',
                   };
                   state.selectedApartmentIds =
@@ -4996,7 +5216,7 @@
                       if (pd.minStay && nights < pd.minStay) {
                         state.pricingMap[String(apartment.id)] = {
                           available: false,
-                          message: `Mindestaufenthalt: ${pd.minStay} Nächte`,
+                          message: t('min_stay', { n: pd.minStay }),
                           status: 'unavailable',
                         };
                         state.selectedApartmentIds =
@@ -5057,10 +5277,7 @@
 
           const selectedApts = getSelectedApartments();
           if (!selectedApts.length) {
-            showMessage(
-              'error',
-              'Bitte zuerst mindestens ein Apartment auswählen.',
-            );
+            showMessage('error', t('err_select_apt_first'));
             return;
           }
 
@@ -5070,17 +5287,14 @@
           });
 
           if (invalidSelection) {
-            showMessage(
-              'error',
-              'Mindestens ein ausgewähltes Apartment ist aktuell nicht verfügbar.',
-            );
+            showMessage('error', t('err_apt_unavailable'));
             return;
           }
 
           const requiredFields = [
-            { id: 'firstName', value: firstName, label: 'Vorname' },
-            { id: 'lastName', value: lastName, label: 'Nachname' },
-            { id: 'email', value: email, label: 'E-Mail' },
+            { id: 'firstName', value: firstName, label: t('field_firstname') },
+            { id: 'lastName', value: lastName, label: t('field_lastname') },
+            { id: 'email', value: email, label: t('field_email') },
           ];
           let hasFieldErrors = false;
           requiredFields.forEach(({ id, value, label }) => {
@@ -5095,7 +5309,7 @@
             if (!value) {
               el && (el.style.borderColor = 'var(--danger)');
               el && el.setAttribute('aria-invalid', 'true');
-              errEl.textContent = `${label} ist ein Pflichtfeld.`;
+              errEl.textContent = t('err_field_required', { label });
               errEl.style.display = 'block';
               hasFieldErrors = true;
             } else {
@@ -5106,12 +5320,12 @@
             }
           });
           if (hasFieldErrors) {
-            showMessage('error', 'Bitte alle Pflichtfelder ausfüllen.');
+            showMessage('error', t('err_fill_required'));
             return;
           }
 
           if (bookingType === 'booking' && !paymentMethod) {
-            showMessage('error', 'Bitte eine Zahlungsmethode auswählen.');
+            showMessage('error', t('err_select_payment'));
             return;
           }
 
@@ -5119,14 +5333,10 @@
           if (termsCheckbox && !termsCheckbox.checked) {
             const termsErr = document.getElementById('termsCheckboxErr');
             if (termsErr) {
-              termsErr.textContent =
-                'Bitte akzeptieren Sie die Anfragebedingungen.';
+              termsErr.textContent = t('err_accept_terms');
               termsErr.style.display = 'block';
             }
-            showMessage(
-              'error',
-              'Bitte akzeptieren Sie die Anfragebedingungen.',
-            );
+            showMessage('error', t('err_accept_terms'));
             return;
           } else {
             const termsErr = document.getElementById('termsCheckboxErr');
@@ -5139,8 +5349,8 @@
           showMessage(
             'info',
             bookingType === 'booking'
-              ? 'Anfrage wird bestätigt …'
-              : 'Anfrage wird gesendet …',
+              ? t('progress_confirming')
+              : t('progress_sending'),
           );
 
           const nights = getNights();
@@ -5227,15 +5437,15 @@
 
             if (!res.ok || !result.success) {
               throw new Error(
-                result.message || 'Fehler beim Senden der Anfrage.',
+                result.message || t('error_sending'),
               );
             }
 
             showMessage(
               'success',
               bookingType === 'booking'
-                ? 'Ihre Buchung ist bestätigt – Sie erhalten eine Bestätigung per E-Mail.'
-                : 'Vielen Dank – Ihre Anfrage wurde erfolgreich gesendet.',
+                ? t('success_booking')
+                : t('success_request'),
             );
 
             document.getElementById('salutation').value = '';
@@ -5268,7 +5478,7 @@
             console.error(error);
             showMessage(
               'error',
-              error.message || 'Serverfehler. Bitte versuchen Sie es erneut.',
+              error.message || t('error_server'),
             );
           } finally {
             state.submitting = false;
@@ -5499,7 +5709,189 @@
           });
         }
 
+        function initTranslations() {
+          if (LANG === 'de') return;
+          // Steps
+          const stepData = [
+            [LANG === 'en' ? 'Travel dates' : 'Reisedaten', LANG === 'en' ? 'Set period and guests' : 'Zeitraum und Gäste festlegen'],
+            [LANG === 'en' ? 'Apartments' : 'Apartments', LANG === 'en' ? 'Choose your accommodation' : 'Wählen Sie Ihre Unterkunft'],
+            [LANG === 'en' ? 'Extras' : 'Zusatzleistungen', LANG === 'en' ? 'Add optional services' : 'Leistungen nach Wunsch ergänzen'],
+            [LANG === 'en' ? 'Inquiry / Booking' : 'Anfrage/Buchung', LANG === 'en' ? 'Enter details and submit' : 'Daten eingeben und absenden'],
+          ];
+          document.querySelectorAll('.step').forEach((el, i) => {
+            const data = stepData[i];
+            if (!data) return;
+            const labelEl = el.querySelector('.step-label');
+            const subEl = el.querySelector('.step-sub');
+            if (labelEl && !labelEl.id) labelEl.textContent = data[0];
+            if (subEl) subEl.textContent = data[1];
+          });
+          // Screens titles & intros
+          const screen1 = document.querySelector('[data-screen="1"]');
+          if (screen1) {
+            const h2 = screen1.querySelector('h2.title');
+            if (h2) h2.textContent = 'Travel dates';
+            const intro = screen1.querySelector('p.intro');
+            if (intro) intro.textContent = 'Select your desired period and specify how many guests will be travelling. Based on this information we will show you suitable apartments and the current pricing.';
+            const micro = screen1.querySelector('.microcopy');
+            if (micro) micro.textContent = 'Availability is checked live based on your selection.';
+          }
+          const screen2 = document.querySelector('[data-screen="2"]');
+          if (screen2) {
+            const h2 = screen2.querySelector('h2.title');
+            if (h2) h2.textContent = 'Select apartments';
+            const intro = screen2.querySelector('p.intro');
+            if (intro) intro.textContent = 'Choose your preferred category. Unsuitable or unavailable options will be marked accordingly.';
+          }
+          const screen3 = document.querySelector('[data-screen="3"]');
+          if (screen3) {
+            const h2 = screen3.querySelector('h2.title');
+            if (h2) h2.textContent = 'Extras';
+            const intro = screen3.querySelector('p.intro');
+            if (intro) intro.textContent = 'Enhance your stay with selected extras.';
+          }
+          const screen4 = document.querySelector('[data-screen="4"]');
+          if (screen4) {
+            const h2 = screen4.querySelector('h2.title');
+            if (h2) h2.textContent = 'Personal details';
+            const intro = screen4.querySelector('p.intro');
+            if (intro) intro.textContent = 'Please fill in all required fields.';
+          }
+          // Price box
+          const priceBoxSmall = document.querySelector('.price-box small');
+          if (priceBoxSmall) priceBoxSmall.textContent = 'Current total';
+          // Form labels
+          const labelMap = {
+            adults: 'Adults', children: 'Children',
+            salutation: 'Salutation', firstName: 'First name',
+            lastName: 'Last name', email: 'Email', phone: 'Phone',
+            notes: 'Notes', street: 'Street, house number',
+            zip: 'ZIP', city: 'City', country: 'Country',
+          };
+          Object.entries(labelMap).forEach(([id, text]) => {
+            const label = document.querySelector(`label[for="${id}"]`);
+            if (label) {
+              const firstChild = label.firstChild;
+              if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
+                firstChild.textContent = text;
+              } else {
+                label.childNodes[0] && (label.childNodes[0].textContent = text);
+              }
+            }
+          });
+          // Address accordion toggle
+          const addrToggle = document.getElementById('addrAccordionToggle');
+          if (addrToggle) {
+            const firstChild = addrToggle.firstChild;
+            if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
+              firstChild.textContent = 'Address (optional)';
+            }
+          }
+          // Guest accordion
+          const guestToggle = document.getElementById('guestAccordionToggle');
+          if (guestToggle) {
+            const span = guestToggle.querySelector('span');
+            if (span) {
+              const textNode = span.firstChild;
+              if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                textNode.textContent = 'additional guest data';
+              }
+            }
+          }
+          // Adults select options
+          const adultsSelect = document.getElementById('adults');
+          if (adultsSelect) {
+            Array.from(adultsSelect.options).forEach((opt) => {
+              opt.textContent = opt.value === '1' ? '1 adult' : `${opt.value} adults`;
+            });
+          }
+          // Children select options
+          const childrenSelect = document.getElementById('children');
+          if (childrenSelect) {
+            Array.from(childrenSelect.options).forEach((opt) => {
+              if (opt.value === '0') opt.textContent = '0 children';
+              else if (opt.value === '1') opt.textContent = '1 child';
+              else opt.textContent = `${opt.value} children`;
+            });
+          }
+          // Salutation select options
+          const salutationSelect = document.getElementById('salutation');
+          if (salutationSelect) {
+            const salMap = { '': 'Please select', 'Herr': 'Mr.', 'Frau': 'Ms.', 'Divers': 'Other' };
+            Array.from(salutationSelect.options).forEach((opt) => {
+              if (salMap[opt.value] !== undefined) opt.textContent = salMap[opt.value];
+            });
+          }
+          // Country select options
+          const countrySelect = document.getElementById('country');
+          if (countrySelect) {
+            const cMap = {
+              'Österreich': 'Austria', 'Deutschland': 'Germany', 'Schweiz': 'Switzerland',
+              'Italien': 'Italy', 'Frankreich': 'France', 'Niederlande': 'Netherlands',
+              'Belgien': 'Belgium', 'Polen': 'Poland', 'Tschechien': 'Czech Republic',
+              'Spanien': 'Spain', 'Vereinigtes Königreich': 'United Kingdom', 'Sonstige': 'Other',
+            };
+            Array.from(countrySelect.options).forEach((opt) => {
+              if (cMap[opt.value] !== undefined) opt.textContent = cMap[opt.value];
+            });
+          }
+          // Summary sidebar
+          const eyebrow = document.querySelector('.summary-eyebrow');
+          if (eyebrow) eyebrow.textContent = 'Your selection';
+          const summaryAptTitle = document.querySelector('.summary-block-title');
+          if (summaryAptTitle) summaryAptTitle.textContent = 'Apartments';
+          const summaryAptEl = document.getElementById('summaryApartment');
+          if (summaryAptEl && summaryAptEl.textContent.trim() === 'Keine Apartments gewählt') {
+            summaryAptEl.textContent = 'No apartments selected';
+          }
+          const summaryDatesEl = document.getElementById('summaryDates');
+          if (summaryDatesEl && summaryDatesEl.textContent.trim() === 'Zeitraum: –') {
+            summaryDatesEl.textContent = 'Period: –';
+          }
+          const summaryGuestsEl = document.getElementById('summaryGuests');
+          if (summaryGuestsEl && summaryGuestsEl.textContent.trim() === '2 Erwachsene') {
+            summaryGuestsEl.textContent = '2 adults';
+          }
+          const allSummaryTitles = document.querySelectorAll('.summary-block-title');
+          allSummaryTitles.forEach((el) => {
+            if (el.textContent.trim() === 'Zusatzleistungen') el.textContent = 'Extras';
+          });
+          const summaryExtrasEl = document.getElementById('summaryExtras');
+          if (summaryExtrasEl && summaryExtrasEl.textContent.trim() === 'Keine ausgewählt') {
+            summaryExtrasEl.textContent = 'None selected';
+          }
+          const summaryTotalLabel = document.querySelector('.summary-total span:first-child');
+          if (summaryTotalLabel && summaryTotalLabel.textContent.trim() === 'Gesamt') {
+            summaryTotalLabel.textContent = 'Total';
+          }
+          // Steps aria-label
+          const stepsOl = document.querySelector('ol.steps');
+          if (stepsOl) stepsOl.setAttribute('aria-label', 'Booking steps');
+          // Nav buttons
+          document.querySelectorAll('[data-next]').forEach((btn) => {
+            btn.textContent = t('btn_next');
+          });
+          document.querySelectorAll('[data-prev]').forEach((btn) => {
+            btn.textContent = t('btn_back');
+          });
+          // Lightbox
+          const lightbox = document.getElementById('lightbox');
+          if (lightbox) lightbox.setAttribute('aria-label', 'Image gallery');
+          const lightboxClose = document.getElementById('lightboxClose');
+          if (lightboxClose) lightboxClose.setAttribute('aria-label', 'Close');
+          // Placeholders
+          const notesEl = document.getElementById('notes');
+          if (notesEl) notesEl.placeholder = 'Special requests, arrival time, further notes';
+          const streetEl = document.getElementById('street');
+          if (streetEl) streetEl.placeholder = 'Sample Street 1';
+          const zipEl = document.getElementById('zip');
+          if (zipEl) zipEl.placeholder = '1010';
+          const cityEl = document.getElementById('city');
+          if (cityEl) cityEl.placeholder = 'Vienna';
+        }
+
         async function init() {
+          initTranslations();
           await loadHotelSettings();
           window.parent.postMessage({ type: 'booking-widget-ready' }, '*');
           setDefaultDates();
