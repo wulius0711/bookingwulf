@@ -131,6 +131,16 @@ function NavGroup({ group }: { group: NavGroup }) {
   useEffect(() => {
     if (hasActive) setOpen(true);
   }, [hasActive]);
+
+  useEffect(() => {
+    const sync = () => {
+      if (document.body.dataset.onboardingGroup === group.label) setOpen(true);
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-onboarding-group'] });
+    return () => observer.disconnect();
+  }, [group.label]);
   return (
     <div data-nav-group={group.label} style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', transition: 'opacity 0.25s ease' }}>
       <button
