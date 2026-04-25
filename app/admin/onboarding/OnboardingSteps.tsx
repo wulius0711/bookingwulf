@@ -107,7 +107,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
           </div>
           {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
           {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
-          {featureRow('🔗', 'Beds24 Channel Manager', 'In Vorbereitung — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.')}
+          {featureRow('🔗', 'Beds24 Channel Manager', 'Synchronisiert Verfügbarkeiten und Buchungen mit Beds24 (ab Business-Plan). In Vorbereitung — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.')}
         </div>
       ),
     },
