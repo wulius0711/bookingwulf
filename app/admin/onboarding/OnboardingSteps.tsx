@@ -107,7 +107,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
           </div>
           {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
           {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
-          {featureRow('🔗', 'Beds24 Channel Manager', 'Synchronisiert Verfügbarkeiten und Buchungen mit Beds24 (ab Business-Plan). In Vorbereitung — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.')}
+          {featureRow('🔗', 'Beds24 Channel Manager', 'Synchronisiert Verfügbarkeiten und Buchungen mit Airbnb und booking.com (ab Business-Plan). In Vorbereitung — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.')}
         </div>
       ),
     },
@@ -252,7 +252,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
 
         {/* Skip */}
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <a href="/admin/billing" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', background: 'rgba(255,255,255,0.9)', padding: '5px 14px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
+          <a href="/admin/billing" style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>
             Onboarding überspringen
           </a>
         </div>
