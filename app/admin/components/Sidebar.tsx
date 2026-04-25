@@ -134,7 +134,8 @@ function NavGroup({ group }: { group: NavGroup }) {
 
   useEffect(() => {
     const sync = () => {
-      if (document.body.dataset.onboardingGroup === group.label) setOpen(true);
+      const active = document.body.dataset.onboardingGroup;
+      if (active) setOpen(active === group.label);
     };
     sync();
     const observer = new MutationObserver(sync);
