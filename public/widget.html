@@ -2198,16 +2198,20 @@
       </div>
 
       <div class="layout">
-        <div id="globalInfo" class="msg info" style="grid-column: 1 / -1"></div>
+        <div id="globalInfo" class="msg info" style="grid-column: 1 / -1" role="status" aria-live="polite"></div>
         <div
           id="globalError"
           class="msg error"
           style="grid-column: 1 / -1"
+          role="alert"
+          aria-live="assertive"
         ></div>
         <div
           id="globalSuccess"
           class="msg success"
           style="grid-column: 1 / -1"
+          role="status"
+          aria-live="polite"
         ></div>
         <div>
           <section class="screen active" data-screen="1">
@@ -2387,8 +2391,9 @@
                     type="text"
                     placeholder="Max"
                     autocomplete="given-name"
+                    aria-describedby="firstName-err"
                   />
-                  <div id="firstName-err" class="field-error"></div>
+                  <div id="firstName-err" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="field-block" id="lastNameFieldWrap">
                   <label class="label" for="lastName"
@@ -2399,8 +2404,9 @@
                     type="text"
                     placeholder="Mustermann"
                     autocomplete="family-name"
+                    aria-describedby="lastName-err"
                   />
-                  <div id="lastName-err" class="field-error"></div>
+                  <div id="lastName-err" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="field-block" id="emailFieldWrap">
                   <label class="label" for="email"
@@ -2411,8 +2417,9 @@
                     type="email"
                     placeholder="max@mustermann.com"
                     autocomplete="email"
+                    aria-describedby="email-err"
                   />
-                  <div id="email-err" class="field-error"></div>
+                  <div id="email-err" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="field-block">
                   <label class="label" for="phone">Telefon</label>
@@ -2430,6 +2437,8 @@
                   type="button"
                   class="addr-accordion-toggle"
                   id="addrAccordionToggle"
+                  aria-expanded="false"
+                  aria-controls="addrAccordionBody"
                 >
                   Adresse (optional)
                   <svg
@@ -2512,6 +2521,8 @@
                   type="button"
                   class="guest-accordion-toggle"
                   id="guestAccordionToggle"
+                  aria-expanded="false"
+                  aria-controls="guestAccordionBody"
                 >
                   <span
                     >weitere Gäste Daten
@@ -2636,7 +2647,7 @@
       </a>
     </div>
 
-    <div class="lightbox" id="lightbox">
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Bildergalerie">
       <div class="lightbox-inner">
         <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Schließen">
           ×
@@ -4505,7 +4516,7 @@
           const body = document.getElementById('guestAccordionBody');
           if (body && !body.classList.contains('open')) {
             body.classList.add('open');
-            if (toggleBtn) toggleBtn.classList.add('open');
+            if (toggleBtn) { toggleBtn.classList.add('open'); toggleBtn.setAttribute('aria-expanded', 'true'); }
           }
 
           const wrap = document.getElementById('guestFieldsWrap');
@@ -4619,10 +4630,10 @@
               '<span style="' +
               labelStyle +
               '">Buchung</span>' +
-              '<div id="paymentAccordionToggle" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;background:#f4f4f5;border-radius:8px;padding:10px 12px;">' +
-              'Zahlungsoptionen<span class="required">*</span>' +
+              '<button type="button" id="paymentAccordionToggle" aria-expanded="true" aria-controls="paymentAccordionBody" style="cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;background:#f4f4f5;border-radius:8px;padding:10px 12px;width:100%;border:none;">' +
+              'Zahlungsoptionen<span class="required" aria-hidden="true">*</span>' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-              '</div>' +
+              '</button>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
               '<div class="payment-desc">Um die Reservierung verbindlich abzuschlie\u00dfen, bitten wir um eine Anzahlung von <strong>' +
               depositText +
@@ -4650,6 +4661,7 @@
               this.querySelector('svg').style.transform = isOpen
                 ? 'rotate(180deg)'
                 : '';
+              this.setAttribute('aria-expanded', isOpen);
             });
 
             // Payment method is pre-selected (Banküberweisung), enable submit immediately
@@ -5297,6 +5309,7 @@
             const body = document.getElementById('guestAccordionBody');
             const isOpen = body.classList.toggle('open');
             this.classList.toggle('open', isOpen);
+            this.setAttribute('aria-expanded', isOpen);
           });
 
         document
@@ -5305,6 +5318,7 @@
             const body = document.getElementById('addrAccordionBody');
             const isOpen = body.classList.toggle('open');
             this.classList.toggle('open', isOpen);
+            this.setAttribute('aria-expanded', isOpen);
           });
 
         ['firstName', 'lastName', 'email'].forEach((id) => {
