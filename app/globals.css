@@ -713,29 +713,21 @@ body[data-onboarding-group]::before {
   pointer-events: none;
 }
 
-/* Sidebar and main content above overlay */
-body[data-onboarding-group] .admin-sidebar {
-  position: relative;
-  z-index: 41;
-}
-body[data-onboarding-group] .admin-main {
-  position: relative;
-  z-index: 41;
-}
-
-/* Dim non-active nav groups with internal overlay */
-body[data-onboarding-group] [data-nav-group]::after {
+/* Dim entire sidebar with internal overlay */
+body[data-onboarding-group] .admin-sidebar::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
   pointer-events: none;
-  transition: opacity 0.25s ease;
 }
-body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"]::after,
-body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"]::after,
-body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"]::after,
-body[data-onboarding-group="Konto"] [data-nav-group="Konto"]::after {
-  content: none;
+
+/* Active nav group floats above sidebar overlay */
+body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"],
+body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"],
+body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"],
+body[data-onboarding-group="Konto"] [data-nav-group="Konto"] {
+  position: relative;
+  z-index: 2;
 }
