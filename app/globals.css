@@ -728,6 +728,7 @@ body[data-onboarding-group] [data-nav-group]::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
   background: rgba(0, 0, 0, 0.55);
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -736,5 +737,5 @@ body[data-onboarding-group="Betrieb"] [data-nav-group="Betrieb"]::after,
 body[data-onboarding-group="Verwaltung"] [data-nav-group="Verwaltung"]::after,
 body[data-onboarding-group="Konfiguration"] [data-nav-group="Konfiguration"]::after,
 body[data-onboarding-group="Konto"] [data-nav-group="Konto"]::after {
-  display: none;
+  content: none;
 }

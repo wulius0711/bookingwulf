@@ -132,7 +132,7 @@ function NavGroup({ group }: { group: NavGroup }) {
     if (hasActive) setOpen(true);
   }, [hasActive]);
   return (
-    <div data-nav-group={group.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', transition: 'opacity 0.25s ease' }}>
+    <div data-nav-group={group.label} style={{ position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', transition: 'opacity 0.25s ease' }}>
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
