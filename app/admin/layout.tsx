@@ -45,40 +45,40 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const navGroupDefs = [
     { label: 'Betrieb', items: [
-      { href: '/admin', label: 'Übersicht' },
-      { href: '/admin/requests', label: 'Anfragen' },
-      { href: '/admin/calendar', label: 'Kalender' },
-      { href: '/admin/zimmerplan', label: 'Zimmerplan' },
-      { href: '/admin/analytics', label: 'Analytics' },
+      { href: '/admin', label: 'Übersicht', icon: 'overview' },
+      { href: '/admin/requests', label: 'Anfragen', icon: 'requests' },
+      { href: '/admin/calendar', label: 'Kalender', icon: 'calendar' },
+      { href: '/admin/zimmerplan', label: 'Zimmerplan', icon: 'roomplan' },
+      { href: '/admin/analytics', label: 'Analytics', icon: 'analytics' },
     ]},
     { label: 'Verwaltung', items: [
-      { href: '/admin/apartments', label: 'Apartments' },
-      { href: '/admin/price-seasons', label: 'Preisanpassungen' },
-      { href: '/admin/blocked-dates', label: 'Sperrzeiten' },
-      { href: '/admin/extras', label: 'Zusatzleistungen' },
+      { href: '/admin/apartments', label: 'Apartments', icon: 'apartments' },
+      { href: '/admin/price-seasons', label: 'Preisanpassungen', icon: 'prices' },
+      { href: '/admin/blocked-dates', label: 'Sperrzeiten', icon: 'blocked' },
+      { href: '/admin/extras', label: 'Zusatzleistungen', icon: 'extras' },
     ]},
     { label: 'Konfiguration', items: [
-      { href: '/admin/settings', label: 'Widget & Design' },
-      { href: '/admin/email-templates', label: 'E-Mails' },
-      { href: '/admin/nuki', label: 'Schlüsselloses Einchecken' },
-      { href: '/admin/beds24', label: 'Beds24 Channel Manager' },
+      { href: '/admin/settings', label: 'Widget & Design', icon: 'settings' },
+      { href: '/admin/email-templates', label: 'E-Mails', icon: 'emails' },
+      { href: '/admin/nuki', label: 'Schlüsselloses Einchecken', icon: 'nuki' },
+      { href: '/admin/beds24', label: 'Beds24 Channel Manager', icon: 'beds24' },
     ]},
     { label: 'Konto', items: [
-      { href: '/admin/billing', label: 'Abonnement' },
-      { href: '/admin/help', label: 'Handbuch' },
+      { href: '/admin/billing', label: 'Abonnement', icon: 'billing' },
+      { href: '/admin/help', label: 'Handbuch', icon: 'help' },
       ...(isSuperAdmin ? [
-        { href: '/admin/hotels', label: 'Hotels' },
-        { href: '/admin/users', label: 'Benutzer' },
+        { href: '/admin/hotels', label: 'Hotels', icon: 'hotels' },
+        { href: '/admin/users', label: 'Benutzer', icon: 'users' },
       ] : []),
     ]},
   ]
 
   const navGroups = navGroupDefs.map(({ label, items }) => ({
     label,
-    items: items.map(({ href, label }) => {
+    items: items.map(({ href, label, icon }) => {
       const minPlan = NAV_PLAN_GATES[href] as PlanKey | undefined
       const locked = !isSuperAdmin && !!minPlan && !hasPlanAccess(hotelPlan, minPlan)
-      return { href, label, locked, upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined }
+      return { href, label, locked, upgradeLabel: minPlan ? PLAN_LABEL[minPlan] : undefined, icon }
     }),
   }))
 
