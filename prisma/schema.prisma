@@ -429,3 +429,20 @@ model ChildPriceRange {
 
   @@index([hotelId])
 }
+
+model OutreachLead {
+  id         Int       @id @default(autoincrement())
+  betrieb    String
+  inhaber    String?
+  email      String?
+  region     String?
+  website    String?
+  // neu | gesendet | follow-up | geantwortet | demo | kein-interesse | abgeschlossen
+  status     String    @default("neu")
+  sentAt     DateTime?
+  followUpAt DateTime?
+  notes      String?
+  nextStep   String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
