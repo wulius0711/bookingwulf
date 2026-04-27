@@ -1,22 +1,23 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Script from 'next/script'
 
 const GA_ID = 'G-PJLWNDWCLV'
 const CONSENT_KEY = 'cookie_consent'
 
 export default function CookieBanner() {
+  const pathname = usePathname()
   const [consent, setConsent] = useState<'granted' | 'denied' | null>(null)
 
   useEffect(() => {
+    if (pathname.startsWith('/admin')) return
     const stored = localStorage.getItem(CONSENT_KEY)
     if (stored === 'granted' || stored === 'denied') {
       setConsent(stored)
-    } else {
-      setConsent(null)
     }
-  }, [])
+  }, [pathname])
 
   function accept() {
     localStorage.setItem(CONSENT_KEY, 'granted')
@@ -27,6 +28,8 @@ export default function CookieBanner() {
     localStorage.setItem(CONSENT_KEY, 'denied')
     setConsent('denied')
   }
+
+  if (pathname.startsWith('/admin')) return null
 
   return (
     <>
