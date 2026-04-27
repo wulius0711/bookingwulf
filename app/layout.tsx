@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
-import Script from "next/script";
+import CookieBanner from "./components/CookieBanner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,13 +43,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: `(function(){document.documentElement.classList.remove('dark');var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);})();` }} />
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-PJLWNDWCLV" strategy="afterInteractive" />
-        <Script id="ga-init" strategy="afterInteractive">{`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-PJLWNDWCLV');
-        `}</Script>
+        <CookieBanner />
         {children}
       </body>
     </html>

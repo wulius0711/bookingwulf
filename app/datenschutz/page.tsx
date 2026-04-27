@@ -82,14 +82,20 @@ export default function DatenschutzPage() {
         <li><strong>Resend Inc.</strong> (USA) — E-Mail-Versand (Buchungsbestätigungen, Benachrichtigungen). Datenschutzrichtlinie: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>resend.com/legal/privacy-policy</a>.</li>
         <li><strong>Stripe Inc.</strong> (USA) — Zahlungsabwicklung. Stripe ist nach dem EU-US Data Privacy Framework zertifiziert.</li>
         <li><strong>Sentry Inc.</strong> (USA) — Fehler-Monitoring zur Sicherstellung der Betriebsstabilität. Dabei können technische Fehlerdaten (Stack Traces, Geräteinformationen, ggf. anonymisierte Nutzungsdaten) übertragen werden. Datenschutzrichtlinie: <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>sentry.io/privacy</a>.</li>
+        <li><strong>Google LLC</strong> (USA) — Google Analytics 4 zur Analyse des Nutzungsverhaltens auf unserer Website (nur mit Ihrer Einwilligung). Dabei werden u. a. Seitenaufrufe, Geräteinformationen und gekürzte IP-Adressen verarbeitet. Google ist nach dem EU-US Data Privacy Framework zertifiziert. Datenschutzrichtlinie: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>policies.google.com/privacy</a>. Opt-Out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>Google Analytics Opt-Out</a>.</li>
       </ul>
       <p style={p}>
         Für Datentransfers in die USA stützen wir uns auf das EU-US Data Privacy Framework, Standardvertragsklauseln (SCCs) sowie die Angemessenheitsbeschlüsse der EU-Kommission, soweit anwendbar.
       </p>
 
       <h2 style={h2}>6. Cookies und Tracking</h2>
+      <h3 style={h3}>6.1 Technisch notwendige Cookies</h3>
       <p style={p}>
-        bookingwulf verwendet <strong>keine Tracking-Cookies</strong> und <strong>kein Google Analytics</strong> oder vergleichbare Analysedienste. Es wird lediglich ein technisch notwendiger Session-Cookie (<code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: 4, fontSize: 13 }}>admin_session</code>) für die Authentifizierung im Admin-Bereich gesetzt. Dieser Cookie ist httpOnly, wird nicht an Dritte weitergegeben und enthält keine personenbezogenen Daten.
+        Es wird ein technisch notwendiger Session-Cookie (<code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: 4, fontSize: 13 }}>admin_session</code>) für die Authentifizierung im Admin-Bereich gesetzt. Dieser Cookie ist httpOnly, wird nicht an Dritte weitergegeben und enthält keine personenbezogenen Daten. Für diesen Cookie ist keine Einwilligung erforderlich.
+      </p>
+      <h3 style={h3}>6.2 Google Analytics (nur mit Einwilligung)</h3>
+      <p style={p}>
+        Mit Ihrer Einwilligung setzen wir <strong>Google Analytics 4</strong> (Google LLC, USA) ein, um das Nutzungsverhalten auf unserer Website statistisch auszuwerten. Dabei werden Cookies gesetzt und Daten wie Seitenaufrufe, Verweildauer und gekürzte IP-Adressen an Google-Server übertragen. Die IP-Anonymisierung ist aktiviert. Rechtsgrundlage ist Ihre Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Sie können Ihre Einwilligung jederzeit über den Cookie-Banner auf unserer Website widerrufen. Alternativ können Sie die Erfassung durch Google Analytics dauerhaft unterbinden: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>Google Analytics Opt-Out-Add-on</a>.
       </p>
 
       <h2 style={h2}>7. Speicherdauer</h2>
