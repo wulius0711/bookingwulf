@@ -20,6 +20,7 @@ const sections = [
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
+  { id: 'assistent',     title: 'KI-Assistent',          plan: 'Pro',      content: AssistentSection },
 ];
 
 export default function HelpPage() {
@@ -971,6 +972,47 @@ function Beds24Section() {
         <li>Buchung auf Airbnb → bei Ihnen gesperrt: <strong>Echtzeit via Webhook</strong></li>
         <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
       </ul>
+    </div>
+  );
+}
+
+function AssistentSection() {
+  return (
+    <div>
+      <H2>KI-Assistent</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Der bookingwulf-Assistent beantwortet Fragen zur Bedienung des Admin-Bereichs direkt im Chat —
+        ohne dass du das Handbuch durchsuchen oder den Support kontaktieren musst.
+      </P>
+      <H3>Öffnen & verwenden</H3>
+      <P>
+        Der Assistent ist als runder Chat-Button unten rechts im Admin sichtbar. Klicke darauf,
+        tippe deine Frage und bestätige mit Enter oder dem Senden-Button.
+      </P>
+      <H3>Was du fragen kannst</H3>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { label: 'Bedienung',     desc: 'Wie funktioniert Sperrzeiten anlegen? Wo finde ich die E-Mail-Vorlagen?' },
+          { label: 'Navigation',    desc: 'Wo ist der Zimmerplan? Wie komme ich zu den Preisanpassungen?' },
+          { label: 'Seitenbezogen',  desc: 'Was mache ich hier? Wofür ist das?' },
+          { label: 'Funktionen',    desc: 'Was kann der Beds24 Channel Manager? Wie funktioniert Nuki?' },
+        ].map((t) => (
+          <div key={t.label} style={{ display: 'flex', gap: 10 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 130, color: '#111' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+          </div>
+        ))}
+      </div>
+      <H3>Verlauf & löschen</H3>
+      <P>
+        Der Chatverlauf bleibt gespeichert, auch wenn du die Seite wechselst oder den Browser schließt.
+        Über das Papierkorb-Symbol oben rechts im Chat kannst du den Verlauf jederzeit löschen.
+      </P>
+      <Tip>
+        <strong>Tipp:</strong> Der Assistent kennt die aktuelle Seite — auf vagen Fragen wie
+        "Was mache ich hier?" antwortet er konkret zum Bereich, in dem du dich gerade befindest.
+      </Tip>
     </div>
   );
 }

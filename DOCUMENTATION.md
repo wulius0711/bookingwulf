@@ -655,6 +655,31 @@ Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt au
 
 `GuidedTour`-Komponente (`app/admin/components/GuidedTour.tsx`) — schrittweise Einführung für neue Nutzer mit `data-tour`-Attributen an Nav-Elementen. Da Items immer im DOM sind (auch bei zugeklappter Gruppe), funktioniert die Tour unabhängig vom Akkordeon-Zustand.
 
+### KI-Assistent (Pro+)
+
+**Komponente:** `app/admin/components/AdminChatWidget.tsx` — Client-Komponente, im Admin-Layout eingebunden.  
+**API-Route:** `app/api/admin/help-chat/route.ts`  
+**KI-Service:** Google Gemini 2.5 Flash via `@google/genai` SDK (`src/lib/gemini.ts`)
+
+**Funktionsweise:**
+- Floating Chat-Button (unten rechts), Farbe folgt dem Admin-Theme (`var(--accent)`)
+- Nutzer stellt Frage → API sendet System-Prompt + aktuelle Seite + Frage an Gemini
+- Antwort wird im Chat angezeigt, Verlauf in `localStorage` gespeichert (`bw_chat_messages`)
+- Verlauf bleibt über Seitenwechsel hinweg erhalten; manuell löschbar via Papierkorb-Icon
+
+**Plan-Gate:** Nur für Pro- und Business-Nutzer sichtbar (geprüft in `admin/layout.tsx`). API-Route (`/api/admin/help-chat`) prüft zusätzlich `subscriptionStatus === 'active' | 'trialing'`. Super-Admin immer erlaubt.
+
+**System-Prompt (`BOOKINGWULF_SYSTEM_PROMPT`):**
+- Vollständige Navigationsstruktur mit allen Admin-Bereichen und deren Inhalten
+- Antwortet auf Deutsch, immer „du", kein Markdown
+- Page-Context wird nur bei unklaren Fragen verwendet; explizite Themen werden direkt beantwortet
+
+**Logging:** Jede Frage + Antwort wird in `SupportChatLog` (Prisma) gespeichert mit `hotelId`, `category` (klassifiziert via `classifyQuestion()`), `isSuperAdmin`.
+
+**Chat-Analytics:** `/admin/chat-analytics` — Super-Admin-only Dashboard mit Fragen, Kategorien und Toggle für Test-Einträge (Super-Admin-Anfragen).
+
+**Umgebungsvariable:** `GEMINI_API_KEY` (Pflicht für KI-Assistent)
+
 ---
 
 ## 13. API-Routen
@@ -695,6 +720,8 @@ Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt au
 | `/api/admin/outreach` | GET/POST | Outreach-Leads auflisten / anlegen (Super-Admin) |
 | `/api/admin/outreach/[id]` | PATCH/DELETE | Lead bearbeiten / löschen (Super-Admin) |
 | `/api/admin/outreach/[id]/send` | POST | Outreach-E-Mail via Zoho SMTP senden (Super-Admin) |
+| `/api/admin/help-chat` | POST | KI-Assistent Frage stellen (Pro+) |
+| `/api/admin/hotel-color` | GET | Accent-Farbe des Hotels abrufen |
 
 ### Sicherheitsschichten
 
