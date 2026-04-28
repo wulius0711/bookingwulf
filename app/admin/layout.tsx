@@ -85,16 +85,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }),
   }))
 
-  // Load accent color for chat widget
-  let accentColor = '#111';
-  if (session.hotelId) {
-    const [hotel, settings] = await Promise.all([
-      prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { accentColor: true } }),
-      prisma.hotelSettings.findUnique({ where: { hotelId: session.hotelId }, select: { accentColor: true } }),
-    ]);
-    accentColor = settings?.accentColor || hotel?.accentColor || '#111';
-  }
-
   // Load user's assigned hotels for the switcher
   const userHotels = session.role === 'super_admin'
     ? (await prisma.hotel.findMany({ select: { id: true, name: true }, orderBy: { id: 'asc' } }))
@@ -142,7 +132,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </div>
 
       <GuidedTour />
-      <AdminChatWidget accentColor={accentColor} />
+      <AdminChatWidget />
     </div>
     </>
   )

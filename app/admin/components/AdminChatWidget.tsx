@@ -6,20 +6,30 @@ type ChatMessage = { role: 'user' | 'assistant'; text: string };
 
 const STORAGE_KEY = 'bw_chat_messages';
 
-export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?: string }) {
+export default function AdminChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [planError, setPlanError] = useState(false);
+  const [accentColor, setAccentColor] = useState('#111');
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount + fetch hotel color
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) setMessages(JSON.parse(stored));
     } catch {}
+    const params = new URLSearchParams(window.location.search);
+    const hotelParam = params.get('hotel');
+    const colorUrl = hotelParam
+      ? `/api/admin/hotel-color?hotelId=${hotelParam}`
+      : '/api/admin/hotel-color';
+    fetch(colorUrl)
+      .then((r) => r.json())
+      .then((d) => { if (d.color) setAccentColor(d.color); })
+      .catch(() => {});
   }, []);
 
   // Persist to localStorage on every change
@@ -79,7 +89,6 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Assistent öffnen"
-        title={`color: ${accentColor}`}
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 52, height: 52, borderRadius: '50%',
