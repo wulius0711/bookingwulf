@@ -93,7 +93,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       prisma.hotelSettings.findUnique({ where: { hotelId: session.hotelId }, select: { accentColor: true } }),
     ]);
     accentColor = settings?.accentColor || hotel?.accentColor || '#111';
-    console.log('[chat widget] hotelId:', session.hotelId, 'accentColor:', accentColor);
   }
 
   // Load user's assigned hotels for the switcher

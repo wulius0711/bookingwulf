@@ -49,7 +49,7 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
       const res = await fetch('/api/admin/help-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, page: window.location.pathname }),
       });
       const data = await res.json();
       if (res.status === 403 && data.error === 'plan_required') {

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     }
   }
 
-  const { question } = await req.json();
+  const { question, page } = await req.json();
   if (!question || typeof question !== 'string' || question.trim().length < 2) {
     return NextResponse.json({ error: 'invalid_question' }, { status: 400 });
   }
@@ -36,8 +36,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'ai_error', detail: 'key_missing' }, { status: 500 });
   }
 
+  const pageContext = typeof page === 'string' && page.startsWith('/admin')
+    ? `\nAktuelle Seite des Nutzers: ${page}`
+    : '';
+
   try {
-    const answer = (await generateChatAnswer(`${BOOKINGWULF_SYSTEM_PROMPT}\n\nFrage: ${trimmed}`)).trim();
+    const answer = (await generateChatAnswer(`${BOOKINGWULF_SYSTEM_PROMPT}${pageContext}\n\nFrage: ${trimmed}`)).trim();
     const category = classifyQuestion(trimmed);
 
     await prisma.supportChatLog.create({
