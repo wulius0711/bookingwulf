@@ -558,8 +558,28 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 |---|---|
 | `/admin/hotels` | Alle Hotels verwalten |
 | `/admin/users` | Alle Nutzer verwalten |
+| `/admin/outreach` | Outreach-CRM — Leads verwalten, E-Mails versenden |
 
 Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
+
+### Outreach-System (Super-Admin)
+
+**Seite:** `/admin/outreach`
+
+Internes CRM-Tool zur Akquisition von Neukunden. Nur für Super-Admins sichtbar.
+
+**Funktionen:**
+- Tabelle aller Leads mit Status-Filter (Neu / Gesendet / Follow-up / Geantwortet / Demo / Kein Interesse / Abgeschlossen)
+- E-Mail-Versand einzeln oder als Bulk (alle Leads mit Status „Neu")
+- Inline-Bearbeitung von Betrieb, Inhaber, E-Mail
+- Lead anlegen / löschen
+- Status-Änderung direkt per Dropdown in der Tabelle
+
+**E-Mail-Versand:** Zoho SMTP (`smtp.zoho.eu:465`) via nodemailer. Template in `src/lib/outreach-mailer.ts` — personalisiert mit Inhabername und Betriebsname.
+
+**Datenmodell:** `OutreachLead` (Prisma) — Felder: `betrieb`, `inhaber`, `email`, `region`, `website`, `status`, `sentAt`, `followUpAt`, `notes`, `nextStep`
+
+**Seed-Script:** `scripts/seed-outreach.ts` — initialer Import der 37 Leads aus Bookmark-Recherche.
 
 ### Layout
 
@@ -669,6 +689,9 @@ Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt au
 | `/api/stripe/webhook` | POST | Stripe-Webhooks (Signatur-Verifizierung) |
 | `/api/cleanup-requests` | GET | Anfragen > 3 Jahre löschen (Cron, Bearer-Token) |
 | `/api/admin/nuki` | GET/POST/DELETE | Nuki-Konfiguration verwalten |
+| `/api/admin/outreach` | GET/POST | Outreach-Leads auflisten / anlegen (Super-Admin) |
+| `/api/admin/outreach/[id]` | PATCH/DELETE | Lead bearbeiten / löschen (Super-Admin) |
+| `/api/admin/outreach/[id]/send` | POST | Outreach-E-Mail via Zoho SMTP senden (Super-Admin) |
 
 ### Sicherheitsschichten
 
@@ -709,6 +732,8 @@ Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt au
 | `BOOKING_RECEIVER_EMAIL` | Fallback-E-Mail wenn Hotel keine E-Mail hinterlegt hat |
 | `SENTRY_DSN` | Sentry-Fehlerverfolgung |
 | `VERCEL_URL` | Automatisch von Vercel gesetzt |
+| `ZOHO_SMTP_USER` | Zoho-Absenderadresse für Outreach-Mails (z.B. `support@bookingwulf.com`) |
+| `ZOHO_SMTP_PASS` | Zoho App-Passwort (Zoho → Einstellungen → Sicherheit → App-Passwörter) |
 
 ---
 
@@ -851,7 +876,8 @@ Airbnb verarbeitet eingehende Sperrzeiten mit ~1–5 Min. Eigendelay. End-to-End
 
 - **Datenbank:** Neon PostgreSQL, Region AWS Europe Central 1 (Frankfurt, EU)
 - **Uploads:** Vercel Blob (global CDN)
-- **E-Mails:** Resend Inc. (USA) — SCCs vorhanden
+- **E-Mails (transaktional):** Resend Inc. (USA) — SCCs vorhanden
+- **E-Mails (Outreach):** Zoho Corporation — Versand über `smtp.zoho.eu`
 - **Zahlungen:** Stripe Inc. (USA) — EU-US Data Privacy Framework
 - **Hosting:** Vercel Inc. (USA) — SCCs vorhanden
 - **Fehler-Monitoring:** Sentry Inc. (USA)
@@ -868,6 +894,10 @@ Airbnb verarbeitet eingehende Sperrzeiten mit ~1–5 Min. Eigendelay. End-to-End
 ### Löschung
 
 Buchungsanfragen können nur durch den Betreiber (support@bookingwulf.com) gelöscht werden. Hotelbetreiber selbst haben keinen eigenständigen Löschzugriff. Anfragen auf Auskunft oder Löschung werden innerhalb von 30 Tagen bearbeitet.
+
+### Outreach-Daten (Interessenten)
+
+Kontaktdaten potenzieller Kunden (Name, E-Mail, Betrieb) werden intern in der `OutreachLead`-Tabelle gespeichert. Rechtsgrundlage: berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO). Quellen: öffentlich zugängliche Unternehmenswebsites. Löschung auf Anfrage über support@bookingwulf.com. Datenschutzerklärung (Abschnitt 4.3) informiert darüber.
 
 ### Keine Tracking-Cookies
 

@@ -45,6 +45,7 @@ export default function DatenschutzPage() {
       <ul style={ul}>
         <li>Kunden und Geschäftskunden (Hotelbetreiber, die bookingwulf nutzen)</li>
         <li>Endnutzer (Gäste, die Buchungsanfragen über das Widget stellen)</li>
+        <li>Interessenten (potenzielle Geschäftskunden, die im Rahmen der Akquisition kontaktiert werden)</li>
       </ul>
 
       <h2 style={h2}>3. Rechtsgrundlagen</h2>
@@ -69,7 +70,12 @@ export default function DatenschutzPage() {
         Wenn Gäste eine Buchungsanfrage über das Widget stellen, werden folgende Daten erhoben: Name, E-Mail-Adresse, ggf. Telefonnummer, Reisezeitraum, Anzahl der Gäste, gewählte Apartments und Zusatzleistungen sowie optionale Nachrichten. Diese Daten werden an das jeweilige Hotel weitergeleitet und zur Bearbeitung der Anfrage gespeichert.
       </p>
 
-      <h3 style={h3}>4.3 Zahlungsdaten</h3>
+      <h3 style={h3}>4.3 Interessenten-Kontaktdaten (Akquisition)</h3>
+      <p style={p}>
+        Zur Akquisition von Neukunden verarbeiten wir öffentlich zugängliche Kontaktdaten potenzieller Geschäftspartner (Name, E-Mail-Adresse, Betriebsname) auf Basis unseres berechtigten Interesses gemäß Art. 6 Abs. 1 lit. f DSGVO. Die Daten stammen ausschließlich aus öffentlich zugänglichen Quellen (z. B. Unternehmenswebsites). Eine Weitergabe an Dritte erfolgt nicht. Auf Anfrage werden diese Daten unverzüglich gelöscht.
+      </p>
+
+      <h3 style={h3}>4.4 Zahlungsdaten</h3>
       <p style={p}>
         Zahlungen für Abonnements werden über <strong>Stripe, Inc.</strong> (USA) abgewickelt. Wir speichern keine Kreditkarten- oder Bankdaten. Stripe verarbeitet Zahlungsdaten gemäß eigener Datenschutzbestimmungen: <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>stripe.com/privacy</a>.
       </p>
@@ -82,6 +88,7 @@ export default function DatenschutzPage() {
         <li><strong>Resend Inc.</strong> (USA) — E-Mail-Versand (Buchungsbestätigungen, Benachrichtigungen). Datenschutzrichtlinie: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>resend.com/legal/privacy-policy</a>.</li>
         <li><strong>Stripe Inc.</strong> (USA) — Zahlungsabwicklung. Stripe ist nach dem EU-US Data Privacy Framework zertifiziert.</li>
         <li><strong>Sentry Inc.</strong> (USA) — Fehler-Monitoring zur Sicherstellung der Betriebsstabilität. Dabei können technische Fehlerdaten (Stack Traces, Geräteinformationen, ggf. anonymisierte Nutzungsdaten) übertragen werden. Datenschutzrichtlinie: <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>sentry.io/privacy</a>.</li>
+        <li><strong>Zoho Corporation</strong> (Indien/EU) — E-Mail-Dienst für den Versand von Akquisitions- und Support-E-Mails über die Adresse support@bookingwulf.com. Datenschutzrichtlinie: <a href="https://www.zoho.com/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>zoho.com/privacy</a>.</li>
         <li><strong>Google LLC</strong> (USA) — Google Analytics 4 zur Analyse des Nutzungsverhaltens auf unserer Website (nur mit Ihrer Einwilligung). Dabei werden u. a. Seitenaufrufe, Geräteinformationen und gekürzte IP-Adressen verarbeitet. Google ist nach dem EU-US Data Privacy Framework zertifiziert. Datenschutzrichtlinie: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>policies.google.com/privacy</a>. Opt-Out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>Google Analytics Opt-Out</a>.</li>
       </ul>
       <p style={p}>
