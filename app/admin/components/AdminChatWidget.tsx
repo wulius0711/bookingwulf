@@ -14,6 +14,7 @@ export default function AdminChatWidget() {
   const [planError, setPlanError] = useState(false);
   const [accentColor, setAccentColor] = useState('#111');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false);
 
   // Load from localStorage on mount + fetch hotel color
   useEffect(() => {
@@ -51,7 +52,8 @@ export default function AdminChatWidget() {
 
   async function send() {
     const q = input.trim();
-    if (!q || loading) return;
+    if (!q || sendingRef.current) return;
+    sendingRef.current = true;
     setInput('');
     setMessages((prev) => [...prev, { role: 'user', text: q }]);
     setLoading(true);
@@ -79,6 +81,7 @@ export default function AdminChatWidget() {
     } catch {
       setMessages((prev) => [...prev, { role: 'assistant', text: 'Verbindungsfehler. Bitte versuche es erneut.' }]);
     } finally {
+      sendingRef.current = false;
       setLoading(false);
     }
   }

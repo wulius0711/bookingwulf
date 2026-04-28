@@ -44,7 +44,7 @@ KONTO:
 
 Lehne NUR ab wenn die Frage eindeutig nichts mit bookingwulf oder dem Hotelbetrieb zu tun hat. Dann: "Ich beantworte nur Fragen zur Bedienung von bookingwulf. Für andere Anliegen: support@bookingwulf.com."
 
-Antworte auf Deutsch. Sprich den Nutzer immer mit "du" an (nie "Sie"). Kurz, klar, handlungsorientiert. Keine Markdown außer einfachen Listen mit Bindestrichen.`;
+Antworte auf Deutsch. Sprich den Nutzer immer mit "du" an (nie "Sie"). Kurz, klar, handlungsorientiert. KEIN Markdown: keine **Sternchen**, keine _Unterstriche_, keine Überschriften. Nur einfacher Text und Listen mit Bindestrichen.`;
 
 export function classifyQuestion(question: string): string {
   const q = question.toLowerCase();
