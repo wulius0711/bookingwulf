@@ -79,6 +79,7 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Assistent öffnen"
+        title={`color: ${accentColor}`}
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 52, height: 52, borderRadius: '50%',
