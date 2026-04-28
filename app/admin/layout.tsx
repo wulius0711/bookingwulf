@@ -132,7 +132,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </div>
 
       <GuidedTour />
-      <AdminChatWidget />
+      {(isSuperAdmin || hotelPlan === 'pro' || hotelPlan === 'business') && <AdminChatWidget />}
     </div>
     </>
   )
