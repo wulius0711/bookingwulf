@@ -119,7 +119,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
             Sie sind startklar!
           </p>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 20px' }}>
-            Ihr 14-tägiger Testzeitraum läuft. Wählen Sie jetzt Ihr Paket — Sie werden erst nach Ablauf des Tests belastet.
+            Ihr 14-tägiger Testzeitraum läuft. Wählen Sie ein Paket und entdecken Sie alle Funktionen — kostenlos bis zum Ende des Tests.
           </p>
           <a
             href="/admin/billing"
