@@ -6,6 +6,7 @@ import { hasPlanAccess, NAV_PLAN_GATES, PLAN_LABEL } from '@/src/lib/plan-gates'
 import { PlanKey } from '@/src/lib/plans'
 import Sidebar from './components/Sidebar'
 import GuidedTour from './components/GuidedTour'
+import AdminChatWidget from './components/AdminChatWidget'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -131,6 +132,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </div>
 
       <GuidedTour />
+      <AdminChatWidget />
     </div>
     </>
   )
