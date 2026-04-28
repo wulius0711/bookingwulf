@@ -130,7 +130,7 @@ Erweiterte Einstellungen pro Hotel. Enthält:
 - **Farben:** `accentColor`, `backgroundColor`, `cardBackground`, `textColor`, `mutedTextColor`, `borderColor`, `buttonColor`
 - **Typografie:** `headlineFont`, `bodyFont`, `headlineFontSize`, `bodyFontSize`, `headlineFontWeight`, `bodyFontWeight`
 - **Layout:** `cardRadius`, `buttonRadius`
-- **Ortstaxe:** `ortstaxePerPersonPerNight` (Decimal?), `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit
+- **Ortstaxe:** `ortstaxeMode` (String, default `"off"`) — `"off"` | `"wien"` | `"custom"`. Bei `"wien"` werden die datumsbezogenen Wiener Sätze automatisch angewendet (2,5237 % / 4,3478 % / 6,7797 % vom Zimmerpreis je nach Anreisedatum). Bei `"custom"`: `ortstaxePerPersonPerNight` (Decimal?) × Personen × Nächte. `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit (nur Custom-Modus).
 
 ### WidgetConfig *(Pro+: mehrere Widgets pro Hotel)*
 
@@ -388,7 +388,7 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 
 **Preistransparenz:** Apartment-Karte zeigt den Gesamtpreis prominent. Klick auf „Preis Details" (`.apt-price-details-btn`) öffnet ein Popover (`.apt-price-popover`) mit vollständiger Aufschlüsselung: Anzahl Nächte + Saison, `X × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Gesamtbetrag fett. Popover schließt sich bei Klick außerhalb. State: `state.openPricePopover` (Apartment-ID oder null). Summary-Sidebar zeigt dieselbe Aufschlüsselung nochmals als Tabelle, inkl. Kinderpreise und Ortstaxe.
 
-**Ortstaxe:** `state.ortstaxePerPersonPerNight` + `state.ortstaxeMinAge` werden aus `/api/hotel-settings` geladen. `calcOrtstaxe(nights)` berechnet den Betrag (Adults + berechtigte Kinder × Rate × Nächte). Kinder unter `ortstaxeMinAge` sind befreit (Altersberechnung via `getChildAge()`). Ortstaxe erscheint in der Summary-Sidebar und wird in `getTotal()` addiert. Im `POST /api/request` wird Ortstaxe serverseitig neu berechnet und in die Preis-E-Mail aufgenommen.
+**Ortstaxe:** `state.ortstaxeMode`, `state.ortstaxePerPersonPerNight` und `state.ortstaxeMinAge` werden aus `/api/hotel-settings` geladen. Drei Modi: `"off"` (keine Ortstaxe), `"wien"` (automatisch nach WKO-Schlüsselzahlen + Anreisedatum: bis 30.6.2026 → 2,5237 %, ab 1.7.2026 → 4,3478 %, ab 1.7.2027 → 6,7797 % vom Zimmerpreis), `"custom"` (€/Person/Nacht × Personen × Nächte). Berechnung serverseitig via `src/lib/ortstaxe.ts → calculateOrtstaxe()`. Ortstaxe erscheint als eigene Zeile in der Summary-Sidebar, in Preis-E-Mails und Buchungsdetails.
 
 **Floating Labels:** Alle Formularfelder im Widget verwenden das Floating-Label-Pattern (`.field-block` + `.label`): Label startet als Placeholder zentriert im Input, schwebt bei Fokus/Wert nach oben. Selects haben das Label immer in der gefloateten Position (da sie immer sichtbaren Text zeigen). Initialisierung via `initFloatingLabels(root)` mit `_floatInit`-Guard gegen doppelte Listener.
 

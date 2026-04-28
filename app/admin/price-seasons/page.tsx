@@ -43,17 +43,17 @@ async function saveOrtstaxe(formData: FormData) {
   if (!hotelId) return;
   if (session.hotelId !== null && hotelId !== session.hotelId) return;
 
+  const mode = String(formData.get('ortstaxeMode') || 'off');
+  const ortstaxeData = {
+    ortstaxeMode: mode,
+    ortstaxePerPersonPerNight: mode === 'custom' ? (parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null) : null,
+    ortstaxeMinAge: mode === 'custom' ? (parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null) : null,
+  };
+
   await prisma.hotelSettings.upsert({
     where: { hotelId },
-    update: {
-      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
-      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
-    },
-    create: {
-      hotelId,
-      ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
-      ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
-    },
+    update: ortstaxeData,
+    create: { hotelId, ...ortstaxeData },
   });
 
   revalidatePath('/admin/price-seasons');
@@ -101,7 +101,7 @@ export default async function PriceSeasonsPage() {
   const selectedHotelId = session.hotelId;
 
   const hotelData = selectedHotelId !== null
-    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } } } })
+    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } } } })
     : null;
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
@@ -159,27 +159,59 @@ export default async function PriceSeasonsPage() {
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
           <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
             <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Ortstaxe / Kurtaxe</h2>
-            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Abgabe pro Person und Nacht — wird zur Buchungssumme addiert.</p>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
           </div>
           <div style={{ padding: '20px' }}>
-            <form action={saveOrtstaxe} style={{ display: 'grid', gap: 16 }}>
+            <form action={saveOrtstaxe} style={{ display: 'grid', gap: 20 }}>
               <input type="hidden" name="hotelId" value={selectedHotelId} />
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
-                  <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
-                    defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
-                    placeholder="z. B. 2.50"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                </div>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 120px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
-                  <input name="ortstaxeMinAge" type="number" min="0" step="1"
-                    defaultValue={s?.ortstaxeMinAge ?? ''}
-                    placeholder="leer = alle zahlen"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+
+              {/* Mode selector */}
+              <div style={{ display: 'grid', gap: 8 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Modus</label>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {([
+                    { value: 'off',    label: 'Deaktiviert' },
+                    { value: 'wien',   label: 'Wien (automatisch)' },
+                    { value: 'custom', label: 'Eigener Betrag' },
+                  ] as const).map(({ value, label }) => (
+                    <label key={value} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, cursor: 'pointer', padding: '8px 14px', border: `1px solid ${(s?.ortstaxeMode ?? 'off') === value ? 'var(--accent)' : '#e5e7eb'}`, borderRadius: 8, background: (s?.ortstaxeMode ?? 'off') === value ? 'color-mix(in srgb, var(--accent) 8%, #fff)' : '#fff' }}>
+                      <input type="radio" name="ortstaxeMode" value={value} defaultChecked={(s?.ortstaxeMode ?? 'off') === value} style={{ accentColor: 'var(--accent)' }} />
+                      {label}
+                    </label>
+                  ))}
                 </div>
               </div>
+
+              {/* Wien info */}
+              {(s?.ortstaxeMode ?? 'off') === 'wien' && (
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 4 }}>
+                  <div style={{ fontWeight: 600 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
+                  <div>bis 30.6.2026: <strong>2,5237 %</strong> vom Zimmerpreis ohne Frühstück</div>
+                  <div>ab 1.7.2026: <strong>4,3478 %</strong> vom Zimmerpreis ohne Frühstück</div>
+                  <div>ab 1.7.2027: <strong>6,7797 %</strong> vom Zimmerpreis ohne Frühstück</div>
+                </div>
+              )}
+
+              {/* Custom fields */}
+              {(s?.ortstaxeMode ?? 'off') === 'custom' && (
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+                    <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
+                      defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
+                      placeholder="z. B. 2.20"
+                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                  </div>
+                  <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+                    <input name="ortstaxeMinAge" type="number" min="0" step="1"
+                      defaultValue={s?.ortstaxeMinAge ?? ''}
+                      placeholder="leer = alle zahlen"
+                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                  </div>
+                </div>
+              )}
+
               <div>
                 <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                   Speichern

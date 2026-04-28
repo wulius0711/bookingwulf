@@ -99,7 +99,8 @@ model HotelSettings {
   occupancySurchargeThreshold Int @default(70) // % occupancy to trigger surcharge
 
   // 🏛️ Ortstaxe / Kurtaxe
-  ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2)
+  ortstaxeMode              String   @default("off")  // "off" | "wien" | "custom"
+  ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2)  // used in "custom" mode
   ortstaxeMinAge            Int?     // children below this age are exempt (null = all pay)
 
   // 🔗 Mini-Widget

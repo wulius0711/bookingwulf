@@ -5,6 +5,7 @@ import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 import { bookingRequestSchema } from '@/src/lib/schemas';
 import { createNukiCode } from '@/src/lib/nuki';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
+import { calculateOrtstaxe } from '@/src/lib/ortstaxe';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
           select: { key: true, name: true, type: true, billingType: true, price: true },
         },
         nukiConfig: { select: { apiToken: true } },
-        settings: { select: { ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } },
+        settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } },
       },
     });
 
@@ -192,26 +193,19 @@ export async function POST(req: Request) {
     }
 
     // Calculate Ortstaxe
-    let ortstaxeTotal = 0;
-    const ortstaxeRate = Number(hotel.settings?.ortstaxePerPersonPerNight || 0);
-    if (ortstaxeRate > 0) {
-      const minAge = hotel.settings?.ortstaxeMinAge ?? null;
-      let eligiblePersons = adults;
-      if (children > 0) {
-        if (minAge === null || minAge === 0) {
-          eligiblePersons += children;
-        } else {
-          for (const bd of childBirthdays) {
-            if (!bd) continue;
-            const bDate = new Date(bd);
-            const diff = arrival.getTime() - bDate.getTime();
-            const age = Math.floor(diff / (365.25 * 24 * 60 * 60 * 1000));
-            if (age >= minAge) eligiblePersons++;
-          }
-        }
-      }
-      ortstaxeTotal = parseFloat((ortstaxeRate * eligiblePersons * nights).toFixed(2));
-    }
+    const ortstaxeTotal = calculateOrtstaxe({
+      settings: {
+        ortstaxeMode: hotel.settings?.ortstaxeMode ?? 'off',
+        ortstaxePerPersonPerNight: Number(hotel.settings?.ortstaxePerPersonPerNight ?? 0) || null,
+        ortstaxeMinAge: hotel.settings?.ortstaxeMinAge ?? null,
+      },
+      roomTotalWithoutBreakfast: apartmentsTotal,
+      adults,
+      children,
+      nights,
+      arrivalDate: arrival,
+      childBirthdays,
+    });
 
     const totalBookingPrice = apartmentsTotal + extrasTotal + ortstaxeTotal;
 

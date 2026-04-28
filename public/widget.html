@@ -2954,6 +2954,7 @@
           selectedInsurance: null,
           availableExtras: [],
           childPriceRanges: [],
+          ortstaxeMode: 'off',
           ortstaxePerPersonPerNight: 0,
           ortstaxeMinAge: null,
           apartments: [],
@@ -3185,6 +3186,7 @@
               state.childPriceRanges = data.childPriceRanges;
             }
             if (data.settings) {
+              state.ortstaxeMode = data.settings.ortstaxeMode || 'off';
               state.ortstaxePerPersonPerNight = Number(
                 data.settings.ortstaxePerPersonPerNight || 0,
               );
@@ -3964,23 +3966,47 @@
           return total;
         }
 
-        function calcOrtstaxe(nights) {
-          const rate = state.ortstaxePerPersonPerNight || 0;
-          if (!rate || !nights) return 0;
-          const minAge = state.ortstaxeMinAge;
-          let eligible = state.adults;
-          if (state.children > 0) {
-            if (minAge === null || minAge === 0) {
-              eligible += state.children;
-            } else {
-              const birthdays = getChildBirthdays();
-              birthdays.forEach((bd) => {
-                const age = getChildAge(bd, state.arrival);
-                if (age !== null && age >= minAge) eligible++;
-              });
-            }
+        function calcOrtstaxe(nights, roomBase) {
+          const mode = state.ortstaxeMode || 'off';
+          if (mode === 'off' || !nights) return 0;
+
+          if (mode === 'wien') {
+            // roomBase: Zimmerpreis ohne Endreinigung (pro Apartment übergeben oder aus selektierten summiert)
+            const base = roomBase != null
+              ? roomBase
+              : state.selectedApartmentIds.reduce((sum, id) => {
+                  const p = state.pricingMap[String(id)];
+                  return sum + (p && p.available ? Number(p.totalPrice) - Number(p.cleaningFee || 0) : 0);
+                }, 0);
+            if (!base) return 0;
+            const arrival = state.arrival ? new Date(state.arrival) : new Date();
+            let rate;
+            if (arrival >= new Date('2027-07-01')) rate = 0.067797;
+            else if (arrival >= new Date('2026-07-01')) rate = 0.043478;
+            else rate = 0.025237;
+            return parseFloat((base * rate).toFixed(2));
           }
-          return rate * eligible * nights;
+
+          if (mode === 'custom') {
+            const rate = state.ortstaxePerPersonPerNight || 0;
+            if (!rate) return 0;
+            const minAge = state.ortstaxeMinAge;
+            let eligible = state.adults;
+            if (state.children > 0) {
+              if (minAge === null || minAge === 0) {
+                eligible += state.children;
+              } else {
+                const birthdays = getChildBirthdays();
+                birthdays.forEach((bd) => {
+                  const age = getChildAge(bd, state.arrival);
+                  if (age !== null && age >= minAge) eligible++;
+                });
+              }
+            }
+            return parseFloat((rate * eligible * nights).toFixed(2));
+          }
+
+          return 0;
         }
 
         function isApartmentMatchingGuests(apartment) {
@@ -4107,7 +4133,7 @@
                     })
                     .join('');
                 })();
-                const ortstaxeAmount = calcOrtstaxe(pricing.nights);
+                const ortstaxeAmount = calcOrtstaxe(pricing.nights, (pricing.totalPrice || 0) - (pricing.cleaningFee || 0));
                 const ortstaxeRow =
                   ortstaxeAmount > 0
                     ? (() => {

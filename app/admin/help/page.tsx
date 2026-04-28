@@ -541,10 +541,14 @@ function PreiseSection() {
 
       <H3>Ortstaxe / Kurtaxe</H3>
       <P>
-        Abgabe pro Person und Nacht. Wird automatisch zur Buchungssumme addiert und in der
-        Buchungsübersicht sowie den Bestätigungs-E-Mails separat ausgewiesen. Optional lässt sich
-        ein Mindestalter festlegen — Kinder darunter sind befreit.
+        Wird automatisch zur Buchungssumme addiert und im Widget sowie in Bestätigungs-E-Mails
+        separat ausgewiesen. Drei Modi:
       </P>
+      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 12px' }}>
+        <li><strong>Deaktiviert</strong> — keine Ortstaxe.</li>
+        <li><strong>Wien (automatisch)</strong> — bookingwulf rechnet mit den offiziellen WKO-Sätzen automatisch nach Anreisedatum: bis 30.6.2026 → 2,5237 %, ab 1.7.2026 → 4,3478 %, ab 1.7.2027 → 6,7797 % vom Zimmerpreis. Kein manuelles Update nötig.</li>
+        <li><strong>Eigener Betrag</strong> — fixer Betrag in € pro Person und Nacht (z. B. für Salzburg, Tirol, etc.). Optional: Mindestalter für Kinder-Befreiung.</li>
+      </ul>
 
       <H3>Kinderpreise</H3>
       <P>
