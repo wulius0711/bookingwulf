@@ -56,8 +56,6 @@ async function saveOrtstaxe(formData: FormData) {
     update: ortstaxeData,
     create: { hotelId, ...ortstaxeData },
   });
-
-  revalidatePath('/admin/price-seasons');
 }
 
 async function saveDynamicPricing(formData: FormData) {

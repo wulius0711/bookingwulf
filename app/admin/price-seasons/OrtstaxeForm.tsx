@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect, useRef } from 'react';
+import { useState, useTransition } from 'react';
 
 type Props = {
   action: (formData: FormData) => Promise<void>;
@@ -20,22 +20,12 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
   const [mode, setMode] = useState(initialMode);
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
-  const isSavingRef = useRef(false);
-
-  // Block prop-driven re-sync while save is in-flight to prevent flash
-  useEffect(() => {
-    if (!isSavingRef.current) setMode(initialMode);
-  }, [initialMode]);
 
   const handleSubmit = (formData: FormData) => {
-    isSavingRef.current = true;
     startTransition(async () => {
       await action(formData);
       setSaved(true);
-      setTimeout(() => {
-        setSaved(false);
-        isSavingRef.current = false;
-      }, 2500);
+      setTimeout(() => setSaved(false), 2500);
     });
   };
 
