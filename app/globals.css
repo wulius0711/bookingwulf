@@ -731,3 +731,6 @@ body[data-onboarding-group="Konto"] [data-nav-group="Konto"] {
   position: relative;
   z-index: 2;
 }
+
+.chat-log-delete-btn { color: #d1d5db; }
+.chat-log-delete-btn:hover { color: #ef4444; }
