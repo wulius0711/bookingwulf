@@ -15,7 +15,7 @@ export const PLANS = {
     maxApartments: 15,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Alles aus Starter', 'Bis zu 15 Apartments', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons & Mindestaufenthalt', 'Last-Minute Rabatt', 'Lücken-Rabatt', 'Nuki-Integration', 'Widget doppelt einsetzbar – für Anfrage & Buchung'],
+    features: ['Alles aus Starter', 'Bis zu 15 Apartments', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons & Mindestaufenthalt', 'Last-Minute Rabatt', 'Lücken-Rabatt', 'Nuki-Integration', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'KI-Assistent im Admin'],
   },
   business: {
     name: 'Business',
