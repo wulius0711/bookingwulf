@@ -61,6 +61,6 @@ export async function POST(req: Request) {
     if (message.includes('429') || message.includes('quota') || message.includes('Too Many Requests')) {
       return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
     }
-    return NextResponse.json({ error: 'ai_error' }, { status: 500 });
+    return NextResponse.json({ error: 'ai_error', detail: message }, { status: 500 });
   }
 }

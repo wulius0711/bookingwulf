@@ -37,7 +37,7 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
       if (!res.ok) {
         const msg = res.status === 429
           ? 'Der Assistent ist gerade überlastet. Bitte versuche es in einer Minute erneut.'
-          : 'Ein Fehler ist aufgetreten. Bitte versuche es erneut oder wende dich an support@bookingwulf.com.';
+          : `Fehler: ${data.detail ?? data.error}`;
         setMessages((prev) => [...prev, { role: 'assistant', text: msg }]);
         return;
       }
