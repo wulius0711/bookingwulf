@@ -1010,7 +1010,7 @@ function AssistentSection() {
         Über das Papierkorb-Symbol oben rechts im Chat kannst du den Verlauf jederzeit löschen.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Der Assistent kennt die aktuelle Seite — auf vagen Fragen wie
+        <strong>Tipp:</strong> Der Assistent kennt die aktuelle Seite — auf vage Fragen wie
         "Was mache ich hier?" antwortet er konkret zum Bereich, in dem du dich gerade befindest.
       </Tip>
     </div>
