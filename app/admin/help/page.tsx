@@ -1000,6 +1000,17 @@ function EinbindungSection() {
         <strong>Wichtig:</strong> Der <Code>data-hotel</Code>-Wert ist Ihr persönlicher Hotel-Slug
         und bereits vorausgefüllt. Ändern Sie diesen Wert nicht.
       </Note>
+      <H3>Sprache des Widgets</H3>
+      <P>
+        Das Widget unterstützt Deutsch und Englisch. Die Sprache wird über das optionale Attribut
+        <Code>data-lang</Code> gesteuert:
+      </P>
+      <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug" data-lang="en"></script>`}</CodeBlock>
+      <P>
+        Mit <Code>data-lang="en"</Code> erscheinen alle Labels, Monatsnamen, Wochentage und
+        Meldungen im Widget auf Englisch. Standard ist Deutsch (<Code>de</Code>).
+        Die Sprache der Bestätigungs-E-Mails an Gäste wird davon unabhängig pro Buchung eingestellt.
+      </P>
       <H3>WordPress</H3>
       <Step num={1} title='Block „Benutzerdefiniertes HTML" hinzufügen'>
         Im Gutenberg-Editor auf <strong>„+"</strong> klicken → <strong>„Benutzerdefiniertes HTML"</strong>

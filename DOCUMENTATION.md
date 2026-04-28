@@ -355,11 +355,14 @@ In der Navigation werden gesperrte Einträge mit 🔒 und Tooltip angezeigt.
 <script
   src="https://bookingwulf.com/widget.js"
   data-hotel="hotel-slug"
-  data-config="widget-slug">
+  data-config="widget-slug"
+  data-lang="de">
 </script>
 ```
 
-`widget.js` erstellt ein `<iframe>` das `/widget.html?hotel=...&config=...` lädt.
+`widget.js` erstellt ein `<iframe>` das `/widget.html?hotel=...&config=...&lang=...` lädt.
+
+**`data-lang`** — Sprache der Widget-Oberfläche. Unterstützte Werte: `de` (Standard), `en`. Beeinflusst alle Labels, Monatsnamen, Wochentage, Datumsformate und Validierungsmeldungen im Widget. Standardmäßig `de` wenn nicht gesetzt.
 
 ### Kommunikation iframe ↔ Elternseite
 
