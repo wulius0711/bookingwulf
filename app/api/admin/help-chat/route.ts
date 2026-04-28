@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
-import { getGeminiModel, BOOKINGWULF_SYSTEM_PROMPT, classifyQuestion } from '@/src/lib/gemini';
+import { generateChatAnswer, BOOKINGWULF_SYSTEM_PROMPT, classifyQuestion } from '@/src/lib/gemini';
 
 export async function POST(req: Request) {
   let session: Awaited<ReturnType<typeof verifySession>>;
@@ -37,11 +37,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const model = getGeminiModel();
-    const result = await model.generateContent(
-      `${BOOKINGWULF_SYSTEM_PROMPT}\n\nFrage: ${trimmed}`
-    );
-    const answer = result.response.text().trim();
+    const answer = (await generateChatAnswer(`${BOOKINGWULF_SYSTEM_PROMPT}\n\nFrage: ${trimmed}`)).trim();
     const category = classifyQuestion(trimmed);
 
     await prisma.supportChatLog.create({

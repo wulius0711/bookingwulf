@@ -1,9 +1,13 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-export function getGeminiModel() {
-  return genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+export async function generateChatAnswer(prompt: string): Promise<string> {
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: prompt,
+  });
+  return response.text ?? '';
 }
 
 export const BOOKINGWULF_SYSTEM_PROMPT = `Du bist ein Support-Assistent für bookingwulf-Nutzer.
@@ -35,13 +39,8 @@ Bei nicht erlaubten Fragen antworte NUR: "Ich beantworte nur Fragen zur Bedienun
 
 Antworte immer auf Deutsch. Kurz, klar, handlungsorientiert. Keine Markdown-Formatierung außer einfachen Listen mit Bindestrichen.`;
 
-export const CHAT_CATEGORIES = [
-  'buchungen', 'kalender', 'apartments', 'preise', 'widget', 'emails',
-  'nuki', 'beds24', 'abonnement', 'analytics', 'sperrzeiten', 'extras', 'sonstiges',
-];
-
 export function classifyQuestion(question: string): string {
-  const q: string = question.toLowerCase();
+  const q = question.toLowerCase();
   if (q.match(/buchung|anfrage|gast|gäste|formular/)) return 'buchungen';
   if (q.match(/kalender|datum|verfügbar|sperr/)) return 'kalender';
   if (q.match(/apartment|zimmer|unterkunft/)) return 'apartments';
