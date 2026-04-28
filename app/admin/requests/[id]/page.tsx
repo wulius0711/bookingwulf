@@ -244,13 +244,6 @@ function getStatusBadge(status: string) {
         color: '#256029',
         border: '#b7dfba',
       };
-    case 'confirmed':
-      return {
-        label: 'Bestätigt',
-        bg: '#e8f5e9',
-        color: '#256029',
-        border: '#b7dfba',
-      };
     case 'answered':
       return {
         label: 'Beantwortet',

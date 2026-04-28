@@ -19,7 +19,6 @@ type ApartmentLookup = { id: number; name: string };
 function getStatusBadge(status: string) {
   switch (status) {
     case 'booked':     return { label: 'Gebucht',     bg: '#e8f5e9', color: '#256029', border: '#b7dfba' };
-    case 'confirmed':  return { label: 'Bestätigt',   bg: '#e8f5e9', color: '#256029', border: '#b7dfba' };
     case 'answered':   return { label: 'Beantwortet', bg: '#eaf2ff', color: '#2457a6', border: '#bfd4fb' };
     case 'cancelled':  return { label: 'Storniert',   bg: '#fdecec', color: '#a63b3b', border: '#f3c3c3' };
     default:           return { label: 'Neu',          bg: '#f4f4f4', color: '#555',    border: '#ddd' };
