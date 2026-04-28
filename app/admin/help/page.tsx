@@ -19,8 +19,8 @@ const sections = [
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
-  { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
   { id: 'assistent',     title: 'KI-Assistent',          plan: 'Pro',      content: AssistentSection },
+  { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
 ];
 
 export default function HelpPage() {
