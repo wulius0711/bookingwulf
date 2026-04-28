@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 
 type ChatMessage = { role: 'user' | 'assistant'; text: string };
 
+const STORAGE_KEY = 'bw_chat_messages';
+
 export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?: string }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -12,9 +14,30 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
   const [planError, setPlanError] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) setMessages(JSON.parse(stored));
+    } catch {}
+  }, []);
+
+  // Persist to localStorage on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch {}
+  }, [messages]);
+
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open]);
+
+  function clearChat() {
+    setMessages([]);
+    setPlanError(false);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  }
 
   async function send() {
     const q = input.trim();
@@ -94,10 +117,21 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div>
+            <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#111' }}>bookingwulf Assistent</div>
               <div style={{ fontSize: 11, color: '#6b7280' }}>Fragen zur Bedienung</div>
             </div>
+            {messages.length > 0 && (
+              <button
+                onClick={clearChat}
+                title="Verlauf löschen"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', display: 'flex', alignItems: 'center' }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Plan gate */}
