@@ -88,11 +88,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Load accent color for chat widget
   let accentColor = '#111';
   if (session.hotelId) {
-    const settings = await prisma.hotelSettings.findUnique({
-      where: { hotelId: session.hotelId },
-      select: { accentColor: true },
-    });
-    accentColor = settings?.accentColor || '#111';
+    const [hotel, settings] = await Promise.all([
+      prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { accentColor: true } }),
+      prisma.hotelSettings.findUnique({ where: { hotelId: session.hotelId }, select: { accentColor: true } }),
+    ]);
+    accentColor = settings?.accentColor || hotel?.accentColor || '#111';
+    console.log('[chat widget] hotelId:', session.hotelId, 'accentColor:', accentColor);
   }
 
   // Load user's assigned hotels for the switcher
