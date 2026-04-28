@@ -94,8 +94,11 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
             </div>
           </div>
 
-          <div style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Deutsch</div>
             <EmbedCode code={`<script src="https://${host}/widget.js" data-hotel="${hotelSlug}" data-config="${c.slug}"></script>`} />
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 4 }}>English</div>
+            <EmbedCode code={`<script src="https://${host}/widget.js" data-hotel="${hotelSlug}" data-config="${c.slug}" data-lang="en"></script>`} />
           </div>
         </div>
       ))}
