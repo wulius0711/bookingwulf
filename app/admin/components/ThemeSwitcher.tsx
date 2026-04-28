@@ -60,7 +60,7 @@ export default function ThemeSwitcher() {
               border: 'none',
               padding: 0,
               cursor: 'pointer',
-              outline: theme === t.key ? `2px solid ${t.color}` : 'none',
+              outline: theme === t.key ? '2px solid var(--text-primary, #0f172a)' : 'none',
               outlineOffset: 2,
               boxShadow: theme === t.key ? '0 0 0 1px var(--surface) inset' : 'none',
               transition: 'outline 0.15s ease',
