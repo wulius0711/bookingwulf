@@ -34,6 +34,11 @@ export default function AdminChatWidget() {
         setMessages((prev) => prev.slice(0, -1));
         return;
       }
+      if (!res.ok) {
+        const detail = data.detail ? ` (${data.detail})` : '';
+        setMessages((prev) => [...prev, { role: 'assistant', text: `Fehler${detail}. Bitte wende dich an support@bookingwulf.com.` }]);
+        return;
+      }
       const answer = data.answer ?? 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
       setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
     } catch {

@@ -32,6 +32,10 @@ export async function POST(req: Request) {
   }
   const trimmed = question.trim().slice(0, 1000);
 
+  if (!process.env.GEMINI_API_KEY) {
+    return NextResponse.json({ error: 'ai_error', detail: 'key_missing' }, { status: 500 });
+  }
+
   try {
     const model = getGeminiModel();
     const result = await model.generateContent(
@@ -52,7 +56,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ answer, category });
   } catch (err) {
-    console.error('Gemini error:', err);
-    return NextResponse.json({ error: 'ai_error' }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('Gemini error:', message);
+    return NextResponse.json({ error: 'ai_error', detail: message }, { status: 500 });
   }
 }
