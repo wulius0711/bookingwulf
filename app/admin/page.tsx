@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 function statusLabel(s: string) {
   switch (s) {
     case 'new':       return 'Neu';
+    case 'confirmed': return 'Bestätigt';
     case 'answered':  return 'Beantwortet';
     case 'booked':    return 'Gebucht';
     case 'cancelled': return 'Storniert';
