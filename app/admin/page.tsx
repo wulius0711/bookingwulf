@@ -102,7 +102,8 @@ async function SuperAdminDashboard() {
             {hotels.map((h) => {
               const byStatus = Object.fromEntries(
                 h.requests.reduce((map, r) => {
-                  map.set(r.status, (map.get(r.status) ?? 0) + 1);
+                  const key = r.status === 'confirmed' ? 'new' : r.status;
+                  map.set(key, (map.get(key) ?? 0) + 1);
                   return map;
                 }, new Map<string, number>()),
               );
@@ -290,9 +291,10 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
 
   if (!hotel) return <p>Hotel nicht gefunden.</p>;
 
-  const byStatus = Object.fromEntries(requestGroups.map((r) => [r.status, r._count._all]));
+  const byStatusRaw = Object.fromEntries(requestGroups.map((r) => [r.status, r._count._all]));
+  const byStatus: Record<string, number> = { ...byStatusRaw, new: (byStatusRaw['new'] ?? 0) + (byStatusRaw['confirmed'] ?? 0) };
   const totalRequests = requestGroups.reduce((s, r) => s + r._count._all, 0);
-  const newCount = (byStatus['new'] ?? 0) + (byStatus['confirmed'] ?? 0);
+  const newCount = byStatus['new'];
 
   const stats = [
     { label: 'Apartments', value: hotel._count.apartments, href: '/admin/apartments' },
