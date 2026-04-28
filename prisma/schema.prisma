@@ -41,6 +41,7 @@ model Hotel {
   nukiConfig    NukiConfig?
   beds24Config  Beds24Config?
   auditLogs     AuditLog[]
+  supportChats  SupportChatLog[]
 }
 
 model HotelSettings {
@@ -445,4 +446,19 @@ model OutreachLead {
   nextStep   String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+}
+
+model SupportChatLog {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int?
+  question  String
+  answer    String
+  category  String   @default("sonstiges")
+  createdAt DateTime @default(now())
+
+  hotel     Hotel?   @relation(fields: [hotelId], references: [id], onDelete: SetNull)
+
+  @@index([hotelId])
+  @@index([createdAt])
+  @@index([category])
 }
