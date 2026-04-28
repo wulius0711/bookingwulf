@@ -1,0 +1,108 @@
+'use client';
+
+import { useState } from 'react';
+
+type Props = {
+  action: (formData: FormData) => Promise<void>;
+  hotelId: number;
+  initialMode: string;
+  initialRate: number;
+  initialMinAge: number | null;
+};
+
+const WIEN_INFO = [
+  { label: 'bis 30.6.2026', rate: '2,5237 %' },
+  { label: 'ab 1.7.2026',   rate: '4,3478 %' },
+  { label: 'ab 1.7.2027',   rate: '6,7797 %' },
+];
+
+export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate, initialMinAge }: Props) {
+  const [mode, setMode] = useState(initialMode);
+
+  return (
+    <form action={action} style={{ display: 'grid', gap: 20 }}>
+      <input type="hidden" name="hotelId" value={hotelId} />
+      <input type="hidden" name="ortstaxeMode" value={mode} />
+
+      {/* Mode selector */}
+      <div style={{ display: 'grid', gap: 8 }}>
+        <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Modus</label>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {([
+            { value: 'off',    label: 'Deaktiviert' },
+            { value: 'wien',   label: 'Wien (automatisch)' },
+            { value: 'custom', label: 'Eigener Betrag' },
+          ] as const).map(({ value, label }) => (
+            <label
+              key={value}
+              onClick={() => setMode(value)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6, fontSize: 14,
+                cursor: 'pointer', padding: '8px 14px',
+                border: `1px solid ${mode === value ? 'var(--accent)' : '#e5e7eb'}`,
+                borderRadius: 8,
+                background: mode === value ? 'color-mix(in srgb, var(--accent) 8%, #fff)' : '#fff',
+                transition: 'border-color 0.15s, background 0.15s',
+              }}
+            >
+              <input
+                type="radio"
+                name="_ortstaxeMode"
+                value={value}
+                checked={mode === value}
+                onChange={() => setMode(value)}
+                style={{ accentColor: 'var(--accent)' }}
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Wien info */}
+      {mode === 'wien' && (
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 6 }}>
+          <div style={{ fontWeight: 600, marginBottom: 2 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
+          {WIEN_INFO.map(({ label, rate }) => (
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+              <span>{label}</span>
+              <strong>{rate} vom Zimmerpreis ohne Frühstück</strong>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Custom fields */}
+      {mode === 'custom' && (
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+            <input
+              name="ortstaxePerPersonPerNight"
+              type="number" min="0" step="0.01"
+              defaultValue={initialRate || ''}
+              placeholder="z. B. 2.20"
+              style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+            />
+          </div>
+          <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+            <input
+              name="ortstaxeMinAge"
+              type="number" min="0" step="1"
+              defaultValue={initialMinAge ?? ''}
+              placeholder="leer = alle zahlen"
+              style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div>
+        <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          Speichern
+        </button>
+      </div>
+    </form>
+  );
+}

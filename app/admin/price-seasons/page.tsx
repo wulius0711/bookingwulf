@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import PriceSeasonList from './PriceSeasonList';
 import ProLockOverlay from '../components/ProLockOverlay';
 import { createChildPriceRange, deleteChildPriceRange } from '../child-pricing/actions';
+import OrtstaxeForm from './OrtstaxeForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -162,62 +163,13 @@ export default async function PriceSeasonsPage() {
             <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
           </div>
           <div style={{ padding: '20px' }}>
-            <form action={saveOrtstaxe} style={{ display: 'grid', gap: 20 }}>
-              <input type="hidden" name="hotelId" value={selectedHotelId} />
-
-              {/* Mode selector */}
-              <div style={{ display: 'grid', gap: 8 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Modus</label>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {([
-                    { value: 'off',    label: 'Deaktiviert' },
-                    { value: 'wien',   label: 'Wien (automatisch)' },
-                    { value: 'custom', label: 'Eigener Betrag' },
-                  ] as const).map(({ value, label }) => (
-                    <label key={value} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, cursor: 'pointer', padding: '8px 14px', border: `1px solid ${(s?.ortstaxeMode ?? 'off') === value ? 'var(--accent)' : '#e5e7eb'}`, borderRadius: 8, background: (s?.ortstaxeMode ?? 'off') === value ? 'color-mix(in srgb, var(--accent) 8%, #fff)' : '#fff' }}>
-                      <input type="radio" name="ortstaxeMode" value={value} defaultChecked={(s?.ortstaxeMode ?? 'off') === value} style={{ accentColor: 'var(--accent)' }} />
-                      {label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Wien info */}
-              {(s?.ortstaxeMode ?? 'off') === 'wien' && (
-                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 4 }}>
-                  <div style={{ fontWeight: 600 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
-                  <div>bis 30.6.2026: <strong>2,5237 %</strong> vom Zimmerpreis ohne Frühstück</div>
-                  <div>ab 1.7.2026: <strong>4,3478 %</strong> vom Zimmerpreis ohne Frühstück</div>
-                  <div>ab 1.7.2027: <strong>6,7797 %</strong> vom Zimmerpreis ohne Frühstück</div>
-                </div>
-              )}
-
-              {/* Custom fields */}
-              {(s?.ortstaxeMode ?? 'off') === 'custom' && (
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                  <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
-                    <input name="ortstaxePerPersonPerNight" type="number" min="0" step="0.01"
-                      defaultValue={Number(s?.ortstaxePerPersonPerNight ?? 0) || ''}
-                      placeholder="z. B. 2.20"
-                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                  </div>
-                  <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
-                    <input name="ortstaxeMinAge" type="number" min="0" step="1"
-                      defaultValue={s?.ortstaxeMinAge ?? ''}
-                      placeholder="leer = alle zahlen"
-                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                  Speichern
-                </button>
-              </div>
-            </form>
+            <OrtstaxeForm
+              action={saveOrtstaxe}
+              hotelId={selectedHotelId}
+              initialMode={s?.ortstaxeMode ?? 'off'}
+              initialRate={Number(s?.ortstaxePerPersonPerNight ?? 0)}
+              initialMinAge={s?.ortstaxeMinAge ?? null}
+            />
           </div>
         </div>
       )}
