@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 
 type ChatMessage = { role: 'user' | 'assistant'; text: string };
 
-export default function AdminChatWidget() {
+export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?: string }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -57,7 +57,7 @@ export default function AdminChatWidget() {
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 52, height: 52, borderRadius: '50%',
-          background: '#111', border: 'none', cursor: 'pointer',
+          background: accentColor, border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
           transition: 'background 0.15s',
@@ -87,7 +87,7 @@ export default function AdminChatWidget() {
         }}>
           {/* Header */}
           <div style={{ padding: '14px 16px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: accentColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -121,7 +121,7 @@ export default function AdminChatWidget() {
                   <div key={i} style={{
                     alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
-                    background: m.role === 'user' ? '#111' : '#f3f4f6',
+                    background: m.role === 'user' ? accentColor : '#f3f4f6',
                     color: m.role === 'user' ? '#fff' : '#111',
                     borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                     padding: '8px 12px',
@@ -159,7 +159,7 @@ export default function AdminChatWidget() {
                   disabled={loading || !input.trim()}
                   style={{
                     padding: '8px 14px', borderRadius: 8, border: 'none',
-                    background: loading || !input.trim() ? '#e5e7eb' : '#111',
+                    background: loading || !input.trim() ? '#e5e7eb' : accentColor,
                     color: loading || !input.trim() ? '#9ca3af' : '#fff',
                     fontSize: 13, fontWeight: 600, cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s',
