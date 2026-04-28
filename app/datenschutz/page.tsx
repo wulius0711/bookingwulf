@@ -75,7 +75,12 @@ export default function DatenschutzPage() {
         Zur Akquisition von Neukunden verarbeiten wir öffentlich zugängliche Kontaktdaten potenzieller Geschäftspartner (Name, E-Mail-Adresse, Betriebsname) auf Basis unseres berechtigten Interesses gemäß Art. 6 Abs. 1 lit. f DSGVO. Die Daten stammen ausschließlich aus öffentlich zugänglichen Quellen (z. B. Unternehmenswebsites). Eine Weitergabe an Dritte erfolgt nicht. Auf Anfrage werden diese Daten unverzüglich gelöscht.
       </p>
 
-      <h3 style={h3}>4.4 Zahlungsdaten</h3>
+      <h3 style={h3}>4.4 KI-Assistent (Admin-Bereich)</h3>
+      <p style={p}>
+        Hotelbetreiber mit einem Pro- oder Business-Abonnement können im Admin-Bereich einen KI-gestützten Assistenten nutzen. Dabei werden die eingegebenen Fragen sowie die generierten Antworten an <strong>Google LLC</strong> (USA, Dienst: Google Gemini API) übertragen, um die Antwort zu erzeugen. Google ist nach dem EU-US Data Privacy Framework zertifiziert. Die Fragen und Antworten werden zusätzlich intern in unserer Datenbank gespeichert, um die Qualität des Assistenten laufend verbessern zu können. Rechtsgrundlage ist unser berechtigtes Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO. Es werden ausschließlich Fragen zur Bedienung der Software übertragen — keine personenbezogenen Gästedaten. Auf Anfrage können gespeicherte Einträge gelöscht werden.
+      </p>
+
+      <h3 style={h3}>4.5 Zahlungsdaten</h3>
       <p style={p}>
         Zahlungen für Abonnements werden über <strong>Stripe, Inc.</strong> (USA) abgewickelt. Wir speichern keine Kreditkarten- oder Bankdaten. Stripe verarbeitet Zahlungsdaten gemäß eigener Datenschutzbestimmungen: <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>stripe.com/privacy</a>.
       </p>
@@ -89,6 +94,7 @@ export default function DatenschutzPage() {
         <li><strong>Stripe Inc.</strong> (USA) — Zahlungsabwicklung. Stripe ist nach dem EU-US Data Privacy Framework zertifiziert.</li>
         <li><strong>Sentry Inc.</strong> (USA) — Fehler-Monitoring zur Sicherstellung der Betriebsstabilität. Dabei können technische Fehlerdaten (Stack Traces, Geräteinformationen, ggf. anonymisierte Nutzungsdaten) übertragen werden. Datenschutzrichtlinie: <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>sentry.io/privacy</a>.</li>
         <li><strong>Zoho Corporation</strong> (Indien/EU) — E-Mail-Dienst für den Versand von Akquisitions- und Support-E-Mails über die Adresse support@bookingwulf.com. Datenschutzrichtlinie: <a href="https://www.zoho.com/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>zoho.com/privacy</a>.</li>
+        <li><strong>Google LLC</strong> (USA) — Google Gemini API für den KI-Assistenten im Admin-Bereich (Pro/Business). Dabei werden eingegebene Fragen zur Verarbeitung übertragen. Google ist nach dem EU-US Data Privacy Framework zertifiziert. Datenschutzrichtlinie: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>policies.google.com/privacy</a>.</li>
         <li><strong>Google LLC</strong> (USA) — Google Analytics 4 zur Analyse des Nutzungsverhaltens auf unserer Website (nur mit Ihrer Einwilligung). Dabei werden u. a. Seitenaufrufe, Geräteinformationen und gekürzte IP-Adressen verarbeitet. Google ist nach dem EU-US Data Privacy Framework zertifiziert. Datenschutzrichtlinie: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>policies.google.com/privacy</a>. Opt-Out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>Google Analytics Opt-Out</a>.</li>
       </ul>
       <p style={p}>
