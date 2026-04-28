@@ -454,6 +454,7 @@ model SupportChatLog {
   question  String
   answer    String
   category  String   @default("sonstiges")
+  isSuperAdmin Boolean @default(false)
   createdAt DateTime @default(now())
 
   hotel     Hotel?   @relation(fields: [hotelId], references: [id], onDelete: SetNull)

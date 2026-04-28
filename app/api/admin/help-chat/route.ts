@@ -46,6 +46,7 @@ export async function POST(req: Request) {
         question: trimmed,
         answer,
         category,
+        isSuperAdmin: session.role === 'super_admin',
       },
     });
 
