@@ -58,6 +58,9 @@ export async function POST(req: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('Gemini error:', message);
-    return NextResponse.json({ error: 'ai_error', detail: message }, { status: 500 });
+    if (message.includes('429') || message.includes('quota') || message.includes('Too Many Requests')) {
+      return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+    }
+    return NextResponse.json({ error: 'ai_error' }, { status: 500 });
   }
 }

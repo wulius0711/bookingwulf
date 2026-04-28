@@ -35,8 +35,10 @@ export default function AdminChatWidget({ accentColor = '#111' }: { accentColor?
         return;
       }
       if (!res.ok) {
-        const detail = data.detail ? ` (${data.detail})` : '';
-        setMessages((prev) => [...prev, { role: 'assistant', text: `Fehler${detail}. Bitte wende dich an support@bookingwulf.com.` }]);
+        const msg = res.status === 429
+          ? 'Der Assistent ist gerade überlastet. Bitte versuche es in einer Minute erneut.'
+          : 'Ein Fehler ist aufgetreten. Bitte versuche es erneut oder wende dich an support@bookingwulf.com.';
+        setMessages((prev) => [...prev, { role: 'assistant', text: msg }]);
         return;
       }
       const answer = data.answer ?? 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
