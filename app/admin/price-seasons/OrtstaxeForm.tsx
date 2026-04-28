@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 type Props = {
   action: (formData: FormData) => Promise<void>;
@@ -18,9 +18,19 @@ const WIEN_INFO = [
 
 export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate, initialMinAge }: Props) {
   const [mode, setMode] = useState(initialMode);
+  const [saved, setSaved] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  const handleSubmit = (formData: FormData) => {
+    startTransition(async () => {
+      await action(formData);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    });
+  };
 
   return (
-    <form action={action} style={{ display: 'grid', gap: 20 }}>
+    <form action={handleSubmit} style={{ display: 'grid', gap: 20 }}>
       <input type="hidden" name="hotelId" value={hotelId} />
       <input type="hidden" name="ortstaxeMode" value={mode} />
 
@@ -98,10 +108,19 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
         </div>
       )}
 
-      <div>
-        <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-          Speichern
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <button
+          type="submit"
+          disabled={pending}
+          style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: pending ? 'default' : 'pointer', opacity: pending ? 0.7 : 1 }}
+        >
+          {pending ? 'Speichern…' : 'Speichern'}
         </button>
+        {saved && (
+          <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>
+            ✓ Gespeichert
+          </span>
+        )}
       </div>
     </form>
   );
