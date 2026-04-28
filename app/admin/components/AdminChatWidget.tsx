@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 type ChatMessage = { role: 'user' | 'assistant'; text: string };
 
 const STORAGE_KEY = 'bw_chat_messages';
+const ACCENT = 'var(--accent)';
 
 export default function AdminChatWidget() {
   const [open, setOpen] = useState(false);
@@ -12,28 +13,16 @@ export default function AdminChatWidget() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [planError, setPlanError] = useState(false);
-  const [accentColor, setAccentColor] = useState('#111');
   const bottomRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false);
 
-  // Load from localStorage on mount + fetch hotel color
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) setMessages(JSON.parse(stored));
     } catch {}
-    const params = new URLSearchParams(window.location.search);
-    const hotelParam = params.get('hotel');
-    const colorUrl = hotelParam
-      ? `/api/admin/hotel-color?hotelId=${hotelParam}`
-      : '/api/admin/hotel-color';
-    fetch(colorUrl)
-      .then((r) => r.json())
-      .then((d) => { if (d.color) setAccentColor(d.color); })
-      .catch(() => {});
   }, []);
 
-  // Persist to localStorage on every change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -95,7 +84,7 @@ export default function AdminChatWidget() {
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 52, height: 52, borderRadius: '50%',
-          background: accentColor, border: 'none', cursor: 'pointer',
+          background: ACCENT, border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
           transition: 'background 0.15s',
@@ -125,7 +114,7 @@ export default function AdminChatWidget() {
         }}>
           {/* Header */}
           <div style={{ padding: '14px 16px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: accentColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -170,7 +159,7 @@ export default function AdminChatWidget() {
                   <div key={i} style={{
                     alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
-                    background: m.role === 'user' ? accentColor : '#f3f4f6',
+                    background: m.role === 'user' ? ACCENT : '#f3f4f6',
                     color: m.role === 'user' ? '#fff' : '#111',
                     borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                     padding: '8px 12px',
@@ -208,7 +197,7 @@ export default function AdminChatWidget() {
                   disabled={loading || !input.trim()}
                   style={{
                     padding: '8px 14px', borderRadius: 8, border: 'none',
-                    background: loading || !input.trim() ? '#e5e7eb' : accentColor,
+                    background: loading || !input.trim() ? '#e5e7eb' : ACCENT,
                     color: loading || !input.trim() ? '#9ca3af' : '#fff',
                     fontSize: 13, fontWeight: 600, cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s',
