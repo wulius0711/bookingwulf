@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect, useRef } from 'react';
 
 type Props = {
   action: (formData: FormData) => Promise<void>;
@@ -20,12 +20,22 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
   const [mode, setMode] = useState(initialMode);
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
+  const isSavingRef = useRef(false);
+
+  // Block prop-driven re-sync while save is in-flight to prevent flash
+  useEffect(() => {
+    if (!isSavingRef.current) setMode(initialMode);
+  }, [initialMode]);
 
   const handleSubmit = (formData: FormData) => {
+    isSavingRef.current = true;
     startTransition(async () => {
       await action(formData);
       setSaved(true);
-      setTimeout(() => setSaved(false), 2500);
+      setTimeout(() => {
+        setSaved(false);
+        isSavingRef.current = false;
+      }, 2500);
     });
   };
 
@@ -89,9 +99,10 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
             <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
             <input
               name="ortstaxePerPersonPerNight"
-              type="number" min="0" step="0.01"
+              type="number" min="0.01" step="0.01"
               defaultValue={initialRate || ''}
               placeholder="z. B. 2.20"
+              required
               style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
             />
           </div>
