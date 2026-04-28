@@ -302,62 +302,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Comparison */}
-      <section id="vergleich" style={{ background: '#fafafa', padding: '80px 24px' }}>
-        <div style={{ maxWidth: 860, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 12px' }}>Warum bookingwulf?</h2>
-          <p style={{ textAlign: 'center', fontSize: 16, color: '#666', margin: '0 0 48px' }}>Kein Kompromiss zwischen Kontrolle, Kosten und Komfort.</p>
-          <div style={{ overflowX: 'auto' }}>
-            <table className="lp-compare-table">
-              <thead>
-                <tr>
-                  <th style={{ width: '32%' }}></th>
-                  <th className="bw-col">bookingwulf</th>
-                  <th className="lp-compare-col-hide">Airbnb / Booking.com</th>
-                  <th className="lp-compare-col-hide">Andere Systeme</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ['Provision',             '0 %',                      '15–20 %',              'Monatliche Gebühr'],
-                  ['Einbindung',            '1 Zeile Code, 5 Min.',     'Eigene Plattform',     'Aufwändige Integration'],
-                  ['Gastdaten gehören Ihnen','✓',                       '✗',                    '~'],
-                  ['Kein Gäste-Account',    '✓',                       '✗',                    '✓'],
-                  ['Eigenes Branding',      '✓',                       '✗',                    '~'],
-                  ['DSGVO, Daten in der EU','✓',                       '✗',                    '~'],
-                  ['Nuki Smart Lock',       '✓',                       '✗',                    '✗'],
-                  ['Keine Einrichtungsgebühr','✓',                     '—',                    '✗'],
-                  ['14 Tage gratis, keine Kreditkarte','✓',            '—',                    '✗'],
-                ].map(([label, bw, portal, other]) => (
-                  <tr key={label}>
-                    <td>{label}</td>
-                    <td className="bw-col">
-                      {bw === '✓' ? <span className="lp-check">✓</span>
-                        : bw === '✗' ? <span className="lp-cross">✗</span>
-                        : <span style={{ fontWeight: 600, fontSize: 13 }}>{bw}</span>}
-                    </td>
-                    <td className="lp-compare-col-hide">
-                      {portal === '✓' ? <span className="lp-check">✓</span>
-                        : portal === '✗' ? <span className="lp-cross">✗</span>
-                        : portal === '~' ? <span className="lp-partial">teilweise</span>
-                        : <span style={{ color: '#aaa', fontSize: 13 }}>{portal}</span>}
-                    </td>
-                    <td className="lp-compare-col-hide">
-                      {other === '✓' ? <span className="lp-check">✓</span>
-                        : other === '✗' ? <span className="lp-cross">✗</span>
-                        : other === '~' ? <span className="lp-partial">teilweise</span>
-                        : <span style={{ color: '#aaa', fontSize: 13 }}>{other}</span>}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p style={{ textAlign: 'center', marginTop: 36, fontSize: 14, color: '#888' }}>
-            Andere Systeme: Feratel, Lodgify, Smoobu, easybooking u.a.
-          </p>
-        </div>
-      </section>
+      {/* Comparison – hidden */}
 
       {/* Pricing */}
       <section id="pricing" style={{ background: '#fff', padding: '80px 24px' }}>
