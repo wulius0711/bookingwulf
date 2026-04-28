@@ -43,3 +43,12 @@ next-env.d.ts
 /app/generated/prisma
 /src/generated/prisma
 .env*.local
+
+# Local research/outreach files
+bookmarks_*.html
+outreach_tracker.xlsx
+~$*.xlsx
+*.py
+gaistal_*.json
+bookingwulf-notion.md
+Recht/
