@@ -90,9 +90,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (session.hotelId) {
     const settings = await prisma.hotelSettings.findUnique({
       where: { hotelId: session.hotelId },
-      select: { accentColor: true, buttonColor: true },
+      select: { accentColor: true },
     });
-    accentColor = settings?.buttonColor || settings?.accentColor || '#111';
+    accentColor = settings?.accentColor || '#111';
   }
 
   // Load user's assigned hotels for the switcher
