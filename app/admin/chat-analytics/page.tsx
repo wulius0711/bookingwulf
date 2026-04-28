@@ -114,7 +114,7 @@ export default async function ChatAnalyticsPage({
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28 }}>
         {[
-          { label: 'Echte Fragen gesamt', value: realCount, sub: null, color: '#6366f1' },
+          { label: 'Fragen gesamt', value: realCount, sub: null, color: '#6366f1' },
           { label: 'Diese Woche', value: weekCount, sub: 'letzte 7 Tage', color: '#10b981' },
           { label: 'Top-Thema', value: topCategory ? (CATEGORY_LABELS[topCategory] ?? topCategory) : '—', sub: topCategory ? `${categoryCounts[0]._count.category}×` : null, color: '#f59e0b', small: true },
         ].map((s) => (
