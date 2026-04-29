@@ -270,42 +270,42 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <main className="admin-page" style={pageStyle}>
+      <div>
+        <h1 style={headlineStyle}>Widget &amp; Design</h1>
+        <p style={sublineStyle}>
+          Daten, Design und Funktionen für Ihr Hotel konfigurieren.
+        </p>
+        <p style={{ ...sublineStyle, marginTop: 4 }}>
+          <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
+            Hier finden Sie den Code zum Einbauen auf Ihre Website.
+          </a>
+        </p>
+      </div>
+
       <div className="settings-shell" style={shellStyle}>
         {/* LEFT */}
         <div className="settings-left-panel" style={leftPanelStyle}>
-          <div style={topBarStyle}>
-            <div>
-              <h1 style={headlineStyle}>Widget-Einstellungen</h1>
-              <p style={sublineStyle}>
-                Daten, Design und Funktionen für Ihr Hotel konfigurieren.{' '}
-                <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
-                  Einbau-Code ansehen
-                </a>
-              </p>
-            </div>
+          {isSuperAdmin && (
+            <form method="GET" style={selectorWrapStyle}>
+              <label style={{ ...labelStyle, whiteSpace: 'nowrap' }}>Hotel auswählen</label>
 
-            {isSuperAdmin && (
-              <form method="GET" style={selectorWrapStyle}>
-                <label style={{ ...labelStyle, whiteSpace: 'nowrap' }}>Hotel auswählen</label>
+              <select
+                name="hotel"
+                defaultValue={String(selected.id)}
+                style={{ ...inputStyle, width: '100%', maxWidth: 320 }}
+              >
+                {hotels.map((hotelItem) => (
+                  <option key={hotelItem.id} value={hotelItem.id}>
+                    {hotelItem.name} ({hotelItem.slug})
+                  </option>
+                ))}
+              </select>
 
-                <select
-                  name="hotel"
-                  defaultValue={String(selected.id)}
-                  style={{ ...inputStyle, width: '100%', maxWidth: 320 }}
-                >
-                  {hotels.map((hotelItem) => (
-                    <option key={hotelItem.id} value={hotelItem.id}>
-                      {hotelItem.name} ({hotelItem.slug})
-                    </option>
-                  ))}
-                </select>
-
-                <button type="submit" style={secondaryButtonStyle}>
-                  Laden
-                </button>
-              </form>
-            )}
-          </div>
+              <button type="submit" style={secondaryButtonStyle}>
+                Laden
+              </button>
+            </form>
+          )}
 
           <form id="settings-form" action={saveHotelSettings} style={{ display: 'grid', gap: 20 }}>
             <input type="hidden" name="hotelId" value={selected.id} />
