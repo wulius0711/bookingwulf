@@ -44,6 +44,16 @@ export default function FeedbackButton() {
     e.target.value = '';
   }
 
+  async function handlePaste(e: React.ClipboardEvent) {
+    const item = Array.from(e.clipboardData.items).find((i) => i.type.startsWith('image/'));
+    if (!item) return;
+    const file = item.getAsFile();
+    if (!file) return;
+    e.preventDefault();
+    const compressed = await compressImage(file);
+    setScreenshot(compressed);
+  }
+
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!message.trim()) return;
@@ -119,6 +129,7 @@ export default function FeedbackButton() {
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onPaste={handlePaste}
                     placeholder="Was hast du erwartet?"
                     rows={4}
                     required
@@ -172,6 +183,9 @@ export default function FeedbackButton() {
                       }}
                     >
                       + Screenshot hinzufügen
+                      <span style={{ display: 'block', fontSize: 11, color: '#9ca3af', fontWeight: 400, marginTop: 2 }}>
+                        oder Bild aus Zwischenablage einfügen (Strg+V / ⌘V)
+                      </span>
                     </button>
                   )}
                 </div>
