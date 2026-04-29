@@ -592,7 +592,8 @@ button, a[role="button"], input[type="submit"] {
 }
 
 .admin-page h1 {
-  font-size: 32px !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
   letter-spacing: -0.03em !important;
   color: #0f172a !important;
 }
@@ -600,7 +601,8 @@ button, a[role="button"], input[type="submit"] {
 /* Reusable page-header classes (also for pages without .admin-page wrapper) */
 .page-title {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px;
+  font-weight: 600;
   letter-spacing: -0.03em;
   color: #0f172a;
 }
@@ -620,11 +622,11 @@ button, a[role="button"], input[type="submit"] {
   }
 
   .admin-page h1 {
-    font-size: 24px !important;
+    font-size: 22px !important;
   }
 
   .page-title {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .two-col {

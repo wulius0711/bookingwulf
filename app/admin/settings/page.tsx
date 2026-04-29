@@ -66,7 +66,8 @@ const topBarStyle: React.CSSProperties = {
 
 const headlineStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 32,
+  fontSize: 28,
+  fontWeight: 600,
   letterSpacing: '-0.03em',
   color: '#0f172a',
 };
