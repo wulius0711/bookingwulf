@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { Megaphone } from 'lucide-react';
 
 export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
@@ -49,9 +50,7 @@ export default function FeedbackButton() {
           color: '#9ca3af',
         }}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
-        </svg>
+        <Megaphone size={16} />
       </button>
 
       {/* Backdrop + Modal */}
