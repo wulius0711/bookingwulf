@@ -270,7 +270,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <main className="admin-page" style={pageStyle}>
-      <div>
+      <div style={{ marginBottom: 28 }}>
         <h1 style={headlineStyle}>Widget &amp; Design</h1>
         <p style={sublineStyle}>
           Daten, Design und Funktionen für Ihr Hotel konfigurieren.
