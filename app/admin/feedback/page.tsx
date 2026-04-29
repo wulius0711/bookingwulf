@@ -2,6 +2,8 @@ import { prisma } from '@/src/lib/prisma';
 import { cookies } from 'next/headers';
 import { decrypt } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
+import DeleteFeedbackButton from './DeleteFeedbackButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +16,14 @@ export default async function FeedbackPage() {
     orderBy: { createdAt: 'desc' },
     take: 200,
   });
+
+  async function deleteFeedback(id: number) {
+    'use server';
+    const s = await decrypt((await cookies()).get('admin_session')?.value);
+    if (!s || s.role !== 'super_admin') return;
+    await prisma.adminFeedback.delete({ where: { id } });
+    revalidatePath('/admin/feedback');
+  }
 
   return (
     <main className="admin-page" style={{ maxWidth: 800 }}>
@@ -29,12 +39,7 @@ export default async function FeedbackPage() {
           {items.map((item) => (
             <div
               key={item.id}
-              style={{
-                background: '#fff',
-                border: '1px solid #e5e7eb',
-                borderRadius: 12,
-                padding: '14px 18px',
-              }}
+              style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 18px' }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -50,9 +55,12 @@ export default async function FeedbackPage() {
                     <span style={{ fontSize: 11, color: '#9ca3af', fontFamily: 'monospace' }}>{item.page}</span>
                   )}
                 </div>
-                <span style={{ fontSize: 11, color: '#9ca3af' }}>
-                  {new Date(item.createdAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 11, color: '#9ca3af' }}>
+                    {new Date(item.createdAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <DeleteFeedbackButton action={deleteFeedback.bind(null, item.id)} />
+                </div>
               </div>
               <p style={{ margin: 0, fontSize: 14, color: '#111', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                 {item.message}
