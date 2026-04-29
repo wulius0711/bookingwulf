@@ -12,7 +12,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   kalender:   'Kalender',
   apartments: 'Apartments',
   preise:     'Preise & Saisonen',
-  widget:     'Widget-Einbindung',
+  widget:     'Widget & Design',
   emails:     'E-Mails',
   nuki:       'Nuki / Zugang',
   beds24:     'Beds24',

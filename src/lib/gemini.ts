@@ -53,8 +53,8 @@ export function classifyQuestion(question: string): string {
   if (q.match(/buchung|anfrage|gast|gäste|formular/)) return 'buchungen';
   if (q.match(/kalender|datum|verfügbar|sperr/)) return 'kalender';
   if (q.match(/apartment|zimmer|unterkunft/)) return 'apartments';
-  if (q.match(/preis|kosten|rate|saison|reinigung/)) return 'preise';
-  if (q.match(/widget|einbind|script|code|website/)) return 'widget';
+  if (q.match(/preis|kosten|\brate\b|saison|reinigung/)) return 'preise';
+  if (q.match(/widget|einbind|script|code|website|schriftart|typografie|font|design|farbe|eckenradius/)) return 'widget';
   if (q.match(/email|e-mail|benachrichtigung|vorlage/)) return 'emails';
   if (q.match(/nuki|schlüssel|einchecken|zugangscode/)) return 'nuki';
   if (q.match(/beds24|channel|manager/)) return 'beds24';
