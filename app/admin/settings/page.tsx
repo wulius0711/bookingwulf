@@ -530,9 +530,9 @@ export default async function Page({ searchParams }: PageProps) {
                     ) : (
                       <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
                         <span style={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>
-                          {field === 'headline' ? 'Eigener Font (Headline)' : 'Eigener Font (Fließtext)'}
+                          {field === 'headline' ? 'Eigene Schrift (Headline)' : 'Eigene Schrift (Fließtext)'}
                         </span>
-                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Font hochladen</span>
+                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Schrift hochladen</span>
                       </div>
                     )}
                   </div>
