@@ -30,23 +30,28 @@ export default function FeedbackButton() {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(true)}
+        title="Feedback geben"
         style={{
           position: 'fixed',
-          top: 16,
-          right: 20,
+          top: 14,
+          right: 18,
           zIndex: 900,
-          padding: '7px 14px',
-          background: 'var(--accent)',
-          color: '#fff',
-          border: 'none',
+          width: 36,
+          height: 36,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'transparent',
+          border: '1px solid #e5e7eb',
           borderRadius: 8,
-          fontSize: 13,
-          fontWeight: 600,
           cursor: 'pointer',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          boxShadow: 'none',
+          color: '#9ca3af',
         }}
       >
-        Feedback geben
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
+        </svg>
       </button>
 
       {/* Backdrop + Modal */}
