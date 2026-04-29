@@ -56,7 +56,7 @@ export default async function RequestsPage() {
         }}
       >
         <div>
-          <h1 style={{ margin: 0 }}>Buchungen</h1>
+          <h1 style={{ margin: 0 }}>Anfragen / Buchungen</h1>
           <p className="page-subtitle" style={{ margin: '6px 0 0' }}>
             {isSuperAdmin ? 'Alle Hotels' : hotelName}
           </p>
