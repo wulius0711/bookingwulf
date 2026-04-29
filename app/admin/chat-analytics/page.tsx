@@ -195,7 +195,7 @@ export default async function ChatAnalyticsPage({
                       <span style={{ fontSize: 11, color: '#9ca3af' }}>
                         {new Date(log.createdAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
                       </span>
-                      <form action={deleteChatLog} onClick={(e) => e.stopPropagation()}>
+                      <form action={deleteChatLog}>
                         <input type="hidden" name="id" value={log.id} />
                         <button
                           type="submit"
