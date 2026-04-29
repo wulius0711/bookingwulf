@@ -21,7 +21,9 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     startTransition(async () => {
       await action(formData);
       setSaved(true);
@@ -30,7 +32,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
   };
 
   return (
-    <form action={handleSubmit} style={{ display: 'grid', gap: 20 }}>
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
       <input type="hidden" name="hotelId" value={hotelId} />
       <input type="hidden" name="ortstaxeMode" value={mode} />
 
