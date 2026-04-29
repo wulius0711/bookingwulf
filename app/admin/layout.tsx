@@ -70,8 +70,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       ...(isSuperAdmin ? [
         { href: '/admin/hotels', label: 'Hotels', icon: 'hotels' },
         { href: '/admin/users', label: 'Benutzer', icon: 'users' },
-        { href: '/admin/outreach', label: 'Outreach', icon: 'outreach' },
         { href: '/admin/chat-analytics', label: 'Chat-Auswertung', icon: 'chat' },
+        { href: '/admin/outreach', label: 'Outreach', icon: 'outreach' },
       ] : []),
     ]},
   ]
