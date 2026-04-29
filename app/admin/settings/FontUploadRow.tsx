@@ -20,6 +20,12 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  function sendToPreview(fontUrl: string | null) {
+    const iframe = document.querySelector('iframe.settings-preview-iframe') as HTMLIFrameElement | null;
+    const key = field === 'headline' ? 'headlineFontUrl' : 'bodyFontUrl';
+    iframe?.contentWindow?.postMessage({ type: 'booking-widget-preview-settings', settings: { [key]: fontUrl } }, '*');
+  }
+
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -33,6 +39,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
     if (res.ok) {
       const data = await res.json();
       setUrl(data.url);
+      sendToPreview(data.url);
     } else {
       const data = await res.json().catch(() => ({}));
       setError(data.error === 'too_large' ? 'Datei zu groß (max. 5 MB)' : 'Upload fehlgeschlagen');
@@ -48,11 +55,14 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ field }),
     });
-    if (res.ok) setUrl(null);
+    if (res.ok) {
+      setUrl(null);
+      sendToPreview(null);
+    }
     setLoading(false);
   }
 
-  const label = field === 'headline' ? 'Eigener Font (Headline)' : 'Eigener Font (Fließtext)';
+  const label = field === 'headline' ? 'Eigene Schrift (Headline)' : 'Eigene Schrift (Fließtext)';
 
   return (
     <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 0', flexWrap: 'wrap' }}>
