@@ -80,8 +80,8 @@ type SelectedItem =
   | { kind: 'booking'; data: Booking & { aptName: string } }
   | { kind: 'blocked'; data: Block & { aptName: string } };
 
-export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasPro: boolean }) {
-  const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
+export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: string; initialIso?: string; hasPro: boolean }) {
+  const [monthIso, setMonthIso] = useState(() => monthStart(initialIso ?? todayIso));
   const [apartments, setApartments] = useState<AptData[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
