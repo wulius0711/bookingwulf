@@ -173,7 +173,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
     };
   }
 
-  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleFormSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setFormError(null);
     const data = Object.fromEntries(new FormData(e.currentTarget));
@@ -220,7 +220,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
             </div>
 
             {/* Scrollable grid */}
-            <div ref={scrollRef} style={{ overflowX: 'auto', flex: 1 }}>
+            <div ref={scrollRef} className="gantt-scroll">
               <div style={{ width: totalW, minWidth: '100%' }}>
 
                 {/* Day headers */}
@@ -358,7 +358,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                 <div style={{ textAlign: 'center', padding: '10px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
               ) : (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  <div className="gantt-form-2col">
                     <div style={fieldStyle}>
                       <label style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
                       <input type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selection.start} />
@@ -370,7 +370,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                   </div>
 
                   {activeTab === 'blocked' && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div className="gantt-form-2col">
                       <div style={fieldStyle}>
                         <label style={labelStyle}>Grund</label>
                         <select name="type" style={inputStyle}>
@@ -386,7 +386,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                   )}
 
                   {activeTab === 'season' && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                    <div className="gantt-form-3col">
                       <div style={fieldStyle}>
                         <label style={labelStyle}>Bezeichnung</label>
                         <input type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
@@ -404,7 +404,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
 
                   {activeTab === 'booking' && (
                     <>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr', gap: 8 }}>
+                      <div className="gantt-form-salutation-row">
                         <div style={fieldStyle}>
                           <label style={labelStyle}>Anrede</label>
                           <select name="salutation" style={inputStyle}>
@@ -422,7 +422,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                           <input type="text" name="lastname" required style={inputStyle} />
                         </div>
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 8 }}>
+                      <div className="gantt-form-guest-row">
                         <div style={fieldStyle}>
                           <label style={labelStyle}>E-Mail</label>
                           <input type="email" name="email" required style={inputStyle} />
@@ -532,7 +532,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                   if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
                   else setEditError((await res.json()).error ?? 'Fehler');
                 }} style={{ display: 'grid', gap: 14 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="gantt-form-2col" style={{ gap: 10 }}>
                     <div style={fieldStyle}>
                       <label style={labelStyle}>Von</label>
                       <input type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
@@ -542,7 +542,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
                       <input type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="gantt-form-2col" style={{ gap: 10 }}>
                     <div style={fieldStyle}>
                       <label style={labelStyle}>Grund</label>
                       <select name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
