@@ -49,8 +49,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { label: 'Betrieb', items: [
       { href: '/admin', label: 'Übersicht', icon: 'overview' },
       { href: '/admin/requests', label: 'Anfragen', icon: 'requests' },
-      { href: '/admin/calendar', label: 'Kalender', icon: 'calendar' },
       { href: '/admin/zimmerplan', label: 'Zimmerplan', icon: 'roomplan' },
+      { href: '/admin/calendar', label: 'Kalender', icon: 'calendar' },
       { href: '/admin/analytics', label: 'Analytics', icon: 'analytics' },
     ]},
     { label: 'Verwaltung', items: [

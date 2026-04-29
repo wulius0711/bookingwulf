@@ -66,7 +66,16 @@ export default function OnboardingSteps({ hotelName }: Props) {
             </div>
           </div>
 
-          {featureRow('🏠', 'Zimmerplan', 'Monats-Gantt aller Apartments — Buchungen und Sperrzeiten auf einen Blick. Zeitraum per Drag markieren, um direkt Sperrzeiten oder Buchungen anzulegen.')}
+          <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>🏠</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Zimmerplan</span>
+              <span style={{ fontSize: 11, fontWeight: 600, background: '#111', color: '#fff', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Tipp</span>
+            </div>
+            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
+              Gantt-Übersicht aller Apartments. Zeitraum per <strong style={{ color: '#374151' }}>Drag & Drop</strong> markieren — dann direkt eine Buchung, Sperrzeit oder Preiszeitraum anlegen, ohne die Seite zu verlassen.
+            </div>
+          </div>
           {featureRow('📊', 'Analytics', 'Buchungsstatistiken: Auslastung, Umsatz, beliebteste Zeiträume (ab Business-Plan).')}
         </div>
       ),
