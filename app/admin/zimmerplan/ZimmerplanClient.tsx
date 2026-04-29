@@ -54,8 +54,8 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>Zimmerplan</h1>
-          <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 14 }}>
+          <h1 style={{ margin: 0 }}>Zimmerplan</h1>
+          <p className="page-subtitle">
             Belegungsstatus aller Apartments auf einen Blick
           </p>
         </div>

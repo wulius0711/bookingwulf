@@ -100,9 +100,9 @@ export default async function ApartmentsAdminPage() {
       >
         <div>
           <h1 style={{ margin: 0 }}>Apartments</h1>
-          <div style={{ marginTop: 8, fontSize: 13, color: '#666' }}>
+          <p className="page-subtitle" style={{ margin: '6px 0 0' }}>
             {isSuperAdmin ? 'Alle Hotels' : hotelName}
-          </div>
+          </p>
         </div>
 
         <div style={{ display: 'flex', gap: 12, alignItems: 'end', flexWrap: 'wrap' }}>

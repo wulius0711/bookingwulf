@@ -14,8 +14,8 @@ export default async function NukiPage() {
   if (!session.hotelId) {
     if (isSuperAdmin) return (
       <main className="admin-page">
-        <h1>Schlüsselloses Einchecken</h1>
-        <p style={{ color: '#6b7280', fontSize: 14 }}>Bitte zuerst eine Anlage in der Sidebar auswählen.</p>
+        <h1 style={{ margin: 0 }}>Schlüsselloses Einchecken</h1>
+        <p className="page-subtitle">Bitte zuerst eine Anlage in der Sidebar auswählen.</p>
       </main>
     );
     redirect('/admin');
@@ -44,11 +44,11 @@ export default async function NukiPage() {
 
   return (
     <main className="admin-page">
-      <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
         <h1 style={{ margin: 0 }}>Schlüsselloses Einchecken</h1>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>
       </div>
-      <p style={{ margin: '0 0 16px', fontSize: 14, color: '#6b7280' }}>
+      <p className="page-subtitle" style={{ marginBottom: 16 }}>
         Verbinden Sie Ihre Nuki-Schlösser. Bei Sofortbuchungen erhalten Gäste automatisch einen zeitlich begrenzten Zugangscode per E-Mail.
       </p>
       <div style={{ margin: '0 0 32px', padding: '12px 16px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 13, color: '#1d4ed8', lineHeight: 1.6 }}>

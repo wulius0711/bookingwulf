@@ -180,8 +180,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   return (
     <div className="calendar-page">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', margin: 0 }}>Kalender</h1>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 style={{ margin: 0 }}>Kalender</h1>
+          <p className="page-subtitle">Buchungen, Sperrzeiten und Preiszeiträume im Monatsüberblick.</p>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
           <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: '#111', textAlign: 'center' }}>

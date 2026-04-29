@@ -425,16 +425,16 @@ const pageStyle: React.CSSProperties = {
 
 const headlineStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 28,
+  fontSize: 32,
   fontWeight: 700,
-  color: 'var(--text-primary)',
-  letterSpacing: '-0.02em',
+  color: '#0f172a',
+  letterSpacing: '-0.03em',
 };
 
 const sublineStyle: React.CSSProperties = {
-  margin: '4px 0 0',
+  margin: '6px 0 0',
   fontSize: 14,
-  color: 'var(--text-muted)',
+  color: '#667085',
 };
 
 const statsRowStyle: React.CSSProperties = {

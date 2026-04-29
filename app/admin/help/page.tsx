@@ -40,8 +40,8 @@ export default function HelpPage() {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <h1 style={{ margin: '0 0 6px' }}>Handbuch</h1>
-      <p style={{ margin: '0 0 32px', fontSize: 14, color: '#6b7280' }}>
+      <h1 style={{ margin: 0 }}>Handbuch</h1>
+      <p className="page-subtitle" style={{ marginBottom: 32 }}>
         Alles was Sie wissen müssen, um Bookingwulf optimal zu nutzen.
       </p>
 

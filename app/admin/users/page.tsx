@@ -56,8 +56,8 @@ export default async function UsersPage() {
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, color: '#111' }}>Benutzer</h1>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: '#666' }}>
+          <h1 className="page-title">Benutzer</h1>
+          <p className="page-subtitle">
             Admin-Zugänge verwalten
           </p>
         </div>

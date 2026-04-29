@@ -77,10 +77,8 @@ export default async function HotelsPage() {
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, color: '#111' }}>Hotels</h1>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: '#666' }}>
-            Hotels anlegen und verwalten
-          </p>
+          <h1 className="page-title">Hotels</h1>
+          <p className="page-subtitle">Hotels anlegen und verwalten</p>
         </div>
         <Link
           href="/admin/hotels/new"

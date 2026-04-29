@@ -138,8 +138,8 @@ export default async function EmailTemplatesPage() {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 720 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111', marginBottom: 6 }}>Benachrichtigungen</h1>
-      <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 28 }}>
+      <h1 style={{ margin: 0 }}>Benachrichtigungen</h1>
+      <p className="page-subtitle" style={{ marginBottom: 28 }}>
         E-Mail-Vorlagen und automatische Gäste-Benachrichtigungen konfigurieren.
       </p>
 

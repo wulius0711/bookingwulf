@@ -66,16 +66,14 @@ const topBarStyle: React.CSSProperties = {
 
 const headlineStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 34,
-  lineHeight: 1.05,
+  fontSize: 32,
   letterSpacing: '-0.03em',
   color: '#0f172a',
 };
 
 const sublineStyle: React.CSSProperties = {
-  margin: '8px 0 0',
-  fontSize: 15,
-  lineHeight: 1.55,
+  margin: '6px 0 0',
+  fontSize: 14,
   color: '#667085',
 };
 

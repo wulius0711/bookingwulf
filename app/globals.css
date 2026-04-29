@@ -592,9 +592,27 @@ button, a[role="button"], input[type="submit"] {
 }
 
 .admin-page h1 {
-  font-size: 28px !important;
-  letter-spacing: -0.02em !important;
+  font-size: 32px !important;
+  letter-spacing: -0.03em !important;
+  color: #0f172a !important;
 }
+
+/* Reusable page-header classes (also for pages without .admin-page wrapper) */
+.page-title {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #667085;
+}
+
+.dark .page-title { color: var(--text-primary) !important; }
+.dark .page-subtitle { color: var(--text-muted) !important; }
 
 @media (max-width: 768px) {
   .admin-page {
@@ -602,8 +620,11 @@ button, a[role="button"], input[type="submit"] {
   }
 
   .admin-page h1 {
-    font-size: 22px !important;
-    letter-spacing: -0.02em !important;
+    font-size: 24px !important;
+  }
+
+  .page-title {
+    font-size: 24px;
   }
 
   .two-col {
