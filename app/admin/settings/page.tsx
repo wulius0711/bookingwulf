@@ -464,6 +464,28 @@ export default async function Page({ searchParams }: PageProps) {
                 );
               })}
 
+              {/* Custom Font Upload - Business */}
+              {(['headline', 'body'] as const).map((field) => (
+                <div key={`${field}-upload`} style={{ position: 'relative' }}>
+                  <div style={{ opacity: hasTypography ? 1 : 0.4 }}>
+                    {hasTypography ? (
+                      <FontUploadRow
+                        field={field}
+                        initialUrl={field === 'headline' ? (selected.settings?.headlineFontUrl ?? null) : (selected.settings?.bodyFontUrl ?? null)}
+                      />
+                    ) : (
+                      <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>
+                          {field === 'headline' ? 'Eigene Schrift (Headline)' : 'Eigene Schrift (Fließtext)'}
+                        </span>
+                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Schrift hochladen</span>
+                      </div>
+                    )}
+                  </div>
+                  {!hasTypography && <ProLockOverlay plan="business" />}
+                </div>
+              ))}
+
               {/* Font Size - Business */}
               {(['headlineFontSize', 'bodyFontSize'] as const).map((field) => {
                 const label = field === 'headlineFontSize' ? 'Headline-Größe (px)' : 'Fließtext-Größe (px)';
@@ -518,27 +540,6 @@ export default async function Page({ searchParams }: PageProps) {
                 );
               })}
 
-              {/* Custom Font Upload - Business */}
-              {(['headline', 'body'] as const).map((field) => (
-                <div key={`${field}-upload`} style={{ position: 'relative' }}>
-                  <div style={{ opacity: hasTypography ? 1 : 0.4 }}>
-                    {hasTypography ? (
-                      <FontUploadRow
-                        field={field}
-                        initialUrl={field === 'headline' ? (selected.settings?.headlineFontUrl ?? null) : (selected.settings?.bodyFontUrl ?? null)}
-                      />
-                    ) : (
-                      <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
-                        <span style={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>
-                          {field === 'headline' ? 'Eigene Schrift (Headline)' : 'Eigene Schrift (Fließtext)'}
-                        </span>
-                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Schrift hochladen</span>
-                      </div>
-                    )}
-                  </div>
-                  {!hasTypography && <ProLockOverlay plan="business" />}
-                </div>
-              ))}
             </div>
 
             {/* PRESETS */}
