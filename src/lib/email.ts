@@ -87,6 +87,9 @@ export function buildPriceTable(rows: PriceRow[], totalLabel: string, totalAmoun
         <td style="padding:12px 0;font-size:16px;font-weight:700;color:${accent};">${totalLabel}</td>
         <td style="padding:12px 0;text-align:right;font-size:18px;font-weight:700;color:${accent};">${totalAmount}</td>
       </tr>
+      <tr>
+        <td colspan="2" style="padding:0;text-align:right;font-size:11px;color:#9ca3af;">inkl. MwSt.</td>
+      </tr>
     </table>
   `;
 }

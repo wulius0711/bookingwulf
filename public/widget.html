@@ -1199,6 +1199,11 @@
         position: relative;
       }
 
+      .apt-price-vat {
+        font-size: 0.786rem;
+        color: var(--muted);
+      }
+
       .apt-price-details-btn {
         background: none;
         border: none;
@@ -2199,6 +2204,7 @@
         <div class="price-box">
           <small>Aktuelle Gesamtsumme</small>
           <strong id="totalBox">€ 0,00</strong>
+          <small id="totalBoxVat" style="font-size:11px;color:var(--muted);"></small>
         </div>
       </div>
 
@@ -2618,6 +2624,7 @@
           >
             <span>Gesamt</span><span id="summaryTotal">€ 0,00</span>
           </div>
+          <div style="text-align:right;font-size:12px;color:var(--muted);margin-top:4px;" id="summaryVatNote"></div>
         </aside>
       </div>
     </div>
@@ -2741,6 +2748,7 @@
             surcharge_badge: '+{pct}% Nachfrage',
             included: 'inklusive',
             total_nights: 'Gesamt {n} Nächte',
+            incl_vat: 'inkl. MwSt.',
             free: 'Gratis',
             ortstaxe: 'Ortstaxe',
             ortstaxe_min_age: '(ab {n} J.)',
@@ -2862,6 +2870,7 @@
             surcharge_badge: '+{pct}% demand',
             included: 'included',
             total_nights: 'Total {n} nights',
+            incl_vat: 'incl. VAT',
             free: 'Free',
             ortstaxe: 'City tax',
             ortstaxe_min_age: '(from {n} y.)',
@@ -4171,9 +4180,10 @@
                     <div class="apt-price-popover-row"><span>${pricing.nights}× ${eur(pricing.pricePerNight)}</span><span>${eur(basePrice)}</span></div>
                     ${childRows}${cleaningRow}${discountRow}${ortstaxeRow}
                     <div class="apt-price-popover-row total"><span>${t('total_nights', { n: pricing.nights })}</span><span>${eur(grandTotal)}</span></div>
+                    <div style="text-align:right;font-size:0.786rem;color:var(--muted);margin-top:4px;">${t('incl_vat')}</div>
                   </div>`
                   : '';
-                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><button class="apt-price-details-btn" data-price-popover="${ap.id}">${t('apt_price_details')}</button>${popoverHtml}</div>`;
+                priceHtml = `<div class="apt-price-wrap">${priceBadge}<div class="apt-price">${eur(grandTotal)}</div><span class="apt-price-vat">${t('incl_vat')}</span><button class="apt-price-details-btn" data-price-popover="${ap.id}">${t('apt_price_details')}</button>${popoverHtml}</div>`;
               } else if (status.type === 'unavailable') {
                 priceHtml = `<div class="apt-price">${t('apt_not_available_price')}</div>`;
               }
@@ -4520,6 +4530,8 @@
 
           const showPrices = state.settings.showPrices;
           document.getElementById('totalBox').textContent = eur(getTotal());
+          const totalBoxVat = document.getElementById('totalBoxVat');
+          if (totalBoxVat) totalBoxVat.textContent = showPrices ? t('incl_vat') : '';
           const totalBoxWrap = document.querySelector('.price-box');
           if (totalBoxWrap)
             totalBoxWrap.style.display = showPrices ? '' : 'none';
@@ -4536,6 +4548,8 @@
           document.getElementById('summaryGuests').textContent = guests;
           document.getElementById('summaryExtras').innerHTML = extras;
           document.getElementById('summaryTotal').textContent = eur(getTotal());
+          const vatNoteEl = document.getElementById('summaryVatNote');
+          if (vatNoteEl) vatNoteEl.textContent = showPrices ? t('incl_vat') : '';
           const summaryPriceEls = document.querySelectorAll(
             '#summaryBreakdown, .summary-total',
           );
