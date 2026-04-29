@@ -87,7 +87,7 @@ export default function FeedbackButton() {
           cursor: 'pointer', color: '#9ca3af',
         }}
       >
-        <Megaphone size={16} />
+        <Megaphone size={16} style={{ transform: 'scaleX(-1)' }} />
       </button>
 
       {open && (
