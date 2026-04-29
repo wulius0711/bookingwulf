@@ -3066,16 +3066,28 @@
               );
 
             // Fonts
-            const headlineFont = settings.headlineFont || 'Inter';
-            const bodyFont = settings.bodyFont || 'Inter';
+            const headlineFontUrl = settings.headlineFontUrl || null;
+            const bodyFontUrl = settings.bodyFontUrl || null;
+            const headlineFont = headlineFontUrl ? 'CustomHeadlineFont' : (settings.headlineFont || 'Inter');
+            const bodyFont = bodyFontUrl ? 'CustomBodyFont' : (settings.bodyFont || 'Inter');
             const headlineFontSize = settings.headlineFontSize;
             const bodyFontSize = settings.bodyFontSize;
             const headlineFontWeight = settings.headlineFontWeight;
             const bodyFontWeight = settings.bodyFontWeight;
 
-            // Load Google Fonts
+            // Inject @font-face for custom uploaded fonts
+            if (headlineFontUrl || bodyFontUrl) {
+              const style = document.createElement('style');
+              if (headlineFontUrl)
+                style.textContent += `@font-face { font-family: 'CustomHeadlineFont'; src: url('${headlineFontUrl}'); font-display: swap; }`;
+              if (bodyFontUrl)
+                style.textContent += `@font-face { font-family: 'CustomBodyFont'; src: url('${bodyFontUrl}'); font-display: swap; }`;
+              document.head.appendChild(style);
+            }
+
+            // Load Google Fonts (only for non-custom fonts)
             const fontsToLoad = [...new Set([headlineFont, bodyFont])].filter(
-              (f) => f,
+              (f) => f && f !== 'CustomHeadlineFont' && f !== 'CustomBodyFont',
             );
             if (fontsToLoad.length > 0) {
               const families = fontsToLoad
@@ -3445,11 +3457,25 @@
                 '--btn-color',
                 s.buttonColor,
               );
-            if (s.headlineFont || s.bodyFont) {
-              var fontsToLoad = [s.headlineFont, s.bodyFont].filter(
-                function (f) {
-                  return !!f;
-                },
+            // Inject @font-face for custom uploaded fonts (preview)
+            if (s.headlineFontUrl || s.bodyFontUrl) {
+              var customFontStyle = document.getElementById('bw-custom-fonts');
+              if (!customFontStyle) {
+                customFontStyle = document.createElement('style');
+                customFontStyle.id = 'bw-custom-fonts';
+                document.head.appendChild(customFontStyle);
+              }
+              customFontStyle.textContent = '';
+              if (s.headlineFontUrl)
+                customFontStyle.textContent += "@font-face { font-family: 'CustomHeadlineFont'; src: url('" + s.headlineFontUrl + "'); font-display: swap; }";
+              if (s.bodyFontUrl)
+                customFontStyle.textContent += "@font-face { font-family: 'CustomBodyFont'; src: url('" + s.bodyFontUrl + "'); font-display: swap; }";
+            }
+            var resolvedHeadlineFont = s.headlineFontUrl ? 'CustomHeadlineFont' : s.headlineFont;
+            var resolvedBodyFont = s.bodyFontUrl ? 'CustomBodyFont' : s.bodyFont;
+            if (resolvedHeadlineFont || resolvedBodyFont) {
+              var fontsToLoad = [resolvedHeadlineFont, resolvedBodyFont].filter(
+                function (f) { return !!f && f !== 'CustomHeadlineFont' && f !== 'CustomBodyFont'; },
               );
               var unique = fontsToLoad.filter(function (f, i, arr) {
                 return arr.indexOf(f) === i;
@@ -3457,31 +3483,24 @@
               if (unique.length > 0) {
                 var families = unique
                   .map(function (f) {
-                    return (
-                      'family=' +
-                      f.replace(/ /g, '+') +
-                      ':wght@300;400;500;600;700'
-                    );
+                    return 'family=' + f.replace(/ /g, '+') + ':wght@300;400;500;600;700';
                   })
                   .join('&');
                 var link = document.createElement('link');
                 link.rel = 'stylesheet';
-                link.href =
-                  'https://fonts.googleapis.com/css2?' +
-                  families +
-                  '&display=swap';
+                link.href = 'https://fonts.googleapis.com/css2?' + families + '&display=swap';
                 document.head.appendChild(link);
               }
             }
-            if (s.headlineFont !== undefined) {
-              var hf = s.headlineFont === 'Inter' ? '' : s.headlineFont;
+            if (resolvedHeadlineFont !== undefined) {
+              var hf = resolvedHeadlineFont === 'Inter' ? '' : resolvedHeadlineFont;
               document.documentElement.style.setProperty(
                 '--font-headline',
                 hf ? "'" + hf + "', serif" : 'Inter, sans-serif',
               );
             }
-            if (s.bodyFont !== undefined) {
-              var bf = s.bodyFont === 'Inter' ? '' : s.bodyFont;
+            if (resolvedBodyFont !== undefined) {
+              var bf = resolvedBodyFont === 'Inter' ? '' : resolvedBodyFont;
               document.documentElement.style.setProperty(
                 '--font-body',
                 bf ? "'" + bf + "', sans-serif" : 'Inter, sans-serif',

@@ -15,6 +15,7 @@ import InfoTooltip from '../components/InfoTooltip';
 import StandardButton from './StandardButton';
 import SaveButton from '../components/SaveButton';
 import FeatureToggles from './FeatureToggles';
+import FontUploadRow from './FontUploadRow';
 
 export const dynamic = 'force-dynamic';
 
@@ -516,6 +517,28 @@ export default async function Page({ searchParams }: PageProps) {
                   </div>
                 );
               })}
+
+              {/* Custom Font Upload - Business */}
+              {(['headline', 'body'] as const).map((field) => (
+                <div key={`${field}-upload`} style={{ position: 'relative' }}>
+                  <div style={{ opacity: hasTypography ? 1 : 0.4 }}>
+                    {hasTypography ? (
+                      <FontUploadRow
+                        field={field}
+                        initialUrl={field === 'headline' ? (selected.settings?.headlineFontUrl ?? null) : (selected.settings?.bodyFontUrl ?? null)}
+                      />
+                    ) : (
+                      <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0' }}>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>
+                          {field === 'headline' ? 'Eigener Font (Headline)' : 'Eigener Font (Fließtext)'}
+                        </span>
+                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Font hochladen</span>
+                      </div>
+                    )}
+                  </div>
+                  {!hasTypography && <ProLockOverlay plan="business" />}
+                </div>
+              ))}
             </div>
 
             {/* PRESETS */}

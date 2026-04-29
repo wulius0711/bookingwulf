@@ -91,6 +91,8 @@ model HotelSettings {
   bodyFontSize       Int?
   headlineFontWeight Int?
   bodyFontWeight     Int?
+  headlineFontUrl    String?  // custom uploaded font (Business)
+  bodyFontUrl        String?  // custom uploaded font (Business)
 
   // 💸 Dynamic Pricing
   lastMinuteDiscountPercent   Int @default(0)  // 0 = disabled

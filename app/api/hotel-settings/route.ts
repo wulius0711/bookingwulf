@@ -100,6 +100,8 @@ export async function GET(req: Request) {
         mergedSettings.bodyFontSize = null;
         mergedSettings.headlineFontWeight = null;
         mergedSettings.bodyFontWeight = null;
+        mergedSettings.headlineFontUrl = null;
+        mergedSettings.bodyFontUrl = null;
       }
     }
 
