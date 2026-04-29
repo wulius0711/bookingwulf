@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { revalidatePath } from 'next/cache';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import ProLockOverlay from '../components/ProLockOverlay';
+import SaveButton from '../components/SaveButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -232,12 +233,7 @@ export default async function EmailTemplatesPage() {
             })}
 
             <div>
-              <button
-                type="submit"
-                style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}
-              >
-                Speichern
-              </button>
+              <SaveButton />
             </div>
           </form>
         </div>
@@ -272,9 +268,7 @@ export default async function EmailTemplatesPage() {
                 style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
             </div>
             <div>
-              <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-                Speichern
-              </button>
+              <SaveButton />
             </div>
           </form>
         </div>

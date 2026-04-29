@@ -13,6 +13,7 @@ import ProLockOverlay from '../components/ProLockOverlay';
 import WidgetConfigs from './WidgetConfigs';
 import InfoTooltip from '../components/InfoTooltip';
 import StandardButton from './StandardButton';
+import SaveButton from '../components/SaveButton';
 import FeatureToggles from './FeatureToggles';
 
 export const dynamic = 'force-dynamic';
@@ -164,16 +165,7 @@ const actionRowStyle: React.CSSProperties = {
   marginBottom: 48,
 };
 
-const primaryButtonStyle: React.CSSProperties = {
-  padding: '10px 16px',
-  borderRadius: 8,
-  background: 'var(--accent)',
-  color: '#ffffff',
-  border: '1px solid #ffffff',
-  cursor: 'pointer',
-  fontSize: 14,
-  fontWeight: 600,
-};
+
 
 const secondaryButtonStyle: React.CSSProperties = {
   padding: '10px 16px',
@@ -569,9 +561,7 @@ export default async function Page({ searchParams }: PageProps) {
 
             {/* ACTIONS */}
             <div style={actionRowStyle}>
-              <button className="btn-primary" type="submit" style={primaryButtonStyle}>
-                Speichern
-              </button>
+              <SaveButton />
 
               <StandardButton hotelId={selected.id} style={secondaryButtonStyle} />
             </div>
