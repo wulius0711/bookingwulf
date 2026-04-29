@@ -158,45 +158,44 @@ export default async function ChatAnalyticsPage({
         {logs.length === 0 ? (
           <p style={{ fontSize: 14, color: '#6b7280' }}>Keine Einträge.</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {logs.map((log) => {
               const color = CATEGORY_COLORS[log.category] ?? '#9ca3af';
               return (
-                <div
+                <details
                   key={log.id}
                   style={{
                     background: '#fff',
                     border: '1px solid #e5e7eb',
                     borderLeft: `3px solid ${log.isSuperAdmin ? '#fbbf24' : color}`,
                     borderRadius: 12,
-                    padding: '14px 16px',
                     opacity: log.isSuperAdmin ? 0.75 : 1,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 6 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                      <span style={{
-                        background: color + '18', color, borderRadius: 6,
-                        fontSize: 11, fontWeight: 700, padding: '2px 8px', whiteSpace: 'nowrap',
-                      }}>
+                  <summary style={{ listStyle: 'none', padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', flex: 1, minWidth: 0 }}>
+                      <span style={{ background: color + '18', color, borderRadius: 6, fontSize: 11, fontWeight: 700, padding: '2px 8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         {CATEGORY_LABELS[log.category] ?? log.category}
                       </span>
                       {log.isSuperAdmin && (
-                        <span style={{ background: '#fef3c7', color: '#92400e', borderRadius: 6, fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
+                        <span style={{ background: '#fef3c7', color: '#92400e', borderRadius: 6, fontSize: 11, fontWeight: 700, padding: '2px 8px', flexShrink: 0 }}>
                           Test
                         </span>
                       )}
                       {log.hotel && (
-                        <span style={{ fontSize: 12, color: '#6b7280', background: '#f9fafb', borderRadius: 6, padding: '2px 8px', border: '1px solid #e5e7eb' }}>
+                        <span style={{ fontSize: 12, color: '#6b7280', background: '#f9fafb', borderRadius: 6, padding: '2px 8px', border: '1px solid #e5e7eb', flexShrink: 0 }}>
                           {log.hotel.name}
                         </span>
                       )}
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {log.question}
+                      </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
                       <span style={{ fontSize: 11, color: '#9ca3af' }}>
                         {new Date(log.createdAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
                       </span>
-                      <form action={deleteChatLog}>
+                      <form action={deleteChatLog} onClick={(e) => e.stopPropagation()}>
                         <input type="hidden" name="id" value={log.id} />
                         <button
                           type="submit"
@@ -210,14 +209,13 @@ export default async function ChatAnalyticsPage({
                         </button>
                       </form>
                     </div>
+                  </summary>
+                  <div style={{ padding: '0 16px 14px', borderTop: '1px solid #f3f4f6' }}>
+                    <p style={{ fontSize: 13, color: '#6b7280', margin: '12px 0 0', lineHeight: 1.6 }}>
+                      {log.answer}
+                    </p>
                   </div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#111', margin: '0 0 8px', lineHeight: 1.5 }}>
-                    {log.question}
-                  </p>
-                  <p style={{ fontSize: 13, color: '#6b7280', margin: 0, lineHeight: 1.6, borderTop: '1px solid #f3f4f6', paddingTop: 8 }}>
-                    {log.answer}
-                  </p>
-                </div>
+                </details>
               );
             })}
           </div>
