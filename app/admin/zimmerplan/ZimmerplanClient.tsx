@@ -25,7 +25,7 @@ function formatDate(iso: string) {
 }
 
 export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: { initialDate: string; initialCards: ApartmentCard[]; hasPro: boolean }) {
-  const [view, setView] = useState<'tag' | 'gantt'>('tag');
+  const [view, setView] = useState<'tag' | 'gantt'>('gantt');
   const [date, setDate] = useState(initialDate);
   const [cards, setCards] = useState(initialCards);
   const [loading, setLoading] = useState(false);
@@ -62,8 +62,8 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* View toggle */}
           <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: 8, overflow: 'hidden' }}>
-            <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
-            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'gantt' ? 'var(--accent)' : '#fff', color: view === 'gantt' ? '#fff' : '#374151', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
+            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : '#fff', color: view === 'gantt' ? '#fff' : '#374151', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
+            <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
           </div>
           {view === 'tag' && !isToday && (
             <button
