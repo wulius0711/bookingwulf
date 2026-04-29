@@ -4,6 +4,18 @@ import { useState, useCallback, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+const PLATFORM_COLORS: Record<string, { border: string; bg: string; text: string }> = {
+  'Airbnb':      { border: '#ff5a5f', bg: '#ff5a5f', text: '#fff' },
+  'Booking.com': { border: '#003580', bg: '#003580', text: '#fff' },
+};
+
+function parsePlatform(note: string | null | undefined): { platform: string; rest: string } | null {
+  if (!note) return null;
+  const m = note.match(/^\[(.+?)\]\s*(.*)/);
+  if (!m) return null;
+  return { platform: m[1], rest: m[2] };
+}
+
 const STATUS_COLORS: Record<string, string> = {
   new: '#3b82f6',
   answered: '#f59e0b',
@@ -236,11 +248,18 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         </button>
                       ))}
                       {bookings.length > 4 && <div className="calendar-chip-label" style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>+{bookings.length - 4} weitere</div>}
-                      {blocked.map((b) => (
-                        <button key={b.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'blocked', data: b }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: '#fee2e2', border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: '#ef4444', fontSize: 10, color: '#7f1d1d', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`Gesperrt${b.aptName ? ' · ' + b.aptName : ''}${b.note ? ' · ' + b.note : ''}`}>
-                          <span className="calendar-chip-label">🚫 {b.aptName || 'Gesperrt'}{b.note ? ` · ${b.note}` : ''}</span>
-                        </button>
-                      ))}
+                      {blocked.map((b) => {
+                        const parsed = parsePlatform(b.note);
+                        const platformStyle = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { border: '#ef4444', bg: '#ef4444', text: '#fff' }) : null;
+                        const chipLabel = parsed
+                          ? `${parsed.platform}${b.aptName ? ' · ' + b.aptName : ''}${parsed.rest ? ' · ' + parsed.rest : ''}`
+                          : `${b.aptName || 'Gesperrt'}${b.note ? ' · ' + b.note : ''}`;
+                        return (
+                          <button key={b.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'blocked', data: b }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: '#fee2e2', border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: platformStyle ? platformStyle.border : '#ef4444', fontSize: 10, color: '#7f1d1d', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={chipLabel}>
+                            <span className="calendar-chip-label">🚫 {chipLabel}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -439,6 +458,37 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                     )}
                   </div>
                 </div>
+              ) : selectedItem.data.type === 'ical_sync' ? (
+                /* iCal-synced — read-only, show platform info */
+                (() => {
+                  const parsed = parsePlatform(selectedItem.data.note);
+                  const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
+                  return (
+                    <div style={{ display: 'grid', gap: 14 }}>
+                      {parsed && ps && (
+                        <span style={{ display: 'inline-flex', alignSelf: 'start', alignItems: 'center', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: ps.bg, color: ps.text }}>
+                          {parsed.platform}
+                        </span>
+                      )}
+                      <div style={{ display: 'grid', gap: 6 }}>
+                        {[
+                          ['Von', selectedItem.data.startDate.split('T')[0].split('-').reverse().join('.')],
+                          ['Bis', selectedItem.data.endDate.split('T')[0].split('-').reverse().join('.')],
+                          ...(parsed?.rest ? [['Bezeichnung', parsed.rest]] : []),
+                        ].map(([label, value]) => (
+                          <div key={label} style={{ display: 'flex', gap: 10, alignItems: 'baseline' }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+                            <span style={{ fontSize: 13, color: '#f1f5f9' }}>{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.</p>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button type="button" onClick={() => setSelectedItem(null)} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Schließen</button>
+                      </div>
+                    </div>
+                  );
+                })()
               ) : (
                 /* Blocked date edit form */
                 <form onSubmit={async (e) => {

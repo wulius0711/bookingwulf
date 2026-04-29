@@ -101,6 +101,27 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
   );
 }
 
+const PLATFORM_STYLES: Record<string, { bg: string; color: string; label: string }> = {
+  'Airbnb':       { bg: '#ff5a5f', color: '#fff', label: 'Airbnb' },
+  'Booking.com':  { bg: '#003580', color: '#fff', label: 'Booking.com' },
+};
+
+function parsePlatform(note: string | null | undefined): { platform: string; rest: string } | null {
+  if (!note) return null;
+  const m = note.match(/^\[(.+?)\]\s*(.*)/);
+  if (!m) return null;
+  return { platform: m[1], rest: m[2] };
+}
+
+function PlatformBadge({ platform }: { platform: string }) {
+  const style = PLATFORM_STYLES[platform] ?? { bg: '#6b7280', color: '#fff', label: platform };
+  return (
+    <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: style.bg, color: style.color, letterSpacing: '0.02em' }}>
+      {style.label}
+    </span>
+  );
+}
+
 function Badge({ color, text, label }: { color: string; text: string; label: string }) {
   return (
     <span style={{ background: color, color: text, fontSize: 13, fontWeight: 600, padding: '4px 12px', borderRadius: 20 }}>
@@ -162,11 +183,19 @@ function ApartmentCardEl({ card, date }: { card: ApartmentCard; date: string }) 
       )}
 
       {s.kind === 'blockiert' && (
-        <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5 }}>
-          <div>
-            noch {Math.ceil((new Date(s.endDate).getTime() - new Date(date + 'T12:00:00').getTime()) / 86400000)} Tage
-          </div>
-          {s.note && <div>{s.note}</div>}
+        <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div>noch {Math.ceil((new Date(s.endDate).getTime() - new Date(date + 'T12:00:00').getTime()) / 86400000)} Tage</div>
+          {(() => {
+            const parsed = parsePlatform(s.note);
+            if (parsed) return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                <PlatformBadge platform={parsed.platform} />
+                {parsed.rest && <span>{parsed.rest}</span>}
+              </div>
+            );
+            if (s.note) return <div>{s.note}</div>;
+            return null;
+          })()}
         </div>
       )}
 
