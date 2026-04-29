@@ -22,8 +22,14 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
 
   function sendToPreview(fontUrl: string | null) {
     const iframe = document.querySelector('iframe.settings-preview-iframe') as HTMLIFrameElement | null;
-    const key = field === 'headline' ? 'headlineFontUrl' : 'bodyFontUrl';
-    iframe?.contentWindow?.postMessage({ type: 'booking-widget-preview-settings', settings: { [key]: fontUrl } }, '*');
+    const urlKey = field === 'headline' ? 'headlineFontUrl' : 'bodyFontUrl';
+    const googleKey = field === 'headline' ? 'headlineFont' : 'bodyFont';
+    const settings: Record<string, string | null> = { [urlKey]: fontUrl };
+    if (!fontUrl) {
+      const el = document.querySelector<HTMLSelectElement>(`[name="${googleKey}"]`);
+      settings[googleKey] = el?.value || 'Inter';
+    }
+    iframe?.contentWindow?.postMessage({ type: 'booking-widget-preview-settings', settings }, '*');
   }
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
