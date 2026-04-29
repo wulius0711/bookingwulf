@@ -275,13 +275,11 @@ export default async function Page({ searchParams }: PageProps) {
         <div className="settings-left-panel" style={leftPanelStyle}>
           <div style={topBarStyle}>
             <div>
-              <h1 style={headlineStyle}>Widget Settings</h1>
+              <h1 style={headlineStyle}>Widget-Einstellungen</h1>
               <p style={sublineStyle}>
-                Daten, Design und Funktionen für Ihr Hotel konfigurieren.
-              </p>
-              <p style={{ ...sublineStyle, marginTop: 4 }}>
+                Daten, Design und Funktionen für Ihr Hotel konfigurieren.{' '}
                 <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
-                  Hier finden Sie den Code zum Einbauen auf Ihre Website.
+                  Einbau-Code ansehen
                 </a>
               </p>
             </div>
