@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import GanttView from './GanttView';
 
 type ApartmentStatus =
   | { kind: 'frei' }
@@ -24,6 +25,7 @@ function formatDate(iso: string) {
 }
 
 export default function ZimmerplanClient({ initialDate, initialCards }: { initialDate: string; initialCards: ApartmentCard[] }) {
+  const [view, setView] = useState<'tag' | 'gantt'>('tag');
   const [date, setDate] = useState(initialDate);
   const [cards, setCards] = useState(initialCards);
   const [loading, setLoading] = useState(false);
@@ -58,7 +60,12 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
           </p>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-          {!isToday && (
+          {/* View toggle */}
+          <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: 8, overflow: 'hidden' }}>
+            <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
+            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'gantt' ? 'var(--accent)' : '#fff', color: view === 'gantt' ? '#fff' : '#374151', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
+          </div>
+          {view === 'tag' && !isToday && (
             <button
               onClick={() => { setDate(todayIso()); loadDate(todayIso()); }}
               style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}
@@ -66,17 +73,22 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
               Heute
             </button>
           )}
-          <input
-            type="date"
-            value={date}
-            onChange={handleDateChange}
-            style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 14, background: '#fff', color: '#111827', cursor: 'pointer' }}
-          />
+          {view === 'tag' && (
+            <input
+              type="date"
+              value={date}
+              onChange={handleDateChange}
+              style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 14, background: '#fff', color: '#111827', cursor: 'pointer' }}
+            />
+          )}
         </div>
       </div>
 
+      {/* Gantt view */}
+      {view === 'gantt' && <GanttView todayIso={date} />}
+
       {/* Card wrapper */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+      {view === 'tag' && <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
         {/* Summary badges */}
         <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <Badge color="#dcfce7" text="#16a34a" label={`${freieCount} Frei`} />
@@ -96,7 +108,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
             ))}
           </div>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
