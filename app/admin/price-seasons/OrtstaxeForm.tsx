@@ -69,46 +69,45 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
         </div>
       </div>
 
-      {/* Conditional content — fixed height to prevent button jump */}
-      <div style={{ minHeight: 110 }}>
-        {mode === 'wien' && (
-          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 6 }}>
-            <div style={{ fontWeight: 600, marginBottom: 2 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
-            {WIEN_INFO.map(({ label, rate }) => (
-              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                <span>{label}</span>
-                <strong>{rate} vom Zimmerpreis ohne Frühstück</strong>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* Wien info */}
+      {mode === 'wien' && (
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 6 }}>
+          <div style={{ fontWeight: 600, marginBottom: 2 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
+          {WIEN_INFO.map(({ label, rate }) => (
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+              <span>{label}</span>
+              <strong>{rate} vom Zimmerpreis ohne Frühstück</strong>
+            </div>
+          ))}
+        </div>
+      )}
 
-        {mode === 'custom' && (
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
-              <input
-                name="ortstaxePerPersonPerNight"
-                type="number" min="0.01" step="0.01"
-                defaultValue={initialRate || ''}
-                placeholder="z. B. 2.20"
-                required
-                style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
-              />
-            </div>
-            <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
-              <input
-                name="ortstaxeMinAge"
-                type="number" min="0" step="1"
-                defaultValue={initialMinAge ?? ''}
-                placeholder="leer = alle zahlen"
-                style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
-              />
-            </div>
+      {/* Custom fields */}
+      {mode === 'custom' && (
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+            <input
+              name="ortstaxePerPersonPerNight"
+              type="number" min="0.01" step="0.01"
+              defaultValue={initialRate || ''}
+              placeholder="z. B. 2.20"
+              required
+              style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+            />
           </div>
-        )}
-      </div>
+          <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+            <input
+              name="ortstaxeMinAge"
+              type="number" min="0" step="1"
+              defaultValue={initialMinAge ?? ''}
+              placeholder="leer = alle zahlen"
+              style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+            />
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <button
