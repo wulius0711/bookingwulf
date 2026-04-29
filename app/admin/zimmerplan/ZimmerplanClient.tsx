@@ -24,6 +24,16 @@ function formatDate(iso: string) {
   return `${d}.${m}.${y}`;
 }
 
+function formatDayLabel(iso: string) {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('de-AT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function shiftDay(iso: string, delta: number) {
+  const d = new Date(iso + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: { initialDate: string; initialCards: ApartmentCard[]; hasPro: boolean }) {
   const [view, setView] = useState<'tag' | 'gantt'>('gantt');
   const [date, setDate] = useState(initialDate);
@@ -38,10 +48,9 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
     setLoading(false);
   }
 
-  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const val = e.target.value;
-    setDate(val);
-    if (val) loadDate(val);
+  function handleDateChange(newDate: string) {
+    setDate(newDate);
+    if (newDate) loadDate(newDate);
   }
 
   const freieCount = cards.filter((c) => c.status.kind === 'frei').length;
@@ -65,27 +74,24 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
             <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : '#fff', color: view === 'gantt' ? '#fff' : '#374151', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
             <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
           </div>
-          {view === 'tag' && !isToday && (
-            <button
-              onClick={() => { setDate(todayIso()); loadDate(todayIso()); }}
-              style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}
-            >
-              Heute
-            </button>
-          )}
-          {view === 'tag' && (
-            <input
-              type="date"
-              value={date}
-              onChange={handleDateChange}
-              style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 14, background: '#fff', color: '#111827', cursor: 'pointer' }}
-            />
-          )}
         </div>
       </div>
 
       {/* Gantt view */}
       {view === 'gantt' && <GanttView todayIso={date} hasPro={hasPro} />}
+
+      {/* Tag-Navigation */}
+      {view === 'tag' && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <button onClick={() => handleDateChange(shiftDay(date, -1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
+          <span style={{ fontWeight: 700, fontSize: 15, minWidth: 220, textAlign: 'center' }}>{formatDayLabel(date)}</span>
+          <button onClick={() => handleDateChange(shiftDay(date, 1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
+          {!isToday && (
+            <button onClick={() => handleDateChange(todayIso())} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}>Heute</button>
+          )}
+          <input type="date" value={date} onChange={(e) => handleDateChange(e.target.value)} style={{ marginLeft: 4, padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111827', cursor: 'pointer' }} />
+        </div>
+      )}
 
       {/* Card wrapper */}
       {view === 'tag' && <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
