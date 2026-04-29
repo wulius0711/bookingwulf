@@ -130,7 +130,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 Erweiterte Einstellungen pro Hotel. Enthält:
 - **Feature-Toggles:** `showPrices`, `allowMultiSelect`, `showAmenities`, `showExtrasStep`, `showPhoneField`, `showMessageField`, `enableImageSlider`, `instantBooking`, `enableInstantBooking`
 - **Farben:** `accentColor`, `backgroundColor`, `cardBackground`, `textColor`, `mutedTextColor`, `borderColor`, `buttonColor`
-- **Typografie:** `headlineFont`, `bodyFont`, `headlineFontSize`, `bodyFontSize`, `headlineFontWeight`, `bodyFontWeight`
+- **Typografie:** `headlineFont`, `bodyFont`, `headlineFontSize`, `bodyFontSize`, `headlineFontWeight`, `bodyFontWeight`, `headlineFontUrl`, `bodyFontUrl` (eigene Schriften via Vercel Blob, Business)
 - **Layout:** `cardRadius`, `buttonRadius`
 - **Ortstaxe:** `ortstaxeMode` (String, default `"off"`) — `"off"` | `"wien"` | `"custom"`. Bei `"wien"` werden die datumsbezogenen Wiener Sätze automatisch angewendet (2,5237 % / 4,3478 % / 6,7797 % vom Zimmerpreis je nach Anreisedatum). Bei `"custom"`: `ortstaxePerPersonPerNight` (Decimal?) × Personen × Nächte. `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit (nur Custom-Modus).
 
@@ -302,7 +302,7 @@ Weitere Prüfungen per `hasPlanAccess(hotelPlan, minPlan)`:
 - Branding-Features (Farben, Schriften)
 - Messaging (Gast-Kommunikation)
 - **Pro**: Last-Minute Rabatt, Mindestaufenthalt pro Saison (`/api/pricing` prüft Plan vor Anwendung)
-- **Business**: Belegungsbasierter Preisaufschlag (`/api/pricing`)
+- **Business**: Belegungsbasierter Preisaufschlag (`/api/pricing`), eigene Schrift-Uploads (`headlineFontUrl`, `bodyFontUrl` via Vercel Blob — `POST/DELETE /api/admin/font-upload`)
 
 In der Navigation werden gesperrte Einträge mit 🔒 und Tooltip angezeigt.
 
@@ -388,7 +388,7 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 
 **Formular-Friction-Reduktion:** Telefon ist optional (kein `*`, kein required-Check). Adresse (Straße, PLZ, Ort, Land) ist in einem `.addr-accordion` „Adresse (optional)" versteckt. Inline-Feldvalidierung markiert leere Pflichtfelder (Vorname, Nachname, E-Mail) rot mit Fehlermeldung direkt unter dem Feld statt nur globaler Fehlermeldung.
 
-**Preistransparenz:** Apartment-Karte zeigt den Gesamtpreis prominent. Klick auf „Preis Details" (`.apt-price-details-btn`) öffnet ein Popover (`.apt-price-popover`) mit vollständiger Aufschlüsselung: Anzahl Nächte + Saison, `X × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Gesamtbetrag fett. Popover schließt sich bei Klick außerhalb. State: `state.openPricePopover` (Apartment-ID oder null). Summary-Sidebar zeigt dieselbe Aufschlüsselung nochmals als Tabelle, inkl. Kinderpreise und Ortstaxe.
+**Preistransparenz:** Apartment-Karte zeigt den Gesamtpreis prominent. Klick auf „Preis Details" (`.apt-price-details-btn`) öffnet ein Popover (`.apt-price-popover`) mit vollständiger Aufschlüsselung: Anzahl Nächte + Saison, `X × €Y/Nacht`, Endreinigung, Last-Minute/Nachfrage-Label, Gesamtbetrag fett. Popover schließt sich bei Klick außerhalb. State: `state.openPricePopover` (Apartment-ID oder null). Summary-Sidebar zeigt dieselbe Aufschlüsselung nochmals als Tabelle, inkl. Kinderpreise und Ortstaxe. Alle angezeigten Preise sind Bruttopreise — „inkl. MwSt." wird an der Apartment-Karte, im Preis-Popover, in der Summary-Sidebar und in Bestätigungs-E-Mails angezeigt. Englische Version: „incl. VAT".
 
 **Ortstaxe:** `state.ortstaxeMode`, `state.ortstaxePerPersonPerNight` und `state.ortstaxeMinAge` werden aus `/api/hotel-settings` geladen. Drei Modi: `"off"` (keine Ortstaxe), `"wien"` (automatisch nach WKO-Schlüsselzahlen + Anreisedatum: bis 30.6.2026 → 2,5237 %, ab 1.7.2026 → 4,3478 %, ab 1.7.2027 → 6,7797 % vom Zimmerpreis), `"custom"` (€/Person/Nacht × Personen × Nächte). Berechnung serverseitig via `src/lib/ortstaxe.ts → calculateOrtstaxe()`. Ortstaxe erscheint als eigene Zeile in der Summary-Sidebar, in Preis-E-Mails und Buchungsdetails.
 
@@ -563,7 +563,16 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 |---|---|
 | `/admin/hotels` | Alle Hotels verwalten |
 | `/admin/users` | Alle Nutzer verwalten |
+| `/admin/feedback` | Eingegangene Feedback-Meldungen löschen |
 | `/admin/outreach` | Outreach-CRM — Leads verwalten, E-Mails versenden |
+
+### Feedback-System
+
+Admins können über den **Megaphone-Button** (oben rechts, fixiert) jederzeit Feedback senden. Ein Modal öffnet sich mit Texteingabe, Screenshot-Upload (Datei oder Strg+V aus Zwischenablage) und Seiten-URL. Daten landen in `AdminFeedback` (Prisma). Super-Admins sehen alle Einträge unter `/admin/feedback` und können sie löschen. API: `POST/DELETE /api/admin/feedback`.
+
+### Eigene Schriften (Business)
+
+Im Admin unter **Widget & Design → Typografie** können Business-Kunden eigene Schriftdateien (woff, woff2, ttf, otf, max. 5 MB) für Headline und Fließtext hochladen. Upload via `POST /api/admin/font-upload` → Vercel Blob (`booking-app-blob`). Die Blob-URL wird in `HotelSettings.headlineFontUrl` / `bodyFontUrl` gespeichert. Das Widget lädt die Schrift via `@font-face` unter dem internen Familiennamen `CustomHeadlineFont` / `CustomBodyFont`. Löschen via `DELETE /api/admin/font-upload` (entfernt Blob + DB-Eintrag). Env-Variable: `BLOB_READ_WRITE_TOKEN`.
 
 Der Super-Admin hat `hotelId = null` in der Session und Zugriff auf alle Hotels.
 
@@ -774,6 +783,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | Variable | Beschreibung |
 |---|---|
 | `BOOKING_RECEIVER_EMAIL` | Fallback-E-Mail wenn Hotel keine E-Mail hinterlegt hat |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob Token (Store: `booking-app-blob`, FRA1) — für eigene Schrift-Uploads |
 | `SENTRY_DSN` | Sentry-Fehlerverfolgung |
 | `VERCEL_URL` | Automatisch von Vercel gesetzt |
 | `ZOHO_SMTP_USER` | Zoho-Absenderadresse für Outreach-Mails (z.B. `support@bookingwulf.com`) |
