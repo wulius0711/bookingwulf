@@ -743,8 +743,13 @@ function EinstellungenSection() {
       </P>
       <H3>Design</H3>
       <P>
-        Akzentfarbe, Schriftart, Hintergrundfarbe und weitere visuelle Parameter des Widgets lassen
-        sich anpassen. Änderungen werden in der Live-Vorschau rechts sofort sichtbar.
+        Im Abschnitt <strong>Typografie</strong> wählen Sie eine Schriftart für das Widget —
+        z.B. Inter, Lato, Playfair Display oder eine andere Google Font. So lässt sich das Widget
+        an Ihr Corporate Design anpassen.
+      </P>
+      <P>
+        Daneben lassen sich Akzentfarbe, Hintergrundfarbe, Eckenradius und weitere visuelle
+        Parameter einstellen. Alle Änderungen werden in der Live-Vorschau rechts sofort sichtbar.
       </P>
       <H3>Erweitertes Branding</H3>
       <PlanNote plan="Pro" feature="Erweiterte Farbsteuerung (Hintergrund, Karten, Text, Rahmen)" />
