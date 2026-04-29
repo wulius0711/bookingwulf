@@ -27,9 +27,7 @@ function daysBetween(from: string, to: string): number {
   return Math.round((new Date(to + 'T00:00:00Z').getTime() - new Date(from + 'T00:00:00Z').getTime()) / 86400000);
 }
 
-function monthStart(iso: string): string {
-  return iso.slice(0, 7) + '-01';
-}
+function monthStart(iso: string): string { return iso.slice(0, 7) + '-01'; }
 
 function monthEnd(iso: string): string {
   const d = new Date(iso.slice(0, 7) + '-01T00:00:00Z');
@@ -51,44 +49,114 @@ function nextMonth(iso: string): string {
 }
 
 function formatMonthLabel(iso: string): string {
-  const d = new Date(iso + 'T00:00:00Z');
-  return d.toLocaleDateString('de-AT', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return new Date(iso + 'T00:00:00Z').toLocaleDateString('de-AT', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 
-const COL_W = 36; // px per day
+function formatDisplay(iso: string): string {
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+const COL_W = 36;
 const ROW_H = 44;
 const LABEL_W = 140;
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
-export default function GanttView({ todayIso }: { todayIso: string }) {
+type TabType = 'blocked' | 'season' | 'booking';
+const TAB_COLORS: Record<TabType, string> = { blocked: '#ef4444', season: '#3b82f6', booking: '#10b981' };
+const TAB_LABELS: Record<TabType, string> = { blocked: 'Sperrzeit', season: 'Preiszeitraum', booking: 'Buchung' };
+
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '7px 10px', border: '1px solid #334155',
+  borderRadius: 7, fontSize: 13, background: '#273548', color: '#f1f5f9', boxSizing: 'border-box',
+};
+const labelStyle: React.CSSProperties = {
+  fontSize: 11, fontWeight: 700, color: '#94a3b8',
+  letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 3,
+};
+const fieldStyle: React.CSSProperties = { display: 'grid', gap: 3 };
+
+type SelectedItem =
+  | { kind: 'booking'; data: Booking & { aptName: string } }
+  | { kind: 'blocked'; data: Block & { aptName: string } };
+
+export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasPro: boolean }) {
   const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
   const [apartments, setApartments] = useState<AptData[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragAptId, setDragAptId] = useState<number | null>(null);
+  const [dragAptName, setDragAptName] = useState<string | null>(null);
+  const [dragStart, setDragStart] = useState<string | null>(null);
+  const [dragEnd, setDragEnd] = useState<string | null>(null);
+
+  // Create popup (after drag)
+  const [selection, setSelection] = useState<{ aptId: number; aptName: string; start: string; end: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>('blocked');
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState(false);
+
+  // Bar detail / edit popup (after click on bar)
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
+  const [editError, setEditError] = useState<string | null>(null);
+  const [editSuccess, setEditSuccess] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const from = monthStart(monthIso);
   const to = monthEnd(monthIso);
 
-  // Build day array for current month
   const days: string[] = [];
   let cur = from;
   while (cur <= to) { days.push(cur); cur = addDays(cur, 1); }
 
-  useEffect(() => {
+  function refetch() {
     setLoading(true);
     fetch(`/api/admin/belegungsplan?from=${from}&to=${to}`)
-      .then((r) => r.json())
-      .then((d) => { setApartments(d.apartments ?? []); setLoading(false); });
-  }, [from, to]);
+      .then(r => r.json())
+      .then(d => { setApartments(d.apartments ?? []); setLoading(false); });
+  }
 
-  // Scroll to today on mount
+  useEffect(() => { refetch(); }, [from, to]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (!scrollRef.current || loading) return;
     const todayIdx = days.indexOf(todayIso);
-    if (todayIdx >= 0) {
-      scrollRef.current.scrollLeft = Math.max(0, todayIdx * COL_W - 100);
+    if (todayIdx >= 0) scrollRef.current.scrollLeft = Math.max(0, todayIdx * COL_W - 100);
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Global mouseup to finalize drag (catches release outside component)
+  useEffect(() => {
+    function onMouseUp() {
+      if (!isDragging || !dragStart || !dragEnd || !dragAptId || !dragAptName) return;
+      const [lo, hi] = dragStart <= dragEnd ? [dragStart, dragEnd] : [dragEnd, dragStart];
+      setIsDragging(false);
+      setDragStart(null);
+      setDragEnd(null);
+      setDragAptId(null);
+      setDragAptName(null);
+      setSelection({ aptId: dragAptId, aptName: dragAptName, start: lo, end: hi });
     }
-  }, [loading]);
+    document.addEventListener('mouseup', onMouseUp);
+    return () => document.removeEventListener('mouseup', onMouseUp);
+  }, [isDragging, dragStart, dragEnd, dragAptId, dragAptName]);
+
+  function dayFromMouseX(clientX: number): string | null {
+    if (!scrollRef.current) return null;
+    const rect = scrollRef.current.getBoundingClientRect();
+    const x = clientX - rect.left + scrollRef.current.scrollLeft;
+    const idx = Math.floor(x / COL_W);
+    if (idx < 0 || idx >= days.length) return null;
+    return days[idx];
+  }
+
+  function inDragHighlight(aptId: number, day: string): boolean {
+    if (!isDragging || dragAptId !== aptId || !dragStart || !dragEnd) return false;
+    const [lo, hi] = dragStart <= dragEnd ? [dragStart, dragEnd] : [dragEnd, dragStart];
+    return day >= lo && day <= hi;
+  }
 
   function barStyle(startDate: string, endDate: string): React.CSSProperties | null {
     const s = startDate < from ? from : startDate;
@@ -97,27 +165,35 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
     const span = daysBetween(s, e);
     if (span <= 0) return null;
     return {
-      position: 'absolute',
-      left: startIdx * COL_W + 2,
-      width: span * COL_W - 4,
-      top: 6,
-      height: ROW_H - 12,
-      borderRadius: 6,
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: 8,
-      fontSize: 11,
-      fontWeight: 600,
-      whiteSpace: 'nowrap',
-      boxSizing: 'border-box',
+      position: 'absolute', left: startIdx * COL_W + 2, width: span * COL_W - 4,
+      top: 6, height: ROW_H - 12, borderRadius: 6, overflow: 'hidden',
+      display: 'flex', alignItems: 'center', paddingLeft: 8,
+      fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', boxSizing: 'border-box',
+      cursor: 'pointer', zIndex: 1,
     };
+  }
+
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setFormError(null);
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const url = activeTab === 'blocked' ? '/api/admin/blocked-date' : activeTab === 'season' ? '/api/admin/price-season' : '/api/admin/booking';
+    const body: Record<string, unknown> = activeTab === 'blocked'
+      ? { apartmentId: selection!.aptId, startDate: data.startDate, endDate: data.endDate, type: data.type, note: data.note }
+      : activeTab === 'season'
+      ? { apartmentId: selection!.aptId, name: data.name, startDate: data.startDate, endDate: data.endDate, pricePerNight: Number(data.pricePerNight), minStay: Number(data.minStay) || 1 }
+      : { apartmentId: selection!.aptId, arrival: data.arrival, departure: data.departure, adults: Number(data.adults), children: Number(data.children), salutation: data.salutation, firstname: data.firstname, lastname: data.lastname, email: data.email, status: data.status };
+    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const json = await res.json();
+    if (!res.ok) { setFormError(json.error ?? 'Fehler beim Speichern'); return; }
+    setFormSuccess(true);
+    setTimeout(() => { setSelection(null); setFormSuccess(false); refetch(); }, 800);
   }
 
   const totalW = days.length * COL_W;
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       {/* Month nav */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <button onClick={() => setMonthIso(prevMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
@@ -135,7 +211,6 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
           <div style={{ display: 'flex' }}>
             {/* Apt label column */}
             <div style={{ width: LABEL_W, flexShrink: 0, borderRight: '1px solid #e5e7eb' }}>
-              {/* Header spacer */}
               <div style={{ height: 40, borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }} />
               {apartments.map((apt, i) => (
                 <div key={apt.id} style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -165,14 +240,34 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
 
                 {/* Rows */}
                 {apartments.map((apt, i) => (
-                  <div key={apt.id} style={{ height: ROW_H, position: 'relative', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', display: 'flex' }}>
-                    {/* Day cells (background grid) */}
+                  <div
+                    key={apt.id}
+                    style={{ height: ROW_H, position: 'relative', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', display: 'flex', cursor: 'crosshair', userSelect: 'none' }}
+                    onMouseDown={(e) => {
+                      if ((e.target as HTMLElement).closest('[data-bar]')) return;
+                      const day = dayFromMouseX(e.clientX);
+                      if (!day) return;
+                      setDragAptId(apt.id);
+                      setDragAptName(apt.name);
+                      setDragStart(day);
+                      setDragEnd(day);
+                      setIsDragging(true);
+                      setSelection(null);
+                    }}
+                    onMouseMove={(e) => {
+                      if (!isDragging || dragAptId !== apt.id) return;
+                      const day = dayFromMouseX(e.clientX);
+                      if (day) setDragEnd(day);
+                    }}
+                  >
+                    {/* Background day cells */}
                     {days.map((d) => {
                       const dow = new Date(d + 'T12:00:00Z').getUTCDay();
                       const isWeekend = dow === 0 || dow === 6;
                       const isToday = d === todayIso;
+                      const highlighted = inDragHighlight(apt.id, d);
                       return (
-                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid #f3f4f6', background: isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? '#fafafa' : 'transparent' }} />
+                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid #f3f4f6', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? '#fafafa' : 'transparent' }} />
                       );
                     })}
 
@@ -181,7 +276,21 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
                       const style = barStyle(b.startDate, b.endDate);
                       if (!style) return null;
                       return (
-                        <a key={b.id} href={`/admin/requests/${b.requestId}`} title={`${b.label} · ${b.startDate} – ${b.endDate}`} style={{ ...style, background: '#bbf7d0', color: '#166534', textDecoration: 'none', cursor: 'pointer' }}>
+                        <a
+                          key={b.id}
+                          data-bar="1"
+                          href={`/admin/requests/${b.requestId}`}
+                          title={`${b.label} · ${b.startDate} – ${b.endDate}`}
+                          style={{ ...style, background: '#bbf7d0', color: '#166534', textDecoration: 'none' }}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedItem({ kind: 'booking', data: { ...b, aptName: apt.name } });
+                            setEditError(null);
+                            setEditSuccess(false);
+                            setConfirmDelete(false);
+                          }}
+                        >
                           {b.label}
                         </a>
                       );
@@ -195,7 +304,19 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
                       const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#fcd34d', text: '#78350f' }) : { bg: '#fcd34d', text: '#78350f' };
                       const label = parsed ? parsed.platform + (parsed.rest ? ` · ${parsed.rest}` : '') : (b.note || 'Gesperrt');
                       return (
-                        <div key={b.id} title={label} style={{ ...style, background: ps.bg, color: ps.text }}>
+                        <div
+                          key={b.id}
+                          data-bar="1"
+                          title={label}
+                          style={{ ...style, background: ps.bg, color: ps.text }}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onClick={() => {
+                            setSelectedItem({ kind: 'blocked', data: { ...b, aptName: apt.name } });
+                            setEditError(null);
+                            setEditSuccess(false);
+                            setConfirmDelete(false);
+                          }}
+                        >
                           {label}
                         </div>
                       );
@@ -206,6 +327,255 @@ export default function GanttView({ todayIso }: { todayIso: string }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── Create popup (after drag) ── */}
+      {selection && (
+        <>
+          <div onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+                  {formatDisplay(selection.start)}{selection.start !== selection.end ? ` – ${formatDisplay(selection.end)}` : ''}
+                </div>
+                <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{selection.aptName}</div>
+              </div>
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
+                  const locked = tab === 'season' && !hasPro;
+                  return (
+                    <button key={tab} onClick={() => { if (!locked) { setActiveTab(tab); setFormError(null); } }} disabled={locked} title={locked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid #334155', cursor: locked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : locked ? '#475569' : '#94a3b8', opacity: locked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {TAB_LABELS[tab]}{locked && <span style={{ fontSize: 10, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 5px', fontWeight: 700, opacity: 1 }}>Pro</span>}
+                    </button>
+                  );
+                })}
+                <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+              </div>
+            </div>
+            <form onSubmit={handleFormSubmit} style={{ padding: '20px', display: 'grid', gap: 18 }}>
+              {formSuccess ? (
+                <div style={{ textAlign: 'center', padding: '10px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+              ) : (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
+                      <input type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selection.start} />
+                    </div>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>{activeTab === 'booking' ? 'Abreise' : 'Bis'}</label>
+                      <input type="date" name={activeTab === 'booking' ? 'departure' : 'endDate'} required style={inputStyle} defaultValue={selection.end} />
+                    </div>
+                  </div>
+
+                  {activeTab === 'blocked' && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                      <div style={fieldStyle}>
+                        <label style={labelStyle}>Grund</label>
+                        <select name="type" style={inputStyle}>
+                          <option value="manual">Eigennutzung</option>
+                          <option value="other">Sonstiges</option>
+                        </select>
+                      </div>
+                      <div style={fieldStyle}>
+                        <label style={labelStyle}>Notiz</label>
+                        <input type="text" name="note" style={inputStyle} placeholder="Optional" />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'season' && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                      <div style={fieldStyle}>
+                        <label style={labelStyle}>Bezeichnung</label>
+                        <input type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
+                      </div>
+                      <div style={fieldStyle}>
+                        <label style={labelStyle}>Preis / Nacht (€)</label>
+                        <input type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
+                      </div>
+                      <div style={fieldStyle}>
+                        <label style={labelStyle}>Mindestaufenthalt</label>
+                        <input type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'booking' && (
+                    <>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr', gap: 8 }}>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Anrede</label>
+                          <select name="salutation" style={inputStyle}>
+                            <option value="Herr">Herr</option>
+                            <option value="Frau">Frau</option>
+                            <option value="Divers">Divers</option>
+                          </select>
+                        </div>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Vorname</label>
+                          <input type="text" name="firstname" style={inputStyle} />
+                        </div>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Nachname</label>
+                          <input type="text" name="lastname" required style={inputStyle} />
+                        </div>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 8 }}>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>E-Mail</label>
+                          <input type="email" name="email" required style={inputStyle} />
+                        </div>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Erw.</label>
+                          <input type="number" name="adults" min={1} defaultValue={2} style={{ ...inputStyle, width: 56 }} />
+                        </div>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Kinder</label>
+                          <input type="number" name="children" min={0} defaultValue={0} style={{ ...inputStyle, width: 56 }} />
+                        </div>
+                        <div style={fieldStyle}>
+                          <label style={labelStyle}>Status</label>
+                          <select name="status" style={inputStyle}>
+                            <option value="booked">Gebucht</option>
+                            <option value="new">Neu</option>
+                            <option value="answered">Beantwortet</option>
+                          </select>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {formError && <div style={{ fontSize: 12, color: '#f87171' }}>{formError}</div>}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button type="submit" style={{ padding: '7px 18px', background: TAB_COLORS[activeTab], color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                      Speichern
+                    </button>
+                  </div>
+                </>
+              )}
+            </form>
+          </div>
+        </>
+      )}
+
+      {/* ── Bar detail / edit popup ── */}
+      {selectedItem && (
+        <>
+          <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+                {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
+              </span>
+              <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+            </div>
+            <div style={{ padding: '16px 16px 20px' }}>
+              {editSuccess ? (
+                <div style={{ textAlign: 'center', padding: '12px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+              ) : selectedItem.kind === 'booking' ? (
+                <div style={{ display: 'grid', gap: 12 }}>
+                  <div style={{ display: 'grid', gap: 6 }}>
+                    {[
+                      { label: 'Gast', value: selectedItem.data.label },
+                      { label: 'Zeitraum', value: `${formatDisplay(selectedItem.data.startDate)} – ${formatDisplay(selectedItem.data.endDate)}` },
+                    ].map(({ label, value }) => (
+                      <div key={label} style={{ display: 'flex', gap: 8 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+                        <span style={{ fontSize: 13, color: '#f1f5f9' }}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 4 }}>
+                    <a href={`/admin/requests/${selectedItem.data.requestId}`} style={{ padding: '6px 16px', background: '#10b981', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                      Anfrage ansehen →
+                    </a>
+                  </div>
+                </div>
+              ) : selectedItem.data.type === 'ical_sync' ? (
+                (() => {
+                  const parsed = parsePlatform(selectedItem.data.note);
+                  const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
+                  return (
+                    <div style={{ display: 'grid', gap: 14 }}>
+                      {parsed && ps && (
+                        <span style={{ display: 'inline-flex', alignSelf: 'start', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: ps.bg, color: ps.text }}>
+                          {parsed.platform}
+                        </span>
+                      )}
+                      <div style={{ display: 'grid', gap: 6 }}>
+                        {([
+                          ['Von', formatDisplay(selectedItem.data.startDate)],
+                          ['Bis', formatDisplay(selectedItem.data.endDate)],
+                          ...(parsed?.rest ? [['Bezeichnung', parsed.rest]] : []),
+                        ] as [string, string][]).map(([label, value]) => (
+                          <div key={label} style={{ display: 'flex', gap: 10 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+                            <span style={{ fontSize: 13, color: '#f1f5f9' }}>{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.</p>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button type="button" onClick={() => setSelectedItem(null)} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Schließen</button>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : (
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  setEditError(null);
+                  const fd = new FormData(e.currentTarget);
+                  const res = await fetch('/api/admin/blocked-date', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id, startDate: fd.get('startDate'), endDate: fd.get('endDate'), type: fd.get('type'), note: fd.get('note') }) });
+                  if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
+                  else setEditError((await res.json()).error ?? 'Fehler');
+                }} style={{ display: 'grid', gap: 14 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>Von</label>
+                      <input type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
+                    </div>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>Bis</label>
+                      <input type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>Grund</label>
+                      <select name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
+                        <option value="manual">Eigennutzung</option>
+                        <option value="other">Sonstiges</option>
+                      </select>
+                    </div>
+                    <div style={fieldStyle}>
+                      <label style={labelStyle}>Notiz</label>
+                      <input type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note ?? ''} />
+                    </div>
+                  </div>
+                  {editError && <div style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
+                  <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
+                    {!confirmDelete ? (
+                      <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button type="button" onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
+                        <button type="button" onClick={async () => {
+                          const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
+                          if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
+                          else setEditError((await res.json()).error ?? 'Fehler');
+                        }} style={{ padding: '6px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Wirklich löschen</button>
+                      </div>
+                    )}
+                    <button type="submit" style={{ padding: '6px 18px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

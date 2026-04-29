@@ -24,7 +24,7 @@ function formatDate(iso: string) {
   return `${d}.${m}.${y}`;
 }
 
-export default function ZimmerplanClient({ initialDate, initialCards }: { initialDate: string; initialCards: ApartmentCard[] }) {
+export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: { initialDate: string; initialCards: ApartmentCard[]; hasPro: boolean }) {
   const [view, setView] = useState<'tag' | 'gantt'>('tag');
   const [date, setDate] = useState(initialDate);
   const [cards, setCards] = useState(initialCards);
@@ -85,7 +85,7 @@ export default function ZimmerplanClient({ initialDate, initialCards }: { initia
       </div>
 
       {/* Gantt view */}
-      {view === 'gantt' && <GanttView todayIso={date} />}
+      {view === 'gantt' && <GanttView todayIso={date} hasPro={hasPro} />}
 
       {/* Card wrapper */}
       {view === 'tag' && <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
