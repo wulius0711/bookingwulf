@@ -464,3 +464,16 @@ model SupportChatLog {
   @@index([createdAt])
   @@index([category])
 }
+
+
+model AdminFeedback {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int?
+  hotelName String?
+  userEmail String?
+  message   String
+  page      String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

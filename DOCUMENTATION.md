@@ -7,24 +7,26 @@
 
 ## Inhaltsverzeichnis
 
-1. [Produktübersicht](#1-produktübersicht)
-2. [Architektur](#2-architektur)
-3. [Tech-Stack](#3-tech-stack)
-4. [Datenbankschema](#4-datenbankschema)
-5. [Authentifizierung & Sessions](#5-authentifizierung--sessions)
-6. [Pläne & Feature-Gates](#6-pläne--feature-gates)
-7. [Buchungsablauf](#7-buchungsablauf)
-8. [Widget-System](#8-widget-system)
-9. [E-Mail-System](#9-e-mail-system)
-10. [iCal-Sync](#10-ical-sync)
-11. [Stripe-Integration](#11-stripe-integration)
-12. [Admin-Bereich](#12-admin-bereich)
-13. [API-Routen](#13-api-routen)
-14. [Umgebungsvariablen](#14-umgebungsvariablen)
-15. [Deployment](#15-deployment)
-16. [Schlüsselloses Einchecken (Nuki)](#16-schlüsselloses-einchecken-nuki-pro)
-17. [Beds24 Channel Manager](#17-beds24-channel-manager-pro-in-vorbereitung)
-18. [Datenschutz & DSGVO](#18-datenschutz--dsgvo)
+> Navigation in Notion: Outline-Sidebar rechts einblenden (oder `/table of contents` Block einfügen).
+
+1. Produktübersicht
+2. Architektur
+3. Tech-Stack
+4. Datenbankschema
+5. Authentifizierung & Sessions
+6. Pläne & Feature-Gates
+7. Buchungsablauf
+8. Widget-System
+9. E-Mail-System
+10. iCal-Sync
+11. Stripe-Integration
+12. Admin-Bereich
+13. API-Routen
+14. Umgebungsvariablen
+15. Deployment
+16. Schlüsselloses Einchecken (Nuki)
+17. Beds24 Channel Manager
+18. Datenschutz & DSGVO
 
 ---
 

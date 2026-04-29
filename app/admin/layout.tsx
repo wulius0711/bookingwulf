@@ -7,6 +7,7 @@ import { PlanKey } from '@/src/lib/plans'
 import Sidebar from './components/Sidebar'
 import GuidedTour from './components/GuidedTour'
 import AdminChatWidget from './components/AdminChatWidget'
+import FeedbackButton from './components/FeedbackButton'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -71,6 +72,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         { href: '/admin/hotels', label: 'Hotels', icon: 'hotels' },
         { href: '/admin/users', label: 'Benutzer', icon: 'users' },
         { href: '/admin/chat-analytics', label: 'Chat-Auswertung', icon: 'chat' },
+        { href: '/admin/feedback', label: 'Feedback', icon: 'feedback' },
         { href: '/admin/outreach', label: 'Outreach', icon: 'outreach' },
       ] : []),
     ]},
@@ -112,6 +114,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       />
 
       <div className="admin-main">
+        <FeedbackButton />
         <main style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
         <footer
           style={{
