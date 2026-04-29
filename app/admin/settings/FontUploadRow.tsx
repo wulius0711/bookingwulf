@@ -98,7 +98,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
               disabled={loading}
               style={{ border: '1px solid #d1d5db', borderRadius: 6, padding: '6px 12px', fontSize: 13, color: '#374151', background: '#f9fafb', cursor: loading ? 'default' : 'pointer' }}
             >
-              {loading ? 'Wird hochgeladen…' : '+ Font hochladen'}
+              {loading ? 'Wird hochgeladen…' : '+ Schrift hochladen'}
             </button>
             <span style={{ fontSize: 11, color: '#9ca3af' }}>woff, woff2, ttf, otf · max. 5 MB</span>
           </>
