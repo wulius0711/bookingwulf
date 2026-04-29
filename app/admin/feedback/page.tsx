@@ -57,6 +57,11 @@ export default async function FeedbackPage() {
               <p style={{ margin: 0, fontSize: 14, color: '#111', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                 {item.message}
               </p>
+              {item.screenshot && (
+                <a href={item.screenshot} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: 10 }}>
+                  <img src={item.screenshot} alt="Screenshot" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, border: '1px solid #e5e7eb', objectFit: 'cover', display: 'block' }} />
+                </a>
+              )}
             </div>
           ))}
         </div>
