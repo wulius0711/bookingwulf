@@ -78,7 +78,7 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
       </div>
 
       {/* Gantt view */}
-      {view === 'gantt' && <GanttView todayIso={date} hasPro={hasPro} />}
+      {view === 'gantt' && <GanttView todayIso={initialDate} hasPro={hasPro} />}
 
       {/* Tag-Navigation */}
       {view === 'tag' && (
