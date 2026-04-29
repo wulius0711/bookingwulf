@@ -72,7 +72,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
 
   return (
     <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 0', flexWrap: 'wrap' }}>
-      <span style={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         {url ? (
           <>
