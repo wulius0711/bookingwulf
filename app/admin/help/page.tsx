@@ -355,10 +355,40 @@ function ZimmerplanSection() {
     <div>
       <H2>Zimmerplan</H2>
       <P>
-        Der Zimmerplan zeigt den Belegungsstatus aller Apartments für einen bestimmten Tag auf einen Blick —
-        ideal für den täglichen Betrieb und Check-in-Management.
+        Der Zimmerplan bietet zwei Ansichten — umschaltbar über den Toggle oben rechts.
       </P>
-      <H3>Statusfarben</H3>
+
+      <H3>Belegungsplan (Standard)</H3>
+      <P>
+        Die Hauptansicht zeigt alle Apartments als monatliches Gantt-Diagramm: jede Zeile ein
+        Apartment, jede Spalte ein Tag. Buchungen erscheinen als <strong style={{ color: '#166534' }}>grüne Balken</strong>,
+        Sperrzeiten je nach Herkunft farbig (Airbnb rot, Booking.com blau, manuell amber).
+        Mit den Pfeilen links wechseln Sie den Monat, <strong>„Heute"</strong> springt zum aktuellen Monat.
+      </P>
+      <H3>Sperrzeiten & Buchungen anlegen</H3>
+      <P>
+        Ziehen Sie in einer Apartment-Zeile mit gedrückter Maustaste einen Zeitraum auf — die
+        markierten Tage werden lila hervorgehoben. Nach dem Loslassen öffnet sich ein Formular
+        mit dem Apartment und den Daten bereits vorausgefüllt. Wählen Sie den Typ:
+      </P>
+      <ul style={{ margin: '6px 0 14px', paddingLeft: 20, fontSize: 13, color: '#374151', lineHeight: 1.7 }}>
+        <li><strong>Sperrzeit</strong> — Eigennutzung oder sonstiger Block</li>
+        <li><strong>Preiszeitraum</strong> — Saisonpreis für diesen Zeitraum <span style={{ fontSize: 11, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 6px', fontWeight: 700, marginLeft: 4 }}>Pro</span></li>
+        <li><strong>Buchung</strong> — manuelle Buchung direkt eintragen</li>
+      </ul>
+      <H3>Balken anklicken</H3>
+      <P>
+        Klick auf einen <strong>grünen Buchungsbalken</strong> öffnet ein Detail-Panel mit Link zur Anfrage.
+        Klick auf einen <strong>Sperrzeit-Balken</strong> öffnet ein Bearbeitungsformular — Datum, Grund und
+        Notiz können geändert oder die Sperrzeit gelöscht werden. iCal-synchronisierte Sperrzeiten
+        (Airbnb, Booking.com) sind read-only und zeigen nur den Plattform-Badge.
+      </P>
+
+      <H3>Tagesansicht</H3>
+      <P>
+        Die zweite Ansicht zeigt den Belegungsstatus aller Apartments für einen bestimmten Tag
+        als Karten-Grid — ideal für das tägliche Check-in-Management.
+      </P>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
         {[
           { color: '#86efac', bg: '#f0fdf4', label: 'Grün – Frei' },
@@ -371,28 +401,11 @@ function ZimmerplanSection() {
           </div>
         ))}
       </div>
-      <H3>Datumswahl</H3>
       <P>
-        Standardmäßig wird der heutige Tag angezeigt. Mit dem Datumsfeld oben rechts können Sie
-        jeden beliebigen Tag prüfen — vergangene und zukünftige Termine. Der Button
-        <strong> „Heute"</strong> bringt Sie jederzeit zum aktuellen Tag zurück.
+        Bei belegten Apartments werden Gastname, verbleibende Tage sowie Anreise- und Abreisedatum
+        angezeigt. Fällt die Abreise auf den gewählten Tag, erscheint ein <strong>„Check-out heute"</strong>-Badge.
+        Mit dem Datumsfeld oben rechts können Sie jeden Tag prüfen.
       </P>
-      <H3>Belegte Apartments</H3>
-      <P>
-        Bei belegten Apartments werden Gastname, verbleibende Tage bis zum Check-out sowie
-        Anreise- und Abreisedatum angezeigt. Wenn die Abreise auf den gewählten Tag fällt,
-        erscheint ein <strong>„Check-out heute"</strong>-Badge statt der Tagesangabe.
-        Über den Link <em>„Anfrage ansehen"</em> gelangen Sie direkt zur Buchungsdetailansicht.
-      </P>
-      <H3>Blockierte Apartments</H3>
-      <P>
-        Blockierte Apartments zeigen die Anzahl der verbleibenden Sperrtage sowie — falls
-        angegeben — die hinterlegte Notiz zur Sperrzeit.
-      </P>
-      <Tip>
-        <strong>Tipp:</strong> Der Zimmerplan ergänzt den Kalender — der Kalender gibt einen
-        Überblick über Wochen und Monate, der Zimmerplan zeigt den Status für genau einen Tag.
-      </Tip>
     </div>
   );
 }

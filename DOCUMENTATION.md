@@ -647,9 +647,21 @@ Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (Hotel
 
 Klick-Drag über Tageszellen markiert einen Zeitraum (lila Highlight). Nach dem Loslassen öffnet sich ein modales Inline-Formular (Lightbox mit Backdrop) zum direkten Anlegen von Sperrzeiten, Preiszeiträumen oder manuellen Buchungen — ohne Seitennavigation. Datumfelder sind im Formular editierbar. Nach dem Speichern wird die Seite per `router.refresh()` aktualisiert.
 
-Sperrzeiten werden im Kalender als roter Chip `🚫` angezeigt (neben den Buchungs-Chips).
+Sperrzeiten werden im Kalender als roter Chip `🚫` angezeigt (neben den Buchungs-Chips). iCal-synchronisierte Sperrzeiten (`type: 'ical_sync'`) zeigen zusätzlich einen farbigen Platform-Badge (Airbnb rot, Booking.com blau) — erkannt durch `[Platform] Titel`-Format im `note`-Feld. Klick auf solche Chips öffnet ein read-only Detail-Panel.
 
 Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt aufrufbar).
+
+### Zimmerplan — Belegungsplan & Tagesansicht
+
+`/admin/zimmerplan` hat zwei Ansichten, umschaltbar per Toggle (oben rechts):
+
+**Belegungsplan (Standard):** Monats-Gantt-Diagramm. Jedes Apartment ist eine Zeile, jeder Tag eine Spalte (36 px). Buchungen erscheinen als grüne Balken (klickbar → Anfrage), Sperrzeiten als plattformfarbige Balken (Airbnb rot, Booking.com blau, sonstige amber). iCal-Blöcke zeigen Platform-Badge + read-only Detail beim Klick; manuelle Sperrzeiten sind editier- und löschbar.
+
+**Drag-to-Create im Gantt:** Klick-Drag horizontal innerhalb einer Apartment-Zeile markiert einen Zeitraum (lila Highlight). Nach dem Loslassen öffnet sich ein dunkles Popup mit Apartment-Name und Datumsbereich — Tabs: Sperrzeit, Preiszeitraum (Pro), Buchung. Nach dem Speichern wird der Gantt automatisch neu geladen (lokaler State, kein `router.refresh()`).
+
+API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — liefert `{ apartments: [{ id, name, bookings, blocks }] }`. Implementierung: `app/admin/zimmerplan/GanttView.tsx` (Client Component), `app/api/admin/belegungsplan/route.ts`.
+
+**Tagesansicht:** Karten-Grid mit Farbstatus (Grün/Rot/Gelb) für einen bestimmten Tag. Zeigt Gastname, verbleibende Tage, Check-out-Badge, Platform-Badges für iCal-Sperrzeiten.
 
 ### Geführte Tour
 

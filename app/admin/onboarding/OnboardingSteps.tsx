@@ -66,7 +66,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
             </div>
           </div>
 
-          {featureRow('🏠', 'Zimmerplan', 'Belegungsstatus aller Apartments auf einen Blick — für jedes Datum abrufbar.')}
+          {featureRow('🏠', 'Zimmerplan', 'Monats-Gantt aller Apartments — Buchungen und Sperrzeiten auf einen Blick. Zeitraum per Drag markieren, um direkt Sperrzeiten oder Buchungen anzulegen.')}
           {featureRow('📊', 'Analytics', 'Buchungsstatistiken: Auslastung, Umsatz, beliebteste Zeiträume (ab Business-Plan).')}
         </div>
       ),
