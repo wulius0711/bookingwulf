@@ -82,18 +82,14 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
 
       {/* Tag-Navigation */}
       {view === 'tag' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 auto', minWidth: 0 }}>
-            <button onClick={() => handleDateChange(shiftDay(date, -1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1, flexShrink: 0 }}>‹</button>
-            <span style={{ fontWeight: 700, fontSize: 15, textAlign: 'center', flex: 1, minWidth: 0 }}>{formatDayLabel(date)}</span>
-            <button onClick={() => handleDateChange(shiftDay(date, 1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1, flexShrink: 0 }}>›</button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {!isToday && (
-              <button onClick={() => handleDateChange(todayIso())} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}>Heute</button>
-            )}
-            <input type="date" value={date} onChange={(e) => handleDateChange(e.target.value)} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111827', cursor: 'pointer' }} />
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+          <button onClick={() => handleDateChange(shiftDay(date, -1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
+          <span style={{ fontWeight: 700, fontSize: 15, textAlign: 'center' }}>{formatDayLabel(date)}</span>
+          <button onClick={() => handleDateChange(shiftDay(date, 1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
+          {!isToday && (
+            <button onClick={() => handleDateChange(todayIso())} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}>Heute</button>
+          )}
+          <input type="date" value={date} onChange={(e) => handleDateChange(e.target.value)} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111827', cursor: 'pointer' }} />
         </div>
       )}
 

@@ -195,7 +195,7 @@ export default function GanttView({ todayIso, hasPro }: { todayIso: string; hasP
   return (
     <div style={{ position: 'relative' }}>
       {/* Month nav */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
         <button onClick={() => setMonthIso(prevMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
         <span style={{ fontWeight: 700, fontSize: 15, minWidth: 160, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
         <button onClick={() => setMonthIso(nextMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
