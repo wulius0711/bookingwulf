@@ -656,9 +656,22 @@ Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (Hotel
 
 ### Barrierefreiheit
 
-- **Widget:** Alle Icon-Buttons (`×` Lightbox-Schließen, `‹›` Lightbox-Navigation, `‹›` Kalender-Monatsnavigation, `‹›` Bild-Slider) haben `aria-label`
 - **Admin:** Footer-Links (`#6b7280` statt `#9ca3af`) — WCAG AA (4.8:1 auf Weiß)
 - **ContrastChecker:** Bei Fail wird die nächstähnliche barrierefreie Farbe per Binary-Search auf HSL-Lightness berechnet und als klickbarer Vorschlag angezeigt. Klick setzt den Wert direkt ins Formular-Input und feuert `settings-color-changed` CustomEvent.
+
+#### Widget-Barrierefreiheit (`public/widget.html`, `public/mini-widget.html`)
+
+- **Icon-Buttons:** `×` (Lightbox-Schließen), `‹›` (Navigation, Kalender-Monatsnavigation, Bild-Slider) haben alle `aria-label`
+- **Kalender-Tageszellen:** `<button role="gridcell">` mit `aria-label` (Datum ausgeschrieben), `aria-selected`, `aria-current="date"` für heute; Tastatur-Navigation via Pfeil-, PgUp/Down-, Home/End-Tasten; Roving-Tabindex
+- **Schritt-Indikatoren:** `aria-current="step"` auf dem aktiven Schritt
+- **Formularvalidierung:** Fehlermeldungen mit `role="alert"` und `aria-live`; Felder mit `aria-describedby` verknüpft; `aria-invalid` bei Fehler
+- **Ladezustand:** `aria-busy="true"` auf dem Apartment-Container während des Ladens
+- **Toggle-Buttons:** `aria-expanded` auf "Mehr lesen" (apt-more) und Ausstattungs-Toggle (apt-amenities-toggle); wird bei State-Änderung aktualisiert
+- **Fokus-Indikatoren:** `:focus-visible` mit `outline: 2px solid var(--accent)` auf allen Buttons, Links und `[tabindex="0"]`-Elementen; Kalender-Tageszellen ebenfalls
+- **iframe:** `title="Buchungsformular"` auf dem `<iframe>`-Element in `IframeWrapper.tsx`
+- **Lightbox-Hinweis:** Die Lightbox (`role="dialog" aria-modal="true"`) ist aktuell deaktiviert (`openLightbox()` ist ein No-op) — Bilder werden ausschließlich über den Inline-Slider angezeigt
+
+**Noch offen (Backlog):** Mini-Widget Labels (`<span>` → `<label for="">`), Register-Formular `id`/`htmlFor`, Skip Links, View-/Layout-Toggle `aria-label`
 
 #### Modal / Dialog-Zugänglichkeit
 
