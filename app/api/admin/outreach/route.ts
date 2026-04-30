@@ -29,6 +29,8 @@ export async function POST(req: Request) {
         betrieb:  String(body.betrieb ?? '').trim(),
         inhaber:  body.inhaber  ? String(body.inhaber).trim()  : null,
         email:    body.email    ? String(body.email).trim()    : null,
+        phone:      body.phone      ? String(body.phone).trim()      : null,
+        kontaktPer: body.kontaktPer ? String(body.kontaktPer).trim() : null,
         region:   body.region   ? String(body.region).trim()   : null,
         website:  body.website  ? String(body.website).trim()  : null,
         notes:    body.notes    ? String(body.notes).trim()    : null,

@@ -7,6 +7,8 @@ type Lead = {
   betrieb: string;
   inhaber: string | null;
   email: string | null;
+  phone: string | null;
+  kontaktPer: string | null;
   region: string | null;
   website: string | null;
   status: string;
@@ -49,7 +51,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
   const [editData, setEditData] = useState<Partial<Lead>>({});
   const [toast, setToast] = useState<{ msg: string; type: 'ok' | 'err' } | null>(null);
   const [newLeadOpen, setNewLeadOpen] = useState(false);
-  const [newLead, setNewLead] = useState({ betrieb: '', inhaber: '', email: '', region: '', website: '' });
+  const [newLead, setNewLead] = useState({ betrieb: '', inhaber: '', email: '', phone: '', kontaktPer: '', region: '', website: '' });
   const [bulkSending, setBulkSending] = useState(false);
 
   const filtered = useMemo(() =>
@@ -121,7 +123,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
     const d = await r.json();
     if (!r.ok) return showToast(d.error || 'Fehler.', 'err');
     setLeads(prev => [...prev, d.lead]);
-    setNewLead({ betrieb: '', inhaber: '', email: '', region: '', website: '' });
+    setNewLead({ betrieb: '', inhaber: '', email: '', phone: '', kontaktPer: '', region: '', website: '' });
     setNewLeadOpen(false);
     showToast('Lead angelegt.', 'ok');
   }
@@ -213,11 +215,18 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
       {newLeadOpen && (
         <div style={{ marginBottom: 20, padding: 20, background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 12 }}>
-            {(['betrieb', 'inhaber', 'email', 'region', 'website'] as const).map(field => (
-              <input key={field} placeholder={field.charAt(0).toUpperCase() + field.slice(1)} value={newLead[field]}
+            {(['betrieb', 'inhaber', 'email', 'phone', 'region', 'website'] as const).map(field => (
+              <input key={field} placeholder={{ betrieb: 'Betrieb', inhaber: 'Inhaber', email: 'E-Mail', phone: 'Telefon', region: 'Region', website: 'Website' }[field]} value={newLead[field]}
                 onChange={e => setNewLead(p => ({ ...p, [field]: e.target.value }))}
                 style={{ padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }} />
             ))}
+            <select value={newLead.kontaktPer} onChange={e => setNewLead(p => ({ ...p, kontaktPer: e.target.value }))}
+              style={{ padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13, color: newLead.kontaktPer ? '#111' : '#9ca3af' }}>
+              <option value="">Kontakt per…</option>
+              <option value="E-Mail">E-Mail</option>
+              <option value="Telefon">Telefon</option>
+              <option value="Persönlich">Persönlich</option>
+            </select>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={createLead} style={{ padding: '7px 16px', background: '#111827', color: '#fff', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
@@ -231,7 +240,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-              {['Betrieb', 'Inhaber', 'E-Mail', 'Region', 'Status', 'Gesendet', 'Aktionen'].map(h => (
+              {['Betrieb', 'Inhaber', 'E-Mail', 'Telefon', 'Kontakt per', 'Region', 'Status', 'Gesendet', 'Aktionen'].map(h => (
                 <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#374151', fontSize: 12, whiteSpace: 'nowrap' }}>{h}</th>
               ))}
             </tr>
@@ -263,6 +272,25 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                       : lead.email
                         ? <a href={`mailto:${lead.email}`} style={{ color: '#1d4ed8', textDecoration: 'none' }}>{lead.email}</a>
                         : <span style={{ color: '#d1d5db' }}>–</span>
+                    }
+                  </td>
+                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                    {isEditing
+                      ? <input value={editData.phone ?? ''} onChange={e => setEditData(p => ({ ...p, phone: e.target.value }))} style={{ width: 120, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      : lead.phone
+                        ? <a href={`tel:${lead.phone}`} style={{ color: '#374151', textDecoration: 'none' }}>{lead.phone}</a>
+                        : <span style={{ color: '#d1d5db' }}>–</span>
+                    }
+                  </td>
+                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                    {isEditing
+                      ? <select value={editData.kontaktPer ?? ''} onChange={e => setEditData(p => ({ ...p, kontaktPer: e.target.value }))} style={{ padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }}>
+                          <option value="">–</option>
+                          <option value="E-Mail">E-Mail</option>
+                          <option value="Telefon">Telefon</option>
+                          <option value="Persönlich">Persönlich</option>
+                        </select>
+                      : <span style={{ color: lead.kontaktPer ? '#374151' : '#d1d5db' }}>{lead.kontaktPer || '–'}</span>
                     }
                   </td>
                   <td style={{ padding: '10px 14px', color: '#6b7280' }}>{lead.region || '–'}</td>
@@ -302,7 +330,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                           </button>
                         )}
                         <button
-                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '' }); }}
+                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '' }); }}
                           style={{ padding: '4px 8px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: '#374151' }}
                         >
                           Bearbeiten
@@ -320,7 +348,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
               );
             })}
             {filtered.length === 0 && (
-              <tr><td colSpan={7} style={{ padding: 32, textAlign: 'center', color: '#9ca3af' }}>Keine Leads in diesem Status.</td></tr>
+              <tr><td colSpan={9} style={{ padding: 32, textAlign: 'center', color: '#9ca3af' }}>Keine Leads in diesem Status.</td></tr>
             )}
           </tbody>
         </table>

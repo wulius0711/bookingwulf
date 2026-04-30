@@ -23,6 +23,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (body.betrieb  !== undefined) data.betrieb  = String(body.betrieb).trim();
     if (body.inhaber  !== undefined) data.inhaber  = body.inhaber  ? String(body.inhaber).trim()  : null;
     if (body.email    !== undefined) data.email    = body.email    ? String(body.email).trim()    : null;
+    if (body.phone      !== undefined) data.phone      = body.phone      ? String(body.phone).trim()      : null;
+    if (body.kontaktPer !== undefined) data.kontaktPer = body.kontaktPer ? String(body.kontaktPer).trim() : null;
     if (body.region   !== undefined) data.region   = body.region   ? String(body.region).trim()   : null;
     if (body.website  !== undefined) data.website  = body.website  ? String(body.website).trim()  : null;
     if (body.notes    !== undefined) data.notes    = body.notes    ? String(body.notes).trim()    : null;

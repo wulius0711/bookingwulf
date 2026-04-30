@@ -439,6 +439,8 @@ model OutreachLead {
   betrieb    String
   inhaber    String?
   email      String?
+  phone      String?
+  kontaktPer String?
   region     String?
   website    String?
   // neu | gesendet | follow-up | geantwortet | demo | kein-interesse | abgeschlossen
