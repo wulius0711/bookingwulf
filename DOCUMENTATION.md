@@ -669,9 +669,11 @@ Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (Hotel
 - **Toggle-Buttons:** `aria-expanded` auf "Mehr lesen" (apt-more) und Ausstattungs-Toggle (apt-amenities-toggle); wird bei State-Änderung aktualisiert
 - **Fokus-Indikatoren:** `:focus-visible` mit `outline: 2px solid var(--accent)` auf allen Buttons, Links und `[tabindex="0"]`-Elementen; Kalender-Tageszellen ebenfalls
 - **iframe:** `title="Buchungsformular"` auf dem `<iframe>`-Element in `IframeWrapper.tsx`
+- **Skip Link:** `<a href="#booking-main">` am Anfang von `<body>`; `id="booking-main"` auf `.booking-shell`; visuell versteckt, bei Fokus sichtbar (position absolute, top: 0 on `:focus`)
+- **View-/Layout-Toggle:** `aria-label` auf alle vier Toggle-Buttons (`viewTop`, `viewSidebar`, `layoutList`, `layoutMasonry`) — ergänzt das bestehende `title`-Attribut
+- **Mini-Widget Labels:** `<span class="field-label">` → `<label for="miniArrival/miniDeparture" class="field-label">` — CSS Adjacent-Sibling-Selektor (`input + .field-label`) bleibt funktional
+- **Mini-Widget Fehlerbox:** `role="alert" aria-live="assertive"` auf `#miniError`
 - **Lightbox-Hinweis:** Die Lightbox (`role="dialog" aria-modal="true"`) ist aktuell deaktiviert (`openLightbox()` ist ein No-op) — Bilder werden ausschließlich über den Inline-Slider angezeigt
-
-**Noch offen (Backlog):** Mini-Widget Labels (`<span>` → `<label for="">`), Register-Formular `id`/`htmlFor`, Skip Links, View-/Layout-Toggle `aria-label`
 
 #### Modal / Dialog-Zugänglichkeit
 
@@ -689,9 +691,13 @@ useFocusTrap(enabled: boolean, onClose: () => void): RefObject<HTMLDivElement>
 
 | Komponente | Modals | ARIA-Attribute |
 |---|---|---|
-| `CalendarGrid.tsx` | Erstellen (`selLo/selHi`) + Bearbeiten (`selectedItem`) | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, Backdrop `aria-hidden="true"`, `×`-Buttons `aria-label="Schließen"`, Fehler `role="alert"` |
-| `GanttView.tsx` | Drag-Erstellen (`selection`) + Balken-Detail (`selectedItem`) + `ApartmentCalendar` | wie oben |
+| `CalendarGrid.tsx` | Erstellen (`selLo/selHi`) + Bearbeiten (`selectedItem`) | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, Backdrop `aria-hidden="true"`, `×`-Buttons `aria-label="Schließen"`, Fehler `role="alert"`, Erfolg `role="status"`, alle Formularfelder mit `id`+`htmlFor` |
+| `GanttView.tsx` | Drag-Erstellen (`selection`) + Balken-Detail (`selectedItem`) + `ApartmentCalendar` | wie oben; Gantt-Apt-Labels und Blocked-Bars: `role="button"`, `tabIndex={0}`, `onKeyDown` (Enter/Space) |
 | `AdminChatWidget.tsx` | Chat-Panel | `role="dialog"`, `aria-label`, `aria-modal="false"` (nicht-blockierend); Trigger-Button: `aria-expanded`, `aria-controls`; Escape schließt; Input bekommt Fokus beim Öffnen |
+
+**Skip Link (Admin):** `.skip-link` in `app/globals.css`, eingebaut in `app/admin/layout.tsx` (`<a href="#admin-content">`); `<main id="admin-content">`. Visuell versteckt (`top: -100%`), erscheint bei Fokus.
+
+**Formular-Labels (Register):** `app/register/RegisterForm.tsx` — alle vier Felder (`reg-hotel-name`, `reg-email`, `reg-password`, `reg-confirm`) mit `id`+`htmlFor`.
 
 **Gesperrte Nav-Items (Sidebar):** `<button aria-disabled="true">` — bewusste Entscheidung: Button bleibt focusbar, Shake-Animation und Tooltip bleiben funktionsfähig. Das ist valides ARIA-Pattern für Buttons mit Seiteneffekten trotz "Disabled"-Zustand.
 
