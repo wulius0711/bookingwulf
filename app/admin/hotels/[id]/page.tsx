@@ -76,8 +76,8 @@ export default async function EditHotelPage({ params }: PageProps) {
       <a href="/admin/hotels" style={s.backLink}>← Hotels</a>
 
       <div style={s.header}>
-        <h1 style={s.title}>Hotel bearbeiten</h1>
-        <p style={s.sub}>{hotel.name} · ID {hotel.id}</p>
+        <h1 className="page-title">Hotel bearbeiten</h1>
+        <p className="page-subtitle">{hotel.name} · ID {hotel.id}</p>
       </div>
 
       {/* Form card */}
@@ -107,9 +107,7 @@ export default async function EditHotelPage({ params }: PageProps) {
             <input name="phone" defaultValue={hotel.phone ?? ''} style={s.input} placeholder="+43 1 234 5678" />
           </div>
 
-          <div style={s.field}>
-            <ColorField label="Akzentfarbe" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={s.label} />
-          </div>
+          <ColorField label="Akzentfarbe" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={s.label} />
 
           <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }}>
             <label style={s.label}>Status</label>

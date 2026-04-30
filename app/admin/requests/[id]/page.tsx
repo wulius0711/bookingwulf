@@ -343,7 +343,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
       {/* Back + delete */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <Link href="/admin/requests" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid #e5e7eb', textDecoration: 'none', color: '#374151', background: '#fff', fontSize: 13, fontWeight: 500 }}>
-          ← Zurück
+          ← Alle Anfragen
         </Link>
         {isSuperAdmin && <DeleteRequestButton requestId={request.id} />}
       </div>
