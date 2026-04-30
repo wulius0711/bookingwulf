@@ -12,8 +12,18 @@
   var lang = script.getAttribute('data-lang') || '';
   var base = script.src.replace(/\/widget\.js(\?.*)?$/, '');
 
+  var _pqp = new URLSearchParams(window.location.search);
+  var _arrival = _pqp.get('arrival') || '';
+  var _departure = _pqp.get('departure') || '';
+  var _type = _pqp.get('type') || '';
+
   var iframe = document.createElement('iframe');
-  iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel) + (config ? '&config=' + encodeURIComponent(config) : '') + (lang ? '&lang=' + encodeURIComponent(lang) : '');
+  iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel)
+    + (config ? '&config=' + encodeURIComponent(config) : '')
+    + (lang ? '&lang=' + encodeURIComponent(lang) : '')
+    + (_arrival ? '&arrival=' + encodeURIComponent(_arrival) : '')
+    + (_departure ? '&departure=' + encodeURIComponent(_departure) : '')
+    + (_type ? '&type=' + encodeURIComponent(_type) : '');
   iframe.style.cssText =
     'width:100%;border:none;overflow:hidden;background:transparent;display:block;height:1200px;';
   iframe.scrolling = 'no';
