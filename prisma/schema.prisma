@@ -32,6 +32,11 @@ model Hotel {
   hungrywulfRestaurantId String?
   hungrywulfSecret       String?
 
+  // eventwulf integration
+  eventwulfEnabled Boolean  @default(false)
+  eventwulfOrgId   String?
+  eventwulfSecret  String?
+
   settings        HotelSettings?
   settingsPresets HotelSettingsPreset[]
   widgetConfigs   WidgetConfig[]

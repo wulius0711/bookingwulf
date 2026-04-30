@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
 import { ColorField } from '@/app/admin/settings/color-field';
 import HungrywulfToggle from './HungrywulfToggle';
+import EventwulfToggle from './EventwulfToggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,6 +46,7 @@ export default async function EditHotelPage({ params }: PageProps) {
       id: true, name: true, slug: true, email: true, phone: true,
       accentColor: true, isActive: true,
       hungrywulfEnabled: true, hungrywulfRestaurantId: true,
+      eventwulfEnabled: true, eventwulfOrgId: true,
     },
   });
   if (!hotel) notFound();
@@ -182,6 +184,18 @@ export default async function EditHotelPage({ params }: PageProps) {
           )}
         </p>
         <HungrywulfToggle hotelId={hotel.id} enabled={hotel.hungrywulfEnabled} />
+      </div>
+
+      {/* eventwulf Integration */}
+      <div style={{ marginTop: 32, paddingTop: 32, borderTop: '1px solid #e5e7eb' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 6 }}>eventwulf</h2>
+        <p style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>
+          Eventbuchungs-App.{' '}
+          {hotel.eventwulfOrgId && (
+            <span style={{ color: '#6b7280' }}>Org-ID: <code style={{ fontSize: 12 }}>{hotel.eventwulfOrgId}</code></span>
+          )}
+        </p>
+        <EventwulfToggle hotelId={hotel.id} enabled={hotel.eventwulfEnabled} />
       </div>
     </main>
   );
