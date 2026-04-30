@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       name: hotel.name,
-      email: hotel.email ?? `hotel-${hotel.id}@bookingwulf.com`,
+      email: `hotel-${hotel.id}@bookingwulf.com`,
       bookingAppUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin`,
     }),
   });
