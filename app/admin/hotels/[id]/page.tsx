@@ -72,7 +72,17 @@ export default async function EditHotelPage({ params }: PageProps) {
   };
 
   return (
-    <main style={s.page}>
+    <main style={s.page} className="hotel-edit-page">
+      <style>{`
+        @media (max-width: 640px) {
+          .hotel-edit-page { padding: 16px !important; }
+          .hotel-edit-page .he-card { padding: 16px !important; }
+          .hotel-edit-page .he-field { grid-template-columns: 1fr !important; gap: 4px !important; }
+          .hotel-edit-page .he-field label,
+          .hotel-edit-page .he-field span { padding-top: 0 !important; }
+          .hotel-edit-page .he-integ-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       <a href="/admin/hotels" style={s.backLink}>← Hotels</a>
 
       <div style={s.header}>
@@ -81,15 +91,15 @@ export default async function EditHotelPage({ params }: PageProps) {
       </div>
 
       {/* Form card */}
-      <div style={s.card}>
+      <div style={s.card} className="he-card">
         <div style={s.cardTitle}>Stammdaten</div>
         <form action={updateHotel}>
-          <div style={s.field}>
+          <div style={s.field} className="he-field">
             <label style={s.label}>Name *</label>
             <input name="name" required defaultValue={hotel.name} style={s.input} />
           </div>
 
-          <div style={s.field}>
+          <div style={s.field} className="he-field">
             <label style={s.label}>Slug *</label>
             <div>
               <input name="slug" required defaultValue={hotel.slug} style={s.input} />
@@ -97,22 +107,22 @@ export default async function EditHotelPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div style={s.field}>
+          <div style={s.field} className="he-field">
             <label style={s.label}>E-Mail</label>
             <input name="email" type="email" defaultValue={hotel.email ?? ''} style={s.input} placeholder="info@hotel.at" />
           </div>
 
-          <div style={s.field}>
+          <div style={s.field} className="he-field">
             <label style={s.label}>Telefon</label>
             <input name="phone" defaultValue={hotel.phone ?? ''} style={s.input} placeholder="+43 1 234 5678" />
           </div>
 
-          <div style={s.field}>
+          <div style={s.field} className="he-field">
             <span style={s.label}>Akzentfarbe</span>
             <ColorField label="" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={{ display: 'none' }} />
           </div>
 
-          <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }}>
+          <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }} className="he-field">
             <label style={s.label}>Status</label>
             <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: '#374151' }}>
               <input type="checkbox" name="isActive" defaultChecked={hotel.isActive} />
@@ -129,7 +139,7 @@ export default async function EditHotelPage({ params }: PageProps) {
 
       {/* Integrations */}
       <div style={s.cardTitle}>Integrationen</div>
-      <div style={s.integGrid}>
+      <div style={s.integGrid} className="he-integ-grid">
         <div style={s.integCard}>
           <div style={s.integIcon}>🍽</div>
           <div style={s.integName}>hungrywulf</div>
