@@ -113,7 +113,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 200 }} />
-      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto' }}>
+      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
