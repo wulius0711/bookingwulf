@@ -70,8 +70,8 @@ type CalItem =
   | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number }
   | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string };
 
-function ApartmentCalendar({ apt, todayIso, onClose, onSelectItem }: { apt: AptData; todayIso: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
-  const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
+function ApartmentCalendar({ apt, todayIso, initialMonth, onClose, onSelectItem }: { apt: AptData; todayIso: string; initialMonth: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
+  const [monthIso, setMonthIso] = useState(() => initialMonth);
   const [aptData, setAptData] = useState<AptData>(apt);
   const [loading, setLoading] = useState(false);
 
@@ -642,6 +642,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
         <ApartmentCalendar
           apt={calApt}
           todayIso={todayIso}
+          initialMonth={monthIso}
           onClose={() => setCalApt(null)}
           onSelectItem={(item) => {
             setCalApt(null);
