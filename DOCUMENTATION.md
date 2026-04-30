@@ -570,6 +570,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/feedback` | Eingegangene Feedback-Meldungen löschen |
 | `/admin/outreach` | Outreach-CRM — Leads verwalten, E-Mails versenden |
 | `/admin/hotels/[id]` → hungrywulf-Sektion | hungrywulf per Hotel aktivieren/deaktivieren (provisioniert automatisch) |
+| `/admin/hotels/[id]` → eventwulf-Sektion | eventwulf per Hotel aktivieren/deaktivieren (provisioniert automatisch) |
 
 ### Feedback-System
 
@@ -658,6 +659,28 @@ Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (Hotel
 - **Widget:** Alle Icon-Buttons (`×` Lightbox-Schließen, `‹›` Lightbox-Navigation, `‹›` Kalender-Monatsnavigation, `‹›` Bild-Slider) haben `aria-label`
 - **Admin:** Footer-Links (`#6b7280` statt `#9ca3af`) — WCAG AA (4.8:1 auf Weiß)
 - **ContrastChecker:** Bei Fail wird die nächstähnliche barrierefreie Farbe per Binary-Search auf HSL-Lightness berechnet und als klickbarer Vorschlag angezeigt. Klick setzt den Wert direkt ins Formular-Input und feuert `settings-color-changed` CustomEvent.
+
+#### Modal / Dialog-Zugänglichkeit
+
+**Hook:** `app/admin/hooks/useFocusTrap.ts`
+
+```ts
+useFocusTrap(enabled: boolean, onClose: () => void): RefObject<HTMLDivElement>
+```
+
+- Solange `enabled = true`: fängt Tab/Shift+Tab innerhalb des Dialog-Containers ab, Escape ruft `onClose()` auf
+- Beim Aktivieren: Fokus springt zum ersten focusbaren Element im Dialog
+- Beim Deaktivieren (Schließen): Fokus kehrt zum auslösenden Element zurück (`document.activeElement` beim Aktivieren)
+
+**Implementiert in:**
+
+| Komponente | Modals | ARIA-Attribute |
+|---|---|---|
+| `CalendarGrid.tsx` | Erstellen (`selLo/selHi`) + Bearbeiten (`selectedItem`) | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, Backdrop `aria-hidden="true"`, `×`-Buttons `aria-label="Schließen"`, Fehler `role="alert"` |
+| `GanttView.tsx` | Drag-Erstellen (`selection`) + Balken-Detail (`selectedItem`) + `ApartmentCalendar` | wie oben |
+| `AdminChatWidget.tsx` | Chat-Panel | `role="dialog"`, `aria-label`, `aria-modal="false"` (nicht-blockierend); Trigger-Button: `aria-expanded`, `aria-controls`; Escape schließt; Input bekommt Fokus beim Öffnen |
+
+**Gesperrte Nav-Items (Sidebar):** `<button aria-disabled="true">` — bewusste Entscheidung: Button bleibt focusbar, Shake-Animation und Tooltip bleiben funktionsfähig. Das ist valides ARIA-Pattern für Buttons mit Seiteneffekten trotz "Disabled"-Zustand.
 
 ### Kalender — Drag-to-Create
 
@@ -985,6 +1008,68 @@ Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/hungrywulf` → `
 | `GET /api/admin/hungrywulf-link` | bookingwulf | Magic-Link generieren |
 | `POST /api/provision` | hungrywulf | Restaurant-Account anlegen (Bearer-Auth) |
 | `GET /api/autologin` | hungrywulf | Magic-Link prüfen + Session setzen |
+
+---
+
+## 20. eventwulf-Integration (Eventbuchungen)
+
+eventwulf ist eine separate Next.js-App für Retreat- und Event-Anfragen (z. B. Yoga-Retreats, Seminare). bookingwulf-Kunden können eventwulf über den Superadmin freischalten und werden dann per Magic-Link automatisch eingeloggt.
+
+### Aktivierung (Superadmin)
+
+1. `/admin/hotels/[id]` → Abschnitt „eventwulf" → Button „Aktivieren"
+2. bookingwulf ruft `POST EVENTWULF_URL/api/provision` auf (Bearer: `EVENTWULF_PROVISIONING_SECRET`)
+3. eventwulf erstellt Organisation-Account (idempotent: bestehender wird zurückgegeben; falls `bookingAppKey` fehlt, wird er nachgeneriert) und liefert `{ orgId, bookingAppKey }`
+4. bookingwulf speichert `eventwulfOrgId` + `eventwulfSecret` (= bookingAppKey) am Hotel; `eventwulfEnabled = true`
+5. Nav-Eintrag „Eventbuchungen" erscheint im Kunden-Admin
+
+**Provisioning-E-Mail:** Immer `hotel-{id}@bookingwulf.com` — nie die echte Hotel-E-Mail, um Kollisionen mit eventwulf-Superadmin zu vermeiden.
+
+### Magic-Link-Login
+
+Kunde klickt „Eventbuchungen öffnen" → `/admin/eventwulf`:
+
+1. Server generiert `ts = Date.now()`
+2. `sig = HMAC-SHA256(eventwulfSecret, "autologin:<orgId>:<ts>")` (hex)
+3. Redirect zu `EVENTWULF_URL/api/autologin?orgId=<id>&ts=<ts>&sig=<sig>`
+4. eventwulf prüft: Org existiert, HMAC korrekt, Token ≤ 60 s alt → setzt JWT-Session-Cookie (`yoga_admin_token`), Redirect zu `/admin`
+
+Timing-Safe-Vergleich via `crypto.timingSafeEqual`. Token-TTL: 60 Sekunden.
+
+### Zurück zu bookingwulf
+
+eventwulf-Admin zeigt oben links den Link „← bookingwulf", wenn `org.bookingAppUrl` gesetzt ist. Superadmin sieht den Link nicht (wird über `clientSlug === SUPERADMIN_SLUG` erkannt).
+
+### Deaktivierung
+
+Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/eventwulf` → `eventwulfEnabled = false`. Org-Account in eventwulf bleibt erhalten.
+
+### Datenbankfelder (Hotel)
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `eventwulfEnabled` | Boolean | Feature sichtbar für Kunden |
+| `eventwulfOrgId` | String? | ID der Organization in eventwulf |
+| `eventwulfSecret` | String? | Shared-Secret für HMAC (= `bookingAppKey` in eventwulf) |
+
+### Umgebungsvariablen
+
+| Variable | Wo | Beschreibung |
+|---|---|---|
+| `EVENTWULF_URL` | bookingwulf | Basis-URL der eventwulf-App |
+| `EVENTWULF_PROVISIONING_SECRET` | bookingwulf | Bearer-Token für Provision-Endpoint |
+| `PROVISIONING_SECRET` | eventwulf | Muss mit bookingwulf-Seite übereinstimmen |
+
+### API-Routen
+
+| Route | App | Beschreibung |
+|---|---|---|
+| `POST /api/admin/eventwulf` | bookingwulf | Aktivieren + Provisionieren (Super-Admin) |
+| `DELETE /api/admin/eventwulf` | bookingwulf | Deaktivieren (Super-Admin) |
+| `GET /api/admin/eventwulf-link` | bookingwulf | Magic-Link generieren |
+| `GET /admin/eventwulf` | bookingwulf | Server-Redirect zum Magic-Link |
+| `POST /api/provision` | eventwulf | Org-Account anlegen (Bearer-Auth) |
+| `GET /api/autologin` | eventwulf | Magic-Link prüfen + Session setzen |
 
 ---
 
