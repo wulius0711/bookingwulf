@@ -115,6 +115,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
+      <a href="#admin-content" className="skip-link">Zum Inhalt springen</a>
       <Sidebar
         navGroups={navGroups}
         email={session.email}
@@ -125,7 +126,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
       <div className="admin-main">
         <FeedbackButton />
-        <main style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
+        <main id="admin-content" style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
         <footer
           style={{
             padding: '16px 32px',

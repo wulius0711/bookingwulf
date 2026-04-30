@@ -299,25 +299,25 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
           {/* Form */}
           <form onSubmit={handleSubmit} style={{ padding: '20px', display: 'grid', gap: 18 }}>
             {success ? (
-              <div style={{ textAlign: 'center', padding: '10px', color: '#16a34a', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+              <div role="status" style={{ textAlign: 'center', padding: '10px', color: '#16a34a', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
             ) : (
               <>
                 {/* Row 1: Apartment + Dates */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                   <div style={field}>
-                    <label style={labelStyle}>Apartment</label>
-                    <select name="apartmentId" required style={inputStyle}>
+                    <label htmlFor="cal-c-apt" style={labelStyle}>Apartment</label>
+                    <select id="cal-c-apt" name="apartmentId" required style={inputStyle}>
                       <option value="">Auswählen</option>
                       {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
                     </select>
                   </div>
                   <div style={field}>
-                    <label style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
-                    <input type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selLo} />
+                    <label htmlFor="cal-c-date1" style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
+                    <input id="cal-c-date1" type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selLo} />
                   </div>
                   <div style={field}>
-                    <label style={labelStyle}>{activeTab === 'booking' ? 'Abreise' : 'Bis'}</label>
-                    <input type="date" name={activeTab === 'booking' ? 'departure' : 'endDate'} required style={inputStyle} defaultValue={selHi} />
+                    <label htmlFor="cal-c-date2" style={labelStyle}>{activeTab === 'booking' ? 'Abreise' : 'Bis'}</label>
+                    <input id="cal-c-date2" type="date" name={activeTab === 'booking' ? 'departure' : 'endDate'} required style={inputStyle} defaultValue={selHi} />
                   </div>
                 </div>
 
@@ -325,15 +325,15 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 {activeTab === 'blocked' && (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                     <div style={field}>
-                      <label style={labelStyle}>Grund</label>
-                      <select name="type" style={inputStyle}>
+                      <label htmlFor="cal-c-type" style={labelStyle}>Grund</label>
+                      <select id="cal-c-type" name="type" style={inputStyle}>
                         <option value="manual">Eigennutzung</option>
                         <option value="other">Sonstiges</option>
                       </select>
                     </div>
                     <div style={field}>
-                      <label style={labelStyle}>Notiz</label>
-                      <input type="text" name="note" style={inputStyle} placeholder="Optional" />
+                      <label htmlFor="cal-c-note" style={labelStyle}>Notiz</label>
+                      <input id="cal-c-note" type="text" name="note" style={inputStyle} placeholder="Optional" />
                     </div>
                   </div>
                 )}
@@ -341,16 +341,16 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 {activeTab === 'season' && (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                     <div style={field}>
-                      <label style={labelStyle}>Bezeichnung</label>
-                      <input type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
+                      <label htmlFor="cal-c-sname" style={labelStyle}>Bezeichnung</label>
+                      <input id="cal-c-sname" type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
                     </div>
                     <div style={field}>
-                      <label style={labelStyle}>Preis / Nacht (€)</label>
-                      <input type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
+                      <label htmlFor="cal-c-price" style={labelStyle}>Preis / Nacht (€)</label>
+                      <input id="cal-c-price" type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
                     </div>
                     <div style={field}>
-                      <label style={labelStyle}>Mindestaufenthalt</label>
-                      <input type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
+                      <label htmlFor="cal-c-minstay" style={labelStyle}>Mindestaufenthalt</label>
+                      <input id="cal-c-minstay" type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
                     </div>
                   </div>
                 )}
@@ -359,38 +359,38 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   <>
                     <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr', gap: 8 }}>
                       <div style={field}>
-                        <label style={labelStyle}>Anrede</label>
-                        <select name="salutation" style={inputStyle}>
+                        <label htmlFor="cal-c-sal" style={labelStyle}>Anrede</label>
+                        <select id="cal-c-sal" name="salutation" style={inputStyle}>
                           <option value="Herr">Herr</option>
                           <option value="Frau">Frau</option>
                           <option value="Divers">Divers</option>
                         </select>
                       </div>
                       <div style={field}>
-                        <label style={labelStyle}>Vorname</label>
-                        <input type="text" name="firstname" style={inputStyle} />
+                        <label htmlFor="cal-c-first" style={labelStyle}>Vorname</label>
+                        <input id="cal-c-first" type="text" name="firstname" style={inputStyle} />
                       </div>
                       <div style={field}>
-                        <label style={labelStyle}>Nachname</label>
-                        <input type="text" name="lastname" required style={inputStyle} />
+                        <label htmlFor="cal-c-last" style={labelStyle}>Nachname</label>
+                        <input id="cal-c-last" type="text" name="lastname" required style={inputStyle} />
                       </div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: 8 }}>
                       <div style={field}>
-                        <label style={labelStyle}>E-Mail</label>
-                        <input type="email" name="email" required style={inputStyle} />
+                        <label htmlFor="cal-c-email" style={labelStyle}>E-Mail</label>
+                        <input id="cal-c-email" type="email" name="email" required style={inputStyle} />
                       </div>
                       <div style={field}>
-                        <label style={labelStyle}>Erw.</label>
-                        <input type="number" name="adults" min={1} defaultValue={2} style={{ ...inputStyle, width: 56 }} />
+                        <label htmlFor="cal-c-adults" style={labelStyle}>Erw.</label>
+                        <input id="cal-c-adults" type="number" name="adults" min={1} defaultValue={2} style={{ ...inputStyle, width: 56 }} />
                       </div>
                       <div style={field}>
-                        <label style={labelStyle}>Kinder</label>
-                        <input type="number" name="children" min={0} defaultValue={0} style={{ ...inputStyle, width: 56 }} />
+                        <label htmlFor="cal-c-children" style={labelStyle}>Kinder</label>
+                        <input id="cal-c-children" type="number" name="children" min={0} defaultValue={0} style={{ ...inputStyle, width: 56 }} />
                       </div>
                       <div style={field}>
-                        <label style={labelStyle}>Status</label>
-                        <select name="status" style={inputStyle}>
+                        <label htmlFor="cal-c-status" style={labelStyle}>Status</label>
+                        <select id="cal-c-status" name="status" style={inputStyle}>
                           <option value="booked">Gebucht</option>
                           <option value="new">Neu</option>
                           <option value="answered">Beantwortet</option>
@@ -428,7 +428,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
 
             <div style={{ padding: '16px 16px 20px' }}>
               {editSuccess ? (
-                <div style={{ textAlign: 'center', padding: '12px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+                <div role="status" style={{ textAlign: 'center', padding: '12px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
               ) : selectedItem.kind === 'booking' ? (
                 /* Booking detail */
                 <div style={{ display: 'grid', gap: 12 }}>
@@ -505,25 +505,25 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 }} style={{ display: 'grid', gap: 14 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div style={field}>
-                      <label style={labelStyle}>Von</label>
-                      <input type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
+                      <label htmlFor="cal-e-from" style={labelStyle}>Von</label>
+                      <input id="cal-e-from" type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
                     </div>
                     <div style={field}>
-                      <label style={labelStyle}>Bis</label>
-                      <input type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
+                      <label htmlFor="cal-e-to" style={labelStyle}>Bis</label>
+                      <input id="cal-e-to" type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
                     </div>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div style={field}>
-                      <label style={labelStyle}>Grund</label>
-                      <select name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
+                      <label htmlFor="cal-e-type" style={labelStyle}>Grund</label>
+                      <select id="cal-e-type" name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
                         <option value="manual">Eigennutzung</option>
                         <option value="other">Sonstiges</option>
                       </select>
                     </div>
                     <div style={field}>
-                      <label style={labelStyle}>Notiz</label>
-                      <input type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note} />
+                      <label htmlFor="cal-e-note" style={labelStyle}>Notiz</label>
+                      <input id="cal-e-note" type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note} />
                     </div>
                   </div>
                   {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}

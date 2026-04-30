@@ -419,7 +419,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
             <div style={{ width: LABEL_W, flexShrink: 0, borderRight: '1px solid #e5e7eb' }}>
               <div style={{ height: 40, borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }} />
               {apartments.map((apt, i) => (
-                <div key={apt.id} onClick={() => setCalApt(apt)} className="gantt-apt-label" style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}>
+                <div key={apt.id} onClick={() => setCalApt(apt)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCalApt(apt); } }} role="button" tabIndex={0} className="gantt-apt-label" style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}>
                   {apt.name}
                 </div>
               ))}
@@ -514,8 +514,19 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           key={b.id}
                           data-bar="1"
                           title={label}
+                          role="button"
+                          tabIndex={0}
                           style={{ ...style, background: ps.bg, color: ps.text }}
                           onMouseDown={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setSelectedItem({ kind: 'blocked', data: { ...b, aptName: apt.name } });
+                              setEditError(null);
+                              setEditSuccess(false);
+                              setConfirmDelete(false);
+                            }
+                          }}
                           onClick={() => {
                             setSelectedItem({ kind: 'blocked', data: { ...b, aptName: apt.name } });
                             setEditError(null);
@@ -561,32 +572,32 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
             </div>
             <form onSubmit={handleFormSubmit} style={{ padding: '20px', display: 'grid', gap: 18 }}>
               {formSuccess ? (
-                <div style={{ textAlign: 'center', padding: '10px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+                <div role="status" style={{ textAlign: 'center', padding: '10px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
               ) : (
                 <>
                   <div className="gantt-form-2col">
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
-                      <input type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selection.start} />
+                      <label htmlFor="gantt-c-date1" style={labelStyle}>{activeTab === 'booking' ? 'Anreise' : 'Von'}</label>
+                      <input id="gantt-c-date1" type="date" name={activeTab === 'booking' ? 'arrival' : 'startDate'} required style={inputStyle} defaultValue={selection.start} />
                     </div>
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>{activeTab === 'booking' ? 'Abreise' : 'Bis'}</label>
-                      <input type="date" name={activeTab === 'booking' ? 'departure' : 'endDate'} required style={inputStyle} defaultValue={selection.end} />
+                      <label htmlFor="gantt-c-date2" style={labelStyle}>{activeTab === 'booking' ? 'Abreise' : 'Bis'}</label>
+                      <input id="gantt-c-date2" type="date" name={activeTab === 'booking' ? 'departure' : 'endDate'} required style={inputStyle} defaultValue={selection.end} />
                     </div>
                   </div>
 
                   {activeTab === 'blocked' && (
                     <div className="gantt-form-2col">
                       <div style={fieldStyle}>
-                        <label style={labelStyle}>Grund</label>
-                        <select name="type" style={inputStyle}>
+                        <label htmlFor="gantt-c-type" style={labelStyle}>Grund</label>
+                        <select id="gantt-c-type" name="type" style={inputStyle}>
                           <option value="manual">Eigennutzung</option>
                           <option value="other">Sonstiges</option>
                         </select>
                       </div>
                       <div style={fieldStyle}>
-                        <label style={labelStyle}>Notiz</label>
-                        <input type="text" name="note" style={inputStyle} placeholder="Optional" />
+                        <label htmlFor="gantt-c-note" style={labelStyle}>Notiz</label>
+                        <input id="gantt-c-note" type="text" name="note" style={inputStyle} placeholder="Optional" />
                       </div>
                     </div>
                   )}
@@ -594,16 +605,16 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                   {activeTab === 'season' && (
                     <div className="gantt-form-3col">
                       <div style={fieldStyle}>
-                        <label style={labelStyle}>Bezeichnung</label>
-                        <input type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
+                        <label htmlFor="gantt-c-sname" style={labelStyle}>Bezeichnung</label>
+                        <input id="gantt-c-sname" type="text" name="name" style={inputStyle} placeholder="z. B. Hochsaison" />
                       </div>
                       <div style={fieldStyle}>
-                        <label style={labelStyle}>Preis / Nacht (€)</label>
-                        <input type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
+                        <label htmlFor="gantt-c-price" style={labelStyle}>Preis / Nacht (€)</label>
+                        <input id="gantt-c-price" type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
                       </div>
                       <div style={fieldStyle}>
-                        <label style={labelStyle}>Mindestaufenthalt</label>
-                        <input type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
+                        <label htmlFor="gantt-c-minstay" style={labelStyle}>Mindestaufenthalt</label>
+                        <input id="gantt-c-minstay" type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
                       </div>
                     </div>
                   )}
@@ -612,38 +623,38 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     <>
                       <div className="gantt-form-salutation-row">
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Anrede</label>
-                          <select name="salutation" style={inputStyle}>
+                          <label htmlFor="gantt-c-sal" style={labelStyle}>Anrede</label>
+                          <select id="gantt-c-sal" name="salutation" style={inputStyle}>
                             <option value="Herr">Herr</option>
                             <option value="Frau">Frau</option>
                             <option value="Divers">Divers</option>
                           </select>
                         </div>
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Vorname</label>
-                          <input type="text" name="firstname" style={inputStyle} />
+                          <label htmlFor="gantt-c-first" style={labelStyle}>Vorname</label>
+                          <input id="gantt-c-first" type="text" name="firstname" style={inputStyle} />
                         </div>
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Nachname</label>
-                          <input type="text" name="lastname" required style={inputStyle} />
+                          <label htmlFor="gantt-c-last" style={labelStyle}>Nachname</label>
+                          <input id="gantt-c-last" type="text" name="lastname" required style={inputStyle} />
                         </div>
                       </div>
                       <div className="gantt-form-guest-row">
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>E-Mail</label>
-                          <input type="email" name="email" required style={inputStyle} />
+                          <label htmlFor="gantt-c-email" style={labelStyle}>E-Mail</label>
+                          <input id="gantt-c-email" type="email" name="email" required style={inputStyle} />
                         </div>
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Erw.</label>
-                          <input type="number" name="adults" min={1} defaultValue={2} style={{ ...inputStyle, width: 56 }} />
+                          <label htmlFor="gantt-c-adults" style={labelStyle}>Erw.</label>
+                          <input id="gantt-c-adults" type="number" name="adults" min={1} defaultValue={2} style={{ ...inputStyle, width: 56 }} />
                         </div>
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Kinder</label>
-                          <input type="number" name="children" min={0} defaultValue={0} style={{ ...inputStyle, width: 56 }} />
+                          <label htmlFor="gantt-c-children" style={labelStyle}>Kinder</label>
+                          <input id="gantt-c-children" type="number" name="children" min={0} defaultValue={0} style={{ ...inputStyle, width: 56 }} />
                         </div>
                         <div style={fieldStyle}>
-                          <label style={labelStyle}>Status</label>
-                          <select name="status" style={inputStyle}>
+                          <label htmlFor="gantt-c-status" style={labelStyle}>Status</label>
+                          <select id="gantt-c-status" name="status" style={inputStyle}>
                             <option value="booked">Gebucht</option>
                             <option value="new">Neu</option>
                             <option value="answered">Beantwortet</option>
@@ -697,7 +708,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
             </div>
             <div style={{ padding: '16px 16px 20px' }}>
               {editSuccess ? (
-                <div style={{ textAlign: 'center', padding: '12px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
+                <div role="status" style={{ textAlign: 'center', padding: '12px', color: '#4ade80', fontWeight: 600, fontSize: 14 }}>✓ Gespeichert</div>
               ) : selectedItem.kind === 'booking' ? (
                 <div style={{ display: 'grid', gap: 12 }}>
                   <div style={{ display: 'grid', gap: 6 }}>
@@ -758,25 +769,25 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                 }} style={{ display: 'grid', gap: 14 }}>
                   <div className="gantt-form-2col" style={{ gap: 10 }}>
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>Von</label>
-                      <input type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
+                      <label htmlFor="gantt-e-from" style={labelStyle}>Von</label>
+                      <input id="gantt-e-from" type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
                     </div>
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>Bis</label>
-                      <input type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
+                      <label htmlFor="gantt-e-to" style={labelStyle}>Bis</label>
+                      <input id="gantt-e-to" type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
                     </div>
                   </div>
                   <div className="gantt-form-2col" style={{ gap: 10 }}>
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>Grund</label>
-                      <select name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
+                      <label htmlFor="gantt-e-type" style={labelStyle}>Grund</label>
+                      <select id="gantt-e-type" name="type" style={inputStyle} defaultValue={selectedItem.data.type}>
                         <option value="manual">Eigennutzung</option>
                         <option value="other">Sonstiges</option>
                       </select>
                     </div>
                     <div style={fieldStyle}>
-                      <label style={labelStyle}>Notiz</label>
-                      <input type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note ?? ''} />
+                      <label htmlFor="gantt-e-note" style={labelStyle}>Notiz</label>
+                      <input id="gantt-e-note" type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note ?? ''} />
                     </div>
                   </div>
                   {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}

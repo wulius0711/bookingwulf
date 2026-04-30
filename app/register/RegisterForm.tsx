@@ -64,8 +64,9 @@ export default function RegisterForm() {
             )}
 
             <div>
-              <label style={labelStyle}>Hotelname *</label>
+              <label htmlFor="reg-hotel-name" style={labelStyle}>Hotelname *</label>
               <input
+                id="reg-hotel-name"
                 name="hotelName"
                 required
                 placeholder="z. B. Hotel Alpenblick"
@@ -81,18 +82,18 @@ export default function RegisterForm() {
             <input type="hidden" name="slug" value={slug} />
 
             <div>
-              <label style={labelStyle}>E-Mail (Admin-Login) *</label>
-              <input name="email" type="email" required placeholder="info@hotel.at" style={inputStyle} />
+              <label htmlFor="reg-email" style={labelStyle}>E-Mail (Admin-Login) *</label>
+              <input id="reg-email" name="email" type="email" required placeholder="info@hotel.at" style={inputStyle} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label style={labelStyle}>Passwort *</label>
-                <input name="password" type="password" required placeholder="Min. 8 Zeichen" style={inputStyle} />
+                <label htmlFor="reg-password" style={labelStyle}>Passwort *</label>
+                <input id="reg-password" name="password" type="password" required placeholder="Min. 8 Zeichen" style={inputStyle} />
               </div>
               <div>
-                <label style={labelStyle}>Bestätigen *</label>
-                <input name="confirm" type="password" required placeholder="Wiederholen" style={inputStyle} />
+                <label htmlFor="reg-confirm" style={labelStyle}>Bestätigen *</label>
+                <input id="reg-confirm" name="confirm" type="password" required placeholder="Wiederholen" style={inputStyle} />
               </div>
             </div>
 

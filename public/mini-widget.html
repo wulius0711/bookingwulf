@@ -136,17 +136,17 @@
       <div class="mini-row">
         <div class="mini-field">
           <input type="date" id="miniArrival" placeholder=" " />
-          <span class="field-label">Anreise</span>
+          <label for="miniArrival" class="field-label">Anreise</label>
         </div>
         <div class="mini-field">
           <input type="date" id="miniDeparture" placeholder=" " />
-          <span class="field-label">Abreise</span>
+          <label for="miniDeparture" class="field-label">Abreise</label>
         </div>
         <div class="mini-actions" id="miniActions">
           <!-- buttons rendered by JS based on settings -->
         </div>
       </div>
-      <div class="mini-error" id="miniError">Bitte Anreise und Abreise auswählen.</div>
+      <div class="mini-error" id="miniError" role="alert" aria-live="assertive">Bitte Anreise und Abreise auswählen.</div>
     </div>
 
     <script>
