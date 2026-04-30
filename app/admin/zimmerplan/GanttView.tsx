@@ -113,44 +113,44 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 200 }} />
-      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', overflowY: 'scroll', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
 
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6', flexShrink: 0 }}>
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
-            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-              <select
-                value={aptId}
-                onChange={(e) => setAptId(Number(e.target.value))}
-                style={{ fontSize: 16, fontWeight: 700, color: '#111', border: 'none', background: 'transparent', padding: '0 22px 0 0', cursor: 'pointer', appearance: 'none', outline: 'none', maxWidth: 260 }}
-              >
-                {allApts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: 2, pointerEvents: 'none' }}>
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
+        {/* Sticky header + month nav */}
+        <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1, borderRadius: '20px 20px 0 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
+              <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+                <select
+                  value={aptId}
+                  onChange={(e) => setAptId(Number(e.target.value))}
+                  style={{ fontSize: 16, fontWeight: 700, color: '#111', border: 'none', background: 'transparent', padding: '0 22px 0 0', cursor: 'pointer', appearance: 'none', outline: 'none', maxWidth: 260 }}
+                >
+                  {allApts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </select>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: 2, pointerEvents: 'none' }}>
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
             </div>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap' }}>
+            <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
+            <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
+            <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
+            {!isCurrentMonth && (
+              <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ ...btnStyle, fontSize: 13, marginLeft: 4 }}>Heute</button>
+            )}
+          </div>
         </div>
 
-        {/* Month nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap', flexShrink: 0 }}>
-          <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
-          <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
-          <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
-          {!isCurrentMonth && (
-            <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ ...btnStyle, fontSize: 13, marginLeft: 4 }}>Heute</button>
-          )}
-        </div>
-
-        {/* Calendar grid */}
-        <div style={{ padding: '12px 16px 20px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain', touchAction: 'pan-y', flex: 1, minHeight: 0 }}>
+        {/* Calendar grid — scrolls with the outer container */}
+        <div style={{ padding: '12px 16px 20px' }}>
           {/* Weekday headers */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 4 }}>
             {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(d => (
