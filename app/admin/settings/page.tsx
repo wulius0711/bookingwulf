@@ -644,10 +644,19 @@ export default async function Page({ searchParams }: PageProps) {
               </p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Embed-Code</div>
-              <EmbedCode
-                code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
-              />
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Embed-Code</div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
+                <EmbedCode
+                  code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
+                <EmbedCode
+                  code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="en"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                />
+              </div>
             </div>
           </div>
 

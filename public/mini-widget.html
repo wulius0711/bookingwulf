@@ -138,11 +138,11 @@
       <div class="mini-row">
         <div class="mini-field">
           <input type="date" id="miniArrival" placeholder=" " />
-          <label for="miniArrival" class="field-label">Anreise</label>
+          <label for="miniArrival" class="field-label" id="miniArrivalLabel">Anreise</label>
         </div>
         <div class="mini-field">
           <input type="date" id="miniDeparture" placeholder=" " />
-          <label for="miniDeparture" class="field-label">Abreise</label>
+          <label for="miniDeparture" class="field-label" id="miniDepartureLabel">Abreise</label>
         </div>
         <div class="mini-actions" id="miniActions">
           <!-- buttons rendered by JS based on settings -->
@@ -158,6 +158,12 @@
         const HOTEL_SLUG = qp.get('hotel') || 'default';
         const WIDGET_CONFIG = qp.get('config') || '';
         let BOOKING_PAGE = qp.get('target') || '';
+        const LANG = qp.get('lang') === 'en' ? 'en' : 'de';
+
+        const T = {
+          de: { arrival: 'Anreise', departure: 'Abreise', request: 'Anfrage', book: 'Buchen', error: 'Bitte Anreise und Abreise auswählen.', titleDefault: 'Anfragen & Buchen', titleBook: 'Jetzt buchen', titleRequest: 'Jetzt anfragen' },
+          en: { arrival: 'Arrival', departure: 'Departure', request: 'Enquire', book: 'Book', error: 'Please select arrival and departure.', titleDefault: 'Enquire & Book', titleBook: 'Book now', titleRequest: 'Enquire now' },
+        }[LANG];
 
         let accentColor = null;
         let bgColor = null;
@@ -165,13 +171,18 @@
         let cardRadius = null;
         let enableInstantBooking = false;
         let hideRequestOption = false;
-        let title = 'Anfragen & Buchen';
 
         const arrivalEl = document.getElementById('miniArrival');
         const departureEl = document.getElementById('miniDeparture');
         const actionsEl = document.getElementById('miniActions');
         const errorEl = document.getElementById('miniError');
         const titleEl = document.getElementById('miniTitle');
+
+        // Apply language
+        document.getElementById('miniArrivalLabel').textContent = T.arrival;
+        document.getElementById('miniDepartureLabel').textContent = T.departure;
+        errorEl.textContent = T.error;
+        titleEl.textContent = T.titleDefault;
 
         // Today as min date
         const todayStr = new Date().toISOString().slice(0, 10);
@@ -206,6 +217,7 @@
           const url = new URL(BOOKING_PAGE || (API_BASE + '/widget.html'), window.location.href);
           url.searchParams.set('hotel', HOTEL_SLUG);
           if (WIDGET_CONFIG) url.searchParams.set('config', WIDGET_CONFIG);
+          if (LANG === 'en') url.searchParams.set('lang', 'en');
           url.searchParams.set('arrival', arrivalEl.value);
           url.searchParams.set('departure', departureEl.value);
           url.searchParams.set('type', type);
@@ -222,21 +234,21 @@
           if (!hideRequestOption) {
             const reqBtn = document.createElement('button');
             reqBtn.className = 'mini-btn' + (enableInstantBooking ? ' secondary' : '');
-            reqBtn.textContent = 'Anfrage';
+            reqBtn.textContent = T.request;
             reqBtn.addEventListener('click', () => navigate('request'));
             actionsEl.appendChild(reqBtn);
           }
           if (enableInstantBooking) {
             const bookBtn = document.createElement('button');
             bookBtn.className = 'mini-btn';
-            bookBtn.textContent = 'Buchen';
+            bookBtn.textContent = T.book;
             bookBtn.addEventListener('click', () => navigate('booking'));
             actionsEl.appendChild(bookBtn);
           }
           if (!enableInstantBooking && hideRequestOption) {
             const reqBtn = document.createElement('button');
             reqBtn.className = 'mini-btn';
-            reqBtn.textContent = 'Anfrage';
+            reqBtn.textContent = T.request;
             reqBtn.addEventListener('click', () => navigate('request'));
             actionsEl.appendChild(reqBtn);
           }
@@ -279,11 +291,11 @@
 
             // Update title based on mode
             if (enableInstantBooking && hideRequestOption) {
-              titleEl.textContent = 'Jetzt buchen';
+              titleEl.textContent = T.titleBook;
             } else if (enableInstantBooking) {
-              titleEl.textContent = 'Anfragen & Buchen';
+              titleEl.textContent = T.titleDefault;
             } else {
-              titleEl.textContent = 'Jetzt anfragen';
+              titleEl.textContent = T.titleRequest;
             }
           } catch (e) {
             console.error('Mini widget settings error:', e);
