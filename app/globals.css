@@ -349,17 +349,6 @@ button, a[role="button"], input[type="submit"] {
   color: var(--accent) !important;
 }
 
-@media (max-width: 600px) {
-  .apt-calendar-modal {
-    top: 16px !important;
-    left: 16px !important;
-    right: 16px !important;
-    transform: none !important;
-    width: auto !important;
-    max-height: calc(100dvh - 32px) !important;
-    border-radius: 16px !important;
-  }
-}
 
 .gantt-scroll {
   overflow-x: auto;

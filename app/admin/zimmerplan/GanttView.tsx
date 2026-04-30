@@ -76,12 +76,6 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   const [aptData, setAptData] = useState<AptData>(apt);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, []);
-
   const from = monthStart(monthIso);
   const to = monthEnd(monthIso);
 
@@ -117,12 +111,18 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
 
   return (
-    <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 950 }} />
-      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 951, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain', touchAction: 'pan-y' }}>
+    <div
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 950, overflowY: 'auto', WebkitOverflowScrolling: 'touch', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="apt-calendar-modal"
+        style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 460, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', marginBottom: 24 }}
+        onClick={(e) => e.stopPropagation()}
+      >
 
-        {/* Sticky header + month nav */}
-        <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1, borderRadius: '20px 20px 0 0' }}>
+        {/* Header + month nav */}
+        <div style={{ borderRadius: '20px 20px 0 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
@@ -251,7 +251,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
           })}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
