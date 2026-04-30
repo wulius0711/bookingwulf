@@ -344,6 +344,11 @@ button, a[role="button"], input[type="submit"] {
 }
 
 /* Belegungsplan (Gantt) */
+.gantt-apt-label:hover {
+  background: var(--accent-light) !important;
+  color: var(--accent) !important;
+}
+
 .gantt-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

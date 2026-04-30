@@ -60,6 +60,161 @@ function formatDisplay(iso: string): string {
 const COL_W = 36;
 const ROW_H = 44;
 const LABEL_W = 140;
+
+function weekdayMon(iso: string): number {
+  const dow = new Date(iso + 'T00:00:00Z').getUTCDay();
+  return dow === 0 ? 6 : dow - 1;
+}
+
+type CalItem =
+  | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number }
+  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string };
+
+function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso: string; onClose: () => void }) {
+  const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
+  const from = monthStart(monthIso);
+  const to = monthEnd(monthIso);
+
+  const gridStart = addDays(from, -weekdayMon(from));
+  const gridEnd = addDays(to, 6 - weekdayMon(to));
+
+  const weeks: string[][] = [];
+  let cur = gridStart;
+  while (cur <= gridEnd) {
+    const week: string[] = [];
+    for (let i = 0; i < 7; i++) { week.push(cur); cur = addDays(cur, 1); }
+    weeks.push(week);
+  }
+
+  const isCurrentMonth = monthIso === monthStart(todayIso);
+
+  const items: CalItem[] = [
+    ...apt.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId })),
+    ...apt.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type })),
+  ];
+
+  const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 200 }} />
+      <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>Belegung</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{apt.name}</div>
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        {/* Month nav */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap' }}>
+          <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
+          <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
+          <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
+          {!isCurrentMonth && (
+            <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ ...btnStyle, fontSize: 13, marginLeft: 4 }}>Heute</button>
+          )}
+        </div>
+
+        {/* Calendar grid */}
+        <div style={{ padding: '12px 16px 20px' }}>
+          {/* Weekday headers */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 4 }}>
+            {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(d => (
+              <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9ca3af', paddingBottom: 6 }}>{d}</div>
+            ))}
+          </div>
+
+          {weeks.map((week, wi) => {
+            const weekStart = week[0];
+            const weekEndExcl = addDays(week[6], 1);
+            const weekItems = items.filter(item => item.start < weekEndExcl && item.end > weekStart);
+
+            return (
+              <div key={wi} style={{ marginBottom: 2 }}>
+                {/* Day numbers */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
+                  {week.map(day => {
+                    const inMonth = day >= from && day <= to;
+                    const isToday = day === todayIso;
+                    const dow = new Date(day + 'T00:00:00Z').getUTCDay();
+                    return (
+                      <div key={day} style={{ textAlign: 'center', padding: '3px 0' }}>
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                          width: 26, height: 26, borderRadius: '50%',
+                          fontSize: 12, fontWeight: isToday ? 700 : 400,
+                          color: isToday ? '#fff' : !inMonth ? '#d1d5db' : (dow === 0 || dow === 6) ? '#6366f1' : '#111',
+                          background: isToday ? 'var(--accent)' : 'transparent',
+                        }}>
+                          {parseInt(day.slice(8), 10)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Event bars */}
+                {weekItems.length > 0 && (
+                  <div style={{ position: 'relative', height: weekItems.length * 22, marginBottom: 2 }}>
+                    {weekItems.map((item, idx) => {
+                      const clipStart = item.start > weekStart ? item.start : weekStart;
+                      const clipEndExcl = item.end < weekEndExcl ? item.end : weekEndExcl;
+                      const colStart = daysBetween(weekStart, clipStart);
+                      const colSpan = daysBetween(clipStart, clipEndExcl);
+                      if (colSpan <= 0) return null;
+
+                      const isFirstSeg = item.start >= weekStart;
+                      const isLastSeg = item.end <= weekEndExcl;
+                      const parsed = item.kind === 'blocked' ? parsePlatform(item.note) : null;
+                      const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#fcd34d', text: '#78350f' }) : null;
+                      const bg = item.kind === 'booking' ? '#bbf7d0' : (ps?.bg ?? '#fcd34d');
+                      const fg = item.kind === 'booking' ? '#166534' : (ps?.text ?? '#78350f');
+                      const label = item.kind === 'booking'
+                        ? item.label
+                        : parsed ? parsed.platform + (parsed.rest ? ` · ${parsed.rest}` : '') : (item.note || 'Gesperrt');
+
+                      return (
+                        <div
+                          key={`${item.kind}-${item.id}`}
+                          title={label}
+                          onClick={item.kind === 'booking' ? () => { window.location.href = `/admin/requests/${item.requestId}`; } : undefined}
+                          style={{
+                            position: 'absolute',
+                            top: idx * 22,
+                            left: `calc(${colStart} * (100% / 7) + 1px)`,
+                            width: `calc(${colSpan} * (100% / 7) - 2px)`,
+                            height: 20,
+                            background: bg, color: fg,
+                            borderRadius: `${isFirstSeg ? 10 : 2}px ${isLastSeg ? 10 : 2}px ${isLastSeg ? 10 : 2}px ${isFirstSeg ? 10 : 2}px`,
+                            fontSize: 10, fontWeight: 600,
+                            padding: '0 6px',
+                            display: 'flex', alignItems: 'center',
+                            overflow: 'hidden', whiteSpace: 'nowrap',
+                            cursor: item.kind === 'booking' ? 'pointer' : 'default',
+                          }}
+                        >
+                          {isFirstSeg ? label : ''}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
 type TabType = 'blocked' | 'season' | 'booking';
@@ -85,6 +240,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
   const [apartments, setApartments] = useState<AptData[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [calApt, setCalApt] = useState<AptData | null>(null);
 
   // Drag state
   const [isDragging, setIsDragging] = useState(false);
@@ -213,7 +369,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
             <div style={{ width: LABEL_W, flexShrink: 0, borderRight: '1px solid #e5e7eb' }}>
               <div style={{ height: 40, borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }} />
               {apartments.map((apt, i) => (
-                <div key={apt.id} style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div key={apt.id} onClick={() => setCalApt(apt)} className="gantt-apt-label" style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}>
                   {apt.name}
                 </div>
               ))}
@@ -459,6 +615,9 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
           </div>
         </>
       )}
+
+      {/* ── Apartment calendar ── */}
+      {calApt && <ApartmentCalendar apt={calApt} todayIso={todayIso} onClose={() => setCalApt(null)} />}
 
       {/* ── Bar detail / edit popup ── */}
       {selectedItem && (
