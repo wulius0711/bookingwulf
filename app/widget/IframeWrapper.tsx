@@ -45,6 +45,7 @@ export default function IframeWrapper({ hotel }: { hotel: string }) {
     <iframe
       ref={iframeRef}
       src={`/widget.html?hotel=${hotel}`}
+      title="Buchungsformular"
       scrolling="no"
       style={{
         width: '100%',

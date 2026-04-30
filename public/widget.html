@@ -169,6 +169,19 @@
         outline: none;
       }
 
+      button:focus-visible,
+      a:focus-visible,
+      [tabindex="0"]:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+
+      .cal-day:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 0;
+      }
+
       input::placeholder,
       textarea::placeholder {
         color: var(--muted-2);
@@ -4217,6 +4230,7 @@
                       type="button"
                       class="apt-amenities-toggle ${amenitiesExpanded ? 'open' : ''}"
                       data-toggle-amenities="${ap.id}"
+                      aria-expanded="${amenitiesExpanded ? 'true' : 'false'}"
                     >
                       <span class="apt-amenities-toggle-label">${t('apt_amenities_toggle')}</span>
                       <span class="apt-amenities-toggle-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
@@ -4304,7 +4318,7 @@
                 </div>
                 ${
                   description.length > 140
-                    ? `<button type="button" class="apt-more" data-toggle-desc="${ap.id}">
+                    ? `<button type="button" class="apt-more" data-toggle-desc="${ap.id}" aria-expanded="${expanded ? 'true' : 'false'}">
                         ${expanded ? t('apt_less') : t('apt_more')}
                       </button>`
                     : ''
@@ -4350,6 +4364,7 @@
               const desc = btn.previousElementSibling;
               if (desc) desc.classList.toggle('is-clamped', !isExpanded);
               btn.textContent = isExpanded ? t('apt_less') : t('apt_more');
+              btn.setAttribute('aria-expanded', String(isExpanded));
             });
           });
 
