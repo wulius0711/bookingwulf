@@ -356,7 +356,7 @@ button, a[role="button"], input[type="submit"] {
     right: 16px !important;
     transform: none !important;
     width: auto !important;
-    height: calc(100vh - 32px) !important;
+    height: calc(100dvh - 32px) !important;
     max-height: none !important;
     border-radius: 16px !important;
   }

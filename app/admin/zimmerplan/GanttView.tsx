@@ -150,7 +150,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         </div>
 
         {/* Calendar grid */}
-        <div style={{ padding: '12px 16px 20px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch', flex: 1, minHeight: 0 }}>
+        <div style={{ padding: '12px 16px 20px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain', touchAction: 'pan-y', flex: 1, minHeight: 0 }}>
           {/* Weekday headers */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 4 }}>
             {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(d => (
