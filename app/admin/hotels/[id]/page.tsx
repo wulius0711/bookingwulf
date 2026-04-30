@@ -9,29 +9,6 @@ export const dynamic = 'force-dynamic';
 
 type PageProps = { params: Promise<{ id: string }> };
 
-const row: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '160px 1fr',
-  alignItems: 'start',
-  gap: 16,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#555',
-  paddingTop: 10,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 12px',
-  border: '1px solid #d1d5db',
-  borderRadius: 8,
-  fontSize: 14,
-  background: '#fff',
-  color: '#111',
-};
-
 export default async function EditHotelPage({ params }: PageProps) {
   const session = await verifySession();
   if (session.role !== 'super_admin') redirect('/admin');
@@ -53,7 +30,6 @@ export default async function EditHotelPage({ params }: PageProps) {
 
   async function updateHotel(formData: FormData) {
     'use server';
-
     const session = await verifySession();
     if (session.role !== 'super_admin') return;
 
@@ -66,136 +42,112 @@ export default async function EditHotelPage({ params }: PageProps) {
 
     if (!name || !slug) throw new Error('Name und Slug sind erforderlich.');
 
-    const conflict = await prisma.hotel.findFirst({
-      where: { slug, NOT: { id: hotelId } },
-    });
+    const conflict = await prisma.hotel.findFirst({ where: { slug, NOT: { id: hotelId } } });
     if (conflict) throw new Error(`Slug „${slug}" ist bereits vergeben.`);
 
-    await prisma.hotel.update({
-      where: { id: hotelId },
-      data: { name, slug, email, phone, accentColor, isActive },
-    });
-
+    await prisma.hotel.update({ where: { id: hotelId }, data: { name, slug, email, phone, accentColor, isActive } });
     redirect('/admin/hotels');
   }
 
+  const s = {
+    page: { padding: '32px 40px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 820 } satisfies React.CSSProperties,
+    backLink: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#6b7280', textDecoration: 'none', marginBottom: 20 } satisfies React.CSSProperties,
+    header: { marginBottom: 28 } satisfies React.CSSProperties,
+    title: { fontSize: 22, fontWeight: 700, color: '#111', margin: 0 } satisfies React.CSSProperties,
+    sub: { fontSize: 13, color: '#6b7280', marginTop: 4 } satisfies React.CSSProperties,
+    card: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '24px 28px', marginBottom: 24 } satisfies React.CSSProperties,
+    cardTitle: { fontSize: 13, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: 20 },
+    field: { display: 'grid', gridTemplateColumns: '140px 1fr', alignItems: 'start', gap: 12, marginBottom: 16 } satisfies React.CSSProperties,
+    label: { fontSize: 14, color: '#374151', paddingTop: 9, fontWeight: 500 } satisfies React.CSSProperties,
+    input: { width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', boxSizing: 'border-box' as const },
+    hint: { fontSize: 12, color: '#9ca3af', marginTop: 4 } satisfies React.CSSProperties,
+    btnPrimary: { padding: '9px 20px', borderRadius: 8, background: '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' } satisfies React.CSSProperties,
+    btnSecondary: { padding: '9px 20px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 14, fontWeight: 500, textDecoration: 'none', display: 'inline-block' } satisfies React.CSSProperties,
+    integGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 } satisfies React.CSSProperties,
+    integCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '20px 24px' } satisfies React.CSSProperties,
+    integIcon: { width: 36, height: 36, borderRadius: 10, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', marginBottom: 12 } satisfies React.CSSProperties,
+    integName: { fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 } satisfies React.CSSProperties,
+    integDesc: { fontSize: 13, color: '#6b7280', marginBottom: 4 } satisfies React.CSSProperties,
+    integId: { fontSize: 11, color: '#9ca3af', fontFamily: 'monospace', marginBottom: 16, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const } satisfies React.CSSProperties,
+  };
+
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 700 }}>
-      <h1 style={{ marginBottom: 8, fontSize: 26, color: '#111' }}>Hotel bearbeiten</h1>
-      <p style={{ marginBottom: 30, fontSize: 13, color: '#666' }}>{hotel.name}</p>
+    <main style={s.page}>
+      <a href="/admin/hotels" style={s.backLink}>← Hotels</a>
 
-      <form action={updateHotel} style={{ display: 'grid', gap: 18 }}>
-        <div style={row}>
-          <label style={labelStyle}>Name *</label>
-          <input name="name" required defaultValue={hotel.name} style={inputStyle} />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Slug *</label>
-          <div>
-            <input
-              name="slug"
-              required
-              defaultValue={hotel.slug}
-              style={inputStyle}
-            />
-            <div style={{ marginTop: 6, fontSize: 12, color: '#888' }}>
-              Kleinbuchstaben, Bindestriche — wird als URL-Kennung verwendet.
-            </div>
-          </div>
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>E-Mail</label>
-          <input
-            name="email"
-            type="email"
-            defaultValue={hotel.email ?? ''}
-            style={inputStyle}
-            placeholder="info@hotel.at"
-          />
-        </div>
-
-        <div style={row}>
-          <label style={labelStyle}>Telefon</label>
-          <input
-            name="phone"
-            defaultValue={hotel.phone ?? ''}
-            style={inputStyle}
-            placeholder="+43 1 234 5678"
-          />
-        </div>
-
-        <ColorField
-          label="Akzentfarbe"
-          name="accentColor"
-          defaultValue={hotel.accentColor ?? '#111827'}
-          labelStyle={labelStyle}
-        />
-
-        <div style={{ ...row, alignItems: 'center' }}>
-          <label style={labelStyle}>Status</label>
-          <label style={{ display: 'flex', gap: 8, alignItems: 'center', paddingTop: 8 }}>
-            <input type="checkbox" name="isActive" defaultChecked={hotel.isActive} />
-            Aktiv
-          </label>
-        </div>
-
-        <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-          <button
-            type="submit"
-            style={{
-              padding: '12px 20px',
-              borderRadius: 8,
-              background: '#111',
-              color: '#fff',
-              border: 'none',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Speichern
-          </button>
-          <a
-            href="/admin/hotels"
-            style={{
-              padding: '12px 20px',
-              borderRadius: 8,
-              border: '1px solid #d1d5db',
-              background: '#fff',
-              color: '#111',
-              fontSize: 14,
-              textDecoration: 'none',
-            }}
-          >
-            Abbrechen
-          </a>
-        </div>
-      </form>
-
-      {/* hungrywulf Integration */}
-      <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #e5e7eb' }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 6 }}>hungrywulf</h2>
-        <p style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>
-          Tischreservierungs-App für Restaurants.{' '}
-          {hotel.hungrywulfRestaurantId && (
-            <span style={{ color: '#6b7280' }}>Restaurant-ID: <code style={{ fontSize: 12 }}>{hotel.hungrywulfRestaurantId}</code></span>
-          )}
-        </p>
-        <HungrywulfToggle hotelId={hotel.id} enabled={hotel.hungrywulfEnabled} />
+      <div style={s.header}>
+        <h1 style={s.title}>Hotel bearbeiten</h1>
+        <p style={s.sub}>{hotel.name} · ID {hotel.id}</p>
       </div>
 
-      {/* eventwulf Integration */}
-      <div style={{ marginTop: 32, paddingTop: 32, borderTop: '1px solid #e5e7eb' }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 6 }}>eventwulf</h2>
-        <p style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>
-          Eventbuchungs-App.{' '}
-          {hotel.eventwulfOrgId && (
-            <span style={{ color: '#6b7280' }}>Org-ID: <code style={{ fontSize: 12 }}>{hotel.eventwulfOrgId}</code></span>
+      {/* Form card */}
+      <div style={s.card}>
+        <div style={s.cardTitle}>Stammdaten</div>
+        <form action={updateHotel}>
+          <div style={s.field}>
+            <label style={s.label}>Name *</label>
+            <input name="name" required defaultValue={hotel.name} style={s.input} />
+          </div>
+
+          <div style={s.field}>
+            <label style={s.label}>Slug *</label>
+            <div>
+              <input name="slug" required defaultValue={hotel.slug} style={s.input} />
+              <p style={s.hint}>Kleinbuchstaben, Bindestriche — URL-Kennung</p>
+            </div>
+          </div>
+
+          <div style={s.field}>
+            <label style={s.label}>E-Mail</label>
+            <input name="email" type="email" defaultValue={hotel.email ?? ''} style={s.input} placeholder="info@hotel.at" />
+          </div>
+
+          <div style={s.field}>
+            <label style={s.label}>Telefon</label>
+            <input name="phone" defaultValue={hotel.phone ?? ''} style={s.input} placeholder="+43 1 234 5678" />
+          </div>
+
+          <div style={s.field}>
+            <ColorField label="Akzentfarbe" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={s.label} />
+          </div>
+
+          <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }}>
+            <label style={s.label}>Status</label>
+            <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: '#374151' }}>
+              <input type="checkbox" name="isActive" defaultChecked={hotel.isActive} />
+              Aktiv
+            </label>
+          </div>
+
+          <div style={{ display: 'flex', gap: 10, marginTop: 24, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>
+            <button type="submit" style={s.btnPrimary}>Speichern</button>
+            <a href="/admin/hotels" style={s.btnSecondary}>Abbrechen</a>
+          </div>
+        </form>
+      </div>
+
+      {/* Integrations */}
+      <div style={s.cardTitle}>Integrationen</div>
+      <div style={s.integGrid}>
+        <div style={s.integCard}>
+          <div style={s.integIcon}>🍽</div>
+          <div style={s.integName}>hungrywulf</div>
+          <div style={s.integDesc}>Tischreservierungs-App für Restaurants</div>
+          {hotel.hungrywulfRestaurantId && (
+            <span style={s.integId}>ID: {hotel.hungrywulfRestaurantId}</span>
           )}
-        </p>
-        <EventwulfToggle hotelId={hotel.id} enabled={hotel.eventwulfEnabled} />
+          <HungrywulfToggle hotelId={hotel.id} enabled={hotel.hungrywulfEnabled} />
+        </div>
+
+        <div style={s.integCard}>
+          <div style={s.integIcon}>📅</div>
+          <div style={s.integName}>eventwulf</div>
+          <div style={s.integDesc}>Eventbuchungs-App</div>
+          {hotel.eventwulfOrgId && (
+            <span style={s.integId}>ID: {hotel.eventwulfOrgId}</span>
+          )}
+          <EventwulfToggle hotelId={hotel.id} enabled={hotel.eventwulfEnabled} />
+        </div>
       </div>
     </main>
   );
