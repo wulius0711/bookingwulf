@@ -113,10 +113,10 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 200 }} />
-      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' }}>
+      <div className="apt-calendar-modal" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#fff', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', zIndex: 201, maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6', flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
             <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
@@ -140,7 +140,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         </div>
 
         {/* Month nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap', flexShrink: 0 }}>
           <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
           <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
           <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
@@ -150,7 +150,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         </div>
 
         {/* Calendar grid */}
-        <div style={{ padding: '12px 16px 20px' }}>
+        <div style={{ padding: '12px 16px 20px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch', flex: 1, minHeight: 0 }}>
           {/* Weekday headers */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 4 }}>
             {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(d => (
