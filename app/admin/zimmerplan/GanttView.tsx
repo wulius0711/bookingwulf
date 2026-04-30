@@ -72,8 +72,22 @@ type CalItem =
 
 function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso: string; onClose: () => void }) {
   const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
+  const [aptData, setAptData] = useState<AptData>(apt);
+  const [loading, setLoading] = useState(false);
+
   const from = monthStart(monthIso);
   const to = monthEnd(monthIso);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/admin/belegungsplan?from=${from}&to=${to}`)
+      .then(r => r.json())
+      .then(d => {
+        const found = (d.apartments ?? []).find((a: AptData) => a.id === apt.id);
+        if (found) setAptData(found);
+        setLoading(false);
+      });
+  }, [from, to]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gridStart = addDays(from, -weekdayMon(from));
   const gridEnd = addDays(to, 6 - weekdayMon(to));
@@ -89,8 +103,8 @@ function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso:
   const isCurrentMonth = monthIso === monthStart(todayIso);
 
   const items: CalItem[] = [
-    ...apt.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId })),
-    ...apt.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type })),
+    ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId })),
+    ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type })),
   ];
 
   const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
@@ -131,6 +145,7 @@ function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso:
               <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9ca3af', paddingBottom: 6 }}>{d}</div>
             ))}
           </div>
+          {loading && <div style={{ textAlign: 'center', padding: '24px 0', color: '#9ca3af', fontSize: 13 }}>Lädt…</div>}
 
           {weeks.map((week, wi) => {
             const weekStart = week[0];
