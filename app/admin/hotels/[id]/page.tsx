@@ -120,7 +120,7 @@ export default async function EditHotelPage({ params }: PageProps) {
             </label>
           </div>
 
-          <div style={{ display: 'flex', gap: 10, marginTop: 24, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>
             <button type="submit" style={s.btnPrimary}>Speichern</button>
             <a href="/admin/hotels" style={s.btnSecondary}>Abbrechen</a>
           </div>
