@@ -107,7 +107,10 @@ export default async function EditHotelPage({ params }: PageProps) {
             <input name="phone" defaultValue={hotel.phone ?? ''} style={s.input} placeholder="+43 1 234 5678" />
           </div>
 
-          <ColorField label="Akzentfarbe" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={s.label} />
+          <div style={s.field}>
+            <span style={s.label}>Akzentfarbe</span>
+            <ColorField label="" name="accentColor" defaultValue={hotel.accentColor ?? '#111827'} labelStyle={{ display: 'none' }} />
+          </div>
 
           <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }}>
             <label style={s.label}>Status</label>
