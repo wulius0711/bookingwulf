@@ -15,6 +15,8 @@ export default function AdminChatWidget() {
   const [planError, setPlanError] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     try {
@@ -32,6 +34,23 @@ export default function AdminChatWidget() {
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open]);
+
+  useEffect(() => {
+    if (open) {
+      inputRef.current?.focus();
+    } else {
+      triggerRef.current?.focus();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false); }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   function clearChat() {
     setMessages([]);
@@ -79,8 +98,11 @@ export default function AdminChatWidget() {
     <>
       {/* Floating button */}
       <button
+        ref={triggerRef}
         onClick={() => setOpen((o) => !o)}
         aria-label="Assistent öffnen"
+        aria-expanded={open}
+        aria-controls="chat-panel"
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 52, height: 52, borderRadius: '50%',
@@ -103,7 +125,12 @@ export default function AdminChatWidget() {
 
       {/* Chat panel */}
       {open && (
-        <div style={{
+        <div
+          id="chat-panel"
+          role="dialog"
+          aria-label="bookingwulf Assistent"
+          aria-modal="false"
+          style={{
           position: 'fixed', bottom: 92, right: 28, zIndex: 9998,
           width: 360, maxWidth: 'calc(100vw - 56px)',
           background: '#fff', borderRadius: 16,
@@ -181,6 +208,7 @@ export default function AdminChatWidget() {
               {/* Input */}
               <div style={{ padding: '10px 12px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: 8 }}>
                 <input
+                  ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 
 type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number };
 type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string };
@@ -76,6 +77,8 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   const [aptData, setAptData] = useState<AptData>(apt);
   const [loading, setLoading] = useState(false);
 
+  const aptCalRef = useFocusTrap(true, onClose);
+
   const from = monthStart(monthIso);
   const to = monthEnd(monthIso);
 
@@ -112,10 +115,15 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
 
   return (
     <div
+      aria-hidden="true"
       style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 950, overflowY: 'auto', WebkitOverflowScrolling: 'touch', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
+        ref={aptCalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="apt-cal-title"
         className="apt-calendar-modal"
         style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 460, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', marginBottom: 24 }}
         onClick={(e) => e.stopPropagation()}
@@ -125,7 +133,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         <div style={{ borderRadius: '20px 20px 0 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
+              <div id="apt-cal-title" style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
                 <select
                   value={aptId}
@@ -139,7 +147,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                 </svg>
               </div>
             </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
+            <button onClick={onClose} aria-label="Schließen" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
@@ -387,6 +395,9 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
 
   const totalW = days.length * COL_W;
 
+  const createModalRef = useFocusTrap(!!selection, () => { setSelection(null); setFormError(null); setFormSuccess(false); });
+  const editModalRef   = useFocusTrap(!!selectedItem, () => setSelectedItem(null));
+
   return (
     <div style={{ position: 'relative' }}>
       {/* Month nav */}
@@ -527,11 +538,11 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {/* ── Create popup (after drag) ── */}
       {selection && (
         <>
-          <div onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div aria-hidden="true" onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+                <div id="gantt-create-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
                   {formatDisplay(selection.start)}{selection.start !== selection.end ? ` – ${formatDisplay(selection.end)}` : ''}
                 </div>
                 <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{selection.aptName}</div>
@@ -545,7 +556,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     </button>
                   );
                 })}
-                <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+                <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} aria-label="Schließen" style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
               </div>
             </div>
             <form onSubmit={handleFormSubmit} style={{ padding: '20px', display: 'grid', gap: 18 }}>
@@ -642,7 +653,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     </>
                   )}
 
-                  {formError && <div style={{ fontSize: 12, color: '#f87171' }}>{formError}</div>}
+                  {formError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{formError}</div>}
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <button type="submit" style={{ padding: '7px 18px', background: TAB_COLORS[activeTab], color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                       Speichern
@@ -676,13 +687,13 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {/* ── Bar detail / edit popup ── */}
       {selectedItem && (
         <>
-          <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div aria-hidden="true" onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+              <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
                 {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
               </span>
-              <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+              <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
             <div style={{ padding: '16px 16px 20px' }}>
               {editSuccess ? (
@@ -768,7 +779,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       <input type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note ?? ''} />
                     </div>
                   </div>
-                  {editError && <div style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
+                  {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
                     {!confirmDelete ? (
                       <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>

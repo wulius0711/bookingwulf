@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useTransition } from 'react';
+import { useState, useCallback, useTransition, useRef } from 'react';
+import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -186,6 +187,9 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
   const tip = isDragging ? dragEnd : selection?.end;
   const [selLo, selHi] = anchor && tip ? compareDates(anchor, tip) : [null, null];
 
+  const createModalRef = useFocusTrap(!isDragging && !!selLo && !!selHi, closePopup);
+  const editModalRef   = useFocusTrap(!!selectedItem, () => setSelectedItem(null));
+
   return (
     <div style={{ position: 'relative' }}>
       <div
@@ -272,11 +276,11 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
       {/* Backdrop + modal */}
       {selLo && selHi && !isDragging && (
         <>
-          <div onClick={closePopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 620, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div aria-hidden="true" onClick={closePopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 620, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+            <span id="cal-create-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
               {formatDisplay(selLo)}{selLo !== selHi ? ` – ${formatDisplay(selHi)}` : ''}
             </span>
             <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
@@ -288,7 +292,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   </button>
                 );
               })}
-              <button onClick={closePopup} style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+              <button onClick={closePopup} aria-label="Schließen" style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
           </div>
 
@@ -396,7 +400,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   </>
                 )}
 
-                {error && <div style={{ fontSize: 12, color: '#dc2626' }}>{error}</div>}
+                {error && <div role="alert" style={{ fontSize: 12, color: '#dc2626' }}>{error}</div>}
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <button type="submit" disabled={isPending} style={{ padding: '7px 18px', background: TAB_COLORS[activeTab], color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: isPending ? 'wait' : 'pointer', opacity: isPending ? 0.7 : 1 }}>
@@ -412,14 +416,14 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
       {/* Edit / delete popup */}
       {selectedItem && (
         <>
-          <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 480, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div aria-hidden="true" onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 480, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+              <span id="cal-edit-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
                 {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'}
               </span>
-              <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+              <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
 
             <div style={{ padding: '16px 16px 20px' }}>
@@ -441,7 +445,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       </div>
                     ))}
                   </div>
-                  {editError && <div style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
+                  {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', paddingTop: 4 }}>
                     <a href={`/admin/requests`} style={{ fontSize: 13, color: '#94a3b8', textDecoration: 'underline', lineHeight: '32px' }}>Zur Anfragenübersicht →</a>
                     {!confirmDelete ? (
@@ -522,7 +526,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       <input type="text" name="note" style={inputStyle} defaultValue={selectedItem.data.note} />
                     </div>
                   </div>
-                  {editError && <div style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
+                  {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
                     {!confirmDelete ? (
                       <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
