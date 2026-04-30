@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
 import { ColorField } from '@/app/admin/settings/color-field';
+import HungrywulfToggle from './HungrywulfToggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,14 @@ export default async function EditHotelPage({ params }: PageProps) {
   const hotelId = parseInt(id, 10);
   if (!Number.isInteger(hotelId)) notFound();
 
-  const hotel = await prisma.hotel.findUnique({ where: { id: hotelId } });
+  const hotel = await prisma.hotel.findUnique({
+    where: { id: hotelId },
+    select: {
+      id: true, name: true, slug: true, email: true, phone: true,
+      accentColor: true, isActive: true,
+      hungrywulfEnabled: true, hungrywulfRestaurantId: true,
+    },
+  });
   if (!hotel) notFound();
 
   async function updateHotel(formData: FormData) {
@@ -163,6 +171,18 @@ export default async function EditHotelPage({ params }: PageProps) {
           </a>
         </div>
       </form>
+
+      {/* hungrywulf Integration */}
+      <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid #e5e7eb' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 600, color: '#111', marginBottom: 6 }}>hungrywulf</h2>
+        <p style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>
+          Tischreservierungs-App für Restaurants.{' '}
+          {hotel.hungrywulfRestaurantId && (
+            <span style={{ color: '#6b7280' }}>Restaurant-ID: <code style={{ fontSize: 12 }}>{hotel.hungrywulfRestaurantId}</code></span>
+          )}
+        </p>
+        <HungrywulfToggle hotelId={hotel.id} enabled={hotel.hungrywulfEnabled} />
+      </div>
     </main>
   );
 }

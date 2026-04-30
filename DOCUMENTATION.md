@@ -124,6 +124,9 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 | accentColor | String? | Globale Akzentfarbe (Fallback) |
 | bookingTermsUrl | String? | AGB-Link im Widget |
 | privacyPolicyUrl | String? | Datenschutz-Link im Widget |
+| hungrywulfEnabled | Boolean | hungrywulf-Tischreservierung freigeschaltet (Super-Admin) |
+| hungrywulfRestaurantId | String? | CUID des Restaurant-Accounts in hungrywulf |
+| hungrywulfSecret | String? | HMAC-Shared-Secret für Magic-Link-Auth (= bookingAppKey in hungrywulf) |
 
 ### HotelSettings *(UI-Konfiguration)*
 
@@ -553,6 +556,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/widget-configs` | Pro | Mehrere Widget-Konfigurationen |
 | `/admin/settings` | Alle | Hotel-Info, Branding, Widget-Optionen |
 | `/admin/nuki` | Pro | Nuki-Verbindung einrichten, Schlösser anzeigen |
+| `/admin/hungrywulf` | — (Super-Admin-Freischaltung) | Redirect → automatischer Magic-Link-Login in hungrywulf |
 | `/admin/analytics` | Business | Buchungsstatistiken |
 | `/admin/billing` | Alle | Abonnement, Upgrade, Kündigung |
 | `/admin/help` | Alle | Handbuch |
@@ -565,6 +569,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/users` | Alle Nutzer verwalten |
 | `/admin/feedback` | Eingegangene Feedback-Meldungen löschen |
 | `/admin/outreach` | Outreach-CRM — Leads verwalten, E-Mails versenden |
+| `/admin/hotels/[id]` → hungrywulf-Sektion | hungrywulf per Hotel aktivieren/deaktivieren (provisioniert automatisch) |
 
 ### Feedback-System
 
@@ -745,6 +750,8 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/admin/outreach/[id]/send` | POST | Outreach-E-Mail via Zoho SMTP senden (Super-Admin) |
 | `/api/admin/help-chat` | POST | KI-Assistent Frage stellen (Pro+) |
 | `/api/admin/hotel-color` | GET | Accent-Farbe des Hotels abrufen |
+| `/api/admin/hungrywulf` | POST / DELETE | hungrywulf für Hotel aktivieren (inkl. Provisionierung) / deaktivieren (Super-Admin) |
+| `/api/admin/hungrywulf-link` | GET | Signierten Magic-Link für hungrywulf-Login generieren (60 s TTL) |
 
 ### Sicherheitsschichten
 
@@ -788,6 +795,8 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `VERCEL_URL` | Automatisch von Vercel gesetzt |
 | `ZOHO_SMTP_USER` | Zoho-Absenderadresse für Outreach-Mails (z.B. `support@bookingwulf.com`) |
 | `ZOHO_SMTP_PASS` | Zoho App-Passwort (Zoho → Einstellungen → Sicherheit → App-Passwörter) |
+| `HUNGRYWULF_URL` | Basis-URL der hungrywulf-App (z.B. `https://hungrywulf.com`) |
+| `HUNGRYWULF_PROVISIONING_SECRET` | Gemeinsames Secret für automatische Account-Erstellung in hungrywulf |
 
 ---
 
@@ -921,6 +930,61 @@ Booking.com ←→ Beds24 ↗
 ### Sync-Frequenz
 
 Airbnb verarbeitet eingehende Sperrzeiten mit ~1–5 Min. Eigendelay. End-to-End circa 1–2 Minuten (vs. 30 Minuten via iCal). Doppelbuchungsrisiko nahezu null.
+
+---
+
+## 19. hungrywulf-Integration (Tischreservierungen)
+
+hungrywulf ist eine separate Next.js-App für Tischreservierungen in Restaurants. bookingwulf-Kunden können hungrywulf über den Superadmin freigeschaltet bekommen und werden dann per Magic-Link automatisch eingeloggt.
+
+### Aktivierung (Superadmin)
+
+1. `/admin/hotels/[id]` → Abschnitt „hungrywulf" → Button „Aktivieren"
+2. bookingwulf ruft `POST HUNGRYWULF_URL/api/provision` auf (Bearer: `HUNGRYWULF_PROVISIONING_SECRET`)
+3. hungrywulf erstellt Restaurant-Account (idempotent: bestehendes wird zurückgegeben) und liefert `{ restaurantId, bookingAppKey }`
+4. bookingwulf speichert `hungrywulfRestaurantId` + `hungrywulfSecret` (= bookingAppKey) am Hotel
+5. Feld `hungrywulfEnabled = true` → Nav-Eintrag „Tischreservierungen" erscheint im Kunden-Admin
+
+### Magic-Link-Login
+
+Der Kunde klickt im bookingwulf-Admin auf „Tischreservierungen" → `/admin/hungrywulf`:
+
+1. Server generiert `ts = Date.now()`
+2. `sig = HMAC-SHA256(hungrywulfSecret, "autologin:<restaurantId>:<ts>")` (hex)
+3. Redirect zu `HUNGRYWULF_URL/api/autologin?rid=<id>&ts=<ts>&sig=<sig>`
+4. hungrywulf prüft: Restaurant existiert, HMAC korrekt, Token ≤ 60 s alt → setzt JWT-Session-Cookie, Redirect zu `/admin`
+
+Timing-Safe-Vergleich via `crypto.timingSafeEqual`. Token-TTL: 60 Sekunden.
+
+### Deaktivierung
+
+Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/hungrywulf` → `hungrywulfEnabled = false`. Restaurant-Account in hungrywulf bleibt erhalten (Daten gehen nicht verloren).
+
+### Datenbankfelder (Hotel)
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `hungrywulfEnabled` | Boolean | Feature sichtbar für Kunden |
+| `hungrywulfRestaurantId` | String? | CUID des Restaurant-Datensatzes in hungrywulf |
+| `hungrywulfSecret` | String? | Shared-Secret für HMAC (= `bookingAppKey` in hungrywulf) |
+
+### Umgebungsvariablen
+
+| Variable | Wo | Beschreibung |
+|---|---|---|
+| `HUNGRYWULF_URL` | bookingwulf | Basis-URL der hungrywulf-App |
+| `HUNGRYWULF_PROVISIONING_SECRET` | bookingwulf | Bearer-Token für Provision-Endpoint |
+| `PROVISIONING_SECRET` | hungrywulf | Muss mit bookingwulf-Seite übereinstimmen |
+
+### API-Routen
+
+| Route | App | Beschreibung |
+|---|---|---|
+| `POST /api/admin/hungrywulf` | bookingwulf | Aktivieren + Provisionieren (Super-Admin) |
+| `DELETE /api/admin/hungrywulf` | bookingwulf | Deaktivieren (Super-Admin) |
+| `GET /api/admin/hungrywulf-link` | bookingwulf | Magic-Link generieren |
+| `POST /api/provision` | hungrywulf | Restaurant-Account anlegen (Bearer-Auth) |
+| `GET /api/autologin` | hungrywulf | Magic-Link prüfen + Session setzen |
 
 ---
 

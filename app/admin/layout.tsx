@@ -20,11 +20,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const currentPath = headerStore.get('x-pathname') || ''
 
   let hotelPlan: PlanKey = 'starter'
+  let hungrywulfEnabled = false
   if (session.role !== 'super_admin' && session.hotelId) {
     const hotel = await prisma.hotel.findUnique({
       where: { id: session.hotelId },
-      select: { subscriptionStatus: true, trialEndsAt: true, plan: true },
+      select: { subscriptionStatus: true, trialEndsAt: true, plan: true, hungrywulfEnabled: true },
     })
+    hungrywulfEnabled = hotel?.hungrywulfEnabled ?? false
 
     hotelPlan = (hotel?.plan as PlanKey) ?? 'starter'
     let status = hotel?.subscriptionStatus ?? 'inactive'
@@ -65,6 +67,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/nuki', label: 'Schlüsselloses Einchecken', icon: 'nuki' },
       { href: '/admin/beds24', label: 'Beds24 Channel Manager', icon: 'beds24' },
     ]},
+    ...(hungrywulfEnabled ? [{ label: 'Tischreservierungen', items: [
+      { href: '/admin/hungrywulf', label: 'Tischreservierungen öffnen', icon: 'hungrywulf' },
+    ]}] : []),
     { label: 'Konto', items: [
       { href: '/admin/billing', label: 'Abonnement', icon: 'billing' },
       { href: '/admin/help', label: 'Handbuch', icon: 'help' },
