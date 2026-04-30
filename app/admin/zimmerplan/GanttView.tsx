@@ -70,7 +70,7 @@ type CalItem =
   | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number }
   | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string };
 
-function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso: string; onClose: () => void }) {
+function ApartmentCalendar({ apt, todayIso, onClose, onSelectItem }: { apt: AptData; todayIso: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
   const [monthIso, setMonthIso] = useState(() => monthStart(todayIso));
   const [aptData, setAptData] = useState<AptData>(apt);
   const [loading, setLoading] = useState(false);
@@ -200,7 +200,13 @@ function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso:
                         <div
                           key={`${item.kind}-${item.id}`}
                           title={label}
-                          onClick={item.kind === 'booking' ? () => { window.location.href = `/admin/requests/${item.requestId}`; } : undefined}
+                          onClick={() => {
+                            if (item.kind === 'booking') {
+                              onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, aptName: aptData.name } });
+                            } else {
+                              onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, aptName: aptData.name } });
+                            }
+                          }}
                           style={{
                             position: 'absolute',
                             top: idx * 22,
@@ -213,7 +219,7 @@ function ApartmentCalendar({ apt, todayIso, onClose }: { apt: AptData; todayIso:
                             padding: '0 6px',
                             display: 'flex', alignItems: 'center',
                             overflow: 'hidden', whiteSpace: 'nowrap',
-                            cursor: item.kind === 'booking' ? 'pointer' : 'default',
+                            cursor: 'pointer',
                           }}
                         >
                           {isFirstSeg ? label : ''}
@@ -632,7 +638,20 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       )}
 
       {/* ── Apartment calendar ── */}
-      {calApt && <ApartmentCalendar apt={calApt} todayIso={todayIso} onClose={() => setCalApt(null)} />}
+      {calApt && (
+        <ApartmentCalendar
+          apt={calApt}
+          todayIso={todayIso}
+          onClose={() => setCalApt(null)}
+          onSelectItem={(item) => {
+            setCalApt(null);
+            setSelectedItem(item);
+            setEditError(null);
+            setEditSuccess(false);
+            setConfirmDelete(false);
+          }}
+        />
+      )}
 
       {/* ── Bar detail / edit popup ── */}
       {selectedItem && (
