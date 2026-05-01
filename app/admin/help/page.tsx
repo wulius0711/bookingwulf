@@ -1115,6 +1115,28 @@ function EinbindungSection() {
       <Note>
         Die Preisaufschlüsselung (Nächte × Rate, Endreinigung, Extras) ist in der rechten Sidebar jederzeit sichtbar und wird live aktualisiert.
       </Note>
+      <H3>Mini-Widget (kompakter Datepicker)</H3>
+      <P>
+        Das Mini-Widget ist ein kompakter Datepicker für Landing Pages, Homepages oder Seitenleisten.
+        Gäste wählen Anreise, Abreise und Gästezahl — ein Klick leitet sie direkt zum Buchungs-Widget weiter,
+        mit vorausgefüllten Daten. Es zeigt außerdem automatisch an, ob der gewählte Zeitraum verfügbar ist.
+      </P>
+      <Step num={1} title="Ziel-URL festlegen">
+        Gehen Sie zu <strong>Widget & Design</strong> und klappen Sie den Abschnitt <strong>„Mini-Widget"</strong> auf.
+        Tragen Sie unter <strong>„Ziel-URL"</strong> die Seite ein, auf der Ihr Buchungs-Widget eingebunden ist —
+        z.B. <Code>https://ihre-website.at/buchen</Code>. Auch Anker-Links sind möglich:
+        <Code>https://ihre-website.at/buchen#buchungs-widget</Code>.
+      </Step>
+      <Step num={2} title="Embed-Code kopieren">
+        Darunter finden Sie den Embed-Code in Deutsch und Englisch. Kopieren Sie den gewünschten Code.
+      </Step>
+      <Step num={3} title="Auf Ihrer Website einfügen">
+        Fügen Sie den Code dort ein, wo das Mini-Widget erscheinen soll — z.B. im Header oder Hero-Bereich.
+      </Step>
+      <Note>
+        <strong>Hinweis:</strong> Auf der Ziel-Seite muss das Buchungs-Widget mit <Code>widget.js</Code> eingebunden sein,
+        damit Anreise, Abreise und Gästezahl automatisch übernommen werden.
+      </Note>
       <H3>Mehrere Widget-Konfigurationen</H3>
       <PlanNote plan="Pro" feature="Mehrere Widget-Varianten auf verschiedenen Seiten einbinden" />
       <P>

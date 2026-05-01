@@ -404,28 +404,38 @@ Reines Vanilla-JS + CSS Custom Properties. Ablauf:
 Das Widget verwendet CSS-Variablen, die von `/api/hotel-settings` befüllt werden:
 `--accent`, `--bg`, `--surface-2`, `--text`, `--muted`, `--border`, `--radius`, `--btn-radius`, etc.
 
-### Mini-Widget (`/public/mini-widget.html`)
+### Mini-Widget (`/public/mini-widget.html` + `mini-widget.js`)
 
-Kompaktes Datepicker-Bar-Widget für einfache Einbindung auf Landing Pages. Zeigt nur Anreise/Abreise-Felder + Anfrage/Buchen-Buttons. Beim Klick wird auf das Haupt-Widget weitergeleitet mit vorausgefüllten Daten.
+Kompakter Datepicker für Landing Pages / Homepages. Zeigt Anreise, Abreise, Gästezahl (+/−) und Verfügbarkeits-Feedback. Beim Klick wird auf das Haupt-Widget weitergeleitet mit vorausgefüllten Daten.
 
-**Einbindung:**
+**Einbindung via Script-Tag (empfohlen):**
 ```html
-<iframe src="https://bookingwulf.com/mini-widget.html?hotel=hotel-slug&config=widget-slug"
-  style="width:100%;border:none;height:120px;" scrolling="no"></iframe>
+<!-- Deutsch -->
+<script src="https://bookingwulf.com/mini-widget.js" data-hotel="hotel-slug" data-target="https://hotel.at/buchen"></script>
+<!-- Englisch -->
+<script src="https://bookingwulf.com/mini-widget.js" data-hotel="hotel-slug" data-lang="en" data-target="https://hotel.at/buchen"></script>
 ```
 
-**URL-Parameter:** `hotel`, `config`, `target` (Ziel-URL falls vom Standard abweichend).
+**Script-Attribute:** `data-hotel` (Pflicht), `data-config`, `data-target` (Ziel-URL; Anker-Links möglich), `data-lang` (`en`).
+
+**mini-widget.html URL-Parameter:** `hotel`, `config`, `target`, `lang`.
 
 **Ablauf:**
-1. Lädt Theme + Feature-Toggles via `/api/hotel-settings`
-2. Passt Buttons an (Anfrage / Buchen / beides je nach `enableInstantBooking` + `hideRequestOption`)
-3. Klick navigiert zu `/widget.html?hotel=...&arrival=...&departure=...&type=request|booking`
+1. `mini-widget.js` erstellt einen `<iframe>` für `mini-widget.html`
+2. `mini-widget.html` lädt Theme + Feature-Toggles via `GET /api/hotel-settings`
+3. Prüft Verfügbarkeit via `GET /api/availability-quick` sobald beide Daten gewählt
+4. Klick auf Button → postMessage `bw-mini-navigate` an Parent (`mini-widget.js`)
+5. `mini-widget.js` schreibt Buchungsdaten in Hotel-Domain-`localStorage` (`bw_booking`, 10 min TTL) → navigiert via `window.top.location.href`
+6. Auf Zielseite liest `widget.js` URL-Params und als Fallback Hotel-`localStorage` → übergibt an `widget.html`-iframe
+7. `widget.html` liest `arrival`, `departure`, `adults`, `type` aus URL-Params → Pre-füllt Schritt 1 + Adults-Selector
 
-**Haupt-Widget URL-Parameter (neu):** `arrival`, `departure`, `type` — Pre-füllen Datepicker und springen direkt zu Schritt 2.
+**Verfügbarkeits-Feedback:** `GET /api/availability-quick?hotel=&arrival=&departure=` → `{ available, availableCount, total }`. Prüft alle aktiven Apartments ohne Apartment-Namen. Kein Auth erforderlich.
 
-**postMessage an Parent:**
-- `{ type: 'mini-widget-height', height: N }` — für iframe-Resize
-- `{ type: 'mini-widget-navigate', url: '...' }` — Navigation-Event (Elternseite kann eigenes Routing übernehmen)
+**postMessage-Events (mini-widget.html → mini-widget.js):**
+- `{ type: 'mini-widget-height', height: N }` — iframe-Resize
+- `{ type: 'bw-mini-navigate', href: '...', booking: { arrival, departure, adults, type } }` — Navigation + Datenweitergabe
+
+**Admin-Einstellung:** `miniWidgetTarget` in `HotelSettings` — Ziel-URL, wenn nicht per `data-target` überschrieben. Einstellbar in Admin → Widget & Design → Mini-Widget (aufklappbar).
 
 ### WidgetConfig (Pro+)
 
