@@ -29,7 +29,7 @@
         background: var(--card-bg);
         border: 1.5px solid var(--line);
         border-radius: calc(var(--radius) + 8px);
-        padding: 20px 20px 20px;
+        padding: 20px;
         display: grid;
         gap: 14px;
       }
@@ -95,6 +95,88 @@
         opacity: 0;
       }
 
+      /* Adults counter */
+      .mini-adults {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto;
+        background: var(--input-bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 6px 10px;
+        height: 40px;
+      }
+
+      .adults-btn {
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 50%;
+        background: var(--line);
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: inherit;
+        transition: background 0.15s;
+        padding: 0;
+      }
+
+      .adults-btn:hover:not(:disabled) { background: #d1d5db; }
+      .adults-btn:disabled { opacity: 0.4; cursor: default; }
+
+      .adults-count {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        min-width: 16px;
+        text-align: center;
+      }
+
+      .adults-label {
+        font-size: 13px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* Availability status */
+      .mini-avail {
+        font-size: 13px;
+        display: none;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .mini-avail.visible { display: flex; }
+
+      .avail-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .avail-dot.checking {
+        background: #9ca3af;
+        animation: pulse 1s ease-in-out infinite;
+      }
+
+      .avail-dot.available { background: #16a34a; }
+      .avail-dot.unavailable { background: #dc2626; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+
+      .avail-text { color: var(--muted); }
+      .avail-text.available { color: #16a34a; font-weight: 500; }
+      .avail-text.unavailable { color: #dc2626; font-weight: 500; }
+
       .mini-actions {
         display: flex;
         gap: 8px;
@@ -144,9 +226,19 @@
           <input type="date" id="miniDeparture" placeholder=" " />
           <label for="miniDeparture" class="field-label" id="miniDepartureLabel">Abreise</label>
         </div>
-        <div class="mini-actions" id="miniActions">
-          <!-- buttons rendered by JS based on settings -->
+        <div class="mini-adults" id="miniAdults" role="group" aria-label="Erwachsene">
+          <button class="adults-btn" id="adultsDown" aria-label="Weniger Erwachsene" disabled>−</button>
+          <span class="adults-count" id="adultsCount" aria-live="polite">2</span>
+          <span class="adults-label" id="adultsLabel">Erw.</span>
+          <button class="adults-btn" id="adultsUp" aria-label="Mehr Erwachsene">+</button>
         </div>
+      </div>
+      <div class="mini-avail" id="miniAvail" role="status" aria-live="polite">
+        <span class="avail-dot" id="availDot"></span>
+        <span class="avail-text" id="availText"></span>
+      </div>
+      <div class="mini-actions" id="miniActions">
+        <!-- buttons rendered by JS based on settings -->
       </div>
       <div class="mini-error" id="miniError" role="alert" aria-live="assertive">Bitte Anreise und Abreise auswählen.</div>
     </div>
@@ -161,8 +253,28 @@
         const LANG = qp.get('lang') === 'en' ? 'en' : 'de';
 
         const T = {
-          de: { arrival: 'Anreise', departure: 'Abreise', request: 'Anfrage', book: 'Buchen', error: 'Bitte Anreise und Abreise auswählen.', titleDefault: 'Anfragen & Buchen', titleBook: 'Jetzt buchen', titleRequest: 'Jetzt anfragen' },
-          en: { arrival: 'Arrival', departure: 'Departure', request: 'Enquire', book: 'Book', error: 'Please select arrival and departure.', titleDefault: 'Enquire & Book', titleBook: 'Book now', titleRequest: 'Enquire now' },
+          de: {
+            arrival: 'Anreise', departure: 'Abreise', adults: 'Erw.',
+            request: 'Anfrage', book: 'Buchen',
+            error: 'Bitte Anreise und Abreise auswählen.',
+            titleDefault: 'Anfragen & Buchen', titleBook: 'Jetzt buchen', titleRequest: 'Jetzt anfragen',
+            availChecking: 'Verfügbarkeit prüfen …',
+            availYes: 'Verfügbar',
+            availNo: 'Nicht verfügbar',
+            adultsDown: 'Weniger Erwachsene', adultsUp: 'Mehr Erwachsene',
+            adultsGroup: 'Erwachsene',
+          },
+          en: {
+            arrival: 'Arrival', departure: 'Departure', adults: 'Adults',
+            request: 'Enquire', book: 'Book',
+            error: 'Please select arrival and departure.',
+            titleDefault: 'Enquire & Book', titleBook: 'Book now', titleRequest: 'Enquire now',
+            availChecking: 'Checking availability …',
+            availYes: 'Available',
+            availNo: 'Not available',
+            adultsDown: 'Fewer adults', adultsUp: 'More adults',
+            adultsGroup: 'Adults',
+          },
         }[LANG];
 
         let accentColor = null;
@@ -172,15 +284,30 @@
         let enableInstantBooking = false;
         let hideRequestOption = false;
 
+        let adults = 2;
+        let availTimer = null;
+
         const arrivalEl = document.getElementById('miniArrival');
         const departureEl = document.getElementById('miniDeparture');
         const actionsEl = document.getElementById('miniActions');
         const errorEl = document.getElementById('miniError');
         const titleEl = document.getElementById('miniTitle');
+        const adultsCountEl = document.getElementById('adultsCount');
+        const adultsDownEl = document.getElementById('adultsDown');
+        const adultsUpEl = document.getElementById('adultsUp');
+        const adultsLabelEl = document.getElementById('adultsLabel');
+        const adultsGroupEl = document.getElementById('miniAdults');
+        const availEl = document.getElementById('miniAvail');
+        const availDotEl = document.getElementById('availDot');
+        const availTextEl = document.getElementById('availText');
 
         // Apply language
         document.getElementById('miniArrivalLabel').textContent = T.arrival;
         document.getElementById('miniDepartureLabel').textContent = T.departure;
+        adultsLabelEl.textContent = T.adults;
+        adultsGroupEl.setAttribute('aria-label', T.adultsGroup);
+        adultsDownEl.setAttribute('aria-label', T.adultsDown);
+        adultsUpEl.setAttribute('aria-label', T.adultsUp);
         errorEl.textContent = T.error;
         titleEl.textContent = T.titleDefault;
 
@@ -188,6 +315,54 @@
         const todayStr = new Date().toISOString().slice(0, 10);
         arrivalEl.min = todayStr;
         departureEl.min = todayStr;
+
+        function updateAdultsUI() {
+          adultsCountEl.textContent = adults;
+          adultsDownEl.disabled = adults <= 1;
+        }
+
+        adultsDownEl.addEventListener('click', () => {
+          if (adults > 1) { adults--; updateAdultsUI(); triggerAvailCheck(); }
+        });
+
+        adultsUpEl.addEventListener('click', () => {
+          adults++;
+          updateAdultsUI();
+          triggerAvailCheck();
+        });
+
+        function setAvailStatus(state) {
+          // state: 'hidden' | 'checking' | 'available' | 'unavailable'
+          availEl.classList.toggle('visible', state !== 'hidden');
+          availDotEl.className = 'avail-dot ' + (state === 'hidden' ? '' : state);
+          availTextEl.className = 'avail-text ' + (state === 'hidden' ? '' : state);
+          if (state === 'checking') availTextEl.textContent = T.availChecking;
+          else if (state === 'available') availTextEl.textContent = T.availYes;
+          else if (state === 'unavailable') availTextEl.textContent = T.availNo;
+          else availTextEl.textContent = '';
+        }
+
+        async function checkAvailability() {
+          if (!arrivalEl.value || !departureEl.value) { setAvailStatus('hidden'); return; }
+          setAvailStatus('checking');
+          try {
+            const res = await fetch(
+              `${API_BASE}/api/availability-quick?hotel=${encodeURIComponent(HOTEL_SLUG)}&arrival=${arrivalEl.value}&departure=${departureEl.value}`
+            );
+            if (!res.ok) { setAvailStatus('hidden'); return; }
+            const data = await res.json();
+            if (!data.success) { setAvailStatus('hidden'); return; }
+            setAvailStatus(data.available ? 'available' : 'unavailable');
+          } catch {
+            setAvailStatus('hidden');
+          }
+        }
+
+        function triggerAvailCheck() {
+          if (!arrivalEl.value || !departureEl.value) { setAvailStatus('hidden'); return; }
+          clearTimeout(availTimer);
+          availTimer = setTimeout(checkAvailability, 400);
+        }
 
         arrivalEl.addEventListener('change', () => {
           arrivalEl.classList.toggle('has-value', !!arrivalEl.value);
@@ -202,11 +377,13 @@
             }
           }
           errorEl.style.display = 'none';
+          triggerAvailCheck();
         });
 
         departureEl.addEventListener('change', () => {
           departureEl.classList.toggle('has-value', !!departureEl.value);
           errorEl.style.display = 'none';
+          triggerAvailCheck();
         });
 
         function navigate(type) {
@@ -220,6 +397,7 @@
           if (LANG === 'en') url.searchParams.set('lang', 'en');
           url.searchParams.set('arrival', arrivalEl.value);
           url.searchParams.set('departure', departureEl.value);
+          url.searchParams.set('adults', String(adults));
           url.searchParams.set('type', type);
           const a = document.createElement('a');
           a.href = url.toString();
@@ -266,7 +444,6 @@
             enableInstantBooking = s.enableInstantBooking === true;
             hideRequestOption = s.hideRequestOption === true;
 
-            // Use saved target from settings if not passed via data-target
             if (!BOOKING_PAGE && data.miniWidgetTarget) {
               BOOKING_PAGE = data.miniWidgetTarget;
             }
@@ -276,7 +453,6 @@
             if (s.buttonRadius != null) buttonRadius = s.buttonRadius;
             if (s.cardRadius != null) cardRadius = s.cardRadius;
 
-            // Apply theme
             const root = document.documentElement;
             if (accentColor) root.style.setProperty('--accent', accentColor);
             if (bgColor) root.style.setProperty('--bg', bgColor);
@@ -289,7 +465,6 @@
 
             renderButtons();
 
-            // Update title based on mode
             if (enableInstantBooking && hideRequestOption) {
               titleEl.textContent = T.titleBook;
             } else if (enableInstantBooking) {
@@ -303,13 +478,13 @@
           }
         }
 
-        // Post height to parent
         function postHeight() {
           if (window.parent === window) return;
           const h = document.body.scrollHeight + 8;
           window.parent.postMessage({ type: 'mini-widget-height', height: h }, '*');
         }
 
+        updateAdultsUI();
         renderButtons();
         loadSettings().then(() => {
           postHeight();

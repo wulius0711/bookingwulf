@@ -623,42 +623,47 @@ export default async function Page({ searchParams }: PageProps) {
           </div>
 
           {/* MINI WIDGET */}
-          <div className="settings-section" style={sectionStyle}>
-            <div>
-              <h2 style={sectionTitleStyle}>Mini-Widget</h2>
-              <p style={sectionIntroStyle}>
-                Kompakter Datepicker für Landing Pages — Gast wählt Datum und wird zum Buchungs-Widget weitergeleitet.
-              </p>
-            </div>
-            <div>
-              <label style={labelStyle}>Ziel-URL (wo das Buchungs-Widget eingebunden ist)</label>
-              <input
-                name="miniWidgetTarget"
-                type="url"
-                defaultValue={selected.settings?.miniWidgetTarget ?? ''}
-                placeholder="https://deine-website.at/buchen"
-                style={{ ...inputStyle, marginTop: 8 }}
-              />
-              <p style={{ margin: '6px 0 0', fontSize: 12, color: '#9ca3af' }}>
-                Ohne Ziel-URL leiten Gäste auf bookingwulf.com/widget.html weiter.
-              </p>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Embed-Code</div>
+          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
-                <EmbedCode
-                  code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
-                />
+                <h2 style={sectionTitleStyle}>Mini-Widget</h2>
+                <p style={sectionIntroStyle}>
+                  Kompakter Datepicker für Landing Pages — Gast wählt Datum und wird zum Buchungs-Widget weitergeleitet.
+                </p>
               </div>
+              <span style={{ fontSize: 18, color: '#9ca3af', marginTop: 4, flexShrink: 0, lineHeight: 1 }}>▾</span>
+            </summary>
+            <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
-                <EmbedCode
-                  code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="en"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                <label style={labelStyle}>Ziel-URL (wo das Buchungs-Widget eingebunden ist)</label>
+                <input
+                  name="miniWidgetTarget"
+                  type="url"
+                  defaultValue={selected.settings?.miniWidgetTarget ?? ''}
+                  placeholder="https://deine-website.at/buchen"
+                  style={{ ...inputStyle, marginTop: 8 }}
                 />
+                <p style={{ margin: '6px 0 0', fontSize: 12, color: '#9ca3af' }}>
+                  Ohne Ziel-URL leiten Gäste auf bookingwulf.com/widget.html weiter.
+                </p>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Embed-Code</div>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
+                  <EmbedCode
+                    code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                  />
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
+                  <EmbedCode
+                    code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="en"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Widget Configs */}
           <div style={{ ...sectionStyle, position: 'relative' }}>

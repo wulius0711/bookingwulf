@@ -16,6 +16,7 @@
   var _arrival = _pqp.get('arrival') || '';
   var _departure = _pqp.get('departure') || '';
   var _type = _pqp.get('type') || '';
+  var _adults = _pqp.get('adults') || '';
 
   var iframe = document.createElement('iframe');
   iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel)
@@ -23,7 +24,8 @@
     + (lang ? '&lang=' + encodeURIComponent(lang) : '')
     + (_arrival ? '&arrival=' + encodeURIComponent(_arrival) : '')
     + (_departure ? '&departure=' + encodeURIComponent(_departure) : '')
-    + (_type ? '&type=' + encodeURIComponent(_type) : '');
+    + (_type ? '&type=' + encodeURIComponent(_type) : '')
+    + (_adults ? '&adults=' + encodeURIComponent(_adults) : '');
   iframe.style.cssText =
     'width:100%;border:none;overflow:hidden;background:transparent;display:block;height:1200px;';
   iframe.scrolling = 'no';

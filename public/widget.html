@@ -2729,6 +2729,7 @@
         const _preArrival = _qp.get('arrival') || '';
         const _preDeparture = _qp.get('departure') || '';
         const _preType = _qp.get('type') || ''; // 'request' | 'booking'
+        const _preAdults = Math.max(1, parseInt(_qp.get('adults') || '2', 10) || 2);
 
         const LANG = (_qp.get('lang') || 'de') === 'en' ? 'en' : 'de';
         const TRANSLATIONS = {
@@ -2987,7 +2988,7 @@
           step: 1,
           arrival: _preArrival,
           departure: _preDeparture,
-          adults: 2,
+          adults: _preAdults,
           children: 0,
           calendarYear: _now.getFullYear(),
           calendarMonth: _now.getMonth(),

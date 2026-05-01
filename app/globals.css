@@ -645,6 +645,11 @@ button, a[role="button"], input[type="submit"] {
   }
 }
 
+/* ─── details/summary reset ─────────────────────────────────────── */
+
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
 /* ─── Skip link ─────────────────────────────────────────────────── */
 
 .skip-link {
