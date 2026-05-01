@@ -2727,7 +2727,17 @@
 
         const _qp = new URLSearchParams(window.location.search);
 
-        const _preArrival = _qp.get('arrival') || '';
+        let _preArrival = _qp.get('arrival') || '';
+        if (!_preArrival) {
+          try {
+            const _awPend = localStorage.getItem('bw_pending_arrival');
+            if (_awPend) {
+              const _awPendD = JSON.parse(_awPend);
+              if (_awPendD.exp && _awPendD.exp > Date.now()) _preArrival = _awPendD.arrival || '';
+              localStorage.removeItem('bw_pending_arrival');
+            }
+          } catch (_e) {}
+        }
         const _preDeparture = _qp.get('departure') || '';
         const _preType = _qp.get('type') || ''; // 'request' | 'booking'
         const _preAdults = Math.max(1, parseInt(_qp.get('adults') || '2', 10) || 2);

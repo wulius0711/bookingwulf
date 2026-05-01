@@ -341,7 +341,16 @@
                 if (!date) return;
                 var url = new URL(target);
                 url.searchParams.set('arrival', date);
+                // Write to own (bookingwulf.com) localStorage — widget.html reads it on load
+                try {
+                  localStorage.setItem('bw_pending_arrival', JSON.stringify({
+                    arrival: date,
+                    exp: Date.now() + 10 * 60 * 1000,
+                  }));
+                } catch (_e) {}
                 window.parent.postMessage({ type: 'aw-navigate', href: url.toString() }, '*');
+                // Fallback: direct top-frame navigation (works for non-sandboxed embeds)
+                try { window.top.location.href = url.toString(); } catch (_e) {}
               });
             });
           }
