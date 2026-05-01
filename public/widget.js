@@ -18,6 +18,23 @@
   var _type = _pqp.get('type') || '';
   var _adults = _pqp.get('adults') || '';
 
+  // Fallback: hotel-domain localStorage written by mini-widget.js
+  if (!_arrival || !_departure) {
+    try {
+      var _bwRaw = localStorage.getItem('bw_booking');
+      if (_bwRaw) {
+        var _bwData = JSON.parse(_bwRaw);
+        if (!_bwData.exp || _bwData.exp > Date.now()) {
+          if (!_arrival && _bwData.arrival) _arrival = _bwData.arrival;
+          if (!_departure && _bwData.departure) _departure = _bwData.departure;
+          if (!_type && _bwData.type) _type = _bwData.type;
+          if (!_adults && _bwData.adults) _adults = String(_bwData.adults);
+        }
+        localStorage.removeItem('bw_booking');
+      }
+    } catch (ex) {}
+  }
+
   var iframe = document.createElement('iframe');
   iframe.src = base + '/widget.html?hotel=' + encodeURIComponent(hotel)
     + (config ? '&config=' + encodeURIComponent(config) : '')

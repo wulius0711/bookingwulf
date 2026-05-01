@@ -2727,26 +2727,10 @@
 
         const _qp = new URLSearchParams(window.location.search);
 
-        // Fallback: localStorage from mini-widget (localStorage is origin-wide on disk, survives renderer isolation)
-        let _bwLS = {};
-        try {
-          const _bwRaw = localStorage.getItem('bw_mini_booking');
-          if (_bwRaw) {
-            const _bwParsed = JSON.parse(_bwRaw);
-            if (!_bwParsed.exp || _bwParsed.exp > Date.now()) _bwLS = _bwParsed;
-            localStorage.removeItem('bw_mini_booking');
-          }
-        } catch(e) {}
-
-        const _preArrival = _qp.get('arrival') || _bwLS.arrival || '';
-        const _preDeparture = _qp.get('departure') || _bwLS.departure || '';
-        const _preType = _qp.get('type') || _bwLS.type || ''; // 'request' | 'booking'
-        const _preAdults = (() => {
-          const qpA = _qp.get('adults');
-          if (qpA !== null) return Math.max(1, parseInt(qpA, 10) || 2);
-          if (_bwLS.adults) return Math.max(1, parseInt(_bwLS.adults, 10) || 2);
-          return 2;
-        })();
+        const _preArrival = _qp.get('arrival') || '';
+        const _preDeparture = _qp.get('departure') || '';
+        const _preType = _qp.get('type') || ''; // 'request' | 'booking'
+        const _preAdults = Math.max(1, parseInt(_qp.get('adults') || '2', 10) || 2);
 
         const LANG = (_qp.get('lang') || 'de') === 'en' ? 'en' : 'de';
         const TRANSLATIONS = {

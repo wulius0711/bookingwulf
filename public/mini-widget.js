@@ -29,5 +29,14 @@
     if (e.data && e.data.type === 'mini-widget-height' && e.data.height > 0) {
       iframe.style.height = e.data.height + 'px';
     }
+    if (e.data && e.data.type === 'bw-mini-navigate' && e.data.href) {
+      // Store booking in hotel-domain localStorage (same origin as this page → no cross-origin issues)
+      try {
+        localStorage.setItem('bw_booking', JSON.stringify(
+          Object.assign({}, e.data.booking, { exp: Date.now() + 10 * 60 * 1000 })
+        ));
+      } catch (ex) {}
+      window.location.href = e.data.href;
+    }
   });
 })();

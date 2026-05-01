@@ -391,12 +391,6 @@
             errorEl.style.display = 'block';
             return;
           }
-          try {
-            localStorage.setItem('bw_mini_booking', JSON.stringify({
-              arrival: arrivalEl.value, departure: departureEl.value, adults: adults, type: type,
-              exp: Date.now() + 10 * 60 * 1000,
-            }));
-          } catch(e) {}
           const url = new URL(BOOKING_PAGE || (API_BASE + '/widget.html'), window.location.href);
           url.searchParams.set('hotel', HOTEL_SLUG);
           if (WIDGET_CONFIG) url.searchParams.set('config', WIDGET_CONFIG);
@@ -405,12 +399,12 @@
           url.searchParams.set('departure', departureEl.value);
           url.searchParams.set('adults', String(adults));
           url.searchParams.set('type', type);
-          const a = document.createElement('a');
-          a.href = url.toString();
-          a.target = '_top';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          // Send to mini-widget.js (runs on hotel domain) to store in hotel's localStorage
+          window.parent.postMessage({
+            type: 'bw-mini-navigate',
+            href: url.toString(),
+            booking: { arrival: arrivalEl.value, departure: departureEl.value, adults: adults, type: type },
+          }, '*');
         }
 
         function renderButtons() {
