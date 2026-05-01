@@ -201,6 +201,11 @@
       .mini-btn:hover { opacity: 0.85; }
       .mini-btn:disabled { opacity: 0.5; cursor: default; }
 
+      .mini-btn.book {
+        flex: 0 0 auto;
+        padding: 10px 14px;
+      }
+
       .mini-btn.secondary {
         background: transparent;
         color: var(--accent);
@@ -418,7 +423,7 @@
           }
           if (enableInstantBooking) {
             const bookBtn = document.createElement('button');
-            bookBtn.className = 'mini-btn';
+            bookBtn.className = 'mini-btn book';
             bookBtn.textContent = T.book;
             bookBtn.addEventListener('click', () => navigate('booking'));
             actionsEl.appendChild(bookBtn);
