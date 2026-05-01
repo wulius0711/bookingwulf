@@ -1,7 +1,9 @@
 import { createHmac } from 'crypto';
 
 function secret(): string {
-  return process.env.ADMIN_SESSION_SECRET || 'dev-fallback-secret';
+  const s = process.env.ADMIN_SESSION_SECRET;
+  if (!s) throw new Error('ADMIN_SESSION_SECRET is not set');
+  return s;
 }
 
 export function generateBookingToken(id: number, createdAt: Date): string {

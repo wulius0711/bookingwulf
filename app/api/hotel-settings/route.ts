@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { NextResponse } from 'next/server';
 import { hasPlanAccess, hasFullBranding, hasAdvancedTypography } from '@/src/lib/plan-gates';
 import type { PlanKey } from '@/src/lib/plans';
+import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 function withCors(response: NextResponse) {
   response.headers.set('Access-Control-Allow-Origin', '*');
@@ -17,6 +18,9 @@ export async function OPTIONS() {
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  if (!rateLimit(`hotel-settings:${ip}`, 60, 60_000).ok) return rateLimitResponse();
+
   try {
     const { searchParams } = new URL(req.url);
     const hotelSlug = searchParams.get('hotel');

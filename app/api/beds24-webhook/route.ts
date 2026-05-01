@@ -1,9 +1,16 @@
 // Beds24 inbound webhook — receives availability change notifications
 // Webhook URL: https://your-domain.com/api/beds24-webhook?token=<BEDS24_WEBHOOK_SECRET>
 
+import { timingSafeEqual } from 'crypto';
+
 export async function POST(req: Request) {
-  const token = new URL(req.url).searchParams.get('token');
-  if (!process.env.BEDS24_WEBHOOK_SECRET || token !== process.env.BEDS24_WEBHOOK_SECRET) {
+  const secret = process.env.BEDS24_WEBHOOK_SECRET;
+  const token = new URL(req.url).searchParams.get('token') ?? '';
+  const authorized =
+    !!secret &&
+    token.length === secret.length &&
+    timingSafeEqual(Buffer.from(token), Buffer.from(secret));
+  if (!authorized) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
