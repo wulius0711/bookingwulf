@@ -296,7 +296,12 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                       : <span style={{ color: lead.kontaktPer ? '#374151' : '#d1d5db' }}>{lead.kontaktPer || '–'}</span>
                     }
                   </td>
-                  <td style={{ padding: '10px 14px', color: '#6b7280' }}>{lead.region || '–'}</td>
+                  <td style={{ padding: '10px 14px', color: '#6b7280' }}>
+                    {isEditing
+                      ? <input value={editData.region ?? ''} onChange={e => setEditData(p => ({ ...p, region: e.target.value }))} placeholder="Region" style={{ width: 110, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      : (lead.region || '–')
+                    }
+                  </td>
                   <td style={{ padding: '10px 14px' }}>
                     <select
                       value={lead.status}
@@ -333,7 +338,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                           </button>
                         )}
                         <button
-                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '', website: lead.website ?? '' }); }}
+                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '', website: lead.website ?? '', region: lead.region ?? '' }); }}
                           style={{ padding: '4px 8px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: '#374151' }}
                         >
                           Bearbeiten
