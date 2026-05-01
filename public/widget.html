@@ -2726,10 +2726,23 @@
           new URLSearchParams(window.location.search).get('config') || '';
 
         const _qp = new URLSearchParams(window.location.search);
-        const _preArrival = _qp.get('arrival') || '';
-        const _preDeparture = _qp.get('departure') || '';
-        const _preType = _qp.get('type') || ''; // 'request' | 'booking'
-        const _preAdults = Math.max(1, parseInt(_qp.get('adults') || '2', 10) || 2);
+
+        // Fallback: sessionStorage from mini-widget (works even when widget.html is embedded directly)
+        let _bwSS = {};
+        try {
+          const _bwRaw = sessionStorage.getItem('bw_mini_booking');
+          if (_bwRaw) { _bwSS = JSON.parse(_bwRaw); sessionStorage.removeItem('bw_mini_booking'); }
+        } catch(e) {}
+
+        const _preArrival = _qp.get('arrival') || _bwSS.arrival || '';
+        const _preDeparture = _qp.get('departure') || _bwSS.departure || '';
+        const _preType = _qp.get('type') || _bwSS.type || ''; // 'request' | 'booking'
+        const _preAdults = (() => {
+          const qpA = _qp.get('adults');
+          if (qpA !== null) return Math.max(1, parseInt(qpA, 10) || 2);
+          if (_bwSS.adults) return Math.max(1, parseInt(_bwSS.adults, 10) || 2);
+          return 2;
+        })();
 
         const LANG = (_qp.get('lang') || 'de') === 'en' ? 'en' : 'de';
         const TRANSLATIONS = {

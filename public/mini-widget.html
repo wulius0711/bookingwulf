@@ -391,6 +391,11 @@
             errorEl.style.display = 'block';
             return;
           }
+          try {
+            sessionStorage.setItem('bw_mini_booking', JSON.stringify({
+              arrival: arrivalEl.value, departure: departureEl.value, adults: adults, type: type,
+            }));
+          } catch(e) {}
           const url = new URL(BOOKING_PAGE || (API_BASE + '/widget.html'), window.location.href);
           url.searchParams.set('hotel', HOTEL_SLUG);
           if (WIDGET_CONFIG) url.searchParams.set('config', WIDGET_CONFIG);
