@@ -253,7 +253,10 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                 <tr key={lead.id} style={{ borderBottom: '1px solid #f3f4f6', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
                   <td style={{ padding: '10px 14px', fontWeight: 600, color: '#111' }}>
                     {isEditing
-                      ? <input value={editData.betrieb ?? ''} onChange={e => setEditData(p => ({ ...p, betrieb: e.target.value }))} style={{ width: 130, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      ? <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          <input value={editData.betrieb ?? ''} onChange={e => setEditData(p => ({ ...p, betrieb: e.target.value }))} placeholder="Betrieb" style={{ width: 130, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                          <input value={editData.website ?? ''} onChange={e => setEditData(p => ({ ...p, website: e.target.value }))} placeholder="Website" style={{ width: 130, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                        </div>
                       : <div>
                           {lead.betrieb}
                           {lead.website && <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{lead.website}</div>}
@@ -330,7 +333,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                           </button>
                         )}
                         <button
-                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '' }); }}
+                          onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '', website: lead.website ?? '' }); }}
                           style={{ padding: '4px 8px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: '#374151' }}
                         >
                           Bearbeiten
