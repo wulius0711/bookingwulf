@@ -662,6 +662,15 @@ export default async function Page({ searchParams }: PageProps) {
                   />
                 </div>
               </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
+                <iframe
+                  src={`/mini-widget.html?hotel=${encodeURIComponent(selected.slug)}`}
+                  style={{ width: '100%', height: 130, border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', display: 'block' }}
+                  scrolling="no"
+                  title="Mini-Widget Vorschau"
+                />
+              </div>
             </div>
           </details>
 
