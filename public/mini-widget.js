@@ -36,7 +36,7 @@
           Object.assign({}, e.data.booking, { exp: Date.now() + 10 * 60 * 1000 })
         ));
       } catch (ex) {}
-      window.location.href = e.data.href;
+      window.top.location.href = e.data.href;
     }
   });
 })();
