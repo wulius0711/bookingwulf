@@ -1138,3 +1138,65 @@ bookingwulf verwendet ausschließlich einen technisch notwendigen Session-Cookie
 ### Rechtliche Dokumente
 
 Alle unter `/datenschutz`, `/impressum`, `/agb`, `/avv` erreichbar und im Admin-Footer verlinkt.
+
+---
+
+## 21. Security
+
+### HTTP Security Headers
+
+Konfiguriert in `next.config.ts` und auf alle Next.js-Routen angewendet:
+
+| Header | Wert |
+|--------|------|
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
+| `X-Frame-Options` | `SAMEORIGIN` |
+| `X-Content-Type-Options` | `nosniff` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
+
+Hinweis: Static Files aus `/public` (Widget-HTMLs) werden von diesen Headers nicht erfasst — sie sind als Cross-Origin-Embeds konzipiert.
+
+### Authentifizierung
+
+- JWT-Sessions mit `jose` (HS256), signiert mit `ADMIN_SESSION_SECRET`
+- Cookie-Flags: `httpOnly`, `secure` (Produktion), `sameSite: lax`
+- Session-TTL: 24 Stunden
+- `verifySession()` auf allen Admin-Routen und Admin-API-Endpunkten
+
+### Passwörter
+
+- Hashing via Node.js `crypto.scrypt` mit 16-Byte-Random-Salt
+- Vergleich via `timingSafeEqual` (kein Timing-Angriff möglich)
+
+### Rate Limiting
+
+In-Memory-Rate-Limiter (`src/lib/rate-limit.ts`), angewendet auf:
+
+| Route | Limit |
+|-------|-------|
+| `POST /api/request` | 10 req/15 Min. per IP + 3 req/5 Min. per E-Mail |
+| `GET /api/availability-quick` | 60 req/Min. per IP |
+| `GET /api/availability-widget` | 30 req/Min. per IP |
+| `GET /api/hotel-settings` | 60 req/Min. per IP |
+| `GET /api/pricing` | 120 req/Min. per IP |
+
+### Eingabe-Validierung
+
+Zod-Schemas auf allen schreibenden Endpunkten (`/api/request`, `/api/checkout`, `/api/admin/*`). Feldlängen begrenzt (z.B. Name max. 100 Zeichen, Nachricht max. 3.000 Zeichen).
+
+### Datenbankzugriff
+
+Prisma ORM mit parametrisierten Queries durchgehend — kein SQL-Injection-Risiko. Einzige Raw-Query: Health-Check via Template-Literal (sicher).
+
+### Stripe Webhook
+
+Signatur-Verifikation via `stripe.webhooks.constructEvent()` — unsignierte Requests werden mit 400 abgewiesen.
+
+### Beds24 Webhook
+
+Token-Vergleich via `crypto.timingSafeEqual` (Timing-Angriffe ausgeschlossen).
+
+### CORS
+
+Widget-APIs (`/api/hotel-settings`, `/api/availability-quick`, `/api/availability-widget`, `/api/request`, `/api/pricing`) erlauben `Access-Control-Allow-Origin: *` — notwendig für Cross-Origin-Einbettung. Alle Schreibzugriffe erfordern zusätzlich eine gültige Admin-Session.
