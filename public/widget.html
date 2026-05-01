@@ -5585,9 +5585,9 @@
           }
         }
 
-        document
-          .getElementById('adults')
-          .addEventListener('change', async (e) => {
+        const adultsEl = document.getElementById('adults');
+        adultsEl.value = String(state.adults);
+        adultsEl.addEventListener('change', async (e) => {
             state.adults = Number(e.target.value);
             renderAll();
             await updateAvailabilityForApartments();
