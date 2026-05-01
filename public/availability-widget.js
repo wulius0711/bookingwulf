@@ -32,6 +32,14 @@
       iframe.style.height = e.data.height + 'px';
     }
     if (e.data && e.data.type === 'aw-navigate' && e.data.href) {
+      try {
+        var arrival = new URL(e.data.href).searchParams.get('arrival');
+        if (arrival) {
+          localStorage.setItem('bw_booking', JSON.stringify(
+            { arrival: arrival, exp: Date.now() + 10 * 60 * 1000 }
+          ));
+        }
+      } catch (ex) {}
       window.top.location.href = e.data.href;
     }
   });
