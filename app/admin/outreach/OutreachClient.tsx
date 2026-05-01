@@ -319,7 +319,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                         {lead.status !== 'gesendet' && lead.status !== 'kein-interesse' && lead.status !== 'abgeschlossen' && zohoConfigured && (
                           <button
-                            onClick={() => sendEmail(lead)}
+                            onClick={() => { if (window.confirm(`E-Mail an ${lead.email} senden?`)) sendEmail(lead); }}
                             disabled={sending === lead.id || !lead.email}
                             title={!lead.email ? 'Keine E-Mail-Adresse' : 'E-Mail senden'}
                             style={{
