@@ -66,7 +66,7 @@ export default async function HotelsPage() {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
+    <main className="admin-page" style={{ maxWidth: 900 }}>
       <div
         style={{
           display: 'flex',
@@ -90,6 +90,8 @@ export default async function HotelsPage() {
             borderRadius: 8,
             fontSize: 14,
             fontWeight: 600,
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
           }}
         >
           Neues Hotel
