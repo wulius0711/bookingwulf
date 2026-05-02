@@ -372,6 +372,7 @@ export default function LandingPage() {
           { q: 'Funktioniert es mit meiner bestehenden Website?', a: 'Ja – das Widget funktioniert mit jeder Website, egal ob WordPress, Framer, Wix oder einer individuellen Lösung.' },
           { q: 'Kann ich das Widget für Anfragen und Buchungen gleichzeitig nutzen?', a: 'Ja – das Widget ist zweifach konfigurierbar. Sie können es gleichzeitig als Buchungs- und Anfrageformular einsetzen.' },
           { q: 'Gibt es versteckte Kosten oder Provisionen?', a: 'Nein. Sie zahlen nur den monatlichen Fixpreis – keine Provision, keine versteckten Gebühren, egal wie viele Buchungen eingehen.' },
+          { q: 'Was kostet der Beds24 Channel Manager?', a: 'Der Beds24 Channel Manager (Pro-Plan) erfordert einen separaten Beds24-Account. Die Kosten dafür finden Sie direkt auf beds24.com — bookingwulf erhebt keine zusätzliche Gebühr dafür.' },
           { q: 'Was passiert nach dem 14-tägigen Testzeitraum?', a: 'Sie wählen ein Paket und können regulär starten. Ein abgeschlossenes Abonnement verlängert sich monatlich oder jährlich automatisch – Sie können jederzeit kündigen.' },
           { q: 'Wo werden meine Daten gespeichert?', a: 'Alle Daten werden auf Servern in Deutschland gespeichert – sicher und DSGVO-konform.' },
           { q: 'Wie zuverlässig ist das System?', a: 'bookingwulf ist auf modernster Infrastruktur gebaut – für schnelle Ladezeiten und hohe Verfügbarkeit. Updates werden automatisch im Hintergrund eingespielt, ohne dass Sie etwas tun müssen.' },
