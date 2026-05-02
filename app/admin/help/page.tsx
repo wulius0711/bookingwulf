@@ -287,6 +287,30 @@ function BuchungenSection() {
         E-Mail oder Telefon direkt geantwortet haben — so behalten Sie den Überblick ohne eine
         zusätzliche automatische Mail auszulösen.
       </Tip>
+      <H3>Buchhaltungsexport (CSV)</H3>
+      <P>
+        Über den Button <strong>„CSV Export"</strong> oben rechts auf der Anfragen-Seite können Sie
+        alle bestätigten Buchungen als CSV-Datei herunterladen — geeignet für Ihren Steuerberater
+        oder die Übergabe an DATEV.
+      </P>
+      <P>
+        Der Export filtert nach <strong>Abreisedatum</strong> (= steuerliches Leistungsdatum).
+        Optional können stornierte Buchungen eingeschlossen werden.
+      </P>
+      <P>
+        Die CSV enthält pro Buchung: Buchungsnummer, Buchungs- und Abreisedatum, Gastdaten,
+        Apartment, Zimmerpreis brutto/netto/MwSt., Reinigung brutto/netto/MwSt., Extras,
+        Ortstaxe und Gesamtbetrag.
+      </P>
+      <P>
+        Die MwSt.-Sätze (z.B. AT: Zimmer 10%, Reinigung 20%) hinterlegen Sie einmalig unter
+        <strong> Preisanpassungen → Steuer / Buchhaltung</strong>.
+      </P>
+      <Tip>
+        <strong>Hinweis:</strong> Buchungen, die vor dem Mai 2026 erstellt wurden, enthalten
+        keinen gespeicherten Preissnapshot — Zimmerpreis und Ortstaxe erscheinen dort als 0,00.
+        Neue Buchungen werden vollständig mit allen Positionen exportiert.
+      </Tip>
     </div>
   );
 }

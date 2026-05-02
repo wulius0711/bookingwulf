@@ -1,6 +1,6 @@
 # bookingwulf — Interne Dokumentation
 
-> Stand: April 2026  
+> Stand: Mai 2026  
 > Stack: Next.js 16 · React 19 · PostgreSQL (Neon/Frankfurt) · Stripe · Resend · Vercel
 
 ---
@@ -136,6 +136,7 @@ Erweiterte Einstellungen pro Hotel. Enthält:
 - **Typografie:** `headlineFont`, `bodyFont`, `headlineFontSize`, `bodyFontSize`, `headlineFontWeight`, `bodyFontWeight`, `headlineFontUrl`, `bodyFontUrl` (eigene Schriften via Vercel Blob, Business)
 - **Layout:** `cardRadius`, `buttonRadius`
 - **Ortstaxe:** `ortstaxeMode` (String, default `"off"`) — `"off"` | `"wien"` | `"custom"`. Bei `"wien"` werden die datumsbezogenen Wiener Sätze automatisch angewendet (2,5237 % / 4,3478 % / 6,7797 % vom Zimmerpreis je nach Anreisedatum). Bei `"custom"`: `ortstaxePerPersonPerNight` (Decimal?) × Personen × Nächte. `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit (nur Custom-Modus).
+- **Steuer/Buchhaltung:** `taxRateRoom` (Decimal?) — MwSt.-Satz für Zimmerpreis in % (z.B. 10,00 für AT). `taxRateCleaning` (Decimal?) — MwSt.-Satz für Reinigungsgebühr in % (z.B. 20,00 für AT). Werden im CSV-Buchhaltungsexport für die Netto/Brutto-Aufschlüsselung verwendet.
 
 ### WidgetConfig *(Pro+: mehrere Widgets pro Hotel)*
 
@@ -185,7 +186,8 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | salutation / country / message | String? | Optionale Felder |
 | newsletter | Boolean | Newsletter-Einwilligung |
 | language | String | `de` / `en` / `it` |
-| extrasJson | Json | Gebuchte Zusatzleistungen (Zeilenpositionen) |
+| extrasJson | Json | Gebuchte Zusatzleistungen (Zeilenpositionen mit key, name, type, subtotal) |
+| pricingJson | Json? | Vollständiger Preis-Snapshot bei Buchungserstellung: `{ apartments: [{name, total, cleaning}], extrasTotal, ortstaxeTotal, total }` |
 
 ### HotelExtra *(Zusatzleistungen)*
 
@@ -559,7 +561,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/calendar` | Alle | Monatskalender mit Sperrzeiten + Buchungen |
 | `/admin/apartments` | Alle | Apartments anlegen, Bilder hochladen |
 | `/admin/blocked-dates` | Alle | Manuelle Sperrzeiten |
-| `/admin/price-seasons` | Pro | Saisonale Preise, Last-Minute Rabatt, Lücken-Rabatt, Verfügbarkeits-Hinweise, Ortstaxe/Kurtaxe |
+| `/admin/price-seasons` | Pro | Saisonale Preise, Last-Minute Rabatt, Lücken-Rabatt, Verfügbarkeits-Hinweise, Ortstaxe/Kurtaxe, Steuereinstellungen (MwSt.-Sätze für CSV-Export) |
 | `/admin/extras` | Pro | Zusatzleistungen & Versicherung |
 | `/admin/email-templates` | Pro | E-Mail-Vorlagen anpassen |
 | `/admin/users` | Pro | Team-Mitglieder einladen |
@@ -792,6 +794,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/admin/settings-presets` | GET/POST/DELETE | Branding-Presets |
 | `/api/admin/email-preview` | GET | E-Mail-Vorschau |
 | `/api/admin/billing-info` | GET | Abo-Status abrufen |
+| `/api/admin/export` | GET | Buchhaltungsexport als CSV (Parameter: `from`, `to` YYYY-MM-DD, optional `cancelled=1`) |
 | `/api/stripe/checkout` | POST | Stripe Checkout Session erstellen |
 | `/api/stripe/portal` | POST | Stripe Billing Portal Link |
 | `/api/stripe/webhook` | POST | Stripe-Webhooks (Signatur-Verifizierung) |
