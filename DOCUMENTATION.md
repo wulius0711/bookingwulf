@@ -938,7 +938,7 @@ Sofortbuchung (bookingType='booking')
 
 ---
 
-## 17. Beds24 Channel Manager (Pro+, In Vorbereitung)
+## 17. Beds24 Channel Manager (Pro)
 
 ### Übersicht
 
@@ -954,9 +954,19 @@ Booking.com ←→ Beds24 ↗
 - **Inbound (Echtzeit):** Beds24 → Webhook → `/api/beds24-webhook` → `BlockedRange` anlegen
 - **Outbound (sofort):** Buchung in bookingwulf → `pushBooking()` → Beds24 → Airbnb/Booking.com sperren
 
+### Authentifizierung (Beds24 API v2)
+
+Beds24 API v2 verwendet ein Invite-Code-basiertes Token-Flow:
+
+1. **Setup (einmalig):** `GET /authentication/setup` mit Header `code: <invite_code>` → liefert `refreshToken` + `token`
+2. **Token-Refresh:** `GET /authentication/token` mit Header `token: <refresh_token>` → liefert neuen `token`
+3. Alle API-Calls nutzen den kurzlebigen `token` als Header
+
+Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Einladungscode erstellen generiert. Sie sind **Einmalcodes** — nach Verwendung ungültig.
+
 ### Datenbankmodelle
 
-- `Beds24Config` — Credentials (`propKey`, `accountKey`) + `isEnabled`-Kill-Switch pro Hotel
+- `Beds24Config` — `refreshToken` (v2 API) + `isEnabled`-Kill-Switch pro Hotel
 - `Beds24ApartmentMapping` — verknüpft lokale `Apartment.id` mit `beds24RoomId`
 
 ### Implementierungsstand
@@ -964,20 +974,22 @@ Booking.com ←→ Beds24 ↗
 | Komponente | Status |
 |---|---|
 | DB-Schema + Prisma-Client | ✅ fertig |
-| `src/lib/beds24.ts` — `testConnection()` | ✅ implementiert |
-| `src/lib/beds24.ts` — `pushBooking()`, `setAvailability()` etc. | 🔲 Stub (wirft `NotImplemented`) |
-| `/api/admin/beds24` — Credentials-CRUD + Toggle | ✅ fertig |
+| `src/lib/beds24.ts` — `setupWithInviteCode()` | ✅ implementiert |
+| `src/lib/beds24.ts` — `pushBooking()` | ✅ implementiert |
+| `/api/admin/beds24` — Invite-Code-Setup, Toggle, Delete | ✅ fertig |
 | `/api/admin/beds24-mappings` — Room-Mapping-CRUD | ✅ fertig |
-| `/api/beds24-webhook` — Inbound, Token-Auth, loggt Payload | ✅ Stub (noch kein BlockedRange-Write) |
+| `/api/beds24-webhook` — Inbound, Token-Auth, BlockedRange-Write | ✅ fertig |
 | Admin UI `/admin/beds24` | ✅ fertig |
-| Outbound Sync-Hook in `/api/request` | ✅ Stub (non-blocking, loggt) |
+| Outbound Sync in `/api/request` | ✅ fertig (non-blocking) |
 
-### Aktivierung
+### Aktivierung (Ersteinrichtung)
 
-1. `BEDS24_WEBHOOK_SECRET` als Umgebungsvariable in Vercel setzen
-2. Webhook-URL in Beds24 eintragen: `https://domain/api/beds24-webhook?token=<SECRET>`
-3. `pushBooking()` in `src/lib/beds24.ts` implementieren
-4. Stub-Hook in `/api/request/route.ts` entkommentieren
+1. Beds24-Account anlegen unter beds24.com
+2. In Beds24: Airbnb/Booking.com unter Channel Manager verbinden
+3. `BEDS24_WEBHOOK_SECRET` als Umgebungsvariable in Vercel setzen
+4. In bookingwulf Admin → Beds24: Invite Code eingeben → Verbinden
+5. Zimmer-IDs pro Apartment zuordnen, Sync aktiv einschalten
+6. Webhook-URL in Beds24 unter Unterkünfte → Zugang eintragen: `https://domain/api/beds24-webhook?token=<SECRET>`, Webhook Version 2
 
 ### Sync-Frequenz
 

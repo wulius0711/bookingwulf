@@ -939,10 +939,6 @@ function Beds24Section() {
         Beds24 ist ein zertifizierter Channel Manager mit direkter Anbindung an Airbnb und Booking.com.
         Durch die Verbindung werden Buchungen automatisch synchronisiert — Doppelbuchungen werden nahezu ausgeschlossen.
       </P>
-      <div style={{ background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 12, padding: '14px 18px', marginBottom: 20, fontSize: 14, color: '#92400e', lineHeight: 1.6 }}>
-        <strong>In Vorbereitung</strong> — Die Verbindung kann bereits konfiguriert werden. Der vollautomatische Sync wird mit einem kommenden Update aktiviert.
-      </div>
-
       <H3>Wie es funktioniert</H3>
       <P>
         bookingwulf kommuniziert direkt mit Beds24. Beds24 ist bei Airbnb und Booking.com als Channel Manager
@@ -964,27 +960,29 @@ function Beds24Section() {
       <Step num={1} title="Beds24-Account anlegen & Kanäle verbinden">
         <P>
           Registrieren Sie sich unter <strong>beds24.com</strong> und verbinden Sie dort Airbnb und/oder
-          Booking.com über das Beds24-Dashboard (Einstellungen → Kanäle).
+          Booking.com über das Beds24-Dashboard (Channel Manager).
         </P>
       </Step>
-      <Step num={2} title="API-Keys in bookingwulf eingeben">
+      <Step num={2} title="Invite Code generieren & Verbindung herstellen">
         <P>
-          Im Admin-Bereich unter <strong>Beds24 Channel Manager</strong> tragen Sie Ihren
-          <strong> Prop Key</strong> und <strong>Account Key</strong> ein (zu finden in Beds24 unter
-          Einstellungen → API). bookingwulf testet die Verbindung automatisch.
+          In Beds24 unter <strong>Einstellungen → Marketplace → API → Einladungscode erstellen</strong> einen
+          neuen Code generieren (Berechtigungen: bookings lesen + ändern, inventory lesen).
+          Den Code im bookingwulf Admin unter <strong>Beds24 Channel Manager</strong> einfügen und auf
+          „Verbinden" klicken. Invite Codes sind Einmalcodes — nach Verbindung werden sie nicht mehr benötigt.
         </P>
       </Step>
       <Step num={3} title="Zimmer zuordnen">
         <P>
-          Ordnen Sie jedem Apartment die entsprechende <strong>Beds24 Room ID</strong> zu
-          (sichtbar in Beds24 unter Einstellungen → Zimmer).
+          Ordnen Sie jedem Apartment die entsprechende <strong>Beds24 Einheit ID</strong> zu
+          (sichtbar in Beds24 unter Einstellungen → Unterkünfte → Einheiten).
+          Danach <strong>Sync aktiv</strong> einschalten.
         </P>
       </Step>
       <Step num={4} title="Webhook eintragen">
         <P>
-          Tragen Sie die angezeigte Webhook-URL in Beds24 unter
-          <strong> Einstellungen → Benachrichtigungen</strong> ein.
-          Damit werden externe Buchungen in Echtzeit übermittelt.
+          Die angezeigte Webhook-URL in Beds24 unter
+          <strong> Unterkünfte → Zugang → Buchung Webhook</strong> eintragen (Webhook Version 2).
+          Damit werden externe Buchungen von Airbnb/Booking.com in Echtzeit übermittelt.
         </P>
       </Step>
 
