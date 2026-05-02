@@ -95,11 +95,6 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
 
   return (
     <div style={{ maxWidth: 620 }}>
-      {/* Info banner */}
-      <div style={{ padding: '12px 16px', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 10, fontSize: 13, color: '#92400e', marginBottom: 24, lineHeight: 1.6 }}>
-        <strong>In Vorbereitung</strong> — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.
-      </div>
-
       {/* Connection card */}
       <div style={cardStyle}>
         <p style={sectionTitle}>Verbindung</p>
