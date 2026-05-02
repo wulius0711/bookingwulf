@@ -29,7 +29,7 @@ export default function LandingPage() {
     { icon: '🎨', title: 'Individuelles Branding', desc: 'Farben, Formen und Funktionen passend zu Ihrem Hotel-Auftritt.' },
     { icon: <LayoutGrid size={28} />, title: 'Zimmerplan', desc: 'Belegungsstatus aller Apartments auf einen Blick — frei, belegt oder blockiert.' },
     { icon: '♊', title: 'Doppelt einsetzbar', desc: 'Gleichzeitig für Buchung und Anfrage verwenden.' },
-    { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Automatischer Kalenderabgleich mit Airbnb & Booking.com via iCal.' },
+    { icon: '🔄', title: 'Airbnb & Booking.com Sync', desc: 'Echtzeit-Sync via Beds24 Channel Manager — Doppelbuchungen ausgeschlossen.' },
     { icon: '📊', title: 'Buchungsverwaltung', desc: 'Alle Anfragen im Blick — Status ändern, filtern, exportieren.' },
     { icon: '💶', title: 'Dynamic Pricing', desc: 'Last-Minute-Rabatte, Mindestaufenthalte und belegungsbasierte Preise.' },
     { icon: '⚡', title: 'Einbau in 1 Minute', desc: 'Eine Zeile Code auf Ihre Website — kein Entwickler nötig.' },
