@@ -237,7 +237,7 @@ export default function LandingPage() {
           Das Buchungssystem für Hotels und Apartments
         </h1>
         <p style={{ fontSize: 18, color: '#555', lineHeight: 1.6, maxWidth: 580, margin: '0 auto 32px' }}>
-          Anfragen und Buchungen direkt auf Ihrer Website – ohne Provision, ohne Drittplattform.
+          Anfragen und Direktbuchungen ohne Provision – einfacher und moderner als Sie es kennen.
         </p>
         <div className="lp-hero-badges" style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
           {['Anpassbares Design', 'Einbauen in 5 Minuten', 'Kein Entwickler nötig'].map((label) => (
