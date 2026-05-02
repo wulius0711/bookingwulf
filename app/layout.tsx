@@ -40,6 +40,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: `(function(){document.documentElement.classList.remove('dark');var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);})();` }} />
