@@ -81,7 +81,7 @@ export default function FeedbackButton() {
         onClick={() => setOpen(true)}
         title="Feedback geben"
         style={{
-          position: 'fixed', top: 14, right: 18, zIndex: 900,
+          position: 'fixed', top: 8, right: 16, zIndex: 900,
           width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 8,
           cursor: 'pointer', color: '#9ca3af',
