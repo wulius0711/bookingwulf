@@ -4,6 +4,7 @@ import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18
 import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 import { bookingRequestSchema } from '@/src/lib/schemas';
 import { createNukiCode } from '@/src/lib/nuki';
+import { pushBooking } from '@/src/lib/beds24';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { calculateOrtstaxe } from '@/src/lib/ortstaxe';
 
@@ -131,6 +132,7 @@ export async function POST(req: Request) {
         id: true, name: true, basePrice: true, cleaningFee: true,
         nukiSmartlockId: true,
         priceSeasons: { select: { startDate: true, endDate: true, pricePerNight: true } },
+        beds24Mapping: { select: { beds24RoomId: true } },
       },
     });
 
@@ -235,17 +237,29 @@ export async function POST(req: Request) {
       });
     }
 
-    // Beds24 outbound sync — IN VORBEREITUNG
-    // When fully implemented: push booking to Beds24 so Airbnb/Booking.com get blocked
+    // Beds24 outbound sync — push booking to Beds24 so Airbnb/Booking.com get blocked
     if (bookingType === 'booking') {
       try {
         const beds24Config = await prisma.beds24Config.findUnique({
           where: { hotelId: hotel.id },
-          select: { isEnabled: true, propKey: true, accountKey: true },
+          select: { isEnabled: true, refreshToken: true },
         });
         if (beds24Config?.isEnabled) {
-          // TODO: await pushBooking(beds24Config.propKey, beds24Config.accountKey, { ... })
-          console.log('[Beds24] sync stub — booking', requestEntry.id, '(not yet implemented)');
+          const arrivalStr = arrival.toISOString().slice(0, 10);
+          const departureStr = departure.toISOString().slice(0, 10);
+          for (const apt of apartments) {
+            if (!apt.beds24Mapping?.beds24RoomId) continue;
+            await pushBooking(beds24Config.refreshToken, {
+              roomId: apt.beds24Mapping.beds24RoomId,
+              arrival: arrivalStr,
+              departure: departureStr,
+              guestName: `${firstname ?? ''} ${lastname}`.trim(),
+              guestEmail: email,
+              numAdults: adults,
+              numChildren: children,
+              externalRef: `BW-${requestEntry.id}`,
+            });
+          }
         }
       } catch (beds24Err) {
         // Non-blocking: booking proceeds regardless of Beds24 failures

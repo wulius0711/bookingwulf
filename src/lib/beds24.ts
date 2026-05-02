@@ -11,66 +11,85 @@ export type Beds24BookingPayload = {
   externalRef?: string;
 };
 
-export type Beds24AvailabilityBlock = {
-  roomId: string;
-  startDate: string; // YYYY-MM-DD
-  endDate: string;   // YYYY-MM-DD
+// Beds24 v2 booking webhook payload (subset of fields we care about)
+export type Beds24WebhookBooking = {
+  id?: number;
+  roomId?: string | number;
+  arrival?: string;   // YYYY-MM-DD
+  departure?: string; // YYYY-MM-DD
+  status?: string;    // "1"=confirmed, "2"=provisional, "3"=cancelled
+  firstName?: string;
+  lastName?: string;
+  email?: string;
 };
 
-function headers(propKey: string, accountKey: string): Record<string, string> {
-  return {
-    'propKey': propKey,
-    'accountKey': accountKey,
-    'Content-Type': 'application/json',
-  };
-}
-
-export async function testConnection(propKey: string, accountKey: string): Promise<{ ok: boolean; info?: string }> {
-  try {
-    const res = await fetch(`${BEDS24_API}/authentication/setup`, {
-      method: 'GET',
-      headers: headers(propKey, accountKey),
-    });
-    if (res.ok) {
-      const data = await res.json().catch(() => ({}));
-      return { ok: true, info: data?.propInfo?.name };
-    }
-    return { ok: false, info: `HTTP ${res.status}` };
-  } catch (err) {
-    return { ok: false, info: String(err) };
+// Exchange invite code for refresh token (one-time setup)
+// Invite codes are generated in Beds24: Einstellungen → Marketplace → API → Invite Code generieren
+export async function setupWithInviteCode(inviteCode: string): Promise<{ refreshToken: string; accessToken: string }> {
+  const res = await fetch(`${BEDS24_API}/authentication/setup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ inviteCode: inviteCode.trim() }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 Setup fehlgeschlagen: HTTP ${res.status} ${text}`);
   }
+  const data = await res.json();
+  if (!data.refreshToken || !data.token) {
+    throw new Error('Beds24: Ungültige Antwort — refreshToken oder token fehlt');
+  }
+  return { refreshToken: data.refreshToken, accessToken: data.token };
 }
 
-export async function getAvailability(
-  _propKey: string,
-  _accountKey: string,
-  _roomId: string,
-  _from: string,
-  _to: string,
-): Promise<unknown> {
-  throw new Error('[Beds24] getAvailability not yet implemented');
+// Get a fresh access token from the stored refresh token
+// Refresh tokens don't expire as long as they're used within 30 days
+async function getAccessToken(refreshToken: string): Promise<string> {
+  const res = await fetch(`${BEDS24_API}/authentication/token`, {
+    method: 'GET',
+    headers: { 'token': refreshToken },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 Token-Refresh fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+  const data = await res.json();
+  if (!data.token) throw new Error('Beds24: Token-Refresh lieferte kein token');
+  return data.token;
 }
 
-export async function setAvailability(
-  _propKey: string,
-  _accountKey: string,
-  _blocks: Beds24AvailabilityBlock[],
-): Promise<void> {
-  throw new Error('[Beds24] setAvailability not yet implemented');
-}
+// Push a confirmed booking to Beds24 so Airbnb/Booking.com get blocked
+export async function pushBooking(refreshToken: string, payload: Beds24BookingPayload): Promise<string> {
+  const accessToken = await getAccessToken(refreshToken);
 
-export async function getBookings(
-  _propKey: string,
-  _accountKey: string,
-  _roomId?: string,
-): Promise<unknown> {
-  throw new Error('[Beds24] getBookings not yet implemented');
-}
+  const nameParts = payload.guestName.trim().split(/\s+/);
+  const firstName = nameParts[0] ?? payload.guestName;
+  const lastName = nameParts.slice(1).join(' ') || '-';
 
-export async function pushBooking(
-  _propKey: string,
-  _accountKey: string,
-  _payload: Beds24BookingPayload,
-): Promise<string> {
-  throw new Error('[Beds24] pushBooking not yet implemented');
+  const body = [{
+    roomId: payload.roomId,
+    arrival: payload.arrival,
+    departure: payload.departure,
+    firstName,
+    lastName,
+    email: payload.guestEmail ?? '',
+    numAdult: payload.numAdults ?? 1,
+    numChild: payload.numChildren ?? 0,
+    status: '1', // confirmed
+    ...(payload.externalRef ? { apiReference: payload.externalRef } : {}),
+  }];
+
+  const res = await fetch(`${BEDS24_API}/bookings`, {
+    method: 'POST',
+    headers: { 'token': accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 pushBooking fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+
+  const data = await res.json().catch(() => []);
+  return String(data?.[0]?.id ?? '');
 }

@@ -24,7 +24,7 @@ export default async function Beds24Page() {
     where: { id: session.hotelId },
     select: {
       plan: true,
-      beds24Config: { select: { propKey: true, isEnabled: true } },
+      beds24Config: { select: { isEnabled: true } },
       apartments: { select: { id: true, name: true }, where: { isActive: true }, orderBy: { sortOrder: 'asc' } },
     },
   });

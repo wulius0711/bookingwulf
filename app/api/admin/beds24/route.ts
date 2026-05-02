@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { testConnection } from '@/src/lib/beds24';
+import { setupWithInviteCode } from '@/src/lib/beds24';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 
 async function getHotelAndCheckPlan(session: Awaited<ReturnType<typeof verifySession>>) {
@@ -32,23 +32,22 @@ export async function POST(req: Request) {
     const hotel = await getHotelAndCheckPlan(session);
     if (!hotel) return NextResponse.json({ error: 'Nicht verfügbar.' }, { status: 403 });
 
-    const { propKey, accountKey } = await req.json();
-    if (!propKey?.trim() || !accountKey?.trim())
-      return NextResponse.json({ error: 'propKey und accountKey erforderlich.' }, { status: 400 });
+    const { inviteCode } = await req.json();
+    if (!inviteCode?.trim())
+      return NextResponse.json({ error: 'Invite Code erforderlich.' }, { status: 400 });
 
-    const result = await testConnection(propKey.trim(), accountKey.trim());
-    if (!result.ok)
-      return NextResponse.json({ error: `Verbindung fehlgeschlagen: ${result.info}` }, { status: 400 });
+    const { refreshToken } = await setupWithInviteCode(inviteCode.trim());
 
     await prisma.beds24Config.upsert({
       where: { hotelId: session.hotelId! },
-      create: { hotelId: session.hotelId!, propKey: propKey.trim(), accountKey: accountKey.trim() },
-      update: { propKey: propKey.trim(), accountKey: accountKey.trim() },
+      create: { hotelId: session.hotelId!, refreshToken },
+      update: { refreshToken },
     });
 
-    return NextResponse.json({ ok: true, info: result.info });
-  } catch {
-    return NextResponse.json({ error: 'Fehler beim Speichern.' }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Fehler beim Verbinden.';
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
 

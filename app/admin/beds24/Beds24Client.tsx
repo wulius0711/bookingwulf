@@ -26,8 +26,7 @@ const btnOutline: React.CSSProperties = {
 export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings }: Props) {
   const [connected, setConnected] = useState(initialConnected);
   const [enabled, setEnabled] = useState(initialEnabled);
-  const [propKey, setPropKey] = useState('');
-  const [accountKey, setAccountKey] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [mappings, setMappings] = useState<Record<number, string>>(initialMappings);
   const [status, setStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
   const [saving, setSaving] = useState(false);
@@ -39,13 +38,13 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
     const res = await fetch('/api/admin/beds24', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propKey, accountKey }),
+      body: JSON.stringify({ inviteCode }),
     });
     const data = await res.json();
     if (res.ok) {
       setConnected(true);
       setStatus({ type: 'success', msg: `Verbunden${data.info ? ` — ${data.info}` : ''}` });
-      setPropKey(''); setAccountKey('');
+      setInviteCode('');
     } else {
       setStatus({ type: 'error', msg: data.error || 'Fehler' });
     }
@@ -122,21 +121,17 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         ) : (
           <form onSubmit={handleConnect} style={{ display: 'grid', gap: 12 }}>
             <div style={{ display: 'grid', gap: 4 }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Prop Key</label>
-              <input type="password" value={propKey} onChange={e => setPropKey(e.target.value)} placeholder="Beds24 Property Key" style={inputStyle} required />
-            </div>
-            <div style={{ display: 'grid', gap: 4 }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Account Key</label>
-              <input type="password" value={accountKey} onChange={e => setAccountKey(e.target.value)} placeholder="Beds24 Account Key" style={inputStyle} required />
+              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Invite Code</label>
+              <input type="password" value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Beds24 Invite Code" style={inputStyle} required />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button type="submit" style={btnStyle} disabled={saving}>{saving ? 'Verbinden…' : 'Verbindung testen & speichern'}</button>
+              <button type="submit" style={btnStyle} disabled={saving}>{saving ? 'Verbinden…' : 'Verbinden'}</button>
               {status && (
                 <span style={{ fontSize: 13, color: status.type === 'success' ? '#16a34a' : '#dc2626' }}>{status.msg}</span>
               )}
             </div>
             <p style={{ fontSize: 12, color: '#9ca3af', margin: 0, lineHeight: 1.5 }}>
-              Den Prop Key und Account Key finden Sie in Ihrem Beds24-Dashboard unter Einstellungen → API.
+              Den Invite Code generieren Sie in Beds24 unter Einstellungen → Marketplace → API → Invite Code generieren.
             </p>
           </form>
         )}
