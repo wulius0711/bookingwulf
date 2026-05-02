@@ -27,9 +27,8 @@ export type Beds24WebhookBooking = {
 // Invite codes are generated in Beds24: Einstellungen → Marketplace → API → Invite Code generieren
 export async function setupWithInviteCode(inviteCode: string): Promise<{ refreshToken: string; accessToken: string }> {
   const res = await fetch(`${BEDS24_API}/authentication/setup`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ inviteCode: inviteCode.trim() }),
+    method: 'GET',
+    headers: { 'code': inviteCode.trim() },
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
