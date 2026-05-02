@@ -78,6 +78,9 @@ export async function saveHotelSettings(formData: FormData) {
 
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
 
+      taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
+      taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
+
     },
     create: {
       hotelId,
@@ -121,6 +124,9 @@ export async function saveHotelSettings(formData: FormData) {
       preArrivalEnabled: getBool('preArrivalEnabled'),
       preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
       preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
+
+      taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
+      taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
 
     },
   });

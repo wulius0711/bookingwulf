@@ -58,6 +58,27 @@ async function saveOrtstaxe(formData: FormData) {
   });
 }
 
+async function saveTaxRates(formData: FormData) {
+  'use server';
+  const session = await verifySession();
+  const hotelId = Number(formData.get('hotelId') || 0);
+  if (!hotelId) return;
+  if (session.hotelId !== null && hotelId !== session.hotelId) return;
+
+  const taxData = {
+    taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
+    taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
+  };
+
+  await prisma.hotelSettings.upsert({
+    where: { hotelId },
+    update: taxData,
+    create: { hotelId, ...taxData },
+  });
+
+  revalidatePath('/admin/price-seasons');
+}
+
 async function saveDynamicPricing(formData: FormData) {
   'use server';
   const session = await verifySession();
@@ -100,7 +121,7 @@ export default async function PriceSeasonsPage() {
   const selectedHotelId = session.hotelId;
 
   const hotelData = selectedHotelId !== null
-    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } } } })
+    ? await prisma.hotel.findUnique({ where: { id: selectedHotelId }, select: { plan: true, settings: { select: { lastMinuteDiscountPercent: true, lastMinuteDiscountDays: true, occupancySurchargePercent: true, occupancySurchargeThreshold: true, showUrgencySignals: true, urgencyThreshold: true, gapNightDiscount: true, gapNightMaxLength: true, ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, taxRateRoom: true, taxRateCleaning: true } } } })
     : null;
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
@@ -328,6 +349,49 @@ export default async function PriceSeasonsPage() {
               </button>
             </div>
           </form>
+          </div>
+        </div>
+      )}
+      {/* STEUEREINSTELLUNGEN */}
+      {selectedHotelId !== null && (
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Steuer / Buchhaltung</h2>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
+          </div>
+          <div style={{ padding: '20px' }}>
+            <form action={saveTaxRates} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+              <input type="hidden" name="hotelId" value={selectedHotelId} />
+              <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>MwSt. Zimmerpreis %</label>
+                <input
+                  name="taxRateRoom"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  defaultValue={Number(s?.taxRateRoom ?? '') || ''}
+                  placeholder="z. B. 10"
+                  style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+                />
+              </div>
+              <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>MwSt. Reinigung %</label>
+                <input
+                  name="taxRateCleaning"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  defaultValue={Number(s?.taxRateCleaning ?? '') || ''}
+                  placeholder="z. B. 20"
+                  style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
+                />
+              </div>
+              <button type="submit" style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                Speichern
+              </button>
+            </form>
           </div>
         </div>
       )}

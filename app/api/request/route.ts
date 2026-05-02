@@ -221,6 +221,12 @@ export async function POST(req: Request) {
         status: 'new',
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
+        pricingJson: {
+          apartments: apartmentPricing,
+          extrasTotal,
+          ortstaxeTotal,
+          total: totalBookingPrice,
+        },
       },
     });
 

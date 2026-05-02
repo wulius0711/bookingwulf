@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { DeleteAllRequestsButton } from './DeleteButtons';
 import RequestList from './RequestList';
+import ExportButton from './ExportButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,9 +62,12 @@ export default async function RequestsPage() {
             {isSuperAdmin ? 'Alle Hotels' : hotelName}
           </p>
         </div>
-        {isSuperAdmin && requests.length > 0 && (
-          <DeleteAllRequestsButton hotelSlug="" count={requests.length} />
-        )}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <ExportButton />
+          {isSuperAdmin && requests.length > 0 && (
+            <DeleteAllRequestsButton hotelSlug="" count={requests.length} />
+          )}
+        </div>
       </div>
 
       {requests.length === 0 ? (

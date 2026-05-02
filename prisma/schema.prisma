@@ -115,6 +115,10 @@ model HotelSettings {
   ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2)  // used in "custom" mode
   ortstaxeMinAge            Int?     // children below this age are exempt (null = all pay)
 
+  // 🧾 Steuer / Buchhaltung
+  taxRateRoom     Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Zimmerpreis in % (z.B. 10.00)
+  taxRateCleaning Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Reinigung in % (z.B. 20.00)
+
   // 🔗 Mini-Widget
   miniWidgetTarget String?  // URL of the page where the full widget is embedded
 
@@ -292,6 +296,7 @@ model Request {
   status               String   @default("new")
   language             String   @default("de") // de | en | it
   extrasJson           Json?
+  pricingJson          Json?    // snapshot: { apartments: {name,total,cleaning}[], ortstaxe, total }
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
