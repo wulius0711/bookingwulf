@@ -160,7 +160,7 @@ export default async function CheckinPage({ params }: Props) {
 
                 {/* Meldezettel */}
                 <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
-                  <strong>Kurzer Hinweis:</strong> In Österreich sind Beherbergungsbetriebe gesetzlich verpflichtet, bei der Anreise die Ausweisdaten ihrer Gäste zu erfassen. Das dauert nur einen Moment — danke für dein Verständnis!
+                  <strong>Kurzer Hinweis:</strong> In Österreich sind Beherbergungsbetriebe gesetzlich verpflichtet, bei der Anreise die Ausweisdaten ihrer Gäste zu erfassen. Das dauert nur einen Moment — danke für Ihr Verständnis!
                 </div>
                 <div>
                   <label htmlFor="birthdate">Geburtsdatum</label>
