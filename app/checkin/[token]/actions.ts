@@ -19,8 +19,10 @@ export async function submitCheckin(formData: FormData) {
     select: {
       id: true,
       checkinCompletedAt: true,
+      salutation: true,
       firstname: true,
       lastname: true,
+      country: true,
       arrival: true,
       departure: true,
       nights: true,
