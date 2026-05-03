@@ -74,8 +74,10 @@ export async function submitCheckin(formData: FormData) {
             ${buildInfoBlock('Geplante Ankunft', arrivalTime)}
             ${buildDivider()}
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Meldedaten (Meldegesetz)</div>
+            ${buildInfoBlock('Name', [request.salutation, request.firstname, request.lastname].filter(Boolean).join(' '))}
             ${birthdate ? buildInfoBlock('Geburtsdatum', birthdate) : ''}
             ${nationality ? buildInfoBlock('Staatsangehörigkeit', nationality) : ''}
+            ${request.country ? buildInfoBlock('Herkunftsland', request.country) : ''}
             ${docNumber ? buildInfoBlock('Ausweis-/Reisepassnr.', docNumber) : ''}
             ${notes ? `${buildDivider()}${buildInfoBlock('Besondere Wünsche', notes)}` : ''}
           `,
