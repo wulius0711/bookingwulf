@@ -23,6 +23,9 @@ export default async function CheckinPage({ params }: Props) {
       checkinCompletedAt: true,
       checkinArrivalTime: true,
       checkinNotes: true,
+      checkinBirthdate: true,
+      checkinNationality: true,
+      checkinDocNumber: true,
       hotelId: true,
       hotel: { select: { name: true, accentColor: true } },
     },
@@ -102,6 +105,7 @@ export default async function CheckinPage({ params }: Props) {
                 <p>
                   Du hast das Check-in Formular bereits ausgefüllt.
                   {request.checkinArrivalTime && <><br />Geplante Ankunft: <strong>{request.checkinArrivalTime}</strong></>}
+                  {request.checkinNationality && <><br />Staatsangehörigkeit: <strong>{request.checkinNationality}</strong></>}
                 </p>
               </div>
             ) : (
@@ -137,6 +141,23 @@ export default async function CheckinPage({ params }: Props) {
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
+                </div>
+
+                {/* Meldezettel */}
+                <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
+                  <strong>Kurzer Hinweis:</strong> In Österreich sind Beherbergungsbetriebe gesetzlich verpflichtet, bei der Anreise die Ausweisdaten ihrer Gäste zu erfassen. Das dauert nur einen Moment — danke für dein Verständnis!
+                </div>
+                <div>
+                  <label htmlFor="birthdate">Geburtsdatum</label>
+                  <input id="birthdate" name="birthdate" type="date" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
+                </div>
+                <div>
+                  <label htmlFor="nationality">Staatsangehörigkeit</label>
+                  <input id="nationality" name="nationality" type="text" required placeholder="z. B. Österreich, Deutschland …" style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
+                </div>
+                <div>
+                  <label htmlFor="docNumber">Reisepass- / Ausweisnummer</label>
+                  <input id="docNumber" name="docNumber" type="text" required placeholder="z. B. P1234567" style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
                 </div>
 
                 {/* Notes */}

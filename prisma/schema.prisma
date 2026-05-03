@@ -308,6 +308,9 @@ model Request {
   checkinArrivalTime     String?
   checkinNotes           String?
   checkinReminderSentAt  DateTime?
+  checkinBirthdate       String?
+  checkinNationality     String?
+  checkinDocNumber       String?
 
   messages RequestMessage[]
 

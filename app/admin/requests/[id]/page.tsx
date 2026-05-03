@@ -418,6 +418,14 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   {request.checkinNotes}
                 </div>
               )}
+              {(request.checkinBirthdate || request.checkinNationality || request.checkinDocNumber) && (
+                <div style={{ gridColumn: '2', marginTop: 8, fontSize: 13, color: '#374151', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Meldedaten</div>
+                  {request.checkinBirthdate && <div>Geburtsdatum: <strong>{request.checkinBirthdate}</strong></div>}
+                  {request.checkinNationality && <div>Staatsangehörigkeit: <strong>{request.checkinNationality}</strong></div>}
+                  {request.checkinDocNumber && <div>Ausweis-/Reisepassnr.: <strong>{request.checkinDocNumber}</strong></div>}
+                </div>
+              )}
             </div>
           )}
 
