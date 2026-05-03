@@ -359,6 +359,52 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
             </div>
 
+            {/* ANZAHLUNG & BANKDATEN */}
+            <div className="settings-section" style={sectionStyle}>
+              <div>
+                <h2 style={sectionTitleStyle}>Anzahlung & Bankdaten</h2>
+                <p style={sectionIntroStyle}>Wird im Widget bei verbindlichen Buchungen angezeigt.</p>
+              </div>
+              <div style={{ display: 'grid', gap: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
+                  <label htmlFor="depositEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Anzahlung aktivieren</label>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={labelStyle}>Art</label>
+                    <select name="depositType" defaultValue={selected.settings?.depositType ?? 'percent'} style={{ ...inputStyle, width: '100%' }}>
+                      <option value="percent">Prozentsatz (%)</option>
+                      <option value="fixed">Fixbetrag (€)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Wert</label>
+                    <input name="depositValue" type="number" min="0" step="0.01" defaultValue={selected.settings?.depositValue ?? 25} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Zahlungsfrist (Tage)</label>
+                    <input name="depositDueDays" type="number" min="1" max="90" defaultValue={selected.settings?.depositDueDays ?? 7} style={inputStyle} />
+                  </div>
+                </div>
+                <div>
+                  <label style={labelStyle}>Kontoinhaber</label>
+                  <input name="bankAccountHolder" type="text" defaultValue={selected.settings?.bankAccountHolder ?? ''} placeholder="Max Mustermann" style={inputStyle} />
+                </div>
+                <div>
+                  <label style={labelStyle}>
+                    IBAN
+                    <span style={{ fontWeight: 400, color: '#9ca3af', fontSize: 12, marginLeft: 6 }}>— wird in der Buchungsbestätigung angezeigt</span>
+                  </label>
+                  <input name="bankIban" type="text" defaultValue={selected.settings?.bankIban ?? ''} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
+                </div>
+                <div>
+                  <label style={labelStyle}>BIC / SWIFT</label>
+                  <input name="bankBic" type="text" defaultValue={selected.settings?.bankBic ?? ''} placeholder="BKAUATWW" style={inputStyle} />
+                </div>
+              </div>
+            </div>
+
             {/* DESIGN */}
             <div className="settings-section" style={sectionStyle}>
               <div>
@@ -555,52 +601,6 @@ export default async function Page({ searchParams }: PageProps) {
                 }
               </div>
               {!fullBranding && <ProLockOverlay />}
-            </div>
-
-            {/* ANZAHLUNG & BANKDATEN */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Anzahlung & Bankdaten</h2>
-                <p style={sectionIntroStyle}>Wird im Widget bei verbindlichen Buchungen angezeigt.</p>
-              </div>
-              <div style={{ display: 'grid', gap: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
-                  <label htmlFor="depositEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Anzahlung aktivieren</label>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div>
-                    <label style={labelStyle}>Art</label>
-                    <select name="depositType" defaultValue={selected.settings?.depositType ?? 'percent'} style={{ ...inputStyle, width: '100%' }}>
-                      <option value="percent">Prozentsatz (%)</option>
-                      <option value="fixed">Fixbetrag (€)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Wert</label>
-                    <input name="depositValue" type="number" min="0" step="0.01" defaultValue={selected.settings?.depositValue ?? 25} style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Zahlungsfrist (Tage)</label>
-                    <input name="depositDueDays" type="number" min="1" max="90" defaultValue={selected.settings?.depositDueDays ?? 7} style={inputStyle} />
-                  </div>
-                </div>
-                <div>
-                  <label style={labelStyle}>Kontoinhaber</label>
-                  <input name="bankAccountHolder" type="text" defaultValue={selected.settings?.bankAccountHolder ?? ''} placeholder="Max Mustermann" style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>
-                    IBAN
-                    <span style={{ fontWeight: 400, color: '#9ca3af', fontSize: 12, marginLeft: 6 }}>— wird in der Buchungsbestätigung angezeigt</span>
-                  </label>
-                  <input name="bankIban" type="text" defaultValue={selected.settings?.bankIban ?? ''} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>BIC / SWIFT</label>
-                  <input name="bankBic" type="text" defaultValue={selected.settings?.bankBic ?? ''} placeholder="BKAUATWW" style={inputStyle} />
-                </div>
-              </div>
             </div>
 
             {/* FEATURES */}
