@@ -123,6 +123,7 @@ model HotelSettings {
   depositEnabled      Boolean @default(false)
   depositType         String  @default("percent")  // "percent" | "fixed"
   depositValue        Float   @default(25)
+  depositDueDays      Int     @default(7)
   bankAccountHolder   String?
   bankIban            String?
   bankBic             String?

@@ -2835,7 +2835,7 @@
             submit_request_btn: 'Anfragen',
             submit_booking_label: 'Buchung',
             submit_payment_options: 'Zahlungsoptionen',
-            submit_payment_desc: 'Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von {amount} innerhalb von 7 Tagen.',
+            submit_payment_desc: 'Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von {amount} innerhalb von {days} Tagen.',
             submit_bank_transfer: 'Banküberweisung',
             submit_credit_card: 'Kreditkarte',
             submit_coming_soon: 'Bald',
@@ -2957,7 +2957,7 @@
             submit_request_btn: 'Inquire',
             submit_booking_label: 'Booking',
             submit_payment_options: 'Payment options',
-            submit_payment_desc: 'To confirm your reservation, we kindly ask for a deposit of {amount} within 7 days.',
+            submit_payment_desc: 'To confirm your reservation, we kindly ask for a deposit of {amount} within {days} days.',
             submit_bank_transfer: 'Bank transfer',
             submit_credit_card: 'Credit card',
             submit_coming_soon: 'Soon',
@@ -5032,6 +5032,7 @@
             const bankIban = state.settings?.bankIban || '';
             const bankBic = state.settings?.bankBic || '';
             const bankHolder = state.settings?.bankAccountHolder || '';
+            const depositDueDays = state.settings?.depositDueDays ?? 7;
             const bankBlock = (deposit > 0 && bankIban)
               ? '<div style="margin-top:10px;padding:12px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;font-size:13px;line-height:1.7;">' +
                 (bankHolder ? '<div><strong>' + bankHolder + '</strong></div>' : '') +
@@ -5071,7 +5072,7 @@
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</button>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
-              (deposit > 0 ? '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>' }) + '</div>' : '') +
+              (deposit > 0 ? '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>', days: String(depositDueDays) }) + '</div>' : '') +
               '<div class="pm-cards">' +
               '<div class="pm-card selected" id="pmCardBank">' +
               '<span class="pm-radio"></span>' + t('submit_bank_transfer') +
