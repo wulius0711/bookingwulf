@@ -5017,12 +5017,28 @@
 
           if (isBooking) {
             const total = getTotal();
-            const deposit =
-              total > 0 ? Math.round((total * 0.25) / 10) * 10 : 0;
+            const depositEnabled = state.settings?.depositEnabled ?? false;
+            const depositType = state.settings?.depositType ?? 'percent';
+            const depositValue = state.settings?.depositValue ?? 25;
+            const deposit = depositEnabled && total > 0
+              ? (depositType === 'fixed'
+                  ? depositValue
+                  : Math.round((total * depositValue / 100) / 10) * 10)
+              : 0;
             const depositText =
               deposit > 0
                 ? '\u20ac\u00a0' + deposit.toFixed(2).replace('.', ',')
                 : '\u2014';
+            const bankIban = state.settings?.bankIban || '';
+            const bankBic = state.settings?.bankBic || '';
+            const bankHolder = state.settings?.bankAccountHolder || '';
+            const bankBlock = (deposit > 0 && bankIban)
+              ? '<div style="margin-top:10px;padding:12px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;font-size:13px;line-height:1.7;">' +
+                (bankHolder ? '<div><strong>' + bankHolder + '</strong></div>' : '') +
+                '<div>IBAN: <strong>' + bankIban + '</strong></div>' +
+                (bankBic ? '<div>BIC: <strong>' + bankBic + '</strong></div>' : '') +
+                '</div>'
+              : '';
             const cardStyle =
               'position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:28px 16px 14px;margin-top:20px;';
             const labelStyle =
@@ -5055,7 +5071,7 @@
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</button>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
-              '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>' }) + '</div>' +
+              (deposit > 0 ? '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>' }) + '</div>' : '') +
               '<div class="pm-cards">' +
               '<div class="pm-card selected" id="pmCardBank">' +
               '<span class="pm-radio"></span>' + t('submit_bank_transfer') +
@@ -5064,6 +5080,7 @@
               '<span class="pm-radio"></span>' + t('submit_credit_card') + '<span class="pm-badge">' + t('submit_coming_soon') + '</span>' +
               '</div>' +
               '</div>' +
+              bankBlock +
               '<input type="hidden" id="paymentMethod" value="' + t('submit_bank_transfer') + '" />' +
               '</div>' +
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +

@@ -118,7 +118,7 @@ export async function POST(req: Request) {
           select: { key: true, name: true, type: true, billingType: true, price: true },
         },
         nukiConfig: { select: { apiToken: true } },
-        settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, preArrivalEnabled: true } },
+        settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, preArrivalEnabled: true, depositEnabled: true, depositType: true, depositValue: true, bankAccountHolder: true, bankIban: true, bankBic: true } },
       },
     });
 
@@ -331,6 +331,30 @@ export async function POST(req: Request) {
     const accent = hotel.accentColor || '#111827';
     const apartmentNames = apartments.map(a => a.name).join(', ');
 
+    // Deposit + bank details block for guest email
+    const depositEnabled = hotel.settings?.depositEnabled ?? false;
+    const depositType = hotel.settings?.depositType ?? 'percent';
+    const depositValue = hotel.settings?.depositValue ?? 25;
+    const depositAmount = depositEnabled && totalBookingPrice > 0
+      ? (depositType === 'fixed'
+          ? depositValue
+          : Math.round((totalBookingPrice * depositValue / 100) / 10) * 10)
+      : 0;
+    const bankIban = hotel.settings?.bankIban;
+    const bankBic = hotel.settings?.bankBic;
+    const bankHolder = hotel.settings?.bankAccountHolder;
+    const depositBlock = (isInstantBooking && depositAmount > 0 && bankIban)
+      ? `${buildDivider()}
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;">
+          <div style="font-size:11px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Anzahlung</div>
+          <p style="margin:0 0 12px;font-size:14px;color:#374151;">Bitte überweisen Sie innerhalb von 7 Tagen einen Anzahlungsbetrag von <strong>€ ${depositAmount.toFixed(2).replace('.', ',')}</strong> auf folgendes Konto:</p>
+          ${bankHolder ? `<div style="font-size:14px;color:#111827;font-weight:600;">${bankHolder}</div>` : ''}
+          <div style="font-size:14px;color:#111827;">IBAN: <strong>${bankIban}</strong></div>
+          ${bankBic ? `<div style="font-size:14px;color:#111827;">BIC: <strong>${bankBic}</strong></div>` : ''}
+          <div style="font-size:13px;color:#6b7280;margin-top:8px;">Verwendungszweck: Buchung #${requestEntry.id} – ${firstname} ${lastname}</div>
+        </div>`
+      : '';
+
     const tplVars: Record<string, string> = {
       '{{guestName}}': firstname,
       '{{guestLastName}}': lastname,
@@ -500,6 +524,7 @@ export async function POST(req: Request) {
               ${buildExtrasSection(true)}
               ${buildDivider()}
               ${guestPriceTable}
+              ${depositBlock}
               ${message ? buildDivider() + buildInfoBlock(i18n.yourMessage, message) : ''}
               ${nukiCode ? `
                 ${buildDivider()}

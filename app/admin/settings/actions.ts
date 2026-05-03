@@ -81,6 +81,13 @@ export async function saveHotelSettings(formData: FormData) {
       taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
       taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
 
+      depositEnabled: getBool('depositEnabled'),
+      depositType: String(formData.get('depositType') || 'percent'),
+      depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,
+      bankAccountHolder: String(formData.get('bankAccountHolder') || '').trim() || null,
+      bankIban: String(formData.get('bankIban') || '').trim() || null,
+      bankBic: String(formData.get('bankBic') || '').trim() || null,
+
     },
     create: {
       hotelId,
@@ -127,6 +134,13 @@ export async function saveHotelSettings(formData: FormData) {
 
       taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
       taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
+
+      depositEnabled: getBool('depositEnabled'),
+      depositType: String(formData.get('depositType') || 'percent'),
+      depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,
+      bankAccountHolder: String(formData.get('bankAccountHolder') || '').trim() || null,
+      bankIban: String(formData.get('bankIban') || '').trim() || null,
+      bankBic: String(formData.get('bankBic') || '').trim() || null,
 
     },
   });
