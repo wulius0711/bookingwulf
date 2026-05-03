@@ -45,6 +45,16 @@ export default async function CheckinPage({ params }: Props) {
   const accent = request.hotel?.accentColor || '#111827';
   const hotelName = request.hotel?.name || 'Hotel';
 
+  function hexLuminance(hex: string): number {
+    const c = hex.replace('#', '');
+    const r = parseInt(c.slice(0, 2), 16) / 255;
+    const g = parseInt(c.slice(2, 4), 16) / 255;
+    const b = parseInt(c.slice(4, 6), 16) / 255;
+    const toLinear = (v: number) => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  }
+  const checkmarkColor = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
+
   const fmtDate = (d: Date) =>
     new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
@@ -103,7 +113,7 @@ export default async function CheckinPage({ params }: Props) {
                 <div className="icon">
                   <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="32" cy="32" r="32" fill={accent} />
-                    <path d="M18 33l10 10 18-18" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M18 33l10 10 18-18" stroke={checkmarkColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h2>Bereits eingecheckt</h2>
