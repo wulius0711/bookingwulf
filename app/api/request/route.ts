@@ -118,7 +118,7 @@ export async function POST(req: Request) {
           select: { key: true, name: true, type: true, billingType: true, price: true },
         },
         nukiConfig: { select: { apiToken: true } },
-        settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true } },
+        settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, preArrivalEnabled: true } },
       },
     });
 
@@ -211,6 +211,12 @@ export async function POST(req: Request) {
 
     const totalBookingPrice = apartmentsTotal + extrasTotal + ortstaxeTotal;
 
+    // Generate checkin token for instant bookings when pre-arrival is enabled
+    const isInstantBooking = bookingType === 'booking';
+    const checkinToken = isInstantBooking && hotel.settings?.preArrivalEnabled
+      ? crypto.randomUUID()
+      : null;
+
     // Save to DB
     const requestEntry = await prisma.request.create({
       data: {
@@ -218,7 +224,7 @@ export async function POST(req: Request) {
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
         message: message || null, newsletter,
-        status: 'new',
+        status: isInstantBooking ? 'booked' : 'new',
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
         pricingJson: {
@@ -227,6 +233,7 @@ export async function POST(req: Request) {
           ortstaxeTotal,
           total: totalBookingPrice,
         },
+        ...(checkinToken ? { checkinToken } : {}),
       },
     });
 
@@ -400,6 +407,8 @@ export async function POST(req: Request) {
 
       const receiverEmail = hotel.email || process.env.BOOKING_RECEIVER_EMAIL!;
       const fromEmail = getFromEmail();
+      const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+      const checkinUrl = checkinToken ? `${base}/checkin/${checkinToken}` : null;
 
       // Hotel notification (always German)
       const hotelTpl = getTpl('request_hotel');
@@ -498,6 +507,16 @@ export async function POST(req: Request) {
                   <div style="font-size:12px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">🔑 Ihr digitaler Zugangscode</div>
                   <div style="font-size:36px;font-weight:800;letter-spacing:0.15em;color:#111827;font-family:monospace;">${nukiCode}</div>
                   <div style="font-size:13px;color:#374151;margin-top:8px;">Gültig von Anreise bis Abreise — öffnet das Schloss direkt vor Ort.</div>
+                </div>
+              ` : ''}
+              ${checkinUrl ? `
+                ${buildDivider()}
+                <div style="margin-top:4px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
+                  <p style="margin:0 0 10px;font-size:14px;color:#374151;font-weight:600;">Online Check-in</p>
+                  <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Füllen Sie bitte vorab das Online Check-in Formular aus — das spart Zeit bei der Ankunft.</p>
+                  <a href="${checkinUrl}" style="display:inline-block;padding:10px 20px;background:${accent};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                    Jetzt einchecken →
+                  </a>
                 </div>
               ` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">
