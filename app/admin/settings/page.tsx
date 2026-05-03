@@ -370,7 +370,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
                   <label htmlFor="depositEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Anzahlung aktivieren</label>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                <div className="deposit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
                   <div>
                     <label style={labelStyle}>Art</label>
                     <select name="depositType" defaultValue={selected.settings?.depositType ?? 'percent'} style={{ ...inputStyle, width: '100%' }}>

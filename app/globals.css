@@ -595,6 +595,10 @@ button, a[role="button"], input[type="submit"] {
   .settings-color-row {
     grid-template-columns: 1fr 1fr !important;
   }
+
+  .deposit-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 .admin-page h1 {
