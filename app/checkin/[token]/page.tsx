@@ -111,7 +111,7 @@ export default async function CheckinPage({ params }: Props) {
             {completed ? (
               <div className="success">
                 <div className="icon">
-                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="32" cy="32" r="32" fill={accent} />
                     <path d="M18 33l10 10 18-18" stroke={checkmarkColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
