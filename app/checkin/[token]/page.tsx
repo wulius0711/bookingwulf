@@ -92,7 +92,7 @@ export default async function CheckinPage({ params }: Props) {
           .btn { display: block; width: 100%; padding: 13px; border-radius: 10px; border: none; background: ${accent}; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
           .btn:hover { opacity: 0.9; }
           .success { text-align: center; padding: 32px 20px; }
-          .success .icon { margin-bottom: 12px; }
+          .success .icon { margin-bottom: 12px; display: flex; justify-content: center; }
           .success h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
           .success p { font-size: 15px; color: #6b7280; line-height: 1.6; }
           .logo { text-align: center; margin-bottom: 24px; font-size: 13px; color: #9ca3af; font-weight: 500; letter-spacing: 0.04em; }
