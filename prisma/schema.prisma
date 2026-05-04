@@ -85,6 +85,10 @@ model HotelSettings {
   checkoutTime            String?  // e.g. "10:00 Uhr"
   checkoutReminderText    String?  // host instructions shown in the email
 
+  reviewRequestEnabled Boolean @default(false)
+  reviewRequestDays    Int     @default(2)   // days after departure to send
+  reviewRequestLink    String?              // Google Reviews URL
+
   // 🎨 Colors
   accentColor      String?  // Primary highlight
   backgroundColor  String?  // App background
@@ -337,6 +341,7 @@ model Request {
   checkinDocNumber       String?
 
   checkoutReminderSentAt DateTime?
+  reviewRequestSentAt    DateTime?
 
   messages RequestMessage[]
 

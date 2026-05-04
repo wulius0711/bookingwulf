@@ -57,7 +57,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true } } },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -130,6 +130,29 @@ export default async function EmailTemplatesPage() {
         checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
         checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
         checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
+      },
+    });
+    revalidatePath('/admin/email-templates');
+  }
+
+  async function saveReviewSettings(formData: FormData) {
+    'use server';
+    const session = await verifySession();
+    if (session.hotelId === null) return;
+    const hotel = await prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { plan: true } });
+    if (!hasPlanAccess(hotel?.plan ?? 'starter', 'pro')) return;
+    await prisma.hotelSettings.upsert({
+      where: { hotelId: session.hotelId },
+      update: {
+        reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
+        reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
+        reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
+      },
+      create: {
+        hotelId: session.hotelId,
+        reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
+        reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
+        reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
       },
     });
     revalidatePath('/admin/email-templates');
@@ -326,6 +349,44 @@ export default async function EmailTemplatesPage() {
               <SaveButton />
             </div>
           </form>
+        </div>
+      )}
+
+      {/* BEWERTUNGSANFRAGE */}
+      {hotel && (
+        <div style={{ position: 'relative', marginTop: 16 }}>
+          <div style={{ opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none', border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Bewertungsanfrage</h2>
+            <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
+              Gäste erhalten X Tage nach der Abreise automatisch eine E-Mail mit der Bitte, eine Google-Bewertung zu hinterlassen.
+            </p>
+            <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false}
+                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Bewertungsanfrage aktivieren</span>
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Versand X Tage nach Abreise</label>
+                  <input type="number" name="reviewRequestDays" min="1" max="14"
+                    defaultValue={s?.reviewRequestDays ?? 2}
+                    style={{ ...inputStyle, width: 120 }} />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Google Reviews Link</label>
+                <input type="url" name="reviewRequestLink"
+                  defaultValue={s?.reviewRequestLink ?? ''}
+                  placeholder="https://g.page/r/…/review"
+                  style={inputStyle} />
+              </div>
+              <div>
+                <SaveButton />
+              </div>
+            </form>
+          </div>
+          {!hasPro && <ProLockOverlay />}
         </div>
       )}
     </main>
