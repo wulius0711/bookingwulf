@@ -88,6 +88,8 @@ model HotelSettings {
   reviewRequestEnabled Boolean @default(false)
   reviewRequestDays    Int     @default(2)   // days after departure to send
   reviewRequestLink    String?              // Google Reviews URL
+  reviewRequestSubject String?
+  reviewRequestBody    String?
 
   // 🎨 Colors
   accentColor      String?  // Primary highlight

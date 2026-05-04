@@ -15,6 +15,8 @@ export async function GET(req: Request) {
       hotelId: true,
       reviewRequestDays: true,
       reviewRequestLink: true,
+      reviewRequestSubject: true,
+      reviewRequestBody: true,
       hotel: { select: { plan: true } },
     },
   });
@@ -53,6 +55,10 @@ export async function GET(req: Request) {
       if (!r.email) continue;
       const hotelName = r.hotel?.name || 'Hotel';
       const reviewUrl = hs.reviewRequestLink;
+      const subject = (hs.reviewRequestSubject || 'Wie war dein Aufenthalt? — {{hotelName}}')
+        .replace('{{hotelName}}', hotelName);
+      const bodyText = hs.reviewRequestBody ||
+        'wir hoffen, es hat dir bei uns gefallen! Wenn du einen Moment Zeit hast, würden wir uns sehr über eine kurze Bewertung freuen — das hilft uns sehr und anderen Gästen bei ihrer Entscheidung.';
 
       try {
         const resend = getResend();
@@ -60,7 +66,7 @@ export async function GET(req: Request) {
           await resend.emails.send({
             from: getFromEmail(),
             to: r.email,
-            subject: `Wie war dein Aufenthalt? — ${hotelName}`,
+            subject,
             html: buildEmailHtml({
               hotelName,
               accentColor: r.hotel?.accentColor || undefined,
@@ -69,9 +75,7 @@ export async function GET(req: Request) {
               body: `
                 <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px;">
                   Hallo ${r.firstname || r.lastname},<br/><br/>
-                  wir hoffen, es hat dir bei uns gefallen! Wenn du einen Moment Zeit hast,
-                  würden wir uns sehr über eine kurze Bewertung freuen — das hilft uns sehr
-                  und anderen Gästen bei ihrer Entscheidung.
+                  ${bodyText.replace(/\n/g, '<br/>')}
                 </p>
                 <div style="margin-top:24px;">
                   <a href="${reviewUrl}" style="display:inline-block;padding:13px 28px;background:${r.hotel?.accentColor || '#111827'};color:#ffffff;text-decoration:none;border-radius:10px;font-size:15px;font-weight:700;">

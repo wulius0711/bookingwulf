@@ -57,7 +57,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true } } },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true, reviewRequestSubject: true, reviewRequestBody: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -147,12 +147,16 @@ export default async function EmailTemplatesPage() {
         reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
         reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
         reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
+        reviewRequestSubject: String(formData.get('reviewRequestSubject') || '').trim() || null,
+        reviewRequestBody: String(formData.get('reviewRequestBody') || '').trim() || null,
       },
       create: {
         hotelId: session.hotelId,
         reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
         reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
         reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
+        reviewRequestSubject: String(formData.get('reviewRequestSubject') || '').trim() || null,
+        reviewRequestBody: String(formData.get('reviewRequestBody') || '').trim() || null,
       },
     });
     revalidatePath('/admin/email-templates');
@@ -209,70 +213,53 @@ export default async function EmailTemplatesPage() {
 
       <div style={{ position: 'relative' }}>
         <div style={{ opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
-          <form action={saveTemplates} style={{ display: 'grid', gap: 24 }}>
+          <form action={saveTemplates} style={{ display: 'grid', gap: 12 }}>
             {TEMPLATE_TYPES.map(({ type, label, description, defaultSubject, defaultBody }) => {
               const saved = getTemplate(type);
               return (
-                <div key={type} style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', display: 'grid', gap: 14 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                <details key={type} style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden' }}>
+                  <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
                     <div>
-                      <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 2px' }}>{label}</h2>
-                      <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{description}</p>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{label}</div>
+                      <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>{description}</div>
                     </div>
-                    <a
-                      href={`/api/admin/email-preview?type=${type}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ padding: '6px 14px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}
-                    >
-                      Vorschau
-                    </a>
+                    <span style={{ fontSize: 18, color: '#9ca3af', flexShrink: 0 }}>›</span>
+                  </summary>
+                  <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <a
+                        href={`/api/admin/email-preview?type=${type}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}
+                      >
+                        Vorschau
+                      </a>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: 4 }}>
+                      <label style={labelStyle}>Betreff</label>
+                      <input name={`${type}_subject`} type="text" defaultValue={saved?.subject ?? defaultSubject} style={inputStyle} />
+                    </div>
+
+                    {type !== 'request_hotel' && (
+                      <>
+                        <div style={{ display: 'grid', gap: 4 }}>
+                          <label style={labelStyle}>Begrüßung</label>
+                          <input name={`${type}_greeting`} type="text" defaultValue={saved?.greeting ?? 'Hallo {{guestName}},'} style={inputStyle} />
+                        </div>
+                        <div style={{ display: 'grid', gap: 4 }}>
+                          <label style={labelStyle}>Fließtext</label>
+                          <textarea name={`${type}_body`} defaultValue={saved?.body ?? defaultBody} rows={4} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                        </div>
+                        <div style={{ display: 'grid', gap: 4 }}>
+                          <label style={labelStyle}>Verabschiedung</label>
+                          <input name={`${type}_signoff`} type="text" defaultValue={saved?.signoff ?? 'Mit freundlichen Grüßen'} style={inputStyle} />
+                        </div>
+                      </>
+                    )}
                   </div>
-
-                  <div style={{ display: 'grid', gap: 4 }}>
-                    <label style={labelStyle}>Betreff</label>
-                    <input
-                      name={`${type}_subject`}
-                      type="text"
-                      defaultValue={saved?.subject ?? defaultSubject}
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  {type !== 'request_hotel' && (
-                    <>
-                      <div style={{ display: 'grid', gap: 4 }}>
-                        <label style={labelStyle}>Begrüßung</label>
-                        <input
-                          name={`${type}_greeting`}
-                          type="text"
-                          defaultValue={saved?.greeting ?? 'Hallo {{guestName}},'}
-                          style={inputStyle}
-                        />
-                      </div>
-
-                      <div style={{ display: 'grid', gap: 4 }}>
-                        <label style={labelStyle}>Fließtext</label>
-                        <textarea
-                          name={`${type}_body`}
-                          defaultValue={saved?.body ?? defaultBody}
-                          rows={4}
-                          style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
-                        />
-                      </div>
-
-                      <div style={{ display: 'grid', gap: 4 }}>
-                        <label style={labelStyle}>Verabschiedung</label>
-                        <input
-                          name={`${type}_signoff`}
-                          type="text"
-                          defaultValue={saved?.signoff ?? 'Mit freundlichen Grüßen'}
-                          style={inputStyle}
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
+                </details>
               );
             })}
 
@@ -381,7 +368,20 @@ export default async function EmailTemplatesPage() {
                   placeholder="https://g.page/r/…/review"
                   style={inputStyle} />
               </div>
-              <div>
+              <div style={{ height: 1, background: '#f3f4f6' }} />
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Betreff</label>
+                <input type="text" name="reviewRequestSubject"
+                  defaultValue={s?.reviewRequestSubject ?? 'Wie war dein Aufenthalt? — {{hotelName}}'}
+                  style={inputStyle} />
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>E-Mail-Text</label>
+                <textarea name="reviewRequestBody" rows={4}
+                  defaultValue={s?.reviewRequestBody ?? 'wir hoffen, es hat dir bei uns gefallen! Wenn du einen Moment Zeit hast, würden wir uns sehr über eine kurze Bewertung freuen — das hilft uns sehr und anderen Gästen bei ihrer Entscheidung.'}
+                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <SaveButton />
               </div>
             </form>
