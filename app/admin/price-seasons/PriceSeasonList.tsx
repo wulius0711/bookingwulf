@@ -39,13 +39,18 @@ export default function PriceSeasonList({
   }
 
   return (
-    <div style={{ display: 'grid', gap: 8 }}>
+    <>
+      <style>{`
+        .price-season-grid { display: grid; gap: 12px; }
+        @media (min-width: 640px) { .price-season-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
+      `}</style>
+      <div className="price-season-grid">
       {seasons.map((s) => {
         const isOpen = open === s.id;
         return (
           <div
             key={s.id}
-            style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', overflow: 'hidden' }}
+            style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
           >
             <button
               type="button"
@@ -125,5 +130,6 @@ export default function PriceSeasonList({
         );
       })}
     </div>
+    </>
   );
 }
