@@ -242,6 +242,10 @@ button, a[role="button"], input[type="submit"] {
 }
 
 @media (max-width: 768px) {
+  .admin-page {
+    padding: 20px 12px;
+  }
+
   .help-layout {
     display: block;
   }
@@ -590,6 +594,15 @@ button, a[role="button"], input[type="submit"] {
 
   .settings-section {
     padding: 16px !important;
+  }
+
+  .settings-section > summary {
+    padding: 14px 16px !important;
+  }
+
+  .settings-section > div {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
   }
 
   .settings-color-row {
