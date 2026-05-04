@@ -322,8 +322,7 @@ export default async function EmailTemplatesPage() {
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer"                style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
                 Vorschau
               </a>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
@@ -381,8 +380,7 @@ export default async function EmailTemplatesPage() {
                 <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                  style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer"                  style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
                   Vorschau
                 </a>
                 <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
