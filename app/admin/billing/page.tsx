@@ -203,10 +203,24 @@ export default function BillingPage() {
           </span>
         </div>
 
+        {/* Bundle plan indicator (only shown when on bundle_all) */}
+        {currentPlan === 'bundle_all' && (
+          <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '2px solid #0284c7', borderRadius: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+              <span style={{ fontSize: 22 }}>⭐</span>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>hotelwulf Bundle</div>
+            </div>
+            <p style={{ margin: 0, fontSize: 14, color: '#0369a1', lineHeight: 1.6 }}>
+              Du hast das hotelwulf Bundle — alle Plattformen inklusive. Für Änderungen an deinem Abonnement wende dich an den Support.
+            </p>
+          </div>
+        )}
+
         {/* Plan cards */}
         <div className="plan-grid" style={{ display: 'grid', gap: 16 }}>
-          {(Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).map(([key, plan]) => {
+          {(Object.entries(PLANS) as [PlanKey, typeof PLANS[PlanKey]][]).filter(([key]) => key !== 'bundle_all').map(([key, plan]) => {
             const isCurrent = currentPlan === key;
+            const isBundle = currentPlan === 'bundle_all';
             return (
               <div
                 key={key}
@@ -253,7 +267,7 @@ export default function BillingPage() {
                   <button
                     className="btn-primary"
                     onClick={() => handlePlanAction(key)}
-                    disabled={actionLoading || isCurrent}
+                    disabled={actionLoading || isCurrent || isBundle}
                     style={{
                       padding: '10px 16px',
                       borderRadius: 8,
@@ -262,14 +276,14 @@ export default function BillingPage() {
                       border: 'none',
                       fontSize: 14,
                       fontWeight: 600,
-                      cursor: isCurrent ? 'default' : 'pointer',
-                      opacity: isCurrent ? 0.4 : actionLoading ? 0.6 : 1,
+                      cursor: isCurrent || isBundle ? 'default' : 'pointer',
+                      opacity: isCurrent || isBundle ? 0.4 : actionLoading ? 0.6 : 1,
                     }}
                   >
                     {isCurrent ? 'Ausgewählt' : 'Auswählen'}
                   </button>
 
-                  {status === 'trialing' && (
+                  {status === 'trialing' && !isBundle && (
                     <button
                       onClick={() => handleCheckout(key)}
                       disabled={actionLoading}

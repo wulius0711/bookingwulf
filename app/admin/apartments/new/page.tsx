@@ -274,13 +274,9 @@ export default async function NewApartmentPage() {
           </div>
 
           {/* Actions */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-              Apartment anlegen
-            </button>
-            <a href="/admin/apartments" style={{ padding: '11px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-              Abbrechen
-            </a>
+          <div className="admin-form-actions">
+            <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
+            <button type="submit" className="btn-primary">Apartment anlegen</button>
           </div>
 
         </form>

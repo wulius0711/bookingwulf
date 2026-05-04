@@ -127,19 +127,9 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-          <button
-            type="submit"
-            style={{ flex: 1, padding: '12px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 15, fontWeight: 600 }}
-          >
-            Speichern
-          </button>
-          <a
-            href="/admin/blocked-dates"
-            style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 15, fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
-          >
-            Abbrechen
-          </a>
+        <div className="admin-form-actions">
+          <a href="/admin/blocked-dates" className="btn-cancel">Abbrechen</a>
+          <button type="submit" className="btn-primary">Speichern</button>
         </div>
       </form>
       </div>

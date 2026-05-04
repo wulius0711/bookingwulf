@@ -4,6 +4,9 @@ import { notFound, redirect } from 'next/navigation';
 import { ColorField } from '@/app/admin/settings/color-field';
 import HungrywulfToggle from './HungrywulfToggle';
 import EventwulfToggle from './EventwulfToggle';
+import { PLANS, PlanKey } from '@/src/lib/plans';
+import { PLAN_LABEL } from '@/src/lib/plan-gates';
+import PlanSelector from './PlanSelector';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +24,7 @@ export default async function EditHotelPage({ params }: PageProps) {
     where: { id: hotelId },
     select: {
       id: true, name: true, slug: true, email: true, phone: true,
-      accentColor: true, isActive: true,
+      accentColor: true, isActive: true, plan: true,
       hungrywulfEnabled: true, hungrywulfRestaurantId: true,
       eventwulfEnabled: true, eventwulfOrgId: true,
     },
@@ -61,7 +64,7 @@ export default async function EditHotelPage({ params }: PageProps) {
     label: { fontSize: 14, color: '#374151', paddingTop: 9, fontWeight: 500 } satisfies React.CSSProperties,
     input: { width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', boxSizing: 'border-box' as const },
     hint: { fontSize: 12, color: '#9ca3af', marginTop: 4 } satisfies React.CSSProperties,
-    btnPrimary: { padding: '9px 20px', borderRadius: 8, background: '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' } satisfies React.CSSProperties,
+    btnPrimary: { padding: '9px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' } satisfies React.CSSProperties,
     btnSecondary: { padding: '9px 20px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 14, fontWeight: 500, textDecoration: 'none', display: 'inline-block' } satisfies React.CSSProperties,
     integGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 } satisfies React.CSSProperties,
     integCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '20px 24px' } satisfies React.CSSProperties,
@@ -130,11 +133,25 @@ export default async function EditHotelPage({ params }: PageProps) {
             </label>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>
-            <button type="submit" style={s.btnPrimary}>Speichern</button>
-            <a href="/admin/hotels" style={s.btnSecondary}>Abbrechen</a>
+          <div className="admin-form-actions" style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>
+            <a href="/admin/hotels" className="btn-cancel">Abbrechen</a>
+            <button type="submit" className="btn-primary">Speichern</button>
           </div>
         </form>
+      </div>
+
+      {/* Plan */}
+      <div style={{ ...s.card, marginBottom: 24 }} className="he-card">
+        <div style={s.cardTitle}>Plan</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 2 }}>Aktueller Plan</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>
+              {PLAN_LABEL[hotel.plan as PlanKey] ?? hotel.plan}
+            </div>
+          </div>
+          <PlanSelector hotelId={hotel.id} currentPlan={hotel.plan} plans={Object.entries(PLANS).map(([key, p]) => ({ key, name: p.name }))} />
+        </div>
       </div>
 
       {/* Integrations */}

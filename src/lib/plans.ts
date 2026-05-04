@@ -26,6 +26,15 @@ export const PLANS = {
     maxHotels: 2,
     features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Priority Support'],
   },
+  bundle_all: {
+    name: 'hotelwulf Bundle',
+    priceMonthly: 179,
+    priceYearly: 164,
+    maxApartments: Infinity,
+    maxUsers: Infinity,
+    maxHotels: 1,
+    features: ['bookingwulf — Zimmerbuchungen', 'hungrywulf — Tischreservierungen', 'eventwulf — Event-Management', 'Alle Business-Features inklusive', 'Einheitliches Dashboard & Reporting', 'Priority Support & persönlicher Ansprechpartner', 'Keine Provision auf Buchungen'],
+  },
 } as const;
 
 export type PlanKey = keyof typeof PLANS;

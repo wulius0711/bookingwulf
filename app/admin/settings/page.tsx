@@ -380,6 +380,18 @@ export default async function Page({ searchParams }: PageProps) {
                     <input type="checkbox" name="paypalEnabled" id="paypalEnabled" defaultChecked={selected.settings?.paypalEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
                     <label htmlFor="paypalEnabled" style={{ ...labelStyle, marginBottom: 0 }}>PayPal</label>
                   </div>
+                  {(selected.settings?.paypalEnabled) && (
+                    <div style={{ display: 'grid', gap: 10, paddingLeft: 26 }}>
+                      <div>
+                        <label style={labelStyle}>PayPal Client ID</label>
+                        <input name="paypalClientId" type="text" defaultValue={selected.settings?.paypalClientId ?? ''} placeholder="AaBbCc..." style={inputStyle} />
+                      </div>
+                      <div>
+                        <label style={labelStyle}>PayPal Client Secret</label>
+                        <input name="paypalClientSecret" type="password" defaultValue={selected.settings?.paypalClientSecret ?? ''} placeholder="••••••••" style={inputStyle} />
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />

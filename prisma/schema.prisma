@@ -122,6 +122,8 @@ model HotelSettings {
   // 💳 Zahlungsarten
   bankTransferEnabled Boolean @default(true)
   paypalEnabled       Boolean @default(false)
+  paypalClientId      String?
+  paypalClientSecret  String?
 
   // 💳 Anzahlung & Bankdaten
   depositEnabled      Boolean @default(false)
@@ -306,6 +308,7 @@ model Request {
   country              String
   message              String?
   paymentMethod        String?
+  paypalOrderId        String?
   newsletter           Boolean  @default(false)
   status               String   @default("new")
   language             String   @default("de") // de | en | it

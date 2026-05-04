@@ -1,6 +1,6 @@
 import { PLANS, PlanKey } from './plans';
 
-const PLAN_LEVEL: Record<string, number> = { starter: 0, pro: 1, business: 2 };
+const PLAN_LEVEL: Record<string, number> = { starter: 0, pro: 1, business: 2, bundle_all: 3 };
 
 export function canAddApartment(plan: string, currentCount: number): boolean {
   const p = PLANS[plan as PlanKey] ?? PLANS.starter;
@@ -19,11 +19,15 @@ export function canAddUser(plan: string, currentCount: number): boolean {
 }
 
 export function hasFullBranding(plan: string): boolean {
-  return plan === 'pro' || plan === 'business';
+  return plan === 'pro' || plan === 'business' || plan === 'bundle_all';
 }
 
 export function hasAdvancedTypography(plan: string): boolean {
-  return plan === 'business';
+  return plan === 'business' || plan === 'bundle_all';
+}
+
+export function isBundlePlan(plan: string): boolean {
+  return plan === 'bundle_all';
 }
 
 export function getPlanLimits(plan: string) {
@@ -53,4 +57,5 @@ export const PLAN_LABEL: Record<PlanKey, string> = {
   starter: 'Starter',
   pro: 'Pro',
   business: 'Business',
+  bundle_all: 'hotelwulf Bundle',
 };

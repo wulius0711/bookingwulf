@@ -88,13 +88,9 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
                 <label style={labelStyle}>Notiz</label>
                 <input type="text" name="note" placeholder="z. B. Familienurlaub" style={inputStyle} />
               </div>
-              <div style={{ paddingTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <button type="submit" style={{ padding: '11px 24px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-                  Speichern
-                </button>
-                <a href="/admin/blocked-dates" style={{ padding: '11px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-                  Abbrechen
-                </a>
+              <div className="admin-form-actions">
+                <a href="/admin/blocked-dates" className="btn-cancel">Abbrechen</a>
+                <button type="submit" className="btn-primary">Speichern</button>
               </div>
             </form>
           </div>

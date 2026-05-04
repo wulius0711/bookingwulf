@@ -45,8 +45,8 @@ export default async function UserHotelsPage({ params }: PageProps) {
   return (
     <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 600 }}>
       <a href="/admin/users" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>← Zurück</a>
-      <h1 style={{ marginTop: 12, marginBottom: 4, fontSize: 24, color: '#111' }}>Hotels verwalten</h1>
-      <p style={{ margin: '0 0 28px', fontSize: 13, color: '#6b7280' }}>{user.email}</p>
+      <h1 className="page-title" style={{ marginTop: 12, marginBottom: 4 }}>Hotels verwalten</h1>
+      <p style={{ margin: '0 0 28px', fontSize: 14, color: '#667085' }}>{user.email}</p>
 
       {/* Assigned hotels */}
       <div style={{ display: 'grid', gap: 10, marginBottom: 28 }}>

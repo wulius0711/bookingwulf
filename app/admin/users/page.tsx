@@ -61,18 +61,7 @@ export default async function UsersPage() {
             Admin-Zugänge verwalten
           </p>
         </div>
-        <Link
-          href="/admin/users/new"
-          style={{
-            textDecoration: 'none',
-            padding: '10px 18px',
-            background: '#111',
-            color: '#fff',
-            borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
+        <Link href="/admin/users/new" className="btn-primary">
           Neuer Benutzer
         </Link>
       </div>

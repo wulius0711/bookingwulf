@@ -601,6 +601,57 @@ button, a[role="button"], input[type="submit"] {
   }
 }
 
+details.settings-section > summary span {
+  transition: transform 0.2s ease;
+}
+
+details.settings-section[open] > summary span {
+  transform: rotate(180deg);
+}
+
+.admin-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px;
+}
+
+.btn-primary {
+  padding: 11px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.btn-cancel {
+  padding: 11px 20px;
+  background: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  margin-right: auto;
+}
+
 .admin-page h1 {
   font-size: 28px !important;
   font-weight: 600 !important;

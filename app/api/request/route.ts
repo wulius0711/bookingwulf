@@ -218,13 +218,14 @@ export async function POST(req: Request) {
       : null;
 
     // Save to DB
+    const isPaypalBooking = paymentMethod.toLowerCase() === 'paypal' && bookingType === 'booking';
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id, arrival, departure, nights, adults, children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
         message: message || null, paymentMethod: paymentMethod || null, newsletter,
-        status: isInstantBooking ? 'booked' : 'new',
+        status: isPaypalBooking ? 'pending_paypal' : (isInstantBooking ? 'booked' : 'new'),
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
         pricingJson: {
@@ -236,6 +237,34 @@ export async function POST(req: Request) {
         ...(checkinToken ? { checkinToken } : {}),
       },
     });
+
+    // PayPal redirect flow — return approval URL, skip blocking and emails
+    if (isPaypalBooking) {
+      try {
+        const hotelSettings = await prisma.hotelSettings.findUnique({
+          where: { hotelId: hotel.id },
+          select: { paypalClientId: true, paypalClientSecret: true },
+        });
+        if (hotelSettings?.paypalClientId && hotelSettings?.paypalClientSecret) {
+          const { getPaypalAccessToken, createPaypalOrder } = await import('@/src/lib/paypal');
+          const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+          const accessToken = await getPaypalAccessToken(hotelSettings.paypalClientId, hotelSettings.paypalClientSecret);
+          const { orderId, approvalUrl } = await createPaypalOrder(
+            accessToken,
+            totalBookingPrice,
+            'EUR',
+            `${base}/api/paypal/capture?requestId=${requestEntry.id}`,
+            `${base}/booking-confirmed?status=cancelled`,
+            `Buchung #${requestEntry.id} — ${hotel.name}`,
+          );
+          await prisma.request.update({ where: { id: requestEntry.id }, data: { paypalOrderId: orderId } });
+          return Response.json({ success: true, approvalUrl }, { headers: corsHeaders });
+        }
+      } catch (paypalErr) {
+        console.error('[PayPal] order creation failed:', paypalErr);
+        // Fall through to normal response if PayPal fails
+      }
+    }
 
     // Auto-block dates for confirmed bookings
     if (bookingType === 'booking') {

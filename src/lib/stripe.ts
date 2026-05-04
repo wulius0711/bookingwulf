@@ -38,6 +38,7 @@ export function getPriceId(plan: PlanKey, interval: 'month' | 'year' = 'month'):
       starter: process.env.STRIPE_PRICE_STARTER_YEARLY ?? '',
       pro: process.env.STRIPE_PRICE_PRO_YEARLY ?? '',
       business: process.env.STRIPE_PRICE_BUSINESS_YEARLY ?? '',
+      bundle_all: '',
     };
     return map[plan];
   }
@@ -45,6 +46,7 @@ export function getPriceId(plan: PlanKey, interval: 'month' | 'year' = 'month'):
     starter: process.env.STRIPE_PRICE_STARTER ?? '',
     pro: process.env.STRIPE_PRICE_PRO ?? '',
     business: process.env.STRIPE_PRICE_BUSINESS ?? '',
+    bundle_all: '',
   };
   return map[plan];
 }

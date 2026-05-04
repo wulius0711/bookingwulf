@@ -5,6 +5,44 @@ import { redirect, notFound } from 'next/navigation';
 
 type PageProps = { params: Promise<{ id: string }> };
 
+const inp: React.CSSProperties = {
+  width: '100%',
+  padding: '10px 12px',
+  border: '1px solid #e5e7eb',
+  borderRadius: 8,
+  fontSize: 14,
+  background: '#f9fafb',
+  color: '#111',
+  boxSizing: 'border-box',
+};
+
+const lbl: React.CSSProperties = {
+  fontSize: 12,
+  fontWeight: 700,
+  color: '#4b5563',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  marginBottom: 4,
+  display: 'block',
+};
+
+const fld: React.CSSProperties = { display: 'grid', gap: 4 };
+
+const card: React.CSSProperties = {
+  background: '#fff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 16,
+  overflow: 'hidden',
+};
+
+const cardHead: React.CSSProperties = {
+  background: '#fafafa',
+  padding: '14px 20px',
+  borderBottom: '1px solid #f3f4f6',
+};
+
+const cardBody: React.CSSProperties = { padding: '20px', display: 'grid', gap: 16 };
+
 export default async function EditPriceSeasonPage({ params }: PageProps) {
   const session = await verifySession();
   const { id } = await params;
@@ -62,103 +100,75 @@ export default async function EditPriceSeasonPage({ params }: PageProps) {
 
   const fmt = (d: Date) => new Date(d).toISOString().slice(0, 10);
 
-  const fieldStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '10px 12px',
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
-    fontSize: 14,
-    background: '#ffffff',
-    color: '#111',
-    boxSizing: 'border-box',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 12,
-    fontWeight: 700,
-    color: '#4b5563',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
-    marginBottom: 4,
-    display: 'block',
-  };
-
-  const fieldWrap: React.CSSProperties = { display: 'grid', gap: 4 };
-
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 520 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Preiszeitraum bearbeiten</h1>
+    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', display: 'grid', gap: 24 }}>
 
-      <form action={updateSeason} style={{ display: 'grid', gap: 16 }}>
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Name / Bezeichnung</label>
-          <input
-            type="text"
-            name="name"
-            defaultValue={season.name ?? ''}
-            placeholder="z. B. Hochsaison, Weihnachten …"
-            required
-            style={fieldStyle}
-          />
+        <div>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Preiszeitraum bearbeiten</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Saison, Zeitraum und Preis anpassen.</p>
         </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Apartment</label>
-          <select name="apartmentId" required defaultValue={season.apartmentId} style={fieldStyle}>
-            {apartments.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
-        </div>
+        <form action={updateSeason} style={{ display: 'grid', gap: 20 }}>
+          <div style={card}>
+            <div style={cardHead}>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Preiszeitraum</h2>
+            </div>
+            <div style={cardBody}>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Von</label>
-          <input type="date" name="startDate" required defaultValue={fmt(season.startDate)} style={fieldStyle} />
-        </div>
+              <div style={fld}>
+                <label style={lbl}>Name / Bezeichnung</label>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={season.name ?? ''}
+                  placeholder="z. B. Hochsaison, Weihnachten …"
+                  required
+                  style={inp}
+                />
+              </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Bis</label>
-          <input type="date" name="endDate" required defaultValue={fmt(season.endDate)} style={fieldStyle} />
-        </div>
+              <div style={fld}>
+                <label style={lbl}>Apartment</label>
+                <select name="apartmentId" required defaultValue={season.apartmentId} style={inp}>
+                  {apartments.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </select>
+              </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Preis pro Nacht (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="pricePerNight"
-            defaultValue={season.pricePerNight}
-            required
-            style={fieldStyle}
-          />
-        </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Von</label>
+                  <input type="date" name="startDate" required defaultValue={fmt(season.startDate)} style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Bis</label>
+                  <input type="date" name="endDate" required defaultValue={fmt(season.endDate)} style={inp} />
+                </div>
+              </div>
 
-        <div style={fieldWrap}>
-          <label style={labelStyle}>Mindestaufenthalt (Nächte)</label>
-          <input
-            type="number"
-            name="minStay"
-            defaultValue={season.minStay}
-            min={1}
-            style={fieldStyle}
-          />
-        </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={fld}>
+                  <label style={lbl}>Preis pro Nacht (€)</label>
+                  <input type="number" step="0.01" name="pricePerNight" defaultValue={season.pricePerNight} required style={inp} />
+                </div>
+                <div style={fld}>
+                  <label style={lbl}>Mindestaufenthalt (Nächte)</label>
+                  <input type="number" name="minStay" defaultValue={season.minStay} min={1} style={inp} />
+                </div>
+              </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-          <button
-            type="submit"
-            style={{ flex: 1, padding: '12px', background: '#111', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 15, fontWeight: 600 }}
-          >
-            Speichern
-          </button>
-          <a
-            href="/admin/price-seasons"
-            style={{ padding: '12px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 15, fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
-          >
-            Abbrechen
-          </a>
-        </div>
-      </form>
+            </div>
+          </div>
+
+          <div className="admin-form-actions">
+            <a href="/admin/price-seasons" className="btn-cancel">Abbrechen</a>
+            <button type="submit" className="btn-primary">Speichern</button>
+          </div>
+        </form>
+
+      </div>
     </main>
   );
 }

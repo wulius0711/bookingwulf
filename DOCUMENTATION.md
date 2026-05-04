@@ -116,7 +116,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 | name | String | Hotelname |
 | slug | String (unique) | URL-Kennung für Widget-Einbindung |
 | email | String? | Empfangs-E-Mail für Buchungen |
-| plan | String | `starter` / `pro` / `business` |
+| plan | String | `starter` / `pro` / `business` / `bundle_all` |
 | subscriptionStatus | String | `trialing` / `active` / `inactive` / `past_due` |
 | trialEndsAt | DateTime? | Ende der 14-Tage-Testphase |
 | stripeCustomerId | String? | Stripe-Kunden-ID |
@@ -282,34 +282,48 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 
 ### Preise
 
-| Plan | Monatlich | Jährlich | Apartments | Nutzer | Hotels |
-|---|---|---|---|---|---|
-| **Starter** | €55 | €49 | 5 | 1 | 1 |
-| **Pro** | €109 | €99 | 20 | 3 | 1 |
-| **Business** | €217 | €199 | unbegrenzt | unbegrenzt | 2 |
+| Plan | Monatlich | Jährlich | Apartments | Nutzer | Hotels | Besonderheit |
+|---|---|---|---|---|---|---|
+| **Starter** | €59 | €54 | 3 | 1 | 1 | — |
+| **Pro** | €119 | €109 | 15 | 3 | 1 | — |
+| **Business** | €249 | €229 | unbegrenzt | unbegrenzt | 2 | — |
+| **hotelwulf Bundle** | €179 | €164 | unbegrenzt | unbegrenzt | 1 | Nur per Superadmin zuweisbar |
 
-### Feature-Gates (`src/lib/plan-gates.ts`)
+### Plan-Hierarchie (`src/lib/plan-gates.ts`)
+
+```typescript
+const PLAN_LEVEL = { starter: 0, pro: 1, business: 2, bundle_all: 3 };
+```
+
+`bundle_all` ist kein Upgrade-Pfad für Kunden — er wird ausschließlich vom Superadmin über `/admin/hotels/[id]` → Plan-Sektion zugewiesen. Auf der Billing-Seite (`/admin/billing`) ist `bundle_all` aus dem Plan-Grid ausgeblendet; stattdessen erscheint ein blauer Info-Banner wenn das Hotel auf diesem Plan ist.
+
+### Feature-Gates
 
 Navigations-Sperren (`NAV_PLAN_GATES`):
 
 | Route | Mindestplan |
 |---|---|
 | `/admin/price-seasons` | Pro |
-| `/admin/extras` | Pro |
 | `/admin/email-templates` | Pro |
-| `/admin/users` | Pro |
-| `/admin/widget-configs` | Pro |
+| `/admin/nuki` | Pro |
 | `/admin/analytics` | Business |
 
 Weitere Prüfungen per `hasPlanAccess(hotelPlan, minPlan)`:
-- Apartment-Limit
-- Nutzer-Limit
-- Branding-Features (Farben, Schriften)
-- Messaging (Gast-Kommunikation)
-- **Pro**: Last-Minute Rabatt, Mindestaufenthalt pro Saison (`/api/pricing` prüft Plan vor Anwendung)
+- Apartment-Limit (`canAddApartment`)
+- Nutzer-Limit (`canAddUser`)
+- Branding-Features: `hasFullBranding` → Pro, Business, bundle_all; `hasAdvancedTypography` → Business, bundle_all
+- Messaging (Gast-Kommunikation) → `FEATURE_PLAN_GATES.messages = 'business'`
+- **Pro**: Last-Minute Rabatt, Mindestaufenthalt pro Saison (`/api/pricing`)
 - **Business**: Belegungsbasierter Preisaufschlag (`/api/pricing`), eigene Schrift-Uploads (`headlineFontUrl`, `bodyFontUrl` via Vercel Blob — `POST/DELETE /api/admin/font-upload`)
+- **bundle_all**: `isBundlePlan(plan)` → gibt true zurück; alle Business-Features + hungrywulf + eventwulf freigeschaltet
 
 In der Navigation werden gesperrte Einträge mit 🔒 und Tooltip angezeigt.
+
+### Superadmin: Plan setzen (`POST /api/admin/set-hotel-plan`)
+
+Ermöglicht dem Superadmin, jeden Plan (inkl. `bundle_all`) direkt ohne Stripe-Checkout oder Trial-Prüfung zuzuweisen. Validierung per Zod: `hotelId` (positive Int), `plan` (muss in `PLANS` vorhanden sein). Erfordert `session.role === 'super_admin'`.
+
+UI: `/admin/hotels/[id]` → Karte „Plan" → `PlanSelector`-Client-Komponente (`app/admin/hotels/[id]/PlanSelector.tsx`). Zeigt aktuellen Plan + Dropdown mit allen Plänen + „Setzen"-Button. Reload nach Erfolg.
 
 ---
 
@@ -581,6 +595,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/users` | Alle Nutzer verwalten |
 | `/admin/feedback` | Eingegangene Feedback-Meldungen löschen |
 | `/admin/outreach` | Outreach-CRM — Leads verwalten, E-Mails versenden |
+| `/admin/hotels/[id]` → Plan-Sektion | Plan direkt zuweisen (inkl. bundle_all) via `PlanSelector` |
 | `/admin/hotels/[id]` → hungrywulf-Sektion | hungrywulf per Hotel aktivieren/deaktivieren (provisioniert automatisch) |
 | `/admin/hotels/[id]` → eventwulf-Sektion | eventwulf per Hotel aktivieren/deaktivieren (provisioniert automatisch) |
 
@@ -791,6 +806,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/admin/switch-hotel` | POST | Aktives Hotel wechseln |
 | `/api/admin/switch-plan` | POST | Plan wechseln (nur in Trial) |
 | `/api/admin/reset-trial` | POST | Trial zurücksetzen (nur Super-Admin) |
+| `/api/admin/set-hotel-plan` | POST | Plan direkt setzen — inkl. `bundle_all` (nur Super-Admin, kein Stripe/Trial-Check) |
 | `/api/admin/settings-presets` | GET/POST/DELETE | Branding-Presets |
 | `/api/admin/email-preview` | GET | E-Mail-Vorschau |
 | `/api/admin/billing-info` | GET | Abo-Status abrufen |

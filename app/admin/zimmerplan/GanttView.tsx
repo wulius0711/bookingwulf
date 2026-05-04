@@ -156,10 +156,10 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap' }}>
             <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
             <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
-            <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
             {!isCurrentMonth && (
-              <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ ...btnStyle, fontSize: 13, marginLeft: 4 }}>Heute</button>
+              <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ ...btnStyle, fontSize: 13 }}>Heute</button>
             )}
+            <button onClick={() => setMonthIso(nextMonth(monthIso))} style={btnStyle}>›</button>
           </div>
         </div>
 

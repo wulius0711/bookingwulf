@@ -80,20 +80,7 @@ export default async function HotelsPage() {
           <h1 className="page-title">Hotels</h1>
           <p className="page-subtitle">Hotels anlegen und verwalten</p>
         </div>
-        <Link
-          href="/admin/hotels/new"
-          style={{
-            textDecoration: 'none',
-            padding: '10px 18px',
-            background: '#111',
-            color: '#fff',
-            borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 600,
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
+        <Link href="/admin/hotels/new" className="btn-primary" style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
           Neues Hotel
         </Link>
       </div>

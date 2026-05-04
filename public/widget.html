@@ -5630,6 +5630,12 @@
               );
             }
 
+            // If PayPal: redirect to approval URL
+            if (result.approvalUrl) {
+              window.top.location.href = result.approvalUrl;
+              return;
+            }
+
             showMessage(
               'success',
               bookingType === 'booking'

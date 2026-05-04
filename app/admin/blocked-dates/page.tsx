@@ -102,7 +102,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
               </a>
             </div>
           ) : (
-            <div style={{ padding: '16px 20px' }}>
+            <div style={{ padding: '16px 20px', background: '#f9fafb' }}>
               <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} isSuperAdmin={isSuperAdmin} />
             </div>
           )}

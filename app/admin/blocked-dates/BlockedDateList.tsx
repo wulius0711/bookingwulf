@@ -36,7 +36,12 @@ export default function BlockedDateList({
   }
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
+    <>
+      <style>{`
+        .blocked-date-grid { display: grid; gap: 12px; }
+        @media (min-width: 640px) { .blocked-date-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
+      `}</style>
+      <div className="blocked-date-grid">
       {ranges.map((r) => (
         <div
           key={r.id}
@@ -45,6 +50,7 @@ export default function BlockedDateList({
             padding: '16px 20px',
             borderRadius: 12,
             background: '#fff',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -97,5 +103,6 @@ export default function BlockedDateList({
         </div>
       ))}
     </div>
+    </>
   );
 }

@@ -300,13 +300,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button type="submit" style={{ padding: '11px 24px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-              Änderungen speichern
-            </button>
-            <a href="/admin/apartments" style={{ padding: '11px 20px', background: '#fff', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-              Abbrechen
-            </a>
+          <div className="admin-form-actions">
+            <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
+            <button type="submit" className="btn-primary">Änderungen speichern</button>
           </div>
         </form>
 
