@@ -985,6 +985,14 @@ Neon PostgreSQL (Serverless). Migrationen via:
 npx prisma migrate deploy
 ```
 
+### Backup & Datensicherung
+
+**Code:** GitHub — jeder Commit ist eine vollständige Sicherung des Quellcodes. Rollback via `git revert` oder Vercel-Deployment-History (ein Klick im Dashboard).
+
+**Buchungsdaten (CSV):** Cron `/api/cron/weekly-backup` läuft jeden Sonntag 03:00 UTC und sendet alle Buchungen aller Hotels als CSV-Anhang an `SUPER_ADMIN_EMAIL`. Excel-kompatibel (UTF-8 BOM).
+
+**Datenbank (Neon):** Aktuell Free Plan — kein Point-in-Time Recovery. Bei Wachstum Upgrade auf Launch Plan (~$19/Mo) für 7 Tage PITR empfohlen. Neon-Projekt: "Booking App", Region AWS Europe Central 1 (Frankfurt). Branch: `production`.
+
 ### Build
 
 ```bash
