@@ -991,6 +991,8 @@ npx prisma migrate deploy
 
 **Buchungsdaten (CSV):** Cron `/api/cron/weekly-backup` läuft jeden Sonntag 03:00 UTC und sendet alle Buchungen aller Hotels als CSV-Anhang an `SUPER_ADMIN_EMAIL`. Excel-kompatibel (UTF-8 BOM).
 
+**Vollständiger DB-Dump (JSON):** Cron `/api/cron/daily-backup` läuft täglich 02:00 UTC. Exportiert alle Tabellen (Hotels, Apartments, Buchungen, Settings etc.) als JSON in Vercel Blob unter `backups/YYYY-MM-DD.json`. Retention: 30 Tage, ältere Backups werden automatisch gelöscht. Einsehbar im Vercel Dashboard → Storage → Blob.
+
 **Datenbank (Neon):** Aktuell Free Plan — kein Point-in-Time Recovery. Bei Wachstum Upgrade auf Launch Plan (~$19/Mo) für 7 Tage PITR empfohlen. Neon-Projekt: "Booking App", Region AWS Europe Central 1 (Frankfurt). Branch: `production`.
 
 ### Build
