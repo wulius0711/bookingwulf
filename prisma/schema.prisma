@@ -301,6 +301,7 @@ model Request {
   email                String
   country              String
   message              String?
+  paymentMethod        String?
   newsletter           Boolean  @default(false)
   status               String   @default("new")
   language             String   @default("de") // de | en | it

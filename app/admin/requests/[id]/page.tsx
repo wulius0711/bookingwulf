@@ -376,6 +376,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             { label: 'Nächte', value: String(request.nights) },
             { label: 'Gäste', value: `${request.adults} Erwachsene${request.children ? `, ${request.children} Kinder` : ''}` },
             { label: 'Apartment', value: apartmentNames || '—' },
+            ...(request.paymentMethod ? [{ label: 'Zahlung', value: request.paymentMethod }] : []),
           ].map(({ label, value }) => (
             <div key={label} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
               <span style={rowLabel}>{label}</span>

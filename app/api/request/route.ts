@@ -223,7 +223,7 @@ export async function POST(req: Request) {
         hotelId: hotel.id, arrival, departure, nights, adults, children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
-        message: message || null, newsletter,
+        message: message || null, paymentMethod: paymentMethod || null, newsletter,
         status: isInstantBooking ? 'booked' : 'new',
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
