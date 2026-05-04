@@ -76,6 +76,8 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
         <div style={{ padding: '12px 16px 0', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
           Zahlungsmethoden
         </div>
+
+        {/* Banküberweisung */}
         <div style={{ padding: '0 16px' }}>
           <ToggleRow
             name="bankTransferEnabled"
@@ -84,7 +86,28 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
             checked={bankTransfer}
             onChange={() => setBankTransfer(v => !v)}
           />
-          <div style={divider} />
+        </div>
+        {bankTransfer && (
+          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
+            <div>
+              <label style={labelStyle}>Kontoinhaber</label>
+              <input name="bankAccountHolder" type="text" defaultValue={initialValues.bankAccountHolder} placeholder="Max Mustermann" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>IBAN</label>
+              <input name="bankIban" type="text" defaultValue={initialValues.bankIban} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>BIC / SWIFT</label>
+              <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
+            </div>
+          </div>
+        )}
+
+        <div style={{ height: 1, background: '#e5e7eb' }} />
+
+        {/* PayPal */}
+        <div style={{ padding: '0 16px' }}>
           <ToggleRow
             name="paypalEnabled"
             label="PayPal"
@@ -93,7 +116,6 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
             onChange={() => setPaypal(v => !v)}
           />
         </div>
-
         {paypal && (
           <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
             <div>
@@ -144,26 +166,6 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
         )}
       </div>
 
-      {/* Bankdaten — nur bei Banküberweisung */}
-      {bankTransfer && (
-        <div style={{ display: 'grid', gap: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-            Bankdaten
-          </div>
-          <div>
-            <label style={labelStyle}>Kontoinhaber</label>
-            <input name="bankAccountHolder" type="text" defaultValue={initialValues.bankAccountHolder} placeholder="Max Mustermann" style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>IBAN</label>
-            <input name="bankIban" type="text" defaultValue={initialValues.bankIban} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>BIC / SWIFT</label>
-            <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
