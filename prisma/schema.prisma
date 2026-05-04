@@ -81,6 +81,10 @@ model HotelSettings {
   preArrivalHouseRules   String?
   preArrivalReminderDays Int     @default(3)
 
+  checkoutReminderEnabled Boolean @default(false)
+  checkoutTime            String?  // e.g. "10:00 Uhr"
+  checkoutReminderText    String?  // host instructions shown in the email
+
   // 🎨 Colors
   accentColor      String?  // Primary highlight
   backgroundColor  String?  // App background
@@ -124,6 +128,9 @@ model HotelSettings {
   paypalEnabled       Boolean @default(false)
   paypalClientId      String?
   paypalClientSecret  String?
+  stripeEnabled         Boolean @default(false)
+  stripePublishableKey  String?
+  stripeSecretKey       String?
 
   // 💳 Anzahlung & Bankdaten
   depositEnabled      Boolean @default(false)
@@ -328,6 +335,8 @@ model Request {
   checkinBirthdate       String?
   checkinNationality     String?
   checkinDocNumber       String?
+
+  checkoutReminderSentAt DateTime?
 
   messages RequestMessage[]
 

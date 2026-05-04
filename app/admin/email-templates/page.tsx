@@ -57,7 +57,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true } } },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -109,6 +109,27 @@ export default async function EmailTemplatesPage() {
         preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
         preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
         preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      },
+    });
+    revalidatePath('/admin/email-templates');
+  }
+
+  async function saveCheckoutSettings(formData: FormData) {
+    'use server';
+    const session = await verifySession();
+    if (session.hotelId === null) return;
+    await prisma.hotelSettings.upsert({
+      where: { hotelId: session.hotelId },
+      update: {
+        checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
+        checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
+        checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
+      },
+      create: {
+        hotelId: session.hotelId,
+        checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
+        checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
+        checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
       },
     });
     revalidatePath('/admin/email-templates');
@@ -265,6 +286,40 @@ export default async function EmailTemplatesPage() {
               <textarea name="preArrivalHouseRules" rows={5}
                 defaultValue={s?.preArrivalHouseRules ?? ''}
                 placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
+                style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+            </div>
+            <div>
+              <SaveButton />
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* CHECKOUT REMINDER */}
+      {hotel && (
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', marginTop: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Check-out-Erinnerung</h2>
+          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
+            Gäste erhalten am Abreisetag morgens eine automatische E-Mail mit der Check-out-Uhrzeit und deinen Hinweisen.
+          </p>
+          <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+              <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
+                style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+              <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Check-out-Erinnerung aktivieren</span>
+            </label>
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={labelStyle}>Check-out-Zeit</label>
+              <input type="text" name="checkoutTime"
+                defaultValue={s?.checkoutTime ?? '10:00 Uhr'}
+                placeholder="z. B. 10:00 Uhr"
+                style={{ ...inputStyle, width: 160 }} />
+            </div>
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional)</span></label>
+              <textarea name="checkoutReminderText" rows={4}
+                defaultValue={s?.checkoutReminderText ?? ''}
+                placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
                 style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
             </div>
             <div>
