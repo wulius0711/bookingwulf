@@ -5585,6 +5585,13 @@
           state.submitting = true;
           renderSummary();
           renderSubmitArea();
+          // renderSubmitArea() rebuilds the DOM via innerHTML, which unmounts the Stripe
+          // card element. Re-mount it immediately so confirmCardPayment works.
+          if (paymentMethod.toLowerCase() === 'stripe' && _stripeCard) {
+            const stripeInfo = document.getElementById('pmInfoStripe');
+            if (stripeInfo) stripeInfo.style.display = '';
+            _stripeCard.mount('#stripeCardMount');
+          }
           showMessage(
             'info',
             bookingType === 'booking'
