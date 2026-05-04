@@ -41,7 +41,7 @@ export default function PriceSeasonList({
   return (
     <>
       <style>{`
-        .price-season-grid { display: grid; gap: 12px; }
+        .price-season-grid { display: grid; gap: 12px; align-items: start; }
         @media (min-width: 640px) { .price-season-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
       `}</style>
       <div className="price-season-grid">
