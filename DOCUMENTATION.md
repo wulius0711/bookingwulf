@@ -714,6 +714,18 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 5. Cron `/api/cron/pre-arrival-reminder` läuft täglich 09:00 UTC und prüft, ob heute = Anreisetag − X Tage ist. Jeder Gast erhält genau eine Erinnerungsmail (Guard: `checkinReminderSentAt IS NULL`), danach wird `checkinReminderSentAt` gesetzt
 6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit und Notizen
 
+### Check-out-Erinnerung
+
+**HotelSettings Felder:** `checkoutReminderEnabled Boolean @default(false)`, `checkoutTime String?` (z.B. "10:00 Uhr"), `checkoutReminderText String?`
+
+**Request Felder:** `checkoutReminderSentAt DateTime?`
+
+**Flow:**
+1. Betreiber aktiviert Feature unter Konfiguration → E-Mails & Check-in (optional: Check-out-Uhrzeit, Freitext mit Hinweisen)
+2. Cron `/api/cron/checkout-reminder` läuft täglich 08:00 UTC und findet alle Buchungen mit `status IN (booked, confirmed)` und `departure = heute` und `checkoutReminderSentAt IS NULL`
+3. Gast erhält E-Mail mit Check-out-Uhrzeit und den Hinweisen des Betreibers
+4. `checkoutReminderSentAt` wird gesetzt (Guard gegen doppelten Versand)
+
 ### Gap-Night-Preise
 
 **Plan-Gate: Pro.** Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxLength Int?` (max. Lückenlänge in Nächten). Beide `null` = Feature deaktiviert.

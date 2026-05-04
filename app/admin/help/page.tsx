@@ -762,6 +762,17 @@ function EmailsSection() {
         Der Betreiber sieht in der Buchungsdetailansicht ob der Check-in ausgefüllt wurde.
         Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls noch nicht ausgefüllt.
       </P>
+
+      <H3>Check-out-Erinnerung</H3>
+      <P>
+        Gäste erhalten am Abreisetag morgens automatisch eine E-Mail mit der Check-out-Uhrzeit und
+        deinen individuellen Hinweisen — z.B. wo der Schlüssel abzugeben ist oder was zu beachten ist.
+      </P>
+      <P>
+        Aktivieren unter <strong>Konfiguration → E-Mails & Check-in → Check-out-Erinnerung</strong>.
+        Einstellbar: Check-out-Uhrzeit und ein freier Hinweistext. Die E-Mail wird automatisch
+        einmal pro Buchung versendet und nicht wiederholt.
+      </P>
     </div>
   );
 }
