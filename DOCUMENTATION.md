@@ -135,6 +135,13 @@ Erweiterte Einstellungen pro Hotel. Enthält:
 - **Farben:** `accentColor`, `backgroundColor`, `cardBackground`, `textColor`, `mutedTextColor`, `borderColor`, `buttonColor`
 - **Typografie:** `headlineFont`, `bodyFont`, `headlineFontSize`, `bodyFontSize`, `headlineFontWeight`, `bodyFontWeight`, `headlineFontUrl`, `bodyFontUrl` (eigene Schriften via Vercel Blob, Business)
 - **Layout:** `cardRadius`, `buttonRadius`
+- **Zahlungsarten (Gast-Zahlungen):** Alle `@default(false)` — standardmäßig keine Zahlungsart aktiv.
+  - `bankTransferEnabled Boolean` — Banküberweisung
+  - `bankAccountHolder String?`, `bankIban String?`, `bankBic String?` — Kontodaten (in Gast-Mail nach Buchung angezeigt)
+  - `depositEnabled Boolean`, `depositType String` (`"percent"` | `"fixed"`), `depositValue Float`, `depositDueDays Int` — optionale Anzahlung (nur bei Banküberweisung)
+  - `paypalEnabled Boolean`, `paypalClientId String?`, `paypalClientSecret String?` — PayPal Business App-Credentials (developer.paypal.com)
+  - `stripeEnabled Boolean`, `stripePublishableKey String?`, `stripeSecretKey String?` — Hotel-eigener Stripe-Account (dashboard.stripe.com/apikeys)
+  - **Sicherheit:** `paypalClientSecret` und `stripeSecretKey` werden in `/api/hotel-settings` (public) vor der Antwort entfernt — nur das Widget erhält Publishable Key.
 - **Ortstaxe:** `ortstaxeMode` (String, default `"off"`) — `"off"` | `"wien"` | `"custom"`. Bei `"wien"` werden die datumsbezogenen Wiener Sätze automatisch angewendet (2,5237 % / 4,3478 % / 6,7797 % vom Zimmerpreis je nach Anreisedatum). Bei `"custom"`: `ortstaxePerPersonPerNight` (Decimal?) × Personen × Nächte. `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit (nur Custom-Modus).
 - **Steuer/Buchhaltung:** `taxRateRoom` (Decimal?) — MwSt.-Satz für Zimmerpreis in % (z.B. 10,00 für AT). `taxRateCleaning` (Decimal?) — MwSt.-Satz für Reinigungsgebühr in % (z.B. 20,00 für AT). Werden im CSV-Buchhaltungsexport für die Netto/Brutto-Aufschlüsselung verwendet.
 
@@ -177,7 +184,7 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | hotelId | Int | FK → Hotel |
-| status | String | `new` / `confirmed` / `booked` / `cancelled` |
+| status | String | `new` / `confirmed` / `booked` / `cancelled` / `pending_paypal` / `pending_stripe` |
 | arrival / departure | DateTime | Reisezeitraum |
 | nights | Int | Anzahl Nächte |
 | adults / children | Int | Gästezahl |
@@ -351,11 +358,41 @@ UI: `/admin/hotels/[id]` → Karte „Plan" → `PlanSelector`-Client-Komponente
 3. Hotel + Apartments laden
 4. Preis berechnen (season-aware, inkl. Extras)
 5. Request in DB speichern
-6. Bei bookingType='booking': BlockedRange pro Apartment erstellen
+   - Anfrage (bookingType='request')     → status='new'
+   - Sofortbuchung (Banküberweisung)     → status='booked'
+   - Sofortbuchung via PayPal            → status='pending_paypal'
+   - Sofortbuchung via Stripe            → status='pending_stripe'
+6. Bei bookingType='booking' (außer PayPal/Stripe): BlockedRange pro Apartment erstellen
 7. Hotel-Benachrichtigung (Deutsch) senden
 8. Gast-Bestätigung (Sprache auto-erkannt: de/en/it) senden
-9. { success: true, requestId } zurückgeben
+9a. Banküberweisung/Anfrage: { success: true, requestId }
+9b. PayPal-Buchung: { success: true, paypalOrderId, approveUrl } → Widget leitet weiter
+9c. Stripe-Buchung: { success: true, clientSecret, requestId } → Widget bestätigt inline
 ```
+
+### PayPal-Flow (Gast-Zahlung)
+
+```
+Widget → POST /api/request (payment_method='paypal') → { approveUrl }
+         ↓ Weiterleitung zu PayPal
+PayPal → POST /api/paypal/capture { requestId, orderId }
+         → PayPal Order capturen
+         → status → 'booked', BlockedRanges anlegen
+         → Hotel- + Gast-E-Mail senden
+```
+
+### Stripe-Flow (Gast-Zahlung, inline)
+
+```
+Widget → POST /api/request (payment_method='stripe') → { clientSecret, requestId }
+         ↓ stripe.confirmCardPayment(clientSecret, { payment_method: { card } })
+         ↓ POST /api/stripe/confirm { requestId, paymentIntentId }
+           → PaymentIntent status='succeeded' prüfen
+           → status → 'booked', BlockedRanges anlegen
+           → Hotel- + Gast-E-Mail senden
+```
+
+**Wichtig:** `/api/stripe/confirm` und `/api/paypal/capture` sind die einzigen Endpunkte, die den Request auf `'booked'` setzen und Dates sperren — `/api/request` macht das bei PayPal/Stripe nicht sofort.
 
 ### Preisberechnung (Extras)
 
@@ -530,7 +567,11 @@ Importiert externe Kalender (Airbnb, Booking.com) als `BlockedRange`-Einträge.
 
 ## 11. Stripe-Integration
 
-### Checkout-Flow
+> **Zwei unabhängige Stripe-Kontexte:**
+> 1. **bookingwulf-eigener Stripe** (`STRIPE_SECRET_KEY`) — für Abonnements (SaaS-Billing), Webhooks, Checkout-Sessions
+> 2. **Hotel-eigener Stripe** (`HotelSettings.stripeSecretKey`) — für direkte Kartenzahlungen der Gäste; Geld geht direkt auf das Stripe-Konto des Hoteliers
+
+### Abonnement-Checkout-Flow (bookingwulf-eigener Stripe)
 
 ```
 1. Admin klickt "Upgrade"
@@ -542,7 +583,7 @@ Importiert externe Kalender (Airbnb, Booking.com) als `BlockedRange`-Einträge.
 7. checkout.session.completed → Hotel aktualisieren, Welcome-E-Mail senden
 ```
 
-### Webhooks (`POST /api/stripe/webhook`)
+### Abonnement-Webhooks (`POST /api/stripe/webhook`)
 
 | Event | Aktion |
 |---|---|
@@ -556,6 +597,18 @@ Jeder Webhook wird per Stripe-Signatur verifiziert (`STRIPE_WEBHOOK_SECRET`).
 ### Stripe-Portal
 
 `POST /api/stripe/portal` → Link zum Stripe Customer Portal für Planwechsel, Kündigung, Rechnungen.
+
+### Hotel-eigene Stripe-Zahlung (Gast → Hotel)
+
+Eingerichtet vom Hotelier in `Konfiguration → Widget & Design → Zahlungsarten`. Verwendet `HotelSettings.stripePublishableKey` (im Widget) und `HotelSettings.stripeSecretKey` (serverseitig).
+
+**PaymentIntent-Erstellung** (`src/lib/stripe-server.ts → createPaymentIntent()`):
+- `automatic_payment_methods: { enabled: true, allow_redirects: 'never' }` — kein Redirect, Zahlung bleibt inline im Widget
+- Gibt `clientSecret` zurück → Widget ruft `stripe.confirmCardPayment()` auf
+
+**Confirm-Endpunkt** (`POST /api/stripe/confirm`):
+- Verifiziert `PaymentIntent.status === 'succeeded'`
+- Setzt Request-Status auf `'booked'`, legt BlockedRanges an, sendet E-Mails
 
 ### Preise
 
@@ -793,6 +846,8 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/ical` | GET | iCal-Feed eines Apartments |
 | `/api/booking-ical` | GET | iCal-Datei für eine Buchung (HMAC-Token) |
 | `/api/blocked-dates` | GET | Sperrzeiten (öffentlich, für Widget) |
+| `/api/paypal/capture` | POST | PayPal-Zahlung des Gastes abschließen (Order capturen → Request auf `booked` setzen) |
+| `/api/stripe/confirm` | POST | Stripe-Kartenzahlung des Gastes bestätigen (PaymentIntent prüfen → Request auf `booked` setzen) |
 
 ### Authentifizierte Routen (JWT-Session erforderlich)
 
