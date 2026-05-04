@@ -276,7 +276,7 @@ export default async function EmailTemplatesPage() {
               );
             })}
 
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SaveButton />
             </div>
           </form>
@@ -311,7 +311,7 @@ export default async function EmailTemplatesPage() {
                 placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
                 style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
             </div>
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SaveButton />
             </div>
           </form>
@@ -345,7 +345,7 @@ export default async function EmailTemplatesPage() {
                 placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
                 style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
             </div>
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <SaveButton />
             </div>
           </form>
