@@ -223,7 +223,7 @@ export default async function EmailTemplatesPage() {
                       <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{label}</div>
                       <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>{description}</div>
                     </div>
-                    <span className="card-caret">▾</span>
+                    <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
                   </summary>
                   <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px', display: 'grid', gap: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -279,7 +279,7 @@ export default async function EmailTemplatesPage() {
               <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Online Check-in</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
             </div>
-            <span className="card-caret">▾</span>
+            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
           <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
             <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
@@ -317,7 +317,7 @@ export default async function EmailTemplatesPage() {
               <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-out-Erinnerung</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
-            <span className="card-caret">▾</span>
+            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
           <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
             <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
@@ -357,7 +357,7 @@ export default async function EmailTemplatesPage() {
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Bewertungsanfrage</div>
                 <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
               </div>
-              <span className="card-caret">▾</span>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
             <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>

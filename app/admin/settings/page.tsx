@@ -295,7 +295,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
                   <p style={sectionIntroStyle}>E-Mail-Adresse, an die neue Buchungsanfragen gesendet werden.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
                 <div className="settings-row" style={rowStyle}>
@@ -318,7 +318,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Rechtliches</h2>
                   <p style={sectionIntroStyle}>Links zu Ihren Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
                 <div className="settings-row" style={rowStyle}>
@@ -351,7 +351,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Zahlungsarten & Bankdaten</h2>
                   <p style={sectionIntroStyle}>Lege fest welche Zahlungsmethoden im Widget angeboten werden. Die Bankdaten erscheinen ausschließlich in der Buchungsbestätigungsmail an den Gast.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px' }}>
                 <PaymentSettings
@@ -384,7 +384,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Design</h2>
                   <p style={sectionIntroStyle}>Farben und Formensprache für das Buchungssystem dieses Hotels.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
               {(
@@ -452,7 +452,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Typografie</h2>
                   <p style={sectionIntroStyle}>Schriftarten, Größen und Gewichtungen für das Widget.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
 
@@ -574,7 +574,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Design-Presets</h2>
                   <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', opacity: fullBranding ? 1 : 0.4 }}>
                 {fullBranding
@@ -592,7 +592,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <h2 style={sectionTitleStyle}>Features</h2>
                   <p style={sectionIntroStyle}>Verhalten und Umfang des Widgets pro Hotel steuern.</p>
                 </div>
-                <span className="card-caret">▾</span>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
               <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
                 <FeatureToggles
@@ -633,7 +633,7 @@ export default async function Page({ searchParams }: PageProps) {
                   Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
                 </p>
               </div>
-              <span className="card-caret">▾</span>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
@@ -660,7 +660,7 @@ export default async function Page({ searchParams }: PageProps) {
                   Kompakter Datepicker für Landing Pages — Gast wählt Datum und wird zum Buchungs-Widget weitergeleitet.
                 </p>
               </div>
-              <span className="card-caret">▾</span>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
               <div>
@@ -710,7 +710,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
                 <p style={sectionIntroStyle}>Erstelle eine weitere Variante des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
               </div>
-              <span className="card-caret">▾</span>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ padding: '0 28px 26px', opacity: hasPro ? 1 : 0.4 }}>
               {hasPro && (
