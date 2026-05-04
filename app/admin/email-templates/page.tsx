@@ -273,7 +273,7 @@ export default async function EmailTemplatesPage() {
 
       {/* ONLINE CHECK-IN */}
       {hotel && (
-        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 32 }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Online Check-in</div>
