@@ -223,7 +223,7 @@ export default async function EmailTemplatesPage() {
                       <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{label}</div>
                       <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>{description}</div>
                     </div>
-                    <span style={{ fontSize: 18, color: '#9ca3af', flexShrink: 0 }}>›</span>
+                    <span className="card-caret">▾</span>
                   </summary>
                   <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px', display: 'grid', gap: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -273,80 +273,93 @@ export default async function EmailTemplatesPage() {
 
       {/* ONLINE CHECK-IN */}
       {hotel && (
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', marginTop: 24 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Online Check-in</h2>
-          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
-            Gäste erhalten nach der Buchungsbestätigung einen persönlichen Check-in-Link.
-            Automatische Erinnerung X Tage vor Anreise falls noch nicht ausgefüllt.
-          </p>
-          <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-              <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false}
-                style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-              <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Online Check-in aktivieren</span>
-            </label>
-            <div style={{ display: 'grid', gap: 4 }}>
-              <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
-              <input type="number" name="preArrivalReminderDays" min="1" max="14"
-                defaultValue={s?.preArrivalReminderDays ?? 3}
-                style={{ ...inputStyle, width: 120 }} />
+        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Online Check-in</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
             </div>
-            <div style={{ display: 'grid', gap: 4 }}>
-              <label style={labelStyle}>Hausordnung <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional — Gast muss bestätigen)</span></label>
-              <textarea name="preArrivalHouseRules" rows={5}
-                defaultValue={s?.preArrivalHouseRules ?? ''}
-                placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
-                style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <SaveButton />
-            </div>
-          </form>
-        </div>
+            <span className="card-caret">▾</span>
+          </summary>
+          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+            <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false}
+                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Online Check-in aktivieren</span>
+              </label>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
+                <input type="number" name="preArrivalReminderDays" min="1" max="14"
+                  defaultValue={s?.preArrivalReminderDays ?? 3}
+                  style={{ ...inputStyle, width: 120 }} />
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Hausordnung <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional — Gast muss bestätigen)</span></label>
+                <textarea name="preArrivalHouseRules" rows={5}
+                  defaultValue={s?.preArrivalHouseRules ?? ''}
+                  placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
+                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <SaveButton />
+              </div>
+            </form>
+          </div>
+        </details>
       )}
 
       {/* CHECKOUT REMINDER */}
       {hotel && (
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff', marginTop: 16 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Check-out-Erinnerung</h2>
-          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
-            Gäste erhalten am Abreisetag morgens eine automatische E-Mail mit der Check-out-Uhrzeit und deinen Hinweisen.
-          </p>
-          <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-              <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
-                style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-              <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Check-out-Erinnerung aktivieren</span>
-            </label>
-            <div style={{ display: 'grid', gap: 4 }}>
-              <label style={labelStyle}>Check-out-Zeit</label>
-              <input type="text" name="checkoutTime"
-                defaultValue={s?.checkoutTime ?? '10:00 Uhr'}
-                placeholder="z. B. 10:00 Uhr"
-                style={{ ...inputStyle, width: 160 }} />
+        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-out-Erinnerung</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
-            <div style={{ display: 'grid', gap: 4 }}>
-              <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional)</span></label>
-              <textarea name="checkoutReminderText" rows={4}
-                defaultValue={s?.checkoutReminderText ?? ''}
-                placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
-                style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <SaveButton />
-            </div>
-          </form>
-        </div>
+            <span className="card-caret">▾</span>
+          </summary>
+          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+            <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
+                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Check-out-Erinnerung aktivieren</span>
+              </label>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Check-out-Zeit</label>
+                <input type="text" name="checkoutTime"
+                  defaultValue={s?.checkoutTime ?? '10:00 Uhr'}
+                  placeholder="z. B. 10:00 Uhr"
+                  style={{ ...inputStyle, width: 160 }} />
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional)</span></label>
+                <textarea name="checkoutReminderText" rows={4}
+                  defaultValue={s?.checkoutReminderText ?? ''}
+                  placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
+                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <SaveButton />
+              </div>
+            </form>
+          </div>
+        </details>
       )}
 
       {/* BEWERTUNGSANFRAGE */}
       {hotel && (
-        <div style={{ position: 'relative', marginTop: 16 }}>
-          <div style={{ opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none', border: '1px solid #e5e7eb', borderRadius: 14, padding: '22px 24px', background: '#fff' }}>
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: '0 0 4px' }}>Bewertungsanfrage</h2>
-            <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
-              Gäste erhalten X Tage nach der Abreise automatisch eine E-Mail mit der Bitte, eine Google-Bewertung zu hinterlassen.
-            </p>
+        <div style={{ position: 'relative', marginTop: 12 }}>
+          <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
+            <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Bewertungsanfrage</div>
+                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
+              </div>
+              <span className="card-caret">▾</span>
+            </summary>
+            <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
             <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false}
@@ -385,7 +398,8 @@ export default async function EmailTemplatesPage() {
                 <SaveButton />
               </div>
             </form>
-          </div>
+            </div>
+          </details>
           {!hasPro && <ProLockOverlay />}
         </div>
       )}
