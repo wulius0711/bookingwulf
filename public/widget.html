@@ -5148,14 +5148,14 @@
               this.setAttribute('aria-expanded', isOpen);
             });
 
-            document.getElementById('pmCardBank').addEventListener('click', function () {
+            document.getElementById('pmCardBank')?.addEventListener('click', function () {
               document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
               this.classList.add('selected');
               document.getElementById('pmInfoBank').style.display = '';
               document.getElementById('pmInfoPaypal').style.display = 'none';
               document.getElementById('paymentMethod').value = t('submit_bank_transfer');
             });
-            document.getElementById('pmCardPaypal').addEventListener('click', function () {
+            document.getElementById('pmCardPaypal')?.addEventListener('click', function () {
               document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
               this.classList.add('selected');
               document.getElementById('pmInfoBank').style.display = 'none';
