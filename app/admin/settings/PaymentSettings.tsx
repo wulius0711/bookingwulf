@@ -102,13 +102,15 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
               <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
             </div>
             <div style={{ height: 1, background: '#e5e7eb', margin: '4px 0' }} />
-            <ToggleRow
-              name="depositEnabled"
-              label="Anzahlung"
-              description="Gast zahlt bei Buchung einen Teilbetrag"
-              checked={deposit}
-              onChange={() => setDeposit(v => !v)}
-            />
+            <div style={{ paddingLeft: 16 }}>
+              <ToggleRow
+                name="depositEnabled"
+                label="Anzahlung"
+                description="Gast zahlt bei Buchung einen Teilbetrag"
+                checked={deposit}
+                onChange={() => setDeposit(v => !v)}
+              />
+            </div>
             {deposit && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
                 <div>
