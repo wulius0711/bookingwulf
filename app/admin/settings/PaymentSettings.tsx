@@ -116,7 +116,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
               />
             </div>
             {deposit && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={labelStyle}>Art</label>
                   <select name="depositType" defaultValue={initialValues.depositType} style={{ ...inputStyle, width: '100%' }}>
@@ -129,7 +129,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
                   <input name="depositValue" type="number" min="0" step="0.01" defaultValue={initialValues.depositValue} style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Frist (Tage)</label>
+                  <label style={labelStyle}>Frist bis Zahlung (Tage)</label>
                   <input name="depositDueDays" type="number" min="1" max="90" defaultValue={initialValues.depositDueDays} style={inputStyle} />
                 </div>
               </div>
