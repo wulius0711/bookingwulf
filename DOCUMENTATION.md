@@ -726,6 +726,21 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 3. Gast erhält E-Mail mit Check-out-Uhrzeit und den Hinweisen des Betreibers
 4. `checkoutReminderSentAt` wird gesetzt (Guard gegen doppelten Versand)
 
+### Bewertungsanfrage (Post-Stay Review Request)
+
+**Plan-Gate: Pro.**
+
+**HotelSettings Felder:** `reviewRequestEnabled Boolean @default(false)`, `reviewRequestDays Int @default(2)`, `reviewRequestLink String?`
+
+**Request Felder:** `reviewRequestSentAt DateTime?`
+
+**Flow:**
+1. Betreiber aktiviert Feature unter Konfiguration → E-Mails & Check-in, trägt Google Reviews Link und Versand-Tage ein (Standard: 2 Tage nach Abreise)
+2. Cron `/api/cron/review-request` läuft täglich 10:00 UTC, findet Buchungen mit `departure = heute − X Tage` und `reviewRequestSentAt IS NULL`
+3. Plan-Gate wird serverseitig geprüft (kein Pro → überspringen)
+4. Gast erhält E-Mail mit CTA-Button → Google Reviews Link
+5. `reviewRequestSentAt` wird gesetzt (Guard gegen doppelten Versand)
+
 ### Gap-Night-Preise
 
 **Plan-Gate: Pro.** Felder in HotelSettings: `gapNightDiscount Int?` (Rabatt in %) und `gapNightMaxLength Int?` (max. Lückenlänge in Nächten). Beide `null` = Feature deaktiviert.

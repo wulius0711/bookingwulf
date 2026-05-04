@@ -773,6 +773,18 @@ function EmailsSection() {
         Einstellbar: Check-out-Uhrzeit und ein freier Hinweistext. Die E-Mail wird automatisch
         einmal pro Buchung versendet und nicht wiederholt.
       </P>
+
+      <H3>Bewertungsanfrage</H3>
+      <PlanNote plan="Pro" feature="Automatische Bewertungsanfrage nach dem Aufenthalt" />
+      <P>
+        X Tage nach der Abreise erhalten Gäste automatisch eine freundliche E-Mail mit der Bitte,
+        eine Google-Bewertung zu hinterlassen. Du gibst deinen Google-Reviews-Link ein — ein Klick
+        in der Mail öffnet direkt das Bewertungsformular.
+      </P>
+      <P>
+        Aktivieren unter <strong>Konfiguration → E-Mails & Check-in → Bewertungsanfrage</strong>.
+        Einstellbar: Versandzeitpunkt (Tage nach Abreise, Standard: 2) und der Google Reviews Link.
+      </P>
     </div>
   );
 }
