@@ -16,6 +16,7 @@ const sections = [
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
   { id: 'emails',        title: 'E-Mails & Check-in',    plan: null,       content: EmailsSection },
   { id: 'einstellungen', title: 'Widget & Design',         plan: null,      content: EinstellungenSection },
+  { id: 'zahlungen',     title: 'Zahlungsarten',           plan: null,       content: ZahlungenSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
@@ -825,6 +826,77 @@ function EinstellungenSection() {
         Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.
         Weitere Details unter <InternalLink id="einbindung">Widget einbinden</InternalLink>.
       </P>
+    </div>
+  );
+}
+
+function ZahlungenSection() {
+  return (
+    <div>
+      <H2>Zahlungsarten</H2>
+      <P>
+        Unter <strong>Konfiguration → Widget &amp; Design → Zahlungsarten</strong> legst du fest,
+        welche Zahlungsmethoden deine Gäste im Widget nutzen können.
+        Verfügbar sind Banküberweisung, PayPal und Kreditkarte (Stripe).
+      </P>
+
+      <H3>Banküberweisung</H3>
+      <P>
+        Aktiviere Banküberweisung und hinterlege Kontoinhaber, IBAN und BIC.
+        Diese Daten werden dem Gast nach der Buchung in der Bestätigungs-E-Mail angezeigt.
+      </P>
+      <P>
+        Optional kannst du eine Anzahlung aktivieren — als Prozentsatz oder Fixbetrag,
+        mit konfigurierbarer Zahlungsfrist in Tagen.
+      </P>
+
+      <H3>PayPal einrichten</H3>
+      <P>
+        Für PayPal benötigst du ein PayPal-Business-Konto und einen API-Zugang.
+        So richtest du es ein:
+      </P>
+      <div style={{ display: 'grid', gap: 8, margin: '8px 0 16px' }}>
+        {[
+          { step: '1', text: 'Gehe zu developer.paypal.com und melde dich mit deinem Business-Konto an.' },
+          { step: '2', text: 'Klicke auf „Apps & Credentials" → „Create App". Gib der App einen Namen (z.B. „Bookingwulf") und wähle „Merchant".' },
+          { step: '3', text: 'Nach dem Erstellen siehst du Client ID und Client Secret — zuerst im Sandbox-Modus. Für den Live-Betrieb wechsle oben rechts auf „Live" und kopiere die Live-Zugangsdaten.' },
+          { step: '4', text: 'Trage Client ID und Client Secret unter Zahlungsarten → PayPal ein und aktiviere den Toggle.' },
+        ].map((item) => (
+          <div key={item.step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{item.step}</span>
+            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{item.text}</span>
+          </div>
+        ))}
+      </div>
+      <Tip>
+        Link: <strong>developer.paypal.com</strong> → Apps &amp; Credentials → Create App
+      </Tip>
+
+      <H3>Stripe (Kreditkarte) einrichten</H3>
+      <P>
+        Mit Stripe können Gäste direkt im Widget mit Kreditkarte zahlen — ohne Weiterleitung.
+        Du verwendest deinen eigenen Stripe-Account, das Geld geht direkt an dich.
+      </P>
+      <div style={{ display: 'grid', gap: 8, margin: '8px 0 16px' }}>
+        {[
+          { step: '1', text: 'Erstelle ein Konto auf stripe.com (kostenlos). Verifiziere dein Business und hinterlege deine Bankverbindung für Auszahlungen.' },
+          { step: '2', text: 'Gehe im Stripe Dashboard zu Entwickler → API-Schlüssel.' },
+          { step: '3', text: 'Kopiere den Publishable Key (beginnt mit pk_live_…) und den Secret Key (sk_live_…).' },
+          { step: '4', text: 'Trage beide Schlüssel unter Zahlungsarten → Kreditkarte (Stripe) ein und aktiviere den Toggle.' },
+        ].map((item) => (
+          <div key={item.step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{item.step}</span>
+            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{item.text}</span>
+          </div>
+        ))}
+      </div>
+      <Tip>
+        Link: <strong>dashboard.stripe.com/apikeys</strong>
+      </Tip>
+      <Note>
+        Stripe erhebt pro Transaktion eine eigene Gebühr (ca. 1,5 % + 0,25 € für europäische Karten).
+        Diese Kosten sind unabhängig von bookingwulf und werden direkt von Stripe abgerechnet.
+      </Note>
     </div>
   );
 }

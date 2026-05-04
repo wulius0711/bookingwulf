@@ -35,7 +35,11 @@ VERWALTUNG:
 
 KONFIGURATION:
 - Konfiguration → Widget & Design: Das Buchungswidget konfigurieren.
-  Inhalte: Benachrichtigungs-E-Mail (wohin Anfragen gesendet werden), Rechtliches (AGB- und Datenschutz-URL für die Pflicht-Checkbox im Widget), Design (Schriftart aus Google Fonts wählbar für eigenes Corporate Design, Farben, Eckenradius), Widget-Funktionen (Preise anzeigen, Extras-Schritt, Sofortbuchung), Einbindungscode (<script>-Tag für die eigene Website).
+  Inhalte: Benachrichtigungs-E-Mail (wohin Anfragen gesendet werden), Rechtliches (AGB- und Datenschutz-URL für die Pflicht-Checkbox im Widget), Design (Schriftart aus Google Fonts wählbar für eigenes Corporate Design, Farben, Eckenradius), Widget-Funktionen (Preise anzeigen, Extras-Schritt, Sofortbuchung), Zahlungsarten (Banküberweisung, PayPal, Kreditkarte via Stripe), Einbindungscode (<script>-Tag für die eigene Website).
+  Zahlungsarten im Detail:
+  - Banküberweisung: Toggle aktivieren → Kontoinhaber, IBAN, BIC eintragen. Optional: Anzahlung (Prozentsatz oder Fixbetrag, mit Zahlungsfrist in Tagen).
+  - PayPal einrichten: 1. Business-Konto auf paypal.com anlegen. 2. Auf developer.paypal.com anmelden → Apps & Credentials → Create App (Typ: Merchant). 3. Oben rechts auf "Live" wechseln → Client ID und Client Secret kopieren. 4. Beides unter Zahlungsarten → PayPal eintragen und Toggle aktivieren.
+  - Stripe (Kreditkarte) einrichten: 1. Konto auf stripe.com erstellen (kostenlos), Business verifizieren, Bankverbindung für Auszahlungen hinterlegen. 2. Im Stripe Dashboard: Entwickler → API-Schlüssel. 3. Publishable Key (pk_live_…) und Secret Key (sk_live_…) kopieren. 4. Beides unter Zahlungsarten → Kreditkarte (Stripe) eintragen und Toggle aktivieren. Hinweis: Stripe berechnet ca. 1,5 % + 0,25 € pro Transaktion — direkt von Stripe, unabhängig von bookingwulf.
 - Konfiguration → E-Mails: E-Mail-Vorlagen für Buchungsbestätigungen und Benachrichtigungen anpassen (Pro-Plan).
 - Konfiguration → Schlüsselloses Einchecken: Nuki-Smartlock-Integration einrichten, automatisch Zugangscodes erstellen (Pro-Plan).
 - Konfiguration → Beds24 Channel Manager: Verbindung zu Beds24 herstellen, Verfügbarkeiten mit Booking.com, Airbnb etc. synchronisieren (Pro-Plan).
