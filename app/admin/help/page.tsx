@@ -146,6 +146,14 @@ function Tip({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', fontWeight: 600, textDecoration: 'underline', textDecorationColor: '#9ca3af', textUnderlineOffset: 3 }}>
+      {children}
+    </a>
+  );
+}
+
 function InternalLink({ id, children }: { id: string; children: React.ReactNode }) {
   const navigate = useContext(NavigateCtx);
   return (
@@ -856,20 +864,20 @@ function ZahlungenSection() {
         So richtest du es ein:
       </P>
       <div style={{ display: 'grid', gap: 8, margin: '8px 0 16px' }}>
-        {[
-          { step: '1', text: 'Gehe zu developer.paypal.com und melde dich mit deinem Business-Konto an.' },
-          { step: '2', text: 'Klicke auf „Apps & Credentials" → „Create App". Gib der App einen Namen (z.B. „Bookingwulf") und wähle „Merchant".' },
-          { step: '3', text: 'Nach dem Erstellen siehst du Client ID und Client Secret — zuerst im Sandbox-Modus. Für den Live-Betrieb wechsle oben rechts auf „Live" und kopiere die Live-Zugangsdaten.' },
-          { step: '4', text: 'Trage Client ID und Client Secret unter Zahlungsarten → PayPal ein und aktiviere den Toggle.' },
-        ].map((item) => (
-          <div key={item.step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{item.step}</span>
-            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{item.text}</span>
+        {([
+          ['1', <>Gehe zu <ExtLink href="https://developer.paypal.com">developer.paypal.com</ExtLink> und melde dich mit deinem Business-Konto an.</>],
+          ['2', <>Klicke auf „Apps &amp; Credentials" → „Create App". Gib der App einen Namen (z.B. „Bookingwulf") und wähle „Merchant".</>],
+          ['3', <>Nach dem Erstellen siehst du Client ID und Client Secret — zuerst im Sandbox-Modus. Für den Live-Betrieb wechsle oben rechts auf „Live" und kopiere die Live-Zugangsdaten.</>],
+          ['4', <>Trage Client ID und Client Secret unter Zahlungsarten → PayPal ein und aktiviere den Toggle.</>],
+        ] as [string, React.ReactNode][]).map(([step, text]) => (
+          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
+            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{text}</span>
           </div>
         ))}
       </div>
       <Tip>
-        Link: <strong>developer.paypal.com</strong> → Apps &amp; Credentials → Create App
+        <ExtLink href="https://developer.paypal.com/dashboard/applications/live">developer.paypal.com</ExtLink> → Apps &amp; Credentials → Create App
       </Tip>
 
       <H3>Stripe (Kreditkarte) einrichten</H3>
@@ -878,20 +886,20 @@ function ZahlungenSection() {
         Du verwendest deinen eigenen Stripe-Account, das Geld geht direkt an dich.
       </P>
       <div style={{ display: 'grid', gap: 8, margin: '8px 0 16px' }}>
-        {[
-          { step: '1', text: 'Erstelle ein Konto auf stripe.com (kostenlos). Verifiziere dein Business und hinterlege deine Bankverbindung für Auszahlungen.' },
-          { step: '2', text: 'Gehe im Stripe Dashboard zu Entwickler → API-Schlüssel.' },
-          { step: '3', text: 'Kopiere den Publishable Key (beginnt mit pk_live_…) und den Secret Key (sk_live_…).' },
-          { step: '4', text: 'Trage beide Schlüssel unter Zahlungsarten → Kreditkarte (Stripe) ein und aktiviere den Toggle.' },
-        ].map((item) => (
-          <div key={item.step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{item.step}</span>
-            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{item.text}</span>
+        {([
+          ['1', <>Erstelle ein Konto auf <ExtLink href="https://stripe.com">stripe.com</ExtLink> (kostenlos). Verifiziere dein Business und hinterlege deine Bankverbindung für Auszahlungen.</>],
+          ['2', <>Gehe im Stripe Dashboard zu <ExtLink href="https://dashboard.stripe.com/apikeys">Entwickler → API-Schlüssel</ExtLink>.</>],
+          ['3', <>Kopiere den Publishable Key (beginnt mit pk_live_…) und den Secret Key (sk_live_…).</>],
+          ['4', <>Trage beide Schlüssel unter Zahlungsarten → Kreditkarte (Stripe) ein und aktiviere den Toggle.</>],
+        ] as [string, React.ReactNode][]).map(([step, text]) => (
+          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
+            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{text}</span>
           </div>
         ))}
       </div>
       <Tip>
-        Link: <strong>dashboard.stripe.com/apikeys</strong>
+        <ExtLink href="https://dashboard.stripe.com/apikeys">dashboard.stripe.com/apikeys</ExtLink>
       </Tip>
       <Note>
         Stripe erhebt pro Transaktion eine eigene Gebühr (ca. 1,5 % + 0,25 € für europäische Karten).
