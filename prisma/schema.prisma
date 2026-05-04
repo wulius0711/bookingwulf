@@ -119,6 +119,10 @@ model HotelSettings {
   taxRateRoom     Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Zimmerpreis in % (z.B. 10.00)
   taxRateCleaning Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Reinigung in % (z.B. 20.00)
 
+  // 💳 Zahlungsarten
+  bankTransferEnabled Boolean @default(true)
+  paypalEnabled       Boolean @default(false)
+
   // 💳 Anzahlung & Bankdaten
   depositEnabled      Boolean @default(false)
   depositType         String  @default("percent")  // "percent" | "fixed"

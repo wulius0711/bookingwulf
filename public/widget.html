@@ -3229,6 +3229,8 @@
             state.settings.hideRequestOption = !!ft.hideRequestOption;
             state.settings.showUrgencySignals = !!ft.showUrgencySignals;
             state.settings.urgencyThreshold = ft.urgencyThreshold ?? 40;
+            state.settings.bankTransferEnabled = ft.bankTransferEnabled !== false;
+            state.settings.paypalEnabled = !!ft.paypalEnabled;
             state.settings.depositEnabled = !!ft.depositEnabled;
             state.settings.depositType = ft.depositType ?? 'percent';
             state.settings.depositValue = ft.depositValue ?? 25;
@@ -5094,19 +5096,26 @@
               '</button>' +
               '<div class="payment-accordion-body open" id="paymentAccordionBody">' +
               (deposit > 0 ? '<div class="payment-desc">' + t('submit_payment_desc', { amount: '<strong>' + depositText + '</strong>', days: String(depositDueDays) }) + '</div>' : '') +
-              '<div class="pm-cards">' +
-              '<div class="pm-card selected" id="pmCardBank">' +
-              '<span class="pm-radio"></span>' + t('submit_bank_transfer') +
-              '</div>' +
-              '<div class="pm-card" id="pmCardPaypal">' +
-              '<span class="pm-radio"></span>' +
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" height="20" aria-label="PayPal" style="display:block"><text y="19" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="21" letter-spacing="-0.5"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg>' +
-              '</div>' +
-              '</div>' +
-              '<div id="pmInfoBank">' +
-              (depositEnabled && bankIban ? '<p style="margin:8px 0 0;font-size:12px;color:#6b7280;">' + t('submit_bank_email_hint') + '</p>' : '') +
-              '</div>' +
-              '<div id="pmInfoPaypal" style="display:none;margin-top:12px;padding:14px 16px;background:#f0f6ff;border:1px solid #cce0f5;border-radius:10px;">' +
+              (() => {
+                const showBank = state.settings.bankTransferEnabled !== false;
+                const showPaypal = !!state.settings.paypalEnabled;
+                const bankFirst = showBank;
+                const defaultPaypal = !showBank && showPaypal;
+                return '<div class="pm-cards">' +
+                (showBank ? '<div class="pm-card' + (!defaultPaypal ? ' selected' : '') + '" id="pmCardBank"><span class="pm-radio"></span>' + t('submit_bank_transfer') + '</div>' : '') +
+                (showPaypal ? '<div class="pm-card' + (defaultPaypal ? ' selected' : '') + '" id="pmCardPaypal"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" height="20" aria-label="PayPal" style="display:block"><text y="19" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="21" letter-spacing="-0.5"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg></div>' : '') +
+                '</div>';
+              })() +
+              (() => {
+                const onlyPaypal = !!state.settings.paypalEnabled && state.settings.bankTransferEnabled === false;
+                return '<div id="pmInfoBank" style="' + (onlyPaypal ? 'display:none;' : '') + '">' +
+                (depositEnabled && bankIban ? '<p style="margin:8px 0 0;font-size:12px;color:#6b7280;">' + t('submit_bank_email_hint') + '</p>' : '') +
+                '</div>';
+              })() +
+              (() => {
+                const onlyPaypal2 = !!state.settings.paypalEnabled && state.settings.bankTransferEnabled === false;
+                return '<div id="pmInfoPaypal" style="' + (onlyPaypal2 ? '' : 'display:none;') + 'margin-top:12px;padding:14px 16px;background:#f0f6ff;border:1px solid #cce0f5;border-radius:10px;">';
+              })() +
               (!depositEnabled && total > 0 ? '<p style="margin:0 0 12px;font-size:13px;color:#1c2e4a;line-height:1.6;">' + t('submit_paypal_full_amount', { amount: '<strong>' + eur(total) + '</strong>' }) + '</p>' : '') +
               '<div style="font-weight:700;font-size:13px;color:#1c2e4a;margin-bottom:8px;">' + t('submit_paypal_next_title') + '</div>' +
               '<ul style="margin:0;padding-left:18px;display:grid;gap:5px;font-size:13px;color:#374151;">' +
@@ -5116,7 +5125,12 @@
               '<li>' + t('submit_paypal_step4') + '</li>' +
               '</ul>' +
               '</div>' +
-              '<input type="hidden" id="paymentMethod" value="' + t('submit_bank_transfer') + '" />' +
+              (() => {
+                const showBank2 = state.settings.bankTransferEnabled !== false;
+                const showPaypal2 = !!state.settings.paypalEnabled;
+                const defaultMethod = (!showBank2 && showPaypal2) ? 'PayPal' : t('submit_bank_transfer');
+                return '<input type="hidden" id="paymentMethod" value="' + defaultMethod + '" />';
+              })() +
               '</div>' +
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
               '<button type="button" id="submitBtn" class="btn">' + t('submit_book_now') + '</button>' +

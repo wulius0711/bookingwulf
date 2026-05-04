@@ -81,6 +81,8 @@ export async function saveHotelSettings(formData: FormData) {
       taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
       taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
 
+      bankTransferEnabled: getBool('bankTransferEnabled'),
+      paypalEnabled: getBool('paypalEnabled'),
       depositEnabled: getBool('depositEnabled'),
       depositType: String(formData.get('depositType') || 'percent'),
       depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,
@@ -136,6 +138,8 @@ export async function saveHotelSettings(formData: FormData) {
       taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
       taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
 
+      bankTransferEnabled: getBool('bankTransferEnabled'),
+      paypalEnabled: getBool('paypalEnabled'),
       depositEnabled: getBool('depositEnabled'),
       depositType: String(formData.get('depositType') || 'percent'),
       depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,

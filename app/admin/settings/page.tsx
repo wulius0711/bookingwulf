@@ -305,67 +305,82 @@ export default async function Page({ searchParams }: PageProps) {
             <input type="hidden" name="hotelId" value={selected.id} />
 
             {/* BENACHRICHTIGUNGEN */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
-                <p style={sectionIntroStyle}>
-                  E-Mail-Adresse, an die neue Buchungsanfragen gesendet werden.
-                </p>
+            <details className="settings-section" open style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
+                  <p style={sectionIntroStyle}>E-Mail-Adresse, an die neue Buchungsanfragen gesendet werden.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
+                <div className="settings-row" style={rowStyle}>
+                  <label style={labelStyle}>Benachrichtigungs-E-Mail</label>
+                  <input
+                    name="notificationEmail"
+                    type="email"
+                    defaultValue={selected.email ?? ''}
+                    placeholder="z. B. info@hotel.at"
+                    style={inputStyle}
+                  />
+                </div>
               </div>
-
-              <div className="settings-row" style={rowStyle}>
-                <label style={labelStyle}>Benachrichtigungs-E-Mail</label>
-                <input
-                  name="notificationEmail"
-                  type="email"
-                  defaultValue={selected.email ?? ''}
-                  placeholder="z. B. info@hotel.at"
-                  style={inputStyle}
-                />
-              </div>
-
-
-            </div>
+            </details>
 
             {/* RECHTLICHES */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Rechtliches</h2>
-                <p style={sectionIntroStyle}>
-                  Links zu Ihren Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.
-                </p>
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Rechtliches</h2>
+                  <p style={sectionIntroStyle}>Links zu Ihren Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
+                <div className="settings-row" style={rowStyle}>
+                  <label style={labelStyle}>Buchungsbedingungen URL</label>
+                  <input
+                    name="bookingTermsUrl"
+                    type="url"
+                    defaultValue={selected.bookingTermsUrl ?? ''}
+                    placeholder="https://hotel.at/buchungsbedingungen"
+                    style={inputStyle}
+                  />
+                </div>
+                <div className="settings-row" style={rowStyle}>
+                  <label style={labelStyle}>Datenschutz URL</label>
+                  <input
+                    name="privacyPolicyUrl"
+                    type="url"
+                    defaultValue={selected.privacyPolicyUrl ?? ''}
+                    placeholder="https://hotel.at/datenschutz"
+                    style={inputStyle}
+                  />
+                </div>
               </div>
+            </details>
 
-              <div className="settings-row" style={rowStyle}>
-                <label style={labelStyle}>Buchungsbedingungen URL</label>
-                <input
-                  name="bookingTermsUrl"
-                  type="url"
-                  defaultValue={selected.bookingTermsUrl ?? ''}
-                  placeholder="https://hotel.at/buchungsbedingungen"
-                  style={inputStyle}
-                />
-              </div>
-
-              <div className="settings-row" style={rowStyle}>
-                <label style={labelStyle}>Datenschutz URL</label>
-                <input
-                  name="privacyPolicyUrl"
-                  type="url"
-                  defaultValue={selected.privacyPolicyUrl ?? ''}
-                  placeholder="https://hotel.at/datenschutz"
-                  style={inputStyle}
-                />
-              </div>
-            </div>
-
-            {/* ANZAHLUNG & BANKDATEN */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Anzahlung & Bankdaten</h2>
-                <p style={sectionIntroStyle}>Wird im Widget bei verbindlichen Buchungen angezeigt.</p>
-              </div>
-              <div style={{ display: 'grid', gap: 16 }}>
+            {/* ZAHLUNGSARTEN & BANKDATEN */}
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Zahlungsarten & Bankdaten</h2>
+                  <p style={sectionIntroStyle}>Lege fest welche Zahlungsmethoden im Widget angeboten werden. Die Bankdaten erscheinen ausschließlich in der Buchungsbestätigungsmail an den Gast.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 16 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
+                  <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aktive Zahlungsmethoden</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <input type="checkbox" name="bankTransferEnabled" id="bankTransferEnabled" defaultChecked={selected.settings?.bankTransferEnabled ?? true} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
+                    <label htmlFor="bankTransferEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Banküberweisung</label>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <input type="checkbox" name="paypalEnabled" id="paypalEnabled" defaultChecked={selected.settings?.paypalEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
+                    <label htmlFor="paypalEnabled" style={{ ...labelStyle, marginBottom: 0 }}>PayPal</label>
+                  </div>
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
                   <label htmlFor="depositEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Anzahlung aktivieren</label>
@@ -392,10 +407,7 @@ export default async function Page({ searchParams }: PageProps) {
                   <input name="bankAccountHolder" type="text" defaultValue={selected.settings?.bankAccountHolder ?? ''} placeholder="Max Mustermann" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>
-                    IBAN
-                    <span style={{ fontWeight: 400, color: '#9ca3af', fontSize: 12, marginLeft: 6 }}>— wird in der Buchungsbestätigung angezeigt</span>
-                  </label>
+                  <label style={labelStyle}>IBAN</label>
                   <input name="bankIban" type="text" defaultValue={selected.settings?.bankIban ?? ''} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
                 </div>
                 <div>
@@ -403,17 +415,18 @@ export default async function Page({ searchParams }: PageProps) {
                   <input name="bankBic" type="text" defaultValue={selected.settings?.bankBic ?? ''} placeholder="BKAUATWW" style={inputStyle} />
                 </div>
               </div>
-            </div>
+            </details>
 
             {/* DESIGN */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Design</h2>
-                <p style={sectionIntroStyle}>
-                  Farben und Formensprache für das Buchungssystem dieses Hotels.
-                </p>
-              </div>
-
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Design</h2>
+                  <p style={sectionIntroStyle}>Farben und Formensprache für das Buchungssystem dieses Hotels.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
               {(
                 [
                   ['Accent',      'accentColor',     selected.settings?.accentColor     || '#111827', true],
@@ -469,14 +482,19 @@ export default async function Page({ searchParams }: PageProps) {
                 </div>
                 {!fullBranding && <ProLockOverlay />}
               </div>
-            </div>
+              </div>
+            </details>
 
             {/* TYPOGRAFIE */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Typografie</h2>
-                <p style={sectionIntroStyle}>Schriftarten, Größen und Gewichtungen für das Widget.</p>
-              </div>
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Typografie</h2>
+                  <p style={sectionIntroStyle}>Schriftarten, Größen und Gewichtungen für das Widget.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
 
               {/* Font Family - Pro */}
               {(['headlineFont', 'bodyFont'] as const).map((field) => {
@@ -586,54 +604,60 @@ export default async function Page({ searchParams }: PageProps) {
                 );
               })}
 
-            </div>
+              </div>
+            </details>
 
             {/* PRESETS */}
-            <div style={{ ...sectionStyle, position: 'relative' }}>
-              <div style={{ opacity: fullBranding ? 1 : 0.4 }}>
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block', position: 'relative' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Design-Presets</h2>
-                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern<br />und wiederverwenden. Max. 3 Stück.</p>
+                  <p style={sectionIntroStyle}>Aktuelle Branding-Einstellungen als Preset speichern und wiederverwenden. Max. 3 Stück.</p>
                 </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', opacity: fullBranding ? 1 : 0.4 }}>
                 {fullBranding
                   ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
                   : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
                 }
               </div>
               {!fullBranding && <ProLockOverlay />}
-            </div>
+            </details>
 
             {/* FEATURES */}
-            <div className="settings-section" style={sectionStyle}>
-              <div>
-                <h2 style={sectionTitleStyle}>Features</h2>
-                <p style={sectionIntroStyle}>
-                  Verhalten und Umfang des Widgets pro Hotel steuern.
-                </p>
+            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+              <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+                <div>
+                  <h2 style={sectionTitleStyle}>Features</h2>
+                  <p style={sectionIntroStyle}>Verhalten und Umfang des Widgets pro Hotel steuern.</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              </summary>
+              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
+                <FeatureToggles
+                  initialValues={{
+                    showPrices: selected.settings?.showPrices ?? true,
+                    showAmenities: selected.settings?.showAmenities ?? true,
+                    showExtrasStep: selected.settings?.showExtrasStep ?? true,
+                    showPhoneField: selected.settings?.showPhoneField ?? true,
+                    showMessageField: selected.settings?.showMessageField ?? true,
+                    enableImageSlider: selected.settings?.enableImageSlider ?? true,
+                    enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
+                    hideRequestOption: selected.settings?.hideRequestOption ?? false,
+                  }}
+                  checkboxRowStyle={checkboxRowStyle}
+                  checkboxBoxStyle={checkboxBoxStyle}
+                  labelStyle={labelStyle}
+                />
               </div>
-
-              <FeatureToggles
-                initialValues={{
-                  showPrices: selected.settings?.showPrices ?? true,
-                  showAmenities: selected.settings?.showAmenities ?? true,
-                  showExtrasStep: selected.settings?.showExtrasStep ?? true,
-                  showPhoneField: selected.settings?.showPhoneField ?? true,
-                  showMessageField: selected.settings?.showMessageField ?? true,
-                  enableImageSlider: selected.settings?.enableImageSlider ?? true,
-                  enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
-                  hideRequestOption: selected.settings?.hideRequestOption ?? false,
-                }}
-                checkboxRowStyle={checkboxRowStyle}
-                checkboxBoxStyle={checkboxBoxStyle}
-                labelStyle={labelStyle}
-              />
-            </div>
+            </details>
 
             {/* ACTIONS */}
-            <div style={actionRowStyle}>
-              <SaveButton />
-
+            <div style={{ ...actionRowStyle, justifyContent: 'flex-end' }}>
               <StandardButton hotelId={selected.id} style={secondaryButtonStyle} />
+
+              <SaveButton />
             </div>
 
             {saved === '1' && (
@@ -644,15 +668,17 @@ export default async function Page({ searchParams }: PageProps) {
           </form>
 
           {/* EMBED CODE */}
-          <div id="embed-code" className="settings-section" style={sectionStyle}>
-            <div>
-              <h2 style={sectionTitleStyle}>Embed-Code</h2>
-              <p style={sectionIntroStyle}>
-                Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <details id="embed-code" className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={sectionTitleStyle}>Embed-Code</h2>
+                <p style={sectionIntroStyle}>
+                  Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
+                </p>
+              </div>
+              <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+            </summary>
+            <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
                 <EmbedCode
@@ -666,7 +692,7 @@ export default async function Page({ searchParams }: PageProps) {
                 />
               </div>
             </div>
-          </div>
+          </details>
 
           {/* MINI WIDGET */}
           <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
@@ -677,7 +703,7 @@ export default async function Page({ searchParams }: PageProps) {
                   Kompakter Datepicker für Landing Pages — Gast wählt Datum und wird zum Buchungs-Widget weitergeleitet.
                 </p>
               </div>
-              <span style={{ fontSize: 18, color: '#9ca3af', marginTop: 4, flexShrink: 0, lineHeight: 1 }}>▾</span>
+              <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
             </summary>
             <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
               <div>
@@ -721,12 +747,15 @@ export default async function Page({ searchParams }: PageProps) {
           </details>
 
           {/* Widget Configs */}
-          <div style={{ ...sectionStyle, position: 'relative' }}>
-            <div style={{ opacity: hasPro ? 1 : 0.4 }}>
+          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block', position: 'relative' }}>
+            <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>
                 <p style={sectionIntroStyle}>Erstelle eine weitere Variante des Widgets mit eigenen Einstellungen — z.B. eine für Anfragen, eine für Buchungen.</p>
               </div>
+              <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
+            </summary>
+            <div style={{ padding: '0 28px 26px', opacity: hasPro ? 1 : 0.4 }}>
               {hasPro && (
                 <WidgetConfigs
                   hotelId={selected.id}
@@ -737,7 +766,7 @@ export default async function Page({ searchParams }: PageProps) {
               )}
             </div>
             {!hasPro && <ProLockOverlay />}
-          </div>
+          </details>
         </div>
 
         {/* RIGHT PREVIEW */}
