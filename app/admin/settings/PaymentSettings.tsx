@@ -45,16 +45,16 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
   );
 }
 
-function ToggleRow({ name, label, description, checked, onChange }: {
-  name: string; label: string; description?: string; checked: boolean; onChange: () => void;
+function ToggleRow({ name, label, description, checked, onChange, disabled }: {
+  name: string; label: string; description?: string; checked: boolean; onChange: () => void; disabled?: boolean;
 }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 0' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 0', opacity: disabled ? 0.4 : 1 }}>
       <div>
         <div style={{ fontSize: 14, fontWeight: 500, color: '#111827', lineHeight: 1.3 }}>{label}</div>
         {description && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2, lineHeight: 1.4 }}>{description}</div>}
       </div>
-      <IosToggle name={name} checked={checked} onChange={onChange} />
+      <IosToggle name={name} checked={disabled ? false : checked} onChange={disabled ? () => {} : onChange} />
     </div>
   );
 }
@@ -114,9 +114,10 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           <ToggleRow
             name="depositEnabled"
             label="Anzahlung"
-            description="Gast zahlt bei Buchung einen Teilbetrag"
+            description={!bankTransfer ? 'Nicht verfügbar bei reiner PayPal-Zahlung' : 'Gast zahlt bei Buchung einen Teilbetrag'}
             checked={deposit}
             onChange={() => setDeposit(v => !v)}
+            disabled={!bankTransfer}
           />
         </div>
 
