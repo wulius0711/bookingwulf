@@ -717,7 +717,7 @@ details.settings-section[open] > summary span {
 
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
-.card-caret { display: inline-block; font-size: 16px; color: #9ca3af; flex-shrink: 0; transition: transform 0.2s; }
+.card-caret { display: inline-block; font-size: 24px; color: #6b7280; flex-shrink: 0; line-height: 1; margin-top: 2px; transition: transform 0.2s; }
 details[open] > summary .card-caret { transform: rotate(180deg); }
 
 /* ─── Skip link ─────────────────────────────────────────────────── */
