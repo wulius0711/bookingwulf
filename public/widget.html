@@ -391,11 +391,11 @@
       .step {
         position: relative;
         min-height: 88px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         border-radius: calc(var(--radius) + 4px);
-        background: rgba(255, 255, 255, 0.38);
+        background: rgba(255, 255, 255, 0.7);
         padding: 14px 16px;
-        color: var(--muted-2);
+        color: var(--text);
         cursor: pointer;
         transition:
           border-color 0.2s ease,
@@ -443,9 +443,9 @@
       }
 
       .step.done {
-        color: var(--text);
-        border-color: var(--line-strong);
-        background: rgba(255, 255, 255, 0.7);
+        color: var(--muted-2);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.38);
       }
 
       .price-box {
@@ -2837,6 +2837,12 @@
             submit_payment_options: 'Zahlungsoptionen',
             submit_payment_desc: 'Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von {amount} innerhalb von {days} Tagen.',
             submit_bank_transfer: 'Banküberweisung',
+            submit_bank_email_hint: 'Die vollständigen Bankdaten erhältst du in der Buchungsbestätigungsmail.',
+            submit_paypal_next_title: 'Das kommt als nächstes',
+            submit_paypal_step1: 'Du wirst zu PayPal weitergeleitet',
+            submit_paypal_step2: 'Wähle die gewünschte Zahlungsart aus (z.B. Kreditkarte, PayPal Guthaben, Pay Later)',
+            submit_paypal_step3: 'Schließe alle Schritte mit PayPal ab',
+            submit_paypal_step4: 'Nach der Bezahlung erhältst du eine Bestätigung',
             submit_credit_card: 'Kreditkarte',
             submit_coming_soon: 'Bald',
             submit_book_now: 'Verbindlich buchen',
@@ -2959,6 +2965,12 @@
             submit_payment_options: 'Payment options',
             submit_payment_desc: 'To confirm your reservation, we kindly ask for a deposit of {amount} within {days} days.',
             submit_bank_transfer: 'Bank transfer',
+            submit_bank_email_hint: 'You will receive the full bank details in your booking confirmation email.',
+            submit_paypal_next_title: 'What happens next',
+            submit_paypal_step1: 'You will be redirected to PayPal',
+            submit_paypal_step2: 'Choose your preferred payment method (e.g. credit card, PayPal balance, Pay Later)',
+            submit_paypal_step3: 'Complete all steps with PayPal',
+            submit_paypal_step4: 'After payment, you will receive a confirmation',
             submit_credit_card: 'Credit card',
             submit_coming_soon: 'Soon',
             submit_book_now: 'Book now',
@@ -3215,6 +3227,13 @@
             state.settings.hideRequestOption = !!ft.hideRequestOption;
             state.settings.showUrgencySignals = !!ft.showUrgencySignals;
             state.settings.urgencyThreshold = ft.urgencyThreshold ?? 40;
+            state.settings.depositEnabled = !!ft.depositEnabled;
+            state.settings.depositType = ft.depositType ?? 'percent';
+            state.settings.depositValue = ft.depositValue ?? 25;
+            state.settings.depositDueDays = ft.depositDueDays ?? 7;
+            state.settings.bankIban = ft.bankIban || '';
+            state.settings.bankBic = ft.bankBic || '';
+            state.settings.bankAccountHolder = ft.bankAccountHolder || '';
 
             // Apply DOM toggles for static fields
             const phoneWrap = document
@@ -5077,11 +5096,23 @@
               '<div class="pm-card selected" id="pmCardBank">' +
               '<span class="pm-radio"></span>' + t('submit_bank_transfer') +
               '</div>' +
-              '<div class="pm-card disabled">' +
-              '<span class="pm-radio"></span>' + t('submit_credit_card') + '<span class="pm-badge">' + t('submit_coming_soon') + '</span>' +
+              '<div class="pm-card" id="pmCardPaypal">' +
+              '<span class="pm-radio"></span>' +
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" height="20" aria-label="PayPal" style="display:block"><text y="19" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="21" letter-spacing="-0.5"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg>' +
               '</div>' +
               '</div>' +
-              bankBlock +
+              '<div id="pmInfoBank">' +
+              (depositEnabled && bankIban ? '<p style="margin:8px 0 0;font-size:12px;color:#6b7280;">' + t('submit_bank_email_hint') + '</p>' : '') +
+              '</div>' +
+              '<div id="pmInfoPaypal" style="display:none;margin-top:12px;padding:14px 16px;background:#f0f6ff;border:1px solid #cce0f5;border-radius:10px;">' +
+              '<div style="font-weight:700;font-size:13px;color:#1c2e4a;margin-bottom:8px;">' + t('submit_paypal_next_title') + '</div>' +
+              '<ul style="margin:0;padding-left:18px;display:grid;gap:5px;font-size:13px;color:#374151;">' +
+              '<li>' + t('submit_paypal_step1') + '</li>' +
+              '<li>' + t('submit_paypal_step2') + '</li>' +
+              '<li>' + t('submit_paypal_step3') + '</li>' +
+              '<li>' + t('submit_paypal_step4') + '</li>' +
+              '</ul>' +
+              '</div>' +
               '<input type="hidden" id="paymentMethod" value="' + t('submit_bank_transfer') + '" />' +
               '</div>' +
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
@@ -5098,6 +5129,21 @@
                 ? 'rotate(180deg)'
                 : '';
               this.setAttribute('aria-expanded', isOpen);
+            });
+
+            document.getElementById('pmCardBank').addEventListener('click', function () {
+              document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
+              this.classList.add('selected');
+              document.getElementById('pmInfoBank').style.display = '';
+              document.getElementById('pmInfoPaypal').style.display = 'none';
+              document.getElementById('paymentMethod').value = t('submit_bank_transfer');
+            });
+            document.getElementById('pmCardPaypal').addEventListener('click', function () {
+              document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
+              this.classList.add('selected');
+              document.getElementById('pmInfoBank').style.display = 'none';
+              document.getElementById('pmInfoPaypal').style.display = '';
+              document.getElementById('paymentMethod').value = 'PayPal';
             });
 
             // Payment method is pre-selected (Banküberweisung), enable submit immediately
