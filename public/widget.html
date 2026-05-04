@@ -2163,6 +2163,24 @@
         border-top-width: 1px;
       }
 
+      .addr-grid {
+        display: grid;
+        grid-template-columns: 40fr 15fr 25fr 20fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 500px) {
+        .addr-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .addr-grid .addr-street {
+          grid-column: 1 / -1;
+        }
+        .addr-grid .addr-land {
+          grid-column: 1 / -1;
+        }
+      }
+
       .field-error {
         color: var(--danger);
         font-size: 12px;
@@ -2505,14 +2523,8 @@
                   </svg>
                 </button>
                 <div class="addr-accordion-body" id="addrAccordionBody">
-                  <div
-                    style="
-                      display: grid;
-                      grid-template-columns: 40fr 15fr 25fr 20fr;
-                      gap: 12px;
-                    "
-                  >
-                    <div class="field-block">
+                  <div class="addr-grid">
+                    <div class="field-block addr-street">
                       <label class="label" for="street"
                         >Straße, Hausnummer</label
                       >
@@ -2530,7 +2542,7 @@
                       <label class="label" for="city">Ort</label>
                       <input id="city" type="text" placeholder="Wien" />
                     </div>
-                    <div class="field-block">
+                    <div class="field-block addr-land">
                       <label class="label" for="country">Land</label>
                       <select id="country">
                         <option value="Österreich">Österreich</option>
