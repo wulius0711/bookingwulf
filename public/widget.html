@@ -5701,11 +5701,15 @@
               if (error) {
                 throw new Error(error.message || 'Kartenzahlung fehlgeschlagen.');
               }
-              await fetch(`${API_BASE}/api/stripe/confirm`, {
+              const confirmRes = await fetch(`${API_BASE}/api/stripe/confirm`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ requestId: result.requestId, paymentIntentId: paymentIntent.id }),
               });
+              if (!confirmRes.ok) {
+                const confirmData = await confirmRes.json().catch(() => ({}));
+                throw new Error(confirmData.message || 'Buchungsbestätigung fehlgeschlagen.');
+              }
             }
 
             showMessage(

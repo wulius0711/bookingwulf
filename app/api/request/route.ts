@@ -219,13 +219,14 @@ export async function POST(req: Request) {
 
     // Save to DB
     const isPaypalBooking = paymentMethod.toLowerCase() === 'paypal' && bookingType === 'booking';
+    const isStripeBooking = paymentMethod.toLowerCase() === 'stripe' && bookingType === 'booking';
     const requestEntry = await prisma.request.create({
       data: {
         hotelId: hotel.id, arrival, departure, nights, adults, children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
         message: message || null, paymentMethod: paymentMethod || null, newsletter,
-        status: isPaypalBooking ? 'pending_paypal' : (isInstantBooking ? 'booked' : 'new'),
+        status: isPaypalBooking ? 'pending_paypal' : isStripeBooking ? 'pending_stripe' : (isInstantBooking ? 'booked' : 'new'),
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
         pricingJson: {
@@ -262,7 +263,32 @@ export async function POST(req: Request) {
         }
       } catch (paypalErr) {
         console.error('[PayPal] order creation failed:', paypalErr);
-        // Fall through to normal response if PayPal fails
+        return Response.json({ success: false, message: 'PayPal-Zahlung konnte nicht gestartet werden.' }, { status: 502, headers: corsHeaders });
+      }
+      // PayPal credentials missing
+      return Response.json({ success: false, message: 'PayPal nicht konfiguriert.' }, { status: 500, headers: corsHeaders });
+    }
+
+    // Stripe flow — create PaymentIntent, return clientSecret
+    if (isStripeBooking) {
+      try {
+        const hotelSettings = await prisma.hotelSettings.findUnique({
+          where: { hotelId: hotel.id },
+          select: { stripeSecretKey: true },
+        });
+        if (hotelSettings?.stripeSecretKey) {
+          const { createPaymentIntent } = await import('@/src/lib/stripe-server');
+          const { clientSecret } = await createPaymentIntent(
+            hotelSettings.stripeSecretKey,
+            totalBookingPrice,
+            { requestId: String(requestEntry.id), hotelName: hotel.name },
+          );
+          return Response.json({ success: true, clientSecret, requestId: requestEntry.id }, { headers: corsHeaders });
+        }
+        return Response.json({ success: false, message: 'Stripe nicht konfiguriert.' }, { status: 500, headers: corsHeaders });
+      } catch (stripeErr) {
+        console.error('[Stripe] PaymentIntent creation failed:', stripeErr);
+        return Response.json({ success: false, message: 'Kartenzahlung konnte nicht gestartet werden.' }, { status: 502, headers: corsHeaders });
       }
     }
 
