@@ -2838,6 +2838,7 @@
             submit_payment_desc: 'Um die Reservierung verbindlich abzuschließen, bitten wir um eine Anzahlung von {amount} innerhalb von {days} Tagen.',
             submit_bank_transfer: 'Banküberweisung',
             submit_bank_email_hint: 'Die vollständigen Bankdaten erhältst du in der Buchungsbestätigungsmail.',
+            submit_paypal_full_amount: 'Das Zimmer wird für dich gebucht und die Reservierung verbindlich abgeschlossen. Der Betrag von {amount} ist bei Buchungsabschluss fällig.',
             submit_paypal_next_title: 'Das kommt als nächstes',
             submit_paypal_step1: 'Du wirst zu PayPal weitergeleitet',
             submit_paypal_step2: 'Wähle die gewünschte Zahlungsart aus (z.B. Kreditkarte, PayPal Guthaben, Pay Later)',
@@ -2966,6 +2967,7 @@
             submit_payment_desc: 'To confirm your reservation, we kindly ask for a deposit of {amount} within {days} days.',
             submit_bank_transfer: 'Bank transfer',
             submit_bank_email_hint: 'You will receive the full bank details in your booking confirmation email.',
+            submit_paypal_full_amount: 'Your room will be booked and the reservation confirmed. The amount of {amount} is due at the time of booking.',
             submit_paypal_next_title: 'What happens next',
             submit_paypal_step1: 'You will be redirected to PayPal',
             submit_paypal_step2: 'Choose your preferred payment method (e.g. credit card, PayPal balance, Pay Later)',
@@ -5105,6 +5107,7 @@
               (depositEnabled && bankIban ? '<p style="margin:8px 0 0;font-size:12px;color:#6b7280;">' + t('submit_bank_email_hint') + '</p>' : '') +
               '</div>' +
               '<div id="pmInfoPaypal" style="display:none;margin-top:12px;padding:14px 16px;background:#f0f6ff;border:1px solid #cce0f5;border-radius:10px;">' +
+              (!depositEnabled && total > 0 ? '<p style="margin:0 0 12px;font-size:13px;color:#1c2e4a;line-height:1.6;">' + t('submit_paypal_full_amount', { amount: '<strong>' + eur(total) + '</strong>' }) + '</p>' : '') +
               '<div style="font-weight:700;font-size:13px;color:#1c2e4a;margin-bottom:8px;">' + t('submit_paypal_next_title') + '</div>' +
               '<ul style="margin:0;padding-left:18px;display:grid;gap:5px;font-size:13px;color:#374151;">' +
               '<li>' + t('submit_paypal_step1') + '</li>' +
