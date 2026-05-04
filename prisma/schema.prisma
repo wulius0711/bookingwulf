@@ -82,8 +82,10 @@ model HotelSettings {
   preArrivalReminderDays Int     @default(3)
 
   checkoutReminderEnabled Boolean @default(false)
-  checkoutTime            String?  // e.g. "10:00 Uhr"
-  checkoutReminderText    String?  // host instructions shown in the email
+  checkoutTime            String?
+  checkoutReminderText    String?
+  checkoutReminderSubject String?
+  checkoutReminderBody    String?
 
   reviewRequestEnabled Boolean @default(false)
   reviewRequestDays    Int     @default(2)   // days after departure to send

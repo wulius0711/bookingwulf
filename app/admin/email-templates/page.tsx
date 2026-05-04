@@ -57,7 +57,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true, reviewRequestSubject: true, reviewRequestBody: true } } },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, checkoutReminderSubject: true, checkoutReminderBody: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true, reviewRequestSubject: true, reviewRequestBody: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -124,12 +124,16 @@ export default async function EmailTemplatesPage() {
         checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
         checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
         checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
+        checkoutReminderSubject: String(formData.get('checkoutReminderSubject') || '').trim() || null,
+        checkoutReminderBody: String(formData.get('checkoutReminderBody') || '').trim() || null,
       },
       create: {
         hotelId: session.hotelId,
         checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
         checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
         checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
+        checkoutReminderSubject: String(formData.get('checkoutReminderSubject') || '').trim() || null,
+        checkoutReminderBody: String(formData.get('checkoutReminderBody') || '').trim() || null,
       },
     });
     revalidatePath('/admin/email-templates');
@@ -338,6 +342,19 @@ export default async function EmailTemplatesPage() {
                 <textarea name="checkoutReminderText" rows={4}
                   defaultValue={s?.checkoutReminderText ?? ''}
                   placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
+                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+              </div>
+              <div style={{ height: 1, background: '#f3f4f6' }} />
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>Betreff</label>
+                <input type="text" name="checkoutReminderSubject"
+                  defaultValue={s?.checkoutReminderSubject ?? 'Erinnerung Check-out heute — {{hotelName}}'}
+                  style={inputStyle} />
+              </div>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>E-Mail-Text</label>
+                <textarea name="checkoutReminderBody" rows={4}
+                  defaultValue={s?.checkoutReminderBody ?? 'wir hoffen, du hattest einen schönen Aufenthalt! Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis {{checkoutTime}}.'}
                   style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

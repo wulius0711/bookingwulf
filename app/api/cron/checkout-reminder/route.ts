@@ -10,7 +10,7 @@ export async function GET(req: Request) {
 
   const hotelsWithFeature = await prisma.hotelSettings.findMany({
     where: { checkoutReminderEnabled: true },
-    select: { hotelId: true, checkoutTime: true, checkoutReminderText: true },
+    select: { hotelId: true, checkoutTime: true, checkoutReminderText: true, checkoutReminderSubject: true, checkoutReminderBody: true },
   });
 
   let sent = 0;
@@ -44,6 +44,13 @@ export async function GET(req: Request) {
       const checkoutTime = hs.checkoutTime || '10:00 Uhr';
       const departureDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(r.departure);
 
+      const subject = (hs.checkoutReminderSubject || 'Erinnerung Check-out heute — {{hotelName}}')
+        .replace('{{hotelName}}', hotelName);
+      const bodyText = (hs.checkoutReminderBody ||
+        'wir hoffen, du hattest einen schönen Aufenthalt! Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis {{checkoutTime}}.')
+        .replace('{{checkoutTime}}', checkoutTime)
+        .replace('{{hotelName}}', hotelName);
+
       const instructionsBlock = hs.checkoutReminderText
         ? `<p style="font-size:14px;color:#374151;line-height:1.7;margin:16px 0 0;background:#f8fafc;border-radius:10px;padding:14px 16px;">${hs.checkoutReminderText.replace(/\n/g, '<br/>')}</p>`
         : '';
@@ -54,7 +61,7 @@ export async function GET(req: Request) {
           await resend.emails.send({
             from: getFromEmail(),
             to: r.email,
-            subject: `Erinnerung Check-out heute — ${hotelName}`,
+            subject,
             html: buildEmailHtml({
               hotelName,
               accentColor: r.hotel?.accentColor || undefined,
@@ -63,8 +70,7 @@ export async function GET(req: Request) {
               body: `
                 <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 12px;">
                   Hallo ${r.firstname || r.lastname},<br/><br/>
-                  wir hoffen, du hattest einen schönen Aufenthalt in <strong>${hotelName}</strong>.
-                  Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis <strong>${checkoutTime}</strong>.
+                  ${bodyText.replace(/\n/g, '<br/>')}
                 </p>
                 ${instructionsBlock}
               `,
