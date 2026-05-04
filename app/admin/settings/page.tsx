@@ -16,6 +16,7 @@ import StandardButton from './StandardButton';
 import SaveButton from '../components/SaveButton';
 import FeatureToggles from './FeatureToggles';
 import FontUploadRow from './FontUploadRow';
+import PaymentSettings from './PaymentSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -138,23 +139,6 @@ const inputStyle: React.CSSProperties = {
 const smallInputStyle: React.CSSProperties = {
   ...inputStyle,
   width: '100%',
-};
-
-const checkboxRowStyle: React.CSSProperties = {
-  gap: 18,
-};
-
-const checkboxBoxStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-  minHeight: 44,
-  padding: '10px 12px',
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
-  background: '#fafafa',
-  color: '#111827',
-  fontSize: 14,
 };
 
 const actionRowStyle: React.CSSProperties = {
@@ -369,63 +353,24 @@ export default async function Page({ searchParams }: PageProps) {
                 </div>
                 <span style={{ fontSize: 24, color: '#6b7280', marginTop: 2, flexShrink: 0, lineHeight: 1 }}>▾</span>
               </summary>
-              <div style={{ padding: '0 28px 26px', display: 'grid', gap: 16 }}>
-                <div style={{ display: 'grid', gap: 10 }}>
-                  <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aktive Zahlungsmethoden</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <input type="checkbox" name="bankTransferEnabled" id="bankTransferEnabled" defaultChecked={selected.settings?.bankTransferEnabled ?? true} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
-                    <label htmlFor="bankTransferEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Banküberweisung</label>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <input type="checkbox" name="paypalEnabled" id="paypalEnabled" defaultChecked={selected.settings?.paypalEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
-                    <label htmlFor="paypalEnabled" style={{ ...labelStyle, marginBottom: 0 }}>PayPal</label>
-                  </div>
-                  {(selected.settings?.paypalEnabled) && (
-                    <div style={{ display: 'grid', gap: 10, paddingLeft: 26 }}>
-                      <div>
-                        <label style={labelStyle}>PayPal Client ID</label>
-                        <input name="paypalClientId" type="text" defaultValue={selected.settings?.paypalClientId ?? ''} placeholder="AaBbCc..." style={inputStyle} />
-                      </div>
-                      <div>
-                        <label style={labelStyle}>PayPal Client Secret</label>
-                        <input name="paypalClientSecret" type="password" defaultValue={selected.settings?.paypalClientSecret ?? ''} placeholder="••••••••" style={inputStyle} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <input type="checkbox" name="depositEnabled" id="depositEnabled" defaultChecked={selected.settings?.depositEnabled ?? false} style={{ width: 16, height: 16, accentColor: selected.settings?.accentColor || '#111827' }} />
-                  <label htmlFor="depositEnabled" style={{ ...labelStyle, marginBottom: 0 }}>Anzahlung aktivieren</label>
-                </div>
-                <div className="deposit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div>
-                    <label style={labelStyle}>Art</label>
-                    <select name="depositType" defaultValue={selected.settings?.depositType ?? 'percent'} style={{ ...inputStyle, width: '100%' }}>
-                      <option value="percent">Prozentsatz (%)</option>
-                      <option value="fixed">Fixbetrag (€)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Wert</label>
-                    <input name="depositValue" type="number" min="0" step="0.01" defaultValue={selected.settings?.depositValue ?? 25} style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Zahlungsfrist (Tage)</label>
-                    <input name="depositDueDays" type="number" min="1" max="90" defaultValue={selected.settings?.depositDueDays ?? 7} style={inputStyle} />
-                  </div>
-                </div>
-                <div>
-                  <label style={labelStyle}>Kontoinhaber</label>
-                  <input name="bankAccountHolder" type="text" defaultValue={selected.settings?.bankAccountHolder ?? ''} placeholder="Max Mustermann" style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>IBAN</label>
-                  <input name="bankIban" type="text" defaultValue={selected.settings?.bankIban ?? ''} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>BIC / SWIFT</label>
-                  <input name="bankBic" type="text" defaultValue={selected.settings?.bankBic ?? ''} placeholder="BKAUATWW" style={inputStyle} />
-                </div>
+              <div style={{ padding: '0 28px 26px' }}>
+                <PaymentSettings
+                  initialValues={{
+                    bankTransferEnabled: selected.settings?.bankTransferEnabled ?? true,
+                    paypalEnabled: selected.settings?.paypalEnabled ?? false,
+                    paypalClientId: selected.settings?.paypalClientId ?? '',
+                    paypalClientSecret: selected.settings?.paypalClientSecret ?? '',
+                    depositEnabled: selected.settings?.depositEnabled ?? false,
+                    depositType: selected.settings?.depositType ?? 'percent',
+                    depositValue: selected.settings?.depositValue ?? 25,
+                    depositDueDays: selected.settings?.depositDueDays ?? 7,
+                    bankAccountHolder: selected.settings?.bankAccountHolder ?? '',
+                    bankIban: selected.settings?.bankIban ?? '',
+                    bankBic: selected.settings?.bankBic ?? '',
+                  }}
+                  inputStyle={inputStyle}
+                  labelStyle={labelStyle}
+                />
               </div>
             </details>
 
@@ -658,9 +603,6 @@ export default async function Page({ searchParams }: PageProps) {
                     enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
                     hideRequestOption: selected.settings?.hideRequestOption ?? false,
                   }}
-                  checkboxRowStyle={checkboxRowStyle}
-                  checkboxBoxStyle={checkboxBoxStyle}
-                  labelStyle={labelStyle}
                 />
               </div>
             </details>
