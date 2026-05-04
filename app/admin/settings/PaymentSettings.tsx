@@ -101,6 +101,33 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
               <label style={labelStyle}>BIC / SWIFT</label>
               <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
             </div>
+            <div style={{ height: 1, background: '#e5e7eb', margin: '4px 0' }} />
+            <ToggleRow
+              name="depositEnabled"
+              label="Anzahlung"
+              description="Gast zahlt bei Buchung einen Teilbetrag"
+              checked={deposit}
+              onChange={() => setDeposit(v => !v)}
+            />
+            {deposit && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={labelStyle}>Art</label>
+                  <select name="depositType" defaultValue={initialValues.depositType} style={{ ...inputStyle, width: '100%' }}>
+                    <option value="percent">Prozentsatz (%)</option>
+                    <option value="fixed">Fixbetrag (€)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={labelStyle}>Wert</label>
+                  <input name="depositValue" type="number" min="0" step="0.01" defaultValue={initialValues.depositValue} style={inputStyle} />
+                </div>
+                <div>
+                  <label style={labelStyle}>Frist (Tage)</label>
+                  <input name="depositDueDays" type="number" min="1" max="90" defaultValue={initialValues.depositDueDays} style={inputStyle} />
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -125,42 +152,6 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
             <div>
               <label style={labelStyle}>PayPal Client Secret</label>
               <input name="paypalClientSecret" type="password" defaultValue={initialValues.paypalClientSecret} placeholder="••••••••" style={inputStyle} />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Anzahlung */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
-        <div style={{ padding: '0 16px' }}>
-          <ToggleRow
-            name="depositEnabled"
-            label="Anzahlung"
-            description={!bankTransfer ? 'Nicht verfügbar bei reiner PayPal-Zahlung' : 'Gast zahlt bei Buchung einen Teilbetrag'}
-            checked={deposit}
-            onChange={() => setDeposit(v => !v)}
-            disabled={!bankTransfer}
-          />
-        </div>
-
-        {deposit && (
-          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-              <div>
-                <label style={labelStyle}>Art</label>
-                <select name="depositType" defaultValue={initialValues.depositType} style={{ ...inputStyle, width: '100%' }}>
-                  <option value="percent">Prozentsatz (%)</option>
-                  <option value="fixed">Fixbetrag (€)</option>
-                </select>
-              </div>
-              <div>
-                <label style={labelStyle}>Wert</label>
-                <input name="depositValue" type="number" min="0" step="0.01" defaultValue={initialValues.depositValue} style={inputStyle} />
-              </div>
-              <div>
-                <label style={labelStyle}>Frist (Tage)</label>
-                <input name="depositDueDays" type="number" min="1" max="90" defaultValue={initialValues.depositDueDays} style={inputStyle} />
-              </div>
             </div>
           </div>
         )}
