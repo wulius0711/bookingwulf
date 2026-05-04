@@ -13,7 +13,7 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
       <input type="checkbox" name={name} checked={checked} onChange={onChange} style={{ opacity: 0, width: 0, height: 0, position: 'absolute' }} />
       <span style={{
         position: 'absolute', inset: 0,
-        background: checked ? '#111827' : '#d1d5db',
+        background: checked ? '#1e293b' : '#d1d5db',
         borderRadius: 26,
         transition: 'background 0.2s',
       }} />

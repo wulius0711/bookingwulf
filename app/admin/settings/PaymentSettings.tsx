@@ -8,6 +8,9 @@ type Props = {
     paypalEnabled: boolean;
     paypalClientId: string;
     paypalClientSecret: string;
+    stripeEnabled: boolean;
+    stripePublishableKey: string;
+    stripeSecretKey: string;
     depositEnabled: boolean;
     depositType: string;
     depositValue: number;
@@ -26,7 +29,7 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
       <input type="checkbox" name={name} checked={checked} onChange={onChange} style={{ opacity: 0, width: 0, height: 0, position: 'absolute' }} />
       <span style={{
         position: 'absolute', inset: 0,
-        background: checked ? '#111827' : '#d1d5db',
+        background: checked ? '#1e293b' : '#d1d5db',
         borderRadius: 26,
         transition: 'background 0.2s',
       }} />
@@ -66,6 +69,7 @@ const divider: React.CSSProperties = {
 export default function PaymentSettings({ initialValues, inputStyle, labelStyle }: Props) {
   const [bankTransfer, setBankTransfer] = useState(initialValues.bankTransferEnabled);
   const [paypal, setPaypal] = useState(initialValues.paypalEnabled);
+  const [stripe, setStripe] = useState(initialValues.stripeEnabled);
   const [deposit, setDeposit] = useState(initialValues.depositEnabled);
 
   return (
@@ -154,6 +158,31 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
             <div>
               <label style={labelStyle}>PayPal Client Secret</label>
               <input name="paypalClientSecret" type="password" defaultValue={initialValues.paypalClientSecret} placeholder="••••••••" style={inputStyle} />
+            </div>
+          </div>
+        )}
+
+        <div style={{ height: 1, background: '#e5e7eb' }} />
+
+        {/* Stripe */}
+        <div style={{ padding: '0 16px' }}>
+          <ToggleRow
+            name="stripeEnabled"
+            label="Kreditkarte (Stripe)"
+            description="Gast zahlt direkt im Widget mit Kreditkarte"
+            checked={stripe}
+            onChange={() => setStripe(v => !v)}
+          />
+        </div>
+        {stripe && (
+          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
+            <div>
+              <label style={labelStyle}>Publishable Key</label>
+              <input name="stripePublishableKey" type="text" defaultValue={initialValues.stripePublishableKey} placeholder="pk_live_…" style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Secret Key</label>
+              <input name="stripeSecretKey" type="password" defaultValue={initialValues.stripeSecretKey} placeholder="sk_live_…" style={inputStyle} />
             </div>
           </div>
         )}
