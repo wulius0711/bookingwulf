@@ -174,6 +174,8 @@ export async function resetHotelSettings(formData: FormData) {
       showPrices: true, allowMultiSelect: false, showAmenities: true,
       showExtrasStep: true, showPhoneField: true, showMessageField: true,
       enableImageSlider: true, instantBooking: false, enableInstantBooking: false,
+      // Payment → defaults (all off)
+      bankTransferEnabled: false, paypalEnabled: false, depositEnabled: false,
       // Colors → null (widget CSS defaults)
       accentColor: null, backgroundColor: null, cardBackground: null,
       textColor: null, mutedTextColor: null, borderColor: null,

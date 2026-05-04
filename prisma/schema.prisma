@@ -120,7 +120,7 @@ model HotelSettings {
   taxRateCleaning Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Reinigung in % (z.B. 20.00)
 
   // 💳 Zahlungsarten
-  bankTransferEnabled Boolean @default(true)
+  bankTransferEnabled Boolean @default(false)
   paypalEnabled       Boolean @default(false)
   paypalClientId      String?
   paypalClientSecret  String?

@@ -356,7 +356,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div style={{ padding: '0 28px 26px' }}>
                 <PaymentSettings
                   initialValues={{
-                    bankTransferEnabled: selected.settings?.bankTransferEnabled ?? true,
+                    bankTransferEnabled: selected.settings?.bankTransferEnabled ?? false,
                     paypalEnabled: selected.settings?.paypalEnabled ?? false,
                     paypalClientId: selected.settings?.paypalClientId ?? '',
                     paypalClientSecret: selected.settings?.paypalClientSecret ?? '',
