@@ -144,24 +144,26 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
         )}
       </div>
 
-      {/* Bankdaten */}
-      <div style={{ display: 'grid', gap: 12 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-          Bankdaten (für Überweisungen)
+      {/* Bankdaten — nur bei Banküberweisung */}
+      {bankTransfer && (
+        <div style={{ display: 'grid', gap: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Bankdaten
+          </div>
+          <div>
+            <label style={labelStyle}>Kontoinhaber</label>
+            <input name="bankAccountHolder" type="text" defaultValue={initialValues.bankAccountHolder} placeholder="Max Mustermann" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>IBAN</label>
+            <input name="bankIban" type="text" defaultValue={initialValues.bankIban} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>BIC / SWIFT</label>
+            <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
+          </div>
         </div>
-        <div>
-          <label style={labelStyle}>Kontoinhaber</label>
-          <input name="bankAccountHolder" type="text" defaultValue={initialValues.bankAccountHolder} placeholder="Max Mustermann" style={inputStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>IBAN</label>
-          <input name="bankIban" type="text" defaultValue={initialValues.bankIban} placeholder="AT12 3456 7890 1234 5678" style={inputStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>BIC / SWIFT</label>
-          <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
-        </div>
-      </div>
+      )}
     </div>
   );
 }
