@@ -2727,6 +2727,18 @@
 
         const _qp = new URLSearchParams(window.location.search);
 
+        let _stripeInstance = null;
+        let _stripeCard = null;
+
+        function _initStripe() {
+          if (_stripeInstance || !state.settings.stripePublishableKey) return;
+          _stripeInstance = window.Stripe(state.settings.stripePublishableKey);
+          const elements = _stripeInstance.elements();
+          _stripeCard = elements.create('card', {
+            style: { base: { fontSize: '14px', color: '#111827', fontFamily: 'Inter, sans-serif', '::placeholder': { color: '#9ca3af' } } },
+          });
+        }
+
         let _preArrival = _qp.get('arrival') || '';
         if (!_preArrival) {
           try {
@@ -3231,6 +3243,18 @@
             state.settings.urgencyThreshold = ft.urgencyThreshold ?? 40;
             state.settings.bankTransferEnabled = ft.bankTransferEnabled !== false;
             state.settings.paypalEnabled = !!ft.paypalEnabled;
+            state.settings.stripeEnabled = !!ft.stripeEnabled;
+            state.settings.stripePublishableKey = ft.stripePublishableKey || '';
+            if (state.settings.stripeEnabled && state.settings.stripePublishableKey) {
+              if (window.Stripe) {
+                _initStripe();
+              } else {
+                const s = document.createElement('script');
+                s.src = 'https://js.stripe.com/v3/';
+                s.onload = () => _initStripe();
+                document.head.appendChild(s);
+              }
+            }
             state.settings.depositEnabled = !!ft.depositEnabled;
             state.settings.depositType = ft.depositType ?? 'percent';
             state.settings.depositValue = ft.depositValue ?? 25;
@@ -5099,11 +5123,13 @@
               (() => {
                 const showBank = state.settings.bankTransferEnabled !== false;
                 const showPaypal = !!state.settings.paypalEnabled;
-                const bankFirst = showBank;
+                const showStripe = !!state.settings.stripeEnabled;
                 const defaultPaypal = !showBank && showPaypal;
+                const defaultStripe = !showBank && !showPaypal && showStripe;
                 return '<div class="pm-cards">' +
-                (showBank ? '<div class="pm-card' + (!defaultPaypal ? ' selected' : '') + '" id="pmCardBank"><span class="pm-radio"></span>' + t('submit_bank_transfer') + '</div>' : '') +
+                (showBank ? '<div class="pm-card' + (!defaultPaypal && !defaultStripe ? ' selected' : '') + '" id="pmCardBank"><span class="pm-radio"></span>' + t('submit_bank_transfer') + '</div>' : '') +
                 (showPaypal ? '<div class="pm-card' + (defaultPaypal ? ' selected' : '') + '" id="pmCardPaypal"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" height="20" aria-label="PayPal" style="display:block"><text y="19" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="21" letter-spacing="-0.5"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg></div>' : '') +
+                (showStripe ? '<div class="pm-card' + (defaultStripe ? ' selected' : '') + '" id="pmCardStripe"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 21" height="18" aria-label="Kreditkarte" style="display:block;margin-right:4px"><rect width="32" height="21" rx="3" fill="#e5e7eb"/><rect y="5" width="32" height="5" fill="#9ca3af"/><rect x="4" y="13" width="8" height="3" rx="1" fill="#6b7280"/></svg>Kreditkarte</div>' : '') +
                 '</div>';
               })() +
               (() => {
@@ -5125,10 +5151,16 @@
               '<li>' + t('submit_paypal_step4') + '</li>' +
               '</ul>' +
               '</div>' +
+              '<div id="pmInfoStripe" style="display:none;margin-top:12px;padding:14px 16px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;">' +
+              '<div id="stripeCardMount" style="padding:6px 2px;"></div>' +
+              '</div>' +
               (() => {
                 const showBank2 = state.settings.bankTransferEnabled !== false;
                 const showPaypal2 = !!state.settings.paypalEnabled;
-                const defaultMethod = (!showBank2 && showPaypal2) ? 'PayPal' : t('submit_bank_transfer');
+                const showStripe2 = !!state.settings.stripeEnabled;
+                const defaultMethod = showBank2 ? t('submit_bank_transfer')
+                  : showPaypal2 ? 'PayPal'
+                  : 'Stripe';
                 return '<input type="hidden" id="paymentMethod" value="' + defaultMethod + '" />';
               })() +
               '</div>' +
@@ -5148,22 +5180,40 @@
               this.setAttribute('aria-expanded', isOpen);
             });
 
+            const _allPmCards = '#pmCardBank,#pmCardPaypal,#pmCardStripe';
             document.getElementById('pmCardBank')?.addEventListener('click', function () {
-              document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
+              document.querySelectorAll(_allPmCards).forEach(c => c.classList.remove('selected'));
               this.classList.add('selected');
               document.getElementById('pmInfoBank').style.display = '';
               document.getElementById('pmInfoPaypal').style.display = 'none';
+              document.getElementById('pmInfoStripe').style.display = 'none';
               document.getElementById('paymentMethod').value = t('submit_bank_transfer');
             });
             document.getElementById('pmCardPaypal')?.addEventListener('click', function () {
-              document.querySelectorAll('#pmCardBank,#pmCardPaypal').forEach(c => c.classList.remove('selected'));
+              document.querySelectorAll(_allPmCards).forEach(c => c.classList.remove('selected'));
               this.classList.add('selected');
               document.getElementById('pmInfoBank').style.display = 'none';
               document.getElementById('pmInfoPaypal').style.display = '';
+              document.getElementById('pmInfoStripe').style.display = 'none';
               document.getElementById('paymentMethod').value = 'PayPal';
             });
+            document.getElementById('pmCardStripe')?.addEventListener('click', function () {
+              document.querySelectorAll(_allPmCards).forEach(c => c.classList.remove('selected'));
+              this.classList.add('selected');
+              document.getElementById('pmInfoBank').style.display = 'none';
+              document.getElementById('pmInfoPaypal').style.display = 'none';
+              document.getElementById('pmInfoStripe').style.display = '';
+              document.getElementById('paymentMethod').value = 'Stripe';
+              if (_stripeCard) _stripeCard.mount('#stripeCardMount');
+            });
 
-            // Payment method is pre-selected (Banküberweisung), enable submit immediately
+            // Mount Stripe card if it's the default method
+            if (document.getElementById('pmCardStripe')?.classList.contains('selected') && _stripeCard) {
+              document.getElementById('pmInfoStripe').style.display = '';
+              _stripeCard.mount('#stripeCardMount');
+            }
+
+            // Payment method is pre-selected, enable submit immediately
             document.getElementById('submitBtn')?.removeAttribute('disabled');
           } else {
             area.innerHTML =
@@ -5634,6 +5684,21 @@
             if (result.approvalUrl) {
               window.top.location.href = result.approvalUrl;
               return;
+            }
+
+            // If Stripe: confirm card payment inline
+            if (result.clientSecret && _stripeInstance && _stripeCard) {
+              const { paymentIntent, error } = await _stripeInstance.confirmCardPayment(result.clientSecret, {
+                payment_method: { card: _stripeCard },
+              });
+              if (error) {
+                throw new Error(error.message || 'Kartenzahlung fehlgeschlagen.');
+              }
+              await fetch(`${API_BASE}/api/stripe/confirm`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId: result.requestId, paymentIntentId: paymentIntent.id }),
+              });
             }
 
             showMessage(
