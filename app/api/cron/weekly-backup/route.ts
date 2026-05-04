@@ -21,16 +21,20 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const adminEmail = process.env.SUPER_ADMIN_EMAIL;
+  if (!adminEmail) {
+    console.error('[weekly-backup] SUPER_ADMIN_EMAIL not set');
+    return NextResponse.json({ error: 'SUPER_ADMIN_EMAIL not configured' }, { status: 500 });
+  }
+
   const hotels = await prisma.hotel.findMany({
     where: { isActive: true },
-    select: { id: true, name: true, email: true },
+    select: { id: true, name: true },
   });
 
   let sent = 0;
 
   for (const hotel of hotels) {
-    if (!hotel.email) continue;
-
     const requests = await prisma.request.findMany({
       where: { hotelId: hotel.id },
       orderBy: { arrival: 'desc' },
@@ -74,9 +78,9 @@ export async function GET(req: Request) {
       if (resend) {
         await resend.emails.send({
           from: getFromEmail(),
-          to: hotel.email,
+          to: adminEmail,
           subject: `Datensicherung ${hotel.name} — ${date}`,
-          text: `Anbei die wöchentliche Datensicherung aller Buchungen für ${hotel.name} (${requests.length} Einträge, Stand ${date}).`,
+          text: `Wöchentliche Datensicherung für ${hotel.name}: ${requests.length} Buchungen, Stand ${date}.`,
           attachments: [{
             filename: `buchungen-${hotel.name.toLowerCase().replace(/\s+/g, '-')}-${date.replace(/\./g, '-')}.csv`,
             content: Buffer.from('﻿' + csv).toString('base64'), // BOM for Excel UTF-8
