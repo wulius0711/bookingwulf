@@ -246,7 +246,7 @@ export default async function PriceSeasonsPage() {
                 <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>€ / Nacht</label>
                 <input name="pricePerNight" type="number" min="0" step="0.01" required placeholder="0.00" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
               </div>
-              <button type="submit" style={{ padding: '8px 16px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-end' }}>
+              <button type="submit" style={{ padding: '8px 16px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-end', marginLeft: 'auto' }}>
                 Hinzufügen
               </button>
             </form>
