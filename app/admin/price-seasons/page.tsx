@@ -8,6 +8,7 @@ import PriceSeasonList from './PriceSeasonList';
 import ProLockOverlay from '../components/ProLockOverlay';
 import { createChildPriceRange, deleteChildPriceRange } from '../child-pricing/actions';
 import OrtstaxeForm from './OrtstaxeForm';
+import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -218,12 +219,11 @@ export default async function PriceSeasonsPage() {
                         </span>
                       </div>
                     </div>
-                    <form action={deleteChildPriceRange} style={{ flexShrink: 0 }} onSubmit={(e) => { if (!confirm(`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`)) e.preventDefault(); }}>
-                      <input type="hidden" name="id" value={r.id} />
+                    <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ flexShrink: 0 }}>
                       <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
                         Löschen
                       </button>
-                    </form>
+                    </ConfirmDeleteForm>
                   </div>
                 ))}
               </div>

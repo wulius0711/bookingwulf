@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { createChildPriceRange, updateChildPriceRange, deleteChildPriceRange } from './actions';
+import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -90,12 +91,11 @@ export default async function ChildPricingPage() {
                         {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
                       </span>
                     </div>
-                    <form action={deleteChildPriceRange} style={{ marginLeft: 'auto' }} onSubmit={(e) => { if (!confirm(`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`)) e.preventDefault(); }}>
-                      <input type="hidden" name="id" value={r.id} />
+                    <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ marginLeft: 'auto' }}>
                       <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626', whiteSpace: 'nowrap' }}>
                         Löschen
                       </button>
-                    </form>
+                    </ConfirmDeleteForm>
                   </div>
                 ))}
               </div>

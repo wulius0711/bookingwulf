@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -173,8 +174,7 @@ export default async function UsersPage() {
                     </button>
                   </form>
 
-                  <form action={deleteUser} onSubmit={(e) => { if (!confirm(`Benutzer „${u.email}" wirklich löschen?`)) e.preventDefault(); }}>
-                    <input type="hidden" name="id" value={u.id} />
+                  <ConfirmDeleteForm action={deleteUser} id={u.id} message={`Benutzer „${u.email}" wirklich löschen?`}>
                     <button
                       type="submit"
                       style={{
@@ -189,7 +189,7 @@ export default async function UsersPage() {
                     >
                       Löschen
                     </button>
-                  </form>
+                  </ConfirmDeleteForm>
                 </div>
               )}
             </div>
