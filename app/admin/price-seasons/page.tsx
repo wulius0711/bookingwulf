@@ -208,13 +208,17 @@ export default async function PriceSeasonsPage() {
             ) : (
               <div>
                 {childRanges.map(r => (
-                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f9fafb', flexWrap: 'wrap' }}>
-                    <span style={{ flex: '1 1 120px', fontSize: 14, color: '#374151' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</span>
-                    <span style={{ fontSize: 13, color: '#6b7280' }}>{r.minAge}–{r.maxAge} Jahre</span>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : '#111827', minWidth: 100 }}>
-                      {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
-                    </span>
-                    <form action={deleteChildPriceRange}>
+                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f9fafb' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, color: '#374151' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</div>
+                      <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
+                        {r.minAge}–{r.maxAge} Jahre ·{' '}
+                        <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : '#111827' }}>
+                          {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
+                        </span>
+                      </div>
+                    </div>
+                    <form action={deleteChildPriceRange} style={{ flexShrink: 0 }}>
                       <input type="hidden" name="id" value={r.id} />
                       <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
                         Löschen
@@ -386,7 +390,7 @@ export default async function PriceSeasonsPage() {
                   style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
                 />
               </div>
-              <div className="admin-form-actions">
+              <div className="admin-form-actions" style={{ flex: '1 1 100%' }}>
                 <button type="submit" className="btn-primary">Speichern</button>
               </div>
             </form>
