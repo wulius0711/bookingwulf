@@ -195,7 +195,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
               {extra.isActive ? 'Deaktivieren' : 'Aktivieren'}
             </button>
           </form>
-          <form action={deleteAction}>
+          <form action={deleteAction} onSubmit={(e) => { if (!confirm(`Zusatzleistung „${extra.name}" wirklich löschen?`)) e.preventDefault(); }}>
             <input type="hidden" name="id" value={extra.id} />
             <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
               Löschen
