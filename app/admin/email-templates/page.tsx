@@ -321,14 +321,14 @@ export default async function EmailTemplatesPage() {
               <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-out-Erinnerung</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer"                style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
-                Vorschau
-              </a>
-              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-            </div>
+            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
           <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+                Vorschau
+              </a>
+            </div>
             <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
@@ -379,14 +379,14 @@ export default async function EmailTemplatesPage() {
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Bewertungsanfrage</div>
                 <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer"                  style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
-                  Vorschau
-                </a>
-                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-              </div>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+                  Vorschau
+                </a>
+              </div>
             <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false}
