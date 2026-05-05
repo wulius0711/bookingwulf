@@ -185,9 +185,6 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
       </td>
       <td style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={() => setEditing(true)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
-            Bearbeiten
-          </button>
           <form action={toggleAction}>
             <input type="hidden" name="id" value={extra.id} />
             <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
@@ -201,6 +198,9 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
               Löschen
             </button>
           </form>
+          <button type="button" onClick={() => setEditing(true)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
+            Bearbeiten
+          </button>
         </div>
       </td>
     </tr>
