@@ -108,13 +108,7 @@ export default function PriceSeasonList({
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                  <a
-                    href={`/admin/price-seasons/${s.id}/edit`}
-                    style={{ padding: '6px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
-                  >
-                    Bearbeiten
-                  </a>
+                <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'flex-end' }}>
                   <button
                     type="button"
                     disabled={deleting === s.id}
@@ -123,6 +117,12 @@ export default function PriceSeasonList({
                   >
                     {deleting === s.id ? '…' : 'Löschen'}
                   </button>
+                  <a
+                    href={`/admin/price-seasons/${s.id}/edit`}
+                    style={{ padding: '6px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
+                  >
+                    Bearbeiten
+                  </a>
                 </div>
               </div>
             )}
