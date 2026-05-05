@@ -97,8 +97,8 @@ export default function CreateExtraForm({ hotelId }: { hotelId: number }) {
         <input name="linkUrl" type="url" placeholder="https://..." style={inputStyle} />
       </div>
 
-      <div>
-        <button type="submit" style={{ padding: '11px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+      <div className="admin-form-actions">
+        <button type="submit" className="btn-primary">
           Anlegen
         </button>
       </div>
