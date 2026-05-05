@@ -173,7 +173,7 @@ export default async function UsersPage() {
                     </button>
                   </form>
 
-                  <form action={deleteUser}>
+                  <form action={deleteUser} onSubmit={(e) => { if (!confirm(`Benutzer „${u.email}" wirklich löschen?`)) e.preventDefault(); }}>
                     <input type="hidden" name="id" value={u.id} />
                     <button
                       type="submit"

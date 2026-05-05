@@ -208,7 +208,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                 </button>
               </form>
 
-              <form action={deleteAction}>
+              <form action={deleteAction} onSubmit={(e) => { if (!confirm(`Apartment „${a.name}" wirklich löschen?`)) e.preventDefault(); }}>
                 <input type="hidden" name="id" value={a.id} />
                 <button
                   type="submit"

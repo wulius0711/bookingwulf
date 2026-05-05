@@ -90,7 +90,7 @@ export default async function ChildPricingPage() {
                         {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
                       </span>
                     </div>
-                    <form action={deleteChildPriceRange} style={{ marginLeft: 'auto' }}>
+                    <form action={deleteChildPriceRange} style={{ marginLeft: 'auto' }} onSubmit={(e) => { if (!confirm(`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`)) e.preventDefault(); }}>
                       <input type="hidden" name="id" value={r.id} />
                       <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626', whiteSpace: 'nowrap' }}>
                         Löschen
