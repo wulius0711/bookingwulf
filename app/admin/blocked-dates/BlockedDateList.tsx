@@ -80,12 +80,6 @@ export default function BlockedDateList({
           </div>
 
           <div className="bdc-actions">
-            <a
-              href={`/admin/blocked-dates/${r.id}/edit`}
-              style={{ border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, textDecoration: 'none' }}
-            >
-              Bearbeiten
-            </a>
             <button
               type="button"
               disabled={deleting === r.id}
@@ -94,6 +88,12 @@ export default function BlockedDateList({
             >
               {deleting === r.id ? '…' : 'Löschen'}
             </button>
+            <a
+              href={`/admin/blocked-dates/${r.id}/edit`}
+              style={{ border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, textDecoration: 'none' }}
+            >
+              Bearbeiten
+            </a>
           </div>
         </div>
       ))}
