@@ -163,15 +163,15 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
         />
         {error && <div style={{ fontSize: 13, color: '#dc2626' }}>{error}</div>}
         {success && <div style={{ fontSize: 13, color: '#16a34a' }}>{success}</div>}
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={handleSave} disabled={saving || !token.trim()} style={{ ...btnPrimary, opacity: saving || !token.trim() ? 0.5 : 1 }}>
-            {saving ? 'Wird gespeichert…' : 'Verbindung testen & speichern'}
-          </button>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
           {connected && (
             <button onClick={handleRemove} disabled={removing} style={{ ...btnDanger, opacity: removing ? 0.5 : 1 }}>
               Verbindung trennen
             </button>
           )}
+          <button onClick={handleSave} disabled={saving || !token.trim()} style={{ ...btnPrimary, opacity: saving || !token.trim() ? 0.5 : 1 }}>
+            {saving ? 'Wird gespeichert…' : 'Verbindung testen & speichern'}
+          </button>
         </div>
       </div>
 
