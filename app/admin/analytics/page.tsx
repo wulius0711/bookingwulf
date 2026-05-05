@@ -197,7 +197,6 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const avgNights = total > 0 ? (allRequests.reduce((s, r) => s + r.nights, 0) / total).toFixed(1) : '0.0';
   const avgGuests = total > 0 ? (allRequests.reduce((s, r) => s + r.adults + r.children, 0) / total).toFixed(1) : '0.0';
 
-  const cardStyle: React.CSSProperties = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '20px 24px' };
   const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: '#111827', letterSpacing: '-0.01em' };
 
   return (
@@ -205,23 +204,23 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gap: 24 }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+        <div className="analytics-header">
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Analytics</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
               {periodDef.label}
             </p>
           </div>
-          <form method="GET" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <form method="GET" className="analytics-period-form">
             <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer' }}>Laden</button>
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
           </form>
         </div>
 
         {/* KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
+        <div className="analytics-kpi">
           {[
             { label: 'Anfragen', value: total },
             { label: 'Gebucht', value: booked },
@@ -231,16 +230,16 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             { label: 'Umsatz', value: `€ ${totalRevenue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
             { label: 'Ø Buchungswert', value: `€ ${avgBookingValue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
           ].map(({ label, value }) => (
-            <div key={label} style={{ ...cardStyle, textAlign: 'center' }}>
-              <div style={{ fontSize: 26, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>{value}</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>{label}</div>
+            <div key={label} className="analytics-card" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>{value}</div>
+              <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{label}</div>
             </div>
           ))}
         </div>
 
         {/* Monthly chart + status */}
         <div className="analytics-chart-row" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Anfragen pro Monat</h2>
             <div style={{ overflowX: 'auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, minWidth: 480 }}>
@@ -255,7 +254,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             </div>
           </div>
 
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Status</h2>
             <div style={{ display: 'grid', gap: 10 }}>
               {Object.entries(statusMap).sort((a, b) => b[1] - a[1]).map(([status, count]) => (
@@ -275,7 +274,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
         {/* Top Apartments + Extras */}
         <div className="analytics-two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Top Apartments</h2>
             {topApartments.length === 0 ? (
               <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Daten</p>
@@ -296,7 +295,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             )}
           </div>
 
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Extras Beliebtheit</h2>
             {topExtras.length === 0 ? (
               <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Noch keine Extras in Buchungen erfasst.</p>
@@ -320,7 +319,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         <div className="analytics-two-col" style={{ display: 'grid', gap: 16, alignItems: 'start' }}>
 
           {/* Occupancy */}
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Auslastung (12M)</h2>
             <p style={{ margin: '-8px 0 16px', fontSize: 12, color: '#9ca3af' }}>Gebuchte Nächte von 365 verfügbaren</p>
             {occupancyData.length === 0 ? (
@@ -348,7 +347,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           </div>
 
           {/* Countries */}
-          <div style={cardStyle}>
+          <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Herkunftsländer</h2>
             {topCountries.length === 0 ? (
               <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Länderdaten erfasst.</p>

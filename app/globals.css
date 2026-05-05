@@ -210,6 +210,33 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: 1fr 1fr;
 }
 
+.analytics-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+.analytics-kpi {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.analytics-period-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 /* Help handbook layout */
 .help-layout {
   display: flex;
@@ -566,6 +593,29 @@ button, a[role="button"], input[type="submit"] {
 
   .analytics-two-col {
     grid-template-columns: 1fr;
+  }
+
+  .analytics-card {
+    padding: 14px 16px;
+    border-radius: 12px;
+  }
+
+  .analytics-kpi {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .analytics-period-form {
+    width: 100%;
+  }
+
+  .analytics-period-form select {
+    flex: 1;
   }
 
   .settings-shell {
