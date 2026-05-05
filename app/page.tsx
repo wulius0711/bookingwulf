@@ -44,7 +44,7 @@ export default function LandingPage() {
     { num: '3', title: 'Einbauen', desc: 'Eine Zeile Code auf Ihre Website — fertig.' },
   ];
 
-  const plans = Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][];
+  const plans = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([key]) => key !== 'bundle_all');
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
