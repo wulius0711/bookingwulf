@@ -40,23 +40,18 @@ export default function BlockedDateList({
       <style>{`
         .blocked-date-grid { display: grid; gap: 12px; }
         @media (min-width: 640px) { .blocked-date-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
+        .bdc { border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 12px; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; }
+        .bdc-actions { display: flex; gap: 8px; }
+        .bdc-actions a, .bdc-actions button { flex: 1; text-align: center; padding: 8px 0; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        @media (min-width: 640px) {
+          .bdc { flex-direction: row; align-items: center; justify-content: space-between; padding: 16px 20px; }
+          .bdc-actions { flex-direction: row; flex-shrink: 0; }
+          .bdc-actions a, .bdc-actions button { flex: none; padding: 6px 14px; }
+        }
       `}</style>
       <div className="blocked-date-grid">
       {ranges.map((r) => (
-        <div
-          key={r.id}
-          style={{
-            border: '1px solid #e5e7eb',
-            padding: '16px 20px',
-            borderRadius: 12,
-            background: '#fff',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 16,
-          }}
-        >
+        <div key={r.id} className="bdc">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>
@@ -84,10 +79,10 @@ export default function BlockedDateList({
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          <div className="bdc-actions">
             <a
               href={`/admin/blocked-dates/${r.id}/edit`}
-              style={{ padding: '6px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
+              style={{ border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, textDecoration: 'none' }}
             >
               Bearbeiten
             </a>
@@ -95,7 +90,7 @@ export default function BlockedDateList({
               type="button"
               disabled={deleting === r.id}
               onClick={() => handleDelete(r.id)}
-              style={{ padding: '6px 14px', border: '1px solid #fecaca', background: '#fff', color: '#dc2626', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, opacity: deleting === r.id ? 0.5 : 1 }}
+              style={{ border: '1px solid #fecaca', background: '#fff', color: '#dc2626', borderRadius: 8, opacity: deleting === r.id ? 0.5 : 1 }}
             >
               {deleting === r.id ? '…' : 'Löschen'}
             </button>
