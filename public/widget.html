@@ -5276,8 +5276,7 @@
           var cx = rect.left + rect.width / 2;
           var cy = rect.top + rect.height / 2;
 
-          // Hide submit area so DOM rebuilds in finally{} don't flash
-          if (submitArea) submitArea.style.visibility = 'hidden';
+          if (submitArea) submitArea.style.pointerEvents = 'none';
 
           // Bar overlay
           var bar = document.createElement('div');
@@ -5347,7 +5346,7 @@
                   circle.style.opacity = '0';
                   setTimeout(function() {
                     circle.remove();
-                    if (submitArea) submitArea.style.visibility = '';
+                    if (submitArea) submitArea.style.pointerEvents = '';
                     onDone();
                   }, 250);
                 }, 900);
