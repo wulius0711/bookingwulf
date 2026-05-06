@@ -41,7 +41,7 @@ const TEMPLATE_TYPES = [
     label: 'Check-in Infos — Benachrichtigung an den Gast',
     description: 'Vorlage für Check-in Infos — manuell aus der Buchungsdetailansicht oder automatisch X Tage vor Anreise.',
     defaultSubject: 'Ihre Check-in Infos — {{hotelName}}',
-    defaultBody: 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nAlle weiteren Details sowie Ihren persönlichen Zugangscode finden Sie in Ihrer Gästemappe:\n{{portalUrl}}\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
+    defaultBody: 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
   },
 ] as const;
 

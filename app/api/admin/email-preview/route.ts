@@ -63,7 +63,7 @@ export async function GET(req: Request) {
   // — Check-in E-Mail preview —
   if (type === 'checkin_guest') {
     const greeting = fill(tpl?.greeting ?? 'Hallo {{guestName}},', hotelName);
-    const bodyText = fill(tpl?.body ?? 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen]\n\nAlle weiteren Details finden Sie in Ihrer Gästemappe:\n{{portalUrl}}', hotelName);
+    const bodyText = fill(tpl?.body ?? 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.', hotelName);
     const signoff = fill(tpl?.signoff ?? 'Mit freundlichen Grüßen', hotelName);
     const portalUrl = SAMPLE['{{portalUrl}}'];
     const html = buildEmailHtml({
