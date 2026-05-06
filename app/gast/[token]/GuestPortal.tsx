@@ -230,8 +230,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
     .tabs { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
+    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap; outline: none; }
     .tab-btn.active { color: ${accent}; border-bottom-color: ${accent}; }
+    .tab-btn:focus-visible { outline: 2px solid ${accent}; outline-offset: -2px; border-radius: 4px; }
     .content { padding: 20px; display: grid; gap: 16px; }
     .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
