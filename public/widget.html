@@ -5142,7 +5142,7 @@
             text +
             '</span>' +
             '</label>' +
-            '<div id="termsCheckboxErr" class="field-error" style="margin-top:6px;' +
+            '<div id="termsCheckboxErr" class="field-error" style="margin-top:2px;' +
             (!checked ? '' : 'display:none;') +
             '"></div>';
         }
@@ -5880,7 +5880,6 @@
               termsErr.textContent = t('err_accept_terms');
               termsErr.style.display = 'block';
             }
-            showMessage('error', t('err_accept_terms'));
             return;
           } else {
             const termsErr = document.getElementById('termsCheckboxErr');
