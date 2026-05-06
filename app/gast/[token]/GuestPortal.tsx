@@ -175,7 +175,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     { id: 'overview', label: 'Übersicht' },
     ...(hotel.preArrivalEnabled && !booking.checkinCompleted ? [{ id: 'checkin' as Tab, label: 'Check-In' }] : []),
     { id: 'messages', label: 'Nachrichten' },
-    ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Extras' }] : []),
+    ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Zusatzleistungen' }] : []),
     ...((hotel.wifiPassword || hotel.parkingInfo || hotel.wasteInfo || hotel.houseRules || hotel.emergencyNumbers.length > 0) ? [{ id: 'houseinfo' as Tab, label: 'Hausinfos' }] : []),
     ...(thingsToSee.length > 0 ? [{ id: 'surroundings' as Tab, label: 'Umgebung' }] : []),
     { id: 'checkout', label: 'Abreise' },
