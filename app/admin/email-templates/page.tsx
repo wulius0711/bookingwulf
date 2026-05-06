@@ -66,7 +66,7 @@ export default async function EmailTemplatesPage() {
     ? null
     : await prisma.hotel.findUnique({
         where: { id: session.hotelId! },
-        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, checkoutReminderSubject: true, checkoutReminderBody: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true, reviewRequestSubject: true, reviewRequestBody: true } } },
+        select: { id: true, plan: true, emailTemplates: true, settings: { select: { preArrivalEnabled: true, preArrivalReminderDays: true, preArrivalHouseRules: true, checkinEmailEnabled: true, checkinEmailDays: true, checkoutReminderEnabled: true, checkoutTime: true, checkoutReminderText: true, checkoutReminderSubject: true, checkoutReminderBody: true, reviewRequestEnabled: true, reviewRequestDays: true, reviewRequestLink: true, reviewRequestSubject: true, reviewRequestBody: true } } },
       });
 
   const hasPro = isSuperAdmin || hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
@@ -99,6 +99,20 @@ export default async function EmailTemplatesPage() {
       });
     }
 
+    revalidatePath('/admin/email-templates');
+  }
+
+  async function saveCheckinEmailSettings(formData: FormData) {
+    'use server';
+    const session = await verifySession();
+    if (session.hotelId === null) return;
+    const enabled = formData.get('checkinEmailEnabled') === 'on';
+    const days = parseInt(String(formData.get('checkinEmailDays') || '3')) || 3;
+    await prisma.hotelSettings.upsert({
+      where: { hotelId: session.hotelId },
+      update: { checkinEmailEnabled: enabled, checkinEmailDays: days },
+      create: { hotelId: session.hotelId, checkinEmailEnabled: enabled, checkinEmailDays: days },
+    });
     revalidatePath('/admin/email-templates');
   }
 
@@ -311,6 +325,40 @@ export default async function EmailTemplatesPage() {
                 📋 <strong>Hausordnung</strong> wird jetzt zentral unter{' '}
                 <a href="/admin/settings" style={{ color: '#0369a1', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
                 gepflegt — der Gast muss sie beim Online Check-in bestätigen.
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <SaveButton />
+              </div>
+            </form>
+          </div>
+        </details>
+      )}
+
+      {/* CHECK-IN E-MAIL AUTO-VERSAND */}
+      {hotel && (
+        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-in E-Mail — Automatisch</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
+            </div>
+            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+          </summary>
+          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+            <form action={saveCheckinEmailSettings} style={{ display: 'grid', gap: 14 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false}
+                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
+                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Automatischen Versand aktivieren</span>
+              </label>
+              <div style={{ display: 'grid', gap: 4 }}>
+                <label style={labelStyle}>X Tage vor Anreise senden</label>
+                <input type="number" name="checkinEmailDays" min="1" max="30"
+                  defaultValue={s?.checkinEmailDays ?? 3}
+                  style={{ ...inputStyle, width: 120 }} />
+              </div>
+              <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#15803d', lineHeight: 1.6 }}>
+                ℹ️ Die E-Mail wird nur einmalig gesendet. Manuell versendete Mails werden nicht doppelt versendet.
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <SaveButton />

@@ -82,6 +82,9 @@ model HotelSettings {
   preArrivalHouseRules   String?
   preArrivalReminderDays Int     @default(3)
 
+  checkinEmailEnabled Boolean @default(false)
+  checkinEmailDays    Int     @default(3)
+
   checkoutReminderEnabled Boolean @default(false)
   checkoutTime            String?
   checkoutReminderText    String?
