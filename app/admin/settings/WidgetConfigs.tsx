@@ -167,7 +167,7 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
               </div>
 
               <div style={{ display: 'flex', gap: 10 }}>
-                <button type="submit" disabled={saving} style={{ padding: '10px 20px', borderRadius: 8, background: saving ? '#6b7280' : '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer' }}>{saving ? 'Speichern…' : 'Speichern'}</button>
+                <button type="submit" disabled={saving} className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: saving ? '#6b7280' : '#111', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer' }}>{saving ? 'Speichern…' : 'Speichern'}</button>
                 <button type="button" onClick={() => setEditing(null)} style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#111', border: '1px solid #d1d5db', fontSize: 14, cursor: 'pointer' }}>Abbrechen</button>
               </div>
             </div>

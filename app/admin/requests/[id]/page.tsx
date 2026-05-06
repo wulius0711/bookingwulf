@@ -564,6 +564,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               </span>
               <button
                 type="submit"
+                className="btn-shine"
                 style={{
                   padding: '9px 20px',
                   borderRadius: 8,

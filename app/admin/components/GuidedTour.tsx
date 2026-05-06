@@ -20,8 +20,13 @@ const TOUR_STEPS = [
   },
   {
     target: '[data-tour="nav-settings"]',
-    title: 'Einstellungen',
+    title: 'Widget & Design',
     text: 'Passen Sie Farben, Design und den Embed-Code für Ihre Website an.',
+  },
+  {
+    target: '[data-tour="nav-guestportal"]',
+    title: 'Gästeportal',
+    text: 'Hinterlegen Sie WLAN-Daten, Hausinfos und Umgebungstipps — Ihre Gäste sehen das alles über einen persönlichen Link in der Buchungsbestätigung.',
   },
   {
     target: '[data-tour="nav-extras"]',
@@ -197,6 +202,7 @@ export default function GuidedTour() {
 
           <button
             onClick={next}
+            className="btn-shine"
             style={{
               padding: '8px 18px',
               borderRadius: 8,

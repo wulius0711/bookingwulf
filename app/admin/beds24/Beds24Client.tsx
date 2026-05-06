@@ -9,6 +9,7 @@ type Props = {
   initialEnabled: boolean;
   apartments: Apartment[];
   initialMappings: Record<number, string>;
+  host: string;
 };
 
 const inputStyle: React.CSSProperties = {
@@ -23,7 +24,7 @@ const btnOutline: React.CSSProperties = {
   ...btnStyle, background: '#fff', color: '#374151', border: '1px solid #e5e7eb',
 };
 
-export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings }: Props) {
+export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, host }: Props) {
   const [connected, setConnected] = useState(initialConnected);
   const [enabled, setEnabled] = useState(initialEnabled);
   const [inviteCode, setInviteCode] = useState('');
@@ -120,7 +121,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
               <input type="password" value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Beds24 Invite Code" style={inputStyle} required />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button type="submit" style={btnStyle} disabled={saving}>{saving ? 'Verbinden…' : 'Verbinden'}</button>
+              <button type="submit" className="btn-shine" style={btnStyle} disabled={saving}>{saving ? 'Verbinden…' : 'Verbinden'}</button>
               {status && (
                 <span style={{ fontSize: 13, color: status.type === 'success' ? '#16a34a' : '#dc2626' }}>{status.msg}</span>
               )}
@@ -164,7 +165,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
             Tragen Sie diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
           <code style={{ display: 'block', padding: '10px 14px', background: '#f4f4f5', borderRadius: 8, fontSize: 13, color: '#374151', wordBreak: 'break-all' }}>
-            {typeof window !== 'undefined' ? window.location.origin : 'https://ihre-domain.com'}/api/beds24-webhook?token=<span style={{ color: '#9ca3af' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
+            {host}/api/beds24-webhook?token=<span style={{ color: '#9ca3af' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
           </code>
         </div>
       )}

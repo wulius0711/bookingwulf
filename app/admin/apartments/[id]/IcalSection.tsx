@@ -154,7 +154,7 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
           <label style={{ fontSize: 12, fontWeight: 600, color: '#555' }}>iCal-URL</label>
           <input name="url" type="url" required placeholder="https://www.airbnb.com/calendar/ical/..." style={inputStyle} />
         </div>
-        <button type="submit" style={{ padding: '10px 18px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', height: 42 }}>
+        <button type="submit" className="btn-shine" style={{ padding: '10px 18px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', height: 42 }}>
           Hinzufügen
         </button>
       </form>

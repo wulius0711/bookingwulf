@@ -169,7 +169,7 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
               Verbindung trennen
             </button>
           )}
-          <button onClick={handleSave} disabled={saving || !token.trim()} style={{ ...btnPrimary, opacity: saving || !token.trim() ? 0.5 : 1 }}>
+          <button onClick={handleSave} disabled={saving || !token.trim()} className="btn-shine" style={{ ...btnPrimary, opacity: saving || !token.trim() ? 0.5 : 1 }}>
             {saving ? 'Wird gespeichert…' : 'Verbindung testen & speichern'}
           </button>
         </div>

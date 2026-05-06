@@ -125,7 +125,7 @@ export default function BillingPage() {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 900, display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Abonnement</h1>
@@ -352,6 +352,7 @@ export default function BillingPage() {
             </ul>
             <button
               onClick={closeWelcome}
+              className="btn-shine"
               style={{
                 width: '100%',
                 padding: '12px 20px',

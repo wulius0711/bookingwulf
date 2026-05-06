@@ -55,6 +55,7 @@ export default function NukiLockSection({ apartmentId, currentSmartlockId, locks
         <button
           type="submit"
           disabled={saving}
+          className="btn-shine"
           style={{ padding: '10px 18px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', opacity: saving ? 0.5 : 1, whiteSpace: 'nowrap' }}
         >
           {saving ? 'Wird gespeichert…' : 'Speichern'}

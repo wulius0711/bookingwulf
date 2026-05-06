@@ -132,6 +132,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
           </p>
           <a
             href="/admin/billing"
+            className="btn-shine"
             style={{
               display: 'inline-block',
               padding: '12px 28px',
@@ -243,6 +244,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
               <button
                 type="button"
                 onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
+                className="btn-shine"
                 style={{
                   padding: '10px 24px',
                   borderRadius: 8,
