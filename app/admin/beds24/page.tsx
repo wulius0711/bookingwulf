@@ -1,6 +1,7 @@
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Beds24Client from './Beds24Client';
 
@@ -40,6 +41,9 @@ export default async function Beds24Page() {
 
   const mappingMap = Object.fromEntries(mappings.map((m) => [m.apartmentId, m.beds24RoomId]));
 
+  const headerStore = await headers();
+  const host = `https://${headerStore.get('host') ?? 'bookingwulf.com'}`;
+
   return (
     <main className="admin-page">
       <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -55,6 +59,7 @@ export default async function Beds24Page() {
         initialEnabled={hotel.beds24Config?.isEnabled ?? false}
         apartments={hotel.apartments}
         initialMappings={mappingMap}
+        host={host}
       />
     </main>
   );
