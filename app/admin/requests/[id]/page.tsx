@@ -41,6 +41,83 @@ async function updateLanguage(formData: FormData) {
   redirect(`/admin/requests/${id}?saved=language`);
 }
 
+async function sendCheckinEmail(formData: FormData) {
+  'use server';
+  const session = await verifySession();
+  const id = Number(formData.get('requestId'));
+  if (!id) return;
+
+  const req = await prisma.request.findUnique({
+    where: { id },
+    select: {
+      id: true, email: true, firstname: true, lastname: true,
+      arrival: true, departure: true, nights: true, hotelId: true,
+      checkinToken: true, nukiCode: true,
+      hotel: {
+        select: {
+          name: true,
+          accentColor: true,
+          emailTemplates: { where: { type: 'checkin_guest' } },
+        },
+      },
+    },
+  });
+
+  if (!req || !req.email) return;
+  if (session.hotelId !== null && req.hotelId !== session.hotelId) return;
+
+  const r = req;
+  const template = r.hotel?.emailTemplates?.[0];
+  const hotelName = r.hotel?.name ?? '';
+  const accent = r.hotel?.accentColor ?? '#111827';
+  const guestName = r.firstname || r.lastname;
+  const fmt = (d: Date) => new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
+  const portalUrl = r.checkinToken ? `${process.env.NEXT_PUBLIC_BASE_URL || ''}/gast/${r.checkinToken}` : '';
+
+  function fill(str: string) {
+    return str
+      .replace(/\{\{guestName\}\}/g, guestName)
+      .replace(/\{\{guestLastName\}\}/g, r.lastname)
+      .replace(/\{\{hotelName\}\}/g, hotelName)
+      .replace(/\{\{arrival\}\}/g, fmt(r.arrival))
+      .replace(/\{\{departure\}\}/g, fmt(r.departure))
+      .replace(/\{\{nights\}\}/g, String(r.nights))
+      .replace(/\{\{bookingId\}\}/g, String(r.id))
+      .replace(/\{\{nukiCode\}\}/g, r.nukiCode ?? '')
+      .replace(/\{\{portalUrl\}\}/g, portalUrl);
+  }
+
+  const subject = fill(template?.subject ?? `Ihre Check-in Infos — ${hotelName}`);
+  const greeting = fill(template?.greeting ?? `Hallo ${guestName},`);
+  const bodyText = fill(template?.body ?? '');
+  const signoff = fill(template?.signoff ?? 'Mit freundlichen Grüßen');
+
+  const bodyHtml = `
+    <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 20px;">${greeting}</p>
+    <p style="font-size:15px;color:#374151;line-height:1.8;margin:0 0 20px;white-space:pre-wrap;">${bodyText.replace(/\n/g, '<br/>')}</p>
+    <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 4px;">${signoff},</p>
+    <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 24px;">${hotelName}</p>
+    ${portalUrl ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;"><p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ihre Gästemappe</p><a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;word-break:break-all;">${portalUrl}</a></div>` : ''}
+  `;
+
+  const html = buildEmailHtml({
+    hotelName,
+    accentColor: accent,
+    title: subject,
+    preheader: `Check-in Infos für Ihren Aufenthalt vom ${fmt(req.arrival)}`,
+    body: bodyHtml,
+    autoReplyText: '',
+  });
+
+  const resend = getResend();
+  if (resend) {
+    await resend.emails.send({ from: getFromEmail(), to: req.email, subject, html });
+  }
+
+  await prisma.request.update({ where: { id }, data: { checkinEmailSentAt: new Date() } });
+  redirect(`/admin/requests/${id}?saved=checkin-email`);
+}
+
 async function updateBookingStatus(formData: FormData) {
   'use server';
 
@@ -284,6 +361,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         select: {
           name: true,
           accentColor: true,
+          emailTemplates: { where: { type: 'checkin_guest' }, select: { subject: true } },
         },
       },
     },
@@ -476,6 +554,45 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
           </div>
         </div>
       </div>
+
+      {/* ─── Check-in E-Mail ─── */}
+      {request.email && (
+        <div style={{ marginTop: 16, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ padding: '14px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <div>
+              <strong style={{ fontSize: 14 }}>Check-in E-Mail</strong>
+              <span style={{ marginLeft: 10, fontSize: 12, color: '#9ca3af' }}>
+                {request.checkinEmailSentAt
+                  ? `Gesendet am ${new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(request.checkinEmailSentAt))}`
+                  : 'Noch nicht gesendet'}
+              </span>
+            </div>
+            {!request.hotel?.emailTemplates?.length && (
+              <a href="/admin/email-templates" style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}>
+                Vorlage einrichten →
+              </a>
+            )}
+          </div>
+          <div style={{ padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 13, color: '#6b7280' }}>
+              An: <strong style={{ color: '#111' }}>{request.email}</strong>
+            </span>
+            <form action={sendCheckinEmail}>
+              <input type="hidden" name="requestId" value={request.id} />
+              <button
+                type="submit"
+                className="btn-shine"
+                style={{ padding: '8px 18px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+              >
+                {request.checkinEmailSentAt ? 'Erneut senden' : 'Jetzt senden'}
+              </button>
+            </form>
+          </div>
+          {saved === 'checkin-email' && (
+            <div style={{ padding: '0 24px 14px', fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ E-Mail wurde gesendet</div>
+          )}
+        </div>
+      )}
 
       {/* ─── Nachrichtenthread ─── */}
       {!canUseMessages ? (

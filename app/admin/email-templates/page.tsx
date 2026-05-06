@@ -36,6 +36,13 @@ const TEMPLATE_TYPES = [
     defaultSubject: 'Neue Buchungsanfrage #{{bookingId}} — {{arrival}} bis {{departure}}',
     defaultBody: '',
   },
+  {
+    type: 'checkin_guest',
+    label: 'Check-in Infos — Manuell an Gast senden',
+    description: 'Wird manuell aus der Buchungsdetailansicht versendet. Enthält Anreiseinfos, Zugangscode und Gästeportal-Link.',
+    defaultSubject: 'Ihre Check-in Infos — {{hotelName}}',
+    defaultBody: 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nAlle weiteren Details sowie Ihren persönlichen Zugangscode finden Sie in Ihrer Gästemappe:\n{{portalUrl}}\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
+  },
 ] as const;
 
 const PLACEHOLDERS = [
@@ -47,6 +54,8 @@ const PLACEHOLDERS = [
   { key: '{{nights}}', desc: 'Anzahl Nächte' },
   { key: '{{apartmentName}}', desc: 'Apartment-Name(n)' },
   { key: '{{bookingId}}', desc: 'Buchungs-ID' },
+  { key: '{{portalUrl}}', desc: 'Link zum Gästeportal' },
+  { key: '{{nukiCode}}', desc: 'Nuki Zugangscode' },
 ];
 
 export default async function EmailTemplatesPage() {
@@ -298,12 +307,10 @@ export default async function EmailTemplatesPage() {
                   defaultValue={s?.preArrivalReminderDays ?? 3}
                   style={{ ...inputStyle, width: 120 }} />
               </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Hausordnung <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional — Gast muss bestätigen)</span></label>
-                <textarea name="preArrivalHouseRules" rows={5}
-                  defaultValue={s?.preArrivalHouseRules ?? ''}
-                  placeholder="z. B. Rauchen verboten, Ruhezeiten 22–8 Uhr, …"
-                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#0369a1', lineHeight: 1.6 }}>
+                📋 <strong>Hausordnung</strong> wird jetzt zentral unter{' '}
+                <a href="/admin/settings" style={{ color: '#0369a1', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
+                gepflegt — der Gast muss sie beim Online Check-in bestätigen.
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <SaveButton />

@@ -47,6 +47,7 @@ model Hotel {
   userHotels    AdminUserHotel[]
   blockedRanges BlockedRange[]
   extras            HotelExtra[]
+  thingsToSee       ThingsToSee[]
   childPriceRanges  ChildPriceRange[]
   nukiConfig    NukiConfig?
   beds24Config  Beds24Config?
@@ -151,6 +152,18 @@ model HotelSettings {
 
   // 🔗 Mini-Widget
   miniWidgetTarget String?  // URL of the page where the full widget is embedded
+
+  // 🗺️ Gästeportal
+  address         String?  // Hotel-Adresse für Google Maps Deep-Link
+  whatsappNumber  String?  // WhatsApp-Nummer für Gästekontakt
+
+  // 🏠 Hausinfos / Gästemappe
+  wifiSsid      String?
+  wifiPassword  String?
+  parkingInfo   String?
+  wasteInfo     String?
+  houseRules    String?
+  emergencyJson Json?    // [{label: string, number: string}]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -340,12 +353,16 @@ model Request {
   checkinArrivalTime     String?
   checkinNotes           String?
   checkinReminderSentAt  DateTime?
+  checkinEmailSentAt     DateTime?
   checkinBirthdate       String?
   checkinNationality     String?
   checkinDocNumber       String?
 
   checkoutReminderSentAt DateTime?
   reviewRequestSentAt    DateTime?
+  checkoutRequestedAt    DateTime?
+
+  beds24BookingId String? @unique // set for bookings synced from Beds24 webhook
 
   messages RequestMessage[]
 
@@ -365,6 +382,25 @@ model RequestMessage {
   @@index([requestId])
 }
 
+model ThingsToSee {
+  id          Int      @id @default(autoincrement())
+  hotelId     Int
+  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  category    String   // 'restaurant' | 'attraction' | 'activity' | 'shopping' | 'emergency'
+  title       String
+  description String?
+  address     String?
+  mapsUrl     String?
+  imageUrl    String?
+  placeId     String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([hotelId])
+}
+
 model HotelExtra {
   id          Int      @id @default(autoincrement())
   hotelId     Int
@@ -376,7 +412,8 @@ model HotelExtra {
   price       Decimal  @db.Decimal(10, 2)
   imageUrl    String?
   description String?
-  linkUrl     String?
+  linkUrl        String?
+  exclusiveGroup String?  // extras with same group: only one bookable at a time
   isActive    Boolean  @default(true)
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
