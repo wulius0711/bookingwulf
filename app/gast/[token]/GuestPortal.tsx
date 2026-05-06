@@ -695,7 +695,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 }, {})
               ).map(([cat, entries]) => (
                 <div key={cat}>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: '#9ca3af', marginBottom: 10 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>
                     {CAT_LABELS[cat] ?? cat}
                   </div>
                   <div style={{ display: 'grid', gap: 10 }}>
