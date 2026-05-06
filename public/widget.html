@@ -5469,6 +5469,7 @@
               '<div style="display:flex;justify-content:flex-end;margin-top:14px;">' +
               '<button type="button" id="submitBtn" class="btn">' + t('submit_book_now') + '</button>' +
               '</div>' +
+              '<div id="submitProgress" style="text-align:right;font-size:13px;color:var(--muted);margin-top:6px;min-height:18px;"></div>' +
               '</div>';
 
             const payToggle = document.getElementById('paymentAccordionToggle');
@@ -5525,7 +5526,8 @@
               '<button type="button" id="submitBtn" class="btn"' +
               disabled +
               '>' + t('submit_send_request') + '</button>' +
-              '</div>';
+              '</div>' +
+              '<div id="submitProgress" style="text-align:right;font-size:13px;color:var(--muted);margin-top:6px;min-height:18px;"></div>';
           }
 
           document
@@ -5898,12 +5900,8 @@
             if (stripeInfo) stripeInfo.style.display = '';
             _stripeCard.mount('#stripeCardMount');
           }
-          showMessage(
-            'info',
-            bookingType === 'booking'
-              ? t('progress_confirming')
-              : t('progress_sending'),
-          );
+          const _progressEl = document.getElementById('submitProgress');
+          if (_progressEl) _progressEl.textContent = bookingType === 'booking' ? t('progress_confirming') : t('progress_sending');
 
           const nights = getNights();
           const apartmentIds = selectedApts.map((a) => a.id).join(',');
@@ -6050,6 +6048,8 @@
             });
           } catch (error) {
             console.error(error);
+            const _pe = document.getElementById('submitProgress');
+            if (_pe) _pe.textContent = '';
             showMessage(
               'error',
               error.message || t('error_server'),
