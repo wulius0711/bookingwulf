@@ -3484,8 +3484,10 @@
             void _el.offsetWidth;
             _el.classList.add('bw-shake');
           }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          window.parent.postMessage({ type: 'booking-widget-scroll-top' }, '*');
+          if (type !== 'info') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.parent.postMessage({ type: 'booking-widget-scroll-top' }, '*');
+          }
         }
 
         function toInputDate(d) {
