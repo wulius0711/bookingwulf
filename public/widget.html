@@ -1445,26 +1445,56 @@
         padding: 0 20px;
         border-radius: var(--button-radius);
         border: 1px solid var(--accent);
-        background: var(--accent);
+        background: transparent;
         color: #fff;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        transition: border-color 0.2s ease;
       }
 
-      .apt-select-btn:hover {
-        background: color-mix(in srgb, var(--accent) 75%, white);
-        border-color: color-mix(in srgb, var(--accent) 75%, white);
+      .apt-select-btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent);
+        border-radius: var(--button-radius);
+        z-index: -2;
+      }
+
+      .apt-select-btn::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background: color-mix(in srgb, var(--accent) 78%, black);
+        border-radius: var(--button-radius);
+        z-index: -1;
+        transition: width 0.3s ease;
+      }
+
+      .apt-select-btn:hover::before {
+        width: 100%;
       }
 
       .apt-select-btn.remove {
-        background: var(--text);
         border-color: var(--text);
       }
 
-      .apt-select-btn.remove:hover {
+      .apt-select-btn.remove::after {
+        background: var(--text);
+      }
+
+      .apt-select-btn.remove::before {
         background: var(--accent);
+      }
+
+      .apt-select-btn.remove:hover {
         border-color: var(--accent);
       }
 
