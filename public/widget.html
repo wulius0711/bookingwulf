@@ -3207,19 +3207,22 @@
 
         let _totalBoxLast = 0;
         function animateTotalBox(newVal) {
-          const el = document.getElementById('totalBox');
-          if (!el) { _totalBoxLast = newVal; return; }
+          const els = [
+            document.getElementById('totalBox'),
+            document.getElementById('summaryTotal'),
+          ].filter(Boolean);
           const from = _totalBoxLast;
           _totalBoxLast = newVal;
-          if (from === newVal) { el.textContent = eur(newVal); return; }
+          if (from === newVal) { els.forEach((el) => (el.textContent = eur(newVal))); return; }
           const duration = Math.min(500, Math.abs(newVal - from) * 2 + 150);
           const start = performance.now();
           function tick(now) {
             const t = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - t, 3);
-            el.textContent = eur(from + (newVal - from) * eased);
+            const cur = eur(from + (newVal - from) * eased);
+            els.forEach((el) => (el.textContent = cur));
             if (t < 1) requestAnimationFrame(tick);
-            else el.textContent = eur(newVal);
+            else els.forEach((el) => (el.textContent = eur(newVal)));
           }
           requestAnimationFrame(tick);
         }
@@ -4826,7 +4829,7 @@
             t('summary_period', { from: formatDate(state.arrival), to: formatDate(state.departure) });
           document.getElementById('summaryGuests').textContent = guests;
           document.getElementById('summaryExtras').innerHTML = extras;
-          document.getElementById('summaryTotal').textContent = eur(getTotal());
+          // summaryTotal is updated by animateTotalBox above
           const vatNoteEl = document.getElementById('summaryVatNote');
           if (vatNoteEl) vatNoteEl.textContent = showPrices ? t('incl_vat') : '';
           const summaryPriceEls = document.querySelectorAll(
