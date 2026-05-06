@@ -1,9 +1,20 @@
+import { prisma } from '@/src/lib/prisma';
+
 export default async function BookingConfirmedPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; id?: string }>;
 }) {
-  const { status } = await searchParams;
+  const { status, id } = await searchParams;
+
+  let portalToken: string | null = null;
+  if (status === 'success' && id) {
+    const req = await prisma.request.findUnique({
+      where: { id: Number(id) },
+      select: { checkinToken: true },
+    });
+    portalToken = req?.checkinToken ?? null;
+  }
 
   const isSuccess = status === 'success';
   const isCancelled = status === 'cancelled';
@@ -125,6 +136,26 @@ export default async function BookingConfirmedPage({
                 ? 'Sie können jederzeit eine neue Buchung starten.'
                 : 'Falls das Problem weiterhin besteht, kontaktieren Sie bitte das Hotel direkt.'}
           </div>
+
+          {portalToken && (
+            <a
+              href={`/gast/${portalToken}`}
+              style={{
+                display: 'block',
+                marginTop: 20,
+                padding: '13px 20px',
+                background: accent,
+                color: '#ffffff',
+                textDecoration: 'none',
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 700,
+                textAlign: 'center',
+              }}
+            >
+              Zum Gästeportal →
+            </a>
+          )}
         </div>
       </div>
     </main>
