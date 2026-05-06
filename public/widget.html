@@ -5277,6 +5277,7 @@
           var cy = rect.top + rect.height / 2;
 
           if (submitArea) submitArea.style.pointerEvents = 'none';
+          if (btn) btn.style.visibility = 'hidden';
 
           // Bar overlay
           var bar = document.createElement('div');
@@ -5347,6 +5348,7 @@
                   setTimeout(function() {
                     circle.remove();
                     if (submitArea) submitArea.style.pointerEvents = '';
+                    if (btn) btn.style.visibility = '';
                     onDone();
                   }, 250);
                 }, 900);
