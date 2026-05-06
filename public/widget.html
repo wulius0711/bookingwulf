@@ -2518,6 +2518,12 @@
                   Masonry
                 </button>
               </div>
+              <div id="apt-sort-bar" style="display:none;justify-content:flex-end;margin-bottom:12px;">
+                <select id="aptSortSelect" style="font-size:0.929rem;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--text);cursor:pointer;appearance:auto;">
+                  <option value="price_asc">Preis aufsteigend</option>
+                  <option value="price_desc">Preis absteigend</option>
+                </select>
+              </div>
               <div id="apartments" aria-label="Verfügbare Apartments" aria-live="polite"></div>
               <div class="selection-note" id="selectionCountNote"></div>
 
@@ -3163,6 +3169,7 @@
           ortstaxeMode: 'off',
           ortstaxePerPersonPerNight: 0,
           ortstaxeMinAge: null,
+          sortOrder: 'price_asc',
           apartments: [],
           pricingMap: {},
           loadingApartments: false,
@@ -4344,14 +4351,28 @@
             return;
           }
 
+          const sortBar = document.getElementById('apt-sort-bar');
+          const showSort = state.settings.showPrices && state.apartments.length > 1;
+          if (sortBar) sortBar.style.display = showSort ? 'flex' : 'none';
+          const sortSel = document.getElementById('aptSortSelect');
+          if (sortSel) sortSel.value = state.sortOrder;
+
           const sortedApartments = [...state.apartments].sort((a, b) => {
             const statusA = getApartmentStatus(a);
             const statusB = getApartmentStatus(b);
-
             const isAvailableA = statusA.type === 'available' ? 0 : 1;
             const isAvailableB = statusB.type === 'available' ? 0 : 1;
+            if (isAvailableA !== isAvailableB) return isAvailableA - isAvailableB;
 
-            return isAvailableA - isAvailableB;
+            if (state.settings.showPrices) {
+              const pA = state.pricingMap[String(a.id)];
+              const pB = state.pricingMap[String(b.id)];
+              const priceA = pA?.available ? Number(pA.totalPrice || 0) : Infinity;
+              const priceB = pB?.available ? Number(pB.totalPrice || 0) : Infinity;
+              if (state.sortOrder === 'price_desc') return priceB - priceA;
+              return priceA - priceB;
+            }
+            return 0;
           });
 
           const _newAptIds = state.apartments.map((a) => a.id).join(',');
@@ -6143,6 +6164,11 @@
             document.getElementById('layoutMasonry').classList.add('active');
             document.getElementById('layoutList').classList.remove('active');
           });
+
+        document.getElementById('aptSortSelect').addEventListener('change', function () {
+          state.sortOrder = this.value;
+          renderApartments();
+        });
 
         document
           .getElementById('lightboxClose')
