@@ -172,7 +172,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     : [];
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'overview', label: 'Übersicht' },
+    { id: 'overview', label: 'Buchung' },
     ...(hotel.preArrivalEnabled && !booking.checkinCompleted ? [{ id: 'checkin' as Tab, label: 'Check-In' }] : []),
     { id: 'messages', label: 'Nachrichten' },
     ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Zusatzleistungen' }] : []),
@@ -222,8 +222,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f5f7fa; color: #111827; min-height: 100vh; }
-    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 80px; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 80px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
     .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
     .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
@@ -311,7 +311,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {/* Header */}
           <div className="header">
             <div className="header-hotel">{hotel.name}</div>
-            <div className="header-title">Meine Buchung</div>
+            <div className="header-title">Gästeportal</div>
             <div className="header-sub">
               {fmt(booking.arrival)} — {fmt(booking.departure)} · {booking.nights} {booking.nights === 1 ? 'Nacht' : 'Nächte'}
             </div>
