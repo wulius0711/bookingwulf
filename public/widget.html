@@ -5268,10 +5268,10 @@
           initFloatingLabels(document.getElementById('guestDataAccordion'));
         }
 
-        function playSubmitSuccessAnimation(accentColor, onDone) {
+        function startSubmitAnimation(accentColor) {
           var btn = document.getElementById('submitBtn');
           var submitArea = document.getElementById('submitArea');
-          if (!btn) { onDone(); return; }
+          if (!btn) return { complete: function(cb) { cb(); }, cancel: function() {} };
 
           var rect = btn.getBoundingClientRect();
           var cx = rect.left + rect.width / 2;
@@ -5279,81 +5279,85 @@
 
           if (submitArea) { submitArea.style.pointerEvents = 'none'; submitArea.classList.add('bw-animating'); }
 
-          // Bar overlay
           var bar = document.createElement('div');
           bar.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;overflow:hidden;' +
             'left:' + rect.left + 'px;top:' + (cy - 5) + 'px;width:' + rect.width + 'px;height:10px;' +
             'background:#e5e7eb;border-radius:100px;';
           var fill = document.createElement('div');
           fill.style.cssText = 'height:100%;width:0;background:' + accentColor + ';border-radius:100px;' +
-            'transition:width 0.9s linear;';
+            'transition:width 9s cubic-bezier(0.1,0,0.3,1);';
           bar.appendChild(fill);
           document.body.appendChild(bar);
 
+          // Slowly fill to 75% while request is in flight
           requestAnimationFrame(function() {
-            requestAnimationFrame(function() { fill.style.width = '100%'; });
+            requestAnimationFrame(function() { fill.style.width = '75%'; });
           });
 
-          // Phase 2: collapse bar → expand circle
-          setTimeout(function() {
-            bar.style.transition = 'all 0.2s ease';
-            bar.style.left = (cx - rect.width / 2) + 'px';
-            bar.style.width = '0';
-
+          function complete(onDone) {
+            // Snap to 100%, then collapse → circle → checkmark
+            fill.style.transition = 'width 0.25s ease';
+            fill.style.width = '100%';
             setTimeout(function() {
-              bar.remove();
-              var SIZE = 60;
-              var circle = document.createElement('div');
-              circle.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;' +
-                'left:' + (cx - SIZE / 2) + 'px;top:' + (cy - SIZE / 2) + 'px;' +
-                'width:0;height:0;background:' + accentColor + ';border-radius:50%;' +
-                'transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);' +
-                'display:flex;align-items:center;justify-content:center;overflow:hidden;';
-              document.body.appendChild(circle);
-
-              requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                  circle.style.width = SIZE + 'px';
-                  circle.style.height = SIZE + 'px';
-                });
-              });
-
-              // Phase 3: checkmark draws in
+              bar.style.transition = 'all 0.2s ease';
+              bar.style.width = '0';
               setTimeout(function() {
-                var NS = 'http://www.w3.org/2000/svg';
-                var svg = document.createElementNS(NS, 'svg');
-                svg.setAttribute('width', '28'); svg.setAttribute('height', '28');
-                svg.setAttribute('viewBox', '0 0 25 30');
-                svg.style.display = 'block';
-                var path = document.createElementNS(NS, 'path');
-                path.setAttribute('d', 'M2,19.2C5.9,23.6,9.4,28,9.4,28L23,2');
-                path.setAttribute('stroke', 'white'); path.setAttribute('stroke-width', '3.5');
-                path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
-                path.setAttribute('fill', 'none');
-                svg.appendChild(path);
-                circle.appendChild(svg);
-
-                var len = path.getTotalLength();
-                path.style.strokeDasharray = len;
-                path.style.strokeDashoffset = len;
-                path.style.transition = 'stroke-dashoffset 0.3s ease-in-out';
+                bar.remove();
+                var SIZE = 60;
+                var circle = document.createElement('div');
+                circle.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;' +
+                  'left:' + (cx - SIZE / 2) + 'px;top:' + (cy - SIZE / 2) + 'px;' +
+                  'width:0;height:0;background:' + accentColor + ';border-radius:50%;' +
+                  'transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);' +
+                  'display:flex;align-items:center;justify-content:center;overflow:hidden;';
+                document.body.appendChild(circle);
                 requestAnimationFrame(function() {
-                  requestAnimationFrame(function() { path.style.strokeDashoffset = '0'; });
+                  requestAnimationFrame(function() {
+                    circle.style.width = SIZE + 'px';
+                    circle.style.height = SIZE + 'px';
+                  });
                 });
-
                 setTimeout(function() {
-                  circle.style.transition = 'all 0.25s ease';
-                  circle.style.transform = 'scale(0)';
-                  circle.style.opacity = '0';
+                  var NS = 'http://www.w3.org/2000/svg';
+                  var svg = document.createElementNS(NS, 'svg');
+                  svg.setAttribute('width', '28'); svg.setAttribute('height', '28');
+                  svg.setAttribute('viewBox', '0 0 25 30');
+                  svg.style.display = 'block';
+                  var path = document.createElementNS(NS, 'path');
+                  path.setAttribute('d', 'M2,19.2C5.9,23.6,9.4,28,9.4,28L23,2');
+                  path.setAttribute('stroke', 'white'); path.setAttribute('stroke-width', '3.5');
+                  path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+                  path.setAttribute('fill', 'none');
+                  svg.appendChild(path);
+                  circle.appendChild(svg);
+                  var len = path.getTotalLength();
+                  path.style.strokeDasharray = len;
+                  path.style.strokeDashoffset = len;
+                  path.style.transition = 'stroke-dashoffset 0.3s ease-in-out';
+                  requestAnimationFrame(function() {
+                    requestAnimationFrame(function() { path.style.strokeDashoffset = '0'; });
+                  });
                   setTimeout(function() {
-                    circle.remove();
-                    if (submitArea) { submitArea.style.pointerEvents = ''; submitArea.classList.remove('bw-animating'); }
-                    onDone();
-                  }, 250);
-                }, 900);
-              }, 300);
-            }, 200);
-          }, 950);
+                    circle.style.transition = 'all 0.25s ease';
+                    circle.style.transform = 'scale(0)';
+                    circle.style.opacity = '0';
+                    setTimeout(function() {
+                      circle.remove();
+                      if (submitArea) { submitArea.style.pointerEvents = ''; submitArea.classList.remove('bw-animating'); }
+                      onDone();
+                    }, 250);
+                  }, 900);
+                }, 300);
+              }, 200);
+            }, 250);
+          }
+
+          function cancel() {
+            bar.remove();
+            if (submitArea) { submitArea.style.pointerEvents = ''; submitArea.classList.remove('bw-animating'); }
+          }
+
+          return { complete: complete, cancel: cancel };
         }
 
         function renderSubmitArea() {
@@ -5903,6 +5907,9 @@
           const _progressEl = document.getElementById('submitProgress');
           if (_progressEl) _progressEl.textContent = bookingType === 'booking' ? t('progress_confirming') : t('progress_sending');
 
+          const _accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3b82f6';
+          const _anim = startSubmitAnimation(_accentColor);
+
           const nights = getNights();
           const apartmentIds = selectedApts.map((a) => a.id).join(',');
           const message = notes || '';
@@ -6016,9 +6023,9 @@
               }
             }
 
-            const _accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3b82f6';
             const _successMsg = bookingType === 'booking' ? t('success_booking') : t('success_request');
-            playSubmitSuccessAnimation(_accentColor, function() {
+            if (_progressEl) _progressEl.textContent = '';
+            _anim.complete(function() {
               showMessage('success', _successMsg);
               document.getElementById('salutation').value = '';
               ['firstName', 'lastName', 'email'].forEach((id) => {
@@ -6048,8 +6055,8 @@
             });
           } catch (error) {
             console.error(error);
-            const _pe = document.getElementById('submitProgress');
-            if (_pe) _pe.textContent = '';
+            _anim.cancel();
+            if (_progressEl) _progressEl.textContent = '';
             showMessage(
               'error',
               error.message || t('error_server'),
