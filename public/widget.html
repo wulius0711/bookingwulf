@@ -402,14 +402,6 @@
         width: 100%;
       }
 
-      .screen {
-        display: none;
-      }
-
-      .screen.active {
-        display: block;
-      }
-
       .top {
         display: grid;
         grid-template-columns: 1fr 260px;
@@ -437,9 +429,9 @@
         color: var(--text);
         cursor: pointer;
         transition:
-          border-color 0.2s ease,
-          background 0.2s ease,
-          color 0.2s ease,
+          border-color 0.35s ease-out,
+          background 0.35s ease-out,
+          color 0.35s ease-out,
           transform 0.2s ease;
       }
 
@@ -458,6 +450,10 @@
         font-size: 0.857rem;
         font-weight: 700;
         margin-bottom: 10px;
+        transition:
+          background 0.35s ease-out,
+          border-color 0.35s ease-out,
+          color 0.35s ease-out;
       }
 
       .step-label {
@@ -485,6 +481,34 @@
         color: var(--muted-2);
         border-color: var(--line);
         background: rgba(255, 255, 255, 0.38);
+      }
+
+      .step.done .step-index {
+        background: color-mix(in srgb, var(--accent) 12%, transparent);
+        border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+        color: var(--accent);
+      }
+
+      /* Screen slide transitions */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      @keyframes bwSlideInRight {
+        from { opacity: 0; transform: translateX(18px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes bwSlideInLeft {
+        from { opacity: 0; transform: translateX(-18px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      .booking-shell[data-step-dir="forward"] .screen.active {
+        animation: bwSlideInRight 0.28s ease-out;
+      }
+      .booking-shell[data-step-dir="back"] .screen.active {
+        animation: bwSlideInLeft 0.28s ease-out;
       }
 
       .price-box {
@@ -4667,19 +4691,44 @@
         }
 
         function renderSteps() {
-          document.querySelectorAll('.step').forEach((el) => {
-            const step = Number(el.dataset.step);
+          // Direction tracking for slide animation
+          var shell = document.querySelector('.booking-shell');
+          if (shell) {
+            var prevStep = Number(shell.dataset.prevStep || state.step);
+            shell.dataset.stepDir = state.step >= prevStep ? 'forward' : 'back';
+            shell.dataset.prevStep = state.step;
+          }
+
+          document.querySelectorAll('.step').forEach(function(el) {
+            var step = Number(el.dataset.step);
+            var isDone = step < state.step;
             el.classList.toggle('active', step === state.step);
-            el.classList.toggle('done', step < state.step);
+            el.classList.toggle('done', isDone);
             if (step === state.step) el.setAttribute('aria-current', 'step');
             else el.removeAttribute('aria-current');
+
+            // Checkmark draw animation on done steps
+            var indexEl = el.querySelector('.step-index');
+            if (indexEl) {
+              if (isDone && !indexEl.querySelector('svg')) {
+                indexEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                var path = indexEl.querySelector('path');
+                var len = path.getTotalLength();
+                path.style.strokeDasharray = len;
+                path.style.strokeDashoffset = len;
+                path.style.transition = 'stroke-dashoffset 0.35s ease-out';
+                requestAnimationFrame(function() {
+                  requestAnimationFrame(function() { path.style.strokeDashoffset = '0'; });
+                });
+              } else if (!isDone && step !== state.step) {
+                // Restore number when going back
+                indexEl.innerHTML = step;
+              }
+            }
           });
 
-          document.querySelectorAll('.screen').forEach((el) => {
-            el.classList.toggle(
-              'active',
-              Number(el.dataset.screen) === state.step,
-            );
+          document.querySelectorAll('.screen').forEach(function(el) {
+            el.classList.toggle('active', Number(el.dataset.screen) === state.step);
           });
         }
 
