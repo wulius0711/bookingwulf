@@ -1,0 +1,798 @@
+'use client';
+
+import { useState, useEffect, useRef, useTransition } from 'react';
+import { sendGuestMessage, requestCheckout, bookExtra } from './actions';
+
+type Booking = {
+  id: number;
+  arrival: string;
+  departure: string;
+  nights: number;
+  adults: number;
+  children: number;
+  salutation: string;
+  firstname: string | null;
+  lastname: string;
+  status: string;
+  paymentMethod: string | null;
+  pricingJson: Record<string, unknown> | null;
+  extrasJson: unknown[] | null;
+  nukiCode: string | null;
+  checkinCompleted: boolean;
+  checkinArrivalTime: string | null;
+  checkoutRequested: boolean;
+  language: string;
+};
+
+type Hotel = {
+  name: string;
+  email: string | null;
+  phone: string | null;
+  accentColor: string;
+  address: string | null;
+  whatsappNumber: string | null;
+  checkoutTime: string | null;
+  preArrivalEnabled: boolean;
+  reviewRequestLink: string | null;
+  wifiSsid: string | null;
+  wifiPassword: string | null;
+  parkingInfo: string | null;
+  wasteInfo: string | null;
+  houseRules: string | null;
+  emergencyNumbers: { label: string; number: string }[];
+};
+
+type Apartment = {
+  id: number;
+  name: string;
+  imageUrl: string | null;
+  imageAlt: string;
+};
+
+type Extra = {
+  id: number;
+  name: string;
+  key: string;
+  type: string;
+  billingType: string;
+  price: number;
+  imageUrl: string | null;
+  description: string | null;
+  linkUrl: string | null;
+  exclusiveGroup: string | null;
+};
+
+type Message = {
+  id: number;
+  sender: string;
+  body: string;
+  createdAt: string;
+};
+
+type ThingToSee = {
+  id: number;
+  category: string;
+  title: string;
+  description: string | null;
+  address: string | null;
+  mapsUrl: string | null;
+  imageUrl: string | null;
+};
+
+type Props = {
+  token: string;
+  booking: Booking;
+  hotel: Hotel;
+  apartments: Apartment[];
+  allExtras: Extra[];
+  serverBookedExtraIds: number[];
+  thingsToSee: ThingToSee[];
+  initialMessages: Message[];
+};
+
+type Tab = 'overview' | 'checkin' | 'messages' | 'extras' | 'houseinfo' | 'surroundings' | 'checkout';
+
+const CAT_LABELS: Record<string, string> = {
+  restaurant: '🍽️ Restaurant & Café',
+  attraction: '🏛️ Sehenswürdigkeit',
+  activity: '🏔️ Aktivität',
+  event: '🎉 Events',
+  shopping: '🛍️ Einkaufen',
+  emergency: '🏥 Wichtiges',
+};
+
+function hexLuminance(hex: string): number {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.slice(0, 2), 16) / 255;
+  const g = parseInt(c.slice(2, 4), 16) / 255;
+  const b = parseInt(c.slice(4, 6), 16) / 255;
+  const lin = (v: number) => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+function fmt(iso: string) {
+  return new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
+}
+
+function fmtTime(iso: string) {
+  return new Intl.DateTimeFormat('de-AT', { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+}
+
+function eur(n: number) {
+  return new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(n);
+}
+
+export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, initialMessages }: Props) {
+  const accent = hotel.accentColor || '#111827';
+  const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
+  const [tab, setTab] = useState<Tab>('overview');
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [msgInput, setMsgInput] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const [checkoutDone, setCheckoutDone] = useState(booking.checkoutRequested);
+  const [bookedExtras, setBookedExtras] = useState<number[]>(serverBookedExtraIds);
+  const [msgError, setMsgError] = useState('');
+  const [copiedWifi, setCopiedWifi] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Register service worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  }, []);
+
+  // Poll for new messages every 20s when on messages tab
+  useEffect(() => {
+    if (tab !== 'messages') return;
+    const iv = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/gast/${token}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setMessages(data.messages);
+      } catch {}
+    }, 20_000);
+    return () => clearInterval(iv);
+  }, [tab, token]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const pricing = booking.pricingJson as {
+    apartments?: { apartmentName?: string; name?: string; totalPrice?: number; total?: number; cleaningFee?: number; cleaning?: number }[];
+    extrasTotal?: number;
+    ortstaxeTotal?: number;
+    total?: number;
+  } | null;
+
+  const bookedExtrasList = Array.isArray(booking.extrasJson)
+    ? (booking.extrasJson as { name: string; guestLabel?: string; subtotal?: number; total?: number }[])
+    : [];
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: 'overview', label: 'Übersicht' },
+    ...(hotel.preArrivalEnabled && !booking.checkinCompleted ? [{ id: 'checkin' as Tab, label: 'Check-In' }] : []),
+    { id: 'messages', label: 'Nachrichten' },
+    ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Extras' }] : []),
+    ...((hotel.wifiPassword || hotel.parkingInfo || hotel.wasteInfo || hotel.houseRules || hotel.emergencyNumbers.length > 0) ? [{ id: 'houseinfo' as Tab, label: 'Hausinfos' }] : []),
+    ...(thingsToSee.length > 0 ? [{ id: 'surroundings' as Tab, label: 'Umgebung' }] : []),
+    { id: 'checkout', label: 'Abreise' },
+  ];
+
+  const mapsUrl = hotel.address
+    ? `https://maps.google.com/?q=${encodeURIComponent(hotel.address)}`
+    : null;
+  const waUrl = hotel.whatsappNumber
+    ? `https://wa.me/${hotel.whatsappNumber.replace(/\D/g, '')}`
+    : null;
+
+  function handleSendMessage() {
+    if (!msgInput.trim()) return;
+    setMsgError('');
+    startTransition(async () => {
+      try {
+        await sendGuestMessage(token, msgInput);
+        const res = await fetch(`/api/gast/${token}`);
+        if (res.ok) {
+          const data = await res.json();
+          setMessages(data.messages);
+        }
+        setMsgInput('');
+      } catch {
+        setMsgError('Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.');
+      }
+    });
+  }
+
+  function handleCheckout() {
+    startTransition(async () => {
+      await requestCheckout(token);
+      setCheckoutDone(true);
+    });
+  }
+
+  function handleBookExtra(extraId: number) {
+    startTransition(async () => {
+      await bookExtra(token, extraId);
+      setBookedExtras((prev) => [...prev, extraId]);
+    });
+  }
+
+  const css = `
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f5f7fa; color: #111827; min-height: 100vh; }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 80px; }
+    .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; }
+    .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+    .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+    .tabs { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
+    .tab-btn.active { color: ${accent}; border-bottom-color: ${accent}; }
+    .content { padding: 20px; display: grid; gap: 16px; }
+    .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+    .card-body { padding: 16px 18px; display: grid; gap: 12px; }
+    .row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; }
+    .row-lbl { color: #6b7280; flex-shrink: 0; }
+    .row-val { font-weight: 600; text-align: right; }
+    .divider { height: 1px; background: #f0f0f0; }
+    .total-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; padding-top: 4px; }
+    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: 10px; border: none; background: ${accent}; color: ${onAccent}; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: inherit; }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-outline { background: transparent; border: 1.5px solid ${accent}; color: ${accent}; }
+    .btn-sm { padding: 9px 16px; font-size: 13px; width: auto; }
+    .btn-danger { background: #dc2626; color: #fff; border: none; }
+    .contact-grid { display: grid; gap: 10px; }
+    .msg-list { display: grid; gap: 10px; max-height: 340px; overflow-y: auto; padding: 4px 0; }
+    .msg-bubble { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
+    .msg-hotel { background: #f3f4f6; color: #111827; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .msg-guest { background: ${accent}; color: ${onAccent}; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .msg-wrap { display: flex; flex-direction: column; }
+    .msg-wrap.guest { align-items: flex-end; }
+    .msg-time { font-size: 11px; color: #9ca3af; margin-top: 3px; padding: 0 4px; }
+    .msg-input-row { display: flex; gap: 8px; }
+    .msg-input { flex: 1; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; }
+    .msg-input:focus { outline: none; border-color: ${accent}; }
+    .extra-card { border: 1.5px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+    .extra-img { width: 100%; height: 120px; object-fit: cover; background: #f3f4f6; }
+    .extra-info { padding: 12px 14px; }
+    .extra-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .extra-desc { font-size: 13px; color: #6b7280; line-height: 1.4; margin-bottom: 8px; }
+    .extra-footer { display: flex; justify-content: space-between; align-items: center; }
+    .extra-price { font-size: 15px; font-weight: 800; color: ${accent}; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-yellow { background: #fef9c3; color: #713f12; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .nuki { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 18px; text-align: center; }
+    .nuki-label { font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .nuki-code { font-size: 34px; font-weight: 900; letter-spacing: 0.2em; color: #111827; font-variant-numeric: tabular-nums; }
+    .nuki-hint { font-size: 12px; color: #374151; margin-top: 6px; }
+    .success-box { text-align: center; padding: 28px 20px; }
+    .success-icon { font-size: 48px; margin-bottom: 12px; }
+    .success-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .success-text { font-size: 14px; color: #6b7280; line-height: 1.6; }
+    .error-text { font-size: 13px; color: #dc2626; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #0f172a; color: #f1f5f9; }
+      .card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+      .card-head { background: #162032; border-color: #2d3f55; color: #64748b; }
+      .row-lbl { color: #94a3b8; }
+      .divider { background: #2d3f55; }
+      .tabs { background: #1e293b; border-color: #2d3f55; }
+      .tab-btn { color: #64748b; }
+      .msg-hotel { background: #2d3f55; color: #f1f5f9; }
+      .msg-input { background: #1e293b; color: #f1f5f9; border-color: #2d3f55; }
+      .extra-card { border-color: #2d3f55; }
+      .extra-img { background: #2d3f55; }
+      .extra-desc { color: #94a3b8; }
+      .nuki { background: #052e16; border-color: #166534; }
+      .nuki-code { color: #f1f5f9; }
+      .nuki-hint { color: #d1fae5; }
+    }
+  `;
+
+  return (
+    <html lang="de">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content={accent} />
+        <link rel="manifest" href="/manifest.json" />
+        <style>{css}</style>
+      </head>
+      <body>
+        <div className="wrap">
+          {/* Header */}
+          <div className="header">
+            <div className="header-hotel">{hotel.name}</div>
+            <div className="header-title">Meine Buchung</div>
+            <div className="header-sub">
+              {fmt(booking.arrival)} — {fmt(booking.departure)} · {booking.nights} {booking.nights === 1 ? 'Nacht' : 'Nächte'}
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="tabs" role="tablist">
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={tab === t.id}
+                className={`tab-btn${tab === t.id ? ' active' : ''}`}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab: Übersicht */}
+          {tab === 'overview' && (
+            <div className="content">
+              {/* Buchungsdetails */}
+              <div className="card">
+                <div className="card-head">Buchungsdetails</div>
+                <div className="card-body">
+                  <div className="row">
+                    <span className="row-lbl">Gast</span>
+                    <span className="row-val">{[booking.salutation, booking.firstname, booking.lastname].filter(Boolean).join(' ')}</span>
+                  </div>
+                  <div className="row">
+                    <span className="row-lbl">Anreise</span>
+                    <span className="row-val">{fmt(booking.arrival)}</span>
+                  </div>
+                  <div className="row">
+                    <span className="row-lbl">Abreise</span>
+                    <span className="row-val">{fmt(booking.departure)}</span>
+                  </div>
+                  <div className="row">
+                    <span className="row-lbl">Nächte</span>
+                    <span className="row-val">{booking.nights}</span>
+                  </div>
+                  <div className="row">
+                    <span className="row-lbl">Personen</span>
+                    <span className="row-val">
+                      {booking.adults} Erwachsene{booking.children ? `, ${booking.children} Kinder` : ''}
+                    </span>
+                  </div>
+                  {apartments.length > 0 && (
+                    <div className="row">
+                      <span className="row-lbl">Unterkunft</span>
+                      <span className="row-val">{apartments.map((a) => a.name).join(', ')}</span>
+                    </div>
+                  )}
+                  <div className="row">
+                    <span className="row-lbl">Status</span>
+                    <span className="row-val">
+                      <span className={`badge ${booking.status === 'booked' || booking.status === 'confirmed' ? 'badge-green' : 'badge-yellow'}`}>
+                        {booking.status === 'booked' || booking.status === 'confirmed' ? 'Bestätigt' : booking.status === 'new' ? 'Anfrage' : booking.status}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Nuki Türcode */}
+              {booking.nukiCode && (
+                <div className="nuki">
+                  <div className="nuki-label">🔑 Ihr Zugangscode</div>
+                  <div className="nuki-code">{booking.nukiCode}</div>
+                  <div className="nuki-hint">Gültig von Anreise bis Abreise</div>
+                </div>
+              )}
+
+              {/* Preisübersicht */}
+              {pricing && (
+                <div className="card">
+                  <div className="card-head">Preisübersicht</div>
+                  <div className="card-body">
+                    {(pricing.apartments ?? []).map((a, i) => (
+                      <div key={i} className="row">
+                        <span className="row-lbl">{a.apartmentName ?? a.name}</span>
+                        <span className="row-val">{eur(a.totalPrice ?? a.total ?? 0)}</span>
+                      </div>
+                    ))}
+                    {bookedExtrasList.length > 0 && (
+                      <>
+                        <div className="divider" />
+                        {bookedExtrasList.map((e, i) => (
+                          <div key={i} className="row">
+                            <span className="row-lbl">{e.guestLabel ?? e.name}</span>
+                            <span className="row-val">{eur(e.subtotal ?? e.total ?? 0)}</span>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    {(pricing.ortstaxeTotal ?? 0) > 0 && (
+                      <div className="row">
+                        <span className="row-lbl">Ortstaxe</span>
+                        <span className="row-val">{eur(pricing.ortstaxeTotal!)}</span>
+                      </div>
+                    )}
+                    <div className="divider" />
+                    <div className="total-row">
+                      <span>Gesamt</span>
+                      <span>{eur(pricing.total ?? 0)}</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'right', marginTop: 2 }}>inkl. MwSt.</div>
+                    {booking.paymentMethod && (
+                      <div className="row" style={{ marginTop: 4 }}>
+                        <span className="row-lbl">Zahlungsart</span>
+                        <span className="row-val" style={{ textTransform: 'capitalize' }}>{booking.paymentMethod.replace('_', ' ')}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Anreise */}
+              {mapsUrl && (
+                <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  Anreise planen
+                </a>
+              )}
+
+              {/* Kontakt */}
+              {(hotel.phone || hotel.email || waUrl) && (
+                <div className="card">
+                  <div className="card-head">Kontakt</div>
+                  <div className="card-body contact-grid">
+                    {hotel.phone && (
+                      <a href={`tel:${hotel.phone}`} className="btn btn-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 10.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17z"/></svg>
+                        Anrufen
+                      </a>
+                    )}
+                    {waUrl && (
+                      <a href={waUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        WhatsApp
+                      </a>
+                    )}
+                    {hotel.email && (
+                      <a href={`mailto:${hotel.email}`} className="btn btn-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        E-Mail schreiben
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Check-In Hinweis */}
+              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
+                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 12, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1e40af', marginBottom: 4 }}>Online Check-In ausstehend</div>
+                    <div style={{ fontSize: 13, color: '#3b82f6' }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
+                  </div>
+                  <button className="btn btn-sm" style={{ background: '#1e40af', color: '#fff', flexShrink: 0 }} onClick={() => setTab('checkin')}>
+                    Zum Check-In
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab: Check-In */}
+          {tab === 'checkin' && (
+            <div className="content">
+              <div className="card">
+                <div className="card-head">Online Check-In</div>
+                <div className="card-body">
+                  {booking.checkinCompleted ? (
+                    <div className="success-box">
+                      <div className="success-icon">✅</div>
+                      <div className="success-title">Bereits eingecheckt</div>
+                      <div className="success-text">
+                        {booking.checkinArrivalTime && <>Geplante Ankunft: <strong>{booking.checkinArrivalTime}</strong></>}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
+                        Füllen Sie das Formular aus, um Zeit bei der Anreise zu sparen.
+                      </p>
+                      <a
+                        href={`/checkin/${token}`}
+                        className="btn"
+                        style={{ marginTop: 4 }}
+                      >
+                        Check-In Formular öffnen →
+                      </a>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab: Nachrichten */}
+          {tab === 'messages' && (
+            <div className="content">
+              <div className="card">
+                <div className="card-head">Nachrichten</div>
+                <div className="card-body">
+                  {messages.length === 0 ? (
+                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>
+                      Noch keine Nachrichten. Schreiben Sie dem {hotel.name}-Team direkt hier.
+                    </p>
+                  ) : (
+                    <div className="msg-list">
+                      {messages.map((m) => (
+                        <div key={m.id} className={`msg-wrap${m.sender === 'guest' ? ' guest' : ''}`}>
+                          <div className={`msg-bubble ${m.sender === 'hotel' ? 'msg-hotel' : 'msg-guest'}`}>
+                            {m.body}
+                          </div>
+                          <span className="msg-time">
+                            {m.sender === 'hotel' ? `${hotel.name} · ` : ''}{fmtTime(m.createdAt)}
+                          </span>
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
+                  <div className="divider" />
+                  <div className="msg-input-row">
+                    <textarea
+                      className="msg-input"
+                      rows={2}
+                      placeholder="Nachricht schreiben …"
+                      value={msgInput}
+                      onChange={(e) => setMsgInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                    />
+                    <button
+                      className="btn btn-sm"
+                      style={{ flexShrink: 0, alignSelf: 'flex-end' }}
+                      onClick={handleSendMessage}
+                      disabled={isPending || !msgInput.trim()}
+                      aria-label="Senden"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                  </div>
+                  {msgError && <p className="error-text">{msgError}</p>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab: Extras */}
+          {tab === 'extras' && (
+            <div className="content">
+              {allExtras.map((extra) => {
+                const done = bookedExtras.includes(extra.id);
+                const groupBlocked = !done && extra.exclusiveGroup !== null && extra.exclusiveGroup !== undefined &&
+                  allExtras.some((e) => e.exclusiveGroup === extra.exclusiveGroup && bookedExtras.includes(e.id));
+                return (
+                  <div key={extra.id} className="extra-card" style={{ opacity: done || groupBlocked ? 0.6 : 1 }}>
+                    {extra.imageUrl && (
+                      <img src={extra.imageUrl} alt={extra.name} className="extra-img" loading="lazy" />
+                    )}
+                    <div className="extra-info">
+                      <div className="extra-name">{extra.name}</div>
+                      {extra.description && <div className="extra-desc">{extra.description}</div>}
+                      <div className="extra-footer">
+                        <span className="extra-price">{eur(extra.price)}</span>
+                        {done ? (
+                          <span className="badge badge-green">✓ Gebucht</span>
+                        ) : groupBlocked ? (
+                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>Variante bereits gebucht</span>
+                        ) : (
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                            {extra.linkUrl && (
+                              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">
+                                Mehr erfahren
+                              </a>
+                            )}
+                            <button
+                              className="btn btn-sm"
+                              disabled={isPending}
+                              onClick={() => handleBookExtra(extra.id)}
+                            >
+                              Hinzufügen
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Tab: Hausinfos */}
+          {tab === 'houseinfo' && (
+            <div className="content">
+              {(hotel.wifiSsid || hotel.wifiPassword) && (
+                <div className="card">
+                  <div className="card-head">📶 WLAN</div>
+                  <div className="card-body">
+                    {hotel.wifiSsid && (
+                      <div className="row">
+                        <span className="row-lbl">Netzwerk</span>
+                        <span className="row-val">{hotel.wifiSsid}</span>
+                      </div>
+                    )}
+                    {hotel.wifiPassword && (
+                      <div className="row">
+                        <span className="row-lbl">Passwort</span>
+                        <span className="row-val" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontFamily: 'monospace', letterSpacing: '0.05em' }}>{hotel.wifiPassword}</span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(hotel.wifiPassword!).then(() => {
+                                setCopiedWifi(true);
+                                setTimeout(() => setCopiedWifi(false), 2000);
+                              });
+                            }}
+                            style={{ padding: '3px 10px', border: '1.5px solid #e5e7eb', borderRadius: 6, background: copiedWifi ? '#dcfce7' : '#f9fafb', color: copiedWifi ? '#166534' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
+                          >
+                            {copiedWifi ? '✓ Kopiert' : 'Kopieren'}
+                          </button>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {hotel.parkingInfo && (
+                <div className="card">
+                  <div className="card-head">🅿️ Parkplatz</div>
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.parkingInfo}</p>
+                  </div>
+                </div>
+              )}
+              {hotel.wasteInfo && (
+                <div className="card">
+                  <div className="card-head">♻️ Müllentsorgung</div>
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.wasteInfo}</p>
+                  </div>
+                </div>
+              )}
+              {hotel.houseRules && (
+                <div className="card">
+                  <div className="card-head">📋 Hausordnung</div>
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.houseRules}</p>
+                  </div>
+                </div>
+              )}
+              {hotel.emergencyNumbers.length > 0 && (
+                <div className="card">
+                  <div className="card-head">🚨 Notfallnummern</div>
+                  <div className="card-body">
+                    {hotel.emergencyNumbers.map((e, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
+                        <a href={`tel:${e.number.replace(/\s/g, '')}`} style={{ fontSize: 15, fontWeight: 700, color: accent, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab: Umgebung */}
+          {tab === 'surroundings' && (
+            <div className="content">
+              {Object.entries(
+                thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => {
+                  (acc[t.category] ??= []).push(t);
+                  return acc;
+                }, {})
+              ).map(([cat, entries]) => (
+                <div key={cat}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#9ca3af', marginBottom: 10 }}>
+                    {CAT_LABELS[cat] ?? cat}
+                  </div>
+                  <div style={{ display: 'grid', gap: 10 }}>
+                    {entries.map((t) => (
+                      <div key={t.id} className="card" style={{ overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', gap: 0 }}>
+                          {t.imageUrl && (
+                            <img src={t.imageUrl} alt={t.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />
+                          )}
+                          <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
+                            {t.description && (
+                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                {t.description}
+                              </div>
+                            )}
+                            {t.address && (
+                              <div style={{ fontSize: 12, color: '#9ca3af' }}>{t.address}</div>
+                            )}
+                          </div>
+                          {t.mapsUrl && (
+                            <a
+                              href={t.mapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }}
+                              aria-label="In Maps öffnen"
+                            >
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab: Abreise */}
+          {tab === 'checkout' && (
+            <div className="content">
+              <div className="card">
+                <div className="card-head">Abreise</div>
+                <div className="card-body">
+                  {checkoutDone ? (
+                    <div className="success-box">
+                      <div className="success-icon">👋</div>
+                      <div className="success-title">Auf Wiedersehen!</div>
+                      <div className="success-text">
+                        Vielen Dank für Ihren Aufenthalt. Das Team wurde über Ihre Abreise informiert.
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {hotel.checkoutTime && (
+                        <div className="row">
+                          <span className="row-lbl">Check-Out Zeit</span>
+                          <span className="row-val">{hotel.checkoutTime} Uhr</span>
+                        </div>
+                      )}
+                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
+                        Wenn Sie zur Abreise bereit sind, informieren Sie das Team mit einem Klick — kein Warten an der Rezeption nötig.
+                      </p>
+                      <button
+                        className="btn"
+                        disabled={isPending}
+                        onClick={handleCheckout}
+                      >
+                        Jetzt auschecken
+                      </button>
+                    </>
+                  )}
+
+                  {hotel.reviewRequestLink && checkoutDone && (
+                    <>
+                      <div className="divider" />
+                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
+                        Hat Ihnen Ihr Aufenthalt gefallen? Wir freuen uns über eine Bewertung!
+                      </p>
+                      <a
+                        href={hotel.reviewRequestLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                      >
+                        ⭐ Bewertung schreiben
+                      </a>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </body>
+    </html>
+  );
+}
