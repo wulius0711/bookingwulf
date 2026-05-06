@@ -133,7 +133,23 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const [bookedExtras, setBookedExtras] = useState<number[]>(serverBookedExtraIds);
   const [msgError, setMsgError] = useState('');
   const [copiedWifi, setCopiedWifi] = useState(false);
+  const [tabContentKey, setTabContentKey] = useState(0);
+  const [freshlyBooked, setFreshlyBooked] = useState(new Set<number>());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
+
+  // Slide tab indicator to active tab
+  useEffect(() => {
+    const tabs = tabsRef.current;
+    const indicator = indicatorRef.current;
+    if (!tabs || !indicator) return;
+    const active = tabs.querySelector('.tab-btn.active') as HTMLElement | null;
+    if (!active) return;
+    indicator.style.left = `${active.offsetLeft}px`;
+    indicator.style.width = `${active.offsetWidth}px`;
+    indicator.style.opacity = '1';
+  }, [tab]);
 
   // Register service worker
   useEffect(() => {
@@ -213,10 +229,16 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     });
   }
 
+  function handleTabChange(newTab: Tab) {
+    setTab(newTab);
+    setTabContentKey((k) => k + 1);
+  }
+
   function handleBookExtra(extraId: number) {
     startTransition(async () => {
       await bookExtra(token, extraId);
       setBookedExtras((prev) => [...prev, extraId]);
+      setFreshlyBooked((prev) => new Set(prev).add(extraId));
     });
   }
 
@@ -228,11 +250,26 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
     .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
-    .tabs { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
+    @keyframes bwPulse { 0%,100%{box-shadow:0 0 0 0 ${accent}44} 50%{box-shadow:0 0 0 5px ${accent}00} }
+    .tabs { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; position: relative; }
     .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap; outline: none; }
-    .tab-btn.active { color: ${accent}; border-bottom-color: ${accent}; }
+    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; transition: color 0.2s; white-space: nowrap; outline: none; }
+    .tab-btn.active { color: ${accent}; }
     .tab-btn:focus-visible { outline: 2px solid ${accent}; outline-offset: -2px; border-radius: 4px; }
+    .tab-indicator { position: absolute; bottom: 0; height: 2px; background: ${accent}; border-radius: 1px; opacity: 0; transition: left 0.25s cubic-bezier(0.4,0,0.2,1), width 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.1s; pointer-events: none; }
+    .content-anim > * { animation: cardReveal 0.28s ease both; }
+    .content-anim > *:nth-child(1) { animation-delay: 0ms; }
+    .content-anim > *:nth-child(2) { animation-delay: 55ms; }
+    .content-anim > *:nth-child(3) { animation-delay: 110ms; }
+    .content-anim > *:nth-child(4) { animation-delay: 165ms; }
+    .content-anim > *:nth-child(5) { animation-delay: 220ms; }
+    .content-anim > *:nth-child(6) { animation-delay: 275ms; }
+    .content-anim > *:nth-child(7) { animation-delay: 330ms; }
+    .badge-pop { animation: bwPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .badge-pulse { animation: bwPulse 2.4s ease-in-out infinite; }
+    .welcome-tile { border-radius: 14px; overflow: hidden; background: linear-gradient(135deg, ${accent}18, ${accent}06); border: 1.5px solid ${accent}33; }
     .content { padding: 20px; display: grid; gap: 16px; }
     .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -319,23 +356,44 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           </div>
 
           {/* Tabs */}
-          <div className="tabs" role="tablist">
+          <div className="tabs" role="tablist" ref={tabsRef}>
             {tabs.map((t) => (
               <button
                 key={t.id}
                 role="tab"
                 aria-selected={tab === t.id}
                 className={`tab-btn${tab === t.id ? ' active' : ''}`}
-                onClick={() => setTab(t.id)}
+                onClick={() => handleTabChange(t.id)}
               >
                 {t.label}
               </button>
             ))}
+            <div className="tab-indicator" ref={indicatorRef} aria-hidden="true" />
           </div>
 
           {/* Tab: Übersicht */}
           {tab === 'overview' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
+              {/* Welcome-Kachel: nur während des Aufenthalts */}
+              {(() => {
+                const today = new Date(); today.setHours(0,0,0,0);
+                const arr = new Date(booking.arrival); arr.setHours(0,0,0,0);
+                const dep = new Date(booking.departure); dep.setHours(0,0,0,0);
+                if (today < arr || today >= dep) return null;
+                const img = apartments[0]?.imageUrl;
+                return (
+                  <div className="welcome-tile">
+                    {img && <img src={img} alt={apartments[0]?.name} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} loading="eager" />}
+                    <div style={{ padding: '16px 18px' }}>
+                      <div style={{ fontSize: 16, fontWeight: 800, color: accent, marginBottom: 4 }}>Schön, dass Sie da sind! 🌟</div>
+                      <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.6 }}>
+                        Hier finden Sie alles für Ihren Aufenthalt bei <strong>{hotel.name}</strong> — von Check-In bis Abreise.
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Buchungsdetails */}
               <div className="card">
                 <div className="card-head">Buchungsdetails</div>
@@ -371,7 +429,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="row">
                     <span className="row-lbl">Status</span>
                     <span className="row-val">
-                      <span className={`badge ${booking.status === 'booked' || booking.status === 'confirmed' ? 'badge-green' : 'badge-yellow'}`}>
+                      <span className={`badge ${booking.status === 'booked' || booking.status === 'confirmed' ? 'badge-green badge-pulse' : 'badge-yellow'}`}>
                         {booking.status === 'booked' || booking.status === 'confirmed' ? 'Bestätigt' : booking.status === 'new' ? 'Anfrage' : booking.status}
                       </span>
                     </span>
@@ -474,7 +532,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#1e40af', marginBottom: 4 }}>Online Check-In ausstehend</div>
                     <div style={{ fontSize: 13, color: '#3b82f6' }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
                   </div>
-                  <button className="btn btn-sm" style={{ background: '#1e40af', color: '#fff', flexShrink: 0 }} onClick={() => setTab('checkin')}>
+                  <button className="btn btn-sm" style={{ background: '#1e40af', color: '#fff', flexShrink: 0 }} onClick={() => handleTabChange('checkin')}>
                     Zum Check-In
                   </button>
                 </div>
@@ -484,7 +542,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Check-In */}
           {tab === 'checkin' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               <div className="card">
                 <div className="card-head">Online Check-In</div>
                 <div className="card-body">
@@ -517,7 +575,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Nachrichten */}
           {tab === 'messages' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               <div className="card">
                 <div className="card-head">Nachrichten</div>
                 <div className="card-body">
@@ -568,7 +626,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Extras */}
           {tab === 'extras' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               {allExtras.map((extra) => {
                 const done = bookedExtras.includes(extra.id);
                 const groupBlocked = !done && extra.exclusiveGroup !== null && extra.exclusiveGroup !== undefined &&
@@ -584,7 +642,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                       <div className="extra-footer">
                         <span className="extra-price">{eur(extra.price)}</span>
                         {done ? (
-                          <span className="badge badge-green">✓ Gebucht</span>
+                          <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>✓ Gebucht</span>
                         ) : groupBlocked ? (
                           <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>Variante bereits gebucht</span>
                         ) : (
@@ -613,7 +671,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Hausinfos */}
           {tab === 'houseinfo' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               {(hotel.wifiSsid || hotel.wifiPassword) && (
                 <div className="card">
                   <div className="card-head">📶 WLAN</div>
@@ -688,7 +746,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Umgebung */}
           {tab === 'surroundings' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               {Object.entries(
                 thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => {
                   (acc[t.category] ??= []).push(t);
@@ -739,7 +797,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
           {/* Tab: Abreise */}
           {tab === 'checkout' && (
-            <div className="content">
+            <div key={tabContentKey} className="content content-anim">
               <div className="card">
                 <div className="card-head">Abreise</div>
                 <div className="card-body">
