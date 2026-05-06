@@ -2284,6 +2284,17 @@
         display: none;
       }
 
+      @keyframes bwShake {
+        0%, 100% { transform: translateX(0); }
+        15%  { transform: translateX(-5px); }
+        30%  { transform: translateX(5px); }
+        45%  { transform: translateX(-4px); }
+        60%  { transform: translateX(4px); }
+        75%  { transform: translateX(-2px); }
+        90%  { transform: translateX(2px); }
+      }
+      .bw-shake { animation: bwShake 0.45s ease-out; }
+
       @media (max-width: 600px) {
         .cal-months {
           grid-template-columns: 1fr;
@@ -3194,6 +3205,25 @@
             currency: 'EUR',
           }).format(Number(n || 0));
 
+        let _totalBoxLast = 0;
+        function animateTotalBox(newVal) {
+          const el = document.getElementById('totalBox');
+          if (!el) { _totalBoxLast = newVal; return; }
+          const from = _totalBoxLast;
+          _totalBoxLast = newVal;
+          if (from === newVal) { el.textContent = eur(newVal); return; }
+          const duration = Math.min(500, Math.abs(newVal - from) * 2 + 150);
+          const start = performance.now();
+          function tick(now) {
+            const t = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = eur(from + (newVal - from) * eased);
+            if (t < 1) requestAnimationFrame(tick);
+            else el.textContent = eur(newVal);
+          }
+          requestAnimationFrame(tick);
+        }
+
         async function loadHotelSettings() {
           try {
             const res = await fetch(
@@ -3433,6 +3463,12 @@
           const map = { info, error, success };
           map[type].textContent = text;
           map[type].style.display = 'block';
+          if (type === 'error') {
+            const _el = map[type];
+            _el.classList.remove('bw-shake');
+            void _el.offsetWidth;
+            _el.classList.add('bw-shake');
+          }
           window.scrollTo({ top: 0, behavior: 'smooth' });
           window.parent.postMessage({ type: 'booking-widget-scroll-top' }, '*');
         }
@@ -4310,7 +4346,11 @@
             return isAvailableA - isAvailableB;
           });
 
-          sortedApartments.forEach((ap) => {
+          const _newAptIds = state.apartments.map((a) => a.id).join(',');
+          const _shouldStagger = state._lastAptIds !== _newAptIds;
+          state._lastAptIds = _newAptIds;
+
+          sortedApartments.forEach((ap, aptIdx) => {
             const selected = isSelectedApartment(ap.id);
             const pricing = state.pricingMap[String(ap.id)];
             const status = getApartmentStatus(ap);
@@ -4538,6 +4578,15 @@
             `;
 
             wrap.appendChild(div);
+            if (_shouldStagger) {
+              div.style.opacity = '0';
+              div.style.transform = 'translateY(10px)';
+              setTimeout(() => {
+                div.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+                div.style.opacity = '';
+                div.style.transform = '';
+              }, aptIdx * 60);
+            }
           });
 
           wrap.querySelectorAll('[data-toggle-desc]').forEach((btn) => {
@@ -4759,7 +4808,7 @@
               : t('summary_no_extras');
 
           const showPrices = state.settings.showPrices;
-          document.getElementById('totalBox').textContent = eur(getTotal());
+          animateTotalBox(getTotal());
           const totalBoxVat = document.getElementById('totalBoxVat');
           if (totalBoxVat) totalBoxVat.textContent = showPrices ? t('incl_vat') : '';
           const totalBoxWrap = document.querySelector('.price-box');
@@ -5768,8 +5817,13 @@
               el?.parentNode?.appendChild(errEl);
             }
             if (!value) {
-              el && (el.style.borderColor = 'var(--danger)');
-              el && el.setAttribute('aria-invalid', 'true');
+              if (el) {
+                el.style.borderColor = 'var(--danger)';
+                el.setAttribute('aria-invalid', 'true');
+                el.classList.remove('bw-shake');
+                void el.offsetWidth;
+                el.classList.add('bw-shake');
+              }
               errEl.textContent = t('err_field_required', { label });
               errEl.style.display = 'block';
               hasFieldErrors = true;

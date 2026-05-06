@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
+import StatCard from './components/StatCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,16 +82,7 @@ async function SuperAdminDashboard() {
       {/* STAT CARDS */}
       <div className="stat-grid" style={statsRowStyle}>
         {stats.map((s) => (
-          <Link key={s.label} href={s.href} style={{ textDecoration: 'none' }}>
-            <div style={{ ...statCardStyle, ...(s.highlight ? { borderColor: '#fca5a5', background: '#fef2f2' } : {}) }}>
-              <div style={{ fontSize: 32, fontWeight: 700, color: s.highlight ? '#dc2626' : '#111' }}>
-                {s.value}
-              </div>
-              <div style={{ fontSize: 13, color: s.highlight ? '#dc2626' : '#666', marginTop: 4 }}>
-                {s.label}
-              </div>
-            </div>
-          </Link>
+          <StatCard key={s.label} label={s.label} value={s.value} href={s.href} highlight={s.highlight} />
         ))}
       </div>
 
@@ -324,16 +316,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
       {/* STAT CARDS */}
       <div className="stat-grid" style={statsRowStyle}>
         {stats.map((s) => (
-          <Link key={s.label} href={s.href} style={{ textDecoration: 'none' }}>
-            <div style={{ ...statCardStyle, ...(s.highlight ? { borderColor: '#fca5a5', background: '#fef2f2' } : {}) }}>
-              <div style={{ fontSize: 32, fontWeight: 700, color: s.highlight ? '#dc2626' : '#111' }}>
-                {s.value}
-              </div>
-              <div style={{ fontSize: 13, color: s.highlight ? '#dc2626' : '#666', marginTop: 4 }}>
-                {s.label}
-              </div>
-            </div>
-          </Link>
+          <StatCard key={s.label} label={s.label} value={s.value} href={s.href} highlight={s.highlight} />
         ))}
       </div>
 
@@ -440,15 +423,6 @@ const sublineStyle: React.CSSProperties = {
 const statsRowStyle: React.CSSProperties = {
   gap: 14,
   marginBottom: 32,
-};
-
-const statCardStyle: React.CSSProperties = {
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
-  borderRadius: 14,
-  padding: '20px 22px',
-  cursor: 'pointer',
-  transition: 'box-shadow 0.15s',
 };
 
 const twoColStyle: React.CSSProperties = {
