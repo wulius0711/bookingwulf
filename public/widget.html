@@ -314,23 +314,44 @@
         min-height: 48px;
         padding: 0 30px;
         border: 1px solid var(--accent);
-        background: var(--accent);
+        background: transparent;
         color: var(--btn-color);
         cursor: pointer;
         font-size: 1.143rem;
         font-weight: 600;
         border-radius: var(--button-radius);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
         transition:
-          background 0.2s ease,
-          border-color 0.2s ease,
           transform 0.15s ease,
-          opacity 0.2s ease,
-          color 0.2s ease;
+          opacity 0.2s ease;
       }
 
-      .btn:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--accent) 75%, white);
-        border-color: color-mix(in srgb, var(--accent) 75%, white);
+      .btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent);
+        border-radius: var(--button-radius);
+        z-index: -2;
+      }
+
+      .btn::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background: color-mix(in srgb, var(--accent) 78%, black);
+        border-radius: var(--button-radius);
+        z-index: -1;
+        transition: width 0.3s ease;
+      }
+
+      .btn:hover:not(:disabled)::before {
+        width: 100%;
       }
 
       .btn:active:not(:disabled) {
@@ -352,15 +373,33 @@
         font-size: 1.143rem;
         font-weight: 500;
         border-radius: var(--button-radius);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
         transition:
-          background 0.2s ease,
           border-color 0.2s ease,
           color 0.2s ease;
       }
 
+      .btn-light::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background: color-mix(in srgb, var(--text) 8%, transparent);
+        border-radius: var(--button-radius);
+        z-index: -1;
+        transition: width 0.3s ease;
+      }
+
       .btn-light:hover {
         border-color: var(--line-strong);
-        background: rgba(255, 255, 255, 0.45);
+      }
+
+      .btn-light:hover::before {
+        width: 100%;
       }
 
       .screen {
@@ -5066,6 +5105,95 @@
           initFloatingLabels(document.getElementById('guestDataAccordion'));
         }
 
+        function playSubmitSuccessAnimation(accentColor, onDone) {
+          var btn = document.getElementById('submitBtn');
+          var submitArea = document.getElementById('submitArea');
+          if (!btn) { onDone(); return; }
+
+          var rect = btn.getBoundingClientRect();
+          var cx = rect.left + rect.width / 2;
+          var cy = rect.top + rect.height / 2;
+
+          // Hide submit area so DOM rebuilds in finally{} don't flash
+          if (submitArea) submitArea.style.visibility = 'hidden';
+
+          // Bar overlay
+          var bar = document.createElement('div');
+          bar.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;overflow:hidden;' +
+            'left:' + rect.left + 'px;top:' + (cy - 5) + 'px;width:' + rect.width + 'px;height:10px;' +
+            'background:#e5e7eb;border-radius:100px;';
+          var fill = document.createElement('div');
+          fill.style.cssText = 'height:100%;width:0;background:' + accentColor + ';border-radius:100px;' +
+            'transition:width 0.9s linear;';
+          bar.appendChild(fill);
+          document.body.appendChild(bar);
+
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() { fill.style.width = '100%'; });
+          });
+
+          // Phase 2: collapse bar → expand circle
+          setTimeout(function() {
+            bar.style.transition = 'all 0.2s ease';
+            bar.style.left = (cx - rect.width / 2) + 'px';
+            bar.style.width = '0';
+
+            setTimeout(function() {
+              bar.remove();
+              var SIZE = 60;
+              var circle = document.createElement('div');
+              circle.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;' +
+                'left:' + (cx - SIZE / 2) + 'px;top:' + (cy - SIZE / 2) + 'px;' +
+                'width:0;height:0;background:' + accentColor + ';border-radius:50%;' +
+                'transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);' +
+                'display:flex;align-items:center;justify-content:center;overflow:hidden;';
+              document.body.appendChild(circle);
+
+              requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                  circle.style.width = SIZE + 'px';
+                  circle.style.height = SIZE + 'px';
+                });
+              });
+
+              // Phase 3: checkmark draws in
+              setTimeout(function() {
+                var NS = 'http://www.w3.org/2000/svg';
+                var svg = document.createElementNS(NS, 'svg');
+                svg.setAttribute('width', '28'); svg.setAttribute('height', '28');
+                svg.setAttribute('viewBox', '0 0 25 30');
+                svg.style.display = 'block';
+                var path = document.createElementNS(NS, 'path');
+                path.setAttribute('d', 'M2,19.2C5.9,23.6,9.4,28,9.4,28L23,2');
+                path.setAttribute('stroke', 'white'); path.setAttribute('stroke-width', '3.5');
+                path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+                path.setAttribute('fill', 'none');
+                svg.appendChild(path);
+                circle.appendChild(svg);
+
+                var len = path.getTotalLength();
+                path.style.strokeDasharray = len;
+                path.style.strokeDashoffset = len;
+                path.style.transition = 'stroke-dashoffset 0.3s ease-in-out';
+                requestAnimationFrame(function() {
+                  requestAnimationFrame(function() { path.style.strokeDashoffset = '0'; });
+                });
+
+                setTimeout(function() {
+                  circle.style.transition = 'all 0.25s ease';
+                  circle.style.transform = 'scale(0)';
+                  circle.style.opacity = '0';
+                  setTimeout(function() {
+                    circle.remove();
+                    if (submitArea) submitArea.style.visibility = '';
+                    onDone();
+                  }, 250);
+                }, 900);
+              }, 300);
+            }, 200);
+          }, 950);
+        }
+
         function renderSubmitArea() {
           const area = document.getElementById('submitArea');
           if (!area) return;
@@ -5724,39 +5852,36 @@
               }
             }
 
-            showMessage(
-              'success',
-              bookingType === 'booking'
-                ? t('success_booking')
-                : t('success_request'),
-            );
-
-            document.getElementById('salutation').value = '';
-            ['firstName', 'lastName', 'email'].forEach((id) => {
-              const el = document.getElementById(id);
-              if (el) {
-                el.value = '';
-                el.style.borderColor = '';
-              }
-              const errEl = document.getElementById(`${id}-err`);
-              if (errEl) errEl.style.display = 'none';
+            const _accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3b82f6';
+            const _successMsg = bookingType === 'booking' ? t('success_booking') : t('success_request');
+            playSubmitSuccessAnimation(_accentColor, function() {
+              showMessage('success', _successMsg);
+              document.getElementById('salutation').value = '';
+              ['firstName', 'lastName', 'email'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                  el.value = '';
+                  el.style.borderColor = '';
+                }
+                const errEl = document.getElementById(`${id}-err`);
+                if (errEl) errEl.style.display = 'none';
+              });
+              document.getElementById('phone').value = '';
+              const streetEl = document.getElementById('street');
+              if (streetEl) streetEl.value = '';
+              const zipEl = document.getElementById('zip');
+              if (zipEl) zipEl.value = '';
+              const cityEl = document.getElementById('city');
+              if (cityEl) cityEl.value = '';
+              document.getElementById('notes').value = '';
+              state.selectedApartmentIds = [];
+              Object.keys(state.selectedExtras).forEach((k) => {
+                state.selectedExtras[k] = false;
+              });
+              state.selectedInsurance = null;
+              state.step = 1;
+              renderAll();
             });
-            document.getElementById('phone').value = '';
-            const streetEl = document.getElementById('street');
-            if (streetEl) streetEl.value = '';
-            const zipEl = document.getElementById('zip');
-            if (zipEl) zipEl.value = '';
-            const cityEl = document.getElementById('city');
-            if (cityEl) cityEl.value = '';
-            document.getElementById('notes').value = '';
-
-            state.selectedApartmentIds = [];
-            Object.keys(state.selectedExtras).forEach((k) => {
-              state.selectedExtras[k] = false;
-            });
-            state.selectedInsurance = null;
-            state.step = 1;
-            renderAll();
           } catch (error) {
             console.error(error);
             showMessage(
