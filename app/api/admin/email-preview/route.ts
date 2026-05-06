@@ -12,6 +12,8 @@ const SAMPLE: Record<string, string> = {
   '{{nights}}': '7',
   '{{apartmentName}}': 'Apartment Seeblick',
   '{{bookingId}}': '42',
+  '{{portalUrl}}': 'https://bookingwulf.com/gast/beispiel-token',
+  '{{nukiCode}}': '1234#',
 };
 
 function fill(str: string, hotelName: string) {
@@ -58,6 +60,32 @@ export async function GET(req: Request) {
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
   }
 
+  // — Check-in E-Mail preview —
+  if (type === 'checkin_guest') {
+    const greeting = fill(tpl?.greeting ?? 'Hallo {{guestName}},', hotelName);
+    const bodyText = fill(tpl?.body ?? 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen]\n\nAlle weiteren Details finden Sie in Ihrer Gästemappe:\n{{portalUrl}}', hotelName);
+    const signoff = fill(tpl?.signoff ?? 'Mit freundlichen Grüßen', hotelName);
+    const portalUrl = SAMPLE['{{portalUrl}}'];
+    const html = buildEmailHtml({
+      hotelName, accentColor: accent,
+      title: fill(tpl?.subject ?? 'Ihre Check-in Infos — {{hotelName}}', hotelName),
+      preheader: `Check-in Infos für Ihren Aufenthalt vom ${SAMPLE['{{arrival}}']}`,
+      autoReplyText: '',
+      body: `
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 20px;">${greeting}</p>
+        <p style="font-size:15px;color:#374151;line-height:1.8;margin:0 0 20px;white-space:pre-wrap;">${bodyText.replace(/\n/g, '<br/>')}</p>
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 4px;">${signoff},</p>
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 24px;">${hotelName}</p>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;">
+          <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ihre Gästemappe</p>
+          <a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;">${portalUrl}</a>
+        </div>
+      `,
+      footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #42 — Vorschau mit Beispieldaten</p>`,
+    });
+    return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+  }
+
   // — Review Request preview —
   if (type === 'review_request') {
     const subject = (s?.reviewRequestSubject || 'Wie war dein Aufenthalt? — {{hotelName}}')
@@ -99,11 +127,24 @@ export async function GET(req: Request) {
     'Gesamtbetrag', eur(1060), accent
   );
 
+  const portalUrl = SAMPLE['{{portalUrl}}'];
+
+  const portalBlock = isBooking ? `
+    <div style="margin:20px 0;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
+      <p style="margin:0 0 10px;font-size:14px;color:#374151;font-weight:600;">Ihre Buchungsübersicht</p>
+      <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Alle Details zu Ihrer Buchung, Check-In, Kontakt und mehr — jederzeit abrufbar.</p>
+      <a href="${portalUrl}" style="display:inline-block;padding:10px 20px;background:${accent};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+        Buchung öffnen →
+      </a>
+    </div>
+  ` : '';
+
   const guestBody = `
     <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
       ${greeting}<br/><br/>
       ${bodyText}
     </p>
+    ${portalBlock}
     ${buildDivider()}
     ${buildInfoBlock('Zeitraum', '20.07.2026 — 27.07.2026 (7 Nächte)')}
     ${buildInfoBlock('Gäste', '2 Erwachsene, 1 Kind')}
