@@ -4721,8 +4721,8 @@
                 requestAnimationFrame(function() {
                   requestAnimationFrame(function() { path.style.strokeDashoffset = '0'; });
                 });
-              } else if (!isDone && step !== state.step) {
-                // Restore number when going back
+              } else if (!isDone) {
+                // Restore number for active + future steps
                 indexEl.innerHTML = step;
               }
             }
