@@ -74,6 +74,7 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button
                 onClick={() => router.push('/admin/billing')}
+                className="btn-shine"
                 style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
               >
                 Zu den Plänen

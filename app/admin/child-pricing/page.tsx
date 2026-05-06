@@ -56,7 +56,7 @@ export default async function ChildPricingPage() {
           .child-form-submit { grid-column: 1 / -1; }
         }
       `}</style>
-      <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 720, display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Kinderpreise</h1>
@@ -140,7 +140,7 @@ export default async function ChildPricingPage() {
               </div>
 
               <div className="child-form-submit">
-                <button type="submit" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                <button type="submit" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                   Hinzufügen
                 </button>
               </div>

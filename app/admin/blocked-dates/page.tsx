@@ -49,14 +49,14 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Sperrzeiten</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Zeiträume für Apartments sperren.</p>
           </div>
           <Link href="/admin/blocked-dates/new">
-            <button style={{ padding: '10px 16px', border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', borderRadius: 8, fontSize: 14, fontWeight: 600 }}>
+            <button className="btn-shine" style={{ padding: '10px 16px', border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', borderRadius: 8, fontSize: 14, fontWeight: 600 }}>
               Neu anlegen
             </button>
           </Link>
@@ -97,7 +97,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
           {ranges.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px' }}>
               <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
-              <a href="/admin/blocked-dates/new" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+              <a href="/admin/blocked-dates/new" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
                 Neue Sperrzeit anlegen
               </a>
             </div>

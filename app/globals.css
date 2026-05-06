@@ -945,11 +945,13 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
 }
 
 /* Shine sweep on hover */
-.btn-primary {
+.btn-primary,
+.btn-shine {
   position: relative;
   overflow: hidden;
 }
-.btn-primary::after {
+.btn-primary::after,
+.btn-shine::after {
   content: '';
   position: absolute;
   top: -50px;
@@ -960,8 +962,10 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   transform: rotate(35deg);
   transition: left 550ms cubic-bezier(0.19, 1, 0.22, 1);
   pointer-events: none;
+  z-index: 1;
 }
-.btn-primary:hover:not(:disabled)::after {
+.btn-primary:hover:not(:disabled)::after,
+.btn-shine:hover:not(:disabled)::after {
   left: 120%;
 }
 

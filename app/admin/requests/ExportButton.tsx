@@ -106,6 +106,7 @@ export default function ExportButton() {
             <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
               <button
                 onClick={download}
+                className="btn-shine"
                 style={{
                   flex: 1, padding: '10px 0', background: 'var(--accent)', color: '#fff',
                   border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',

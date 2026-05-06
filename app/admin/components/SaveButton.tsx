@@ -28,6 +28,7 @@ export default function SaveButton({
       <button
         type="submit"
         disabled={pending}
+        className="btn-shine"
         style={{
           padding: '10px 20px',
           background: 'var(--accent)',
