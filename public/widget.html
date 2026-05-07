@@ -975,8 +975,10 @@
 
       .apt-card {
         position: relative;
-        display: flex;
-        gap: 18px;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        grid-template-rows: auto auto;
+        gap: 0 18px;
         border: 1px solid var(--line);
         border-radius: calc(var(--radius) + 4px);
         padding: 18px;
@@ -1060,20 +1062,28 @@
       }
 
       .apt-left-col {
-        width: 320px;
-        flex-shrink: 0;
+        grid-column: 1;
+        grid-row: 1;
         display: flex;
         flex-direction: column;
       }
 
-      .apt-left-col .apt-amenities-wrap {
-        margin-top: 10px;
-        margin-bottom: 0;
+      .apt-copy {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
       }
 
-      .apt-left-col .apt-amenities {
+      .apt-card > .apt-amenities-wrap {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+
+      .apt-card > .apt-amenities-wrap .apt-amenities {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px 10px;
       }
 
       .apt-image-wrap {
@@ -1169,10 +1179,6 @@
         pointer-events: none;
       }
 
-      .apt-copy {
-        min-width: 0;
-        flex: 1;
-      }
 
       .apt-name {
         font-size: var(--font-size-headline);
@@ -2012,15 +2018,27 @@
         }
 
         .apt-card {
-          flex-direction: column;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto auto;
+        }
+
+        .apt-left-col {
+          grid-column: 1;
+          grid-row: 1;
+        }
+
+        .apt-copy {
+          grid-column: 1;
+          grid-row: 2;
+        }
+
+        .apt-card > .apt-amenities-wrap {
+          grid-column: 1;
+          grid-row: 3;
         }
 
         .toggle-cards-grid {
           grid-template-columns: 1fr;
-        }
-
-        .apt-left-col {
-          width: 100%;
         }
 
         .apt-image-wrap {
@@ -4681,7 +4699,6 @@
                     : ''
                 }
               </div>
-              ${amenitiesHtml}
               </div>
 
               <div class="apt-copy">
@@ -4723,6 +4740,8 @@
                   </div>
                 </div>
               </div>
+
+              ${amenitiesHtml}
             `;
 
             wrap.appendChild(div);
