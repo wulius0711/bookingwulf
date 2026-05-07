@@ -19,6 +19,7 @@ export async function createExtra(formData: FormData) {
   const description = String(formData.get('description') || '').trim() || null;
   const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
+  const exclusiveGroup = String(formData.get('exclusiveGroup') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
 
   if (!name) throw new Error('Name ist erforderlich.');
@@ -31,7 +32,7 @@ export async function createExtra(formData: FormData) {
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
   await prisma.hotelExtra.create({
-    data: { hotelId, name, key, type, billingType, price, description, imageUrl, linkUrl, sortOrder },
+    data: { hotelId, name, key, type, billingType, price, description, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');
@@ -67,13 +68,14 @@ export async function updateExtra(formData: FormData) {
   const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
+  const exclusiveGroup = String(formData.get('exclusiveGroup') || '').trim() || null;
 
   if (!name) throw new Error('Name ist erforderlich.');
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
   await prisma.hotelExtra.update({
     where: { id },
-    data: { name, type, billingType, price, description, imageUrl, linkUrl, sortOrder },
+    data: { name, type, billingType, price, description, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');
@@ -88,5 +90,27 @@ export async function deleteExtra(id: number) {
   if (session.hotelId !== null && extra.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
 
   await prisma.hotelExtra.delete({ where: { id } });
+  revalidatePath('/admin/extras');
+}
+
+export async function toggleUpsellExtra(id: number, showInUpsell: boolean) {
+  const session = await verifySession();
+
+  const extra = await prisma.hotelExtra.findUnique({ where: { id } });
+  if (!extra) throw new Error('Extra nicht gefunden.');
+  if (session.hotelId !== null && extra.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+
+  await prisma.hotelExtra.update({ where: { id }, data: { showInUpsell } });
+  revalidatePath('/admin/extras');
+}
+
+export async function toggleWidgetExtra(id: number, showInWidget: boolean) {
+  const session = await verifySession();
+
+  const extra = await prisma.hotelExtra.findUnique({ where: { id } });
+  if (!extra) throw new Error('Extra nicht gefunden.');
+  if (session.hotelId !== null && extra.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+
+  await prisma.hotelExtra.update({ where: { id }, data: { showInWidget } });
   revalidatePath('/admin/extras');
 }

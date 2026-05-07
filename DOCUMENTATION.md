@@ -27,6 +27,7 @@
 16. Schlüsselloses Einchecken (Nuki)
 17. Beds24 Channel Manager
 18. Datenschutz & DSGVO
+22. Gäste-Portal
 
 ---
 
@@ -144,6 +145,7 @@ Erweiterte Einstellungen pro Hotel. Enthält:
   - **Sicherheit:** `paypalClientSecret` und `stripeSecretKey` werden in `/api/hotel-settings` (public) vor der Antwort entfernt — nur das Widget erhält Publishable Key.
 - **Ortstaxe:** `ortstaxeMode` (String, default `"off"`) — `"off"` | `"wien"` | `"custom"`. Bei `"wien"` werden die datumsbezogenen Wiener Sätze automatisch angewendet (2,5237 % / 4,3478 % / 6,7797 % vom Zimmerpreis je nach Anreisedatum). Bei `"custom"`: `ortstaxePerPersonPerNight` (Decimal?) × Personen × Nächte. `ortstaxeMinAge` (Int?) — Kinder unter diesem Alter sind befreit (nur Custom-Modus).
 - **Steuer/Buchhaltung:** `taxRateRoom` (Decimal?) — MwSt.-Satz für Zimmerpreis in % (z.B. 10,00 für AT). `taxRateCleaning` (Decimal?) — MwSt.-Satz für Reinigungsgebühr in % (z.B. 20,00 für AT). Werden im CSV-Buchhaltungsexport für die Netto/Brutto-Aufschlüsselung verwendet.
+- **Hausinfos / Gästemappe:** `wifiSsid String?`, `wifiPassword String?` (WLAN-Zugangsdaten), `parkingInfo String?` (Parkplatz-Hinweise), `wasteInfo String?` (Müllentsorgung), `houseRules String?` (Hausordnung — wird auch beim Online-Check-in angezeigt und muss dort bestätigt werden), `emergencyJson Json?` (Array von `{label, number}` — Notfallnummern im Gäste-Portal).
 
 ### WidgetConfig *(Pro+: mehrere Widgets pro Hotel)*
 
@@ -205,7 +207,37 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | | `per_stay` | Pauschal |
 | | `per_person_per_stay` | Preis × Personen |
 
-Optionale Felder: `imageUrl` (Thumbnail im Widget), `description` (Kurztext unter dem Namen).
+Optionale Felder: `imageUrl` (Thumbnail im Widget), `description` (Kurztext unter dem Namen), `linkUrl` (externer Link, z. B. zur Versicherungswebsite), `exclusiveGroup` (Varianten-Gruppe).
+
+**Sichtbarkeits-Flags:**
+
+| Flag | Default | Bedeutung |
+|---|---|---|
+| `isActive` | `true` | Extra ist grundsätzlich aktiv |
+| `showInWidget` | `true` | Erscheint im Buchungs-Widget und kann beim Buchen gewählt werden |
+| `showInUpsell` | `false` | Wird in der Bestätigungs-E-Mail als „Noch etwas dazubuchen?"-Block angeboten (nur wenn vom Gast noch nicht gebucht) |
+
+Kombination `showInWidget: false` + `showInUpsell: true` = **Mail-Only-Extra**: erscheint nie im Widget, wird aber nach der Buchung per E-Mail angeboten. Typische Anwendungsfälle: Zimmerdekoration (Rosen, Luftballons), Champagner zur Ankunft, Frühstück aufs Zimmer, privater Transfer, Late-Check-out auf Anfrage.
+
+**Varianten-Gruppe (`exclusiveGroup`):** Extras mit demselben Gruppen-Namen schließen sich im Gäste-Portal gegenseitig aus — der Gast kann nur eine davon buchen. Wird eine neue Variante gebucht, wird die bereits gebuchte Variante der Gruppe automatisch aus `extrasJson` entfernt. Anwendungsfall: „Hotelstorno Plus" und „Hotelstorno Premium" beide mit `exclusiveGroup = hotelstorno`.
+
+### ThingsToSee *(Umgebungstipps)*
+
+Sehenswürdigkeiten, Restaurants, Aktivitäten und Events rund ums Hotel. Erscheinen im Gäste-Portal unter dem Tab „Umgebung".
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| hotelId | Int | FK → Hotel |
+| category | String | `restaurant` / `activity` / `attraction` / `shopping` / `event` / manuell erweiterbar |
+| title | String | Name des Eintrags |
+| description | String? | Kurzbeschreibung |
+| address | String? | Adresse |
+| mapsUrl | String? | Google Maps Link |
+| imageUrl | String? | Vorschaubild |
+| isActive | Boolean | Sichtbar im Gäste-Portal |
+| sortOrder | Int | Reihenfolge |
+
+Einträge können manuell erfasst oder über die Google Places API (Autocomplete + Details) angelegt werden. Die Google Places API ist über `GOOGLE_PLACES_API_KEY` konfiguriert.
 
 ### ChildPriceRange *(Kinderpreise nach Altersgruppe)*
 
@@ -847,7 +879,10 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 **Plan-Gate:** Nur für Pro- und Business-Nutzer sichtbar (geprüft in `admin/layout.tsx`). API-Route (`/api/admin/help-chat`) prüft zusätzlich `subscriptionStatus === 'active' | 'trialing'`. Super-Admin immer erlaubt.
 
 **System-Prompt (`BOOKINGWULF_SYSTEM_PROMPT`):**
-- Vollständige Navigationsstruktur mit allen Admin-Bereichen und deren Inhalten
+- Wird zur Laufzeit durch `buildSystemPrompt()` in `src/lib/gemini.ts` zusammengebaut
+- **Auto-generiert:** Plans-Block (Preise + Features) aus `PLANS` (`src/lib/plans.ts`), Plan-Gate-Übersicht aus `NAV_PLAN_GATES` (`src/lib/plan-gates.ts`) — bei Planänderungen automatisch aktuell
+- **Manuell gepflegt:** `STATIC_NAV_DESCRIPTIONS` in `gemini.ts` — Seiten-Beschreibungen, Schritt-für-Schritt-Anleitungen; bei neuen Pages ergänzen
+- `NAV_LABELS` in `gemini.ts` bildet hrefs auf human-readable Navigationspfade ab — bei Umbenennung von Nav-Items hier aktualisieren
 - Antwortet auf Deutsch, immer „du", kein Markdown
 - Page-Context wird nur bei unklaren Fragen verwendet; explizite Themen werden direkt beantwortet
 
@@ -1062,7 +1097,7 @@ Airbnb ←→ Beds24 ←→ bookingwulf ←→ DB
 Booking.com ←→ Beds24 ↗
 ```
 
-- **Inbound (Echtzeit):** Beds24 → Webhook → `/api/beds24-webhook` → `BlockedRange` anlegen
+- **Inbound (Echtzeit):** Beds24 → Webhook → `/api/beds24-webhook` → `BlockedRange` anlegen + `Request`-Datensatz erstellen (für CSV-Export)
 - **Outbound (sofort):** Buchung in bookingwulf → `pushBooking()` → Beds24 → Airbnb/Booking.com sperren
 
 ### Authentifizierung (Beds24 API v2)
@@ -1079,6 +1114,7 @@ Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Ei
 
 - `Beds24Config` — `refreshToken` (v2 API) + `isEnabled`-Kill-Switch pro Hotel
 - `Beds24ApartmentMapping` — verknüpft lokale `Apartment.id` mit `beds24RoomId`
+- `Request.beds24BookingId` — optionales Unique-Feld, gesetzt für alle über Beds24-Webhook eingehenden Buchungen (ermöglicht idempotentes Upsert)
 
 ### Implementierungsstand
 
@@ -1089,7 +1125,7 @@ Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Ei
 | `src/lib/beds24.ts` — `pushBooking()` | ✅ implementiert |
 | `/api/admin/beds24` — Invite-Code-Setup, Toggle, Delete | ✅ fertig |
 | `/api/admin/beds24-mappings` — Room-Mapping-CRUD | ✅ fertig |
-| `/api/beds24-webhook` — Inbound, Token-Auth, BlockedRange-Write | ✅ fertig |
+| `/api/beds24-webhook` — Inbound, Token-Auth, BlockedRange + Request-Upsert | ✅ fertig |
 | Admin UI `/admin/beds24` | ✅ fertig |
 | Outbound Sync in `/api/request` | ✅ fertig (non-blocking) |
 
@@ -1320,6 +1356,65 @@ Signatur-Verifikation via `stripe.webhooks.constructEvent()` — unsignierte Req
 
 Token-Vergleich via `crypto.timingSafeEqual` (Timing-Angriffe ausgeschlossen).
 
+Inbound-Buchungen (Status "1"/"2") erzeugen sowohl einen `BlockedRange` (Typ `beds24_sync`) als auch einen `Request`-Datensatz mit `status='booked'` und `beds24BookingId` als Unique-Key für idempotentes Upsert. Buchungs-Metadaten (Nächte, Erwachsene, Kinder, Herkunftsland) werden direkt aus dem Webhook-Payload übernommen — Verfügbarkeit hängt von der Plattform ab (Airbnb/Booking.com). Stornierungen (Status "3") löschen den `BlockedRange` und setzen `Request.status = 'cancelled'`.
+
 ### CORS
 
 Widget-APIs (`/api/hotel-settings`, `/api/availability-quick`, `/api/availability-widget`, `/api/request`, `/api/pricing`) erlauben `Access-Control-Allow-Origin: *` — notwendig für Cross-Origin-Einbettung. Alle Schreibzugriffe erfordern zusätzlich eine gültige Admin-Session.
+
+---
+
+## 22. Gäste-Portal
+
+### Übersicht
+
+Jede Buchung erhält ein `checkinToken` (UUID v4). Der Link `bookingwulf.com/gast/[token]` ist der persönliche Gäste-Bereich — ohne Login, nur per Token zugänglich.
+
+**Daten werden beim Seitenaufruf serverseitig geladen** (`app/gast/[token]/page.tsx`) und an `GuestPortal.tsx` (Client-Komponente) übergeben. Für Live-Aktualisierungen (Nachrichten-Polling) gibt es zusätzlich `GET /api/gast/[token]`.
+
+### Tabs im Gäste-Portal
+
+| Tab | Bedingung | Inhalt |
+|---|---|---|
+| Buchung | immer | Anreise/Abreise, Apartments, Preisübersicht, Zahlungsart, Nuki-Code |
+| Check-in | `preArrivalEnabled = true` + noch nicht eingecheckt | Ankunftszeit + Hausordnung bestätigen |
+| Extras | `allExtras.length > 0` | Alle aktiven Extras des Hotels — buchbar, bereits gebuchte grün markiert |
+| Hausinfos | mind. ein Hausinfos-Feld befüllt | WLAN, Parkplatz, Müll, Hausordnung, Notfallnummern |
+| Umgebung | `thingsToSee.length > 0` | Tipps nach Kategorie gruppiert (Restaurant, Aktivität, Event …) |
+| Nachrichten | immer | Messaging zwischen Gast und Hotel |
+
+### Extras im Gäste-Portal
+
+- Alle aktiven Extras werden angezeigt (nicht nur nicht-gebuchte)
+- Bereits gebuchte: `opacity: 0.6` + grünes Badge „✓ Gebucht"
+- **Varianten-Gruppe (`exclusiveGroup`):** Hat ein Extra eine Gruppe und ein anderes Extra derselben Gruppe ist bereits gebucht, wird „Variante bereits gebucht" angezeigt (kein Button). Beim Buchen einer neuen Variante werden alle anderen Einträge der Gruppe aus `extrasJson` entfernt (serverseitig in `bookExtra`).
+- Extras mit `linkUrl`: beide Buttons anzeigen — „Mehr erfahren" + „Hinzufügen"
+
+### Check-in-Flow
+
+1. Gast öffnet Portal → Tab „Check-in" (nur wenn `preArrivalEnabled`)
+2. Wählt Ankunftszeit, bestätigt Hausordnung
+3. Server Action `completeCheckin` setzt `checkinCompletedAt` + `checkinArrivalTime`
+4. Tab verschwindet, Hotel wird per E-Mail informiert
+
+### Check-out-Flow
+
+1. Gast klickt „Check-out anfordern"
+2. Server Action `requestCheckout` setzt `checkoutRequestedAt`
+3. Hotel wird per E-Mail informiert
+
+### Umgebung (ThingsToSee)
+
+Einträge werden im Admin unter `/admin/guestportal` im Abschnitt „Umgebung" verwaltet. Kategorien: `restaurant`, `activity`, `attraction`, `shopping`, `event` + beliebige Freitext-Kategorien. Anlage über Google Places Autocomplete (API-Key: `GOOGLE_PLACES_API_KEY`) oder manuell. Im Gäste-Portal nach Kategorie gruppiert dargestellt.
+
+### Hausinfos / Gästemappe
+
+Die Felder `wifiSsid`, `wifiPassword`, `parkingInfo`, `wasteInfo`, `houseRules`, `emergencyJson` aus `HotelSettings` werden direkt im Gäste-Portal-Tab „Hausinfos" angezeigt. `houseRules` wird zusätzlich beim Online-Check-in zur Bestätigung angezeigt. Konfiguration unter `/admin/guestportal`.
+
+### Offline-Fähigkeit
+
+Das Gäste-Portal ist nach dem ersten Aufruf auch offline nutzbar. `public/sw.js` (Service Worker) cached alle `/gast/`-Seitenaufrufe und `/api/gast/`-API-Responses beim ersten Besuch. Bei erneutem Aufruf ohne Internet werden die gecachten Inhalte ausgeliefert. Ohne vorherigen Besuch erscheint eine deutsche Offline-Meldung (`503`).
+
+### Nachrichten
+
+`Message`-Modell mit `sender` (`guest` | `hotel`), `body`, `createdAt`. Der Gast sendet über das Portal, der Admin antwortet über `/admin/requests/[id]`. Polling im Portal alle 10 Sekunden via `GET /api/gast/[token]`.

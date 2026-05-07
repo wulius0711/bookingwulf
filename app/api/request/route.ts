@@ -115,7 +115,7 @@ export async function POST(req: Request) {
         emailTemplates: { select: { type: true, subject: true, greeting: true, body: true, signoff: true } },
         extras: {
           where: { isActive: true },
-          select: { key: true, name: true, type: true, billingType: true, price: true },
+          select: { key: true, name: true, type: true, billingType: true, price: true, showInWidget: true, showInUpsell: true },
         },
         nukiConfig: { select: { apiToken: true } },
         settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, preArrivalEnabled: true, depositEnabled: true, depositType: true, depositValue: true, depositDueDays: true, bankAccountHolder: true, bankIban: true, bankBic: true } },
@@ -427,6 +427,11 @@ export async function POST(req: Request) {
     const insuranceExtras = extrasLineItems.filter(e => e.type === 'insurance');
     const declinedInsurance = !insuranceExtras.length && hotel.extras.some(e => e.type === 'insurance');
 
+    const bookedExtraKeys = new Set(extrasLineItems.map(e => e.key));
+    const upsellExtras = hotel.extras.filter(
+      e => e.showInUpsell && e.type !== 'insurance' && !bookedExtraKeys.has(e.key)
+    );
+
     function buildExtrasSection(useGuestLabels = false): string {
       let html = '';
       const insuranceLabel = useGuestLabels ? i18n.insurance : 'Versicherung';
@@ -609,6 +614,27 @@ export async function POST(req: Request) {
                   <a href="${checkinUrl}" style="display:inline-block;padding:10px 20px;background:${accent};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
                     Jetzt einchecken →
                   </a>
+                </div>
+              ` : ''}
+              ${upsellExtras.length > 0 ? `
+                ${buildDivider()}
+                <div style="padding:16px 18px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;">
+                  <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Noch etwas dazubuchen?</div>
+                  ${upsellExtras.map(e => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;">
+                      <div>
+                        <div style="font-size:14px;font-weight:600;color:#111827;">${e.name}</div>
+                      </div>
+                      <div style="font-size:13px;color:#374151;font-weight:600;flex-shrink:0;margin-left:16px;">${new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(Number(e.price))}</div>
+                    </div>
+                  `).join('')}
+                  ${portalUrl ? `
+                    <div style="margin-top:14px;">
+                      <a href="${portalUrl}" style="display:inline-block;padding:9px 18px;background:${accent};color:#ffffff;text-decoration:none;border-radius:8px;font-size:13px;font-weight:600;">
+                        Jetzt dazubuchen →
+                      </a>
+                    </div>
+                  ` : ''}
                 </div>
               ` : ''}
               <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">

@@ -2,7 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import type { PlanKey } from '@/src/lib/plans';
-import { updateExtra, toggleExtra, deleteExtra } from './actions';
+import { updateExtra, toggleExtra, deleteExtra, toggleUpsellExtra, toggleWidgetExtra } from './actions';
 import ExtraRow from './ExtraRow';
 import CreateExtraForm from './CreateExtraForm';
 
@@ -48,7 +48,7 @@ export default async function ExtrasPage() {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
@@ -86,7 +86,7 @@ export default async function ExtrasPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                    {['Name', 'Typ', 'Abrechnung', 'Preis', 'Link', 'Status', ''].map((h) => (
+                    {['Name', 'Typ', 'Abrechnung', 'Preis', 'Link', 'Status', 'Sichtbarkeit', ''].map((h) => (
                       <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: '#6b7280', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{h}</th>
                     ))}
                   </tr>
@@ -102,6 +102,18 @@ export default async function ExtrasPage() {
                         const id = Number(formData.get('id'));
                         const isActive = formData.get('isActive') === 'true';
                         await toggleExtra(id, isActive);
+                      }}
+                      toggleWidgetAction={async (formData: FormData) => {
+                        'use server';
+                        const id = Number(formData.get('id'));
+                        const showInWidget = formData.get('showInWidget') === 'true';
+                        await toggleWidgetExtra(id, showInWidget);
+                      }}
+                      toggleUpsellAction={async (formData: FormData) => {
+                        'use server';
+                        const id = Number(formData.get('id'));
+                        const showInUpsell = formData.get('showInUpsell') === 'true';
+                        await toggleUpsellExtra(id, showInUpsell);
                       }}
                       deleteAction={async (formData: FormData) => {
                         'use server';

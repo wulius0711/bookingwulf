@@ -120,6 +120,7 @@ export async function GET(req: Request) {
       where: {
         hotelId: hotel.id,
         isActive: true,
+        showInWidget: true,
         // Starter plans only get insurance, Pro+ gets everything
         ...(!canUseExtras ? { type: 'insurance' } : {}),
       },

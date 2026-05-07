@@ -419,10 +419,12 @@ model HotelExtra {
   description String?
   linkUrl        String?
   exclusiveGroup String?  // extras with same group: only one bookable at a time
-  isActive    Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive      Boolean  @default(true)
+  showInWidget  Boolean  @default(true)
+  showInUpsell  Boolean  @default(false)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@unique([hotelId, key])
 }

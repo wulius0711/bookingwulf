@@ -23,7 +23,10 @@ type Extra = {
   description: string | null;
   imageUrl: string | null;
   linkUrl: string | null;
+  exclusiveGroup: string | null;
   isActive: boolean;
+  showInWidget: boolean;
+  showInUpsell: boolean;
   sortOrder: number;
 };
 
@@ -31,6 +34,8 @@ type Props = {
   extra: Extra;
   updateAction: (formData: FormData) => void;
   toggleAction: (formData: FormData) => void;
+  toggleWidgetAction: (formData: FormData) => void;
+  toggleUpsellAction: (formData: FormData) => void;
   deleteAction: (formData: FormData) => void;
 };
 
@@ -44,7 +49,7 @@ const inputStyle: React.CSSProperties = {
   boxSizing: 'border-box',
 };
 
-export default function ExtraRow({ extra, updateAction, toggleAction, deleteAction }: Props) {
+export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidgetAction, toggleUpsellAction, deleteAction }: Props) {
   const [editing, setEditing] = useState(false);
   const [imageUrl, setImageUrl] = useState(extra.imageUrl || '');
   const [uploading, setUploading] = useState(false);
@@ -135,12 +140,20 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
               <input name="linkUrl" type="url" defaultValue={extra.linkUrl || ''} placeholder="https://..." style={inputStyle} />
             </div>
 
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button type="submit" style={{ padding: '7px 16px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-                Speichern
-              </button>
+            <div style={{ display: 'grid', gap: 4 }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Varianten-Gruppe <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 10, color: '#9ca3af' }}>(optional)</span></label>
+              <input name="exclusiveGroup" defaultValue={extra.exclusiveGroup || ''} placeholder="z. B. hotelstorno" style={inputStyle} />
+              <p style={{ margin: 0, fontSize: 11, color: '#9ca3af', lineHeight: 1.5 }}>
+                Extras mit dem gleichen Gruppen-Namen schließen sich aus — der Gast kann nur eine davon buchen.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#111', fontSize: 13, cursor: 'pointer' }}>
                 Abbrechen
+              </button>
+              <button type="submit" className="btn-primary" style={{ padding: '7px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                Speichern
               </button>
             </div>
           </form>
@@ -179,22 +192,37 @@ export default function ExtraRow({ extra, updateAction, toggleAction, deleteActi
         ) : '\u2014'}
       </td>
       <td style={{ padding: '12px 16px' }}>
-        <span style={{ padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
-          {extra.isActive ? 'Aktiv' : 'Inaktiv'}
-        </span>
+        <form action={toggleAction} style={{ margin: 0 }}>
+          <input type="hidden" name="id" value={extra.id} />
+          <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
+          <button type="submit" title={extra.isActive ? 'Klicken zum Deaktivieren' : 'Klicken zum Aktivieren'} style={{ padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
+            {extra.isActive ? 'Aktiv' : 'Inaktiv'}
+          </button>
+        </form>
+      </td>
+      <td style={{ padding: '12px 16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <form action={toggleWidgetAction} style={{ margin: 0 }}>
+            <input type="hidden" name="id" value={extra.id} />
+            <input type="hidden" name="showInWidget" value={extra.showInWidget ? 'false' : 'true'} />
+            <button type="submit" title="Im Buchungs-Widget anzeigen" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInWidget ? '#dbeafe' : '#f3f4f6', color: extra.showInWidget ? '#1d4ed8' : '#9ca3af' }}>
+              Widget{extra.showInWidget ? ' ✓' : ''}
+            </button>
+          </form>
+          <form action={toggleUpsellAction} style={{ margin: 0 }}>
+            <input type="hidden" name="id" value={extra.id} />
+            <input type="hidden" name="showInUpsell" value={extra.showInUpsell ? 'false' : 'true'} />
+            <button type="submit" title="Im Bestätigungs-E-Mail als Upsell anbieten" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInUpsell ? '#dcfce7' : '#f3f4f6', color: extra.showInUpsell ? '#16a34a' : '#9ca3af' }}>
+              Upsell{extra.showInUpsell ? ' ✓' : ''}
+            </button>
+          </form>
+        </div>
       </td>
       <td style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button type="button" onClick={() => setEditing(true)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
             Bearbeiten
           </button>
-          <form action={toggleAction}>
-            <input type="hidden" name="id" value={extra.id} />
-            <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
-            <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
-              {extra.isActive ? 'Deaktivieren' : 'Aktivieren'}
-            </button>
-          </form>
           <form action={deleteAction} onSubmit={(e) => { if (!confirm(`Zusatzleistung „${extra.name}" wirklich löschen?`)) e.preventDefault(); }}>
             <input type="hidden" name="id" value={extra.id} />
             <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
