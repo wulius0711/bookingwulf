@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { createVoucherTemplate, updateVoucherTemplate, toggleVoucherTemplate, deleteVoucherTemplate, cancelVoucher } from './actions';
+import { createVoucherTemplate, updateVoucherTemplate, toggleVoucherTemplate, cancelVoucher } from './actions';
+import DeleteTemplateButton from './DeleteTemplateButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -152,9 +153,7 @@ export default async function VouchersPage() {
                           {t.isActive ? 'Deaktivieren' : 'Aktivieren'}
                         </button>
                       </form>
-                      <form action={deleteVoucherTemplate.bind(null, t.id)} onSubmit={() => confirm('Vorlage löschen?')}>
-                        <button type="submit" className="vc-btn-danger">Löschen</button>
-                      </form>
+                      <DeleteTemplateButton id={t.id} />
                     </div>
                   </div>
                 </div>
