@@ -56,13 +56,18 @@ export default async function VouchersPage() {
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <style>{`
+        @keyframes vc-glow {
+          0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent, #0f172a) 40%, transparent); }
+          50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent, #0f172a) 0%, transparent); }
+        }
         .vc-btn-primary {
           padding: 10px 20px; background: var(--accent, #0f172a); color: #fff;
           border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
           cursor: pointer; font-family: inherit;
-          transition: opacity 0.15s, transform 0.1s;
+          transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+          animation: vc-glow 2.4s ease-in-out infinite;
         }
-        .vc-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .vc-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); animation: none; box-shadow: 0 4px 14px color-mix(in srgb, var(--accent, #0f172a) 45%, transparent); }
         .vc-btn-primary:active { opacity: 1; transform: translateY(0); }
         .vc-btn-secondary {
           padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 6px;
