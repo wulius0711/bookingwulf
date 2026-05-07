@@ -627,6 +627,18 @@ export async function POST(req: Request) {
       console.error('Mail error:', mailError);
     }
 
+    // Redeem voucher for confirmed bank-transfer bookings only
+    if (bookingType === 'booking' && body.voucherCode) {
+      try {
+        await prisma.voucher.updateMany({
+          where: { code: body.voucherCode, hotelId: hotel.id, status: 'active' },
+          data: { status: 'redeemed', redeemedAt: new Date(), redeemedOnRequestId: requestEntry.id },
+        });
+      } catch (e) {
+        console.error('[voucher redeem]', e);
+      }
+    }
+
     return Response.json({ success: true, requestId: requestEntry.id }, { headers: corsHeaders });
   } catch (error) {
     console.error(error);
