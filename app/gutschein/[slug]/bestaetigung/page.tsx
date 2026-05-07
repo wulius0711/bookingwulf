@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { notFound } from 'next/navigation';
+import ConfettiEffect from './ConfettiEffect';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,7 @@ export default async function VoucherConfirmationPage({
 
   return (
     <>
+      <ConfettiEffect />
       <style>{`
         .vc-confirm-wrap {
           display: flex; align-items: center; justify-content: center;

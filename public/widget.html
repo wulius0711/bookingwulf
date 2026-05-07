@@ -504,18 +504,18 @@
         display: block;
       }
       @keyframes bwSlideInRight {
-        from { opacity: 0; transform: translateX(18px); }
-        to   { opacity: 1; transform: translateX(0); }
+        from { opacity: 0; transform: translateX(22px) scale(0.98); }
+        to   { opacity: 1; transform: translateX(0) scale(1); }
       }
       @keyframes bwSlideInLeft {
-        from { opacity: 0; transform: translateX(-18px); }
-        to   { opacity: 1; transform: translateX(0); }
+        from { opacity: 0; transform: translateX(-22px) scale(0.98); }
+        to   { opacity: 1; transform: translateX(0) scale(1); }
       }
       .booking-shell[data-step-dir="forward"] .screen.active {
-        animation: bwSlideInRight 0.28s ease-out;
+        animation: bwSlideInRight 0.38s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .booking-shell[data-step-dir="back"] .screen.active {
-        animation: bwSlideInLeft 0.28s ease-out;
+        animation: bwSlideInLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .price-box {
@@ -1676,6 +1676,33 @@
         padding: 28px 0;
         color: var(--muted);
       }
+
+      /* Skeleton shimmer */
+      @keyframes bwShimmer {
+        from { background-position: -400px 0; }
+        to   { background-position: 400px 0; }
+      }
+      .bw-skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+        background-size: 800px 100%;
+        animation: bwShimmer 1.4s infinite linear;
+        border-radius: 8px;
+      }
+      .bw-skeleton-card {
+        background: var(--card-bg, #fff);
+        border: 1px solid var(--border, #e5e7eb);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .bw-skeleton-img { width: 96px; height: 72px; flex-shrink: 0; border-radius: calc(var(--radius) - 4px); }
+      .bw-skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
+      .bw-skeleton-title { height: 16px; width: 55%; }
+      .bw-skeleton-sub   { height: 12px; width: 35%; }
+      .bw-skeleton-price { height: 20px; width: 25%; margin-top: 4px; }
 
       .lightbox {
         display: none;
@@ -4384,7 +4411,16 @@
 
           if (state.loadingApartments) {
             wrap.setAttribute('aria-busy', 'true');
-            wrap.innerHTML = `<div class="loading">${t('apt_loading')}</div>`;
+            const skeletonCard = () => `
+              <div class="bw-skeleton-card">
+                <div class="bw-skeleton bw-skeleton-img"></div>
+                <div class="bw-skeleton-lines">
+                  <div class="bw-skeleton bw-skeleton-title"></div>
+                  <div class="bw-skeleton bw-skeleton-sub"></div>
+                  <div class="bw-skeleton bw-skeleton-price"></div>
+                </div>
+              </div>`;
+            wrap.innerHTML = skeletonCard() + skeletonCard() + skeletonCard();
             return;
           }
           wrap.removeAttribute('aria-busy');
