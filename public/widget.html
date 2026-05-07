@@ -2797,6 +2797,16 @@
       </div>
     </div>
 
+    <div id="bw-voucher-link" style="display:none;text-align:center;padding:14px 0 4px;">
+      <a id="bw-voucher-anchor" href="#" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--accent,#111);text-decoration:none;padding:9px 18px;border:1.5px solid var(--accent,#111);border-radius:100px;transition:background 0.15s,color 0.15s;"
+        onmouseover="this.style.background='var(--accent,#111)';this.style.color='#fff';"
+        onmouseout="this.style.background='';this.style.color='var(--accent,#111)';">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        Gutschein verschenken
+      </a>
+    </div>
+
     <div
       id="bw-branding"
       style="
@@ -3458,6 +3468,12 @@
             }
             if (data.childPriceRanges && Array.isArray(data.childPriceRanges)) {
               state.childPriceRanges = data.childPriceRanges;
+            }
+            if (data.vouchersEnabled) {
+              var voucherLink = document.getElementById('bw-voucher-link');
+              var voucherAnchor = document.getElementById('bw-voucher-anchor');
+              if (voucherLink) voucherLink.style.display = 'block';
+              if (voucherAnchor) voucherAnchor.href = (API_BASE || '') + '/gutschein/' + HOTEL_SLUG;
             }
             if (data.settings) {
               state.ortstaxeMode = data.settings.ortstaxeMode || 'off';

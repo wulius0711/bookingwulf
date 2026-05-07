@@ -109,6 +109,12 @@ export async function GET(req: Request) {
       }
     }
 
+    // Strip server-side secrets before sending to widget
+    if (mergedSettings) {
+      (mergedSettings as Record<string, unknown>).paypalClientSecret = undefined;
+      (mergedSettings as Record<string, unknown>).stripeSecretKey = undefined;
+    }
+
     const canUseExtras = hasPlanAccess(plan, 'pro');
     const extras = await prisma.hotelExtra.findMany({
       where: {
@@ -127,9 +133,13 @@ export async function GET(req: Request) {
       select: { id: true, label: true, minAge: true, maxAge: true, pricePerNight: true },
     });
 
+    const vouchersEnabled = await prisma.voucherTemplate.count({
+      where: { hotelId: hotel.id, isActive: true },
+    }).then((n) => n > 0);
+
     return withCors(
       NextResponse.json(
-        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges, miniWidgetTarget: mergedSettings?.miniWidgetTarget ?? null },
+        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges, miniWidgetTarget: mergedSettings?.miniWidgetTarget ?? null, vouchersEnabled },
         { headers: { 'Cache-Control': 'no-store' } },
       ),
     );
