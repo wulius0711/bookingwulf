@@ -1074,15 +1074,21 @@
         min-width: 0;
       }
 
-      .apt-card > .apt-amenities-wrap {
+      .apt-amenities-toggle-wrap {
+        margin-top: 10px;
+      }
+
+      .apt-card > .apt-amenities-panel {
         grid-column: 1 / -1;
         grid-row: 2;
-        margin-top: 14px;
+      }
+
+      .apt-card > .apt-amenities-panel.open {
         padding-top: 14px;
         border-top: 1px solid var(--line);
       }
 
-      .apt-card > .apt-amenities-wrap .apt-amenities {
+      .apt-card > .apt-amenities-panel .apt-amenities {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
@@ -2032,7 +2038,7 @@
           grid-row: 2;
         }
 
-        .apt-card > .apt-amenities-wrap {
+        .apt-card > .apt-amenities-panel {
           grid-column: 1;
           grid-row: 3;
         }
@@ -4610,41 +4616,40 @@
             const description =
               ap.description || t('apt_default_desc');
 
-            const amenitiesHtml =
-              ap.amenities &&
-              ap.amenities.length &&
-              state.settings.showAmenities
-                ? `
-                  <div class="apt-amenities-wrap">
-                    <button
-                      type="button"
-                      class="apt-amenities-toggle ${amenitiesExpanded ? 'open' : ''}"
-                      data-toggle-amenities="${ap.id}"
-                      aria-expanded="${amenitiesExpanded ? 'true' : 'false'}"
-                    >
-                      <span class="apt-amenities-toggle-label">${t('apt_amenities_toggle')}</span>
-                      <span class="apt-amenities-toggle-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-                    </button>
+            const hasAmenities = !!(ap.amenities && ap.amenities.length && state.settings.showAmenities);
 
-                    <div class="apt-amenities-panel ${amenitiesExpanded ? 'open' : ''}">
-                      <div class="apt-amenities-inner">
-                        <div class="apt-amenities">
-                          ${ap.amenities
-                            .map(
-                              (item) => `
-                                <div class="apt-amenity">
-                                  <span class="apt-amenity-icon">✓</span>
-                                  <span class="apt-amenity-text">${item}</span>
-                                </div>
-                              `,
-                            )
-                            .join('')}
-                        </div>
-                      </div>
+            const amenitiesToggleHtml = hasAmenities
+              ? `<div class="apt-amenities-toggle-wrap">
+                  <button
+                    type="button"
+                    class="apt-amenities-toggle ${amenitiesExpanded ? 'open' : ''}"
+                    data-toggle-amenities="${ap.id}"
+                    aria-expanded="${amenitiesExpanded ? 'true' : 'false'}"
+                  >
+                    <span class="apt-amenities-toggle-label">${t('apt_amenities_toggle')}</span>
+                    <span class="apt-amenities-toggle-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+                  </button>
+                </div>`
+              : '';
+
+            const amenitiesPanelHtml = hasAmenities
+              ? `<div class="apt-amenities-panel ${amenitiesExpanded ? 'open' : ''}">
+                  <div class="apt-amenities-inner">
+                    <div class="apt-amenities">
+                      ${ap.amenities
+                        .map(
+                          (item) => `
+                            <div class="apt-amenity">
+                              <span class="apt-amenity-icon">✓</span>
+                              <span class="apt-amenity-text">${item}</span>
+                            </div>
+                          `,
+                        )
+                        .join('')}
                     </div>
                   </div>
-                `
-                : '';
+                </div>`
+              : '';
 
             const div = document.createElement('div');
             div.className = `apt-card ${selected ? 'selected' : ''} ${
@@ -4699,6 +4704,7 @@
                     : ''
                 }
               </div>
+              ${amenitiesToggleHtml}
               </div>
 
               <div class="apt-copy">
@@ -4741,7 +4747,7 @@
                 </div>
               </div>
 
-              ${amenitiesHtml}
+              ${amenitiesPanelHtml}
             `;
 
             wrap.appendChild(div);
