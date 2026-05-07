@@ -217,7 +217,9 @@ Optionale Felder: `imageUrl` (Thumbnail im Widget), `description` (Kurztext unte
 | `showInWidget` | `true` | Erscheint im Buchungs-Widget und kann beim Buchen gewählt werden |
 | `showInUpsell` | `false` | Wird in der Bestätigungs-E-Mail als „Noch etwas dazubuchen?"-Block angeboten (nur wenn vom Gast noch nicht gebucht) |
 
-Kombination `showInWidget: false` + `showInUpsell: true` = **Mail-Only-Extra**: erscheint nie im Widget, wird aber nach der Buchung per E-Mail angeboten. Typische Anwendungsfälle: Zimmerdekoration (Rosen, Luftballons), Champagner zur Ankunft, Frühstück aufs Zimmer, privater Transfer, Late-Check-out auf Anfrage.
+Kombination `showInWidget: false` + `showInUpsell: true` = **Mail-Only-Extra**: erscheint nie im Buchungs-Widget, wird aber nach der Buchung per E-Mail angeboten und ist im Gästeportal buchbar. Typische Anwendungsfälle: Zimmerdekoration (Rosen, Luftballons), Champagner zur Ankunft, Frühstück aufs Zimmer, privater Transfer, Late-Check-out auf Anfrage.
+
+> Gästeportal-Logik: Extras erscheinen wenn `isActive: true` UND (`showInWidget: true` ODER `showInUpsell: true`).
 
 **Varianten-Gruppe (`exclusiveGroup`):** Extras mit demselben Gruppen-Namen schließen sich im Gäste-Portal gegenseitig aus — der Gast kann nur eine davon buchen. Wird eine neue Variante gebucht, wird die bereits gebuchte Variante der Gruppe automatisch aus `extrasJson` entfernt. Anwendungsfall: „Hotelstorno Plus" und „Hotelstorno Premium" beide mit `exclusiveGroup = hotelstorno`.
 

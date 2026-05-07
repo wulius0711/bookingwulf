@@ -699,7 +699,7 @@ function ExtrasSection() {
         {[
           { label: 'Aktiv / Inaktiv',  desc: 'Grundschalter — inaktive Extras erscheinen nirgends.' },
           { label: 'Widget ✓',          desc: 'Extra erscheint im Buchungs-Widget und kann vom Gast beim Buchen gewählt werden.' },
-          { label: 'Upsell ✓',          desc: 'Extra wird in der Bestätigungs-E-Mail als Nachkauf-Empfehlung angeboten — aber nur, wenn der Gast es noch nicht gebucht hat.' },
+          { label: 'Upsell ✓',          desc: 'Extra wird in der Bestätigungs-E-Mail als Nachkauf-Empfehlung angeboten (nur wenn noch nicht gebucht) und ist zusätzlich im Gästeportal buchbar.' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: '#111' }}>{t.label}</span>
@@ -708,7 +708,7 @@ function ExtrasSection() {
         ))}
       </div>
       <Tip>
-        <strong>Mail-Only-Extras (Widget aus, Upsell an):</strong> Extras, die nicht im Buchungsformular erscheinen, aber nach der Buchung per E-Mail angeboten werden. Ideal für spontane Überraschungen, die der Gast nicht selbst einplant — z.B. Champagner zur Ankunft, Zimmerdekoration (Rosen, Luftballons) für besondere Anlässe, Frühstück aufs Zimmer am ersten Morgen, privater Shuttle-Transfer vom Bahnhof oder Late-Check-out auf Anfrage.
+        <strong>Mail-Only-Extras (Widget aus, Upsell an):</strong> Extras, die nicht im Buchungsformular erscheinen, aber nach der Buchung per E-Mail angeboten und im Gästeportal buchbar sind. Ideal für spontane Überraschungen, die der Gast nicht selbst einplant — z.B. Champagner zur Ankunft, Zimmerdekoration (Rosen, Luftballons) für besondere Anlässe, Frühstück aufs Zimmer am ersten Morgen, privater Shuttle-Transfer vom Bahnhof oder Late-Check-out auf Anfrage.
       </Tip>
       <H3>Abrechnungsarten</H3>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
