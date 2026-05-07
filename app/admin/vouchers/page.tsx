@@ -55,6 +55,42 @@ export default async function VouchersPage() {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <style>{`
+        .vc-btn-primary {
+          padding: 10px 20px; background: var(--accent, #0f172a); color: #fff;
+          border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+          cursor: pointer; font-family: inherit;
+          transition: opacity 0.15s, transform 0.1s;
+        }
+        .vc-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .vc-btn-primary:active { opacity: 1; transform: translateY(0); }
+        .vc-btn-secondary {
+          padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 6px;
+          background: #f9fafb; font-size: 12px; cursor: pointer; font-family: inherit;
+          transition: background 0.12s, border-color 0.12s;
+        }
+        .vc-btn-secondary:hover { background: #f3f4f6; border-color: #d1d5db; }
+        .vc-btn-danger {
+          padding: 6px 12px; border: 1px solid #fecaca; border-radius: 6px;
+          background: #fff; color: #dc2626; font-size: 12px; cursor: pointer; font-family: inherit;
+          transition: background 0.12s;
+        }
+        .vc-btn-danger:hover { background: #fef2f2; }
+        .vc-btn-danger-sm {
+          padding: 4px 10px; border: 1px solid #fecaca; border-radius: 6px;
+          background: #fff; color: #dc2626; font-size: 11px; cursor: pointer; font-family: inherit;
+          transition: background 0.12s;
+        }
+        .vc-btn-danger-sm:hover { background: #fef2f2; }
+        .vc-shop-link {
+          padding: 10px 18px; background: var(--accent, #0f172a); color: #fff;
+          border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none;
+          transition: opacity 0.15s, transform 0.1s; display: inline-block;
+        }
+        .vc-shop-link:hover { opacity: 0.88; transform: translateY(-1px); }
+        .vc-shop-link:active { opacity: 1; transform: translateY(0); }
+      `}</style>
+
       <div style={{ maxWidth: 960, display: 'grid', gap: 32 }}>
 
         {/* Header */}
@@ -64,8 +100,7 @@ export default async function VouchersPage() {
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Gutschein-Vorlagen anlegen und verkaufte Gutscheine verwalten.</p>
           </div>
           {hotel && (
-            <a href={shopUrl} target="_blank" rel="noopener noreferrer"
-              style={{ padding: '10px 18px', background: '#0f172a', color: '#fff', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+            <a href={shopUrl} target="_blank" rel="noopener noreferrer" className="vc-shop-link">
               Shop ansehen →
             </a>
           )}
@@ -105,9 +140,9 @@ export default async function VouchersPage() {
               <label style={label}>Beschreibung</label>
               <input name="description" placeholder="Kurze Beschreibung für den Gast" style={input} />
             </div>
-            <button type="submit" style={{ padding: '10px 20px', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-              Vorlage erstellen
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button type="submit" className="vc-btn-primary">Vorlage erstellen</button>
+            </div>
           </form>
         </div>
 
@@ -128,14 +163,12 @@ export default async function VouchersPage() {
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
                       <form action={toggleVoucherTemplate.bind(null, t.id, !t.isActive)}>
-                        <button type="submit" style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 6, background: '#f9fafb', fontSize: 12, cursor: 'pointer' }}>
+                        <button type="submit" className="vc-btn-secondary">
                           {t.isActive ? 'Deaktivieren' : 'Aktivieren'}
                         </button>
                       </form>
                       <form action={deleteVoucherTemplate.bind(null, t.id)} onSubmit={() => confirm('Vorlage löschen?')}>
-                        <button type="submit" style={{ padding: '6px 12px', border: '1px solid #fecaca', borderRadius: 6, background: '#fff', color: '#dc2626', fontSize: 12, cursor: 'pointer' }}>
-                          Löschen
-                        </button>
+                        <button type="submit" className="vc-btn-danger">Löschen</button>
                       </form>
                     </div>
                   </div>
@@ -179,9 +212,7 @@ export default async function VouchersPage() {
                       <td style={{ padding: '10px 12px' }}>
                         {v.status === 'active' && (
                           <form action={cancelVoucher.bind(null, v.id)}>
-                            <button type="submit" style={{ padding: '4px 10px', border: '1px solid #fecaca', borderRadius: 6, background: '#fff', color: '#dc2626', fontSize: 11, cursor: 'pointer' }}>
-                              Stornieren
-                            </button>
+                            <button type="submit" className="vc-btn-danger-sm">Stornieren</button>
                           </form>
                         )}
                       </td>
