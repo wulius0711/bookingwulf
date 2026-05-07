@@ -26,13 +26,15 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         const hotelId = Number(session.metadata?.hotelId);
 
-        // Voucher payment
-        if (session.metadata?.voucherId) {
-          const voucherId = Number(session.metadata.voucherId);
-          const voucher = await prisma.voucher.update({
-            where: { id: voucherId },
-            data: { status: 'active' },
-          });
+        // Voucher payment (new: voucherIds, legacy: voucherId)
+        if (session.metadata?.voucherIds || session.metadata?.voucherId) {
+          const ids = session.metadata.voucherIds
+            ? session.metadata.voucherIds.split(',').map(Number)
+            : [Number(session.metadata.voucherId)];
+
+          const vouchers = await prisma.$transaction(
+            ids.map(id => prisma.voucher.update({ where: { id }, data: { status: 'active' } }))
+          );
 
           const hotel = await prisma.hotel.findUnique({
             where: { id: hotelId },
@@ -41,54 +43,56 @@ export async function POST(req: Request) {
 
           try {
             const resend = getResend();
-            if (resend && hotel) {
-              const codeFormatted = voucher.code;
-              const expiresFormatted = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(voucher.expiresAt));
+            if (resend && hotel && vouchers.length > 0) {
               const accent = hotel.accentColor || '#111827';
+              const fmt = (d: Date) => new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
+              const first = vouchers[0];
 
-              const voucherHtml = `
-                <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                  Vielen Dank für Ihren Kauf! Nachfolgend finden Sie Ihren Gutschein.
-                </p>
-                <div style="padding:24px;background:#f9fafb;border:2px dashed #d1d5db;border-radius:14px;text-align:center;margin-bottom:24px;">
-                  <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Ihr Gutschein-Code</div>
-                  <div style="font-size:28px;font-weight:800;letter-spacing:0.12em;color:#0f172a;font-family:monospace;">${codeFormatted}</div>
-                  <div style="margin-top:12px;font-size:13px;color:#6b7280;">Gültig bis: <strong>${expiresFormatted}</strong></div>
+              const codeBlocks = vouchers.map(v => `
+                <div style="padding:20px 24px;background:#f9fafb;border:2px dashed #d1d5db;border-radius:14px;text-align:center;margin-bottom:12px;">
+                  <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Gutschein-Code</div>
+                  <div style="font-size:26px;font-weight:800;letter-spacing:0.12em;color:#0f172a;font-family:monospace;">${v.code}</div>
+                  <div style="margin-top:10px;font-size:13px;color:#6b7280;">Gültig bis: <strong>${fmt(v.expiresAt)}</strong></div>
                 </div>
-                ${voucher.message ? `<div style="padding:14px 18px;background:#f0f9ff;border-left:3px solid ${accent};border-radius:0 8px 8px 0;margin-bottom:20px;font-size:14px;color:#374151;font-style:italic;">"${voucher.message}"</div>` : ''}
+              `).join('');
+
+              const messageBlock = first.message
+                ? `<div style="padding:14px 18px;background:#f0f9ff;border-left:3px solid ${accent};border-radius:0 8px 8px 0;margin-bottom:20px;font-size:14px;color:#374151;font-style:italic;">"${first.message}"</div>`
+                : '';
+
+              const senderHtml = `
+                <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+                  Vielen Dank für Ihren Kauf! Nachfolgend finden Sie ${vouchers.length === 1 ? 'Ihren Gutschein' : 'Ihre Gutscheine'}.
+                </p>
+                ${codeBlocks}
+                ${messageBlock}
                 <p style="font-size:13px;color:#6b7280;line-height:1.6;margin:0;">
-                  Bitte nennen Sie diesen Code bei der Buchung oder bei der Rezeption von <strong>${hotel.name}</strong>.
+                  Bitte nennen Sie ${vouchers.length === 1 ? 'diesen Code' : 'die Codes'} bei der Buchung oder bei der Rezeption von <strong>${hotel.name}</strong>.
                 </p>
               `;
-
               await resend.emails.send({
                 from: getFromEmail(),
-                to: voucher.senderEmail,
-                subject: `Ihr Gutschein — ${hotel.name}`,
-                html: buildEmailHtml({ hotelName: hotel.name, title: 'Gutschein bestätigt', body: voucherHtml }),
+                to: first.senderEmail,
+                subject: `${vouchers.length === 1 ? 'Ihr Gutschein' : `Ihre ${vouchers.length} Gutscheine`} — ${hotel.name}`,
+                html: buildEmailHtml({ hotelName: hotel.name, title: 'Gutschein bestätigt', body: senderHtml }),
               });
 
-              if (voucher.recipientEmail && voucher.recipientEmail !== voucher.senderEmail) {
-                const recipientName = voucher.recipientName ? `Hallo ${voucher.recipientName},<br/><br/>` : '';
-                const senderName = voucher.senderName || 'Jemand';
+              if (first.recipientEmail && first.recipientEmail !== first.senderEmail) {
+                const greeting = first.recipientName ? `Hallo ${first.recipientName},<br/><br/>` : '';
                 const recipientHtml = `
                   <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                    ${recipientName}<strong>${senderName}</strong> hat Ihnen einen Gutschein von <strong>${hotel.name}</strong> geschenkt!
+                    ${greeting}<strong>${first.senderName || 'Jemand'}</strong> hat Ihnen ${vouchers.length === 1 ? 'einen Gutschein' : `${vouchers.length} Gutscheine`} von <strong>${hotel.name}</strong> geschenkt!
                   </p>
-                  <div style="padding:24px;background:#f9fafb;border:2px dashed #d1d5db;border-radius:14px;text-align:center;margin-bottom:24px;">
-                    <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Ihr Gutschein-Code</div>
-                    <div style="font-size:28px;font-weight:800;letter-spacing:0.12em;color:#0f172a;font-family:monospace;">${codeFormatted}</div>
-                    <div style="margin-top:12px;font-size:13px;color:#6b7280;">Gültig bis: <strong>${expiresFormatted}</strong></div>
-                  </div>
-                  ${voucher.message ? `<div style="padding:14px 18px;background:#f0f9ff;border-left:3px solid ${accent};border-radius:0 8px 8px 0;margin-bottom:20px;font-size:14px;color:#374151;font-style:italic;">"${voucher.message}"</div>` : ''}
+                  ${codeBlocks}
+                  ${messageBlock}
                   <p style="font-size:13px;color:#6b7280;line-height:1.6;margin:0;">
-                    Bitte nennen Sie diesen Code bei der Buchung oder bei der Rezeption.
+                    Bitte nennen Sie ${vouchers.length === 1 ? 'diesen Code' : 'die Codes'} bei der Buchung oder bei der Rezeption.
                   </p>
                 `;
                 await resend.emails.send({
                   from: getFromEmail(),
-                  to: voucher.recipientEmail,
-                  subject: `Sie haben einen Gutschein erhalten — ${hotel.name}`,
+                  to: first.recipientEmail,
+                  subject: `Sie haben ${vouchers.length === 1 ? 'einen Gutschein' : `${vouchers.length} Gutscheine`} erhalten — ${hotel.name}`,
                   html: buildEmailHtml({ hotelName: hotel.name, title: 'Gutschein erhalten', body: recipientHtml }),
                 });
               }

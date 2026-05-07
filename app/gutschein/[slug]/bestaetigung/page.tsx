@@ -8,10 +8,10 @@ export default async function VoucherConfirmationPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ code?: string }>;
+  searchParams: Promise<{ codes?: string; code?: string }>;
 }) {
   const { slug } = await params;
-  const { code } = await searchParams;
+  const { codes, code } = await searchParams;
 
   const hotel = await prisma.hotel.findUnique({
     where: { slug },
@@ -19,17 +19,20 @@ export default async function VoucherConfirmationPage({
   });
   if (!hotel) return notFound();
 
-  const voucher = code
-    ? await prisma.voucher.findFirst({
-        where: { code, hotel: { slug } },
+  // Support both ?codes=A,B,C (new) and ?code=A (legacy)
+  const codeList = codes
+    ? codes.split(',').map(c => c.trim()).filter(Boolean)
+    : code ? [code] : [];
+
+  const vouchers = codeList.length > 0
+    ? await prisma.voucher.findMany({
+        where: { code: { in: codeList }, hotel: { slug } },
         select: { code: true, expiresAt: true },
       })
-    : null;
+    : [];
 
   const accent = hotel.accentColor || '#111827';
-  const expires = voucher
-    ? new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(voucher.expiresAt))
-    : null;
+  const fmt = (d: Date) => new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
   return (
     <>
@@ -45,7 +48,7 @@ export default async function VoucherConfirmationPage({
           font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
         }
         .vc-check { width: 64px; height: 64px; border-radius: 50%; background: var(--vc-accent-glow); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .vc-code-box { background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 14px; padding: 20px; margin: 24px 0; }
+        .vc-code-box { background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 14px; padding: 20px; margin: 12px 0; }
       `}</style>
       <div className="vc-confirm-wrap" style={{ '--vc-accent': accent, '--vc-accent-glow': `${accent}18` } as React.CSSProperties}>
         <div className="vc-confirm-card">
@@ -57,18 +60,26 @@ export default async function VoucherConfirmationPage({
           <div style={{ fontSize: 13, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>{hotel.name}</div>
           <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: 12 }}>Vielen Dank!</h1>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6 }}>
-            Ihr Gutschein wurde erfolgreich gekauft. Sie erhalten in Kürze eine Bestätigung per E-Mail.
+            {vouchers.length > 1
+              ? `Ihre ${vouchers.length} Gutscheine wurden erfolgreich gekauft.`
+              : 'Ihr Gutschein wurde erfolgreich gekauft.'} Sie erhalten in Kürze eine Bestätigung per E-Mail.
           </p>
 
-          {voucher && (
-            <div className="vc-code-box">
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Ihr Gutschein-Code</div>
-              <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '0.12em', color: '#0f172a', fontFamily: 'monospace' }}>{voucher.code}</div>
-              {expires && <div style={{ marginTop: 8, fontSize: 13, color: '#9ca3af' }}>Gültig bis {expires}</div>}
+          {vouchers.length > 0 && (
+            <div style={{ marginTop: 24 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
+                {vouchers.length === 1 ? 'Ihr Gutschein-Code' : 'Ihre Gutschein-Codes'}
+              </div>
+              {vouchers.map(v => (
+                <div key={v.code} className="vc-code-box">
+                  <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '0.12em', color: '#0f172a', fontFamily: 'monospace' }}>{v.code}</div>
+                  <div style={{ marginTop: 8, fontSize: 13, color: '#9ca3af' }}>Gültig bis {fmt(v.expiresAt)}</div>
+                </div>
+              ))}
             </div>
           )}
 
-          <a href={`/gutschein/${slug}`} style={{ display: 'inline-block', marginTop: 8, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}>
+          <a href={`/gutschein/${slug}`} style={{ display: 'inline-block', marginTop: 20, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}>
             Weiteren Gutschein kaufen →
           </a>
         </div>

@@ -32,7 +32,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
   const accent = hotel.accentColor;
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
 
-  const [selected, setSelected] = useState<Template | null>(null);
+  const [cart, setCart] = useState<Map<number, number>>(new Map());
   const [step, setStep] = useState<'select' | 'form'>('select');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,8 +43,25 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
   const [recipientEmail, setRecipientEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  function addItem(id: number) {
+    setCart(prev => new Map(prev).set(id, (prev.get(id) || 0) + 1));
+  }
+  function removeItem(id: number) {
+    setCart(prev => {
+      const next = new Map(prev);
+      const qty = (prev.get(id) || 0) - 1;
+      if (qty <= 0) next.delete(id);
+      else next.set(id, qty);
+      return next;
+    });
+  }
+
+  const cartItems = templates.filter(t => (cart.get(t.id) || 0) > 0);
+  const cartTotal = cartItems.reduce((sum, t) => sum + (cart.get(t.id) || 0) * t.price, 0);
+  const cartCount = Array.from(cart.values()).reduce((a, b) => a + b, 0);
+
   async function handleCheckout() {
-    if (!selected) return;
+    if (cartCount === 0) return;
     if (!senderName.trim() || !senderEmail.trim()) {
       setError('Bitte Name und E-Mail angeben.');
       return;
@@ -52,12 +69,13 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
     setError('');
     setLoading(true);
     try {
+      const items = cartItems.map(t => ({ templateId: t.id, quantity: cart.get(t.id)! }));
       const res = await fetch('/api/vouchers/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           hotelSlug: hotel.slug,
-          templateId: selected.id,
+          items,
           senderName: senderName.trim(),
           senderEmail: senderEmail.trim(),
           recipientName: recipientName.trim() || null,
@@ -85,13 +103,31 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
   return (
     <>
       <style>{`
+        @keyframes vs-fade-up {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes vs-fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes vs-select-pulse {
+          0%   { transform: scale(1); }
+          40%  { transform: scale(1.025); box-shadow: 0 6px 28px var(--vs-accent-glow); }
+          100% { transform: scale(1); }
+        }
         .vs-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #111827; }
-        .vs-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
-        .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; cursor: pointer; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
-        .vs-template:hover { border-color: var(--vs-accent-soft); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .vs-template.selected { border-color: var(--vs-accent); box-shadow: 0 4px 20px var(--vs-accent-glow); }
-        .vs-btn { display: block; width: 100%; padding: 14px 20px; background: var(--vs-accent); color: var(--vs-on-accent); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
-        .vs-btn:hover:not(:disabled) { opacity: 0.9; }
+        .vs-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); animation: vs-fade-in 0.35s ease both; }
+        .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s; animation: vs-fade-up 0.42s ease both; }
+        .vs-template:hover { border-color: var(--vs-accent-soft); box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+        .vs-template.in-cart { border-color: var(--vs-accent); box-shadow: 0 4px 20px var(--vs-accent-glow); animation: vs-select-pulse 0.35s ease forwards; }
+        .vs-qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--vs-accent); background: transparent; color: var(--vs-accent); font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s, color 0.15s; }
+        .vs-qty-btn:hover { background: var(--vs-accent); color: var(--vs-on-accent); }
+        .vs-qty-btn.add-first { width: auto; padding: 0 12px; border-radius: 20px; font-size: 13px; }
+        .vs-step-form { animation: vs-fade-in 0.38s ease both; }
+        .vs-btn { display: block; width: 100%; padding: 14px 20px; background: var(--vs-accent); color: var(--vs-on-accent); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.15s, transform 0.15s; }
+        .vs-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        .vs-btn:active:not(:disabled) { transform: scale(0.98); }
         .vs-btn:disabled { opacity: 0.5; cursor: not-allowed; }
       `}</style>
 
@@ -113,46 +149,79 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
 
         {step === 'select' && (
           <div style={{ display: 'grid', gap: 16 }}>
-            {templates.map((t) => (
-              <div
-                key={t.id}
-                className={`vs-template${selected?.id === t.id ? ' selected' : ''}`}
-                onClick={() => setSelected(t)}
-              >
-                {t.imageUrl && (
-                  <img src={t.imageUrl} alt={t.name} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} />
-                )}
-                <div style={{ padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 16 }}>{t.name}</div>
-                    {t.description && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 3, lineHeight: 1.4 }}>{t.description}</div>}
-                    <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{t.validDays} Tage gültig</div>
-                  </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price)}</div>
-                    {t.value !== t.price && (
-                      <div style={{ fontSize: 12, color: '#9ca3af' }}>Wert: {eur(t.value)}</div>
-                    )}
+            {templates.map((t, i) => {
+              const qty = cart.get(t.id) || 0;
+              return (
+                <div
+                  key={t.id}
+                  className={`vs-template${qty > 0 ? ' in-cart' : ''}`}
+                  style={{ animationDelay: `${i * 0.07}s` }}
+                >
+                  {t.imageUrl && (
+                    <img src={t.imageUrl} alt={t.name} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} />
+                  )}
+                  <div style={{ padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: 16 }}>{t.name}</div>
+                      {t.description && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 3, lineHeight: 1.4 }}>{t.description}</div>}
+                      <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{t.validDays} Tage gültig</div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price)}</div>
+                        {t.value !== t.price && (
+                          <div style={{ fontSize: 12, color: '#9ca3af' }}>Wert: {eur(t.value)}</div>
+                        )}
+                      </div>
+                      {qty === 0 ? (
+                        <button className="vs-qty-btn add-first" onClick={() => addItem(t.id)}>+ Hinzufügen</button>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <button className="vs-qty-btn" onClick={() => removeItem(t.id)}>−</button>
+                          <span style={{ fontSize: 16, fontWeight: 700, minWidth: 20, textAlign: 'center', color: 'var(--vs-accent)' }}>{qty}</span>
+                          <button className="vs-qty-btn" onClick={() => addItem(t.id)}>+</button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
-            <button className="vs-btn" disabled={!selected} onClick={() => setStep('form')} style={{ marginTop: 8 }}>
+            {cartCount > 0 && (
+              <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>
+                  {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</div>
+              </div>
+            )}
+
+            <button className="vs-btn" disabled={cartCount === 0} onClick={() => setStep('form')} style={{ marginTop: 4 }}>
               Weiter →
             </button>
           </div>
         )}
 
-        {step === 'form' && selected && (
-          <div style={{ display: 'grid', gap: 20 }}>
-            <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontWeight: 700 }}>{selected.name}</div>
-                <div style={{ fontSize: 13, color: '#6b7280' }}>{eur(selected.price)}</div>
+        {step === 'form' && (
+          <div className="vs-step-form" style={{ display: 'grid', gap: 20 }}>
+            {/* Cart summary */}
+            <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px' }}>
+              {cartItems.map(t => (
+                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0' }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>
+                    {cart.get(t.id)! > 1 && <span style={{ color: 'var(--vs-accent)', marginRight: 6 }}>{cart.get(t.id)}×</span>}
+                    {t.name}
+                  </div>
+                  <div style={{ fontSize: 13, color: '#6b7280' }}>{eur((cart.get(t.id)! ) * t.price)}</div>
+                </div>
+              ))}
+              <div style={{ borderTop: '1px solid var(--vs-accent-soft)', marginTop: 8, paddingTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 700, fontSize: 14 }}>Gesamt</span>
+                <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</span>
               </div>
-              <button onClick={() => setStep('select')} style={{ fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                Ändern
+              <button onClick={() => setStep('select')} style={{ marginTop: 10, fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
+                ← Warenkorb bearbeiten
               </button>
             </div>
 
@@ -192,7 +261,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             {error && <p style={{ fontSize: 14, color: '#dc2626' }}>{error}</p>}
 
             <button className="vs-btn" onClick={handleCheckout} disabled={loading}>
-              {loading ? 'Weiterleitung …' : `Jetzt bezahlen — ${eur(selected.price)}`}
+              {loading ? 'Weiterleitung …' : `Jetzt bezahlen — ${eur(cartTotal)}`}
             </button>
           </div>
         )}
