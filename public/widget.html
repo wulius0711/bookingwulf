@@ -588,9 +588,16 @@
         display: none;
       }
       .booking-shell.sidebar-layout .top aside.summary {
-        display: block;
+        display: flex;
+        flex-direction: column;
         margin-top: 16px;
         position: static;
+      }
+      .booking-shell.sidebar-layout .top aside.summary #bw-voucher-link {
+        order: -1;
+        padding: 0 0 14px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--line);
       }
 
       .view-toggle {
@@ -1907,7 +1914,14 @@
           grid-template-columns: minmax(0, 1fr) 340px;
         }
         .booking-shell.sidebar-layout .layout > aside.summary {
-          display: block;
+          display: flex;
+          flex-direction: column;
+        }
+        .booking-shell.sidebar-layout .layout > aside.summary #bw-voucher-link {
+          order: -1;
+          padding: 0 0 14px;
+          margin-bottom: 4px;
+          border-bottom: 1px solid var(--line);
         }
         .booking-shell.sidebar-layout .top > aside.summary {
           display: none;
@@ -2793,18 +2807,18 @@
             <span>Gesamt</span><span id="summaryTotal">€ 0,00</span>
           </div>
           <div style="text-align:right;font-size:12px;color:var(--muted);margin-top:4px;" id="summaryVatNote"></div>
+
+          <div id="bw-voucher-link" style="display:none;text-align:center;padding:14px 0 4px;">
+            <a id="bw-voucher-anchor" href="#" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--accent,#111);text-decoration:none;padding:9px 18px;border:1.5px solid var(--accent,#111);border-radius:100px;transition:background 0.15s,color 0.15s;"
+              onmouseover="this.style.background='var(--accent,#111)';this.style.color='#fff';"
+              onmouseout="this.style.background='';this.style.color='var(--accent,#111)';">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+              Gutschein verschenken
+            </a>
+          </div>
         </aside>
       </div>
-    </div>
-
-    <div id="bw-voucher-link" style="display:none;text-align:center;padding:14px 0 4px;">
-      <a id="bw-voucher-anchor" href="#" target="_blank" rel="noopener"
-        style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--accent,#111);text-decoration:none;padding:9px 18px;border:1.5px solid var(--accent,#111);border-radius:100px;transition:background 0.15s,color 0.15s;"
-        onmouseover="this.style.background='var(--accent,#111)';this.style.color='#fff';"
-        onmouseout="this.style.background='';this.style.color='var(--accent,#111)';">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-        Gutschein verschenken
-      </a>
     </div>
 
     <div
