@@ -44,10 +44,10 @@ export default async function VoucherConfirmationPage({
           max-width: 480px; width: 100%; padding: 40px 32px; text-align: center;
           font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
         }
-        .vc-check { width: 64px; height: 64px; border-radius: 50%; background: ${accent}18; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .vc-check { width: 64px; height: 64px; border-radius: 50%; background: var(--vc-accent-glow); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
         .vc-code-box { background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 14px; padding: 20px; margin: 24px 0; }
       `}</style>
-      <div className="vc-confirm-wrap">
+      <div className="vc-confirm-wrap" style={{ '--vc-accent': accent, '--vc-accent-glow': `${accent}18` } as React.CSSProperties}>
         <div className="vc-confirm-card">
           <div className="vc-check">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

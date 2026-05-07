@@ -88,14 +88,22 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         .vs-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #111827; }
         .vs-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
         .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; cursor: pointer; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
-        .vs-template:hover { border-color: ${accent}88; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .vs-template.selected { border-color: ${accent}; box-shadow: 0 4px 20px ${accent}33; }
-        .vs-btn { display: block; width: 100%; padding: 14px 20px; background: ${accent}; color: ${onAccent}; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+        .vs-template:hover { border-color: var(--vs-accent-soft); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        .vs-template.selected { border-color: var(--vs-accent); box-shadow: 0 4px 20px var(--vs-accent-glow); }
+        .vs-btn { display: block; width: 100%; padding: 14px 20px; background: var(--vs-accent); color: var(--vs-on-accent); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
         .vs-btn:hover:not(:disabled) { opacity: 0.9; }
         .vs-btn:disabled { opacity: 0.5; cursor: not-allowed; }
       `}</style>
 
-      <div className="vs-wrap">
+      <div
+        className="vs-wrap"
+        style={{
+          '--vs-accent': accent,
+          '--vs-on-accent': onAccent,
+          '--vs-accent-soft': `${accent}88`,
+          '--vs-accent-glow': `${accent}33`,
+        } as React.CSSProperties}
+      >
         {/* Header */}
         <div style={{ marginBottom: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{hotel.name}</div>
@@ -121,7 +129,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
                     <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{t.validDays} Tage gültig</div>
                   </div>
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: accent }}>{eur(t.price)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price)}</div>
                     {t.value !== t.price && (
                       <div style={{ fontSize: 12, color: '#9ca3af' }}>Wert: {eur(t.value)}</div>
                     )}
@@ -138,12 +146,12 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
 
         {step === 'form' && selected && (
           <div style={{ display: 'grid', gap: 20 }}>
-            <div style={{ background: `${accent}12`, border: `1.5px solid ${accent}33`, borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontWeight: 700 }}>{selected.name}</div>
                 <div style={{ fontSize: 13, color: '#6b7280' }}>{eur(selected.price)}</div>
               </div>
-              <button onClick={() => setStep('select')} style={{ fontSize: 13, color: accent, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+              <button onClick={() => setStep('select')} style={{ fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
                 Ändern
               </button>
             </div>
