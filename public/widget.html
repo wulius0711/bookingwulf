@@ -2781,6 +2781,7 @@
           <div class="summary-line"></div>
 
           <div id="summaryBreakdown"></div>
+          <div id="voucherSection" style="display:none;margin:10px 0 2px;"></div>
           <div
             class="summary-row summary-total"
             style="
@@ -3187,6 +3188,10 @@
           autoplayTimers: {},
           bookingTermsUrl: null,
           privacyPolicyUrl: null,
+          voucherCode: '',
+          voucherData: null,
+          voucherError: '',
+          voucherLoading: false,
           settings: {
             showPrices: true,
             showAmenities: true,
@@ -3576,6 +3581,17 @@
         }
 
         function getTotal() {
+          const nights = getNights() || 1;
+          const raw =
+            getApartmentsTotal() +
+            getExtrasTotal() +
+            calcChildSurcharge(nights) +
+            calcOrtstaxe(nights);
+          const discount = state.voucherData ? Math.min(state.voucherData.value, raw) : 0;
+          return Math.max(0, raw - discount);
+        }
+
+        function getRawTotal() {
           const nights = getNights() || 1;
           return (
             getApartmentsTotal() +
@@ -4937,10 +4953,107 @@
               rows += `<div style="${rowStyle}"><span style="${muteStyle}">${t('ortstaxe')}${minAgeNote}</span><span>${eur(ortstaxe)}</span></div>`;
             }
 
+            if (state.voucherData) {
+              const raw = getRawTotal();
+              const discount = Math.min(state.voucherData.value, raw);
+              rows += `<div style="${rowStyle}"><span style="color:#16a34a;font-weight:600;">Gutschein (${state.voucherData.code})</span><span style="color:#16a34a;font-weight:600;">−${eur(discount)}</span></div>`;
+            }
+
             breakdownEl.innerHTML = rows;
           }
 
           renderExtras();
+        }
+
+        function renderVoucherSection() {
+          const el = document.getElementById('voucherSection');
+          if (!el) return;
+          const show = state.settings.showPrices && state.step >= 3;
+          el.style.display = show ? '' : 'none';
+          if (!show) return;
+
+          if (state.voucherData) {
+            el.innerHTML =
+              '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13px;">' +
+              '<span style="color:#166534;font-weight:600;">✓ Gutschein angewendet</span>' +
+              '<button type="button" id="voucherRemoveBtn" style="font-size:12px;color:#6b7280;background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;">✕ Entfernen</button>' +
+              '</div>';
+            document.getElementById('voucherRemoveBtn').addEventListener('click', () => {
+              state.voucherData = null;
+              state.voucherCode = '';
+              state.voucherError = '';
+              renderSummary();
+              renderVoucherSection();
+            });
+            return;
+          }
+
+          el.innerHTML =
+            '<div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;">' +
+            '<button type="button" id="voucherToggleBtn" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>' +
+            'Gutschein-Code einlösen' +
+            '<svg id="voucherChevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>' +
+            '</button>' +
+            '<div id="voucherInputArea" style="display:none;padding:10px 12px;border-top:1px solid var(--line);">' +
+            '<div style="display:flex;gap:8px;">' +
+            '<input id="voucherCodeInput" type="text" value="' + state.voucherCode + '" placeholder="XXXX-XXXX-XXXX" maxlength="14" style="flex:1;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:monospace;text-transform:uppercase;outline:none;" />' +
+            '<button type="button" id="voucherApplyBtn" style="padding:8px 14px;background:var(--accent,#111827);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">' +
+            (state.voucherLoading ? '…' : 'Einlösen') +
+            '</button>' +
+            '</div>' +
+            (state.voucherError ? '<div style="margin-top:6px;font-size:12px;color:#dc2626;">' + state.voucherError + '</div>' : '') +
+            '</div>' +
+            '</div>';
+
+          const toggleBtn = document.getElementById('voucherToggleBtn');
+          const inputArea = document.getElementById('voucherInputArea');
+          const chevron = document.getElementById('voucherChevron');
+
+          // Keep open if there's an error or previously typed code
+          if (state.voucherError || state.voucherCode) {
+            inputArea.style.display = '';
+            chevron.style.transform = 'rotate(180deg)';
+          }
+
+          toggleBtn.addEventListener('click', () => {
+            const open = inputArea.style.display === '';
+            inputArea.style.display = open ? 'none' : '';
+            chevron.style.transform = open ? '' : 'rotate(180deg)';
+          });
+
+          document.getElementById('voucherCodeInput').addEventListener('input', (e) => {
+            state.voucherCode = e.target.value;
+          });
+
+          document.getElementById('voucherApplyBtn').addEventListener('click', async () => {
+            const code = (document.getElementById('voucherCodeInput').value || '').trim();
+            if (!code) return;
+            state.voucherCode = code;
+            state.voucherLoading = true;
+            state.voucherError = '';
+            renderVoucherSection();
+            try {
+              const res = await fetch(API_BASE + '/api/vouchers/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, hotelSlug: HOTEL_SLUG }),
+              });
+              const data = await res.json();
+              if (data.valid) {
+                state.voucherData = data.voucher;
+                state.voucherError = '';
+              } else {
+                state.voucherData = null;
+                state.voucherError = data.error || 'Ungültiger Code.';
+              }
+            } catch {
+              state.voucherError = 'Verbindungsfehler.';
+            }
+            state.voucherLoading = false;
+            renderSummary();
+            renderVoucherSection();
+          });
         }
 
         function renderExtras() {
@@ -5561,6 +5674,7 @@
           renderApartments();
           renderExtras();
           renderSummary();
+          renderVoucherSection();
           renderLightbox();
           renderTermsCheckbox();
           renderChildBirthdays();
@@ -5987,6 +6101,8 @@
                 bookingType,
                 showPrices: state.settings.showPrices,
                 browserLanguage: navigator.language || '',
+                voucherCode: state.voucherData ? state.voucherData.code : null,
+                voucherDiscount: state.voucherData ? Math.min(state.voucherData.value, getRawTotal()) : null,
               }),
             });
 
