@@ -22,7 +22,7 @@ export default async function VoucherConfirmationPage({
   const voucher = code
     ? await prisma.voucher.findFirst({
         where: { code, hotel: { slug } },
-        select: { code: true, status: true, expiresAt: true, senderName: true, recipientName: true },
+        select: { code: true, expiresAt: true },
       })
     : null;
 
@@ -32,22 +32,24 @@ export default async function VoucherConfirmationPage({
     : null;
 
   return (
-    <html lang="de">
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Gutschein bestätigt — {hotel.name}</title>
-        <style>{`
-          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
-          .card { background: #fff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.09); max-width: 480px; width: 100%; padding: 40px 32px; text-align: center; }
-          .check { width: 64px; height: 64px; border-radius: 50%; background: ${accent}18; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-          .code-box { background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 14px; padding: 20px; margin: 24px 0; }
-        `}</style>
-      </head>
-      <body>
-        <div className="card">
-          <div className="check">
+    <>
+      <style>{`
+        .vc-confirm-wrap {
+          display: flex; align-items: center; justify-content: center;
+          padding: 24px 16px; min-height: 100vh;
+        }
+        .vc-confirm-card {
+          background: #fff; border-radius: 20px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+          max-width: 480px; width: 100%; padding: 40px 32px; text-align: center;
+          font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+        }
+        .vc-check { width: 64px; height: 64px; border-radius: 50%; background: ${accent}18; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .vc-code-box { background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 14px; padding: 20px; margin: 24px 0; }
+      `}</style>
+      <div className="vc-confirm-wrap">
+        <div className="vc-confirm-card">
+          <div className="vc-check">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
@@ -59,21 +61,18 @@ export default async function VoucherConfirmationPage({
           </p>
 
           {voucher && (
-            <div className="code-box">
+            <div className="vc-code-box">
               <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Ihr Gutschein-Code</div>
               <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '0.12em', color: '#0f172a', fontFamily: 'monospace' }}>{voucher.code}</div>
               {expires && <div style={{ marginTop: 8, fontSize: 13, color: '#9ca3af' }}>Gültig bis {expires}</div>}
             </div>
           )}
 
-          <a
-            href={`/gutschein/${slug}`}
-            style={{ display: 'inline-block', marginTop: 8, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}
-          >
+          <a href={`/gutschein/${slug}`} style={{ display: 'inline-block', marginTop: 8, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}>
             Weiteren Gutschein kaufen →
           </a>
         </div>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }
