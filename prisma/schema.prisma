@@ -53,6 +53,8 @@ model Hotel {
   beds24Config  Beds24Config?
   auditLogs     AuditLog[]
   supportChats  SupportChatLog[]
+  voucherTemplates  VoucherTemplate[]
+  vouchers          Voucher[]
 }
 
 model HotelSettings {
@@ -561,6 +563,50 @@ model SupportChatLog {
   @@index([category])
 }
 
+
+model VoucherTemplate {
+  id          Int      @id @default(autoincrement())
+  hotelId     Int
+  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  name        String
+  type        String   @default("value") // "value" | "nights" | "service"
+  value       Decimal  @db.Decimal(10, 2)
+  price       Decimal  @db.Decimal(10, 2)
+  description String?
+  imageUrl    String?
+  validDays   Int      @default(365)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  vouchers    Voucher[]
+
+  @@index([hotelId])
+}
+
+model Voucher {
+  id                    Int              @id @default(autoincrement())
+  hotelId               Int
+  hotel                 Hotel            @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  templateId            Int?
+  template              VoucherTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  code                  String           @unique
+  type                  String           @default("value") // "value" | "nights" | "service"
+  value                 Decimal          @db.Decimal(10, 2)
+  pricePaid             Decimal          @db.Decimal(10, 2)
+  recipientName         String?
+  recipientEmail        String?
+  message               String?
+  senderName            String?
+  senderEmail           String
+  status                String           @default("pending") // "pending" | "active" | "redeemed" | "expired" | "cancelled"
+  expiresAt             DateTime
+  redeemedAt            DateTime?
+  redeemedOnRequestId   Int?
+  stripePaymentIntentId String?
+  createdAt             DateTime         @default(now())
+
+  @@index([hotelId])
+  @@index([code])
+}
 
 model AdminFeedback {
   id         Int      @id @default(autoincrement())

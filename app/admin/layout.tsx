@@ -62,9 +62,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: '/admin/price-seasons', label: 'Preisanpassungen', icon: 'prices' },
       { href: '/admin/blocked-dates', label: 'Sperrzeiten', icon: 'blocked' },
       { href: '/admin/extras', label: 'Zusatzleistungen', icon: 'extras' },
+      { href: '/admin/vouchers', label: 'Gutscheine', icon: 'vouchers' },
     ]},
     { label: 'Konfiguration', items: [
       { href: '/admin/settings', label: 'Widget & Design', icon: 'settings' },
+      { href: '/admin/guestportal', label: 'Gästeportal', icon: 'guestportal' },
       { href: '/admin/email-templates', label: 'E-Mails', icon: 'emails' },
       { href: '/admin/nuki', label: 'Schlüsselloses Einchecken', icon: 'nuki' },
       { href: '/admin/beds24', label: 'Beds24 Channel Manager', icon: 'beds24' },
