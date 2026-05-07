@@ -52,7 +52,7 @@ export default async function VouchersPage() {
     prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { slug: true, name: true } }),
   ]);
 
-  const shopUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/gutschein/${hotel?.slug}`;
+  const shopUrl = `/gutschein/${hotel?.slug}`;
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
