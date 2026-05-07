@@ -1,6 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+function useAnimatedValue(target: number, duration = 420) {
+  const [display, setDisplay] = useState(target);
+  const from = useRef(target);
+  const startTime = useRef<number | null>(null);
+  const raf = useRef<number | null>(null);
+
+  useEffect(() => {
+    const start = from.current;
+    if (start === target) return;
+    startTime.current = null;
+
+    function tick(now: number) {
+      if (!startTime.current) startTime.current = now;
+      const t = Math.min((now - startTime.current) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // ease-out-cubic
+      setDisplay(start + (target - start) * eased);
+      if (t < 1) {
+        raf.current = requestAnimationFrame(tick);
+      } else {
+        from.current = target;
+      }
+    }
+
+    if (raf.current) cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(tick);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [target, duration]);
+
+  return display;
+}
 
 type Template = {
   id: number;
@@ -59,6 +90,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
   const cartItems = templates.filter(t => (cart.get(t.id) || 0) > 0);
   const cartTotal = cartItems.reduce((sum, t) => sum + (cart.get(t.id) || 0) * t.price, 0);
   const cartCount = Array.from(cart.values()).reduce((a, b) => a + b, 0);
+  const animatedTotal = useAnimatedValue(cartTotal);
 
   async function handleCheckout() {
     if (cartCount === 0) return;
@@ -193,7 +225,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>
                   {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
                 </div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(animatedTotal)}</div>
               </div>
             )}
 
