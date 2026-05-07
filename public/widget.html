@@ -1059,9 +1059,25 @@
         opacity: 0.6;
       }
 
+      .apt-left-col {
+        width: 320px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .apt-left-col .apt-amenities-wrap {
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+
+      .apt-left-col .apt-amenities {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .apt-image-wrap {
         position: relative;
-        width: 320px;
+        width: 100%;
         height: 220px;
         flex-shrink: 0;
         border-radius: calc(var(--radius) + 2px);
@@ -2000,6 +2016,10 @@
 
         .toggle-cards-grid {
           grid-template-columns: 1fr;
+        }
+
+        .apt-left-col {
+          width: 100%;
         }
 
         .apt-image-wrap {
@@ -4627,6 +4647,7 @@
 
               <div class="apt-selected-badge">${t('apt_selected_badge')}</div>
 
+              <div class="apt-left-col">
               <div class="apt-image-wrap" data-image-wrap="${ap.id}">
                 <div
                   class="apt-image-slider"
@@ -4659,6 +4680,8 @@
                     : ''
                 }
               </div>
+              ${amenitiesHtml}
+              </div>
 
               <div class="apt-copy">
                 <h3 class="apt-name">${ap.name}</h3>
@@ -4674,8 +4697,6 @@
                       </button>`
                     : ''
                 }
-
-                ${amenitiesHtml}
 
                 <div class="apt-bottom">
                   <div class="apt-status-copy">
