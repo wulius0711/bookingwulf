@@ -44,55 +44,28 @@ type Hotel = {
   emergencyNumbers: { label: string; number: string }[];
 };
 
-type Apartment = {
-  id: number;
-  name: string;
-  imageUrl: string | null;
-  imageAlt: string;
-};
+type Apartment = { id: number; name: string; imageUrl: string | null; imageAlt: string };
 
 type Extra = {
-  id: number;
-  name: string;
-  key: string;
-  type: string;
-  billingType: string;
-  price: number;
-  imageUrl: string | null;
-  description: string | null;
-  linkUrl: string | null;
-  exclusiveGroup: string | null;
+  id: number; name: string; key: string; type: string; billingType: string;
+  price: number; imageUrl: string | null; description: string | null;
+  linkUrl: string | null; exclusiveGroup: string | null;
 };
 
-type Message = {
-  id: number;
-  sender: string;
-  body: string;
-  createdAt: string;
-};
+type Message = { id: number; sender: string; body: string; createdAt: string };
 
 type ThingToSee = {
-  id: number;
-  category: string;
-  title: string;
-  description: string | null;
-  address: string | null;
-  mapsUrl: string | null;
-  imageUrl: string | null;
+  id: number; category: string; title: string; description: string | null;
+  address: string | null; mapsUrl: string | null; imageUrl: string | null;
 };
 
 type Props = {
-  token: string;
-  booking: Booking;
-  hotel: Hotel;
-  apartments: Apartment[];
-  allExtras: Extra[];
-  serverBookedExtraIds: number[];
-  thingsToSee: ThingToSee[];
-  initialMessages: Message[];
+  token: string; booking: Booking; hotel: Hotel; apartments: Apartment[];
+  allExtras: Extra[]; serverBookedExtraIds: number[];
+  thingsToSee: ThingToSee[]; initialMessages: Message[];
 };
 
-type Tab = 'arrival' | 'checkin' | 'messages' | 'extras' | 'houseinfo' | 'surroundings' | 'checkout';
+type Tab = 'arrival' | 'extras' | 'surroundings' | 'messages' | 'checkout';
 
 const CAT_LABELS: Record<string, string> = {
   restaurant: '🍽️ Restaurant & Café',
@@ -138,29 +111,13 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const [tabContentKey, setTabContentKey] = useState(0);
   const [freshlyBooked, setFreshlyBooked] = useState(new Set<number>());
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
 
-  // Slide tab indicator to active tab
-  useEffect(() => {
-    const tabs = tabsRef.current;
-    const indicator = indicatorRef.current;
-    if (!tabs || !indicator) return;
-    const active = tabs.querySelector('.tab-btn.active') as HTMLElement | null;
-    if (!active) return;
-    indicator.style.left = `${active.offsetLeft}px`;
-    indicator.style.width = `${active.offsetWidth}px`;
-    indicator.style.opacity = '1';
-  }, [tab]);
-
-  // Register service worker
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(() => {});
     }
   }, []);
 
-  // Poll for new messages every 20s when on messages tab
   useEffect(() => {
     if (tab !== 'messages') return;
     const iv = setInterval(async () => {
@@ -178,16 +135,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: 'arrival', label: 'Anreise' },
-    ...(hotel.preArrivalEnabled && !booking.checkinCompleted ? [{ id: 'checkin' as Tab, label: 'Check-In' }] : []),
-    { id: 'messages', label: 'Nachrichten' },
-    ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Zusatzleistungen' }] : []),
-    ...((hotel.wifiPassword || hotel.parkingInfo || hotel.wasteInfo || hotel.houseRules || hotel.emergencyNumbers.length > 0) ? [{ id: 'houseinfo' as Tab, label: 'Hausinfos' }] : []),
-    ...(thingsToSee.length > 0 ? [{ id: 'surroundings' as Tab, label: 'Umgebung' }] : []),
-    { id: 'checkout', label: 'Abreise' },
-  ];
-
   const mapsUrl = hotel.address
     ? `https://maps.google.com/?q=${encodeURIComponent(hotel.address)}`
     : null;
@@ -202,10 +149,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       try {
         await sendGuestMessage(token, msgInput);
         const res = await fetch(`/api/gast/${token}`);
-        if (res.ok) {
-          const data = await res.json();
-          setMessages(data.messages);
-        }
+        if (res.ok) setMessages((await res.json()).messages);
         setMsgInput('');
       } catch {
         setMsgError('Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.');
@@ -233,25 +177,43 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     });
   }
 
+  const hasHausinfos = !!(hotel.wifiSsid || hotel.wifiPassword || hotel.parkingInfo || hotel.wasteInfo || hotel.houseRules || hotel.emergencyNumbers.length > 0);
+
+  const navItems: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    {
+      id: 'arrival', label: 'Anreise',
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    },
+    {
+      id: 'extras', label: 'Extras',
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
+    },
+    {
+      id: 'surroundings', label: 'Umgebung',
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+    },
+    {
+      id: 'messages', label: 'Nachrichten',
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+    },
+    {
+      id: 'checkout', label: 'Abreise',
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+    },
+  ];
+
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
-    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 max(80px, calc(60px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
+    .wrap { max-width: 560px; margin: 0 auto; padding-bottom: max(90px, calc(70px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
     .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .header-left { flex: 1; min-width: 0; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
     .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
-    .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; }
+    .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; text-decoration: none; display: inline-flex; align-items: center; }
     @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
-    @keyframes bwPulse { 0%,100%{box-shadow:0 0 0 0 ${accent}44} 50%{box-shadow:0 0 0 5px ${accent}00} }
-    .tabs { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; position: relative; }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { flex-shrink: 0; padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7280; border: none; background: none; cursor: pointer; transition: color 0.2s; white-space: nowrap; outline: none; }
-    .tab-btn.active { color: ${accent}; }
-    .tab-btn:focus-visible { outline: 2px solid ${accent}; outline-offset: -2px; border-radius: 4px; }
-    .tab-indicator { position: absolute; bottom: 0; height: 2px; background: ${accent}; border-radius: 1px; opacity: 0; transition: left 0.25s cubic-bezier(0.4,0,0.2,1), width 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.1s; pointer-events: none; }
     .content-anim > * { animation: cardReveal 0.28s ease both; }
     .content-anim > *:nth-child(1) { animation-delay: 0ms; }
     .content-anim > *:nth-child(2) { animation-delay: 55ms; }
@@ -260,10 +222,11 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .content-anim > *:nth-child(5) { animation-delay: 220ms; }
     .content-anim > *:nth-child(6) { animation-delay: 275ms; }
     .content-anim > *:nth-child(7) { animation-delay: 330ms; }
+    .content-anim > *:nth-child(8) { animation-delay: 385ms; }
+    .content-anim > *:nth-child(9) { animation-delay: 440ms; }
     .badge-pop { animation: bwPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
-    .badge-pulse { animation: bwPulse 2.4s ease-in-out infinite; }
-    .welcome-tile { border-radius: 14px; overflow: hidden; background: linear-gradient(135deg, ${accent}18, ${accent}06); border: 1.5px solid ${accent}33; }
     .content { padding: 20px; display: grid; gap: 16px; }
+    .section-label { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 0 0; }
     .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
     .card-body { padding: 16px 18px; display: grid; gap: 12px; }
@@ -271,13 +234,11 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .row-lbl { color: #6b7280; flex-shrink: 0; }
     .row-val { font-weight: 600; text-align: right; }
     .divider { height: 1px; background: #f0f0f0; }
-    .total-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; padding-top: 4px; }
     .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: 10px; border: none; background: ${accent}; color: ${onAccent}; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: inherit; }
     .btn:hover { opacity: 0.9; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-outline { background: transparent; border: 1.5px solid ${accent}; color: ${accent}; }
     .btn-sm { padding: 9px 16px; font-size: 13px; width: auto; }
-    .btn-danger { background: #dc2626; color: #fff; border: none; }
     .contact-grid { display: grid; gap: 10px; }
     .msg-list { display: grid; gap: 10px; max-height: 340px; overflow-y: auto; padding: 4px 0; }
     .msg-bubble { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
@@ -298,8 +259,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .extra-price { font-size: 15px; font-weight: 800; color: ${accent}; }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .badge-green { background: #dcfce7; color: #166534; }
-    .badge-yellow { background: #fef9c3; color: #713f12; }
-    .badge-blue { background: #dbeafe; color: #1e40af; }
     .nuki { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 18px; text-align: center; }
     .nuki-label { font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
     .nuki-code { font-size: 34px; font-weight: 900; letter-spacing: 0.2em; color: #111827; font-variant-numeric: tabular-nums; }
@@ -309,14 +268,19 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .success-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
     .success-text { font-size: 14px; color: #6b7280; line-height: 1.6; }
     .error-text { font-size: 13px; color: #dc2626; }
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; }
+    .bottom-nav-inner { width: 100%; max-width: 584px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; padding-bottom: env(safe-area-inset-bottom); }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 10px 4px 12px; border: none; background: none; color: #9ca3af; cursor: pointer; font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 0.02em; transition: color 0.15s; -webkit-tap-highlight-color: transparent; }
+    .nav-btn.active { color: ${accent}; }
     @media (prefers-color-scheme: dark) {
       body { background: #0f172a; color: #f1f5f9; }
       .card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
       .card-head { background: #162032; border-color: #2d3f55; color: #64748b; }
       .row-lbl { color: #94a3b8; }
       .divider { background: #2d3f55; }
-      .tabs { background: #1e293b; border-color: #2d3f55; }
-      .tab-btn { color: #64748b; }
+      .bottom-nav-inner { background: #1e293b; border-color: #2d3f55; }
+      .nav-btn { color: #475569; }
       .msg-hotel { background: #2d3f55; color: #f1f5f9; }
       .msg-input { background: #1e293b; color: #f1f5f9; border-color: #2d3f55; }
       .extra-card { border-color: #2d3f55; }
@@ -325,6 +289,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki { background: #052e16; border-color: #166534; }
       .nuki-code { color: #f1f5f9; }
       .nuki-hint { color: #d1fae5; }
+      .section-label { color: #475569; }
     }
   `;
 
@@ -349,26 +314,10 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               </div>
             </div>
             {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-              <button className="header-checkin-btn" onClick={() => handleTabChange('checkin')}>
+              <a href={`/checkin/${token}`} className="header-checkin-btn">
                 Check-In ↗
-              </button>
+              </a>
             )}
-          </div>
-
-          {/* Tabs */}
-          <div className="tabs" role="tablist" ref={tabsRef}>
-            {tabs.map((t) => (
-              <button
-                key={t.id}
-                role="tab"
-                aria-selected={tab === t.id}
-                className={`tab-btn${tab === t.id ? ' active' : ''}`}
-                onClick={() => handleTabChange(t.id)}
-              >
-                {t.label}
-              </button>
-            ))}
-            <div className="tab-indicator" ref={indicatorRef} aria-hidden="true" />
           </div>
 
           {/* Tab: Anreise */}
@@ -385,7 +334,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   </div>
                 </div>
               )}
-
               {hotel.checkinInfo && (
                 <div className="card">
                   <div className="card-head">🔑 Schlüsselübergabe</div>
@@ -394,7 +342,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   </div>
                 </div>
               )}
-
               {booking.nukiCode && (
                 <div className="nuki">
                   <div className="nuki-label">🔑 Ihr Zugangscode</div>
@@ -402,14 +349,12 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="nuki-hint">Gültig von Anreise bis Abreise</div>
                 </div>
               )}
-
               {mapsUrl && (
                 <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   Anreise planen
                 </a>
               )}
-
               {(hotel.phone || hotel.email || waUrl) && (
                 <div className="card">
                   <div className="card-head">Kontakt</div>
@@ -435,39 +380,162 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   </div>
                 </div>
               )}
+
+              {/* Hausinfos */}
+              {hasHausinfos && (
+                <>
+                  <div className="section-label">Hausinfos</div>
+                  {(hotel.wifiSsid || hotel.wifiPassword) && (
+                    <div className="card">
+                      <div className="card-head">📶 WLAN</div>
+                      <div className="card-body">
+                        {hotel.wifiSsid && (
+                          <div className="row">
+                            <span className="row-lbl">Netzwerk</span>
+                            <span className="row-val">{hotel.wifiSsid}</span>
+                          </div>
+                        )}
+                        {hotel.wifiPassword && (
+                          <div className="row">
+                            <span className="row-lbl">Passwort</span>
+                            <span className="row-val" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <span style={{ fontFamily: 'monospace', letterSpacing: '0.05em' }}>{hotel.wifiPassword}</span>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText(hotel.wifiPassword!).then(() => { setCopiedWifi(true); setTimeout(() => setCopiedWifi(false), 2000); }); }}
+                                style={{ padding: '3px 10px', border: '1.5px solid #e5e7eb', borderRadius: 6, background: copiedWifi ? '#dcfce7' : '#f9fafb', color: copiedWifi ? '#166534' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
+                              >
+                                {copiedWifi ? '✓ Kopiert' : 'Kopieren'}
+                              </button>
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {hotel.parkingInfo && (
+                    <div className="card">
+                      <div className="card-head">🅿️ Parkplatz</div>
+                      <div className="card-body">
+                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.parkingInfo}</p>
+                      </div>
+                    </div>
+                  )}
+                  {hotel.wasteInfo && (
+                    <div className="card">
+                      <div className="card-head">♻️ Müllentsorgung</div>
+                      <div className="card-body">
+                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.wasteInfo}</p>
+                      </div>
+                    </div>
+                  )}
+                  {hotel.houseRules && (
+                    <div className="card">
+                      <div className="card-head">📋 Hausordnung</div>
+                      <div className="card-body">
+                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.houseRules}</p>
+                      </div>
+                    </div>
+                  )}
+                  {hotel.emergencyNumbers.length > 0 && (
+                    <div className="card">
+                      <div className="card-head">🚨 Notfallnummern</div>
+                      <div className="card-body">
+                        {hotel.emergencyNumbers.map((e, i) => (
+                          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
+                            <a href={`tel:${e.number.replace(/\s/g, '')}`} style={{ fontSize: 15, fontWeight: 700, color: accent, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )}
 
-          {/* Tab: Check-In */}
-          {tab === 'checkin' && (
+          {/* Tab: Extras */}
+          {tab === 'extras' && (
             <div key={tabContentKey} className="content content-anim">
-              <div className="card">
-                <div className="card-head">Online Check-In</div>
-                <div className="card-body">
-                  {booking.checkinCompleted ? (
-                    <div className="success-box">
-                      <div className="success-icon">✅</div>
-                      <div className="success-title">Bereits eingecheckt</div>
-                      <div className="success-text">
-                        {booking.checkinArrivalTime && <>Geplante Ankunft: <strong>{booking.checkinArrivalTime}</strong></>}
+              {allExtras.length === 0 ? (
+                <div className="card">
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>Keine Zusatzleistungen verfügbar.</p>
+                  </div>
+                </div>
+              ) : allExtras.map((extra) => {
+                const done = bookedExtras.includes(extra.id);
+                const groupBlocked = !done && extra.exclusiveGroup !== null &&
+                  allExtras.some((e) => e.exclusiveGroup === extra.exclusiveGroup && bookedExtras.includes(e.id));
+                return (
+                  <div key={extra.id} className="extra-card" style={{ opacity: done || groupBlocked ? 0.6 : 1 }}>
+                    {extra.imageUrl && <img src={extra.imageUrl} alt={extra.name} className="extra-img" loading="lazy" />}
+                    <div className="extra-info">
+                      <div className="extra-name">{extra.name}</div>
+                      {extra.description && <div className="extra-desc">{extra.description}</div>}
+                      <div className="extra-footer">
+                        <span className="extra-price">{eur(extra.price)}</span>
+                        {done ? (
+                          <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>✓ Gebucht</span>
+                        ) : groupBlocked ? (
+                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>Variante bereits gebucht</span>
+                        ) : (
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                            {extra.linkUrl && (
+                              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">Mehr erfahren</a>
+                            )}
+                            <button className="btn btn-sm" disabled={isPending} onClick={() => handleBookExtra(extra.id)}>
+                              Hinzufügen
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
-                        Füllen Sie das Formular aus, um Zeit bei der Anreise zu sparen.
-                      </p>
-                      <a
-                        href={`/checkin/${token}`}
-                        className="btn"
-                        style={{ marginTop: 4 }}
-                      >
-                        Check-In Formular öffnen →
-                      </a>
-                    </>
-                  )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Tab: Umgebung */}
+          {tab === 'surroundings' && (
+            <div key={tabContentKey} className="content content-anim">
+              {thingsToSee.length === 0 ? (
+                <div className="card">
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>Noch keine Einträge.</p>
+                  </div>
                 </div>
-              </div>
+              ) : Object.entries(
+                thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => { (acc[t.category] ??= []).push(t); return acc; }, {})
+              ).map(([cat, entries]) => (
+                <div key={cat}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>{CAT_LABELS[cat] ?? cat}</div>
+                  <div style={{ display: 'grid', gap: 10 }}>
+                    {entries.map((t) => (
+                      <div key={t.id} className="card" style={{ overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', gap: 0 }}>
+                          {t.imageUrl && <img src={t.imageUrl} alt={t.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />}
+                          <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
+                            {t.description && (
+                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                {t.description}
+                              </div>
+                            )}
+                            {t.address && <div style={{ fontSize: 12, color: '#9ca3af' }}>{t.address}</div>}
+                          </div>
+                          {t.mapsUrl && (
+                            <a href={t.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }} aria-label="In Maps öffnen">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
@@ -485,12 +553,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div className="msg-list">
                       {messages.map((m) => (
                         <div key={m.id} className={`msg-wrap${m.sender === 'guest' ? ' guest' : ''}`}>
-                          <div className={`msg-bubble ${m.sender === 'hotel' ? 'msg-hotel' : 'msg-guest'}`}>
-                            {m.body}
-                          </div>
-                          <span className="msg-time">
-                            {m.sender === 'hotel' ? `${hotel.name} · ` : ''}{fmtTime(m.createdAt)}
-                          </span>
+                          <div className={`msg-bubble ${m.sender === 'hotel' ? 'msg-hotel' : 'msg-guest'}`}>{m.body}</div>
+                          <span className="msg-time">{m.sender === 'hotel' ? `${hotel.name} · ` : ''}{fmtTime(m.createdAt)}</span>
                         </div>
                       ))}
                       <div ref={messagesEndRef} />
@@ -499,197 +563,17 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="divider" />
                   <div className="msg-input-row">
                     <textarea
-                      className="msg-input"
-                      rows={2}
-                      placeholder="Nachricht schreiben …"
-                      value={msgInput}
-                      onChange={(e) => setMsgInput(e.target.value)}
+                      className="msg-input" rows={2} placeholder="Nachricht schreiben …"
+                      value={msgInput} onChange={(e) => setMsgInput(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                     />
-                    <button
-                      className="btn btn-sm"
-                      style={{ flexShrink: 0, alignSelf: 'flex-end' }}
-                      onClick={handleSendMessage}
-                      disabled={isPending || !msgInput.trim()}
-                      aria-label="Senden"
-                    >
+                    <button className="btn btn-sm" style={{ flexShrink: 0, alignSelf: 'flex-end' }} onClick={handleSendMessage} disabled={isPending || !msgInput.trim()} aria-label="Senden">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                     </button>
                   </div>
                   {msgError && <p className="error-text">{msgError}</p>}
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Tab: Extras */}
-          {tab === 'extras' && (
-            <div key={tabContentKey} className="content content-anim">
-              {allExtras.map((extra) => {
-                const done = bookedExtras.includes(extra.id);
-                const groupBlocked = !done && extra.exclusiveGroup !== null && extra.exclusiveGroup !== undefined &&
-                  allExtras.some((e) => e.exclusiveGroup === extra.exclusiveGroup && bookedExtras.includes(e.id));
-                return (
-                  <div key={extra.id} className="extra-card" style={{ opacity: done || groupBlocked ? 0.6 : 1 }}>
-                    {extra.imageUrl && (
-                      <img src={extra.imageUrl} alt={extra.name} className="extra-img" loading="lazy" />
-                    )}
-                    <div className="extra-info">
-                      <div className="extra-name">{extra.name}</div>
-                      {extra.description && <div className="extra-desc">{extra.description}</div>}
-                      <div className="extra-footer">
-                        <span className="extra-price">{eur(extra.price)}</span>
-                        {done ? (
-                          <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>✓ Gebucht</span>
-                        ) : groupBlocked ? (
-                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>Variante bereits gebucht</span>
-                        ) : (
-                          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                            {extra.linkUrl && (
-                              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">
-                                Mehr erfahren
-                              </a>
-                            )}
-                            <button
-                              className="btn btn-sm"
-                              disabled={isPending}
-                              onClick={() => handleBookExtra(extra.id)}
-                            >
-                              Hinzufügen
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Tab: Hausinfos */}
-          {tab === 'houseinfo' && (
-            <div key={tabContentKey} className="content content-anim">
-              {(hotel.wifiSsid || hotel.wifiPassword) && (
-                <div className="card">
-                  <div className="card-head">📶 WLAN</div>
-                  <div className="card-body">
-                    {hotel.wifiSsid && (
-                      <div className="row">
-                        <span className="row-lbl">Netzwerk</span>
-                        <span className="row-val">{hotel.wifiSsid}</span>
-                      </div>
-                    )}
-                    {hotel.wifiPassword && (
-                      <div className="row">
-                        <span className="row-lbl">Passwort</span>
-                        <span className="row-val" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontFamily: 'monospace', letterSpacing: '0.05em' }}>{hotel.wifiPassword}</span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(hotel.wifiPassword!).then(() => {
-                                setCopiedWifi(true);
-                                setTimeout(() => setCopiedWifi(false), 2000);
-                              });
-                            }}
-                            style={{ padding: '3px 10px', border: '1.5px solid #e5e7eb', borderRadius: 6, background: copiedWifi ? '#dcfce7' : '#f9fafb', color: copiedWifi ? '#166534' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
-                          >
-                            {copiedWifi ? '✓ Kopiert' : 'Kopieren'}
-                          </button>
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              {hotel.parkingInfo && (
-                <div className="card">
-                  <div className="card-head">🅿️ Parkplatz</div>
-                  <div className="card-body">
-                    <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.parkingInfo}</p>
-                  </div>
-                </div>
-              )}
-              {hotel.wasteInfo && (
-                <div className="card">
-                  <div className="card-head">♻️ Müllentsorgung</div>
-                  <div className="card-body">
-                    <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.wasteInfo}</p>
-                  </div>
-                </div>
-              )}
-              {hotel.houseRules && (
-                <div className="card">
-                  <div className="card-head">📋 Hausordnung</div>
-                  <div className="card-body">
-                    <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.houseRules}</p>
-                  </div>
-                </div>
-              )}
-              {hotel.emergencyNumbers.length > 0 && (
-                <div className="card">
-                  <div className="card-head">🚨 Notfallnummern</div>
-                  <div className="card-body">
-                    {hotel.emergencyNumbers.map((e, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
-                        <a href={`tel:${e.number.replace(/\s/g, '')}`} style={{ fontSize: 15, fontWeight: 700, color: accent, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Tab: Umgebung */}
-          {tab === 'surroundings' && (
-            <div key={tabContentKey} className="content content-anim">
-              {Object.entries(
-                thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => {
-                  (acc[t.category] ??= []).push(t);
-                  return acc;
-                }, {})
-              ).map(([cat, entries]) => (
-                <div key={cat}>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>
-                    {CAT_LABELS[cat] ?? cat}
-                  </div>
-                  <div style={{ display: 'grid', gap: 10 }}>
-                    {entries.map((t) => (
-                      <div key={t.id} className="card" style={{ overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', gap: 0 }}>
-                          {t.imageUrl && (
-                            <img src={t.imageUrl} alt={t.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />
-                          )}
-                          <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
-                            {t.description && (
-                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                                {t.description}
-                              </div>
-                            )}
-                            {t.address && (
-                              <div style={{ fontSize: 12, color: '#9ca3af' }}>{t.address}</div>
-                            )}
-                          </div>
-                          {t.mapsUrl && (
-                            <a
-                              href={t.mapsUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }}
-                              aria-label="In Maps öffnen"
-                            >
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
             </div>
           )}
 
@@ -703,9 +587,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div className="success-box">
                       <div className="success-icon">👋</div>
                       <div className="success-title">Auf Wiedersehen!</div>
-                      <div className="success-text">
-                        Vielen Dank für Ihren Aufenthalt. Das Team wurde über Ihre Abreise informiert.
-                      </div>
+                      <div className="success-text">Vielen Dank für Ihren Aufenthalt. Das Team wurde über Ihre Abreise informiert.</div>
                     </div>
                   ) : (
                     <>
@@ -718,30 +600,14 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                       <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
                         Wenn Sie zur Abreise bereit sind, informieren Sie das Team mit einem Klick — kein Warten an der Rezeption nötig.
                       </p>
-                      <button
-                        className="btn"
-                        disabled={isPending}
-                        onClick={handleCheckout}
-                      >
-                        Jetzt auschecken
-                      </button>
+                      <button className="btn" disabled={isPending} onClick={handleCheckout}>Jetzt auschecken</button>
                     </>
                   )}
-
                   {hotel.reviewRequestLink && checkoutDone && (
                     <>
                       <div className="divider" />
-                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
-                        Hat Ihnen Ihr Aufenthalt gefallen? Wir freuen uns über eine Bewertung!
-                      </p>
-                      <a
-                        href={hotel.reviewRequestLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline"
-                      >
-                        ⭐ Bewertung schreiben
-                      </a>
+                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>Hat Ihnen Ihr Aufenthalt gefallen? Wir freuen uns über eine Bewertung!</p>
+                      <a href={hotel.reviewRequestLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">⭐ Bewertung schreiben</a>
                     </>
                   )}
                 </div>
@@ -749,6 +615,18 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
             </div>
           )}
         </div>
+
+        {/* Bottom Navigation */}
+        <nav className="bottom-nav" aria-label="Navigation">
+          <div className="bottom-nav-inner">
+            {navItems.map((item) => (
+              <button key={item.id} className={`nav-btn${tab === item.id ? ' active' : ''}`} onClick={() => handleTabChange(item.id)} aria-label={item.label}>
+                {item.icon}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </nav>
       </body>
     </html>
   );
