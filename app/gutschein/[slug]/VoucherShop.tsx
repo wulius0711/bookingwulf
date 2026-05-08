@@ -127,10 +127,10 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
 
   const inputStyle: React.CSSProperties = {
     width: '100%', boxSizing: 'border-box', padding: '11px 14px',
-    border: '1.5px solid #e5e7eb', borderRadius: 10, fontSize: 15,
-    fontFamily: 'inherit', color: '#111', outline: 'none',
+    border: '1.5px solid var(--vs-border)', borderRadius: 10, fontSize: 15,
+    fontFamily: 'inherit', color: 'var(--vs-text)', outline: 'none',
   };
-  const labelStyle: React.CSSProperties = { display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 };
+  const labelStyle: React.CSSProperties = { display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--vs-label)', marginBottom: 6 };
 
   return (
     <>
@@ -148,9 +148,9 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
           40%  { transform: scale(1.025); box-shadow: 0 6px 28px var(--vs-accent-glow); }
           100% { transform: scale(1); }
         }
-        .vs-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #111827; }
-        .vs-card { background: #fff; border-radius: 16px; overflow: hidden; animation: vs-fade-in 0.35s ease both; }
-        .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; overflow: hidden; transition: border-color 0.2s, transform 0.2s; animation: vs-fade-up 0.42s ease both; }
+        .vs-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--vs-text); }
+        .vs-card { background: var(--vs-bg); border-radius: 16px; overflow: hidden; animation: vs-fade-in 0.35s ease both; }
+        .vs-template { background: var(--vs-bg); border-radius: 14px; border: 2px solid var(--vs-border); overflow: hidden; transition: border-color 0.2s, transform 0.2s; animation: vs-fade-up 0.42s ease both; }
         .vs-template:hover { border-color: var(--vs-accent-soft); transform: translateY(-1px); }
         .vs-template.in-cart { border-color: var(--vs-accent); animation: vs-select-pulse 0.35s ease forwards; }
         .vs-qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--vs-accent); background: transparent; color: var(--vs-accent); font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s, color 0.15s; }
@@ -170,13 +170,22 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
           '--vs-on-accent': onAccent,
           '--vs-accent-soft': `${accent}88`,
           '--vs-accent-glow': `${accent}33`,
+          '--vs-bg': '#ffffff',
+          '--vs-surface': '#f9fafb',
+          '--vs-border': '#e5e7eb',
+          '--vs-border-subtle': '#f3f4f6',
+          '--vs-text': '#111827',
+          '--vs-label': '#374151',
+          '--vs-muted': '#6b7280',
+          '--vs-faint': '#9ca3af',
+          '--vs-error': '#dc2626',
         } as React.CSSProperties}
       >
         {/* Header */}
         <div style={{ marginBottom: 24, textAlign: 'center' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{hotel.name}</div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a' }}>Gutschein kaufen</h1>
-          <p style={{ marginTop: 6, fontSize: 15, color: '#6b7280' }}>Verschenken Sie ein unvergessliches Erlebnis.</p>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--vs-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{hotel.name}</div>
+          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--vs-text)' }}>Gutschein kaufen</h1>
+          <p style={{ marginTop: 6, fontSize: 15, color: 'var(--vs-muted)' }}>Verschenken Sie ein unvergessliches Erlebnis.</p>
         </div>
 
         {step === 'select' && (
@@ -195,14 +204,14 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
                   <div style={{ padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: 16 }}>{t.name}</div>
-                      {t.description && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 3, lineHeight: 1.4 }}>{t.description}</div>}
-                      <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{t.validDays} Tage gültig</div>
+                      {t.description && <div style={{ fontSize: 13, color: 'var(--vs-muted)', marginTop: 3, lineHeight: 1.4 }}>{t.description}</div>}
+                      <div style={{ fontSize: 12, color: 'var(--vs-faint)', marginTop: 4 }}>{t.validDays} Tage gültig</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
                       <div style={{ textAlign: 'right' }}>
                         <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price)}</div>
                         {t.value !== t.price && (
-                          <div style={{ fontSize: 12, color: '#9ca3af' }}>Wert: {eur(t.value)}</div>
+                          <div style={{ fontSize: 12, color: 'var(--vs-faint)' }}>Wert: {eur(t.value)}</div>
                         )}
                       </div>
                       {qty === 0 ? (
@@ -221,8 +230,8 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             })}
 
             {cartCount > 0 && (
-              <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>
+              <div style={{ padding: '6px 2px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--vs-label)' }}>
                   {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
                 </div>
                 <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(animatedTotal)}</div>
@@ -238,18 +247,18 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         {step === 'form' && (
           <div className="vs-step-form" style={{ display: 'grid', gap: 20 }}>
             {/* Cart summary */}
-            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '16px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+            <div style={{ background: 'var(--vs-bg)', border: '1px solid var(--vs-border)', borderRadius: 14, padding: '16px 20px' }}>
               {cartItems.map(t => (
                 <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0' }}>
-                  <div style={{ fontWeight: 500, fontSize: 14, color: '#111827' }}>
-                    <span style={{ color: '#9ca3af', fontWeight: 600, marginRight: 6, fontVariantNumeric: 'tabular-nums' }}>{cart.get(t.id)}×</span>
+                  <div style={{ fontWeight: 500, fontSize: 14, color: 'var(--vs-text)' }}>
+                    <span style={{ color: 'var(--vs-faint)', fontWeight: 600, marginRight: 6, fontVariantNumeric: 'tabular-nums' }}>{cart.get(t.id)}×</span>
                     {t.name}
                   </div>
-                  <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>{eur((cart.get(t.id)!) * t.price)}</div>
+                  <div style={{ fontSize: 14, color: 'var(--vs-label)', fontWeight: 500 }}>{eur((cart.get(t.id)!) * t.price)}</div>
                 </div>
               ))}
-              <div style={{ borderTop: '1px solid #f3f4f6', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>Gesamt</span>
+              <div style={{ borderTop: '1px solid var(--vs-border-subtle)', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--vs-text)' }}>Gesamt</span>
                 <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</span>
               </div>
               <button onClick={() => setStep('select')} style={{ marginTop: 10, fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0, opacity: 0.85 }}>
@@ -272,8 +281,8 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             </div>
 
             <div className="vs-card" style={{ padding: 20 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Empfänger <span style={{ fontWeight: 400, color: '#9ca3af', fontSize: 13 }}>(optional)</span></div>
-              <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.5 }}>Der Gutschein wird auch an die Empfänger-E-Mail geschickt.</p>
+              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Empfänger <span style={{ fontWeight: 400, color: 'var(--vs-faint)', fontSize: 13 }}>(optional)</span></div>
+              <p style={{ fontSize: 13, color: 'var(--vs-muted)', marginBottom: 16, lineHeight: 1.5 }}>Der Gutschein wird auch an die Empfänger-E-Mail geschickt.</p>
               <div style={{ display: 'grid', gap: 14 }}>
                 <div>
                   <label style={labelStyle}>Name des Empfängers</label>
@@ -290,7 +299,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
               </div>
             </div>
 
-            {error && <p style={{ fontSize: 14, color: '#dc2626' }}>{error}</p>}
+            {error && <p style={{ fontSize: 14, color: 'var(--vs-error)' }}>{error}</p>}
 
             <button className="vs-btn" onClick={handleCheckout} disabled={loading}>
               {loading ? 'Weiterleitung …' : `Jetzt bezahlen — ${eur(cartTotal)}`}
