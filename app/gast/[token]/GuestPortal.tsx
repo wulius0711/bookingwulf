@@ -323,6 +323,16 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {/* Tab: Anreise */}
           {tab === 'arrival' && (
             <div key={tabContentKey} className="content content-anim">
+              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
+                <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 18px', background: accent, color: onAccent, borderRadius: 14, textDecoration: 'none' }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.75, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 3 }}>Ausstehend</div>
+                    <div style={{ fontSize: 16, fontWeight: 800 }}>Online Check-In</div>
+                    <div style={{ fontSize: 13, opacity: 0.8, marginTop: 2 }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
+                  </div>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.85 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              )}
               {hotel.checkinTime && (
                 <div className="card">
                   <div className="card-head">🕐 Check-in</div>
