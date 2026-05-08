@@ -4,6 +4,7 @@ import { saveGuestPortalSettings } from './actions';
 import EmergencyNumbersEditor from '../settings/EmergencyNumbersEditor';
 import SaveButton from '../components/SaveButton';
 import ThingsToSeeManager from '../things-to-see/ThingsToSeeManager';
+import CheckinImageManager from '../components/CheckinImageManager';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,7 +69,7 @@ export default async function GuestPortalSettingsPage() {
 
   if (!selected) return <p>Kein Hotel</p>;
 
-  const [thingsToSee, apartments] = await Promise.all([
+  const [thingsToSee, apartments, checkinImages] = await Promise.all([
     prisma.thingsToSee.findMany({
       where: { hotelId: selected.id },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
@@ -77,6 +78,11 @@ export default async function GuestPortalSettingsPage() {
       where: { hotelId: selected.id },
       select: { id: true, name: true },
       orderBy: { name: 'asc' },
+    }),
+    prisma.checkinImage.findMany({
+      where: { hotelId: selected.id, apartmentId: null },
+      select: { id: true, imageUrl: true, caption: true, sortOrder: true },
+      orderBy: { sortOrder: 'asc' },
     }),
   ]);
 
@@ -148,6 +154,13 @@ export default async function GuestPortalSettingsPage() {
                   <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
                 </label>
                 <textarea name="checkinInfo" rows={4} defaultValue={selected.settings?.checkinInfo ?? ''} placeholder="z. B. Der Schlüssel liegt in der Schlüsselbox beim Eingang. Code wird 24h vor Anreise per E-Mail zugeschickt." style={{ ...inputStyle, resize: 'vertical' } as React.CSSProperties} />
+              </div>
+              <div className="settings-row" style={rowStyle}>
+                <label style={labelStyle}>Check-in Fotos</label>
+                <CheckinImageManager
+                  hotelId={selected.id}
+                  initialImages={checkinImages}
+                />
               </div>
             </div>
           </details>
