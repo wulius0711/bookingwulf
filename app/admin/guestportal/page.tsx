@@ -68,10 +68,17 @@ export default async function GuestPortalSettingsPage() {
 
   if (!selected) return <p>Kein Hotel</p>;
 
-  const thingsToSee = await prisma.thingsToSee.findMany({
-    where: { hotelId: selected.id },
-    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
-  });
+  const [thingsToSee, apartments] = await Promise.all([
+    prisma.thingsToSee.findMany({
+      where: { hotelId: selected.id },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    }),
+    prisma.apartment.findMany({
+      where: { hotelId: selected.id },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    }),
+  ]);
 
   return (
     <main className="admin-page" style={{ minHeight: '100vh', background: 'var(--page-bg)', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -209,6 +216,7 @@ export default async function GuestPortalSettingsPage() {
                 createdAt: i.createdAt.toISOString(),
                 updatedAt: i.updatedAt.toISOString(),
               }))}
+              apartments={apartments}
             />
           </div>
         </details>

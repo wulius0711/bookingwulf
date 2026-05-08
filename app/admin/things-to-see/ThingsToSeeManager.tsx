@@ -14,10 +14,12 @@ type Item = {
   placeId: string | null;
   isActive: boolean;
   sortOrder: number;
+  apartmentId: number | null;
   createdAt: string;
   updatedAt: string;
 };
 
+type Apartment = { id: number; name: string };
 type Suggestion = { placeId: string; title: string; subtitle: string };
 
 const CATEGORIES = [
@@ -36,7 +38,7 @@ function catIcon(v: string) {
   return CATEGORIES.find((c) => c.value === v)?.icon ?? '📍';
 }
 
-export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId: number; initialItems: Item[] }) {
+export default function ThingsToSeeManager({ hotelId, initialItems, apartments }: { hotelId: number; initialItems: Item[]; apartments: Apartment[] }) {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -46,7 +48,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId:
   const [editData, setEditData] = useState<Partial<Item>>({});
   const [error, setError] = useState('');
   const [showManualForm, setShowManualForm] = useState(false);
-  const [manualData, setManualData] = useState({ category: 'event', title: '', description: '', address: '', mapsUrl: '' });
+  const [manualData, setManualData] = useState({ category: 'event', title: '', description: '', address: '', mapsUrl: '', apartmentId: '' });
   const [filterCat, setFilterCat] = useState('all');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -109,11 +111,11 @@ export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId:
         const res = await fetch('/api/admin/things-to-see', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ hotelId, ...manualData }),
+          body: JSON.stringify({ hotelId, ...manualData, apartmentId: manualData.apartmentId ? Number(manualData.apartmentId) : null }),
         });
         const newItem = await res.json();
         setItems((prev) => [...prev, newItem]);
-        setManualData({ category: 'event', title: '', description: '', address: '', mapsUrl: '' });
+        setManualData({ category: 'event', title: '', description: '', address: '', mapsUrl: '', apartmentId: '' });
         setShowManualForm(false);
       } catch { setError('Fehler beim Speichern'); }
     });
@@ -206,6 +208,15 @@ export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId:
                   <input style={inp} value={manualData.mapsUrl} onChange={(e) => setManualData((d) => ({ ...d, mapsUrl: e.target.value }))} placeholder="https://maps.google.com/…" />
                 </div>
               </div>
+              {apartments.length > 1 && (
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 4 }}>Wohnung (optional)</label>
+                  <select style={inp} value={manualData.apartmentId} onChange={(e) => setManualData((d) => ({ ...d, apartmentId: e.target.value }))}>
+                    <option value="">Alle Wohnungen</option>
+                    {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  </select>
+                </div>
+              )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                 <button style={{ ...btn, background: '#f3f4f6', color: '#374151' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
                 <button style={{ ...btn, background: '#111827', color: '#fff' }} onClick={addManual} disabled={isPending || !manualData.title.trim()}>Hinzufügen</button>
@@ -260,6 +271,19 @@ export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId:
                 <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 4 }}>Adresse</label>
                 <input style={inp} value={editData.address ?? item.address ?? ''} onChange={(e) => setEditData((d) => ({ ...d, address: e.target.value }))} />
               </div>
+              {apartments.length > 1 && (
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 4 }}>Wohnung (optional)</label>
+                  <select
+                    style={inp}
+                    value={editData.apartmentId !== undefined ? (editData.apartmentId ?? '') : (item.apartmentId ?? '')}
+                    onChange={(e) => setEditData((d) => ({ ...d, apartmentId: e.target.value ? Number(e.target.value) : null }))}
+                  >
+                    <option value="">Alle Wohnungen</option>
+                    {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  </select>
+                </div>
+              )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                 <button style={{ ...btn, background: '#f3f4f6', color: '#374151' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
                 <button className="btn-shine" style={{ ...btn, background: '#111827', color: '#fff' }} onClick={saveEdit}>Speichern</button>
@@ -279,6 +303,13 @@ export default function ThingsToSeeManager({ hotelId, initialItems }: { hotelId:
                     <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{catLabel(item.category)}</div>
                     {item.address && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.address}</div>}
                     {item.description && <div style={{ fontSize: 12, color: '#374151', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</div>}
+                    {item.apartmentId && apartments.length > 1 && (
+                      <div style={{ marginTop: 5 }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', background: '#f3f4f6', borderRadius: 6, padding: '2px 7px' }}>
+                          {apartments.find((a) => a.id === item.apartmentId)?.name ?? 'Wohnung'}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                     <button style={{ ...btn, background: '#f3f4f6', color: '#374151', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
