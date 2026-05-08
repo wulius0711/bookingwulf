@@ -67,15 +67,6 @@ type Props = {
 
 type Tab = 'arrival' | 'extras' | 'surroundings' | 'messages' | 'checkout';
 
-const CAT_LABELS: Record<string, string> = {
-  restaurant: '🍽️ Restaurant & Café',
-  attraction: '🏛️ Sehenswürdigkeit',
-  activity: '🏔️ Aktivität',
-  event: '🎉 Events',
-  shopping: '🛍️ Einkaufen',
-  emergency: '🏥 Wichtiges',
-};
-
 function hexLuminance(hex: string): number {
   const c = hex.replace('#', '');
   const r = parseInt(c.slice(0, 2), 16) / 255;
@@ -85,17 +76,117 @@ function hexLuminance(hex: string): number {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
-function fmt(iso: string) {
-  return new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
+function fmt(iso: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
 }
 
-function fmtTime(iso: string) {
-  return new Intl.DateTimeFormat('de-AT', { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+function fmtTime(iso: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 }
 
 function eur(n: number) {
   return new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(n);
 }
+
+const TRANSLATIONS = {
+  de: {
+    guestportal: 'Gästeportal', night: 'Nacht', nights: 'Nächte',
+    checkinPending: 'Online Check-In ausstehend',
+    checkinPendingDesc: 'Jetzt ausfüllen und Zeit bei der Anreise sparen.',
+    checkinFrom: 'Check-in ab', oclock: ' Uhr',
+    keyHandover: '🔑 Schlüsselübergabe',
+    accessCode: '🔑 Ihr Zugangscode', accessCodeValid: 'Gültig von Anreise bis Abreise',
+    planArrival: 'Anreise planen', contact: 'Kontakt',
+    call: 'Anrufen', whatsapp: 'WhatsApp', emailBtn: 'E-Mail schreiben',
+    houseinfo: 'Hausinfos', wifi: '📶 WLAN', network: 'Netzwerk', password: 'Passwort',
+    copy: 'Kopieren', copied: '✓ Kopiert',
+    parking: '🅿️ Parkplatz', waste: '♻️ Müllentsorgung',
+    houseRules: '📋 Hausordnung', emergency: '🚨 Notfallnummern',
+    noExtras: 'Keine Zusatzleistungen verfügbar.',
+    booked: '✓ Gebucht', variantBooked: 'Variante bereits gebucht',
+    learnMore: 'Mehr erfahren', add: 'Hinzufügen',
+    noSurroundings: 'Noch keine Einträge.', less: '▴ Weniger', openInMaps: 'In Maps öffnen',
+    messagesHead: 'Nachrichten',
+    noMessages: (h: string) => `Noch keine Nachrichten. Schreiben Sie dem ${h}-Team direkt hier.`,
+    msgPlaceholder: 'Nachricht schreiben …',
+    msgError: 'Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.',
+    checkoutHead: 'Abreise', checkoutTime: 'Check-Out Zeit',
+    checkoutDesc: 'Wenn Sie zur Abreise bereit sind, informieren Sie das Team mit einem Klick — kein Warten an der Rezeption nötig.',
+    checkoutBtn: 'Jetzt auschecken', goodbye: 'Auf Wiedersehen!',
+    goodbyeText: 'Vielen Dank für Ihren Aufenthalt. Das Team wurde über Ihre Abreise informiert.',
+    reviewPrompt: 'Hat Ihnen Ihr Aufenthalt gefallen? Wir freuen uns über eine Bewertung!',
+    reviewBtn: '⭐ Bewertung schreiben',
+    navArrival: 'Anreise', navExtras: 'Extras', navSurroundings: 'Umgebung',
+    navMessages: 'Nachrichten', navCheckout: 'Abreise',
+    cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Sehenswürdigkeit', activity: '🏔️ Aktivität', event: '🎉 Events', shopping: '🛍️ Einkaufen', emergency: '🏥 Wichtiges' },
+    locale: 'de-AT',
+  },
+  en: {
+    guestportal: 'Guest Portal', night: 'night', nights: 'nights',
+    checkinPending: 'Online Check-In pending',
+    checkinPendingDesc: 'Fill in now and save time on arrival.',
+    checkinFrom: 'Check-in from', oclock: '',
+    keyHandover: '🔑 Key Handover',
+    accessCode: '🔑 Your Access Code', accessCodeValid: 'Valid from arrival to departure',
+    planArrival: 'Plan Arrival', contact: 'Contact',
+    call: 'Call', whatsapp: 'WhatsApp', emailBtn: 'Send E-Mail',
+    houseinfo: 'House Info', wifi: '📶 Wi-Fi', network: 'Network', password: 'Password',
+    copy: 'Copy', copied: '✓ Copied',
+    parking: '🅿️ Parking', waste: '♻️ Waste Disposal',
+    houseRules: '📋 House Rules', emergency: '🚨 Emergency Numbers',
+    noExtras: 'No additional services available.',
+    booked: '✓ Booked', variantBooked: 'Variant already booked',
+    learnMore: 'Learn more', add: 'Add',
+    noSurroundings: 'No entries yet.', less: '▴ Less', openInMaps: 'Open in Maps',
+    messagesHead: 'Messages',
+    noMessages: (h: string) => `No messages yet. Write to the ${h} team directly here.`,
+    msgPlaceholder: 'Write a message …',
+    msgError: 'Message could not be sent. Please try again.',
+    checkoutHead: 'Departure', checkoutTime: 'Check-Out Time',
+    checkoutDesc: 'When you are ready to leave, notify the team with one click — no waiting at reception.',
+    checkoutBtn: 'Check out now', goodbye: 'Goodbye!',
+    goodbyeText: 'Thank you for your stay. The team has been notified of your departure.',
+    reviewPrompt: 'Did you enjoy your stay? We would love a review!',
+    reviewBtn: '⭐ Write a review',
+    navArrival: 'Arrival', navExtras: 'Extras', navSurroundings: 'Around',
+    navMessages: 'Messages', navCheckout: 'Departure',
+    cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Attraction', activity: '🏔️ Activity', event: '🎉 Events', shopping: '🛍️ Shopping', emergency: '🏥 Important' },
+    locale: 'en-GB',
+  },
+  it: {
+    guestportal: 'Portale Ospiti', night: 'notte', nights: 'notti',
+    checkinPending: 'Check-In online in sospeso',
+    checkinPendingDesc: "Compilalo ora e risparmia tempo all'arrivo.",
+    checkinFrom: 'Check-in dalle', oclock: '',
+    keyHandover: '🔑 Consegna chiavi',
+    accessCode: '🔑 Il suo codice di accesso', accessCodeValid: "Valido dall'arrivo alla partenza",
+    planArrival: 'Pianifica arrivo', contact: 'Contatto',
+    call: 'Chiama', whatsapp: 'WhatsApp', emailBtn: 'Scrivi e-mail',
+    houseinfo: 'Info struttura', wifi: '📶 Wi-Fi', network: 'Rete', password: 'Password',
+    copy: 'Copia', copied: '✓ Copiato',
+    parking: '🅿️ Parcheggio', waste: '♻️ Raccolta rifiuti',
+    houseRules: '📋 Regolamento', emergency: '🚨 Numeri di emergenza',
+    noExtras: 'Nessun servizio aggiuntivo disponibile.',
+    booked: '✓ Prenotato', variantBooked: 'Variante già prenotata',
+    learnMore: 'Scopri di più', add: 'Aggiungi',
+    noSurroundings: 'Nessuna voce disponibile.', less: '▴ Meno', openInMaps: 'Apri su Maps',
+    messagesHead: 'Messaggi',
+    noMessages: (h: string) => `Nessun messaggio. Scrivi direttamente al team di ${h}.`,
+    msgPlaceholder: 'Scrivi un messaggio …',
+    msgError: 'Impossibile inviare il messaggio. Riprova.',
+    checkoutHead: 'Partenza', checkoutTime: 'Orario check-out',
+    checkoutDesc: 'Quando sei pronto a partire, avvisa il team con un clic — senza attendere alla reception.',
+    checkoutBtn: 'Effettua check-out', goodbye: 'Arrivederci!',
+    goodbyeText: 'Grazie per il soggiorno. Il team è stato informato della tua partenza.',
+    reviewPrompt: 'Ti è piaciuto il soggiorno? Lascia una recensione!',
+    reviewBtn: '⭐ Scrivi una recensione',
+    navArrival: 'Arrivo', navExtras: 'Extra', navSurroundings: 'Dintorni',
+    navMessages: 'Messaggi', navCheckout: 'Partenza',
+    cats: { restaurant: '🍽️ Ristorante & Caffè', attraction: '🏛️ Attrazione', activity: '🏔️ Attività', event: '🎉 Eventi', shopping: '🛍️ Shopping', emergency: '🏥 Importante' },
+    locale: 'it-IT',
+  },
+} as const;
+type Lang = keyof typeof TRANSLATIONS;
 
 export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, initialMessages }: Props) {
   const accent = hotel.accentColor || '#111827';
@@ -114,6 +205,19 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('gp_lang') as Lang | null;
+      if (stored && stored in TRANSLATIONS) return stored;
+    }
+    const bl = booking.language as Lang;
+    return bl in TRANSLATIONS ? bl : 'de';
+  });
+  const t = TRANSLATIONS[lang];
+
+  useEffect(() => {
+    localStorage.setItem('gp_lang', lang);
+  }, [lang]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -169,7 +273,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
         if (res.ok) setMessages((await res.json()).messages);
         setMsgInput('');
       } catch {
-        setMsgError('Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.');
+        setMsgError(t.msgError);
       }
     });
   }
@@ -198,23 +302,23 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
   const navItems: { id: Tab; label: string; icon: React.ReactNode }[] = [
     {
-      id: 'arrival', label: 'Anreise',
+      id: 'arrival', label: t.navArrival,
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
     },
     {
-      id: 'extras', label: 'Extras',
+      id: 'extras', label: t.navExtras,
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
     },
     {
-      id: 'surroundings', label: 'Umgebung',
+      id: 'surroundings', label: t.navSurroundings,
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
     },
     {
-      id: 'messages', label: 'Nachrichten',
+      id: 'messages', label: t.navMessages,
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
     },
     {
-      id: 'checkout', label: 'Abreise',
+      id: 'checkout', label: t.navCheckout,
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
     },
   ];
@@ -317,7 +421,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   `;
 
   return (
-    <html lang="de">
+    <html lang={lang}>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -331,16 +435,30 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           <div className="header">
             <div className="header-left">
               <div className="header-hotel">{hotel.name}</div>
-              <div className="header-title">Gästeportal</div>
+              <div className="header-title">{t.guestportal}</div>
               <div className="header-sub">
-                {fmt(booking.arrival)} — {fmt(booking.departure)} · {booking.nights} {booking.nights === 1 ? 'Nacht' : 'Nächte'}
+                {fmt(booking.arrival, t.locale)} — {fmt(booking.departure, t.locale)} · {booking.nights} {booking.nights === 1 ? t.night : t.nights}
               </div>
             </div>
-            {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-              <a href={`/checkin/${token}`} className="header-checkin-btn">
-                Check-In ↗
-              </a>
-            )}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
+                <a href={`/checkin/${token}`} className="header-checkin-btn">Check-In ↗</a>
+              )}
+              <div style={{ display: 'flex', gap: 4 }}>
+                {(['de', 'en', 'it'] as Lang[]).map((l) => (
+                  <button key={l} onClick={() => setLang(l)} style={{
+                    padding: '3px 8px', borderRadius: 6,
+                    border: `1px solid rgba(255,255,255,${lang === l ? '0.6' : '0.2'})`,
+                    background: lang === l ? 'rgba(255,255,255,0.18)' : 'transparent',
+                    color: onAccent, fontSize: 10, fontWeight: lang === l ? 700 : 400,
+                    cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.04em',
+                    opacity: lang === l ? 1 : 0.65,
+                  }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Tab: Anreise */}
@@ -349,8 +467,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {hotel.preArrivalEnabled && !booking.checkinCompleted && (
                 <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accentOnLight }}>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>Online Check-In ausstehend</div>
-                    <div style={{ fontSize: 13, opacity: 0.8 }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{t.checkinPending}</div>
+                    <div style={{ fontSize: 13, opacity: 0.8 }}>{t.checkinPendingDesc}</div>
                   </div>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
@@ -360,15 +478,15 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="card-head">🕐 Check-in</div>
                   <div className="card-body">
                     <div className="row">
-                      <span className="row-lbl">Check-in ab</span>
-                      <span className="row-val">{hotel.checkinTime} Uhr</span>
+                      <span className="row-lbl">{t.checkinFrom}</span>
+                      <span className="row-val">{hotel.checkinTime}{t.oclock}</span>
                     </div>
                   </div>
                 </div>
               )}
               {hotel.checkinInfo && (
                 <div className="card">
-                  <div className="card-head">🔑 Schlüsselübergabe</div>
+                  <div className="card-head">{t.keyHandover}</div>
                   <div className="card-body">
                     <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.checkinInfo}</p>
                   </div>
@@ -376,37 +494,37 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               )}
               {booking.nukiCode && (
                 <div className="nuki">
-                  <div className="nuki-label">🔑 Ihr Zugangscode</div>
+                  <div className="nuki-label">{t.accessCode}</div>
                   <div className="nuki-code">{booking.nukiCode}</div>
-                  <div className="nuki-hint">Gültig von Anreise bis Abreise</div>
+                  <div className="nuki-hint">{t.accessCodeValid}</div>
                 </div>
               )}
               {mapsUrl && (
                 <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Anreise planen
+                  {t.planArrival}
                 </a>
               )}
               {(hotel.phone || hotel.email || waUrl) && (
                 <div className="card">
-                  <div className="card-head">Kontakt</div>
+                  <div className="card-head">{t.contact}</div>
                   <div className="card-body contact-grid">
                     {hotel.phone && (
                       <a href={`tel:${hotel.phone}`} className="btn btn-outline">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 10.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17z"/></svg>
-                        Anrufen
+                        {t.call}
                       </a>
                     )}
                     {waUrl && (
                       <a href={waUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                        WhatsApp
+                        {t.whatsapp}
                       </a>
                     )}
                     {hotel.email && (
                       <a href={`mailto:${hotel.email}`} className="btn btn-outline">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        E-Mail schreiben
+                        {t.emailBtn}
                       </a>
                     )}
                   </div>
@@ -416,27 +534,27 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {/* Hausinfos */}
               {hasHausinfos && (
                 <>
-                  <div className="section-label">Hausinfos</div>
+                  <div className="section-label">{t.houseinfo}</div>
                   {(hotel.wifiSsid || hotel.wifiPassword) && (
                     <div className="card">
-                      <div className="card-head">📶 WLAN</div>
+                      <div className="card-head">{t.wifi}</div>
                       <div className="card-body">
                         {hotel.wifiSsid && (
                           <div className="row">
-                            <span className="row-lbl">Netzwerk</span>
+                            <span className="row-lbl">{t.network}</span>
                             <span className="row-val">{hotel.wifiSsid}</span>
                           </div>
                         )}
                         {hotel.wifiPassword && (
                           <div className="row">
-                            <span className="row-lbl">Passwort</span>
+                            <span className="row-lbl">{t.password}</span>
                             <span className="row-val" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <span style={{ fontFamily: 'monospace', letterSpacing: '0.05em' }}>{hotel.wifiPassword}</span>
                               <button
                                 onClick={() => { navigator.clipboard.writeText(hotel.wifiPassword!).then(() => { setCopiedWifi(true); setTimeout(() => setCopiedWifi(false), 2000); }); }}
                                 style={{ padding: '3px 10px', border: '1.5px solid #e5e7eb', borderRadius: 6, background: copiedWifi ? '#dcfce7' : '#f9fafb', color: copiedWifi ? '#166534' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
                               >
-                                {copiedWifi ? '✓ Kopiert' : 'Kopieren'}
+                                {copiedWifi ? t.copied : t.copy}
                               </button>
                             </span>
                           </div>
@@ -446,7 +564,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   )}
                   {hotel.parkingInfo && (
                     <div className="card">
-                      <div className="card-head">🅿️ Parkplatz</div>
+                      <div className="card-head">{t.parking}</div>
                       <div className="card-body">
                         <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.parkingInfo}</p>
                       </div>
@@ -454,7 +572,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   )}
                   {hotel.wasteInfo && (
                     <div className="card">
-                      <div className="card-head">♻️ Müllentsorgung</div>
+                      <div className="card-head">{t.waste}</div>
                       <div className="card-body">
                         <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.wasteInfo}</p>
                       </div>
@@ -462,7 +580,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   )}
                   {hotel.houseRules && (
                     <div className="card">
-                      <div className="card-head">📋 Hausordnung</div>
+                      <div className="card-head">{t.houseRules}</div>
                       <div className="card-body">
                         <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.houseRules}</p>
                       </div>
@@ -470,7 +588,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   )}
                   {hotel.emergencyNumbers.length > 0 && (
                     <div className="card">
-                      <div className="card-head">🚨 Notfallnummern</div>
+                      <div className="card-head">{t.emergency}</div>
                       <div className="card-body">
                         {hotel.emergencyNumbers.map((e, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
@@ -492,7 +610,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {allExtras.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>Keine Zusatzleistungen verfügbar.</p>
+                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>{t.noExtras}</p>
                   </div>
                 </div>
               ) : allExtras.map((extra) => {
@@ -508,16 +626,16 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                       <div className="extra-footer">
                         <span className="extra-price">{eur(extra.price)}</span>
                         {done ? (
-                          <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>✓ Gebucht</span>
+                          <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>{t.booked}</span>
                         ) : groupBlocked ? (
-                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>Variante bereits gebucht</span>
+                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>{t.variantBooked}</span>
                         ) : (
                           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                             {extra.linkUrl && (
-                              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">Mehr erfahren</a>
+                              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline">{t.learnMore}</a>
                             )}
                             <button className="btn btn-sm" disabled={isPending} onClick={() => handleBookExtra(extra.id)}>
-                              Hinzufügen
+                              {t.add}
                             </button>
                           </div>
                         )}
@@ -535,34 +653,34 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {thingsToSee.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>Noch keine Einträge.</p>
+                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>{t.noSurroundings}</p>
                   </div>
                 </div>
               ) : Object.entries(
                 thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => { (acc[t.category] ??= []).push(t); return acc; }, {})
               ).map(([cat, entries]) => (
                 <div key={cat}>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>{CAT_LABELS[cat] ?? cat}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>{(TRANSLATIONS[lang].cats as Record<string, string>)[cat] ?? cat}</div>
                   <div style={{ display: 'grid', gap: 10 }}>
-                    {entries.map((t) => (
-                      <div key={t.id} className="card" style={{ overflow: 'hidden' }}>
+                    {entries.map((entry) => (
+                      <div key={entry.id} className="card" style={{ overflow: 'hidden' }}>
                         <div style={{ display: 'flex', gap: 0 }}>
-                          {t.imageUrl && <img src={t.imageUrl} alt={t.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />}
+                          {entry.imageUrl && <img src={entry.imageUrl} alt={entry.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />}
                           <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
-                            {t.description && (
+                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{entry.title}</div>
+                            {entry.description && (
                               <details className="desc-details" style={{ marginBottom: 6 }}>
                                 <summary>
-                                  <span className="desc-preview">{t.description}</span>
-                                  <span className="desc-collapse">▴ Weniger</span>
+                                  <span className="desc-preview">{entry.description}</span>
+                                  <span className="desc-collapse">{t.less}</span>
                                 </summary>
-                                <span className="desc-full">{t.description}</span>
+                                <span className="desc-full">{entry.description}</span>
                               </details>
                             )}
-                            {t.address && <div style={{ fontSize: 12, color: '#9ca3af' }}>{t.address}</div>}
+                            {entry.address && <div style={{ fontSize: 12, color: '#9ca3af' }}>{entry.address}</div>}
                           </div>
-                          {t.mapsUrl && (
-                            <a href={t.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }} aria-label="In Maps öffnen">
+                          {entry.mapsUrl && (
+                            <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }} aria-label={t.openInMaps}>
                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </a>
                           )}
@@ -579,18 +697,18 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {tab === 'messages' && (
             <div key={tabContentKey} className="content content-anim">
               <div className="card">
-                <div className="card-head">Nachrichten</div>
+                <div className="card-head">{t.messagesHead}</div>
                 <div className="card-body">
                   {messages.length === 0 ? (
                     <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>
-                      Noch keine Nachrichten. Schreiben Sie dem {hotel.name}-Team direkt hier.
+                      {t.noMessages(hotel.name)}
                     </p>
                   ) : (
                     <div className="msg-list">
                       {messages.map((m) => (
                         <div key={m.id} className={`msg-wrap${m.sender === 'guest' ? ' guest' : ''}`}>
                           <div className={`msg-bubble ${m.sender === 'hotel' ? 'msg-hotel' : 'msg-guest'}`}>{m.body}</div>
-                          <span className="msg-time">{m.sender === 'hotel' ? `${hotel.name} · ` : ''}{fmtTime(m.createdAt)}</span>
+                          <span className="msg-time">{m.sender === 'hotel' ? `${hotel.name} · ` : ''}{fmtTime(m.createdAt, t.locale)}</span>
                         </div>
                       ))}
                       <div ref={messagesEndRef} />
@@ -599,7 +717,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="divider" />
                   <div className="msg-input-row">
                     <textarea
-                      className="msg-input" rows={2} placeholder="Nachricht schreiben …"
+                      className="msg-input" rows={2} placeholder={t.msgPlaceholder}
                       value={msgInput} onChange={(e) => setMsgInput(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                     />
@@ -617,33 +735,33 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {tab === 'checkout' && (
             <div key={tabContentKey} className="content content-anim">
               <div className="card">
-                <div className="card-head">Abreise</div>
+                <div className="card-head">{t.checkoutHead}</div>
                 <div className="card-body">
                   {checkoutDone ? (
                     <div className="success-box">
                       <div className="success-icon">👋</div>
-                      <div className="success-title">Auf Wiedersehen!</div>
-                      <div className="success-text">Vielen Dank für Ihren Aufenthalt. Das Team wurde über Ihre Abreise informiert.</div>
+                      <div className="success-title">{t.goodbye}</div>
+                      <div className="success-text">{t.goodbyeText}</div>
                     </div>
                   ) : (
                     <>
                       {hotel.checkoutTime && (
                         <div className="row">
-                          <span className="row-lbl">Check-Out Zeit</span>
-                          <span className="row-val">{hotel.checkoutTime} Uhr</span>
+                          <span className="row-lbl">{t.checkoutTime}</span>
+                          <span className="row-val">{hotel.checkoutTime}{t.oclock}</span>
                         </div>
                       )}
                       <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
-                        Wenn Sie zur Abreise bereit sind, informieren Sie das Team mit einem Klick — kein Warten an der Rezeption nötig.
+                        {t.checkoutDesc}
                       </p>
-                      <button className="btn" disabled={isPending} onClick={handleCheckout}>Jetzt auschecken</button>
+                      <button className="btn" disabled={isPending} onClick={handleCheckout}>{t.checkoutBtn}</button>
                     </>
                   )}
                   {hotel.reviewRequestLink && checkoutDone && (
                     <>
                       <div className="divider" />
-                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>Hat Ihnen Ihr Aufenthalt gefallen? Wir freuen uns über eine Bewertung!</p>
-                      <a href={hotel.reviewRequestLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">⭐ Bewertung schreiben</a>
+                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>{t.reviewPrompt}</p>
+                      <a href={hotel.reviewRequestLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">{t.reviewBtn}</a>
                     </>
                   )}
                 </div>
