@@ -365,6 +365,9 @@ model Request {
   checkinBirthdate       String?
   checkinNationality     String?
   checkinDocNumber       String?
+  checkinGuestsJson      Json?    // [{ type, firstname, lastname, birthdate, nationality, docNumber }]
+
+  guestsJson             Json?    // additional_guests from widget: [{ type, firstname, lastname, birthday? }]
 
   checkoutReminderSentAt DateTime?
   reviewRequestSentAt    DateTime?

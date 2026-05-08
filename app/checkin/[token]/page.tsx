@@ -6,6 +6,8 @@ type Props = { params: Promise<{ token: string }> };
 
 export const dynamic = 'force-dynamic';
 
+type AdditionalGuest = { type: 'adult' | 'child'; firstname: string; lastname: string; birthday?: string };
+
 export default async function CheckinPage({ params }: Props) {
   const { token } = await params;
 
@@ -22,10 +24,8 @@ export default async function CheckinPage({ params }: Props) {
       children: true,
       checkinCompletedAt: true,
       checkinArrivalTime: true,
-      checkinNotes: true,
-      checkinBirthdate: true,
       checkinNationality: true,
-      checkinDocNumber: true,
+      guestsJson: true,
       hotelId: true,
       hotel: { select: { name: true, accentColor: true } },
     },
@@ -36,7 +36,7 @@ export default async function CheckinPage({ params }: Props) {
   const settings = request.hotelId
     ? await prisma.hotelSettings.findUnique({
         where: { hotelId: request.hotelId },
-        select: { preArrivalHouseRules: true, preArrivalEnabled: true },
+        select: { houseRules: true, preArrivalEnabled: true },
       })
     : null;
 
@@ -59,6 +59,16 @@ export default async function CheckinPage({ params }: Props) {
     new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
   const completed = !!request.checkinCompletedAt;
+
+  // Build guest list: primary guest first, then additional guests from guestsJson
+  const additionalGuests: AdditionalGuest[] = Array.isArray(request.guestsJson)
+    ? (request.guestsJson as AdditionalGuest[])
+    : [];
+
+  const guests = [
+    { type: 'adult' as const, firstname: request.firstname ?? '', lastname: request.lastname, birthday: undefined as string | undefined, isPrimary: true },
+    ...additionalGuests.map((g) => ({ ...g, isPrimary: false })),
+  ];
 
   return (
     <html lang="de">
@@ -83,8 +93,9 @@ export default async function CheckinPage({ params }: Props) {
           .summary-row .lbl { color: #6b7280; }
           .summary-row .val { font-weight: 600; }
           label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
-          select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; color: #111; background: #fff; }
-          select:focus, textarea:focus { outline: 2px solid ${accent}; border-color: transparent; }
+          input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; color: #111; background: #fff; }
+          input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus { outline: 2px solid ${accent}; border-color: transparent; }
+          input[readonly] { background: #f9fafb; color: #6b7280; cursor: default; }
           .rules { background: #f9fafb; border-radius: 10px; padding: 16px; font-size: 13px; color: #374151; line-height: 1.7; max-height: 200px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #e5e7eb; }
           .checkbox-row { display: flex; align-items: flex-start; gap: 10px; }
           .checkbox-row input { width: 18px; height: 18px; margin-top: 2px; accent-color: ${accent}; flex-shrink: 0; }
@@ -96,6 +107,17 @@ export default async function CheckinPage({ params }: Props) {
           .success h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
           .success p { font-size: 15px; color: #6b7280; line-height: 1.6; }
           .logo { text-align: center; margin-bottom: 24px; font-size: 13px; color: #9ca3af; font-weight: 500; letter-spacing: 0.04em; }
+          /* Guest accordions */
+          .guest-accordion { border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+          .guest-accordion summary { padding: 14px 16px; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 600; color: #111827; background: #f9fafb; user-select: none; -webkit-user-select: none; }
+          .guest-accordion summary::-webkit-details-marker { display: none; }
+          .guest-accordion[open] summary { border-bottom: 1px solid #e5e7eb; }
+          .guest-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: ${accent}22; color: ${accent}; }
+          .guest-caret { transition: transform 0.2s; }
+          .guest-accordion[open] .guest-caret { transform: rotate(180deg); }
+          .guest-fields { padding: 16px; display: grid; gap: 14px; }
+          .readonly-name { font-size: 14px; color: #6b7280; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; }
+          .field-note { font-size: 12px; color: #9ca3af; font-weight: 400; margin-left: 4px; }
         `}</style>
       </head>
       <body>
@@ -111,7 +133,7 @@ export default async function CheckinPage({ params }: Props) {
             {completed ? (
               <div className="success">
                 <div className="icon">
-                  <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
                     <circle cx="32" cy="32" r="32" fill={accent} />
                     <path d="M18 33l10 10 18-18" stroke={checkmarkColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -158,34 +180,88 @@ export default async function CheckinPage({ params }: Props) {
                   </select>
                 </div>
 
-                {/* Meldezettel */}
+                {/* Meldezettel notice */}
                 <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
                   <strong>Kurzer Hinweis:</strong> In Österreich sind Beherbergungsbetriebe gesetzlich verpflichtet, bei der Anreise die Ausweisdaten ihrer Gäste zu erfassen. Das dauert nur einen Moment — danke für Ihr Verständnis!
                 </div>
-                <div>
-                  <label htmlFor="birthdate">Geburtsdatum</label>
-                  <input id="birthdate" name="birthdate" type="date" required style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
-                </div>
-                <div>
-                  <label htmlFor="nationality">Staatsangehörigkeit</label>
-                  <input id="nationality" name="nationality" type="text" required placeholder="z. B. Österreich, Deutschland …" style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
-                </div>
-                <div>
-                  <label htmlFor="docNumber">Reisepass- / Ausweisnummer</label>
-                  <input id="docNumber" name="docNumber" type="text" required placeholder="z. B. P1234567" style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: '#111', background: '#fff' }} />
+
+                {/* Per-guest accordions */}
+                <div style={{ display: 'grid', gap: 10 }}>
+                  <label style={{ marginBottom: 0 }}>Meldedaten</label>
+                  {guests.map((guest, i) => {
+                    const isChild = guest.type === 'child';
+                    const label = isChild
+                      ? `Kind: ${guest.firstname} ${guest.lastname}`.trim()
+                      : guest.isPrimary
+                        ? `${guest.firstname} ${guest.lastname}`.trim() || 'Hauptgast'
+                        : `${guest.firstname} ${guest.lastname}`.trim();
+                    return (
+                      <details key={i} className="guest-accordion" {...(i === 0 ? { open: true } : {})}>
+                        <summary>
+                          <span>{label}</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span className="guest-badge">{isChild ? 'Kind' : 'Erwachsen'}</span>
+                            <svg className="guest-caret" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </span>
+                        </summary>
+                        <div className="guest-fields">
+                          <div>
+                            <label>Name</label>
+                            <div className="readonly-name">{guest.firstname} {guest.lastname}</div>
+                          </div>
+                          <div>
+                            <label htmlFor={`g${i}_birthdate`}>
+                              Geburtsdatum
+                            </label>
+                            <input
+                              id={`g${i}_birthdate`}
+                              name={`g${i}_birthdate`}
+                              type="date"
+                              required
+                              defaultValue={guest.birthday ?? ''}
+                            />
+                          </div>
+                          <div>
+                            <label htmlFor={`g${i}_nationality`}>Staatsangehörigkeit</label>
+                            <input
+                              id={`g${i}_nationality`}
+                              name={`g${i}_nationality`}
+                              type="text"
+                              required
+                              placeholder="z. B. Österreich, Deutschland …"
+                            />
+                          </div>
+                          {!isChild && (
+                            <div>
+                              <label htmlFor={`g${i}_docnumber`}>Reisepass- / Ausweisnummer</label>
+                              <input
+                                id={`g${i}_docnumber`}
+                                name={`g${i}_docnumber`}
+                                type="text"
+                                required
+                                placeholder="z. B. P1234567"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    );
+                  })}
                 </div>
 
                 {/* Notes */}
                 <div>
-                  <label htmlFor="notes">Besondere Wünsche / Hinweise <span style={{ fontWeight: 400, color: '#9ca3af' }}>(optional)</span></label>
+                  <label htmlFor="notes">Besondere Wünsche / Hinweise <span className="field-note">(optional)</span></label>
                   <textarea id="notes" name="notes" rows={3} placeholder="z. B. Allergien, Kinderbett benötigt, …" />
                 </div>
 
                 {/* House rules */}
-                {settings?.preArrivalHouseRules && (
+                {settings?.houseRules && (
                   <div style={{ display: 'grid', gap: 10 }}>
                     <label>Hausordnung</label>
-                    <div className="rules">{settings.preArrivalHouseRules}</div>
+                    <div className="rules">{settings.houseRules}</div>
                     <div className="checkbox-row">
                       <input type="checkbox" id="acceptRules" name="acceptRules" value="1" required />
                       <label htmlFor="acceptRules" style={{ marginBottom: 0 }}>

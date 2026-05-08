@@ -227,6 +227,7 @@ export async function POST(req: Request) {
         status: isPaypalBooking ? 'pending_paypal' : isStripeBooking ? 'pending_stripe' : (isInstantBooking ? 'booked' : 'new'),
         language: autoLang,
         extrasJson: extrasLineItems.length > 0 ? extrasLineItems : [],
+        guestsJson: Array.isArray(additionalGuests) && additionalGuests.length > 0 ? additionalGuests : [],
         pricingJson: {
           apartments: apartmentPricing,
           extrasTotal,
