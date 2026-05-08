@@ -57,7 +57,7 @@ export default async function GastPage({ params }: Props) {
     .map(Number)
     .filter(Boolean);
 
-  const [hotel, apartments, extras, thingsToSee] = await Promise.all([
+  const [hotel, apartments, extras, thingsToSee, checkinImages] = await Promise.all([
     prisma.hotel.findUnique({
       where: { id: request.hotelId! },
       select: {
@@ -122,6 +122,17 @@ export default async function GastPage({ params }: Props) {
       },
       select: { id: true, category: true, title: true, description: true, address: true, mapsUrl: true, imageUrl: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    }),
+    prisma.checkinImage.findMany({
+      where: {
+        hotelId: request.hotelId!,
+        OR: [
+          { apartmentId: null },
+          { apartmentId: { in: apartmentIds } },
+        ],
+      },
+      select: { id: true, imageUrl: true, caption: true, sortOrder: true },
+      orderBy: { sortOrder: 'asc' },
     }),
   ]);
 
@@ -189,6 +200,7 @@ export default async function GastPage({ params }: Props) {
       allExtras={allExtras}
       serverBookedExtraIds={serverBookedExtraIds}
       thingsToSee={thingsToSee}
+      checkinImages={checkinImages}
       initialMessages={request.messages.map((m) => ({
         id: m.id,
         sender: m.sender,

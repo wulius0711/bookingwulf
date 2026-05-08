@@ -55,6 +55,7 @@ model Hotel {
   supportChats  SupportChatLog[]
   voucherTemplates  VoucherTemplate[]
   vouchers          Voucher[]
+  checkinImages     CheckinImage[]
 }
 
 model HotelSettings {
@@ -268,6 +269,7 @@ model Apartment {
 
   // Relations
   images        ApartmentImage[]
+  checkinImages CheckinImage[]
   blockedRanges BlockedRange[]
   priceSeasons  PriceSeason[]
   icalFeeds       IcalFeed[]
@@ -599,6 +601,20 @@ model VoucherTemplate {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   vouchers    Voucher[]
+
+  @@index([hotelId])
+}
+
+model CheckinImage {
+  id          Int       @id @default(autoincrement())
+  hotelId     Int
+  hotel       Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  apartmentId Int?
+  apartment   Apartment? @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  caption     String?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
 
   @@index([hotelId])
 }

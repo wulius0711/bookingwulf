@@ -59,10 +59,12 @@ type ThingToSee = {
   address: string | null; mapsUrl: string | null; imageUrl: string | null;
 };
 
+type CheckinImage = { id: number; imageUrl: string; caption: string | null; sortOrder: number };
+
 type Props = {
   token: string; booking: Booking; hotel: Hotel; apartments: Apartment[];
   allExtras: Extra[]; serverBookedExtraIds: number[];
-  thingsToSee: ThingToSee[]; initialMessages: Message[];
+  thingsToSee: ThingToSee[]; checkinImages: CheckinImage[]; initialMessages: Message[];
 };
 
 type Tab = 'arrival' | 'extras' | 'surroundings' | 'messages' | 'checkout';
@@ -188,7 +190,7 @@ const TRANSLATIONS = {
 } as const;
 type Lang = keyof typeof TRANSLATIONS;
 
-export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, initialMessages }: Props) {
+export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, checkinImages, initialMessages }: Props) {
   const accent = hotel.accentColor || '#111827';
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
   const accentOnLight = hexLuminance(accent) > 0.4 ? '#374151' : accent;
@@ -486,11 +488,30 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   </div>
                 </div>
               )}
-              {hotel.checkinInfo && (
+              {(hotel.checkinInfo || checkinImages.length > 0) && (
                 <div className="card">
                   <div className="card-head">{t.keyHandover}</div>
                   <div className="card-body">
-                    <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.checkinInfo}</p>
+                    {hotel.checkinInfo && (
+                      <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: checkinImages.length > 0 ? '0 0 16px' : 0 }}>{hotel.checkinInfo}</p>
+                    )}
+                    {checkinImages.length > 0 && (
+                      <div style={{ display: 'grid', gap: 12 }}>
+                        {checkinImages.map((img) => (
+                          <div key={img.id}>
+                            <img
+                              src={img.imageUrl}
+                              alt={img.caption ?? ''}
+                              style={{ width: '100%', borderRadius: 10, objectFit: 'cover', maxHeight: 280, display: 'block' }}
+                              loading="lazy"
+                            />
+                            {img.caption && (
+                              <p style={{ fontSize: 13, color: '#6b7280', margin: '6px 0 0', lineHeight: 1.5 }}>{img.caption}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

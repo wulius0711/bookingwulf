@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
+import CheckinImageManager from '@/app/admin/components/CheckinImageManager';
 import IcalSection from './IcalSection';
 import NukiLockSection from './NukiLockSection';
 import { getNukiLocks } from '@/src/lib/nuki';
@@ -42,6 +43,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
       },
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
+        checkinImages: { orderBy: { sortOrder: 'asc' } },
         icalFeeds: { orderBy: { createdAt: 'asc' } },
         hotel: { select: { slug: true, plan: true } },
       },
@@ -323,6 +325,14 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <div style={{ display: 'grid', gap: 4 }}>
                   <label style={labelStyle}>Schlüsselübergabe / Check-in Info</label>
                   <textarea name="gpCheckinInfo" defaultValue={apartment.gpCheckinInfo ?? ''} rows={3} placeholder="Wo liegt der Schlüssel, Codeschloss-Code etc." style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <div style={{ display: 'grid', gap: 8 }}>
+                  <label style={labelStyle}>Check-in Fotos</label>
+                  <CheckinImageManager
+                    hotelId={apartment.hotelId}
+                    apartmentId={apartment.id}
+                    initialImages={apartment.checkinImages}
+                  />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div style={{ display: 'grid', gap: 4 }}>
