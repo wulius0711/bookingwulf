@@ -366,6 +366,7 @@ model Request {
   checkoutReminderSentAt DateTime?
   reviewRequestSentAt    DateTime?
   checkoutRequestedAt    DateTime?
+  upsellNotifiedAt       DateTime?
 
   beds24BookingId String? @unique // set for bookings synced from Beds24 webhook
 
