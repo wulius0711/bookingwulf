@@ -462,6 +462,72 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             </div>
           ))}
 
+          {/* Pricing */}
+          {(() => {
+            const pricing = request.pricingJson as {
+              source?: string;
+              total?: number;
+              apartments?: { apartmentName: string; totalPrice: number; cleaningFee: number }[];
+              extrasTotal?: number;
+              ortstaxeTotal?: number;
+              beds24Items?: { type: string; description: string; amount: number }[];
+            } | null;
+            if (!pricing?.total) return null;
+            const fmtEur = (n: number) => `€ ${n.toFixed(2).replace('.', ',')}`;
+            const isBeds24 = pricing.source === 'beds24';
+            const apts = pricing.apartments ?? [];
+            const roomTotal = apts.reduce((s, a) => s + (a.totalPrice - a.cleaningFee), 0);
+            const cleaningTotal = apts.reduce((s, a) => s + a.cleaningFee, 0);
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
+                <span style={rowLabel}>Preis</span>
+                <div style={{ fontSize: 13, color: '#374151', background: '#f9fafb', border: '1px solid #f0f0f0', borderRadius: 10, padding: '12px 14px', display: 'grid', gap: 6 }}>
+                  {isBeds24 && pricing.beds24Items && pricing.beds24Items.length > 0 ? (
+                    <>
+                      {pricing.beds24Items.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                          <span style={{ color: '#6b7280' }}>{item.description || item.type}</span>
+                          <span style={{ fontWeight: 500 }}>{fmtEur(item.amount)}</span>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {roomTotal > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                          <span style={{ color: '#6b7280' }}>Zimmerpreis</span>
+                          <span style={{ fontWeight: 500 }}>{fmtEur(roomTotal)}</span>
+                        </div>
+                      )}
+                      {cleaningTotal > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                          <span style={{ color: '#6b7280' }}>Reinigung</span>
+                          <span style={{ fontWeight: 500 }}>{fmtEur(cleaningTotal)}</span>
+                        </div>
+                      )}
+                      {(pricing.extrasTotal ?? 0) > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                          <span style={{ color: '#6b7280' }}>Extras</span>
+                          <span style={{ fontWeight: 500 }}>{fmtEur(pricing.extrasTotal!)}</span>
+                        </div>
+                      )}
+                      {(pricing.ortstaxeTotal ?? 0) > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                          <span style={{ color: '#6b7280' }}>Ortstaxe</span>
+                          <span style={{ fontWeight: 500 }}>{fmtEur(pricing.ortstaxeTotal!)}</span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                  <div style={{ borderTop: '1px solid #e5e7eb', marginTop: 4, paddingTop: 6, display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                    <span style={{ fontWeight: 700, color: '#111' }}>Gesamt</span>
+                    <span style={{ fontWeight: 700, color: '#111' }}>{fmtEur(pricing.total)}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {request.message && (
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
               <span style={rowLabel}>Mitteilung</span>

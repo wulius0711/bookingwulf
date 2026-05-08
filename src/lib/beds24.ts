@@ -21,6 +21,9 @@ export type Beds24WebhookBooking = {
   firstName?: string;
   lastName?: string;
   email?: string;
+  numAdult?: number;
+  numChild?: number;
+  guestCountry?: string; // ISO 3166-1 alpha-2 country code
 };
 
 // Exchange invite code for refresh token (one-time setup)
@@ -55,6 +58,75 @@ async function getAccessToken(refreshToken: string): Promise<string> {
   const data = await res.json();
   if (!data.token) throw new Error('Beds24: Token-Refresh lieferte kein token');
   return data.token;
+}
+
+export type Beds24InvoiceItem = {
+  type: string;
+  description: string;
+  amount: number;
+  vatRate?: number;
+};
+
+export type Beds24PricingSnapshot = {
+  source: 'beds24';
+  total: number;
+  beds24Items: Beds24InvoiceItem[];
+  apartments: { apartmentName: string; totalPrice: number; cleaningFee: number }[];
+  extrasTotal: number;
+  ortstaxeTotal: number;
+};
+
+export async function fetchBeds24BookingDetails(
+  refreshToken: string,
+  bookingId: string,
+  apartmentName = 'Zimmer',
+): Promise<Beds24PricingSnapshot | null> {
+  try {
+    const accessToken = await getAccessToken(refreshToken);
+    const url = new URL(`${BEDS24_API}/bookings`);
+    url.searchParams.set('bookingId', bookingId);
+    const res = await fetch(url.toString(), { headers: { token: accessToken } });
+    if (!res.ok) return null;
+    const data = await res.json() as { data?: Record<string, unknown>[] };
+    const b = data?.data?.[0];
+    if (!b) return null;
+
+    const rawItems = (Array.isArray(b.invoiceItems) ? b.invoiceItems : []) as Record<string, unknown>[];
+    const items: Beds24InvoiceItem[] = rawItems.map((i) => ({
+      type: String(i.type ?? ''),
+      description: String(i.description ?? ''),
+      amount: Number(i.amount ?? 0),
+      vatRate: i.vatRate != null ? Number(i.vatRate) : undefined,
+    }));
+
+    const invoiceTotal = Number(b.invoiceTotal ?? b.price ?? items.reduce((s, i) => s + i.amount, 0));
+
+    const isCleaning = (item: Beds24InvoiceItem) =>
+      /cleaning|reinigung|endreinigung/i.test(item.description) || /cleaning/i.test(item.type);
+    const isTouristTax = (item: Beds24InvoiceItem) =>
+      /ortstaxe|kurtaxe|tourist|city.?tax|local.?tax/i.test(item.description) ||
+      /local_fee|tourist|city_tax/i.test(item.type);
+    const isRoom = (item: Beds24InvoiceItem) =>
+      /room|zimmer|booking|unterkunft/i.test(item.type) || /room|zimmer/i.test(item.description);
+
+    const roomTotal = items.filter((i) => isRoom(i) && !isCleaning(i)).reduce((s, i) => s + i.amount, 0);
+    const cleaningFee = items.filter(isCleaning).reduce((s, i) => s + i.amount, 0);
+    const ortstaxeTotal = items.filter(isTouristTax).reduce((s, i) => s + i.amount, 0);
+    const extrasTotal = items
+      .filter((i) => !isRoom(i) && !isCleaning(i) && !isTouristTax(i))
+      .reduce((s, i) => s + i.amount, 0);
+
+    return {
+      source: 'beds24',
+      total: invoiceTotal,
+      beds24Items: items,
+      apartments: [{ apartmentName, totalPrice: roomTotal + cleaningFee, cleaningFee }],
+      extrasTotal,
+      ortstaxeTotal,
+    };
+  } catch {
+    return null;
+  }
 }
 
 // Push a confirmed booking to Beds24 so Airbnb/Booking.com get blocked
