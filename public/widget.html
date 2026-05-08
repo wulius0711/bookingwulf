@@ -2805,7 +2805,7 @@
                   aria-expanded="false"
                   aria-controls="guestAccordionBody"
                 >
-                  <span>weitere Gäste Daten</span>
+                  <span>weitere Gäste Daten <span style="color:var(--danger)">*</span></span>
                   <svg
                     width="16"
                     height="16"
@@ -6109,6 +6109,22 @@
           if (hasFieldErrors) {
             showMessage('error', t('err_fill_required'));
             return;
+          }
+
+          // Validate additional guest fields (required when accordion is shown)
+          if (document.getElementById('guestDataAccordion')?.style.display !== 'none') {
+            let guestErrors = false;
+            document.getElementById('guestFieldsWrap')?.querySelectorAll('input[type="text"]').forEach(el => {
+              if (!el.value.trim()) {
+                el.style.borderColor = 'var(--danger)';
+                el.setAttribute('aria-invalid', 'true');
+                guestErrors = true;
+              } else {
+                el.style.borderColor = '';
+                el.removeAttribute('aria-invalid');
+              }
+            });
+            if (guestErrors) { showMessage('error', t('err_fill_required')); return; }
           }
 
           if (bookingType === 'booking' && !paymentMethod) {
