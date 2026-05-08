@@ -112,6 +112,22 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const [tabContentKey, setTabContentKey] = useState(0);
   const [freshlyBooked, setFreshlyBooked] = useState(new Set<number>());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const current = window.scrollY;
+      if (current > lastScrollY.current && current > window.innerHeight * 0.5) {
+        setNavVisible(false);
+      } else if (current < lastScrollY.current) {
+        setNavVisible(true);
+      }
+      lastScrollY.current = current;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -278,7 +294,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .desc-details[open] .desc-collapse { display: block; }
     .desc-details[open] .desc-full { display: block; }
     /* Bottom Navigation */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
     .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); width: 100%; max-width: 420px; }
     .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 8px; border: none; background: none; color: rgba(255,255,255,0.45); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
     .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
@@ -637,7 +653,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
         </div>
 
         {/* Bottom Navigation */}
-        <nav className="bottom-nav" aria-label="Navigation">
+        <nav className="bottom-nav" aria-label="Navigation" style={{ transform: navVisible ? 'translateY(0)' : 'translateY(calc(100% + 32px))' }}>
           <div className="bottom-nav-inner">
             {navItems.map((item) => (
               <button key={item.id} className={`nav-btn${tab === item.id ? ' active' : ''}`} onClick={() => handleTabChange(item.id)} aria-label={item.label}>
