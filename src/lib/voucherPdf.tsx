@@ -50,7 +50,7 @@ export function VoucherPdfDocument({ data }: { data: VoucherPdfData }) {
     codeBox: { backgroundColor: '#ffffff', borderRadius: 12, padding: '24 32', marginBottom: 24, alignItems: 'center', border: `2 dashed #d1d5db` },
     codeLabel: { fontSize: 10, fontFamily: 'Helvetica', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 12 },
     codeRow: { flexDirection: 'row', justifyContent: 'center', width: '100%' },
-    codeText: { fontSize: 30, fontFamily: 'Courier-Bold', color: '#0f172a', letterSpacing: 3 },
+    codeText: { fontSize: 22, fontFamily: 'Courier-Bold', color: '#0f172a', letterSpacing: 1.5 },
     metaRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
     metaBox: { backgroundColor: '#ffffff', borderRadius: 10, padding: '16 20', flex: 1 },
     metaBoxLeft: { marginRight: 8 },
