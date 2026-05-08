@@ -269,6 +269,14 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .success-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
     .success-text { font-size: 14px; color: #6b7280; line-height: 1.6; }
     .error-text { font-size: 13px; color: #dc2626; }
+    .desc-details > summary { list-style: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+    .desc-details > summary::-webkit-details-marker { display: none; }
+    .desc-preview { font-size: 13px; color: #6b7280; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .desc-collapse { display: none; font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .desc-full { display: none; font-size: 13px; color: #6b7280; line-height: 1.4; }
+    .desc-details[open] .desc-preview { display: none; }
+    .desc-details[open] .desc-collapse { display: block; }
+    .desc-details[open] .desc-full { display: block; }
     /* Bottom Navigation */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; }
     .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); width: 100%; }
@@ -527,9 +535,13 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                           <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
                             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
                             {t.description && (
-                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6 }}>
-                                {t.description}
-                              </div>
+                              <details className="desc-details" style={{ marginBottom: 6 }}>
+                                <summary>
+                                  <span className="desc-preview">{t.description}</span>
+                                  <span className="desc-collapse">▴ Weniger</span>
+                                </summary>
+                                <span className="desc-full">{t.description}</span>
+                              </details>
                             )}
                             {t.address && <div style={{ fontSize: 12, color: '#9ca3af' }}>{t.address}</div>}
                           </div>
