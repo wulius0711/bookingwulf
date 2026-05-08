@@ -481,14 +481,24 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {/* Tab: Anreise */}
           {tab === 'arrival' && (
             <div key={tabContentKey} className="content content-anim">
-              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-                <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accentOnLight }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{t.checkinPending}</div>
-                    <div style={{ fontSize: 13, opacity: 0.8 }}>{t.checkinPendingDesc}</div>
-                  </div>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </a>
+              {hotel.preArrivalEnabled && (
+                booking.checkinCompleted ? (
+                  <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14, textDecoration: 'none', color: '#166534' }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>✓ {t.checkinDone}</div>
+                      <div style={{ fontSize: 13, opacity: 0.75 }}>{booking.checkinArrivalTime ? `${t.checkinFrom} ${booking.checkinArrivalTime}${t.oclock} · ${t.checkinDoneView}` : t.checkinDoneView}</div>
+                    </div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.5 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </a>
+                ) : (
+                  <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accentOnLight }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{t.checkinPending}</div>
+                      <div style={{ fontSize: 13, opacity: 0.8 }}>{t.checkinPendingDesc}</div>
+                    </div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </a>
+                )
               )}
               {hotel.checkinTime && (
                 <div className="card">
