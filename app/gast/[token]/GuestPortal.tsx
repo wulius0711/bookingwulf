@@ -31,6 +31,8 @@ type Hotel = {
   accentColor: string;
   address: string | null;
   whatsappNumber: string | null;
+  checkinTime: string | null;
+  checkinInfo: string | null;
   checkoutTime: string | null;
   preArrivalEnabled: boolean;
   reviewRequestLink: string | null;
@@ -90,7 +92,7 @@ type Props = {
   initialMessages: Message[];
 };
 
-type Tab = 'overview' | 'checkin' | 'messages' | 'extras' | 'houseinfo' | 'surroundings' | 'checkout';
+type Tab = 'arrival' | 'checkin' | 'messages' | 'extras' | 'houseinfo' | 'surroundings' | 'checkout';
 
 const CAT_LABELS: Record<string, string> = {
   restaurant: '🍽️ Restaurant & Café',
@@ -125,7 +127,7 @@ function eur(n: number) {
 export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, initialMessages }: Props) {
   const accent = hotel.accentColor || '#111827';
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
-  const [tab, setTab] = useState<Tab>('overview');
+  const [tab, setTab] = useState<Tab>('arrival');
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [msgInput, setMsgInput] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -176,19 +178,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const pricing = booking.pricingJson as {
-    apartments?: { apartmentName?: string; name?: string; totalPrice?: number; total?: number; cleaningFee?: number; cleaning?: number }[];
-    extrasTotal?: number;
-    ortstaxeTotal?: number;
-    total?: number;
-  } | null;
-
-  const bookedExtrasList = Array.isArray(booking.extrasJson)
-    ? (booking.extrasJson as { name: string; guestLabel?: string; subtotal?: number; total?: number }[])
-    : [];
-
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'overview', label: 'Buchung' },
+    { id: 'arrival', label: 'Anreise' },
     ...(hotel.preArrivalEnabled && !booking.checkinCompleted ? [{ id: 'checkin' as Tab, label: 'Check-In' }] : []),
     { id: 'messages', label: 'Nachrichten' },
     ...(allExtras.length > 0 ? [{ id: 'extras' as Tab, label: 'Zusatzleistungen' }] : []),
@@ -246,10 +237,12 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; }
     .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 80px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
-    .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; }
+    .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .header-left { flex: 1; min-width: 0; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
     .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+    .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; }
     @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
     @keyframes bwPulse { 0%,100%{box-shadow:0 0 0 0 ${accent}44} 50%{box-shadow:0 0 0 5px ${accent}00} }
@@ -348,11 +341,18 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
         <div className="wrap">
           {/* Header */}
           <div className="header">
-            <div className="header-hotel">{hotel.name}</div>
-            <div className="header-title">Gästeportal</div>
-            <div className="header-sub">
-              {fmt(booking.arrival)} — {fmt(booking.departure)} · {booking.nights} {booking.nights === 1 ? 'Nacht' : 'Nächte'}
+            <div className="header-left">
+              <div className="header-hotel">{hotel.name}</div>
+              <div className="header-title">Gästeportal</div>
+              <div className="header-sub">
+                {fmt(booking.arrival)} — {fmt(booking.departure)} · {booking.nights} {booking.nights === 1 ? 'Nacht' : 'Nächte'}
+              </div>
             </div>
+            {hotel.preArrivalEnabled && !booking.checkinCompleted && (
+              <button className="header-checkin-btn" onClick={() => handleTabChange('checkin')}>
+                Check-In ↗
+              </button>
+            )}
           </div>
 
           {/* Tabs */}
@@ -371,73 +371,30 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
             <div className="tab-indicator" ref={indicatorRef} aria-hidden="true" />
           </div>
 
-          {/* Tab: Übersicht */}
-          {tab === 'overview' && (
+          {/* Tab: Anreise */}
+          {tab === 'arrival' && (
             <div key={tabContentKey} className="content content-anim">
-              {/* Welcome-Kachel: nur während des Aufenthalts */}
-              {(() => {
-                const today = new Date(); today.setHours(0,0,0,0);
-                const arr = new Date(booking.arrival); arr.setHours(0,0,0,0);
-                const dep = new Date(booking.departure); dep.setHours(0,0,0,0);
-                if (today < arr || today >= dep) return null;
-                const img = apartments[0]?.imageUrl;
-                return (
-                  <div className="welcome-tile">
-                    {img && <img src={img} alt={apartments[0]?.name} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} loading="eager" />}
-                    <div style={{ padding: '16px 18px' }}>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: accent, marginBottom: 4 }}>Schön, dass Sie da sind! 🌟</div>
-                      <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.6 }}>
-                        Hier finden Sie alles für Ihren Aufenthalt bei <strong>{hotel.name}</strong> — von Check-In bis Abreise.
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Buchungsdetails */}
-              <div className="card">
-                <div className="card-head">Buchungsdetails</div>
-                <div className="card-body">
-                  <div className="row">
-                    <span className="row-lbl">Gast</span>
-                    <span className="row-val">{[booking.salutation, booking.firstname, booking.lastname].filter(Boolean).join(' ')}</span>
-                  </div>
-                  <div className="row">
-                    <span className="row-lbl">Anreise</span>
-                    <span className="row-val">{fmt(booking.arrival)}</span>
-                  </div>
-                  <div className="row">
-                    <span className="row-lbl">Abreise</span>
-                    <span className="row-val">{fmt(booking.departure)}</span>
-                  </div>
-                  <div className="row">
-                    <span className="row-lbl">Nächte</span>
-                    <span className="row-val">{booking.nights}</span>
-                  </div>
-                  <div className="row">
-                    <span className="row-lbl">Personen</span>
-                    <span className="row-val">
-                      {booking.adults} Erwachsene{booking.children ? `, ${booking.children} Kinder` : ''}
-                    </span>
-                  </div>
-                  {apartments.length > 0 && (
+              {hotel.checkinTime && (
+                <div className="card">
+                  <div className="card-head">🕐 Check-in</div>
+                  <div className="card-body">
                     <div className="row">
-                      <span className="row-lbl">Unterkunft</span>
-                      <span className="row-val">{apartments.map((a) => a.name).join(', ')}</span>
+                      <span className="row-lbl">Check-in ab</span>
+                      <span className="row-val">{hotel.checkinTime} Uhr</span>
                     </div>
-                  )}
-                  <div className="row">
-                    <span className="row-lbl">Status</span>
-                    <span className="row-val">
-                      <span className={`badge ${booking.status === 'booked' || booking.status === 'confirmed' ? 'badge-green badge-pulse' : 'badge-yellow'}`}>
-                        {booking.status === 'booked' || booking.status === 'confirmed' ? 'Bestätigt' : booking.status === 'new' ? 'Anfrage' : booking.status}
-                      </span>
-                    </span>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* Nuki Türcode */}
+              {hotel.checkinInfo && (
+                <div className="card">
+                  <div className="card-head">🔑 Schlüsselübergabe</div>
+                  <div className="card-body">
+                    <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.checkinInfo}</p>
+                  </div>
+                </div>
+              )}
+
               {booking.nukiCode && (
                 <div className="nuki">
                   <div className="nuki-label">🔑 Ihr Zugangscode</div>
@@ -446,51 +403,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 </div>
               )}
 
-              {/* Preisübersicht */}
-              {pricing && (
-                <div className="card">
-                  <div className="card-head">Preisübersicht</div>
-                  <div className="card-body">
-                    {(pricing.apartments ?? []).map((a, i) => (
-                      <div key={i} className="row">
-                        <span className="row-lbl">{a.apartmentName ?? a.name}</span>
-                        <span className="row-val">{eur(a.totalPrice ?? a.total ?? 0)}</span>
-                      </div>
-                    ))}
-                    {bookedExtrasList.length > 0 && (
-                      <>
-                        <div className="divider" />
-                        {bookedExtrasList.map((e, i) => (
-                          <div key={i} className="row">
-                            <span className="row-lbl">{e.guestLabel ?? e.name}</span>
-                            <span className="row-val">{eur(e.subtotal ?? e.total ?? 0)}</span>
-                          </div>
-                        ))}
-                      </>
-                    )}
-                    {(pricing.ortstaxeTotal ?? 0) > 0 && (
-                      <div className="row">
-                        <span className="row-lbl">Ortstaxe</span>
-                        <span className="row-val">{eur(pricing.ortstaxeTotal!)}</span>
-                      </div>
-                    )}
-                    <div className="divider" />
-                    <div className="total-row">
-                      <span>Gesamt</span>
-                      <span>{eur(pricing.total ?? 0)}</span>
-                    </div>
-                    <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'right', marginTop: 2 }}>inkl. MwSt.</div>
-                    {booking.paymentMethod && (
-                      <div className="row" style={{ marginTop: 4 }}>
-                        <span className="row-lbl">Zahlungsart</span>
-                        <span className="row-val" style={{ textTransform: 'capitalize' }}>{booking.paymentMethod.replace('_', ' ')}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Anreise */}
               {mapsUrl && (
                 <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -498,7 +410,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 </a>
               )}
 
-              {/* Kontakt */}
               {(hotel.phone || hotel.email || waUrl) && (
                 <div className="card">
                   <div className="card-head">Kontakt</div>
@@ -522,19 +433,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                       </a>
                     )}
                   </div>
-                </div>
-              )}
-
-              {/* Check-In Hinweis */}
-              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 12, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1e40af', marginBottom: 4 }}>Online Check-In ausstehend</div>
-                    <div style={{ fontSize: 13, color: '#3b82f6' }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
-                  </div>
-                  <button className="btn btn-sm" style={{ background: '#1e40af', color: '#fff', flexShrink: 0 }} onClick={() => handleTabChange('checkin')}>
-                    Zum Check-In
-                  </button>
                 </div>
               )}
             </div>

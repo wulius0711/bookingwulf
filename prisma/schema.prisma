@@ -87,6 +87,9 @@ model HotelSettings {
   checkinEmailEnabled Boolean @default(false)
   checkinEmailDays    Int     @default(3)
 
+  checkinTime             String?
+  checkinInfo             String?
+
   checkoutReminderEnabled Boolean @default(false)
   checkoutTime            String?
   checkoutReminderText    String?
