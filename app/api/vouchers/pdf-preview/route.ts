@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     message: 'Alles Gute zum Geburtstag! Genieße deinen Aufenthalt.',
   });
 
-  return new Response(pdf, {
+  return new Response(new Uint8Array(pdf), {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': 'inline; filename="gutschein-preview.pdf"',
