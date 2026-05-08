@@ -235,8 +235,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; }
-    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 80px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 0 0 max(80px, calc(60px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
     .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .header-left { flex: 1; min-width: 0; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
