@@ -37,7 +37,7 @@ export async function POST(req: Request) {
             ids.map(id => prisma.voucher.update({
               where: { id },
               data: { status: 'active' },
-              include: { template: { select: { name: true } } },
+              include: { template: { select: { name: true, description: true } } },
             }))
           );
 
@@ -80,6 +80,7 @@ export async function POST(req: Request) {
                   hotelName: hotel.name,
                   accentColor: accent,
                   templateName: v.template?.name ?? v.code,
+                  description: v.template?.description,
                   code: v.code,
                   type: v.type,
                   value: Number(v.value),

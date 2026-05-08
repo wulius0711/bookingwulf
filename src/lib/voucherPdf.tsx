@@ -8,6 +8,7 @@ type VoucherPdfData = {
   type: string;
   value: number;
   expiresAt: Date;
+  description?: string | null;
   recipientName?: string | null;
   senderName?: string | null;
   message?: string | null;
@@ -56,6 +57,8 @@ export function VoucherPdfDocument({ data }: { data: VoucherPdfData }) {
     metaBoxLeft: { marginRight: 8 },
     metaLabel: { fontSize: 9, fontFamily: 'Helvetica', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 4 },
     metaValue: { fontSize: 13, fontFamily: 'Helvetica-Bold', color: '#111827' },
+    descBox: { backgroundColor: '#ffffff', borderRadius: 10, padding: '14 18', marginBottom: 16, border: '1 solid #e5e7eb' },
+    descText: { fontSize: 12, fontFamily: 'Helvetica', color: '#6b7280', lineHeight: 1.6 },
     messageBox: { backgroundColor: '#f0f9ff', borderRadius: 10, padding: '16 20', marginBottom: 16, borderLeft: `3 solid ${accent}` },
     messageText: { fontSize: 13, fontFamily: 'Helvetica-Oblique', color: '#374151', lineHeight: 1.6 },
     footer: { padding: '0 48 32', marginTop: 'auto' },
@@ -96,6 +99,12 @@ export function VoucherPdfDocument({ data }: { data: VoucherPdfData }) {
               </View>
             )}
           </View>
+
+          {data.description && (
+            <View style={s.descBox}>
+              <Text style={s.descText}>{data.description}</Text>
+            </View>
+          )}
 
           {data.message && (
             <View style={s.messageBox}>

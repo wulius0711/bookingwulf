@@ -27,7 +27,6 @@ export async function POST(req: Request) {
         code: normalizeCode(code),
         hotelId: hotel.id,
         status: 'active',
-        type: 'value',
         expiresAt: { gt: new Date() },
       },
       select: { id: true, code: true, value: true },
