@@ -76,7 +76,7 @@
         --line-strong: #d1d5db;
 
         --accent: #111111;
-        --accent-dark: #000000;
+        --accent-dark: color-mix(in srgb, var(--accent) 78%, black);
         --accent-soft: rgba(0, 0, 0, 0.06);
 
         --success: #16a34a;
@@ -345,7 +345,7 @@
         left: 0;
         width: 0%;
         height: 100%;
-        background: color-mix(in srgb, var(--accent) 78%, black);
+        background: var(--accent-dark);
         border-radius: var(--button-radius);
         z-index: -1;
         transition: width 0.3s ease;
@@ -1556,7 +1556,7 @@
         left: 0;
         width: 0%;
         height: 100%;
-        background: color-mix(in srgb, var(--accent) 78%, black);
+        background: var(--accent-dark);
         border-radius: var(--button-radius);
         z-index: -1;
         transition: width 0.3s ease;
