@@ -90,6 +90,9 @@ export default async function GastPage({ params }: Props) {
         id: true,
         name: true,
         images: { take: 1, orderBy: { id: 'asc' }, select: { imageUrl: true, altText: true } },
+        gpCheckinTime: true, gpCheckinInfo: true, gpCheckoutTime: true,
+        gpWifiSsid: true, gpWifiPassword: true, gpParkingInfo: true,
+        gpWasteInfo: true, gpHouseRules: true, gpEmergencyJson: true,
       },
     }),
     prisma.hotelExtra.findMany({
@@ -109,11 +112,21 @@ export default async function GastPage({ params }: Props) {
       orderBy: { sortOrder: 'asc' },
     }),
     prisma.thingsToSee.findMany({
-      where: { hotelId: request.hotelId!, isActive: true },
+      where: {
+        hotelId: request.hotelId!,
+        isActive: true,
+        OR: [
+          { apartmentId: null },
+          { apartmentId: { in: apartmentIds } },
+        ],
+      },
       select: { id: true, category: true, title: true, description: true, address: true, mapsUrl: true, imageUrl: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
     }),
   ]);
+
+  // Apartment-Overrides: erstes Apartment gewinnt (bei Mehrfachbuchung)
+  const apt = apartments[0];
 
   const bookedExtraKeys: string[] = Array.isArray(request.extrasJson)
     ? (request.extrasJson as { key: string }[]).map((e) => e.key)
@@ -151,17 +164,21 @@ export default async function GastPage({ params }: Props) {
         accentColor: hotel?.accentColor ?? '#111827',
         address: hotel?.settings?.address ?? null,
         whatsappNumber: hotel?.settings?.whatsappNumber ?? null,
-        checkinTime: hotel?.settings?.checkinTime ?? null,
-        checkinInfo: hotel?.settings?.checkinInfo ?? null,
-        checkoutTime: hotel?.settings?.checkoutTime ?? null,
+        checkinTime: apt?.gpCheckinTime ?? hotel?.settings?.checkinTime ?? null,
+        checkinInfo: apt?.gpCheckinInfo ?? hotel?.settings?.checkinInfo ?? null,
+        checkoutTime: apt?.gpCheckoutTime ?? hotel?.settings?.checkoutTime ?? null,
         preArrivalEnabled: hotel?.settings?.preArrivalEnabled ?? false,
         reviewRequestLink: hotel?.settings?.reviewRequestLink ?? null,
-        wifiSsid: hotel?.settings?.wifiSsid ?? null,
-        wifiPassword: hotel?.settings?.wifiPassword ?? null,
-        parkingInfo: hotel?.settings?.parkingInfo ?? null,
-        wasteInfo: hotel?.settings?.wasteInfo ?? null,
-        houseRules: hotel?.settings?.houseRules ?? null,
-        emergencyNumbers: Array.isArray(hotel?.settings?.emergencyJson) ? (hotel!.settings!.emergencyJson as {label:string;number:string}[]) : [],
+        wifiSsid: apt?.gpWifiSsid ?? hotel?.settings?.wifiSsid ?? null,
+        wifiPassword: apt?.gpWifiPassword ?? hotel?.settings?.wifiPassword ?? null,
+        parkingInfo: apt?.gpParkingInfo ?? hotel?.settings?.parkingInfo ?? null,
+        wasteInfo: apt?.gpWasteInfo ?? hotel?.settings?.wasteInfo ?? null,
+        houseRules: apt?.gpHouseRules ?? hotel?.settings?.houseRules ?? null,
+        emergencyNumbers: Array.isArray(apt?.gpEmergencyJson)
+          ? (apt.gpEmergencyJson as {label:string;number:string}[])
+          : Array.isArray(hotel?.settings?.emergencyJson)
+            ? (hotel!.settings!.emergencyJson as {label:string;number:string}[])
+            : [],
       }}
       apartments={apartments.map((a) => ({
         id: a.id,

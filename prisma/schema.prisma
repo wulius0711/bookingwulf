@@ -255,6 +255,17 @@ model Apartment {
   // Nuki
   nukiSmartlockId String?
 
+  // Gästeportal-Overrides (überschreiben Hotel-Defaults wenn befüllt)
+  gpCheckinTime   String?
+  gpCheckinInfo   String?
+  gpCheckoutTime  String?
+  gpWifiSsid      String?
+  gpWifiPassword  String?
+  gpParkingInfo   String?
+  gpWasteInfo     String?
+  gpHouseRules    String?
+  gpEmergencyJson Json?
+
   // Relations
   images        ApartmentImage[]
   blockedRanges BlockedRange[]
@@ -398,6 +409,7 @@ model ThingsToSee {
   id          Int      @id @default(autoincrement())
   hotelId     Int
   hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  apartmentId Int?
   category    String   // 'restaurant' | 'attraction' | 'activity' | 'shopping' | 'emergency'
   title       String
   description String?

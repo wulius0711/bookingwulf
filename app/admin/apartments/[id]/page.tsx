@@ -131,6 +131,15 @@ export default async function EditApartmentPage({ params }: PageProps) {
       .map((item) => item.trim())
       .filter(Boolean);
 
+    const gpCheckinTime  = String(formData.get('gpCheckinTime')  || '').trim();
+    const gpCheckinInfo  = String(formData.get('gpCheckinInfo')  || '').trim();
+    const gpCheckoutTime = String(formData.get('gpCheckoutTime') || '').trim();
+    const gpWifiSsid     = String(formData.get('gpWifiSsid')     || '').trim();
+    const gpWifiPassword = String(formData.get('gpWifiPassword') || '').trim();
+    const gpParkingInfo  = String(formData.get('gpParkingInfo')  || '').trim();
+    const gpWasteInfo    = String(formData.get('gpWasteInfo')    || '').trim();
+    const gpHouseRules   = String(formData.get('gpHouseRules')   || '').trim();
+
     await prisma.apartment.update({
       where: { id: apartmentId },
       data: {
@@ -148,6 +157,14 @@ export default async function EditApartmentPage({ params }: PageProps) {
         cleaningFee,
         sortOrder,
         isActive,
+        gpCheckinTime:  gpCheckinTime  || null,
+        gpCheckinInfo:  gpCheckinInfo  || null,
+        gpCheckoutTime: gpCheckoutTime || null,
+        gpWifiSsid:     gpWifiSsid     || null,
+        gpWifiPassword: gpWifiPassword || null,
+        gpParkingInfo:  gpParkingInfo  || null,
+        gpWasteInfo:    gpWasteInfo    || null,
+        gpHouseRules:   gpHouseRules   || null,
       },
     });
 
@@ -182,7 +199,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 720, display: 'grid', gap: 24 }}>
 
         {/* Header */}
         <div>
@@ -281,6 +298,54 @@ export default async function EditApartmentPage({ params }: PageProps) {
                   style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
                 />
                 <span style={{ fontSize: 12, color: '#9ca3af' }}>Eine Ausstattung pro Zeile</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Gästeportal */}
+          <div style={card}>
+            <div style={cardHeader}><h2 style={cardTitle}>Gästeportal</h2></div>
+            <div style={cardBody}>
+              <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 16px' }}>
+                Apartment-spezifische Infos überschreiben die Hotel-Standardwerte im Gästeportal. Leer lassen = Hotel-Default wird verwendet.
+              </p>
+              <div style={{ display: 'grid', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>Check-in ab</label>
+                    <input name="gpCheckinTime" defaultValue={apartment.gpCheckinTime ?? ''} placeholder="z.B. 15:00" style={inputStyle} />
+                  </div>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>Check-out bis</label>
+                    <input name="gpCheckoutTime" defaultValue={apartment.gpCheckoutTime ?? ''} placeholder="z.B. 11:00" style={inputStyle} />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Schlüsselübergabe / Check-in Info</label>
+                  <textarea name="gpCheckinInfo" defaultValue={apartment.gpCheckinInfo ?? ''} rows={3} placeholder="Wo liegt der Schlüssel, Codeschloss-Code etc." style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>WLAN-Name</label>
+                    <input name="gpWifiSsid" defaultValue={apartment.gpWifiSsid ?? ''} placeholder="Netzwerkname" style={inputStyle} />
+                  </div>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>WLAN-Passwort</label>
+                    <input name="gpWifiPassword" defaultValue={apartment.gpWifiPassword ?? ''} placeholder="Passwort" style={inputStyle} />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Parkplatz</label>
+                  <textarea name="gpParkingInfo" defaultValue={apartment.gpParkingInfo ?? ''} rows={2} placeholder="Parkplatz-Hinweise" style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Müllentsorgung</label>
+                  <textarea name="gpWasteInfo" defaultValue={apartment.gpWasteInfo ?? ''} rows={2} placeholder="Müllhinweise" style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Hausordnung</label>
+                  <textarea name="gpHouseRules" defaultValue={apartment.gpHouseRules ?? ''} rows={4} placeholder="Hausordnung für diese Wohnung" style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
               </div>
             </div>
           </div>
