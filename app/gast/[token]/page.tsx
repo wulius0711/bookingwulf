@@ -131,13 +131,19 @@ export default async function GastPage({ params }: Props) {
           { apartmentId: { in: apartmentIds } },
         ],
       },
-      select: { id: true, imageUrl: true, caption: true, sortOrder: true },
+      select: { id: true, imageUrl: true, caption: true, sortOrder: true, apartmentId: true },
       orderBy: { sortOrder: 'asc' },
     }),
   ]);
 
   // Apartment-Overrides: erstes Apartment gewinnt (bei Mehrfachbuchung)
   const apt = apartments[0];
+
+  // Check-in Fotos: Apartment-Bilder überschreiben Hotel-Bilder
+  const aptCheckinImages = checkinImages.filter((i) => i.apartmentId !== null);
+  const finalCheckinImages = aptCheckinImages.length > 0
+    ? aptCheckinImages
+    : checkinImages.filter((i) => i.apartmentId === null);
 
   const bookedExtraKeys: string[] = Array.isArray(request.extrasJson)
     ? (request.extrasJson as { key: string }[]).map((e) => e.key)
@@ -200,7 +206,7 @@ export default async function GastPage({ params }: Props) {
       allExtras={allExtras}
       serverBookedExtraIds={serverBookedExtraIds}
       thingsToSee={thingsToSee}
-      checkinImages={checkinImages}
+      checkinImages={finalCheckinImages}
       initialMessages={request.messages.map((m) => ({
         id: m.id,
         sender: m.sender,
