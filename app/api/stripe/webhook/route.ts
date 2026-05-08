@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { stripe, getPlanFromPriceId } from '@/src/lib/stripe';
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
+import { generateVoucherPdf } from '@/src/lib/voucherPdf';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import Stripe from 'stripe';
 
@@ -33,7 +34,11 @@ export async function POST(req: Request) {
             : [Number(session.metadata.voucherId)];
 
           const vouchers = await prisma.$transaction(
-            ids.map(id => prisma.voucher.update({ where: { id }, data: { status: 'active' } }))
+            ids.map(id => prisma.voucher.update({
+              where: { id },
+              data: { status: 'active' },
+              include: { template: { select: { name: true } } },
+            }))
           );
 
           const hotel = await prisma.hotel.findUnique({
@@ -70,11 +75,31 @@ export async function POST(req: Request) {
                   Bitte nennen Sie ${vouchers.length === 1 ? 'diesen Code' : 'die Codes'} bei der Buchung oder bei der Rezeption von <strong>${hotel.name}</strong>.
                 </p>
               `;
+              const pdfAttachments = await Promise.all(vouchers.map(async (v) => {
+                const pdf = await generateVoucherPdf({
+                  hotelName: hotel.name,
+                  accentColor: accent,
+                  templateName: v.template?.name ?? v.code,
+                  code: v.code,
+                  type: v.type,
+                  value: Number(v.value),
+                  expiresAt: v.expiresAt,
+                  recipientName: v.recipientName,
+                  senderName: v.senderName,
+                  message: v.message,
+                });
+                const filename = vouchers.length === 1
+                  ? `Gutschein-${hotel.name.replace(/\s+/g, '-')}.pdf`
+                  : `Gutschein-${v.code}.pdf`;
+                return { filename, content: pdf.toString('base64') };
+              }));
+
               await resend.emails.send({
                 from: getFromEmail(),
                 to: first.senderEmail,
                 subject: `${vouchers.length === 1 ? 'Ihr Gutschein' : `Ihre ${vouchers.length} Gutscheine`} — ${hotel.name}`,
                 html: buildEmailHtml({ hotelName: hotel.name, title: 'Gutschein bestätigt', body: senderHtml }),
+                attachments: pdfAttachments,
               });
 
               if (first.recipientEmail && first.recipientEmail !== first.senderEmail) {
@@ -94,6 +119,7 @@ export async function POST(req: Request) {
                   to: first.recipientEmail,
                   subject: `Sie haben ${vouchers.length === 1 ? 'einen Gutschein' : `${vouchers.length} Gutscheine`} erhalten — ${hotel.name}`,
                   html: buildEmailHtml({ hotelName: hotel.name, title: 'Gutschein erhalten', body: recipientHtml }),
+                  attachments: pdfAttachments,
                 });
               }
             }
