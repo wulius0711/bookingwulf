@@ -130,5 +130,5 @@ export async function submitCheckin(formData: FormData) {
     console.error('[checkin] Hotel notification failed:', e);
   }
 
-  redirect(`/checkin/${token}`);
+  redirect(`/gast/${token}`);
 }
