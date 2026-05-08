@@ -140,7 +140,7 @@ export default async function NewApartmentPage() {
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 720, display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neues Apartment</h1>

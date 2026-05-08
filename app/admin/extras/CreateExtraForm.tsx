@@ -97,6 +97,14 @@ export default function CreateExtraForm({ hotelId }: { hotelId: number }) {
         <input name="linkUrl" type="url" placeholder="https://..." style={inputStyle} />
       </div>
 
+      <div style={{ display: 'grid', gap: 6 }}>
+        <label style={labelStyle}>Varianten-Gruppe <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: '#9ca3af' }}>(optional)</span></label>
+        <input name="exclusiveGroup" placeholder="z. B. hotelstorno" style={inputStyle} />
+        <p style={{ margin: 0, fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>
+          Wenn mehrere Extras den gleichen Gruppen-Namen haben, kann der Gast nur <strong>eine davon</strong> buchen — z. B. „Hotelstorno Plus" und „Hotelstorno Premium" beide mit dem Wert <em>hotelstorno</em>.
+        </p>
+      </div>
+
       <div className="admin-form-actions">
         <button type="submit" className="btn-primary">
           Anlegen

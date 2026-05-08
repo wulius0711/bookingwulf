@@ -8,6 +8,7 @@ import IcalSection from './IcalSection';
 import NukiLockSection from './NukiLockSection';
 import { getNukiLocks } from '@/src/lib/nuki';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
+import { autoTranslateFields } from '@/src/lib/translate';
 
 export const dynamic = 'force-dynamic';
 
@@ -143,6 +144,16 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const gpWasteInfo    = String(formData.get('gpWasteInfo')    || '').trim();
     const gpHouseRules   = String(formData.get('gpHouseRules')   || '').trim();
 
+    const existingApt = await prisma.apartment.findUnique({
+      where: { id: apartmentId },
+      select: { gpTranslationsJson: true },
+    });
+
+    const gpTranslationsJson = await autoTranslateFields(
+      { checkinInfo: gpCheckinInfo || null, houseRules: gpHouseRules || null, parkingInfo: gpParkingInfo || null, wasteInfo: gpWasteInfo || null },
+      existingApt?.gpTranslationsJson as Record<string, Record<string, string>> | null,
+    );
+
     await prisma.apartment.update({
       where: { id: apartmentId },
       data: {
@@ -168,6 +179,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         gpParkingInfo:  gpParkingInfo  || null,
         gpWasteInfo:    gpWasteInfo    || null,
         gpHouseRules:   gpHouseRules   || null,
+        gpTranslationsJson,
       },
     });
 

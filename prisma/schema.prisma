@@ -173,6 +173,7 @@ model HotelSettings {
   wasteInfo     String?
   houseRules    String?
   emergencyJson Json?    // [{label: string, number: string}]
+  translationsJson Json? // { en: { checkinInfo, houseRules, parkingInfo, wasteInfo }, it: { ... } }
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -266,6 +267,7 @@ model Apartment {
   gpWasteInfo     String?
   gpHouseRules    String?
   gpEmergencyJson Json?
+  gpTranslationsJson Json? // { en: { gpCheckinInfo, gpHouseRules, gpParkingInfo, gpWasteInfo }, it: { ... } }
 
   // Relations
   images        ApartmentImage[]

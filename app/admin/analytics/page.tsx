@@ -201,7 +201,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 1100, display: 'grid', gap: 24 }}>
 
         {/* Header */}
         <div className="analytics-header">

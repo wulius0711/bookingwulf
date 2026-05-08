@@ -64,7 +64,9 @@ type CheckinImage = { id: number; imageUrl: string; caption: string | null; sort
 type Props = {
   token: string; booking: Booking; hotel: Hotel; apartments: Apartment[];
   allExtras: Extra[]; serverBookedExtraIds: number[];
-  thingsToSee: ThingToSee[]; checkinImages: CheckinImage[]; initialMessages: Message[];
+  thingsToSee: ThingToSee[]; checkinImages: CheckinImage[];
+  translations: Record<string, Record<string, string>>;
+  initialMessages: Message[];
 };
 
 type Tab = 'arrival' | 'extras' | 'surroundings' | 'messages' | 'checkout';
@@ -196,7 +198,7 @@ const TRANSLATIONS = {
 } as const;
 type Lang = keyof typeof TRANSLATIONS;
 
-export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, checkinImages, initialMessages }: Props) {
+export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, checkinImages, translations, initialMessages }: Props) {
   const accent = hotel.accentColor || '#111827';
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
   const accentOnLight = hexLuminance(accent) > 0.4 ? '#374151' : accent;
@@ -224,6 +226,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     return bl in TRANSLATIONS ? bl : 'de';
   });
   const t = TRANSLATIONS[lang];
+  const tr = (field: string, deValue: string | null) =>
+    lang !== 'de' ? (translations[lang]?.[field] ?? deValue) : deValue;
 
   useEffect(() => {
     localStorage.setItem('gp_lang', lang);
@@ -516,7 +520,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="card-head">{t.keyHandover}</div>
                   <div className="card-body">
                     {hotel.checkinInfo && (
-                      <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: checkinImages.length > 0 ? '0 0 16px' : 0 }}>{hotel.checkinInfo}</p>
+                      <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: checkinImages.length > 0 ? '0 0 16px' : 0 }}>{tr('checkinInfo', hotel.checkinInfo)}</p>
                     )}
                     {checkinImages.length > 0 && (
                       <div style={{ display: 'grid', gap: 12 }}>
@@ -612,7 +616,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div className="card">
                       <div className="card-head">{t.parking}</div>
                       <div className="card-body">
-                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.parkingInfo}</p>
+                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{tr('parkingInfo', hotel.parkingInfo)}</p>
                       </div>
                     </div>
                   )}
@@ -620,7 +624,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div className="card">
                       <div className="card-head">{t.waste}</div>
                       <div className="card-body">
-                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{hotel.wasteInfo}</p>
+                        <p style={{ fontSize: 14, lineHeight: 1.6 }}>{tr('wasteInfo', hotel.wasteInfo)}</p>
                       </div>
                     </div>
                   )}
@@ -628,7 +632,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <div className="card">
                       <div className="card-head">{t.houseRules}</div>
                       <div className="card-body">
-                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{hotel.houseRules}</p>
+                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{tr('houseRules', hotel.houseRules)}</p>
                       </div>
                     </div>
                   )}

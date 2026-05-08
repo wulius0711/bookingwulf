@@ -35,7 +35,6 @@ const pageStyle: React.CSSProperties = {
 
 const shellStyle: React.CSSProperties = {
   maxWidth: 1440,
-  margin: '0 auto',
   display: 'grid',
   gap: 28,
   alignItems: 'start',

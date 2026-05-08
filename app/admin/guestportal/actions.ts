@@ -3,6 +3,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { revalidatePath } from 'next/cache';
+import { autoTranslateFields } from '@/src/lib/translate';
 
 export async function saveGuestPortalSettings(formData: FormData) {
   const session = await verifySession();
@@ -29,6 +30,16 @@ export async function saveGuestPortalSettings(formData: FormData) {
     if (Array.isArray(parsed)) emergencyJson = parsed;
   } catch { /* ignore */ }
 
+  const existing = await prisma.hotelSettings.findUnique({
+    where: { hotelId },
+    select: { translationsJson: true },
+  });
+
+  const translationsJson = await autoTranslateFields(
+    { checkinInfo, houseRules, parkingInfo, wasteInfo },
+    existing?.translationsJson as Record<string, Record<string, string>> | null,
+  );
+
   await prisma.hotel.update({
     where: { id: hotelId },
     data: { phone },
@@ -36,8 +47,8 @@ export async function saveGuestPortalSettings(formData: FormData) {
 
   await prisma.hotelSettings.upsert({
     where: { hotelId },
-    update: { whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson },
-    create: { hotelId, whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson },
+    update: { whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
+    create: { hotelId, whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
   });
 
   revalidatePath('/admin/guestportal');

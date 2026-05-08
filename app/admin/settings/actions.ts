@@ -21,6 +21,7 @@ export async function saveHotelSettings(formData: FormData) {
   const getBool = (name: string) => formData.get(name) === 'on';
 
   const notificationEmail = String(formData.get('notificationEmail') || '').trim() || null;
+  const phone = String(formData.get('phone') || '').trim() || null;
   const bookingTermsUrl = String(formData.get('bookingTermsUrl') || '').trim() || null;
   const privacyPolicyUrl = String(formData.get('privacyPolicyUrl') || '').trim() || null;
   const enableInstantBooking = getBool('enableInstantBooking');
@@ -36,7 +37,7 @@ export async function saveHotelSettings(formData: FormData) {
 
   await prisma.hotel.update({
     where: { id: hotelId },
-    data: { email: notificationEmail, bookingTermsUrl, privacyPolicyUrl },
+    data: { email: notificationEmail, phone, bookingTermsUrl, privacyPolicyUrl },
   });
 
   await writeAuditLog(hotelId,
@@ -77,6 +78,15 @@ export async function saveHotelSettings(formData: FormData) {
       bodyFontWeight: parseInt(String(formData.get('bodyFontWeight') || '0')) || null,
 
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
+      address: String(formData.get('address') || '').trim() || null,
+      whatsappNumber: String(formData.get('whatsappNumber') || '').trim() || null,
+
+      wifiSsid: String(formData.get('wifiSsid') || '').trim() || null,
+      wifiPassword: String(formData.get('wifiPassword') || '').trim() || null,
+      parkingInfo: String(formData.get('parkingInfo') || '').trim() || null,
+      wasteInfo: String(formData.get('wasteInfo') || '').trim() || null,
+      houseRules: String(formData.get('houseRules') || '').trim() || null,
+      emergencyJson: (() => { try { const v = JSON.parse(String(formData.get('emergencyJson') || '[]')); return Array.isArray(v) ? v : []; } catch { return []; } })(),
 
       taxRateRoom: parseFloat(String(formData.get('taxRateRoom') || '')) || null,
       taxRateCleaning: parseFloat(String(formData.get('taxRateCleaning') || '')) || null,
@@ -85,6 +95,9 @@ export async function saveHotelSettings(formData: FormData) {
       paypalEnabled: getBool('paypalEnabled'),
       paypalClientId: String(formData.get('paypalClientId') || '').trim() || null,
       paypalClientSecret: String(formData.get('paypalClientSecret') || '').trim() || null,
+      stripeEnabled: getBool('stripeEnabled'),
+      stripePublishableKey: String(formData.get('stripePublishableKey') || '').trim() || null,
+      stripeSecretKey: String(formData.get('stripeSecretKey') || '').trim() || null,
       depositEnabled: getBool('depositEnabled'),
       depositType: String(formData.get('depositType') || 'percent'),
       depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,
@@ -130,6 +143,16 @@ export async function saveHotelSettings(formData: FormData) {
       ortstaxePerPersonPerNight: parseFloat(String(formData.get('ortstaxePerPersonPerNight') || '0')) || null,
       ortstaxeMinAge: parseInt(String(formData.get('ortstaxeMinAge') || '0')) || null,
       miniWidgetTarget: String(formData.get('miniWidgetTarget') || '').trim() || null,
+      address: String(formData.get('address') || '').trim() || null,
+      whatsappNumber: String(formData.get('whatsappNumber') || '').trim() || null,
+
+      wifiSsid: String(formData.get('wifiSsid') || '').trim() || null,
+      wifiPassword: String(formData.get('wifiPassword') || '').trim() || null,
+      parkingInfo: String(formData.get('parkingInfo') || '').trim() || null,
+      wasteInfo: String(formData.get('wasteInfo') || '').trim() || null,
+      houseRules: String(formData.get('houseRules') || '').trim() || null,
+      emergencyJson: (() => { try { const v = JSON.parse(String(formData.get('emergencyJson') || '[]')); return Array.isArray(v) ? v : []; } catch { return []; } })(),
+
       gapNightDiscount: parseInt(String(formData.get('gapNightDiscount') || '0')) || null,
       gapNightMaxLength: parseInt(String(formData.get('gapNightMaxLength') || '0')) || null,
 
@@ -144,6 +167,9 @@ export async function saveHotelSettings(formData: FormData) {
       paypalEnabled: getBool('paypalEnabled'),
       paypalClientId: String(formData.get('paypalClientId') || '').trim() || null,
       paypalClientSecret: String(formData.get('paypalClientSecret') || '').trim() || null,
+      stripeEnabled: getBool('stripeEnabled'),
+      stripePublishableKey: String(formData.get('stripePublishableKey') || '').trim() || null,
+      stripeSecretKey: String(formData.get('stripeSecretKey') || '').trim() || null,
       depositEnabled: getBool('depositEnabled'),
       depositType: String(formData.get('depositType') || 'percent'),
       depositValue: parseFloat(String(formData.get('depositValue') || '25')) || 25,

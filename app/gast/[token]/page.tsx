@@ -80,6 +80,7 @@ export default async function GastPage({ params }: Props) {
             wasteInfo: true,
             houseRules: true,
             emergencyJson: true,
+            translationsJson: true,
           },
         },
       },
@@ -93,6 +94,7 @@ export default async function GastPage({ params }: Props) {
         gpCheckinTime: true, gpCheckinInfo: true, gpCheckoutTime: true,
         gpWifiSsid: true, gpWifiPassword: true, gpParkingInfo: true,
         gpWasteInfo: true, gpHouseRules: true, gpEmergencyJson: true,
+        gpTranslationsJson: true,
       },
     }),
     prisma.hotelExtra.findMany({
@@ -144,6 +146,14 @@ export default async function GastPage({ params }: Props) {
   const finalCheckinImages = aptCheckinImages.length > 0
     ? aptCheckinImages
     : checkinImages.filter((i) => i.apartmentId === null);
+
+  // Übersetzungen: Apartment überschreibt Hotel (nur für die relevanten Felder)
+  const hotelTr = (hotel?.settings?.translationsJson ?? {}) as Record<string, Record<string, string>>;
+  const aptTr = (apt?.gpTranslationsJson ?? {}) as Record<string, Record<string, string>>;
+  const translations: Record<string, Record<string, string>> = {};
+  for (const lang of ['en', 'it']) {
+    translations[lang] = { ...(hotelTr[lang] ?? {}), ...(aptTr[lang] ?? {}) };
+  }
 
   const bookedExtraKeys: string[] = Array.isArray(request.extrasJson)
     ? (request.extrasJson as { key: string }[]).map((e) => e.key)
@@ -207,6 +217,7 @@ export default async function GastPage({ params }: Props) {
       serverBookedExtraIds={serverBookedExtraIds}
       thingsToSee={thingsToSee}
       checkinImages={finalCheckinImages}
+      translations={translations}
       initialMessages={request.messages.map((m) => ({
         id: m.id,
         sender: m.sender,

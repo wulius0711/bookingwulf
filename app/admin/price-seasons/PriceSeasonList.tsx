@@ -84,7 +84,9 @@ export default function PriceSeasonList({
                   {s.apartment?.name} · {fmt(s.startDate)} – {fmt(s.endDate)}
                 </span>
               </div>
-              <span style={{ fontSize: 13, color: '#9ca3af', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+              <span className="card-caret" style={{ transform: isOpen ? 'rotate(180deg)' : undefined }}>
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
             </button>
 
             {isOpen && (
