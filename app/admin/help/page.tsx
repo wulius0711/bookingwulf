@@ -772,6 +772,9 @@ function GastePortalSection() {
         Die Hausordnung wird auch beim Online Check-in angezeigt — der Gast muss sie dort
         bestätigen, bevor der Check-in abgeschlossen wird.
       </Note>
+      <Note>
+        <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet.
+      </Note>
       <Tip>
         Das Gäste-Portal funktioniert auch offline — nach dem ersten Öffnen können Gäste es ohne
         Internetverbindung nutzen.
