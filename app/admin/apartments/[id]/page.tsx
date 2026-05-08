@@ -17,10 +17,11 @@ type PageProps = {
   }>;
 };
 
-const card: React.CSSProperties = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' };
-const cardHeader: React.CSSProperties = { background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' };
+const detailsStyle: React.CSSProperties = { border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', display: 'block' };
+const summaryStyle: React.CSSProperties = { padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' };
 const cardTitle: React.CSSProperties = { margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' };
-const cardBody: React.CSSProperties = { padding: '20px 20px', display: 'grid', gap: 16 };
+const cardBody: React.CSSProperties = { padding: '4px 20px 20px', display: 'grid', gap: 16 };
+const caret = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, transition: 'transform 0.2s' }}><path d="M4 6l4 4 4-4" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
 const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, color: '#111', background: '#f9fafb', boxSizing: 'border-box' };
@@ -214,8 +215,8 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <input type="hidden" name="slug" value={apartment.slug} />
 
           {/* Allgemein */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Allgemein</h2></div>
+          <details style={detailsStyle} open>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Allgemein</h2>{caret}</summary>
             <div style={cardBody}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Name</label>
@@ -232,11 +233,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input type="number" name="sortOrder" defaultValue={apartment.sortOrder} style={inputStyle} />
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Kapazität */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Kapazität</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Kapazität</h2>{caret}</summary>
             <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Max. Erwachsene</label>
@@ -247,11 +248,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input type="number" name="maxChildren" min="0" defaultValue={apartment.maxChildren} style={inputStyle} />
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Details */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Details</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Details</h2>{caret}</summary>
             <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Größe (m²)</label>
@@ -266,11 +267,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input name="view" defaultValue={apartment.view ?? ''} placeholder="z. B. Bergblick" style={inputStyle} />
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Preise */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Preise</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Preise</h2>{caret}</summary>
             <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Preis pro Nacht (€)</label>
@@ -281,11 +282,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input type="number" step="0.01" name="cleaningFee" defaultValue={apartment.cleaningFee ?? ''} style={inputStyle} />
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Beschreibung & Ausstattung */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Beschreibung & Ausstattung</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Beschreibung & Ausstattung</h2>{caret}</summary>
             <div style={cardBody}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Beschreibung</label>
@@ -302,14 +303,14 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <span style={{ fontSize: 12, color: '#9ca3af' }}>Eine Ausstattung pro Zeile</span>
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Gästeportal */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Gästeportal</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Gästeportal</h2>{caret}</summary>
             <div style={cardBody}>
-              <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 16px' }}>
-                Apartment-spezifische Infos überschreiben die Hotel-Standardwerte im Gästeportal. Leer lassen = Hotel-Default wird verwendet.
+              <p style={{ fontSize: 13, color: '#6b7280', margin: '8px 0 4px' }}>
+                Leer lassen = Hotel-Default wird verwendet.
               </p>
               <div style={{ display: 'grid', gap: 14 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -358,11 +359,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Bilder */}
-          <div style={card}>
-            <div style={cardHeader}><h2 style={cardTitle}>Bilder</h2></div>
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Bilder</h2>{caret}</summary>
             <div style={cardBody}>
               {[0, 1, 2, 3, 4, 5].map((index) => (
                 <ImageUploadField
@@ -373,7 +374,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 />
               ))}
             </div>
-          </div>
+          </details>
 
           <div className="admin-form-actions">
             <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
