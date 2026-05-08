@@ -155,7 +155,8 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         .vs-template.in-cart { border-color: var(--vs-accent); animation: vs-select-pulse 0.35s ease forwards; }
         .vs-qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--vs-accent); background: transparent; color: var(--vs-accent); font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s, color 0.15s; }
         .vs-qty-btn:hover { background: var(--vs-accent); color: var(--vs-on-accent); }
-        .vs-qty-btn.add-first { width: auto; padding: 0 12px; border-radius: 20px; font-size: 13px; }
+        .vs-qty-btn.add-first { width: auto; padding: 0 12px; border-radius: 20px; font-size: 13px; background: linear-gradient(to right, var(--vs-accent) 50%, transparent 50%); background-size: 200% 100%; background-position: right center; transition: background-position 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s; }
+        .vs-qty-btn.add-first:hover { background: linear-gradient(to right, var(--vs-accent) 50%, transparent 50%); background-size: 200% 100%; background-position: left center; color: var(--vs-on-accent); }
         .vs-step-form { animation: vs-fade-in 0.38s ease both; }
         .vs-btn { display: block; width: 100%; padding: 14px 20px; background: var(--vs-accent); color: var(--vs-on-accent); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.15s, transform 0.15s; }
         .vs-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
