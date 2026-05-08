@@ -238,21 +238,21 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         {step === 'form' && (
           <div className="vs-step-form" style={{ display: 'grid', gap: 20 }}>
             {/* Cart summary */}
-            <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px' }}>
+            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '16px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
               {cartItems.map(t => (
-                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0' }}>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>
-                    {cart.get(t.id)! > 1 && <span style={{ color: 'var(--vs-accent)', marginRight: 6 }}>{cart.get(t.id)}×</span>}
+                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0' }}>
+                  <div style={{ fontWeight: 500, fontSize: 14, color: '#111827' }}>
+                    <span style={{ color: '#9ca3af', fontWeight: 600, marginRight: 6, fontVariantNumeric: 'tabular-nums' }}>{cart.get(t.id)}×</span>
                     {t.name}
                   </div>
-                  <div style={{ fontSize: 13, color: '#6b7280' }}>{eur((cart.get(t.id)! ) * t.price)}</div>
+                  <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>{eur((cart.get(t.id)!) * t.price)}</div>
                 </div>
               ))}
-              <div style={{ borderTop: '1px solid var(--vs-accent-soft)', marginTop: 8, paddingTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700, fontSize: 14 }}>Gesamt</span>
-                <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</span>
+              <div style={{ borderTop: '1px solid #f3f4f6', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>Gesamt</span>
+                <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</span>
               </div>
-              <button onClick={() => setStep('select')} style={{ marginTop: 10, fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0 }}>
+              <button onClick={() => setStep('select')} style={{ marginTop: 10, fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0, opacity: 0.85 }}>
                 ← Warenkorb bearbeiten
               </button>
             </div>
