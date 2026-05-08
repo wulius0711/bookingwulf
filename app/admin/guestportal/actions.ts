@@ -17,6 +17,7 @@ export async function saveGuestPortalSettings(formData: FormData) {
   const address = String(formData.get('address') || '').trim() || null;
   const checkinTime = String(formData.get('checkinTime') || '').trim() || null;
   const checkinInfo = String(formData.get('checkinInfo') || '').trim() || null;
+  const checkoutInfo = String(formData.get('checkoutInfo') || '').trim() || null;
   const wifiSsid = String(formData.get('wifiSsid') || '').trim() || null;
   const wifiPassword = String(formData.get('wifiPassword') || '').trim() || null;
   const parkingInfo = String(formData.get('parkingInfo') || '').trim() || null;
@@ -36,7 +37,7 @@ export async function saveGuestPortalSettings(formData: FormData) {
   });
 
   const translationsJson = await autoTranslateFields(
-    { checkinInfo, houseRules, parkingInfo, wasteInfo },
+    { checkinInfo, checkoutInfo, houseRules, parkingInfo, wasteInfo },
     existing?.translationsJson as Record<string, Record<string, string>> | null,
   );
 
@@ -47,8 +48,8 @@ export async function saveGuestPortalSettings(formData: FormData) {
 
   await prisma.hotelSettings.upsert({
     where: { hotelId },
-    update: { whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
-    create: { hotelId, whatsappNumber, address, checkinTime, checkinInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
+    update: { whatsappNumber, address, checkinTime, checkinInfo, checkoutInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
+    create: { hotelId, whatsappNumber, address, checkinTime, checkinInfo, checkoutInfo, wifiSsid, wifiPassword, parkingInfo, wasteInfo, houseRules, emergencyJson, translationsJson },
   });
 
   revalidatePath('/admin/guestportal');

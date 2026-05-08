@@ -93,6 +93,7 @@ model HotelSettings {
 
   checkoutReminderEnabled Boolean @default(false)
   checkoutTime            String?
+  checkoutInfo            String?
   checkoutReminderText    String?
   checkoutReminderSubject String?
   checkoutReminderBody    String?

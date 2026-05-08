@@ -33,6 +33,7 @@ type Hotel = {
   whatsappNumber: string | null;
   checkinTime: string | null;
   checkinInfo: string | null;
+  checkoutInfo: string | null;
   checkoutTime: string | null;
   preArrivalEnabled: boolean;
   reviewRequestLink: string | null;
@@ -800,6 +801,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                           <span className="row-lbl">{t.checkoutTime}</span>
                           <span className="row-val">{hotel.checkoutTime}{t.oclock}</span>
                         </div>
+                      )}
+                      {hotel.checkoutInfo && (
+                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#374151' }}>{tr('checkoutInfo', hotel.checkoutInfo)}</p>
                       )}
                       <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
                         {t.checkoutDesc}

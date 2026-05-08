@@ -63,7 +63,7 @@ export default async function GuestPortalSettingsPage() {
   const selected = hotels[0]
     ? await prisma.hotel.findUnique({
         where: { id: hotels[0].id },
-        select: { id: true, phone: true, settings: { select: { whatsappNumber: true, address: true, checkinTime: true, checkinInfo: true, wifiSsid: true, wifiPassword: true, parkingInfo: true, wasteInfo: true, houseRules: true, emergencyJson: true } } },
+        select: { id: true, phone: true, settings: { select: { whatsappNumber: true, address: true, checkinTime: true, checkinInfo: true, checkoutInfo: true, wifiSsid: true, wifiPassword: true, parkingInfo: true, wasteInfo: true, houseRules: true, emergencyJson: true } } },
       })
     : null;
 
@@ -161,6 +161,26 @@ export default async function GuestPortalSettingsPage() {
                   hotelId={selected.id}
                   initialImages={checkinImages}
                 />
+              </div>
+            </div>
+          </details>
+
+          {/* ABREISE */}
+          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={sectionTitleStyle}>Abreise</h2>
+                <p style={sectionIntroStyle}>Hinweise zur Abreise — erscheinen im Gästeportal unter dem Tab „Abreise".</p>
+              </div>
+              {caretSvg}
+            </summary>
+            <div style={{ padding: '0 28px 26px', display: 'grid', gap: 18 }}>
+              <div className="settings-row" style={rowStyle}>
+                <label style={labelStyle}>
+                  Abreise-Info
+                  <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
+                </label>
+                <textarea name="checkoutInfo" rows={4} defaultValue={selected.settings?.checkoutInfo ?? ''} placeholder="z. B. Bitte hinterlassen Sie die Schlüssel im Schlüsselfach neben der Eingangstür. Kein Auschecken an der Rezeption nötig." style={{ ...inputStyle, resize: 'vertical' } as React.CSSProperties} />
               </div>
             </div>
           </details>
