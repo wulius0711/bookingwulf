@@ -160,7 +160,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         .vs-step-form { animation: vs-fade-in 0.38s ease both; }
         .vs-btn { display: block; width: 100%; padding: 14px 20px; position: relative; overflow: hidden; z-index: 1; background: transparent; color: var(--vs-on-accent); border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform 0.15s; }
         .vs-btn::after { content: ''; position: absolute; inset: 0; background: var(--vs-accent); border-radius: 12px; z-index: -2; }
-        .vs-btn::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background: color-mix(in srgb, var(--vs-accent) 78%, black); border-radius: 12px; z-index: -1; transition: width 0.3s ease; }
+        .vs-btn::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background: var(--vs-accent-dark); border-radius: 12px; z-index: -1; transition: width 0.3s ease; }
         .vs-btn:hover:not(:disabled)::before { width: 100%; }
         .vs-btn:active:not(:disabled) { transform: translateY(1px); }
         .vs-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -170,6 +170,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         className="vs-wrap"
         style={{
           '--vs-accent': accent,
+          '--vs-accent-dark': 'color-mix(in srgb, var(--vs-accent) 78%, black)',
           '--vs-on-accent': onAccent,
           '--vs-accent-soft': `${accent}88`,
           '--vs-accent-glow': `${accent}33`,
