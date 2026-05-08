@@ -206,7 +206,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
-    .wrap { max-width: 560px; margin: 0 auto; padding-bottom: max(90px, calc(70px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
+    .wrap { max-width: 560px; margin: 0 auto; padding-bottom: max(110px, calc(90px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
     .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .header-left { flex: 1; min-width: 0; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
@@ -270,18 +270,16 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .success-text { font-size: 14px; color: #6b7280; line-height: 1.6; }
     .error-text { font-size: 13px; color: #dc2626; }
     /* Bottom Navigation */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; }
-    .bottom-nav-inner { width: 100%; max-width: 584px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; padding-bottom: env(safe-area-inset-bottom); }
-    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 10px 4px 12px; border: none; background: none; color: #9ca3af; cursor: pointer; font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 0.02em; transition: color 0.15s; -webkit-tap-highlight-color: transparent; }
-    .nav-btn.active { color: ${accent}; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 20px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; }
+    .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); max-width: calc(100% - 0px); }
+    .nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 16px; border: none; background: none; color: rgba(255,255,255,0.45); cursor: pointer; font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
+    .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
     @media (prefers-color-scheme: dark) {
       body { background: #0f172a; color: #f1f5f9; }
       .card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
       .card-head { background: #162032; border-color: #2d3f55; color: #64748b; }
       .row-lbl { color: #94a3b8; }
       .divider { background: #2d3f55; }
-      .bottom-nav-inner { background: #1e293b; border-color: #2d3f55; }
-      .nav-btn { color: #475569; }
       .msg-hotel { background: #2d3f55; color: #f1f5f9; }
       .msg-input { background: #1e293b; color: #f1f5f9; border-color: #2d3f55; }
       .extra-card { border-color: #2d3f55; }
