@@ -149,10 +149,10 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
           100% { transform: scale(1); }
         }
         .vs-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: #111827; }
-        .vs-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); animation: vs-fade-in 0.35s ease both; }
-        .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s; animation: vs-fade-up 0.42s ease both; }
-        .vs-template:hover { border-color: var(--vs-accent-soft); box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
-        .vs-template.in-cart { border-color: var(--vs-accent); box-shadow: 0 4px 20px var(--vs-accent-glow); animation: vs-select-pulse 0.35s ease forwards; }
+        .vs-card { background: #fff; border-radius: 16px; overflow: hidden; animation: vs-fade-in 0.35s ease both; }
+        .vs-template { background: #fff; border-radius: 14px; border: 2px solid #e5e7eb; overflow: hidden; transition: border-color 0.2s, transform 0.2s; animation: vs-fade-up 0.42s ease both; }
+        .vs-template:hover { border-color: var(--vs-accent-soft); transform: translateY(-1px); }
+        .vs-template.in-cart { border-color: var(--vs-accent); animation: vs-select-pulse 0.35s ease forwards; }
         .vs-qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--vs-accent); background: transparent; color: var(--vs-accent); font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s, color 0.15s; }
         .vs-qty-btn:hover { background: var(--vs-accent); color: var(--vs-on-accent); }
         .vs-qty-btn.add-first { width: auto; padding: 0 12px; border-radius: 20px; font-size: 13px; }
@@ -221,7 +221,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             })}
 
             {cartCount > 0 && (
-              <div style={{ background: 'var(--vs-accent-glow)', border: '1.5px solid var(--vs-accent-soft)', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
+              <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>
                   {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
                 </div>
