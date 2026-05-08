@@ -209,6 +209,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('gp_lang') as Lang | null;
       if (stored && stored in TRANSLATIONS) return stored;
+      const nav = navigator.language.slice(0, 2) as Lang;
+      if (nav in TRANSLATIONS) return nav;
     }
     const bl = booking.language as Lang;
     return bl in TRANSLATIONS ? bl : 'de';
