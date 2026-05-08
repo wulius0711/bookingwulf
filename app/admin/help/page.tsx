@@ -18,6 +18,7 @@ const sections = [
   { id: 'emails',        title: 'E-Mails & Check-in',    plan: null,       content: EmailsSection },
   { id: 'einstellungen', title: 'Widget & Design',         plan: null,      content: EinstellungenSection },
   { id: 'zahlungen',     title: 'Zahlungsarten',           plan: null,       content: ZahlungenSection },
+  { id: 'gutscheine',    title: 'Gutscheine',             plan: 'Pro',      content: GutscheineSection },
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
@@ -996,6 +997,72 @@ function ZahlungenSection() {
         Stripe erhebt pro Transaktion eine eigene Gebühr (ca. 1,5 % + 0,25 € für europäische Karten).
         Diese Kosten sind unabhängig von bookingwulf und werden direkt von Stripe abgerechnet.
       </Note>
+    </div>
+  );
+}
+
+function GutscheineSection() {
+  return (
+    <div>
+      <H2>Gutscheine</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Mit dem Gutschein-Modul können Sie Geschenkgutscheine direkt über Ihre Hotel-Website verkaufen.
+        Gäste kaufen den Gutschein per Kreditkarte (Stripe), erhalten den Code und ein PDF per E-Mail
+        und können ihn bei der nächsten Buchung im Widget einlösen.
+      </P>
+      <H3>Vorlagen anlegen</H3>
+      <P>
+        Unter <strong>Gutscheine</strong> legen Sie Vorlagen an, die dann auf Ihrer Gutschein-Seite
+        erscheinen. Jede Vorlage definiert Art, Wert und Laufzeit.
+      </P>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { label: 'Name',             desc: 'Titel des Gutscheins — z.B. „Muttertagsspecial" oder „Erlebnis-Gutschein". Wird auf der Kauf-Seite und im PDF angezeigt.' },
+          { label: 'Typ',              desc: 'Wertgutschein (fixer €-Betrag) oder Nächte-Gutschein (z.B. „2 Nächte"). Bei Einlösung wird in beiden Fällen der Kaufpreis als Rabatt vom Buchungstotal abgezogen.' },
+          { label: 'Nennwert',         desc: 'Der angezeigte Wert auf dem Gutschein (z.B. € 150 oder 2 Nächte).' },
+          { label: 'Kaufpreis',        desc: 'Der tatsächlich bezahlte Betrag. Kann vom Nennwert abweichen — z.B. Nennwert € 200, Kaufpreis € 170.' },
+          { label: 'Gültig (Tage)',    desc: 'Wie viele Tage der Gutschein nach dem Kauf gültig ist. Standard: 365 Tage.' },
+          { label: 'Beschreibung',     desc: 'Optionaler Hinweistext für den Gast — z.B. „Gültig für Doppelzimmer inkl. Frühstück". Erscheint auf der Kauf-Seite und im PDF.' },
+        ].map((t) => (
+          <div key={t.label} style={{ display: 'flex', gap: 10 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 140, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
+          </div>
+        ))}
+      </div>
+      <H3>Kauf-Seite</H3>
+      <P>
+        Jedes Hotel hat eine öffentliche Gutschein-Seite unter{' '}
+        <Code>bookingwulf.com/gutschein/[ihr-slug]</Code>. Dort sehen Besucher alle aktiven Vorlagen,
+        wählen eine aus, geben Empfänger- und Absenderdaten ein und bezahlen per Kreditkarte.
+        Nach erfolgreicher Zahlung wird der Gutschein-Code automatisch per E-Mail zugestellt —
+        inklusive angehängtem PDF.
+      </P>
+      <H3>PDF-Gutschein</H3>
+      <P>
+        Nach dem Kauf erhält der Käufer (und optional der Empfänger) automatisch ein gestaltetes
+        PDF mit Akzentfarbe des Hotels, Gutschein-Code, Wert, Gültigkeitsdatum, Beschreibung
+        und einer persönlichen Nachricht.
+      </P>
+      <H3>Einlösen im Widget</H3>
+      <P>
+        Im Buchungs-Widget erscheint beim Checkout ein Feld „Gutschein-Code". Der Gast gibt den
+        Code ein, klickt auf Einlösen — der Rabatt wird sofort vom Gesamtbetrag abgezogen und
+        in der Preisübersicht angezeigt. Nach abgeschlossener Buchung wird der Gutschein als
+        eingelöst markiert.
+      </P>
+      <Tip>
+        <strong>Nächte-Gutscheine:</strong> Der Kaufpreis des Gutscheins wird als Rabatt abgezogen.
+        Wenn der Gast ein teureres Zimmer bucht, zahlt er die Differenz — das regeln Sie in Ihren
+        Buchungsbedingungen.
+      </Tip>
+      <H3>Verwaltung</H3>
+      <P>
+        Unter <strong>Gutscheine → Verkaufte Gutscheine</strong> sehen Sie alle ausgestellten Codes
+        mit Status (ausstehend / aktiv / eingelöst / abgelaufen) und können einzelne Gutscheine
+        bei Bedarf manuell auf aktiv setzen.
+      </P>
     </div>
   );
 }
