@@ -1374,16 +1374,19 @@ Jede Buchung erhält ein `checkinToken` (UUID v4). Der Link `bookingwulf.com/gas
 
 **Daten werden beim Seitenaufruf serverseitig geladen** (`app/gast/[token]/page.tsx`) und an `GuestPortal.tsx` (Client-Komponente) übergeben. Für Live-Aktualisierungen (Nachrichten-Polling) gibt es zusätzlich `GET /api/gast/[token]`.
 
+### Navigation
+
+Glassmorphismus-Pill-Nav (`position: fixed`, Bottom) mit 5 Tabs: Anreise · Extras · Umgebung · Nachrichten · Abreise. Hausinfos sind in den Anreise-Tab integriert. Die Nav blendet sich beim Runterscrollen (ab 50 % Viewport-Höhe) aus und erscheint beim Hochscrollen sofort wieder (`transform: translateY`, CSS-Transition 300ms).
+
 ### Tabs im Gäste-Portal
 
-| Tab | Bedingung | Inhalt |
-|---|---|---|
-| Buchung | immer | Anreise/Abreise, Apartments, Preisübersicht, Zahlungsart, Nuki-Code |
-| Check-in | `preArrivalEnabled = true` + noch nicht eingecheckt | Ankunftszeit + Hausordnung bestätigen |
-| Extras | `allExtras.length > 0` | Alle aktiven Extras des Hotels — buchbar, bereits gebuchte grün markiert |
-| Hausinfos | mind. ein Hausinfos-Feld befüllt | WLAN, Parkplatz, Müll, Hausordnung, Notfallnummern |
-| Umgebung | `thingsToSee.length > 0` | Tipps nach Kategorie gruppiert (Restaurant, Aktivität, Event …) |
-| Nachrichten | immer | Messaging zwischen Gast und Hotel |
+| Tab | Inhalt |
+|---|---|
+| Anreise | Check-In CTA (wenn ausstehend), Check-in-Zeit, Schlüsselübergabe, Nuki-Code, Anreise planen, Kontakt, Hausinfos |
+| Extras | Alle aktiven Upsell-Extras — buchbar, bereits gebuchte grün markiert |
+| Umgebung | Umgebungstipps nach Kategorie gruppiert, Beschreibungen collapsible |
+| Nachrichten | Messaging zwischen Gast und Hotel |
+| Abreise | Check-out anfordern, Bewertungslink |
 
 ### Extras im Gäste-Portal
 
@@ -1417,6 +1420,53 @@ Die Felder `wifiSsid`, `wifiPassword`, `parkingInfo`, `wasteInfo`, `houseRules`,
 
 Das Gäste-Portal ist nach dem ersten Aufruf auch offline nutzbar. `public/sw.js` (Service Worker) cached alle `/gast/`-Seitenaufrufe und `/api/gast/`-API-Responses beim ersten Besuch. Bei erneutem Aufruf ohne Internet werden die gecachten Inhalte ausgeliefert. Ohne vorherigen Besuch erscheint eine deutsche Offline-Meldung (`503`).
 
+### Mehrsprachigkeit
+
+Das Portal unterstützt **DE / EN / IT**. Die Sprache wird initialisiert aus `localStorage` (Key `gp_lang`) → `booking.language` → Fallback `de`. Drei Pill-Buttons im Header erlauben dem Gast den Wechsel, die Wahl wird in `localStorage` gespeichert. Alle UI-Strings kommen aus dem `TRANSLATIONS`-Objekt in `GuestPortal.tsx`, Datums- und Zeitformate werden über `Intl.DateTimeFormat` mit dem jeweiligen Locale (`de-AT` / `en-GB` / `it-IT`) gerendert.
+
 ### Nachrichten
 
 `Message`-Modell mit `sender` (`guest` | `hotel`), `body`, `createdAt`. Der Gast sendet über das Portal, der Admin antwortet über `/admin/requests/[id]`. Polling im Portal alle 10 Sekunden via `GET /api/gast/[token]`.
+
+---
+
+## 23. Gutschein-System (Pro)
+
+### Übersicht
+
+Hotels können Geschenkgutscheine direkt über ihre Gutschein-Seite verkaufen. Kauf via Stripe, PDF-Versand per E-Mail, Einlösung im Buchungs-Widget.
+
+### Datenmodell
+
+**`VoucherTemplate`** — Vorlage, die ein Hotel anlegt:
+- `name` — Titel (z. B. „Muttertagsspecial")
+- `type` — `value` (€-Betrag) | `nights` (Nächte-Gutschein)
+- `value` — Nennwert (Decimal)
+- `price` — Kaufpreis (kann vom Nennwert abweichen)
+- `description` — Optionaler Hinweis für den Gast (erscheint auf Kauf-Seite und im PDF)
+- `validDays` — Gültigkeitsdauer in Tagen (Standard: 365)
+- `isActive` — Sichtbar auf der öffentlichen Kauf-Seite
+
+**`Voucher`** — Ausgestellter Code nach Kauf:
+- `code` — Format `XXXX-XXXX-XXXX` (autogeneriert)
+- `status` — `pending` → `active` (nach Zahlung) → `redeemed` (nach Einlösung) | `expired`
+- `type`, `value` — kopiert von Template zum Kaufzeitpunkt
+- `senderName`, `senderEmail`, `recipientName`, `recipientEmail`, `message` — Käufer/Empfänger-Daten
+- `redeemedOnRequestId` — Referenz auf die Buchung bei Einlösung
+
+### Kauf-Flow
+
+1. Gast öffnet `bookingwulf.com/gutschein/[hotel-slug]`
+2. Wählt Vorlage, gibt Empfänger/Nachricht ein
+3. Stripe Checkout (`POST /api/vouchers/purchase`) — erstellt `Voucher` mit `status: pending`
+4. Stripe Webhook `checkout.session.completed` → setzt Status auf `active`, sendet PDF per E-Mail
+
+### PDF-Gutschein
+
+Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akzentfarbe des Hotels, enthält: Wert, Vorlagen-Name, Beschreibung, gestrichelter Code-Box, Gültigkeitsdatum, Empfänger, Nachricht. Wird als Base64-Anhang via Resend versandt — an Käufer (immer) und Empfänger (wenn `recipientEmail` gesetzt und abweichend). Vorschau für Admins: `GET /api/vouchers/pdf-preview?accent=...&hotel=...&type=...`.
+
+### Einlösung im Widget
+
+`POST /api/vouchers/validate` prüft Code (beide Typen `value` + `nights`), Hotel-Zugehörigkeit, Status `active` und Ablaufdatum. Gibt `{ valid, voucher: { id, code, value } }` zurück. Der Rabatt (= `voucher.value`, max. Buchungstotal) wird in der Preisübersicht angezeigt. Bei Buchungs-Submit wird `voucherCode` mitgesendet und der Gutschein serverseitig auf `redeemed` gesetzt.
+
+**Nächte-Gutscheine:** Der Kaufpreis (`value` in €) wird als Rabatt abgezogen — identisch zu Wertgutscheinen. Der Unterschied liegt nur in der Darstellung auf dem PDF (`2 Nächte` statt `€ 280`). Differenzen (teureres Zimmer) regelt das Hotel in seinen AGB.
