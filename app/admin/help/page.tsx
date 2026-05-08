@@ -773,7 +773,7 @@ function GastePortalSection() {
         bestätigen, bevor der Check-in abgeschlossen wird.
       </Note>
       <Note>
-        <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet.
+        <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet. Sie erhalten beim ersten nachgebuchten Extra automatisch eine E-Mail mit allen offenen Positionen und dem Gesamtbetrag.
       </Note>
       <Tip>
         Das Gäste-Portal funktioniert auch offline — nach dem ersten Öffnen können Gäste es ohne
