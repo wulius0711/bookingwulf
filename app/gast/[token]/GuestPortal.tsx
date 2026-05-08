@@ -95,6 +95,8 @@ const TRANSLATIONS = {
     guestportal: 'Gästeportal', night: 'Nacht', nights: 'Nächte',
     checkinPending: 'Online Check-In ausstehend',
     checkinPendingDesc: 'Jetzt ausfüllen und Zeit bei der Anreise sparen.',
+    checkinDone: 'Check-In abgeschlossen',
+    checkinDoneView: 'Angaben ansehen →',
     checkinFrom: 'Check-in ab', oclock: ' Uhr',
     keyHandover: '🔑 Schlüsselübergabe',
     accessCode: '🔑 Ihr Zugangscode', accessCodeValid: 'Gültig von Anreise bis Abreise',
@@ -127,6 +129,8 @@ const TRANSLATIONS = {
     guestportal: 'Guest Portal', night: 'night', nights: 'nights',
     checkinPending: 'Online Check-In pending',
     checkinPendingDesc: 'Fill in now and save time on arrival.',
+    checkinDone: 'Check-In completed',
+    checkinDoneView: 'View details →',
     checkinFrom: 'Check-in from', oclock: '',
     keyHandover: '🔑 Key Handover',
     accessCode: '🔑 Your Access Code', accessCodeValid: 'Valid from arrival to departure',
@@ -159,6 +163,8 @@ const TRANSLATIONS = {
     guestportal: 'Portale Ospiti', night: 'notte', nights: 'notti',
     checkinPending: 'Check-In online in sospeso',
     checkinPendingDesc: "Compilalo ora e risparmia tempo all'arrivo.",
+    checkinDone: 'Check-In completato',
+    checkinDoneView: 'Vedi dettagli →',
     checkinFrom: 'Check-in dalle', oclock: '',
     keyHandover: '🔑 Consegna chiavi',
     accessCode: '🔑 Il suo codice di accesso', accessCodeValid: "Valido dall'arrivo alla partenza",
@@ -445,8 +451,15 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
-              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-                <a href={`/checkin/${token}`} className="header-checkin-btn">Check-In ↗</a>
+              {hotel.preArrivalEnabled && (
+                <a
+                  href={`/checkin/${token}`}
+                  className="header-checkin-btn"
+                  style={booking.checkinCompleted ? { background: 'rgba(34,197,94,0.25)', borderColor: 'rgba(34,197,94,0.7)' } : undefined}
+                  title={booking.checkinCompleted ? t.checkinDoneView : undefined}
+                >
+                  {booking.checkinCompleted ? `✓ ${t.checkinDone}` : 'Check-In ↗'}
+                </a>
               )}
               <div style={{ display: 'flex', gap: 4 }}>
                 {(['de', 'en', 'it'] as Lang[]).map((l) => (
