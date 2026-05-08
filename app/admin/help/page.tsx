@@ -57,9 +57,9 @@ export default function HelpPage() {
               flexShrink: 0,
               padding: '6px 12px',
               borderRadius: 999,
-              border: `1px solid ${active === s.id ? '#111' : '#e5e7eb'}`,
-              background: active === s.id ? '#111' : '#fff',
-              color: active === s.id ? '#fff' : '#6b7280',
+              border: `1px solid ${active === s.id ? 'var(--text-primary)' : 'var(--border)'}`,
+              background: active === s.id ? 'var(--text-primary)' : 'var(--surface)',
+              color: active === s.id ? 'var(--surface)' : 'var(--text-muted)',
               fontWeight: active === s.id ? 600 : 400,
               fontSize: 13,
               cursor: 'pointer',
@@ -73,7 +73,7 @@ export default function HelpPage() {
 
       <div className="help-layout">
         {/* Desktop sidebar nav */}
-        <nav className="help-sidebar" style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '12px 8px', alignSelf: 'start' }}>
+        <nav className="help-sidebar" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '12px 8px', alignSelf: 'start' }}>
           {sections.map((s) => (
             <button
               key={s.id}
@@ -83,8 +83,8 @@ export default function HelpPage() {
                 padding: '8px 12px',
                 borderRadius: 8,
                 border: 'none',
-                background: active === s.id ? '#f3f4f6' : 'transparent',
-                color: active === s.id ? '#111' : '#6b7280',
+                background: active === s.id ? 'var(--surface-3)' : 'transparent',
+                color: active === s.id ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontWeight: active === s.id ? 600 : 400,
                 fontSize: 13,
                 cursor: 'pointer',
@@ -125,13 +125,13 @@ export default function HelpPage() {
 /* ─── Shared components ────────────────────────────────────── */
 
 function H2({ children }: { children: React.ReactNode }) {
-  return <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', color: '#111' }}>{children}</h2>;
+  return <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>{children}</h2>;
 }
 function H3({ children }: { children: React.ReactNode }) {
-  return <h3 style={{ fontSize: 15, fontWeight: 600, margin: '24px 0 6px', color: '#111' }}>{children}</h3>;
+  return <h3 style={{ fontSize: 15, fontWeight: 600, margin: '24px 0 6px', color: 'var(--text-primary)' }}>{children}</h3>;
 }
 function P({ children }: { children: React.ReactNode }) {
-  return <p style={{ fontSize: 14, lineHeight: 1.7, color: '#374151', margin: '0 0 12px' }}>{children}</p>;
+  return <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--text-muted)', margin: '0 0 12px' }}>{children}</p>;
 }
 function Note({ children }: { children: React.ReactNode }) {
   return (
@@ -169,7 +169,7 @@ function InternalLink({ id, children }: { id: string; children: React.ReactNode 
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code style={{ background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 4, padding: '2px 6px', fontSize: 12, fontFamily: 'monospace', color: '#111' }}>
+    <code style={{ background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 4, padding: '2px 6px', fontSize: 12, fontFamily: 'monospace', color: 'var(--text-primary)' }}>
       {children}
     </code>
   );
@@ -212,12 +212,12 @@ function CodeBlock({ children }: { children: string }) {
 function Step({ num, title, children }: { num: number; title: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
-      <div style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: '#111', color: '#fff', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: 'var(--text-primary)', color: 'var(--surface)', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {num}
       </div>
       <div>
         <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{title}</div>
-        <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.6 }}>{children}</div>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6 }}>{children}</div>
       </div>
     </div>
   );
@@ -241,9 +241,9 @@ function UebersichtSection() {
           { label: 'Aktuelle Anfragen', desc: 'Die letzten 5 Anfragen mit Status — direkt verlinkt.' },
           { label: 'Schnellzugriff', desc: 'Links zu den wichtigsten Bereichen der Verwaltung.' },
         ].map((i) => (
-          <div key={i.label} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 180, color: '#111' }}>{i.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{i.desc}</span>
+          <div key={i.label} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 180, color: 'var(--text-primary)' }}>{i.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{i.desc}</span>
           </div>
         ))}
       </div>
@@ -275,7 +275,7 @@ function BuchungenSection() {
             <span style={{ padding: '3px 10px', borderRadius: 6, background: s.color, color: s.text, fontSize: 12, fontWeight: 700, flexShrink: 0, minWidth: 100 }}>
               {s.label}
             </span>
-            <span style={{ fontSize: 13, color: '#374151' }}>{s.desc}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{s.desc}</span>
           </div>
         ))}
       </div>
@@ -346,14 +346,14 @@ function KalenderSection() {
         ].map((c) => (
           <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 12, height: 12, borderRadius: 2, background: c.color, flexShrink: 0 }} />
-            <span style={{ fontSize: 13, color: '#374151' }}>{c.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{c.label}</span>
           </div>
         ))}
       </div>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 12, height: 12, borderRadius: 2, background: '#ef4444', flexShrink: 0 }} />
-          <span style={{ fontSize: 13, color: '#374151' }}>Rot – Sperrzeit</span>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Rot – Sperrzeit</span>
         </div>
       </div>
       <H3>Zeitraum per Drag anlegen</H3>
@@ -361,7 +361,7 @@ function KalenderSection() {
         Halten Sie die Maustaste gedrückt und ziehen Sie über mehrere Tage, um einen Zeitraum zu markieren.
         Nach dem Loslassen öffnet sich ein Formular zum direkten Anlegen von:
       </P>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, paddingLeft: 20, margin: '6px 0 12px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, paddingLeft: 20, margin: '6px 0 12px' }}>
         <li><strong style={{ color: '#ef4444' }}>Sperrzeit</strong> – Apartment für einen Zeitraum sperren</li>
         <li><strong style={{ color: '#3b82f6' }}>Preiszeitraum</strong> – Saisonalen Preis festlegen</li>
         <li><strong style={{ color: '#10b981' }}>Buchung</strong> – Manuelle Buchung erfassen</li>
@@ -405,7 +405,7 @@ function ZimmerplanSection() {
         markierten Tage werden lila hervorgehoben. Nach dem Loslassen öffnet sich ein Formular
         mit dem Apartment und den Daten bereits vorausgefüllt. Wählen Sie den Typ:
       </P>
-      <ul style={{ margin: '6px 0 14px', paddingLeft: 20, fontSize: 13, color: '#374151', lineHeight: 1.7 }}>
+      <ul style={{ margin: '6px 0 14px', paddingLeft: 20, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>
         <li><strong>Sperrzeit</strong> — Eigennutzung oder sonstiger Block</li>
         <li><strong>Preiszeitraum</strong> — Saisonpreis für diesen Zeitraum <span style={{ fontSize: 11, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 6px', fontWeight: 700, marginLeft: 4 }}>Pro</span></li>
         <li><strong>Buchung</strong> — manuelle Buchung direkt eintragen</li>
@@ -431,7 +431,7 @@ function ZimmerplanSection() {
         ].map((c) => (
           <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 14, height: 14, borderRadius: 3, background: c.bg, border: `2px solid ${c.color}`, flexShrink: 0 }} />
-            <span style={{ fontSize: 13, color: '#374151' }}>{c.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{c.label}</span>
           </div>
         ))}
       </div>
@@ -469,9 +469,9 @@ function AnalyticsSection() {
           { label: 'Umsatz', desc: 'Geschätzter Gesamtumsatz (Apartment + Extras).' },
           { label: 'Ø Buchungswert', desc: 'Durchschnittlicher Wert pro Buchung.' },
         ].map((k) => (
-          <div key={k.label} style={{ display: 'flex', gap: 10, padding: '6px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 140, color: '#111' }}>{k.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{k.desc}</span>
+          <div key={k.label} style={{ display: 'flex', gap: 10, padding: '6px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 140, color: 'var(--text-primary)' }}>{k.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{k.desc}</span>
           </div>
         ))}
       </div>
@@ -500,8 +500,8 @@ function ApartmentsSection() {
           { plan: 'Business', limit: 'Unlimitierte Apartments' },
         ].map((p) => (
           <div key={p.plan} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 80, color: '#111' }}>{p.plan}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{p.limit}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 80, color: 'var(--text-primary)' }}>{p.plan}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{p.limit}</span>
           </div>
         ))}
       </div>
@@ -533,17 +533,17 @@ function ApartmentsSection() {
         automatisch abgleichen — in beide Richtungen.
       </P>
       <div style={{ display: 'grid', gap: 10, margin: '12px 0 16px' }}>
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 16px' }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: '#111', marginBottom: 4 }}>Export-URL</div>
-          <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6 }}>
+        <div style={{ border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', marginBottom: 4 }}>Export-URL</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
             Eine eindeutige iCal-URL für das Apartment. Diese URL bei Airbnb oder Booking.com als
             importierten Kalender hinterlegen — so werden Ihre Buchungen dort automatisch als
             blockiert angezeigt.
           </div>
         </div>
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 16px' }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: '#111', marginBottom: 4 }}>Import-Feeds</div>
-          <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6 }}>
+        <div style={{ border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', marginBottom: 4 }}>Import-Feeds</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
             Die iCal-URL von Airbnb oder Booking.com eintragen. Buchungen von dort werden
             automatisch als Sperrzeiten übernommen und verhindern Doppelbuchungen.
             Mit <strong>„Jetzt syncen"</strong> können Sie den Abgleich manuell anstoßen.
@@ -591,7 +591,7 @@ function PreiseSection() {
         Wird automatisch zur Buchungssumme addiert und im Widget sowie in Bestätigungs-E-Mails
         separat ausgewiesen. Drei Modi:
       </P>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 12px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 12px' }}>
         <li><strong>Deaktiviert</strong> — keine Ortstaxe.</li>
         <li><strong>Wien (automatisch)</strong> — bookingwulf rechnet mit den offiziellen WKO-Sätzen automatisch nach Anreisedatum: bis 30.6.2026 → 2,5237 %, ab 1.7.2026 → 4,3478 %, ab 1.7.2027 → 6,7797 % vom Zimmerpreis. Kein manuelles Update nötig.</li>
         <li><strong>Eigener Betrag</strong> — fixer Betrag in € pro Person und Nacht (z. B. für Salzburg, Tirol, etc.). Optional: Mindestalter für Kinder-Befreiung.</li>
@@ -686,8 +686,8 @@ function ExtrasSection() {
           { label: 'Nr.',               desc: 'Reihenfolge im Widget (aufsteigend sortiert).' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: '#111' }}>{t.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
           </div>
         ))}
       </div>
@@ -702,8 +702,8 @@ function ExtrasSection() {
           { label: 'Upsell ✓',          desc: 'Extra wird in der Bestätigungs-E-Mail als Nachkauf-Empfehlung angeboten (nur wenn noch nicht gebucht) und ist zusätzlich im Gästeportal buchbar.' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: '#111' }}>{t.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
           </div>
         ))}
       </div>
@@ -718,8 +718,8 @@ function ExtrasSection() {
           { label: 'Pro Aufenthalt',     desc: 'Einmaliger Fixbetrag, unabhängig von Dauer und Personen.' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: '#111' }}>{t.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
           </div>
         ))}
       </div>
@@ -755,9 +755,9 @@ function GastePortalSection() {
           { label: 'Umgebung',   desc: 'Restaurants, Aktivitäten, Events und Sehenswürdigkeiten rund ums Hotel. Verwaltung unter Konfiguration → Gästeportal.' },
           { label: 'Nachrichten', desc: 'Direkter Chat mit dem Hotel. Neue Nachrichten des Gastes erscheinen in der Buchungsdetailansicht.' },
         ].map((t) => (
-          <div key={t.label} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 120, color: '#111' }}>{t.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+          <div key={t.label} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 120, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
           </div>
         ))}
       </div>
@@ -799,9 +799,9 @@ function EmailsSection() {
           { name: 'Nachricht',             desc: 'Wenn Sie in der Detailansicht eine Nachricht senden. (Business)' },
           { name: 'Interne Benachrichtigung', desc: 'An Sie, wenn eine neue Anfrage eingeht.' },
         ].map((e) => (
-          <div key={e.name} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 200, color: '#111' }}>{e.name}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{e.desc}</span>
+          <div key={e.name} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 200, color: 'var(--text-primary)' }}>{e.name}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{e.desc}</span>
           </div>
         ))}
       </div>
@@ -903,9 +903,9 @@ function EinstellungenSection() {
           { label: 'Image Slider aktivieren',        desc: 'Zeigt mehrere Bilder pro Apartment als Slider statt als Einzelbild.' },
           { label: 'Verbindliche Buchung anbieten',  desc: 'Gäste können direkt verbindlich buchen statt nur eine Anfrage zu senden.' },
         ].map((f) => (
-          <div key={f.label} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 220, color: '#111', flexShrink: 0 }}>{f.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{f.desc}</span>
+          <div key={f.label} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 220, color: 'var(--text-primary)', flexShrink: 0 }}>{f.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{f.desc}</span>
           </div>
         ))}
       </div>
@@ -958,9 +958,9 @@ function ZahlungenSection() {
           ['3', <>Nach dem Erstellen siehst du Client ID und Client Secret — zuerst im Sandbox-Modus. Für den Live-Betrieb wechsle oben rechts auf „Live" und kopiere die Live-Zugangsdaten.</>],
           ['4', <>Trage Client ID und Client Secret unter Zahlungsarten → PayPal ein und aktiviere den Toggle.</>],
         ] as [string, React.ReactNode][]).map(([step, text]) => (
-          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
-            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{text}</span>
+          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--surface-3)', color: 'var(--text-muted)', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{text}</span>
           </div>
         ))}
       </div>
@@ -980,9 +980,9 @@ function ZahlungenSection() {
           ['3', <>Kopiere den Publishable Key (beginnt mit pk_live_…) und den Secret Key (sk_live_…).</>],
           ['4', <>Trage beide Schlüssel unter Zahlungsarten → Kreditkarte (Stripe) ein und aktiviere den Toggle.</>],
         ] as [string, React.ReactNode][]).map(([step, text]) => (
-          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, background: '#f3f4f6', color: '#6b7280', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
-            <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{text}</span>
+          <div key={step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--surface-3)', color: 'var(--text-muted)', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{step}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{text}</span>
           </div>
         ))}
       </div>
@@ -1021,14 +1021,14 @@ function AbonnementSection() {
             features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
-          <div key={p.name} style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: '14px 18px' }}>
+          <div key={p.name} style={{ border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>{p.name}</span>
-              <span style={{ fontSize: 13, color: '#6b7280' }}>{p.price}</span>
+              <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{p.name}</span>
+              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{p.price}</span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {p.features.map((f) => (
-                <span key={f} style={{ fontSize: 12, padding: '2px 8px', borderRadius: 999, background: '#f3f4f6', color: '#374151' }}>{f}</span>
+                <span key={f} style={{ fontSize: 12, padding: '2px 8px', borderRadius: 999, background: 'var(--surface-3)', color: 'var(--text-muted)' }}>{f}</span>
               ))}
             </div>
           </div>
@@ -1064,7 +1064,7 @@ function NukiSection() {
       </P>
 
       <H3>Voraussetzungen</H3>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
         <li>Nuki-Schloss mit verbundenem Keypad (Nuki Keypad oder Keypad 2.0)</li>
         <li>Nuki Web-Konto unter <strong>web.nuki.io</strong></li>
         <li>Sofortbuchung im Widget aktiviert (<InternalLink id="einstellungen">Widget & Design</InternalLink>)</li>
@@ -1111,7 +1111,7 @@ function NukiSection() {
       </div>
 
       <H3>Hinweise</H3>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
         <li>Pro Apartment kann genau ein Schloss zugewiesen werden.</li>
         <li>Der Code läuft nach der Abreise automatisch ab (wird von Nuki deaktiviert).</li>
         <li>Bei reinen Anfragen (kein Sofortbuchungs-Modus) wird kein Code generiert.</li>
@@ -1136,13 +1136,13 @@ function Beds24Section() {
         bookingwulf kommuniziert direkt mit Beds24. Beds24 ist bei Airbnb und Booking.com als Channel Manager
         zertifiziert und übermittelt Verfügbarkeiten in beide Richtungen:
       </P>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.9, paddingLeft: 20, margin: '0 0 16px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.9, paddingLeft: 20, margin: '0 0 16px' }}>
         <li><strong>Buchung bei Ihnen</strong> → bookingwulf meldet sie an Beds24 → Airbnb/Booking.com wird sofort gesperrt</li>
         <li><strong>Buchung auf Airbnb/Booking.com</strong> → Beds24 schickt Webhook → bookingwulf sperrt sofort</li>
       </ul>
 
       <H3>Voraussetzungen</H3>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
         <li>Beds24-Account (ca. €9/Monat pro Property — <strong>beds24.com</strong>)</li>
         <li>Airbnb und/oder Booking.com bereits in Beds24 verbunden</li>
         <li>Pro-Plan in bookingwulf</li>
@@ -1179,7 +1179,7 @@ function Beds24Section() {
       </Step>
 
       <H3>Sync-Geschwindigkeit</H3>
-      <ul style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
         <li>Buchung bei Ihnen → Airbnb gesperrt: <strong>~1–2 Minuten</strong></li>
         <li>Buchung auf Airbnb → bei Ihnen gesperrt: <strong>Echtzeit via Webhook</strong></li>
         <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
@@ -1211,8 +1211,8 @@ function AssistentSection() {
           { label: 'Funktionen',    desc: 'Was kann der Beds24 Channel Manager? Wie funktioniert Nuki?' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 130, color: '#111' }}>{t.label}</span>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>{t.desc}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 130, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
           </div>
         ))}
       </div>
@@ -1293,7 +1293,7 @@ function EinbindungSection() {
       <P>
         Das Widget führt Gäste in vier Schritten durch den Buchungsprozess:
       </P>
-      <ul style={{ margin: '10px 0 16px', paddingLeft: 20, lineHeight: 1.7, fontSize: 14, color: '#374151' }}>
+      <ul style={{ margin: '10px 0 16px', paddingLeft: 20, lineHeight: 1.7, fontSize: 14, color: 'var(--text-muted)' }}>
         <li><strong>Schritt 1 – Reisedaten:</strong> Visueller Kalender-Datepicker (2-Monats-Ansicht). Gäste wählen Anreise durch Klick, dann Abreise — mit farbiger Range-Vorschau beim Hover. Nächte werden live angezeigt.</li>
         <li><strong>Schritt 2 – Apartment:</strong> Nur passende Apartments werden angezeigt; nicht verfügbare sind markiert. Jede Karte zeigt den Gesamtpreis — Klick auf „Preis Details" öffnet eine Aufschlüsselung mit Nächten, Preis pro Nacht, Endreinigung und Gesamtbetrag.</li>
         <li><strong>Schritt 3 – Zusatzleistungen:</strong> (falls aktiviert)</li>
