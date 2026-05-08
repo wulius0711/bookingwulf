@@ -776,6 +776,13 @@ function GastePortalSection() {
       <Note>
         <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet. Sie erhalten beim ersten nachgebuchten Extra automatisch eine E-Mail mit allen offenen Positionen und dem Gesamtbetrag.
       </Note>
+      <H3>Sprache</H3>
+      <P>
+        Das Gäste-Portal ist in <strong>Deutsch, Englisch und Italienisch</strong> verfügbar.
+        Die Standardsprache richtet sich nach der Buchungssprache des Gastes.
+        Im Portal erscheinen drei Buttons <strong>DE / EN / IT</strong> oben rechts im Header —
+        der Gast kann die Sprache jederzeit wechseln, die Auswahl wird gespeichert.
+      </P>
       <Tip>
         Das Gäste-Portal funktioniert auch offline — nach dem ersten Öffnen können Gäste es ohne
         Internetverbindung nutzen.
