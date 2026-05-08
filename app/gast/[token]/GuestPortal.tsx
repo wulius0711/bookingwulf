@@ -527,7 +527,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                           <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
                             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
                             {t.description && (
-                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                              <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.4, marginBottom: 6 }}>
                                 {t.description}
                               </div>
                             )}
