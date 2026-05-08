@@ -100,6 +100,7 @@ function eur(n: number) {
 export default function GuestPortal({ token, booking, hotel, apartments, allExtras, serverBookedExtraIds, thingsToSee, initialMessages }: Props) {
   const accent = hotel.accentColor || '#111827';
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
+  const accentOnLight = hexLuminance(accent) > 0.4 ? '#374151' : accent;
   const [tab, setTab] = useState<Tab>('arrival');
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [msgInput, setMsgInput] = useState('');
@@ -324,7 +325,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
           {tab === 'arrival' && (
             <div key={tabContentKey} className="content content-anim">
               {hotel.preArrivalEnabled && !booking.checkinCompleted && (
-                <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accent }}>
+                <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accentOnLight }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>Online Check-In ausstehend</div>
                     <div style={{ fontSize: 13, opacity: 0.8 }}>Jetzt ausfüllen und Zeit bei der Anreise sparen.</div>
