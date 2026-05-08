@@ -270,9 +270,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .success-text { font-size: 14px; color: #6b7280; line-height: 1.6; }
     .error-text { font-size: 13px; color: #dc2626; }
     /* Bottom Navigation */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 20px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; }
-    .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); max-width: calc(100% - 0px); }
-    .nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 16px; border: none; background: none; color: rgba(255,255,255,0.45); cursor: pointer; font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; }
+    .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); width: 100%; }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; border: none; background: none; color: rgba(255,255,255,0.45); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
     .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
     @media (prefers-color-scheme: dark) {
       body { background: #0f172a; color: #f1f5f9; }
