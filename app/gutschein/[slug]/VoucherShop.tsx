@@ -230,7 +230,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             })}
 
             {cartCount > 0 && (
-              <div style={{ padding: '6px 2px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
+              <div style={{ padding: '6px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--vs-label)' }}>
                   {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
                 </div>
