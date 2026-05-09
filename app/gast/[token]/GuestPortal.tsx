@@ -412,6 +412,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .nuki-label { font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
     .nuki-code { font-size: 34px; font-weight: 900; letter-spacing: 0.2em; color: #111827; font-variant-numeric: tabular-nums; }
     .nuki-hint { font-size: 12px; color: #374151; margin-top: 6px; }
+    .text-muted { color: #6b7280; }
+    .badge-muted { background: #f3f4f6; color: #6b7280; }
     .success-box { text-align: center; padding: 28px 20px; }
     .success-icon { font-size: 48px; margin-bottom: 12px; }
     .success-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
@@ -446,6 +448,10 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki-code { color: #f1f5f9; }
       .nuki-hint { color: #d1fae5; }
       .section-label { color: #94a3b8; }
+      .text-muted { color: #94a3b8; }
+      .badge-muted { background: #334155; color: #94a3b8; }
+      .success-text { color: #94a3b8; }
+      .desc-preview, .desc-full, .desc-collapse { color: #94a3b8; }
       .btn-outline { border-color: var(--accent-fg); color: var(--accent-fg); }
     }
   `;
@@ -542,7 +548,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                               loading="lazy"
                             />
                             {img.caption && (
-                              <p style={{ fontSize: 13, color: '#6b7280', margin: '6px 0 0', lineHeight: 1.5 }}>{img.caption}</p>
+                              <p className="text-muted" style={{ fontSize: 13, margin: '6px 0 0', lineHeight: 1.5 }}>{img.caption}</p>
                             )}
                           </div>
                         ))}
@@ -669,7 +675,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {allExtras.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>{t.noExtras}</p>
+                    <p className="text-muted" style={{ fontSize: 14, textAlign: 'center', padding: '16px 0' }}>{t.noExtras}</p>
                   </div>
                 </div>
               ) : allExtras.map((extra) => {
@@ -687,7 +693,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         {done ? (
                           <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>{t.booked}</span>
                         ) : groupBlocked ? (
-                          <span className="badge" style={{ background: '#f3f4f6', color: '#6b7280' }}>{t.variantBooked}</span>
+                          <span className="badge badge-muted">{t.variantBooked}</span>
                         ) : (
                           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                             {extra.linkUrl && (
@@ -712,7 +718,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {thingsToSee.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>{t.noSurroundings}</p>
+                    <p className="text-muted" style={{ fontSize: 14, textAlign: 'center', padding: '16px 0' }}>{t.noSurroundings}</p>
                   </div>
                 </div>
               ) : Object.entries(
@@ -736,7 +742,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                                 <span className="desc-full">{entry.description}</span>
                               </details>
                             )}
-                            {entry.address && <div style={{ fontSize: 12, color: '#6b7280' }}>{entry.address}</div>}
+                            {entry.address && <div className="text-muted" style={{ fontSize: 12 }}>{entry.address}</div>}
                           </div>
                           {entry.mapsUrl && (
                             <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" className="accent-link" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', flexShrink: 0 }} aria-label={t.openInMaps}>
@@ -759,7 +765,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 <div className="card-head">{t.messagesHead}</div>
                 <div className="card-body">
                   {messages.length === 0 ? (
-                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>
+                    <p className="text-muted" style={{ fontSize: 14, textAlign: 'center', padding: '16px 0' }}>
                       {t.noMessages(hotel.name)}
                     </p>
                   ) : (
@@ -811,9 +817,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         </div>
                       )}
                       {hotel.checkoutInfo && (
-                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#374151' }}>{tr('checkoutInfo', hotel.checkoutInfo)}</p>
+                        <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{tr('checkoutInfo', hotel.checkoutInfo)}</p>
                       )}
-                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
+                      <p className="text-muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
                         {t.checkoutDesc}
                       </p>
                       <button className="btn" disabled={isPending} onClick={handleCheckout}>{t.checkoutBtn}</button>
@@ -822,7 +828,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   {hotel.reviewRequestLink && checkoutDone && (
                     <>
                       <div className="divider" />
-                      <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>{t.reviewPrompt}</p>
+                      <p className="text-muted" style={{ fontSize: 14, lineHeight: 1.6 }}>{t.reviewPrompt}</p>
                       <a href={hotel.reviewRequestLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">{t.reviewBtn}</a>
                     </>
                   )}
