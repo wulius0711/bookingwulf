@@ -470,14 +470,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
-              {hotel.preArrivalEnabled && (
-                <a
-                  href={`/checkin/${token}`}
-                  className="header-checkin-btn"
-                  style={booking.checkinCompleted ? { background: 'rgba(34,197,94,0.25)', borderColor: 'rgba(34,197,94,0.7)' } : undefined}
-                  title={booking.checkinCompleted ? t.checkinDoneView : undefined}
-                >
-                  {booking.checkinCompleted ? `✓ ${t.checkinDone}` : 'Check-In ↗'}
+              {hotel.preArrivalEnabled && !booking.checkinCompleted && (
+                <a href={`/checkin/${token}`} className="header-checkin-btn">
+                  Check-In ↗
                 </a>
               )}
               <div style={{ display: 'flex', gap: 4 }}>
