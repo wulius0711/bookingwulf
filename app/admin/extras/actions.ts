@@ -2,6 +2,7 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { autoTranslateFields } from '@/src/lib/translate';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -35,8 +36,17 @@ export async function createExtra(formData: FormData) {
     .replace(/^_|_$/g, '');
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
+  let finalNameEn = nameEn, finalNameIt = nameIt, finalDescEn = descriptionEn, finalDescIt = descriptionIt;
+  if (!nameEn || !nameIt) {
+    const tr = await autoTranslateFields({ name, ...(description ? { description } : {}) });
+    if (!nameEn) finalNameEn = tr.en?.name ?? null;
+    if (!nameIt) finalNameIt = tr.it?.name ?? null;
+    if (!descriptionEn) finalDescEn = tr.en?.description ?? null;
+    if (!descriptionIt) finalDescIt = tr.it?.description ?? null;
+  }
+
   await prisma.hotelExtra.create({
-    data: { hotelId, name, nameEn, nameIt, key, type, billingType, price, description, descriptionEn, descriptionIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
+    data: { hotelId, name, nameEn: finalNameEn, nameIt: finalNameIt, key, type, billingType, price, description, descriptionEn: finalDescEn, descriptionIt: finalDescIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');
@@ -81,9 +91,18 @@ export async function updateExtra(formData: FormData) {
   if (!name) throw new Error('Name ist erforderlich.');
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
+  let finalNameEn = nameEn, finalNameIt = nameIt, finalDescEn = descriptionEn, finalDescIt = descriptionIt;
+  if (!nameEn || !nameIt) {
+    const tr = await autoTranslateFields({ name, ...(description ? { description } : {}) });
+    if (!nameEn) finalNameEn = tr.en?.name ?? null;
+    if (!nameIt) finalNameIt = tr.it?.name ?? null;
+    if (!descriptionEn) finalDescEn = tr.en?.description ?? null;
+    if (!descriptionIt) finalDescIt = tr.it?.description ?? null;
+  }
+
   await prisma.hotelExtra.update({
     where: { id },
-    data: { name, nameEn, nameIt, type, billingType, price, description, descriptionEn, descriptionIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
+    data: { name, nameEn: finalNameEn, nameIt: finalNameIt, type, billingType, price, description, descriptionEn: finalDescEn, descriptionIt: finalDescIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');
