@@ -400,6 +400,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .extra-desc { font-size: 13px; color: #6b7280; line-height: 1.4; margin-bottom: 8px; }
     .extra-footer { display: flex; justify-content: space-between; align-items: center; }
     .extra-price { font-size: 15px; font-weight: 800; color: var(--accent); }
+    .accent-link { color: var(--accent); }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .badge-green { background: #dcfce7; color: #166534; }
     .nuki { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 18px; text-align: center; }
@@ -440,8 +441,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki-hint { color: #d1fae5; }
       .section-label { color: #94a3b8; }
       .btn-outline { border-color: rgba(255,255,255,0.4); color: #e2e8f0; }
-      .extra-price { color: #e2e8f0; }
-      .accent-link { color: #e2e8f0; }
+      .extra-price, .accent-link { color: #e2e8f0; }
     }
   `;
 
@@ -654,7 +654,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         {hotel.emergencyNumbers.map((e, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                             <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
-                            <a href={`tel:${e.number.replace(/\s/g, '')}`} className="accent-link" style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
+                            <a href={`tel:${e.number.replace(/\s/g, '')}`} className="accent-link" style={{ fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
                           </div>
                         ))}
                       </div>
@@ -741,7 +741,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                             {entry.address && <div style={{ fontSize: 12, color: '#6b7280' }}>{entry.address}</div>}
                           </div>
                           {entry.mapsUrl && (
-                            <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" className="accent-link" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: 'var(--accent)', flexShrink: 0 }} aria-label={t.openInMaps}>
+                            <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" className="accent-link" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', flexShrink: 0 }} aria-label={t.openInMaps}>
                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </a>
                           )}
