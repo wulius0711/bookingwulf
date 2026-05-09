@@ -725,7 +725,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 thingsToSee.reduce<Record<string, ThingToSee[]>>((acc, t) => { (acc[t.category] ??= []).push(t); return acc; }, {})
               ).map(([cat, entries]) => (
                 <div key={cat}>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: 'rgb(75,75,75)', marginBottom: 10 }}>{(TRANSLATIONS[lang].cats as Record<string, string>)[cat] ?? cat}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>{(TRANSLATIONS[lang].cats as Record<string, string>)[cat] ?? cat}</div>
                   <div style={{ display: 'grid', gap: 10 }}>
                     {entries.map((entry) => (
                       <div key={entry.id} className="card" style={{ overflow: 'hidden' }}>
