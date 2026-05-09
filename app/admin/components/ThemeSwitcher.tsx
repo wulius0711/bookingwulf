@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 const THEMES = [
   { key: 'indigo',  label: 'Indigo',   color: '#4f46e5' },
@@ -67,7 +68,7 @@ export default function ThemeSwitcher() {
             }}
           />
         ))}
-        {/* Dark mode toggle — coming soon */}
+        <ThemeToggle />
       </div>
     </div>
   );

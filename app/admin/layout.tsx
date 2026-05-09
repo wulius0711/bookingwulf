@@ -8,6 +8,7 @@ import Sidebar from './components/Sidebar'
 import GuidedTour from './components/GuidedTour'
 import AdminChatWidget from './components/AdminChatWidget'
 import FeedbackButton from './components/FeedbackButton'
+import { ThemeProvider } from './components/ThemeProvider'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -110,7 +111,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       });
 
   return (
-    <>
+    <ThemeProvider>
     <div
       className="admin-layout"
       style={{
@@ -150,6 +151,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <GuidedTour />
       {(isSuperAdmin || hotelPlan === 'pro' || hotelPlan === 'business') && <AdminChatWidget />}
     </div>
-    </>
+    </ThemeProvider>
   )
 }

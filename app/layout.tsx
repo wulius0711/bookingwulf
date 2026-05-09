@@ -44,7 +44,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <Script id="theme-init" strategy="beforeInteractive">{`(function(){document.documentElement.classList.remove('dark');var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);})();`}</Script>
+        <Script id="theme-init" strategy="beforeInteractive">{`(function(){try{var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;if(d==='true'||(d===null&&s)){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();`}</Script>
         <CookieBanner />
         {children}
       </body>

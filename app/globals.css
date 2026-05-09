@@ -1,3 +1,4 @@
+@import "./admin/styles/tokens.css";
 @import "tailwindcss";
 
 :root {
@@ -1001,3 +1002,43 @@ body[data-onboarding-group="Konto"] [data-nav-group="Konto"] {
 
 .chat-log-delete-btn { color: #d1d5db; }
 .chat-log-delete-btn:hover { color: #ef4444; }
+
+/* ─── Focus styles ──────────────────────────────────────────────── */
+/* Keyboard users get a clear focus ring; mouse users don't.         */
+
+:focus-visible {
+  outline: 2px solid var(--border-focus, #4f46e5);
+  outline-offset: 2px;
+  border-radius: var(--radius-md, 6px);
+}
+
+/* Suppress ring for mouse/touch interactions */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Smooth theme transition ───────────────────────────────────── */
+/* Applied only when switching theme via JS (not on initial load).   */
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color var(--transition-base) ease,
+    border-color var(--transition-base) ease,
+    color var(--transition-fast) ease !important;
+}
