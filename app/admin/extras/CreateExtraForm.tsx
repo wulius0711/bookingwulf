@@ -71,8 +71,27 @@ export default function CreateExtraForm({ hotelId }: { hotelId: number }) {
       </div>
 
       <div style={{ display: 'grid', gap: 6 }}>
-        <label style={labelStyle}>Beschreibung <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: '#9ca3af' }}>(optional)</span></label>
+        <label style={labelStyle}>Beschreibung (DE) <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: '#9ca3af' }}>(optional)</span></label>
         <input name="description" placeholder="Kurze Beschreibung für das Widget" style={inputStyle} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gap: 6 }}>
+          <label style={labelStyle}>Name EN</label>
+          <input name="nameEn" placeholder="z. B. Breakfast" style={inputStyle} />
+        </div>
+        <div style={{ display: 'grid', gap: 6 }}>
+          <label style={labelStyle}>Name IT</label>
+          <input name="nameIt" placeholder="z. B. Colazione" style={inputStyle} />
+        </div>
+        <div style={{ display: 'grid', gap: 6 }}>
+          <label style={labelStyle}>Beschreibung EN</label>
+          <input name="descriptionEn" placeholder="Optional" style={inputStyle} />
+        </div>
+        <div style={{ display: 'grid', gap: 6 }}>
+          <label style={labelStyle}>Beschreibung IT</label>
+          <input name="descriptionIt" placeholder="Optional" style={inputStyle} />
+        </div>
       </div>
 
       <div style={{ display: 'grid', gap: 6 }}>

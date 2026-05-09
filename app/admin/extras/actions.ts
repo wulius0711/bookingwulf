@@ -13,10 +13,14 @@ export async function createExtra(formData: FormData) {
   if (session.hotelId !== null && hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
 
   const name = String(formData.get('name') || '').trim();
+  const nameEn = String(formData.get('nameEn') || '').trim() || null;
+  const nameIt = String(formData.get('nameIt') || '').trim() || null;
   const type = String(formData.get('type') || 'extra');
   const billingType = String(formData.get('billingType') || 'per_stay');
   const price = parseFloat(String(formData.get('price') || '0'));
   const description = String(formData.get('description') || '').trim() || null;
+  const descriptionEn = String(formData.get('descriptionEn') || '').trim() || null;
+  const descriptionIt = String(formData.get('descriptionIt') || '').trim() || null;
   const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const exclusiveGroup = String(formData.get('exclusiveGroup') || '').trim() || null;
@@ -32,7 +36,7 @@ export async function createExtra(formData: FormData) {
   if (isNaN(price) || price < 0) throw new Error('Ungültiger Preis.');
 
   await prisma.hotelExtra.create({
-    data: { hotelId, name, key, type, billingType, price, description, imageUrl, linkUrl, exclusiveGroup, sortOrder },
+    data: { hotelId, name, nameEn, nameIt, key, type, billingType, price, description, descriptionEn, descriptionIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');
@@ -61,10 +65,14 @@ export async function updateExtra(formData: FormData) {
   if (session.hotelId !== null && extra.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
 
   const name = String(formData.get('name') || '').trim();
+  const nameEn = String(formData.get('nameEn') || '').trim() || null;
+  const nameIt = String(formData.get('nameIt') || '').trim() || null;
   const type = String(formData.get('type') || 'extra');
   const billingType = String(formData.get('billingType') || 'per_stay');
   const price = parseFloat(String(formData.get('price') || '0'));
   const description = String(formData.get('description') || '').trim() || null;
+  const descriptionEn = String(formData.get('descriptionEn') || '').trim() || null;
+  const descriptionIt = String(formData.get('descriptionIt') || '').trim() || null;
   const imageUrl = String(formData.get('imageUrl') || '').trim() || null;
   const linkUrl = String(formData.get('linkUrl') || '').trim() || null;
   const sortOrder = Number(formData.get('sortOrder') || 0);
@@ -75,7 +83,7 @@ export async function updateExtra(formData: FormData) {
 
   await prisma.hotelExtra.update({
     where: { id },
-    data: { name, type, billingType, price, description, imageUrl, linkUrl, exclusiveGroup, sortOrder },
+    data: { name, nameEn, nameIt, type, billingType, price, description, descriptionEn, descriptionIt, imageUrl, linkUrl, exclusiveGroup, sortOrder },
   });
 
   revalidatePath('/admin/extras');

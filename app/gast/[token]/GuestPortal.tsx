@@ -48,8 +48,10 @@ type Hotel = {
 type Apartment = { id: number; name: string; imageUrl: string | null; imageAlt: string };
 
 type Extra = {
-  id: number; name: string; key: string; type: string; billingType: string;
+  id: number; name: string; nameEn: string | null; nameIt: string | null;
+  key: string; type: string; billingType: string;
   price: number; imageUrl: string | null; description: string | null;
+  descriptionEn: string | null; descriptionIt: string | null;
   linkUrl: string | null; exclusiveGroup: string | null;
 };
 
@@ -681,8 +683,10 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div key={extra.id} className="extra-card" style={{ opacity: done || groupBlocked ? 0.6 : 1 }}>
                     {extra.imageUrl && <img src={extra.imageUrl} alt={extra.name} className="extra-img" loading="lazy" />}
                     <div className="extra-info">
-                      <div className="extra-name">{extra.name}</div>
-                      {extra.description && <div className="extra-desc">{extra.description}</div>}
+                      <div className="extra-name">{(lang === 'en' ? extra.nameEn : lang === 'it' ? extra.nameIt : null) ?? extra.name}</div>
+                      {((lang === 'en' ? extra.descriptionEn : lang === 'it' ? extra.descriptionIt : null) ?? extra.description) && (
+                        <div className="extra-desc">{(lang === 'en' ? extra.descriptionEn : lang === 'it' ? extra.descriptionIt : null) ?? extra.description}</div>
+                      )}
                       <div className="extra-footer">
                         <span className="extra-price">{eur(extra.price)}</span>
                         {done ? (
