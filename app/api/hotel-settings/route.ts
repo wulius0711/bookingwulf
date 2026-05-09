@@ -44,7 +44,7 @@ export async function GET(req: Request) {
         plan: true,
         bookingTermsUrl: true,
         privacyPolicyUrl: true,
-        hotelSettings: true,
+        settings: true,
       },
     });
 
@@ -86,7 +86,7 @@ export async function GET(req: Request) {
     ]);
 
     const vouchersEnabled = voucherCount > 0;
-    const settings = hotel.hotelSettings;
+    const settings = hotel.settings;
 
     const mergedSettings = widgetConfig
       ? {

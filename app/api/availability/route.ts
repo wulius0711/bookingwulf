@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       select: {
         id: true,
         plan: true,
-        hotelSettings: { select: { gapNightDiscount: true, gapNightMaxLength: true } },
+        settings: { select: { gapNightDiscount: true, gapNightMaxLength: true } },
       },
     });
 
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const hotelSettings = hotel.hotelSettings;
+    const hotelSettings = hotel.settings;
     const hotelHasPro = hasPlanAccess(hotel.plan ?? 'starter', 'pro');
     const gapEnabled = hotelHasPro && hotelSettings?.gapNightDiscount && hotelSettings?.gapNightMaxLength && nights <= hotelSettings.gapNightMaxLength;
 
