@@ -217,19 +217,18 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const [lang, setLang] = useState<Lang>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('gp_lang') as Lang | null;
-      if (stored && stored in TRANSLATIONS) return stored;
-      const nav = navigator.language.slice(0, 2) as Lang;
-      if (nav in TRANSLATIONS) return nav;
-    }
-    const bl = booking.language as Lang;
-    return bl in TRANSLATIONS ? bl : 'de';
-  });
+  const bl = booking.language as Lang;
+  const [lang, setLang] = useState<Lang>(bl in TRANSLATIONS ? bl : 'de');
   const t = TRANSLATIONS[lang];
   const tr = (field: string, deValue: string | null) =>
     lang !== 'de' ? (translations[lang]?.[field] ?? deValue) : deValue;
+
+  useEffect(() => {
+    const stored = localStorage.getItem('gp_lang') as Lang | null;
+    if (stored && stored in TRANSLATIONS) { setLang(stored); return; }
+    const nav = navigator.language.slice(0, 2) as Lang;
+    if (nav in TRANSLATIONS) setLang(nav);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('gp_lang', lang);
