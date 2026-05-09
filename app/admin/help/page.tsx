@@ -1261,6 +1261,18 @@ function Beds24Section() {
         <li>Buchung auf Airbnb → bei Ihnen gesperrt: <strong>Echtzeit via Webhook</strong></li>
         <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
       </ul>
+
+      <H3>Gäste-Lounge für Airbnb/Booking.com-Gäste</H3>
+      <P>
+        Jede Buchung die über Beds24 reinkommt, erhält automatisch einen persönlichen Gäste-Lounge-Link.
+        In der Buchungsdetailansicht finden Sie unter <strong>Gäste-Lounge</strong> einen „Link kopieren"-Button —
+        den Link können Sie dem Gast direkt über Airbnb-Nachrichten, WhatsApp oder E-Mail schicken.
+      </P>
+      <P>
+        <strong>Warum kein automatischer Versand?</strong> Airbnb und Booking.com schicken eigene
+        Kommunikation an den Gast. Eine zweite E-Mail von bookingwulf wäre verwirrend — deshalb
+        entscheiden Sie selbst, wann und über welchen Kanal Sie den Link teilen.
+      </P>
     </div>
   );
 }
