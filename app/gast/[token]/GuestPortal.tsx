@@ -362,9 +362,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .content-anim > *:nth-child(9) { animation-delay: 440ms; }
     .badge-pop { animation: bwPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
     .content { padding: 20px; display: grid; gap: 16px; }
-    .section-label { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 0 0; }
+    .section-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 0 0; }
     .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+    .card-head { padding: 14px 18px; background: #f9fafb; border-bottom: 1px solid #f0f0f0; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; }
     .card-body { padding: 16px 18px; display: grid; gap: 12px; }
     .row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; }
     .row-lbl { color: #6b7280; flex-shrink: 0; }
@@ -382,7 +382,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .msg-guest { background: ${accent}; color: ${onAccent}; border-bottom-right-radius: 4px; align-self: flex-end; }
     .msg-wrap { display: flex; flex-direction: column; }
     .msg-wrap.guest { align-items: flex-end; }
-    .msg-time { font-size: 11px; color: #9ca3af; margin-top: 3px; padding: 0 4px; }
+    .msg-time { font-size: 11px; color: #6b7280; margin-top: 3px; padding: 0 4px; }
     .msg-input-row { display: flex; gap: 8px; }
     .msg-input { flex: 1; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; }
     .msg-input:focus { outline: none; border-color: ${accent}; }
@@ -407,7 +407,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .desc-details > summary { list-style: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
     .desc-details > summary::-webkit-details-marker { display: none; }
     .desc-preview { font-size: 13px; color: #6b7280; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .desc-collapse { display: none; font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .desc-collapse { display: none; font-size: 11px; color: #6b7280; margin-top: 2px; }
     .desc-full { display: none; font-size: 13px; color: #6b7280; line-height: 1.4; }
     .desc-details[open] .desc-preview { display: none; }
     .desc-details[open] .desc-collapse { display: block; }
@@ -415,12 +415,12 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     /* Bottom Navigation */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
     .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); width: 100%; max-width: 420px; }
-    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 8px; border: none; background: none; color: rgba(255,255,255,0.45); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 8px; border: none; background: none; color: rgba(255,255,255,0.65); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
     .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
     @media (prefers-color-scheme: dark) {
       body { background: #0f172a; color: #f1f5f9; }
       .card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
-      .card-head { background: #162032; border-color: #2d3f55; color: #64748b; }
+      .card-head { background: #162032; border-color: #2d3f55; color: #94a3b8; }
       .row-lbl { color: #94a3b8; }
       .divider { background: #2d3f55; }
       .msg-hotel { background: #2d3f55; color: #f1f5f9; }
@@ -431,7 +431,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki { background: #052e16; border-color: #166534; }
       .nuki-code { color: #f1f5f9; }
       .nuki-hint { color: #d1fae5; }
-      .section-label { color: #475569; }
+      .section-label { color: #94a3b8; }
     }
   `;
 
@@ -491,7 +491,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14, textDecoration: 'none', color: '#166534' }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>✓ {t.checkinDone}</div>
-                      <div style={{ fontSize: 13, opacity: 0.75 }}>{booking.checkinArrivalTime ? `${t.checkinFrom} ${booking.checkinArrivalTime}${t.oclock} · ${t.checkinDoneView}` : t.checkinDoneView}</div>
+                      <div style={{ fontSize: 13, opacity: 0.9 }}>{booking.checkinArrivalTime ? `${t.checkinFrom} ${booking.checkinArrivalTime}${t.oclock} · ${t.checkinDoneView}` : t.checkinDoneView}</div>
                     </div>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.5 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                   </a>
@@ -661,7 +661,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {allExtras.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>{t.noExtras}</p>
+                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>{t.noExtras}</p>
                   </div>
                 </div>
               ) : allExtras.map((extra) => {
@@ -704,7 +704,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               {thingsToSee.length === 0 ? (
                 <div className="card">
                   <div className="card-body">
-                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>{t.noSurroundings}</p>
+                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>{t.noSurroundings}</p>
                   </div>
                 </div>
               ) : Object.entries(
@@ -728,7 +728,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                                 <span className="desc-full">{entry.description}</span>
                               </details>
                             )}
-                            {entry.address && <div style={{ fontSize: 12, color: '#9ca3af' }}>{entry.address}</div>}
+                            {entry.address && <div style={{ fontSize: 12, color: '#6b7280' }}>{entry.address}</div>}
                           </div>
                           {entry.mapsUrl && (
                             <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }} aria-label={t.openInMaps}>
@@ -751,7 +751,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                 <div className="card-head">{t.messagesHead}</div>
                 <div className="card-body">
                   {messages.length === 0 ? (
-                    <p style={{ fontSize: 14, color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>
+                    <p style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>
                       {t.noMessages(hotel.name)}
                     </p>
                   ) : (
