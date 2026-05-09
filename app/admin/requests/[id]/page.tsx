@@ -10,6 +10,7 @@ import { notFound, redirect } from 'next/navigation';
 import StatusButtons from './StatusButtons';
 import { DeleteRequestButton } from '../DeleteButtons';
 import CopyLinkButton from '../../components/CopyLinkButton';
+import InfoTooltip from '../../components/InfoTooltip';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -583,7 +584,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center', padding: '6px 0' }}>
               <span style={{ ...rowLabel, display: 'flex', alignItems: 'center', gap: 4 }}>
                 Gäste-Lounge
-                <span title="Persönliche Lounge des Gastes mit Hausinfos, Extras, Nachrichten und Check-out. Link manuell teilen — z.B. per Airbnb-Chat oder WhatsApp." style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 15, height: 15, borderRadius: '50%', background: '#e5e7eb', color: '#6b7280', fontSize: 10, fontWeight: 700, cursor: 'default', flexShrink: 0 }}>i</span>
+                <InfoTooltip text="Persönliche Lounge des Gastes mit Hausinfos, Extras, Nachrichten und Check-out. Link manuell teilen — z.B. per Airbnb-Chat oder WhatsApp." />
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <a
