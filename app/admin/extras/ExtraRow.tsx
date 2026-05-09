@@ -117,27 +117,8 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
             </div>
 
             <div style={{ display: 'grid', gap: 4 }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Beschreibung (DE)</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Beschreibung</label>
               <input name="description" defaultValue={extra.description || ''} placeholder="Kurze Beschreibung (optional)" style={inputStyle} />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Name EN</label>
-                <input name="nameEn" defaultValue={extra.nameEn || ''} placeholder="z. B. Breakfast" style={inputStyle} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Name IT</label>
-                <input name="nameIt" defaultValue={extra.nameIt || ''} placeholder="z. B. Colazione" style={inputStyle} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Beschreibung EN</label>
-                <input name="descriptionEn" defaultValue={extra.descriptionEn || ''} placeholder="Optional" style={inputStyle} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Beschreibung IT</label>
-                <input name="descriptionIt" defaultValue={extra.descriptionIt || ''} placeholder="Optional" style={inputStyle} />
-              </div>
             </div>
 
             <div style={{ display: 'grid', gap: 4 }}>
