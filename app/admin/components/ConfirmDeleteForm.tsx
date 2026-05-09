@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { useTransition, type ReactNode } from 'react';
 
 export default function ConfirmDeleteForm({
   action,
@@ -15,12 +15,17 @@ export default function ConfirmDeleteForm({
   children: ReactNode;
   style?: React.CSSProperties;
 }) {
+  const [, startTransition] = useTransition();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!confirm(message)) return;
+    const formData = new FormData(e.currentTarget);
+    startTransition(() => { void action(formData); });
+  }
+
   return (
-    <form
-      action={action}
-      style={style}
-      onSubmit={(e) => { if (!confirm(message)) e.preventDefault(); }}
-    >
+    <form onSubmit={handleSubmit} style={style}>
       <input type="hidden" name="id" value={id} />
       {children}
     </form>

@@ -35,6 +35,7 @@ export async function GET(req: Request) {
       );
     }
 
+    // hotel + hotelSettings in one query
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
       select: {
@@ -43,6 +44,7 @@ export async function GET(req: Request) {
         plan: true,
         bookingTermsUrl: true,
         privacyPolicyUrl: true,
+        hotelSettings: true,
       },
     });
 
@@ -55,16 +57,36 @@ export async function GET(req: Request) {
       );
     }
 
-    const settings = await prisma.hotelSettings.findUnique({
-      where: { hotelId: hotel.id },
-    });
+    const plan = (hotel.plan as PlanKey) ?? 'starter';
+    const canUseExtras = hasPlanAccess(plan, 'pro');
 
-    // If a widget config slug is given, override feature toggles
-    const widgetConfig = configSlug
-      ? await prisma.widgetConfig.findUnique({
-          where: { hotelId_slug: { hotelId: hotel.id, slug: configSlug } },
-        })
-      : null;
+    // Parallel: widgetConfig + extras + childPriceRanges + voucherCount
+    const [widgetConfig, extras, childPriceRanges, voucherCount] = await Promise.all([
+      configSlug
+        ? prisma.widgetConfig.findUnique({
+            where: { hotelId_slug: { hotelId: hotel.id, slug: configSlug } },
+          })
+        : Promise.resolve(null),
+      prisma.hotelExtra.findMany({
+        where: {
+          hotelId: hotel.id,
+          isActive: true,
+          showInWidget: true,
+          ...(!canUseExtras ? { type: 'insurance' } : {}),
+        },
+        orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+        select: { key: true, name: true, type: true, billingType: true, price: true, description: true, imageUrl: true, linkUrl: true },
+      }),
+      prisma.childPriceRange.findMany({
+        where: { hotelId: hotel.id },
+        orderBy: [{ sortOrder: 'asc' }, { minAge: 'asc' }],
+        select: { id: true, label: true, minAge: true, maxAge: true, pricePerNight: true },
+      }),
+      prisma.voucherTemplate.count({ where: { hotelId: hotel.id, isActive: true } }),
+    ]);
+
+    const vouchersEnabled = voucherCount > 0;
+    const settings = hotel.hotelSettings;
 
     const mergedSettings = widgetConfig
       ? {
@@ -81,11 +103,9 @@ export async function GET(req: Request) {
         }
       : settings;
 
-    const plan = (hotel.plan as PlanKey) ?? 'starter';
     const fullBranding = hasFullBranding(plan);
     const advancedTypography = hasAdvancedTypography(plan);
 
-    // Strip settings that aren't available on this plan
     if (mergedSettings) {
       if (!fullBranding) {
         mergedSettings.backgroundColor = null;
@@ -107,36 +127,9 @@ export async function GET(req: Request) {
         mergedSettings.headlineFontUrl = null;
         mergedSettings.bodyFontUrl = null;
       }
-    }
-
-    // Strip server-side secrets before sending to widget
-    if (mergedSettings) {
       (mergedSettings as Record<string, unknown>).paypalClientSecret = undefined;
       (mergedSettings as Record<string, unknown>).stripeSecretKey = undefined;
     }
-
-    const canUseExtras = hasPlanAccess(plan, 'pro');
-    const extras = await prisma.hotelExtra.findMany({
-      where: {
-        hotelId: hotel.id,
-        isActive: true,
-        showInWidget: true,
-        // Starter plans only get insurance, Pro+ gets everything
-        ...(!canUseExtras ? { type: 'insurance' } : {}),
-      },
-      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-      select: { key: true, name: true, type: true, billingType: true, price: true, description: true, imageUrl: true, linkUrl: true },
-    });
-
-    const childPriceRanges = await prisma.childPriceRange.findMany({
-      where: { hotelId: hotel.id },
-      orderBy: [{ sortOrder: 'asc' }, { minAge: 'asc' }],
-      select: { id: true, label: true, minAge: true, maxAge: true, pricePerNight: true },
-    });
-
-    const vouchersEnabled = await prisma.voucherTemplate.count({
-      where: { hotelId: hotel.id, isActive: true },
-    }).then((n) => n > 0);
 
     return withCors(
       NextResponse.json(

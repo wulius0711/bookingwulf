@@ -57,23 +57,24 @@ export async function GET(req: Request) {
       );
     }
 
-    const apartments = await prisma.apartment.findMany({
-      where: { hotelId: hotel.id, isActive: true },
-      select: {
-        id: true,
-        blockedRanges: { select: { startDate: true, endDate: true } },
-      },
-    });
-
-    const confirmedBookings = await prisma.request.findMany({
-      where: {
-        hotelId: hotel.id,
-        status: 'booked',
-        arrival: { lt: departure },
-        departure: { gt: arrival },
-      },
-      select: { selectedApartmentIds: true },
-    });
+    const [apartments, confirmedBookings] = await Promise.all([
+      prisma.apartment.findMany({
+        where: { hotelId: hotel.id, isActive: true },
+        select: {
+          id: true,
+          blockedRanges: { select: { startDate: true, endDate: true } },
+        },
+      }),
+      prisma.request.findMany({
+        where: {
+          hotelId: hotel.id,
+          status: 'booked',
+          arrival: { lt: departure },
+          departure: { gt: arrival },
+        },
+        select: { selectedApartmentIds: true },
+      }),
+    ]);
 
     const bookedIds = new Set<number>();
     for (const b of confirmedBookings) {

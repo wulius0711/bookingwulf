@@ -55,11 +55,15 @@ export async function POST(req: Request) {
       );
     }
 
+    // hotel + hotelSettings in one query
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
-      select: { id: true, plan: true },
+      select: {
+        id: true,
+        plan: true,
+        hotelSettings: { select: { gapNightDiscount: true, gapNightMaxLength: true } },
+      },
     });
-
 
     if (!hotel) {
       return Response.json(
@@ -68,86 +72,64 @@ export async function POST(req: Request) {
       );
     }
 
-    const hotelSettings = await prisma.hotelSettings.findUnique({
-      where: { hotelId: hotel.id },
-      select: { gapNightDiscount: true, gapNightMaxLength: true },
-    });
-
-    // Pre-fetch gap bookings if gap-night feature is configured
+    const hotelSettings = hotel.hotelSettings;
     const hotelHasPro = hasPlanAccess(hotel.plan ?? 'starter', 'pro');
     const gapEnabled = hotelHasPro && hotelSettings?.gapNightDiscount && hotelSettings?.gapNightMaxLength && nights <= hotelSettings.gapNightMaxLength;
-    let gapBeforeIds = new Set<number>();
-    let gapAfterIds = new Set<number>();
-
-    if (gapEnabled) {
-      const arrivalNorm = normalizeDate(arrival);
-      const departureNorm = normalizeDate(departure);
-      const nextDay = (d: Date) => new Date(d.getTime() + 24 * 60 * 60 * 1000);
-
-      const [beforeBookings, afterBookings] = await Promise.all([
-        prisma.request.findMany({
-          where: { hotelId: hotel.id, status: 'booked', departure: { gte: arrivalNorm, lt: nextDay(arrivalNorm) } },
-          select: { selectedApartmentIds: true },
-        }),
-        prisma.request.findMany({
-          where: { hotelId: hotel.id, status: 'booked', arrival: { gte: departureNorm, lt: nextDay(departureNorm) } },
-          select: { selectedApartmentIds: true },
-        }),
-      ]);
-
-      const parseIds = (bookings: { selectedApartmentIds: string }[]) =>
-        new Set(bookings.flatMap((b) => b.selectedApartmentIds.split(',').map((s) => Number(s.trim())).filter(Boolean)));
-
-      gapBeforeIds = parseIds(beforeBookings);
-      gapAfterIds = parseIds(afterBookings);
-    }
 
     const apartmentNames = selectedApartmentsRaw
       .split(',')
       .map((name) => name.trim())
       .filter(Boolean);
 
-    const apartments = await prisma.apartment.findMany({
-      where: {
-        hotelId: hotel.id,
-        name: {
-          in: apartmentNames,
-        },
-        isActive: true,
-      },
-      include: {
-        blockedRanges: true,
-        priceSeasons: true,
-      },
-    });
+    const arrivalNorm = normalizeDate(arrival);
+    const departureNorm = normalizeDate(departure);
+    const nextDay = (d: Date) => new Date(d.getTime() + 24 * 60 * 60 * 1000);
+
+    // Parallel: apartments + confirmed bookings + optional gap queries
+    const [apartments, confirmedBookings, beforeBookings, afterBookings] = await Promise.all([
+      prisma.apartment.findMany({
+        where: { hotelId: hotel.id, name: { in: apartmentNames }, isActive: true },
+        include: { blockedRanges: true, priceSeasons: true },
+      }),
+      prisma.request.findMany({
+        where: { hotelId: hotel.id, status: 'booked', arrival: { lt: departure }, departure: { gt: arrival } },
+        select: { selectedApartmentIds: true },
+      }),
+      gapEnabled
+        ? prisma.request.findMany({
+            where: { hotelId: hotel.id, status: 'booked', departure: { gte: arrivalNorm, lt: nextDay(arrivalNorm) } },
+            select: { selectedApartmentIds: true },
+          })
+        : Promise.resolve([]),
+      gapEnabled
+        ? prisma.request.findMany({
+            where: { hotelId: hotel.id, status: 'booked', arrival: { gte: departureNorm, lt: nextDay(departureNorm) } },
+            select: { selectedApartmentIds: true },
+          })
+        : Promise.resolve([]),
+    ]);
 
     if (apartments.length !== apartmentNames.length) {
       return Response.json(
         {
           success: false,
-          message:
-            'Mindestens ein Apartment konnte im gewählten Hotel nicht gefunden werden.',
+          message: 'Mindestens ein Apartment konnte im gewählten Hotel nicht gefunden werden.',
         },
         { status: 404, headers: corsHeaders },
       );
     }
+
+    const parseIds = (bookings: { selectedApartmentIds: string }[]) =>
+      new Set(bookings.flatMap((b) => b.selectedApartmentIds.split(',').map((s) => Number(s.trim())).filter(Boolean)));
+
+    const gapBeforeIds = parseIds(beforeBookings);
+    const gapAfterIds = parseIds(afterBookings);
 
     const unavailableApartments: Array<{
       apartmentId: number;
       apartmentName: string;
       message: string;
     }> = [];
-
-    // Check confirmed bookings that overlap the requested period
-    const confirmedBookings = await prisma.request.findMany({
-      where: {
-        hotelId: hotel.id,
-        status: 'booked',
-        arrival: { lt: departure },
-        departure: { gt: arrival },
-      },
-      select: { selectedApartmentIds: true },
-    });
 
     const bookedApartmentIds = new Set<number>();
     for (const booking of confirmedBookings) {
