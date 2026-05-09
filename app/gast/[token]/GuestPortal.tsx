@@ -203,6 +203,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const accent = hotel.accentColor || '#111827';
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
   const accentOnLight = hexLuminance(accent) > 0.4 ? '#374151' : accent;
+  const accentOnDark = hexLuminance(accent) < 0.3 ? '#e2e8f0' : accent;
   const [tab, setTab] = useState<Tab>('arrival');
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [msgInput, setMsgInput] = useState('');
@@ -345,6 +346,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       --accent-light: ${accentOnLight};
       --accent-subtle: ${accent}14;
       --accent-border: ${accent}44;
+      --accent-fg: ${accent};
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
@@ -380,7 +382,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: 10px; border: none; background: var(--accent); color: var(--on-accent); font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: inherit; }
     .btn:hover { opacity: 0.9; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-outline { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--accent-fg); color: var(--accent-fg); }
     .btn-sm { padding: 9px 16px; font-size: 13px; width: auto; }
     .contact-grid { display: grid; gap: 10px; }
     .msg-list { display: grid; gap: 10px; max-height: 340px; overflow-y: auto; padding: 4px 0; }
@@ -399,8 +401,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .extra-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .extra-desc { font-size: 13px; color: #6b7280; line-height: 1.4; margin-bottom: 8px; }
     .extra-footer { display: flex; justify-content: space-between; align-items: center; }
-    .extra-price { font-size: 15px; font-weight: 800; color: var(--accent); }
-    .accent-link { color: var(--accent); }
+    .extra-price { font-size: 15px; font-weight: 800; color: var(--accent-fg); }
+    .accent-link { color: var(--accent-fg); }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .badge-green { background: #dcfce7; color: #166534; }
     .nuki { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 18px; text-align: center; }
@@ -426,6 +428,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 8px; border: none; background: none; color: rgba(255,255,255,0.65); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
     .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
     @media (prefers-color-scheme: dark) {
+      :root { --accent-fg: ${accentOnDark}; }
       body { background: #0f172a; color: #f1f5f9; }
       .card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
       .card-head { background: #162032; border-color: #2d3f55; color: #94a3b8; }
@@ -440,8 +443,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki-code { color: #f1f5f9; }
       .nuki-hint { color: #d1fae5; }
       .section-label { color: #94a3b8; }
-      .btn-outline { border-color: rgba(255,255,255,0.4); color: #e2e8f0; }
-      .extra-price, .accent-link { color: #e2e8f0; }
+      .btn-outline { border-color: var(--accent-fg); color: var(--accent-fg); }
     }
   `;
 
@@ -653,7 +655,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                       <div className="card-body">
                         {hotel.emergencyNumbers.map((e, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                            <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
+                            <span style={{ fontSize: 14 }}>{e.label}</span>
                             <a href={`tel:${e.number.replace(/\s/g, '')}`} className="accent-link" style={{ fontSize: 15, fontWeight: 700, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
                           </div>
                         ))}
