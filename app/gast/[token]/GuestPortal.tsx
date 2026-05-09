@@ -432,6 +432,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       .nuki-code { color: #f1f5f9; }
       .nuki-hint { color: #d1fae5; }
       .section-label { color: #94a3b8; }
+      .btn-outline { border-color: rgba(255,255,255,0.4); color: #e2e8f0; }
+      .extra-price { color: #e2e8f0; }
     }
   `;
 
