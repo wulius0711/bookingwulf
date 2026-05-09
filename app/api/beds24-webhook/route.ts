@@ -2,7 +2,7 @@
 // Webhook URL: https://your-domain.com/api/beds24-webhook?token=<BEDS24_WEBHOOK_SECRET>
 // Configure under: Beds24 → Settings → Properties → Access → Booking Webhook
 
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual, randomUUID } from 'crypto';
 import { prisma } from '@/src/lib/prisma';
 import { fetchBeds24BookingDetails } from '@/src/lib/beds24';
 import type { Beds24WebhookBooking } from '@/src/lib/beds24';
@@ -129,6 +129,7 @@ export async function POST(req: Request) {
           country: booking.guestCountry ?? '',
           status: 'booked',
           language: 'de',
+          checkinToken: randomUUID(),
         },
       });
 

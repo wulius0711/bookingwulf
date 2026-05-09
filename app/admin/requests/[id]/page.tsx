@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import StatusButtons from './StatusButtons';
 import { DeleteRequestButton } from '../DeleteButtons';
+import CopyLinkButton from '../../components/CopyLinkButton';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -575,6 +576,23 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   {request.checkinDocNumber && <div>Ausweis-/Reisepassnr.: <strong>{request.checkinDocNumber}</strong></div>}
                 </div>
               )}
+            </div>
+          )}
+
+          {request.checkinToken && (
+            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center' }}>
+              <span style={rowLabel}>Gäste-Lounge</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <a
+                  href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/gast/${request.checkinToken}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}
+                >
+                  Link öffnen
+                </a>
+                <CopyLinkButton url={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/gast/${request.checkinToken}`} />
+              </div>
             </div>
           )}
 
