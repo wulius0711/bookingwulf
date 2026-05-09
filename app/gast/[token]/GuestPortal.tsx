@@ -339,10 +339,17 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   ];
 
   const css = `
+    :root {
+      --accent: ${accent};
+      --on-accent: ${onAccent};
+      --accent-light: ${accentOnLight};
+      --accent-subtle: ${accent}14;
+      --accent-border: ${accent}44;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
     .wrap { max-width: 560px; margin: 0 auto; padding-bottom: max(110px, calc(90px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
-    .header { background: ${accent}; color: ${onAccent}; padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .header { background: var(--accent); color: var(--on-accent); padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .header-left { flex: 1; min-width: 0; }
     .header-hotel { font-size: 12px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
     .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
@@ -370,29 +377,29 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .row-lbl { color: #6b7280; flex-shrink: 0; }
     .row-val { font-weight: 600; text-align: right; }
     .divider { height: 1px; background: #f0f0f0; }
-    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: 10px; border: none; background: ${accent}; color: ${onAccent}; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: inherit; }
+    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: 10px; border: none; background: var(--accent); color: var(--on-accent); font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: inherit; }
     .btn:hover { opacity: 0.9; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-outline { background: transparent; border: 1.5px solid ${accent}; color: ${accent}; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); }
     .btn-sm { padding: 9px 16px; font-size: 13px; width: auto; }
     .contact-grid { display: grid; gap: 10px; }
     .msg-list { display: grid; gap: 10px; max-height: 340px; overflow-y: auto; padding: 4px 0; }
     .msg-bubble { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
     .msg-hotel { background: #f3f4f6; color: #111827; border-bottom-left-radius: 4px; align-self: flex-start; }
-    .msg-guest { background: ${accent}; color: ${onAccent}; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .msg-guest { background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 4px; align-self: flex-end; }
     .msg-wrap { display: flex; flex-direction: column; }
     .msg-wrap.guest { align-items: flex-end; }
     .msg-time { font-size: 11px; color: #6b7280; margin-top: 3px; padding: 0 4px; }
     .msg-input-row { display: flex; gap: 8px; }
     .msg-input { flex: 1; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; }
-    .msg-input:focus { outline: none; border-color: ${accent}; }
+    .msg-input:focus { outline: none; border-color: var(--accent); }
     .extra-card { border: 1.5px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
     .extra-img { width: 100%; height: 120px; object-fit: cover; background: #f3f4f6; }
     .extra-info { padding: 12px 14px; }
     .extra-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .extra-desc { font-size: 13px; color: #6b7280; line-height: 1.4; margin-bottom: 8px; }
     .extra-footer { display: flex; justify-content: space-between; align-items: center; }
-    .extra-price { font-size: 15px; font-weight: 800; color: ${accent}; }
+    .extra-price { font-size: 15px; font-weight: 800; color: var(--accent); }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .badge-green { background: #dcfce7; color: #166534; }
     .nuki { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 18px; text-align: center; }
@@ -474,7 +481,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     padding: '3px 8px', borderRadius: 6,
                     border: `1px solid rgba(255,255,255,${lang === l ? '0.6' : '0.2'})`,
                     background: lang === l ? 'rgba(255,255,255,0.18)' : 'transparent',
-                    color: onAccent, fontSize: 10, fontWeight: lang === l ? 700 : 400,
+                    color: 'var(--on-accent)', fontSize: 10, fontWeight: lang === l ? 700 : 400,
                     cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.04em',
                     opacity: lang === l ? 1 : 0.65,
                   }}>
@@ -498,7 +505,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.5 }}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                   </a>
                 ) : (
-                  <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: `${accent}14`, border: `1px solid ${accent}44`, borderRadius: 14, textDecoration: 'none', color: accentOnLight }}>
+                  <a href={`/checkin/${token}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', background: 'var(--accent-subtle)', border: '1px solid var(--accent-border)', borderRadius: 14, textDecoration: 'none', color: 'var(--accent-light)' }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{t.checkinPending}</div>
                       <div style={{ fontSize: 13, opacity: 0.8 }}>{t.checkinPendingDesc}</div>
@@ -646,7 +653,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         {hotel.emergencyNumbers.map((e, i) => (
                           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                             <span style={{ fontSize: 14, color: '#374151' }}>{e.label}</span>
-                            <a href={`tel:${e.number.replace(/\s/g, '')}`} style={{ fontSize: 15, fontWeight: 700, color: accent, textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
+                            <a href={`tel:${e.number.replace(/\s/g, '')}`} style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', textDecoration: 'none', fontFamily: 'monospace' }}>{e.number}</a>
                           </div>
                         ))}
                       </div>
@@ -733,7 +740,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                             {entry.address && <div style={{ fontSize: 12, color: '#6b7280' }}>{entry.address}</div>}
                           </div>
                           {entry.mapsUrl && (
-                            <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: accent, flexShrink: 0 }} aria-label={t.openInMaps}>
+                            <a href={entry.mapsUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', color: 'var(--accent)', flexShrink: 0 }} aria-label={t.openInMaps}>
                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </a>
                           )}
