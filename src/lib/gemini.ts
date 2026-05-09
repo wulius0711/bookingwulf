@@ -25,7 +25,7 @@ const NAV_LABELS: Record<string, string> = {
   '/admin/blocked-dates':    'Verwaltung → Sperrzeiten',
   '/admin/extras':           'Verwaltung → Zusatzleistungen',
   '/admin/settings':         'Konfiguration → Widget & Design',
-  '/admin/guestportal':      'Konfiguration → Gästeportal',
+  '/admin/guestportal':      'Konfiguration → Gäste-Lounge',
   '/admin/email-templates':  'Konfiguration → E-Mails',
   '/admin/nuki':             'Konfiguration → Schlüsselloses Einchecken',
   '/admin/beds24':           'Konfiguration → Beds24',
@@ -84,10 +84,10 @@ KONFIGURATION:
   - Banküberweisung: Toggle aktivieren → Kontoinhaber, IBAN, BIC eintragen. Optional: Anzahlung (Prozentsatz oder Fixbetrag, mit Zahlungsfrist in Tagen).
   - PayPal einrichten: 1. Business-Konto auf paypal.com anlegen. 2. Auf developer.paypal.com anmelden → Apps & Credentials → Create App (Typ: Merchant). 3. Oben rechts auf "Live" wechseln → Client ID und Client Secret kopieren. 4. Beides unter Zahlungsarten → PayPal eintragen und Toggle aktivieren.
   - Stripe (Kreditkarte) einrichten: 1. Konto auf stripe.com erstellen (kostenlos), Business verifizieren, Bankverbindung für Auszahlungen hinterlegen. 2. Im Stripe Dashboard: Entwickler → API-Schlüssel. 3. Publishable Key (pk_live_…) und Secret Key (sk_live_…) kopieren. 4. Beides unter Zahlungsarten → Kreditkarte (Stripe) eintragen und Toggle aktivieren. Hinweis: Stripe berechnet ca. 1,5 % + 0,25 € pro Transaktion — direkt von Stripe, unabhängig von bookingwulf.
-- Konfiguration → Gästeportal: Kontaktdaten, Hausinfos und Umgebungstipps für Gäste pflegen. Drei Bereiche:
-  1. Kontakt & Erreichbarkeit: Telefonnummer, WhatsApp-Nummer (optional), Adresse (für Anreise-Button). Diese Daten erscheinen im Gästeportal als Kontaktmöglichkeiten.
+- Konfiguration → Gäste-Lounge: Kontaktdaten, Hausinfos und Umgebungstipps für Gäste pflegen. Drei Bereiche:
+  1. Kontakt & Erreichbarkeit: Telefonnummer, WhatsApp-Nummer (optional), Adresse (für Anreise-Button). Diese Daten erscheinen in der Gäste-Lounge als Kontaktmöglichkeiten.
   2. Hausinfos / Gästemappe: WLAN-Name und -Passwort, Parkplatzinfo, Müllentsorgung, Hausordnung (wird auch beim Online Check-in angezeigt — Gast muss sie bestätigen), Notfallnummern (z.B. Feuerwehr, Arzt — als Liste mit Name und Nummer).
-  3. Umgebung: Restaurants, Aktivitäten und Sehenswürdigkeiten in der Nähe — erscheinen im Gästeportal unter dem Tab "Umgebung". Einträge können manuell angelegt oder per Google-Suche gefunden und importiert werden. Felder: Name, Beschreibung, Kategorie (Restaurant, Aktivität, Sehenswürdigkeit, Einkaufen, Sonstiges), Link, Sortierreihenfolge, aktiv/inaktiv.
+  3. Umgebung: Restaurants, Aktivitäten und Sehenswürdigkeiten in der Nähe — erscheinen in der Gäste-Lounge unter dem Tab "Umgebung". Einträge können manuell angelegt oder per Google-Suche gefunden und importiert werden. Felder: Name, Beschreibung, Kategorie (Restaurant, Aktivität, Sehenswürdigkeit, Einkaufen, Sonstiges), Link, Sortierreihenfolge, aktiv/inaktiv.
 - Konfiguration → E-Mails: Vier Bereiche auf einer Seite:
   1. E-Mail-Vorlagen: Bestätigungs- und Benachrichtigungs-E-Mails anpassen (Pro-Plan).
   2. Online Check-in (Pre-Arrival): Gäste erhalten nach einer Sofortbuchung automatisch einen Link in der Bestätigungs-E-Mail, über den sie sich vor Anreise einchecken können — Ankunftszeit angeben, Notizen hinterlassen, Hausordnung akzeptieren. Der Betreiber sieht den Check-in-Status direkt in der Buchungsdetailseite (✓ Ausgefüllt / ⏳ Ausstehend). Aktivierung: Konfiguration → E-Mails → Online Check-in einschalten, optional Hausordnung-Text und Erinnerungs-Tage vor Anreise einstellen. Erinnerungs-E-Mail geht automatisch X Tage vor Anreise raus (konfigurierbar).

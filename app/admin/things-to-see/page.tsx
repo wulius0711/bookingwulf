@@ -29,7 +29,7 @@ export default async function ThingsToSeePage() {
         Restaurants, Sehenswürdigkeiten und Aktivitäten für Ihre Gäste — einmal einpflegen, immer verfügbar.
       </p>
       <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 32 }}>
-        Erscheint im Gästeportal unter dem Tab <strong style={{ color: '#6b7280' }}>Umgebung</strong>.
+        Erscheint in der Gäste-Lounge unter dem Tab <strong style={{ color: '#6b7280' }}>Umgebung</strong>.
       </p>
       <ThingsToSeeManager
         hotelId={hotelId!}

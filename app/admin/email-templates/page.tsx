@@ -54,7 +54,7 @@ const PLACEHOLDERS = [
   { key: '{{nights}}', desc: 'Anzahl Nächte' },
   { key: '{{apartmentName}}', desc: 'Apartment-Name(n)' },
   { key: '{{bookingId}}', desc: 'Buchungs-ID' },
-  { key: '{{portalUrl}}', desc: 'Link zum Gästeportal' },
+  { key: '{{portalUrl}}', desc: 'Link zur Gäste-Lounge' },
   { key: '{{nukiCode}}', desc: 'Nuki Zugangscode' },
 ];
 

@@ -95,7 +95,7 @@ function eur(n: number) {
 
 const TRANSLATIONS = {
   de: {
-    guestportal: 'Gästeportal', night: 'Nacht', nights: 'Nächte',
+    guestportal: 'Gäste-Lounge', night: 'Nacht', nights: 'Nächte',
     checkinPending: 'Online Check-In ausstehend',
     checkinPendingDesc: 'Jetzt ausfüllen und Zeit bei der Anreise sparen.',
     checkinDone: 'Check-In abgeschlossen',
@@ -129,7 +129,7 @@ const TRANSLATIONS = {
     locale: 'de-AT',
   },
   en: {
-    guestportal: 'Guest Portal', night: 'night', nights: 'nights',
+    guestportal: 'Guest Lounge', night: 'night', nights: 'nights',
     checkinPending: 'Online Check-In pending',
     checkinPendingDesc: 'Fill in now and save time on arrival.',
     checkinDone: 'Check-In completed',
@@ -163,7 +163,7 @@ const TRANSLATIONS = {
     locale: 'en-GB',
   },
   it: {
-    guestportal: 'Portale Ospiti', night: 'notte', nights: 'notti',
+    guestportal: 'Guest Lounge', night: 'notte', nights: 'notti',
     checkinPending: 'Check-In online in sospeso',
     checkinPendingDesc: "Compilalo ora e risparmia tempo all'arrivo.",
     checkinDone: 'Check-In completato',

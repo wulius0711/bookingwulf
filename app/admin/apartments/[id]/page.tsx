@@ -317,9 +317,9 @@ export default async function EditApartmentPage({ params }: PageProps) {
             </div>
           </details>
 
-          {/* Gästeportal */}
+          {/* Gäste-Lounge */}
           <details style={detailsStyle}>
-            <summary style={summaryStyle}><h2 style={cardTitle}>Gästeportal</h2>{caret}</summary>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Gäste-Lounge</h2>{caret}</summary>
             <div style={cardBody}>
               <p style={{ fontSize: 13, color: '#6b7280', margin: '8px 0 4px' }}>
                 Leer lassen = Hotel-Default wird verwendet.

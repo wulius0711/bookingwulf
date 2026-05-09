@@ -25,7 +25,7 @@ const TOUR_STEPS = [
   },
   {
     target: '[data-tour="nav-guestportal"]',
-    title: 'Gästeportal',
+    title: 'Gäste-Lounge',
     text: 'Hinterlegen Sie WLAN-Daten, Hausinfos und Umgebungstipps — Ihre Gäste sehen das alles über einen persönlichen Link in der Buchungsbestätigung.',
   },
   {

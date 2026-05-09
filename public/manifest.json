@@ -1,7 +1,7 @@
 {
   "name": "Meine Buchung",
   "short_name": "Buchung",
-  "description": "Ihre Buchungsübersicht und Gästeportal",
+  "description": "Ihre persönliche Gäste-Lounge",
   "start_url": "/gast/",
   "display": "standalone",
   "background_color": "#f5f7fa",

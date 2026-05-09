@@ -14,7 +14,7 @@ const sections = [
   { id: 'preise',        title: 'Preisanpassungen',       plan: null,       content: PreiseSection },
   { id: 'sperrzeiten',   title: 'Sperrzeiten',           plan: null,       content: SperrzeitenSection },
   { id: 'extras',        title: 'Zusatzleistungen',      plan: 'Pro',      content: ExtrasSection },
-  { id: 'gasteportal',   title: 'Gäste-Portal',          plan: null,       content: GastePortalSection },
+  { id: 'gasteportal',   title: 'Gäste-Lounge',          plan: null,       content: GastePortalSection },
   { id: 'emails',        title: 'E-Mails & Check-in',    plan: null,       content: EmailsSection },
   { id: 'einstellungen', title: 'Widget & Design',         plan: null,      content: EinstellungenSection },
   { id: 'zahlungen',     title: 'Zahlungsarten',           plan: null,       content: ZahlungenSection },
@@ -682,7 +682,7 @@ function ExtrasSection() {
           { label: 'Name',              desc: 'Wird im Widget als Titel der Karte angezeigt.' },
           { label: 'Beschreibung',      desc: 'Optionaler Kurztext unter dem Namen (z.B. "inkl. Kaffee und Saft").' },
           { label: 'Bild',              desc: 'Optionales Bild — wird als Thumbnail links in der Karte angezeigt. Per Klick hochladen (JPEG, PNG, WebP).' },
-          { label: 'Link-URL',          desc: 'Optionaler externer Link (z.B. zur Versicherungsseite). Im Gäste-Portal erscheinen dann beide Buttons: „Mehr erfahren" und „Hinzufügen".' },
+          { label: 'Link-URL',          desc: 'Optionaler externer Link (z.B. zur Versicherungsseite). In der Gäste-Lounge erscheinen dann beide Buttons: „Mehr erfahren" und „Hinzufügen".' },
           { label: 'Varianten-Gruppe',  desc: 'Extras mit demselben Gruppen-Namen schließen sich gegenseitig aus — der Gast kann nur eine davon buchen. Nützlich z.B. für Hotelstorno-Varianten: beide Extras bekommen denselben Wert (z.B. „hotelstorno").' },
           { label: 'Nr.',               desc: 'Reihenfolge im Widget (aufsteigend sortiert).' },
         ].map((t) => (
@@ -700,7 +700,7 @@ function ExtrasSection() {
         {[
           { label: 'Aktiv / Inaktiv',  desc: 'Grundschalter — inaktive Extras erscheinen nirgends.' },
           { label: 'Widget ✓',          desc: 'Extra erscheint im Buchungs-Widget und kann vom Gast beim Buchen gewählt werden.' },
-          { label: 'Upsell ✓',          desc: 'Extra wird in der Bestätigungs-E-Mail als Nachkauf-Empfehlung angeboten (nur wenn noch nicht gebucht) und ist zusätzlich im Gästeportal buchbar.' },
+          { label: 'Upsell ✓',          desc: 'Extra wird in der Bestätigungs-E-Mail als Nachkauf-Empfehlung angeboten (nur wenn noch nicht gebucht) und ist zusätzlich in der Gäste-Lounge buchbar.' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 150, color: 'var(--text-primary)' }}>{t.label}</span>
@@ -709,7 +709,7 @@ function ExtrasSection() {
         ))}
       </div>
       <Tip>
-        <strong>Mail-Only-Extras (Widget aus, Upsell an):</strong> Extras, die nicht im Buchungsformular erscheinen, aber nach der Buchung per E-Mail angeboten und im Gästeportal buchbar sind. Ideal für spontane Überraschungen, die der Gast nicht selbst einplant — z.B. Champagner zur Ankunft, Zimmerdekoration (Rosen, Luftballons) für besondere Anlässe, Frühstück aufs Zimmer am ersten Morgen, privater Shuttle-Transfer vom Bahnhof oder Late-Check-out auf Anfrage.
+        <strong>Mail-Only-Extras (Widget aus, Upsell an):</strong> Extras, die nicht im Buchungsformular erscheinen, aber nach der Buchung per E-Mail angeboten und in der Gäste-Lounge buchbar sind. Ideal für spontane Überraschungen, die der Gast nicht selbst einplant — z.B. Champagner zur Ankunft, Zimmerdekoration (Rosen, Luftballons) für besondere Anlässe, Frühstück aufs Zimmer am ersten Morgen, privater Shuttle-Transfer vom Bahnhof oder Late-Check-out auf Anfrage.
       </Tip>
       <H3>Abrechnungsarten</H3>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
@@ -740,9 +740,9 @@ function ExtrasSection() {
 function GastePortalSection() {
   return (
     <div>
-      <H2>Gäste-Portal</H2>
+      <H2>Gäste-Lounge</H2>
       <P>
-        Jeder Gast erhält mit der Buchungsbestätigung einen persönlichen Link zum Gäste-Portal —
+        Jeder Gast erhält mit der Buchungsbestätigung einen persönlichen Link zur Gäste-Lounge —
         kein Passwort, kein Account nötig. Das Portal ist unter{' '}
         <Code>bookingwulf.com/gast/[token]</Code> erreichbar.
       </P>
@@ -752,8 +752,8 @@ function GastePortalSection() {
           { label: 'Buchung',     desc: 'Anreise, Abreise, Apartment(s), Preisübersicht und Zahlungsart. Bei Nuki-Integration wird der Zugangscode hier angezeigt.' },
           { label: 'Check-in',   desc: 'Ankunftszeit auswählen und Hausordnung bestätigen — erscheint nur wenn „Online Check-in" in den Einstellungen aktiviert ist.' },
           { label: 'Extras',     desc: 'Alle aktiven Zusatzleistungen. Bereits gebuchte sind grün markiert. Mit Varianten-Gruppe: nur eine Variante buchbar.' },
-          { label: 'Hausinfos',  desc: 'WLAN-Zugangsdaten, Parkplatz, Müllentsorgung, Hausordnung und Notfallnummern. Wird befüllt unter Konfiguration → Gästeportal.' },
-          { label: 'Umgebung',   desc: 'Restaurants, Aktivitäten, Events und Sehenswürdigkeiten rund ums Hotel. Verwaltung unter Konfiguration → Gästeportal.' },
+          { label: 'Hausinfos',  desc: 'WLAN-Zugangsdaten, Parkplatz, Müllentsorgung, Hausordnung und Notfallnummern. Wird befüllt unter Konfiguration → Gäste-Lounge.' },
+          { label: 'Umgebung',   desc: 'Restaurants, Aktivitäten, Events und Sehenswürdigkeiten rund ums Hotel. Verwaltung unter Konfiguration → Gäste-Lounge.' },
           { label: 'Nachrichten', desc: 'Direkter Chat mit dem Hotel. Neue Nachrichten des Gastes erscheinen in der Buchungsdetailansicht.' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
@@ -764,7 +764,7 @@ function GastePortalSection() {
       </div>
       <H3>Hausinfos & Umgebung einrichten</H3>
       <P>
-        Alles wird zentral unter <strong>Konfiguration → Gästeportal</strong> verwaltet — WLAN-Daten,
+        Alles wird zentral unter <strong>Konfiguration → Gäste-Lounge</strong> verwaltet — WLAN-Daten,
         Parkplatz- und Müllhinweise, Hausordnung, Notfallnummern sowie Umgebungstipps (Restaurants,
         Aktivitäten, Sehenswürdigkeiten). Umgebungseinträge können per Google-Suche importiert oder
         manuell erfasst werden.
@@ -778,13 +778,13 @@ function GastePortalSection() {
       </Note>
       <H3>Sprache</H3>
       <P>
-        Das Gäste-Portal ist in <strong>Deutsch, Englisch und Italienisch</strong> verfügbar.
+        Die Gäste-Lounge ist in <strong>Deutsch, Englisch und Italienisch</strong> verfügbar.
         Die Standardsprache richtet sich nach der Buchungssprache des Gastes.
         Im Portal erscheinen drei Buttons <strong>DE / EN / IT</strong> oben rechts im Header —
         der Gast kann die Sprache jederzeit wechseln, die Auswahl wird gespeichert.
       </P>
       <Tip>
-        Das Gäste-Portal funktioniert auch offline — nach dem ersten Öffnen können Gäste es ohne
+        Die Gäste-Lounge funktioniert auch offline — nach dem ersten Öffnen können Gäste es ohne
         Internetverbindung nutzen.
       </Tip>
     </div>

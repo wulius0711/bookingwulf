@@ -91,12 +91,12 @@ export default async function GuestPortalSettingsPage() {
       <div style={{ maxWidth: 800, display: 'grid', gap: 24 }}>
 
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: '#0f172a' }}>Gästeportal</h1>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: '#0f172a' }}>Gäste-Lounge</h1>
           <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085', lineHeight: 1.6 }}>
-            Das Gästeportal ist eine persönliche Webseite für Ihre Gäste — erreichbar über einen individuellen Link, der automatisch in der Buchungsbestätigung mitgeschickt wird. Dort finden Gäste alles Wichtige auf einen Blick: Ihre Kontaktdaten, WLAN-Zugangsdaten, Parkplatz- und Hausinfos sowie Tipps zur Umgebung.
+            Die Gäste-Lounge ist eine persönliche Webseite für Ihre Gäste — erreichbar über einen individuellen Link, der automatisch in der Buchungsbestätigung mitgeschickt wird. Dort finden Gäste alles Wichtige auf einen Blick: Ihre Kontaktdaten, WLAN-Zugangsdaten, Parkplatz- und Hausinfos sowie Tipps zur Umgebung.
           </p>
           <div style={{ marginTop: 12, padding: '10px 14px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
-            Das Gästeportal funktioniert auch offline — Gäste können es nach dem ersten Öffnen ohne Internetverbindung nutzen.
+            Die Gäste-Lounge funktioniert auch offline — Gäste können sie nach dem ersten Öffnen ohne Internetverbindung nutzen.
           </div>
         </div>
 
@@ -108,7 +108,7 @@ export default async function GuestPortalSettingsPage() {
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Kontakt & Erreichbarkeit</h2>
-                <p style={sectionIntroStyle}>Werden im Gästeportal als Kontaktmöglichkeiten angezeigt.</p>
+                <p style={sectionIntroStyle}>Werden in der Gäste-Lounge als Kontaktmöglichkeiten angezeigt.</p>
               </div>
               {caretSvg}
             </summary>
@@ -139,7 +139,7 @@ export default async function GuestPortalSettingsPage() {
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Anreise</h2>
-                <p style={sectionIntroStyle}>Check-in Zeit und Hinweise zur Schlüsselübergabe — erscheinen im Gästeportal unter dem Tab „Anreise".</p>
+                <p style={sectionIntroStyle}>Check-in Zeit und Hinweise zur Schlüsselübergabe — erscheinen in der Gäste-Lounge unter dem Tab „Anreise".</p>
               </div>
               {caretSvg}
             </summary>
@@ -170,7 +170,7 @@ export default async function GuestPortalSettingsPage() {
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Abreise</h2>
-                <p style={sectionIntroStyle}>Hinweise zur Abreise — erscheinen im Gästeportal unter dem Tab „Abreise".</p>
+                <p style={sectionIntroStyle}>Hinweise zur Abreise — erscheinen in der Gäste-Lounge unter dem Tab „Abreise".</p>
               </div>
               {caretSvg}
             </summary>
@@ -190,7 +190,7 @@ export default async function GuestPortalSettingsPage() {
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Hausinfos / Gästemappe</h2>
-                <p style={sectionIntroStyle}>WLAN, Parkplatz, Hausordnung und Notfallnummern — einmal einpflegen, immer im Gästeportal verfügbar.</p>
+                <p style={sectionIntroStyle}>WLAN, Parkplatz, Hausordnung und Notfallnummern — einmal einpflegen, immer in der Gäste-Lounge verfügbar.</p>
               </div>
               {caretSvg}
             </summary>
@@ -237,7 +237,7 @@ export default async function GuestPortalSettingsPage() {
           <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={sectionTitleStyle}>Umgebung</h2>
-              <p style={sectionIntroStyle}>Restaurants, Aktivitäten und Events — erscheinen im Gästeportal unter dem Tab „Umgebung".</p>
+              <p style={sectionIntroStyle}>Restaurants, Aktivitäten und Events — erscheinen in der Gäste-Lounge unter dem Tab „Umgebung".</p>
             </div>
             {caretSvg}
           </summary>

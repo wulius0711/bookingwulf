@@ -153,7 +153,7 @@ export default async function BookingConfirmedPage({
                 textAlign: 'center',
               }}
             >
-              Zum Gästeportal →
+              Zur Gäste-Lounge →
             </a>
           )}
         </div>

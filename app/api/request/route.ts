@@ -600,10 +600,10 @@ export async function POST(req: Request) {
               ${portalUrl ? `
                 ${buildDivider()}
                 <div style="margin-top:4px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
-                  <p style="margin:0 0 10px;font-size:14px;color:#374151;font-weight:600;">Ihr Gästeportal</p>
+                  <p style="margin:0 0 10px;font-size:14px;color:#374151;font-weight:600;">Ihre Gäste-Lounge</p>
                   <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Alle Details zu Ihrer Buchung, Check-In, Kontakt und mehr — jederzeit abrufbar.</p>
                   <a href="${portalUrl}" style="display:inline-block;padding:10px 20px;background:${accent};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
-                    Gästeportal öffnen →
+                    Gäste-Lounge öffnen →
                   </a>
                 </div>
               ` : ''}
