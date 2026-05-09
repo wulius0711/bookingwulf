@@ -1,10 +1,17 @@
 import { prisma } from '@/src/lib/prisma';
 import { notFound } from 'next/navigation';
+import type { Viewport } from 'next';
 import GuestPortal from './GuestPortal';
 
 type Props = { params: Promise<{ token: string }> };
 
 export const dynamic = 'force-dynamic';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#111827',
+};
 
 export async function generateMetadata({ params }: Props) {
   const { token } = await params;

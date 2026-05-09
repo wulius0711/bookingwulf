@@ -231,6 +231,10 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   }, []);
 
   useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
     localStorage.setItem('gp_lang', lang);
   }, [lang]);
 
@@ -348,7 +352,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       --accent-fg: ${accent};
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; display: block; background: #f0f2f5; color: #111827; min-height: 100vh; padding: 12px 12px 0; padding-bottom: env(safe-area-inset-bottom); }
     .wrap { max-width: 560px; margin: 0 auto; padding-bottom: max(110px, calc(90px + env(safe-area-inset-bottom))); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.09); }
     .header { background: var(--accent); color: var(--on-accent); padding: 24px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .header-left { flex: 1; min-width: 0; }
@@ -447,16 +451,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   `;
 
   return (
-    <html lang={lang}>
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content={accent} />
-        <link rel="manifest" href="/manifest.json" />
-        <style>{css}</style>
-      </head>
-      <body>
-        <div className="wrap">
+    <>
+      <style>{css}</style>
+      <div className="wrap">
           {/* Header */}
           <div className="header">
             <div className="header-left">
@@ -846,7 +843,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
             ))}
           </div>
         </nav>
-      </body>
-    </html>
+    </>
   );
 }
