@@ -374,13 +374,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
     .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; text-decoration: none; display: inline-flex; align-items: center; }
     @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes welcomeFade { from { opacity:0; } to { opacity:1; } }
-    @keyframes welcomeSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
-    .welcome-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(3px); animation:welcomeFade 0.2s ease; }
-    .welcome-card { background:#fff; border-radius:20px; overflow:hidden; max-width:360px; width:100%; position:relative; animation:welcomeSlide 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 20px 60px rgba(0,0,0,0.2); }
-    .welcome-top { background:var(--accent); color:var(--on-accent); padding:28px 24px 22px; }
-    .welcome-close { position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.2); border:none; color:inherit; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; font-family:inherit; }
-    .welcome-body { padding:20px 24px 24px; }
+    @keyframes welcomeSlide { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .welcome-card { position:relative; background:#fff; border-left:4px solid var(--accent); border-radius:0; padding:16px 44px 16px 20px; animation:welcomeSlide 0.25s ease; }
+    .welcome-close { position:absolute; top:12px; right:12px; background:none; border:none; color:#9ca3af; cursor:pointer; font-size:16px; font-family:inherit; line-height:1; padding:4px; }
     @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
     .content-anim > * { animation: cardReveal 0.28s ease both; }
     .content-anim > *:nth-child(1) { animation-delay: 0ms; }
@@ -479,22 +475,6 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   return (
     <>
       <style>{css}</style>
-      {showWelcome && (
-        <div className="welcome-overlay" onClick={() => { localStorage.setItem(`gp_welcome_seen_${token}`, '1'); setShowWelcome(false); }}>
-          <div className="welcome-card" onClick={(e) => e.stopPropagation()}>
-            <div className="welcome-top">
-              <button className="welcome-close" onClick={() => { localStorage.setItem(`gp_welcome_seen_${token}`, '1'); setShowWelcome(false); }}>✕</button>
-              <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>{hotel.name}</div>
-              <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em' }}>
-                {t.welcomeTitle}{booking.firstname ? `, ${booking.firstname}` : ''}!
-              </div>
-            </div>
-            <div className="welcome-body">
-              <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.65 }}>{t.welcomeMsg}</p>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="wrap">
           {/* Header */}
           <div className="header">
@@ -527,6 +507,17 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
               </div>
             </div>
           </div>
+
+          {/* Welcome card */}
+          {showWelcome && (
+            <div className="welcome-card">
+              <button className="welcome-close" onClick={() => { localStorage.setItem(`gp_welcome_seen_${token}`, '1'); setShowWelcome(false); }}>✕</button>
+              <div style={{ fontSize: 13, fontWeight: 700, color: accentOnLight, marginBottom: 4 }}>
+                {t.welcomeTitle}{booking.firstname ? `, ${booking.firstname}` : ''}!
+              </div>
+              <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.5 }}>{t.welcomeMsg}</div>
+            </div>
+          )}
 
           {/* Tab: Anreise */}
           {tab === 'arrival' && (
