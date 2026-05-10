@@ -43,7 +43,7 @@ export default function PlanSelector({ hotelId, currentPlan, plans }: Props) {
       <button
         onClick={handleSave}
         disabled={loading || selected === currentPlan}
-        className="btn-primary"
+        className="ui-btn ui-btn-primary ui-btn-md"
         style={{ opacity: loading || selected === currentPlan ? 0.5 : 1, cursor: selected === currentPlan ? 'default' : 'pointer' }}
       >
         {loading ? 'Speichern…' : 'Setzen'}

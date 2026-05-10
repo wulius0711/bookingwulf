@@ -390,7 +390,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
           <div className="admin-form-actions">
             <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
-            <button type="submit" className="btn-primary">Änderungen speichern</button>
+            <button type="submit" className="ui-btn ui-btn-primary ui-btn-md">Änderungen speichern</button>
 
           </div>
         </form>

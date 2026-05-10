@@ -98,15 +98,6 @@
   background-attachment: fixed;
 }
 
-/* Dark mode gradient buttons — uses theme-aware variables so accent color persists */
-.dark .btn-primary,
-[data-theme="dark"] .btn-primary {
-  background: var(--accent-gradient) !important;
-}
-.dark .btn-primary:hover:not(:disabled),
-[data-theme="dark"] .btn-primary:hover:not(:disabled) {
-  background: var(--accent-gradient-hover) !important;
-}
 
 /* Dark mode card/surface glow */
 .dark .admin-content > *,
@@ -800,25 +791,6 @@ details.settings-section[open] > summary span {
   padding-top: 16px;
 }
 
-.btn-primary {
-  padding: 11px 24px;
-  background: var(--accent);
-  color: var(--text-on-accent);
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-primary:disabled {
-  opacity: 0.7;
-  cursor: default;
-}
 
 .btn-cancel {
   padding: 11px 20px;
@@ -1024,18 +996,6 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
 }
 
 /* ─── Button hover & press effects ─────────────────────────────── */
-.btn-primary {
-  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
-}
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-.btn-primary:active:not(:disabled) {
-  transform: scale(0.97);
-  box-shadow: none;
-}
-
 .btn-secondary {
   transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
@@ -1047,21 +1007,11 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   transform: scale(0.97);
 }
 
-/* Subtle gradient for primary buttons */
-.btn-primary {
-  background: var(--accent-gradient) !important;
-}
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-gradient-hover) !important;
-}
-
 /* Shine sweep on hover */
-.btn-primary,
 .btn-shine {
   position: relative;
   overflow: hidden;
 }
-.btn-primary::after,
 .btn-shine::after {
   content: '';
   position: absolute;
@@ -1075,7 +1025,6 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   pointer-events: none;
   z-index: 1;
 }
-.btn-primary:hover:not(:disabled)::after,
 .btn-shine:hover:not(:disabled)::after {
   left: 120%;
 }

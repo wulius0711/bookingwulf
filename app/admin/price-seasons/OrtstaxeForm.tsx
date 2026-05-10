@@ -113,7 +113,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
       )}
 
       <div className="admin-form-actions">
-        <button type="submit" disabled={pending} className="btn-primary" style={{ opacity: pending ? 0.7 : 1 }}>
+        <button type="submit" disabled={pending} className="ui-btn ui-btn-primary ui-btn-md">
           {pending ? 'Speichern…' : 'Speichern'}
         </button>
         {saved && (

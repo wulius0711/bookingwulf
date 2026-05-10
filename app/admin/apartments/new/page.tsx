@@ -276,7 +276,7 @@ export default async function NewApartmentPage() {
           {/* Actions */}
           <div className="admin-form-actions">
             <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
-            <button type="submit" className="btn-primary">Apartment anlegen</button>
+            <button type="submit" className="ui-btn ui-btn-primary ui-btn-md">Apartment anlegen</button>
 
           </div>
 

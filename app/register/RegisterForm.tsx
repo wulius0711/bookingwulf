@@ -110,7 +110,7 @@ export default function RegisterForm() {
             </label>
 
             <button
-              className="btn-primary"
+              className="ui-btn ui-btn-primary ui-btn-md"
               type="submit"
               disabled={pending}
               style={{
