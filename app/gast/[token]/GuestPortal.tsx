@@ -396,7 +396,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; text-decoration: none; display: inline-flex; align-items: center; }
     @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes welcomeSlide { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-    .welcome-card { position:relative; background:#fff; border-left:4px solid var(--accent); border-radius:0; padding:16px 44px 16px 20px; animation:welcomeSlide 0.25s ease; }
+    .welcome-card { position:relative; background:#fff; border-left:4px solid var(--accent); border-top-left-radius:10px; border-bottom:1px solid #f0f0f0; padding:16px 44px 16px 20px; animation:welcomeSlide 0.25s ease; }
     .welcome-close { position:absolute; top:12px; right:12px; background:none; border:none; color:#9ca3af; cursor:pointer; font-size:16px; font-family:inherit; line-height:1; padding:4px; }
     @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
     .content-anim > * { animation: cardReveal 0.28s ease both; }
