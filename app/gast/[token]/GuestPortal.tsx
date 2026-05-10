@@ -129,6 +129,8 @@ const TRANSLATIONS = {
     navMessages: 'Nachrichten', navCheckout: 'Abreise',
     cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Sehenswürdigkeit', activity: '🏔️ Aktivität', event: '🎉 Events', shopping: '🛍️ Einkaufen', emergency: '🏥 Wichtiges' },
     locale: 'de-AT',
+    welcomeTitle: 'Herzlich willkommen',
+    welcomeMsg: 'Schön, dass Sie da sind. Wir wünschen Ihnen einen wunderschönen Aufenthalt.',
   },
   en: {
     guestportal: 'Guest Lounge', night: 'night', nights: 'nights',
@@ -163,6 +165,8 @@ const TRANSLATIONS = {
     navMessages: 'Messages', navCheckout: 'Departure',
     cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Attraction', activity: '🏔️ Activity', event: '🎉 Events', shopping: '🛍️ Shopping', emergency: '🏥 Important' },
     locale: 'en-GB',
+    welcomeTitle: 'Welcome',
+    welcomeMsg: "We're so glad you're here. Wishing you a wonderful stay.",
   },
   it: {
     guestportal: 'Guest Lounge', night: 'notte', nights: 'notti',
@@ -197,6 +201,8 @@ const TRANSLATIONS = {
     navMessages: 'Messaggi', navCheckout: 'Partenza',
     cats: { restaurant: '🍽️ Ristorante & Caffè', attraction: '🏛️ Attrazione', activity: '🏔️ Attività', event: '🎉 Eventi', shopping: '🛍️ Shopping', emergency: '🏥 Importante' },
     locale: 'it-IT',
+    welcomeTitle: 'Benvenuti',
+    welcomeMsg: 'Siamo felici di avervi qui. Vi auguriamo un soggiorno meraviglioso.',
   },
 } as const;
 type Lang = keyof typeof TRANSLATIONS;
@@ -206,6 +212,11 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
   const accentOnLight = hexLuminance(accent) > 0.4 ? '#374151' : accent;
   const accentOnDark = hexLuminance(accent) < 0.3 ? '#e2e8f0' : accent;
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem(`gp_welcome_seen_${token}`)) setShowWelcome(true);
+  }, [token]);
   const [tab, setTab] = useState<Tab>('arrival');
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [msgInput, setMsgInput] = useState('');
@@ -363,6 +374,13 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .header-sub { font-size: 14px; opacity: 0.8; margin-top: 4px; }
     .header-checkin-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.55); background: rgba(255,255,255,0.15); color: inherit; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; text-decoration: none; display: inline-flex; align-items: center; }
     @keyframes cardReveal { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes welcomeFade { from { opacity:0; } to { opacity:1; } }
+    @keyframes welcomeSlide { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+    .welcome-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(3px); animation:welcomeFade 0.2s ease; }
+    .welcome-card { background:#fff; border-radius:20px; overflow:hidden; max-width:360px; width:100%; position:relative; animation:welcomeSlide 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    .welcome-top { background:var(--accent); color:var(--on-accent); padding:28px 24px 22px; }
+    .welcome-close { position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.2); border:none; color:inherit; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; font-family:inherit; }
+    .welcome-body { padding:20px 24px 24px; }
     @keyframes bwPop { 0%{transform:scale(0.6);opacity:0} 70%{transform:scale(1.18)} 100%{transform:scale(1);opacity:1} }
     .content-anim > * { animation: cardReveal 0.28s ease both; }
     .content-anim > *:nth-child(1) { animation-delay: 0ms; }
@@ -461,6 +479,22 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   return (
     <>
       <style>{css}</style>
+      {showWelcome && (
+        <div className="welcome-overlay" onClick={() => { localStorage.setItem(`gp_welcome_seen_${token}`, '1'); setShowWelcome(false); }}>
+          <div className="welcome-card" onClick={(e) => e.stopPropagation()}>
+            <div className="welcome-top">
+              <button className="welcome-close" onClick={() => { localStorage.setItem(`gp_welcome_seen_${token}`, '1'); setShowWelcome(false); }}>✕</button>
+              <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>{hotel.name}</div>
+              <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em' }}>
+                {t.welcomeTitle}{booking.firstname ? `, ${booking.firstname}` : ''}!
+              </div>
+            </div>
+            <div className="welcome-body">
+              <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.65 }}>{t.welcomeMsg}</p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="wrap">
           {/* Header */}
           <div className="header">
