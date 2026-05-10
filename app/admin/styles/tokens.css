@@ -169,6 +169,16 @@
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
+/* Native date/time inputs — icon follows dark mode */
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="time"],
+[data-theme="dark"] input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
 /* ── Spacing Scale (4px base unit) ───────────────────────────────────── */
 
 :root {
