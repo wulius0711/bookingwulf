@@ -85,13 +85,12 @@
 
 /* Variants */
 .ui-btn-primary {
-  background: var(--accent-gradient);
+  background: var(--accent);
   color: var(--text-on-accent);
   border-color: transparent;
 }
 .ui-btn-primary:hover:not(:disabled):not([data-loading="true"]) {
-  background: var(--accent-gradient-hover);
-  filter: brightness(1.05);
+  filter: brightness(1.1);
 }
 .ui-btn-primary:active:not(:disabled) {
   filter: brightness(0.92);
