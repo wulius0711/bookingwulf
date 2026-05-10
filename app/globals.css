@@ -934,6 +934,10 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   }
 }
 
+/* ─── Zimmerplan detail backdrop ────────────────────────────────── */
+.gantt-detail-backdrop { background: rgba(0, 0, 0, 0.45) !important; }
+.dark .gantt-detail-backdrop { background: rgba(255, 255, 255, 0.25) !important; }
+
 /* ─── Button hover & press effects ─────────────────────────────── */
 
 /* Shine sweep on hover */

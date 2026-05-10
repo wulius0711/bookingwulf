@@ -123,6 +123,7 @@
   --btn-danger-bg-hover: #b91c1c;
   --text-on-danger:      #ffffff;
   --overlay-bg:          rgba(0, 0, 0, 0.4);
+  --gantt-backdrop:      rgba(0, 0, 0, 0.45);
 }
 
 /* ── Semantic Tokens — Dark Mode ──────────────────────────────────────── */
@@ -160,6 +161,7 @@
   --btn-danger-bg-hover: #dc2626;
   --text-on-danger:      #ffffff;
   --overlay-bg:          rgba(0, 0, 0, 0.6);
+  --gantt-backdrop:      rgba(255, 255, 255, 0.25);
 
   /* Shadows — heavier in dark mode */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
