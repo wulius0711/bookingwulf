@@ -21,7 +21,7 @@ export default async function ThingsToSeePage() {
     : [[], []];
 
   return (
-    <div style={{ maxWidth: 760, padding: '32px 24px' }}>
+    <main className="admin-page" style={{ maxWidth: 760 }}>
       <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 6 }}>
         Umgebung
       </h1>
@@ -40,6 +40,6 @@ export default async function ThingsToSeePage() {
         }))}
         apartments={apartments}
       />
-    </div>
+    </main>
   );
 }
