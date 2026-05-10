@@ -171,7 +171,7 @@ export default async function PriceSeasonsPage() {
             </Link>
           </div>
           {seasons.length === 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '40px 20px' }}>
+            <div className="ui-card-empty">
               <EmptyState title="Keine Preiszeiträume vorhanden." />
               <Link href="/admin/price-seasons/new" className="ui-btn ui-btn-primary ui-btn-md">
                 Neuen Preiszeitraum anlegen

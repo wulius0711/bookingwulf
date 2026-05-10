@@ -120,7 +120,7 @@ export default async function ApartmentsAdminPage() {
       </div>
 
       {apartments.length === 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        <div className="ui-card-empty">
           <EmptyState
             title="Noch keine Apartments vorhanden."
             description="Lege dein erstes Apartment an."

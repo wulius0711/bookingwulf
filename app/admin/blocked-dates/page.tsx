@@ -94,7 +94,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
             </h2>
           </div>
           {ranges.length === 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div className="ui-card-empty">
               <EmptyState title="Noch keine Sperrzeiten vorhanden." />
               <Link href="/admin/blocked-dates/new" className="ui-btn ui-btn-primary ui-btn-md" style={{ textDecoration: 'none' }}>
                 Neue Sperrzeit anlegen
