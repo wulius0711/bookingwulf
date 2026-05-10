@@ -56,12 +56,17 @@ type Props = {
   isSuperAdmin?: boolean;
 };
 
+function slugify(str: string) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef) {
   const pathname = usePathname();
   const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
   const [shaking, setShaking] = useState(false);
+  const tooltipId = `tooltip-${slugify(href)}`;
   const tourId = href.replace('/admin/', '').replace('/admin', 'overview') || 'overview';
   const iconEl = icon ? NAV_ICONS[icon] : null;
 
@@ -71,10 +76,13 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
         type="button"
         className={shaking ? 'shake sidebar-nav-item' : 'sidebar-nav-item'}
         aria-disabled="true"
+        aria-describedby={upgradeLabel ? tooltipId : undefined}
         onClick={() => { setShaking(true); setTimeout(() => setShaking(false), 400); }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
+        onFocus={() => setShowTooltip(true)}
+        onBlur={() => setShowTooltip(false)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -83,7 +91,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
           borderRadius: 8,
           fontSize: 13,
           fontWeight: 500,
-          color: '#c0c5ce',
+          color: 'var(--text-subtle)',
           cursor: 'default',
           userSelect: 'none',
           background: 'none',
@@ -94,23 +102,28 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
       >
         {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0, opacity: 0.5 }}>{iconEl}</span>}
         {label} 🔒
-        {showTooltip && upgradeLabel && (
-          <span role="tooltip" style={{
-            position: 'fixed',
-            left: pos.x + 14,
-            top: pos.y + 14,
-            zIndex: 9999,
-            background: 'var(--text-primary)',
-            color: 'var(--surface)',
-            fontSize: 12,
-            fontWeight: 500,
-            padding: '5px 10px',
-            borderRadius: 0,
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-            boxShadow: '2px 2px 0 rgba(0,0,0,0.25)',
-          }}>
-            <span style={{
+        {upgradeLabel && (
+          <span
+            id={tooltipId}
+            role="tooltip"
+            style={{
+              position: 'fixed',
+              left: pos.x + 14,
+              top: pos.y + 14,
+              zIndex: 9999,
+              background: 'var(--text-primary)',
+              color: 'var(--surface)',
+              fontSize: 12,
+              fontWeight: 500,
+              padding: '5px 10px',
+              borderRadius: 0,
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              boxShadow: '2px 2px 0 rgba(0,0,0,0.25)',
+              visibility: showTooltip ? 'visible' : 'hidden',
+            }}
+          >
+            <span aria-hidden="true" style={{
               position: 'absolute',
               top: -5,
               left: 10,
@@ -179,7 +192,7 @@ function NavGroup({ group }: { group: NavGroup }) {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-controls={`nav-group-${group.label}`}
+        aria-controls={`nav-group-${slugify(group.label)}`}
         style={{
           width: '100%',
           display: 'flex',
@@ -198,6 +211,7 @@ function NavGroup({ group }: { group: NavGroup }) {
       >
         {group.label}
         <svg
+          aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="12"
           height="12"
@@ -212,7 +226,7 @@ function NavGroup({ group }: { group: NavGroup }) {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <div id={`nav-group-${group.label}`} style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease, padding 0.2s ease', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <div id={`nav-group-${slugify(group.label)}`} style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease, padding 0.2s ease', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {group.items.map((item) => (
           <SidebarNavItem key={item.href} {...item} />
         ))}
@@ -224,6 +238,13 @@ function NavGroup({ group }: { group: NavGroup }) {
 export default function Sidebar({ navGroups, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setMobileOpen(false); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileOpen]);
 
   async function handleHotelSwitch(value: string) {
     const hotelId = value === '' ? null : Number(value);
@@ -261,7 +282,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
       )}
 
       {/* Sidebar */}
-      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} style={{ background: 'var(--sidebar-bg)' }}>
+      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} aria-label="Sidebar" style={{ background: 'var(--sidebar-bg)' }}>
         {/* Logo */}
         <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid var(--sidebar-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />

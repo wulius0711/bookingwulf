@@ -68,7 +68,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { label: 'Konfiguration', items: [
       { href: '/admin/settings', label: 'Widget & Design', icon: 'settings' },
       { href: '/admin/guestportal', label: 'Gäste-Lounge', icon: 'guestportal' },
-      { href: '/admin/things-to-see', label: 'Sehenswürdigkeiten', icon: 'surroundings' },
+      { href: '/admin/things-to-see', label: 'Umgebung', icon: 'surroundings' },
       { href: '/admin/email-templates', label: 'E-Mails', icon: 'emails' },
       { href: '/admin/nuki', label: 'Schlüsselloses Einchecken', icon: 'nuki' },
       { href: '/admin/beds24', label: 'Beds24 Channel Manager', icon: 'beds24' },
