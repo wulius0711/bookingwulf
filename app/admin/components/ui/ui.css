@@ -92,6 +92,14 @@
 .ui-btn-primary:hover:not(:disabled):not([data-loading="true"]) {
   filter: brightness(1.1);
 }
+.dark .ui-btn-primary,
+[data-theme="dark"] .ui-btn-primary {
+  background: color-mix(in srgb, var(--accent) 70%, #000);
+}
+.dark .ui-btn-primary:hover:not(:disabled):not([data-loading="true"]),
+[data-theme="dark"] .ui-btn-primary:hover:not(:disabled):not([data-loading="true"]) {
+  filter: brightness(1.15);
+}
 .ui-btn-primary:active:not(:disabled) {
   filter: brightness(0.92);
 }
