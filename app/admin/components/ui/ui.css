@@ -60,6 +60,7 @@
   outline: none;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .ui-btn:focus-visible {
@@ -103,21 +104,21 @@
 .ui-btn-primary:active:not(:disabled) {
   filter: brightness(0.92);
 }
-.ui-btn-primary::after {
+.ui-btn-primary::before {
   content: '';
   position: absolute;
-  top: -50px;
-  left: -75px;
-  width: 50px;
-  height: 155px;
-  background: var(--shimmer-color);
-  transform: rotate(35deg);
-  transition: left 550ms cubic-bezier(0.19, 1, 0.22, 1);
+  top: 0;
+  left: -100%;
+  width: 75%;
+  height: 100%;
+  background: var(--shimmer-gradient);
+  transform: skewX(-25deg);
+  transition: left 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
-  z-index: 1;
+  z-index: -1;
 }
-.ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::after {
-  left: 120%;
+.ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::before {
+  left: 125%;
 }
 
 .ui-btn-secondary {
