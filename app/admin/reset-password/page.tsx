@@ -92,7 +92,6 @@ export default function ResetPasswordPage() {
                   borderRadius: 8,
                   border: '1px solid var(--border)',
                   fontSize: 14,
-                  outline: 'none',
                   color: '#111',
                 }}
               />
@@ -113,7 +112,6 @@ export default function ResetPasswordPage() {
                   borderRadius: 8,
                   border: '1px solid var(--border)',
                   fontSize: 14,
-                  outline: 'none',
                   color: '#111',
                 }}
               />

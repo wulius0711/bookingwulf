@@ -83,7 +83,6 @@ export default function ForgotPasswordPage() {
                   borderRadius: 8,
                   border: '1px solid var(--border)',
                   fontSize: 14,
-                  outline: 'none',
                   color: '#111',
                 }}
               />

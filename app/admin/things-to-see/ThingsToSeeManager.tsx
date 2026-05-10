@@ -221,8 +221,8 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
-                <button style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={addManual} disabled={isPending || !manualData.title.trim()}>Hinzufügen</button>
+                <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
+                <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={addManual} disabled={isPending || !manualData.title.trim()}>Hinzufügen</button>
               </div>
             </div>
           )}
@@ -288,7 +288,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
+                <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
                 <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={saveEdit}>Speichern</button>
               </div>
             </div>
@@ -315,11 +315,11 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                    <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
-                    <button style={{ ...btn, background: item.isActive ? 'var(--status-booked-bg)' : 'var(--surface-2)', color: item.isActive ? 'var(--status-booked-text)' : 'var(--text-muted)', padding: '5px 10px' }} onClick={() => toggleActive(item.id, !item.isActive)}>
+                    <button aria-label="Eintrag bearbeiten" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
+                    <button aria-label={item.isActive ? 'Eintrag deaktivieren' : 'Eintrag aktivieren'} style={{ ...btn, background: item.isActive ? 'var(--status-booked-bg)' : 'var(--surface-2)', color: item.isActive ? 'var(--status-booked-text)' : 'var(--text-muted)', padding: '5px 10px' }} onClick={() => toggleActive(item.id, !item.isActive)}>
                       {item.isActive ? 'Aktiv' : 'Inaktiv'}
                     </button>
-                    <button style={{ ...btn, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', padding: '5px 10px' }} onClick={() => setConfirmId(item.id)}>🗑️</button>
+                    <button aria-label="Eintrag löschen" style={{ ...btn, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', padding: '5px 10px' }} onClick={() => setConfirmId(item.id)}>🗑️</button>
                   </div>
                 </div>
               </div>

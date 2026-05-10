@@ -133,6 +133,7 @@
 .dark,
 [data-theme="dark"] {
   --border-strong: #364466;
+  --text-secondary: #b4c0d8;
 
   /* Status colors — desaturated so they don't glow on dark backgrounds */
   --status-new-bg:   rgba(59, 130, 246, 0.12);

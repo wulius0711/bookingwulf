@@ -121,6 +121,28 @@
   background: var(--bg-surface-sunken);
 }
 
+/* Shine sweep on hover — matches .btn-shine from globals.css */
+.ui-btn-primary::after,
+.ui-btn-secondary::after,
+.ui-btn-ghost::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -75px;
+  width: 50px;
+  height: 155px;
+  background: rgba(255, 255, 255, 0.22);
+  transform: rotate(35deg);
+  transition: left 550ms cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+.ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::after,
+.ui-btn-secondary:hover:not(:disabled):not([data-loading="true"])::after,
+.ui-btn-ghost:hover:not(:disabled):not([data-loading="true"])::after {
+  left: 120%;
+}
+
 .ui-btn-danger {
   background: var(--btn-danger-bg);
   color: var(--text-on-danger);
@@ -471,4 +493,63 @@
   color: var(--text-secondary);
   display: flex;
   align-items: center;
+}
+
+/* ── Range Slider ─────────────────────────────────────────────────────── */
+/* --progress (0%–100%) set as inline style drives the filled-track color */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--progress, 50%),
+    var(--border-strong) var(--progress, 50%),
+    var(--border-strong) 100%
+  );
+  cursor: pointer;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-strong);
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }

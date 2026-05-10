@@ -216,7 +216,7 @@ export default function AdminChatWidget() {
                   disabled={loading}
                   style={{
                     flex: 1, border: '1px solid var(--border)', borderRadius: 8,
-                    padding: '8px 12px', fontSize: 13, outline: 'none',
+                    padding: '8px 12px', fontSize: 13,
                     background: loading ? 'var(--surface-2)' : 'var(--surface)',
                   }}
                 />

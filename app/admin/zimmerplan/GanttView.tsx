@@ -138,7 +138,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                 <select
                   value={aptId}
                   onChange={(e) => setAptId(Number(e.target.value))}
-                  style={{ fontSize: 16, fontWeight: 700, color: '#111', border: 'none', background: 'transparent', padding: '0 22px 0 0', cursor: 'pointer', appearance: 'none', outline: 'none', maxWidth: 260 }}
+                  style={{ fontSize: 16, fontWeight: 700, color: '#111', border: 'none', background: 'transparent', padding: '0 22px 0 0', cursor: 'pointer', appearance: 'none', maxWidth: 260 }}
                 >
                   {allApts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </select>

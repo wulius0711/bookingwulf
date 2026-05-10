@@ -136,7 +136,7 @@ export default function FeedbackButton() {
                     required
                     style={{
                       width: '100%', padding: '10px 12px', border: '1px solid var(--border)',
-                      borderRadius: 8, fontSize: 14, resize: 'vertical', outline: 'none',
+                      borderRadius: 8, fontSize: 14, resize: 'vertical',
                       lineHeight: 1.6, boxSizing: 'border-box', color: 'var(--text-primary)',
                     }}
                   />
@@ -193,6 +193,7 @@ export default function FeedbackButton() {
 
                 <button
                   type="submit"
+                  className="btn-shine"
                   disabled={sending || !message.trim()}
                   style={{
                     ...btnBase, padding: '11px',
@@ -206,6 +207,7 @@ export default function FeedbackButton() {
 
                 <button
                   type="button"
+                  className="btn-shine"
                   onClick={handleClose}
                   style={{ ...btnBase, background: 'none', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
                 >

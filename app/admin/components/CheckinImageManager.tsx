@@ -99,8 +99,8 @@ export default function CheckinImageManager({
                     autoFocus
                   />
                   <div style={{ display: 'flex', gap: 6 }}>
-                    <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', flex: 1 }} onClick={() => setEditId(null)}>Abbrechen</button>
-                    <button style={{ ...btn, background: '#111827', color: '#fff', flex: 1 }} onClick={() => saveCaption(img.id)} disabled={isPending}>OK</button>
+                    <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', flex: 1 }} onClick={() => setEditId(null)}>Abbrechen</button>
+                    <button className="btn-shine" style={{ ...btn, background: '#111827', color: '#fff', flex: 1 }} onClick={() => saveCaption(img.id)} disabled={isPending}>OK</button>
                   </div>
                 </div>
               ) : (

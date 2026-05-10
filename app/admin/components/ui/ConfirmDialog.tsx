@@ -66,6 +66,7 @@ export default function ConfirmDialog({
         {requiresTyping && (
           <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
             <label
+              htmlFor="confirm-text-input"
               style={{
                 fontSize: 'var(--text-sm)',
                 color: 'var(--text-primary)',
@@ -86,6 +87,7 @@ export default function ConfirmDialog({
               eingeben:
             </label>
             <input
+              id="confirm-text-input"
               className="ui-input"
               type="text"
               value={typed}

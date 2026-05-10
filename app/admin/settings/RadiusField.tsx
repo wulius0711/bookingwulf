@@ -41,7 +41,7 @@ export function RadiusField({
           max={100}
           value={Math.min(value, 100)}
           onChange={(e) => setValue(Number(e.target.value))}
-          style={{ width: 90, accentColor: '#111' }}
+          style={{ width: 90, '--progress': `${Math.min(value, 100)}%` } as React.CSSProperties}
         />
         <input
           ref={inputRef}

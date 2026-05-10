@@ -11,12 +11,13 @@ export default function DeleteFeedbackButton({ action }: { action: () => Promise
       <button
         type="submit"
         title="Löschen"
+        aria-label="Löschen"
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
-          padding: 4, color: '#d1d5db', display: 'flex', alignItems: 'center', lineHeight: 1,
+          padding: 4, color: 'var(--text-subtle)', display: 'flex', alignItems: 'center', lineHeight: 1,
         }}
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
         </svg>
       </button>

@@ -92,7 +92,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
           textAlign: 'left',
         }}
       >
-        {iconEl && <span style={{ display: 'flex', flexShrink: 0, opacity: 0.5 }}>{iconEl}</span>}
+        {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0, opacity: 0.5 }}>{iconEl}</span>}
         {label} 🔒
         {showTooltip && upgradeLabel && (
           <span role="tooltip" style={{
@@ -140,14 +140,14 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
         borderRadius: 8,
         fontSize: 13,
         fontWeight: active ? 600 : 500,
-        color: active ? 'var(--accent)' : 'var(--text-muted)',
+        color: active ? 'var(--accent)' : 'var(--text-secondary)',
         textDecoration: 'none',
         background: active ? 'var(--accent-light)' : 'transparent',
         borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
         transition: 'background 0.12s ease, color 0.12s ease',
       }}
     >
-      {iconEl && <span style={{ display: 'flex', flexShrink: 0 }}>{iconEl}</span>}
+      {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0 }}>{iconEl}</span>}
       {label}
     </a>
   );
@@ -179,6 +179,7 @@ function NavGroup({ group }: { group: NavGroup }) {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls={`nav-group-${group.label}`}
         style={{
           width: '100%',
           display: 'flex',
@@ -211,7 +212,7 @@ function NavGroup({ group }: { group: NavGroup }) {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <div style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease, padding 0.2s ease', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <div id={`nav-group-${group.label}`} style={{ padding: open ? '2px 4px 6px' : 0, overflow: 'hidden', maxHeight: open ? 1000 : 0, transition: 'max-height 0.2s ease, padding 0.2s ease', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {group.items.map((item) => (
           <SidebarNavItem key={item.href} {...item} />
         ))}
@@ -243,7 +244,10 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         <img
           src="/bookingwulf-logo.png"
           alt="bookingwulf"
+          role="button"
+          tabIndex={0}
           onClick={() => setMobileOpen(true)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setMobileOpen(true); }}
           style={{ height: 36, cursor: 'pointer' }}
         />
       </div>
@@ -265,20 +269,21 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
             <button
               type="submit"
               title="Abmelden"
+              aria-label="Abmelden"
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
                 <line x1="21" y1="12" x2="9" y2="12"/>
               </svg>
-              <span style={{ fontSize: 9, letterSpacing: '0.04em' }}>logout</span>
+              <span aria-hidden="true" style={{ fontSize: 9, letterSpacing: '0.04em' }}>logout</span>
             </button>
           </form>
         </div>
 
         {/* Nav items */}
-        <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <nav aria-label="Admin Navigation" style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
           {navGroups.map((group) => (
             <NavGroup key={group.label} group={group} />
           ))}

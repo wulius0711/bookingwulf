@@ -230,7 +230,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={createLead} className="btn-shine" style={{ padding: '7px 16px', background: '#111827', color: '#fff', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
-            <button onClick={() => setNewLeadOpen(false)} style={{ padding: '7px 16px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
+            <button onClick={() => setNewLeadOpen(false)} className="btn-shine" style={{ padding: '7px 16px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
           </div>
         </div>
       )}
@@ -318,7 +318,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                     {isEditing ? (
                       <div style={{ display: 'flex', gap: 6 }}>
                         <button onClick={() => saveEdit(lead.id)} className="btn-shine" style={{ padding: '4px 10px', background: '#111827', color: '#fff', border: 'none', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Speichern</button>
-                        <button onClick={() => setEditId(null)} style={{ padding: '4px 10px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Abbrechen</button>
+                        <button onClick={() => setEditId(null)} className="btn-shine" style={{ padding: '4px 10px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Abbrechen</button>
                       </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>

@@ -132,7 +132,6 @@ const inputStyle: React.CSSProperties = {
   fontSize: 14,
   background: 'var(--surface)',
   color: 'var(--text-primary)',
-  outline: 'none',
 };
 
 const smallInputStyle: React.CSSProperties = {

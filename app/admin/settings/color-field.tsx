@@ -87,7 +87,7 @@ export function ColorField({
             max={100}
             value={alpha}
             onChange={(e) => setAlpha(Number(e.target.value))}
-            style={{ flex: 1, accentColor: '#111', cursor: 'pointer' }}
+            style={{ flex: 1, cursor: 'pointer', '--progress': `${alpha}%` } as React.CSSProperties}
           />
           <span style={{ fontSize: 12, color: '#6b7280', width: 34, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{alpha}%</span>
         </div>
