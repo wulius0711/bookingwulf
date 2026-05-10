@@ -564,7 +564,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <a
-                  href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/gast/${request.checkinToken}`}
+                  href={`/gast/${request.checkinToken}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ fontSize: 12, color: 'var(--text-muted)', textDecoration: 'underline' }}

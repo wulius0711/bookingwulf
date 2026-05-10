@@ -230,6 +230,9 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const pillRef = useRef<HTMLSpanElement>(null);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const pillMounted = useRef(false);
   const bl = booking.language as Lang;
   const [lang, setLang] = useState<Lang>(bl in TRANSLATIONS ? bl : 'de');
   const t = TRANSLATIONS[lang];
@@ -317,6 +320,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     });
   }
 
+
   function handleTabChange(newTab: Tab) {
     setTab(newTab);
     setTabContentKey((k) => k + 1);
@@ -354,6 +358,23 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
     },
   ];
+
+  useEffect(() => {
+    const idx = navItems.findIndex(item => item.id === tab);
+    const btn = btnRefs.current[idx];
+    const pill = pillRef.current;
+    if (!btn || !pill) return;
+    if (!pillMounted.current) {
+      pillMounted.current = true;
+      pill.style.transition = 'none';
+      pill.style.left = btn.offsetLeft + 'px';
+      pill.style.width = btn.offsetWidth + 'px';
+      requestAnimationFrame(() => { pill.style.transition = ''; });
+    } else {
+      pill.style.left = btn.offsetLeft + 'px';
+      pill.style.width = btn.offsetWidth + 'px';
+    }
+  }, [tab]);
 
   const css = `
     :root {
@@ -447,7 +468,8 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); pointer-events: none; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
     .bottom-nav-inner { pointer-events: all; display: flex; gap: 2px; background: rgba(18,18,18,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; padding: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09); width: 100%; max-width: 420px; }
     .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 8px; border: none; background: none; color: rgba(255,255,255,0.65); cursor: pointer; font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 0.03em; transition: color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 14px; white-space: nowrap; }
-    .nav-btn.active { color: #fff; background: rgba(255,255,255,0.14); }
+    .nav-btn.active { color: #fff; }
+    .nav-pill { position: absolute; top: 6px; bottom: 6px; background: rgba(255,255,255,0.14); border-radius: 14px; pointer-events: none; transition: left 0.25s ease-out, width 0.25s ease-out; }
     @media (prefers-color-scheme: dark) {
       :root { --accent-fg: ${accentOnDark}; }
       body { background: #0f172a; color: #f1f5f9; }
@@ -864,9 +886,16 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
 
         {/* Bottom Navigation */}
         <nav className="bottom-nav" aria-label="Navigation" style={{ transform: navVisible ? 'translateY(0)' : 'translateY(calc(100% + 32px))' }}>
-          <div className="bottom-nav-inner">
-            {navItems.map((item) => (
-              <button key={item.id} className={`nav-btn${tab === item.id ? ' active' : ''}`} onClick={() => handleTabChange(item.id)} aria-label={item.label}>
+          <div className="bottom-nav-inner" style={{ position: 'relative' }}>
+            <span ref={pillRef} className="nav-pill" />
+            {navItems.map((item, idx) => (
+              <button
+                key={item.id}
+                ref={el => { btnRefs.current[idx] = el; }}
+                className={`nav-btn${tab === item.id ? ' active' : ''}`}
+                onClick={() => handleTabChange(item.id)}
+                aria-label={item.label}
+              >
                 {item.icon}
                 {item.label}
               </button>
