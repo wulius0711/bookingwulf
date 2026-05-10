@@ -43,6 +43,11 @@
   --nav-group: #fdba74;
 }
 
+/* ─── Logo dark/light swap ────────────────────────────────────────── */
+.logo-dark { display: none; }
+.dark .logo-dark, [data-theme="dark"] .logo-dark { display: block; }
+.dark .logo-light, [data-theme="dark"] .logo-light { display: none; }
+
 /* ─── Dark mode ───────────────────────────────────────────────────── */
 .dark,
 [data-theme="dark"] {

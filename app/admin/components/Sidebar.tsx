@@ -262,15 +262,8 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
     <>
       {/* Mobile top bar */}
       <div className="mobile-topbar">
-        <img
-          src="/bookingwulf-logo.png"
-          alt="bookingwulf"
-          role="button"
-          tabIndex={0}
-          onClick={() => setMobileOpen(true)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setMobileOpen(true); }}
-          style={{ height: 36, cursor: 'pointer' }}
-        />
+        <img src="/bookingwulf-logo.png" alt="bookingwulf" className="logo-light" role="button" tabIndex={0} onClick={() => setMobileOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setMobileOpen(true); }} style={{ height: 36, cursor: 'pointer' }} />
+        <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" className="logo-dark" role="button" tabIndex={0} onClick={() => setMobileOpen(true)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setMobileOpen(true); }} style={{ height: 36, cursor: 'pointer' }} />
       </div>
 
       {/* Backdrop */}
@@ -285,7 +278,8 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
       <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} aria-label="Sidebar" style={{ background: 'var(--sidebar-bg)' }}>
         {/* Logo */}
         <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid var(--sidebar-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <img src="/bookingwulf-logo.png" alt="bookingwulf" style={{ height: 36 }} />
+          <img src="/bookingwulf-logo.png" alt="bookingwulf" className="logo-light" style={{ height: 36 }} />
+          <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" className="logo-dark" style={{ height: 36 }} />
           <form action={logout}>
             <button
               type="submit"
