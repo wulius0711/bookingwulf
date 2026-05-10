@@ -116,6 +116,10 @@
   pointer-events: none;
   z-index: 1;
 }
+.dark.theme-classic .ui-btn-primary::after,
+[data-theme="dark"].theme-classic .ui-btn-primary::after {
+  background: rgba(0, 0, 0, 0.12);
+}
 .ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::after {
   left: 120%;
 }
