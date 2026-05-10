@@ -939,7 +939,7 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   position: relative;
   overflow: hidden;
 }
-.btn-shine::before {
+.btn-shine::after {
   content: '';
   position: absolute;
   top: 0;
@@ -957,7 +957,7 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   pointer-events: none;
   z-index: 1;
 }
-.btn-shine:hover:not(:disabled)::before {
+.btn-shine:hover:not(:disabled)::after {
   left: 125%;
 }
 
