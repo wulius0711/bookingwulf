@@ -114,11 +114,11 @@ export default function AdminChatWidget() {
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M5 5l10 10M15 5L5 15" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M5 5l10 10M15 5L5 15" stroke="var(--text-on-accent)" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         ) : (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="var(--text-on-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         )}
       </button>
@@ -143,18 +143,18 @@ export default function AdminChatWidget() {
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="var(--text-on-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>bookingwulf Assistent</div>
-              <div style={{ fontSize: 11, color: '#6b7280' }}>Fragen zur Bedienung</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Fragen zur Bedienung</div>
             </div>
             {messages.length > 0 && (
               <button
                 onClick={clearChat}
                 title="Verlauf löschen"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-subtle)', display: 'flex', alignItems: 'center' }}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
@@ -178,7 +178,7 @@ export default function AdminChatWidget() {
               {/* Messages */}
               <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {messages.length === 0 && (
-                  <div style={{ fontSize: 13, color: '#6b7280', textAlign: 'center', marginTop: 8 }}>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', textAlign: 'center', marginTop: 8 }}>
                     Wie kann ich helfen? Stell mir eine Frage zur Bedienung von bookingwulf.
                   </div>
                 )}
@@ -187,7 +187,7 @@ export default function AdminChatWidget() {
                     alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
                     background: m.role === 'user' ? ACCENT : 'var(--surface-2)',
-                    color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
+                    color: m.role === 'user' ? 'var(--text-on-accent)' : 'var(--text-primary)',
                     borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                     padding: '8px 12px',
                     fontSize: 13,
@@ -198,7 +198,7 @@ export default function AdminChatWidget() {
                   </div>
                 ))}
                 {loading && (
-                  <div style={{ alignSelf: 'flex-start', background: 'var(--surface-2)', borderRadius: '12px 12px 12px 2px', padding: '8px 14px', fontSize: 20, color: '#9ca3af', letterSpacing: 2 }}>
+                  <div style={{ alignSelf: 'flex-start', background: 'var(--surface-2)', borderRadius: '12px 12px 12px 2px', padding: '8px 14px', fontSize: 20, color: 'var(--text-subtle)', letterSpacing: 2 }}>
                     ···
                   </div>
                 )}
@@ -226,7 +226,7 @@ export default function AdminChatWidget() {
                   style={{
                     padding: '8px 14px', borderRadius: 8, border: 'none',
                     background: loading || !input.trim() ? 'var(--border)' : ACCENT,
-                    color: loading || !input.trim() ? '#9ca3af' : '#fff',
+                    color: loading || !input.trim() ? 'var(--text-subtle)' : 'var(--text-on-accent)',
                     fontSize: 13, fontWeight: 600, cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s',
                   }}

@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import BlockedDateList from './BlockedDateList';
+import { EmptyState } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,18 +54,16 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Sperrzeiten</h1>
-            <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Zeiträume für Apartments sperren.</p>
+            <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Zeiträume für Apartments sperren.</p>
           </div>
-          <Link href="/admin/blocked-dates/new">
-            <button className="btn-shine" style={{ padding: '10px 16px', border: 'none', background: 'var(--accent)', color: '#fff', cursor: 'pointer', borderRadius: 8, fontSize: 14, fontWeight: 600 }}>
-              Neu anlegen
-            </button>
+          <Link href="/admin/blocked-dates/new" className="ui-btn ui-btn-primary ui-btn-md" style={{ textDecoration: 'none' }}>
+            Neu anlegen
           </Link>
         </div>
 
         {isSuperAdmin && (
           <form method="GET" style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
               Hotel
             </label>
             <select
@@ -81,7 +80,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
               Filtern
             </button>
             {selectedHotelId !== null && (
-              <a href="/admin/blocked-dates" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>
+              <a href="/admin/blocked-dates" style={{ fontSize: 13, color: 'var(--text-secondary)', textDecoration: 'none' }}>
                 Zurücksetzen
               </a>
             )}
@@ -95,11 +94,11 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
             </h2>
           </div>
           {ranges.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Sperrzeiten vorhanden.</p>
-              <a href="/admin/blocked-dates/new" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+              <EmptyState title="Noch keine Sperrzeiten vorhanden." />
+              <Link href="/admin/blocked-dates/new" className="ui-btn ui-btn-primary ui-btn-md" style={{ textDecoration: 'none' }}>
                 Neue Sperrzeit anlegen
-              </a>
+              </Link>
             </div>
           ) : (
             <div style={{ padding: '16px 20px', background: 'var(--surface-2)' }}>

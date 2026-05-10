@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button, ConfirmDialog } from '../components/ui';
 
 type Apartment = { id: number; name: string };
 
@@ -15,13 +16,7 @@ type Props = {
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '10px 12px', border: '1px solid var(--border)',
   borderRadius: 8, fontSize: 14, boxSizing: 'border-box', background: 'var(--surface)',
-};
-const btnStyle: React.CSSProperties = {
-  padding: '9px 18px', borderRadius: 8, border: 'none', background: '#111',
-  color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-};
-const btnOutline: React.CSSProperties = {
-  ...btnStyle, background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--border)',
+  color: 'var(--text-primary)',
 };
 
 export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, host }: Props) {
@@ -31,6 +26,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
   const [mappings, setMappings] = useState<Record<number, string>>(initialMappings);
   const [status, setStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
   const [saving, setSaving] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   async function handleConnect(e: React.FormEvent) {
     e.preventDefault();
@@ -53,7 +49,6 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
   }
 
   async function handleDisconnect() {
-    if (!confirm('Beds24-Verbindung wirklich trennen?')) return;
     await fetch('/api/admin/beds24', { method: 'DELETE' });
     setConnected(false);
     setEnabled(false);
@@ -103,37 +98,39 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         {connected ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
-              <span style={{ fontSize: 14, fontWeight: 600, color: '#16a34a' }}>Verbunden</span>
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--status-booked-text)', display: 'inline-block' }} />
+              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--status-booked-text)' }}>Verbunden</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer' }}>
-                <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} style={{ accentColor: '#111' }} />
+                <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} style={{ accentColor: 'var(--accent)' }} />
                 Sync aktiv
               </label>
-              <button onClick={handleDisconnect} style={btnOutline}>Trennen</button>
+              <Button variant="secondary" size="sm" onClick={() => setConfirmOpen(true)}>Trennen</Button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleConnect} style={{ display: 'grid', gap: 12 }}>
             <div style={{ display: 'grid', gap: 4 }}>
-              <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Invite Code</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Invite Code</label>
               <input type="password" value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Beds24 Invite Code" style={inputStyle} required />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button type="submit" className="btn-shine" style={btnStyle} disabled={saving}>{saving ? 'Verbinden…' : 'Verbinden'}</button>
+              <Button variant="primary" type="submit" loading={saving} disabled={saving}>
+                {saving ? 'Verbinden…' : 'Verbinden'}
+              </Button>
               {status && (
-                <span style={{ fontSize: 13, color: status.type === 'success' ? '#16a34a' : '#dc2626' }}>{status.msg}</span>
+                <span style={{ fontSize: 13, color: status.type === 'success' ? 'var(--status-booked-text)' : 'var(--status-cancelled-text)' }}>{status.msg}</span>
               )}
             </div>
-            <p style={{ fontSize: 12, color: '#9ca3af', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: 12, color: 'var(--text-disabled)', margin: 0, lineHeight: 1.5 }}>
               Den Invite Code generieren Sie in Beds24 unter Einstellungen → Marketplace → API → Invite Code generieren.
             </p>
           </form>
         )}
 
         {status && connected && (
-          <p style={{ fontSize: 13, color: status.type === 'success' ? '#16a34a' : '#dc2626', marginTop: 12 }}>{status.msg}</p>
+          <p style={{ fontSize: 13, color: status.type === 'success' ? 'var(--status-booked-text)' : 'var(--status-cancelled-text)', marginTop: 12 }}>{status.msg}</p>
         )}
       </div>
 
@@ -141,7 +138,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
       {connected && apartments.length > 0 && (
         <div style={cardStyle}>
           <p style={sectionTitle}>Zimmer-Zuordnung</p>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
             Tragen Sie pro Apartment die entsprechende Beds24 Room ID ein. Diese finden Sie in Beds24 unter Einstellungen → Zimmer.
           </p>
           <div style={{ display: 'grid', gap: 12 }}>
@@ -161,14 +158,24 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
       {connected && (
         <div style={cardStyle}>
           <p style={sectionTitle}>Webhook URL</p>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
             Tragen Sie diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
-          <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-muted)', wordBreak: 'break-all' }}>
-            {host}/api/beds24-webhook?token=<span style={{ color: '#9ca3af' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
+          <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
+            {host}/api/beds24-webhook?token=<span style={{ color: 'var(--text-disabled)' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
           </code>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleDisconnect}
+        title="Verbindung trennen"
+        description="Beds24-Verbindung wirklich trennen? Die Zimmerzuordnungen bleiben gespeichert."
+        confirmLabel="Trennen"
+        dangerous
+      />
     </div>
   );
 }
@@ -191,9 +198,9 @@ function MappingRow({ apt, initialValue, onSave }: { apt: Apartment; initialValu
         value={value}
         onChange={e => setValue(e.target.value)}
         placeholder="Room ID"
-        style={{ padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, boxSizing: 'border-box' }}
+        style={{ padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, boxSizing: 'border-box', background: 'var(--surface)', color: 'var(--text-primary)' }}
       />
-      <button onClick={handleSave} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: saved ? '#16a34a' : 'var(--text-muted)', fontWeight: saved ? 700 : 400 }}>
+      <button onClick={handleSave} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: saved ? 'var(--status-booked-text)' : 'var(--text-secondary)', fontWeight: saved ? 700 : 400 }}>
         {saved ? '✓' : 'Speichern'}
       </button>
     </div>

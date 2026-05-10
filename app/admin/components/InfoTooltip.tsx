@@ -17,7 +17,7 @@ export default function InfoTooltip({ text }: { text: string }) {
       <span
         onMouseEnter={show}
         onMouseLeave={() => setPos(null)}
-        style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: '50%', background: '#e5e7eb', color: '#6b7280', fontSize: 10, fontWeight: 700, cursor: 'help' }}
+        style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: '50%', background: 'var(--surface-2)', color: 'var(--text-muted)', fontSize: 10, fontWeight: 700, cursor: 'help' }}
       >
         i
       </span>
@@ -28,12 +28,13 @@ export default function InfoTooltip({ text }: { text: string }) {
             left: pos.x,
             top: pos.y - 10,
             transform: 'translate(-50%, -100%)',
-            background: '#1e293b',
-            color: '#fff',
+            background: 'var(--surface-2)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border)',
             fontSize: 12,
             lineHeight: 1.5,
             padding: '8px 12px',
-            borderRadius: 0,
+            borderRadius: 8,
             whiteSpace: 'normal',
             width: 220,
             zIndex: 9999,
@@ -51,7 +52,7 @@ export default function InfoTooltip({ text }: { text: string }) {
             height: 0,
             borderLeft: '7px solid transparent',
             borderRight: '7px solid transparent',
-            borderTop: '7px solid #1e293b',
+            borderTop: '7px solid var(--border)',
             zIndex: 9999,
             pointerEvents: 'none',
           }} />

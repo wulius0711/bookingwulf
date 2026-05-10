@@ -76,7 +76,7 @@ export default function FeatureToggles({ initialValues }: Props) {
       ))}
       <div style={{ height: 1, background: 'var(--border)' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '13px 16px 13px 32px', background: 'var(--surface-2)' }}>
-        <span style={{ fontSize: 13, color: '#6b7280' }}>Nur Buchung — Anfrage ausblenden</span>
+        <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Nur Buchung — Anfrage ausblenden</span>
         <IosToggle name="hideRequestOption" checked={!!values.hideRequestOption} onChange={() => toggle('hideRequestOption')} />
       </div>
     </div>

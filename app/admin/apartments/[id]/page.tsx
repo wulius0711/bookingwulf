@@ -22,7 +22,7 @@ const detailsStyle: React.CSSProperties = { border: '1px solid var(--border)', b
 const summaryStyle: React.CSSProperties = { padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' };
 const cardTitle: React.CSSProperties = { margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' };
 const cardBody: React.CSSProperties = { padding: '4px 20px 20px', display: 'grid', gap: 16 };
-const caret = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, transition: 'transform 0.2s' }}><path d="M4 6l4 4 4-4" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const caret = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, transition: 'transform 0.2s', color: 'var(--text-disabled)' }}><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
 const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', background: 'var(--surface-2)', boxSizing: 'border-box' };
@@ -219,7 +219,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         {/* Header */}
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Apartment bearbeiten</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>{apartment.name}</p>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>{apartment.name}</p>
         </div>
 
         <form action={updateApartment} style={{ display: 'grid', gap: 16 }}>
@@ -235,7 +235,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input name="name" defaultValue={apartment.name} style={inputStyle} required />
               </div>
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
-                <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: '#374151', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: 'var(--text-primary)', cursor: 'pointer' }}>
                   <input type="checkbox" name="isActive" defaultChecked={apartment.isActive} />
                   Aktiv
                 </label>
@@ -312,7 +312,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
                   placeholder={`WLAN\nBalkon\nKaffeemaschine`}
                   style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
                 />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>Eine Ausstattung pro Zeile</span>
+                <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>Eine Ausstattung pro Zeile</span>
               </div>
             </div>
           </details>
@@ -321,7 +321,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <details style={detailsStyle}>
             <summary style={summaryStyle}><h2 style={cardTitle}>Gäste-Lounge</h2>{caret}</summary>
             <div style={cardBody}>
-              <p style={{ fontSize: 13, color: '#6b7280', margin: '8px 0 4px' }}>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '8px 0 4px' }}>
                 Leer lassen = Hotel-Default wird verwendet.
               </p>
               <div style={{ display: 'grid', gap: 14 }}>
@@ -391,6 +391,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <div className="admin-form-actions">
             <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
             <button type="submit" className="btn-primary">Änderungen speichern</button>
+
           </div>
         </form>
 

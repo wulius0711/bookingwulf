@@ -67,7 +67,7 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
   const labelStyle: React.CSSProperties = {
     fontSize: 12,
     fontWeight: 700,
-    color: '#4b5563',
+    color: 'var(--text-secondary)',
     letterSpacing: '0.06em',
     textTransform: 'uppercase',
     marginBottom: 4,

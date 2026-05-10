@@ -15,7 +15,7 @@ export default async function Beds24Page() {
     if (isSuperAdmin) return (
       <main className="admin-page">
         <h1>Beds24 Channel Manager</h1>
-        <p style={{ color: '#6b7280', fontSize: 14 }}>Bitte zuerst eine Anlage in der Sidebar auswählen.</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Bitte zuerst eine Anlage in der Sidebar auswählen.</p>
       </main>
     );
     redirect('/admin');
@@ -50,7 +50,7 @@ export default async function Beds24Page() {
         <h1 style={{ margin: 0 }}>Beds24 Channel Manager</h1>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>
       </div>
-      <p style={{ margin: '0 0 24px', fontSize: 14, color: '#6b7280' }}>
+      <p style={{ margin: '0 0 24px', fontSize: 14, color: 'var(--text-secondary)' }}>
         Verbinden Sie Ihren Beds24-Account, um Buchungen automatisch mit Airbnb und Booking.com zu synchronisieren.
       </p>
 

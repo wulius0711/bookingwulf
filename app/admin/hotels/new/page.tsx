@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 import { ColorField } from '@/app/admin/settings/color-field';
+import { Button } from '../../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,7 +79,7 @@ export default async function NewHotelPage() {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neues Hotel</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Grunddaten für ein neues Hotel anlegen.</p>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Grunddaten für ein neues Hotel anlegen.</p>
         </div>
 
         <form action={createHotel} style={{ display: 'grid', gap: 20 }}>
@@ -95,7 +96,7 @@ export default async function NewHotelPage() {
               <div style={fld}>
                 <label style={lbl}>Slug *</label>
                 <input name="slug" required style={inp} placeholder="z. B. hotel-bergblick" />
-                <span style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Kleinbuchstaben, Bindestriche — wird als URL-Kennung verwendet.</span>
+                <span style={{ fontSize: 12, color: 'var(--text-disabled)', marginTop: 2 }}>Kleinbuchstaben, Bindestriche — wird als URL-Kennung verwendet.</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div style={fld}>
@@ -118,14 +119,14 @@ export default async function NewHotelPage() {
               <ColorField label="Akzentfarbe" name="accentColor" defaultValue="#111827" labelStyle={lbl} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input type="checkbox" name="isActive" id="isActive" defaultChecked style={{ width: 16, height: 16 }} />
-                <label htmlFor="isActive" style={{ fontSize: 14, color: '#374151' }}>Aktiv</label>
+                <label htmlFor="isActive" style={{ fontSize: 14, color: 'var(--text-primary)' }}>Aktiv</label>
               </div>
             </div>
           </div>
 
           <div className="admin-form-actions">
             <a href="/admin/hotels" className="btn-cancel">Abbrechen</a>
-            <button type="submit" className="btn-primary">Hotel anlegen</button>
+            <Button variant="primary" type="submit">Hotel anlegen</Button>
           </div>
 
         </form>

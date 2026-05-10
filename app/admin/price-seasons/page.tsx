@@ -9,6 +9,7 @@ import ProLockOverlay from '../components/ProLockOverlay';
 import { createChildPriceRange, deleteChildPriceRange } from '../child-pricing/actions';
 import OrtstaxeForm from './OrtstaxeForm';
 import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
+import { Button, EmptyState } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,8 @@ const caretSvg = (
   </span>
 );
 
+const lbl: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' };
+const inp: React.CSSProperties = { padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)' };
 
 async function deleteSeason(formData: FormData) {
   'use server';
@@ -152,271 +155,233 @@ export default async function PriceSeasonsPage() {
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
       <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
-      <div>
-        <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Preisanpassungen</h1>
-        <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-muted)' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
-      </div>
-
-      {/* Seasons list */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
-            Preiszeiträume · {seasons.length} {seasons.length === 1 ? 'Eintrag' : 'Einträge'}
-          </h2>
-          <Link href="/admin/price-seasons/new">
-            <button className="btn-shine" style={{ padding: '7px 14px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-              Neu anlegen
-            </button>
-          </Link>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Preisanpassungen</h1>
+          <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
         </div>
-        {seasons.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-            <p style={{ fontSize: 15, color: 'var(--text-muted)', marginBottom: 16 }}>Keine Preiszeiträume vorhanden.</p>
-            <a href="/admin/price-seasons/new" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
-              Neuen Preiszeitraum anlegen
-            </a>
-          </div>
-        ) : (
-          <div style={{ padding: '16px 20px', background: 'var(--surface-2)' }}>
-            <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} isSuperAdmin={isSuperAdmin} />
-          </div>
-        )}
-      </div>
 
-      {/* ORTSTAXE */}
-      {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Ortstaxe / Kurtaxe</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
-            </div>
-            {caretSvg}
-          </summary>
-          <div style={{ padding: '20px' }}>
-            <OrtstaxeForm
-              action={saveOrtstaxe}
-              hotelId={selectedHotelId}
-              initialMode={s?.ortstaxeMode ?? 'off'}
-              initialRate={Number(s?.ortstaxePerPersonPerNight ?? 0)}
-              initialMinAge={s?.ortstaxeMinAge ?? null}
-            />
+        {/* Seasons list */}
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+              Preiszeiträume · {seasons.length} {seasons.length === 1 ? 'Eintrag' : 'Einträge'}
+            </h2>
+            <Link href="/admin/price-seasons/new" className="ui-btn ui-btn-primary ui-btn-sm">
+              Neu anlegen
+            </Link>
           </div>
-        </details>
-      )}
-
-      {/* KINDERPREISE */}
-      {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Kinderpreise</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Preis pro Kind und Nacht nach Altersgruppe — ohne Saisonbindung.</p>
+          {seasons.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '40px 20px' }}>
+              <EmptyState title="Keine Preiszeiträume vorhanden." />
+              <Link href="/admin/price-seasons/new" className="ui-btn ui-btn-primary ui-btn-md">
+                Neuen Preiszeitraum anlegen
+              </Link>
             </div>
-            {caretSvg}
-          </summary>
-          <div style={{ padding: '0 0 16px' }}>
-            {childRanges.length === 0 ? (
-              <div style={{ padding: '24px 20px', fontSize: 13, color: 'var(--text-subtle)' }}>
-                Noch keine Altersgruppen. Kinder sind standardmäßig kostenlos.
-              </div>
-            ) : (
+          ) : (
+            <div style={{ padding: '16px 20px', background: 'var(--surface-2)' }}>
+              <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} isSuperAdmin={isSuperAdmin} />
+            </div>
+          )}
+        </div>
+
+        {/* ORTSTAXE */}
+        {selectedHotelId !== null && (
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
+            <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
-                {childRanges.map(r => (
-                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid var(--border)' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{r.label || <span style={{ color: 'var(--text-subtle)' }}>—</span>}</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-                        {r.minAge}–{r.maxAge} Jahre ·{' '}
-                        <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : 'var(--text-primary)' }}>
-                          {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
-                        </span>
+                <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Ortstaxe / Kurtaxe</h2>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-secondary)' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
+              </div>
+              {caretSvg}
+            </summary>
+            <div style={{ padding: '20px' }}>
+              <OrtstaxeForm
+                action={saveOrtstaxe}
+                hotelId={selectedHotelId}
+                initialMode={s?.ortstaxeMode ?? 'off'}
+                initialRate={Number(s?.ortstaxePerPersonPerNight ?? 0)}
+                initialMinAge={s?.ortstaxeMinAge ?? null}
+              />
+            </div>
+          </details>
+        )}
+
+        {/* KINDERPREISE */}
+        {selectedHotelId !== null && (
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
+            <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Kinderpreise</h2>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-secondary)' }}>Preis pro Kind und Nacht nach Altersgruppe — ohne Saisonbindung.</p>
+              </div>
+              {caretSvg}
+            </summary>
+            <div style={{ padding: '0 0 16px' }}>
+              {childRanges.length === 0 ? (
+                <div style={{ padding: '24px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>
+                  Noch keine Altersgruppen. Kinder sind standardmäßig kostenlos.
+                </div>
+              ) : (
+                <div>
+                  {childRanges.map(r => (
+                    <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid var(--border)' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{r.label || <span style={{ color: 'var(--text-disabled)' }}>—</span>}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>
+                          {r.minAge}–{r.maxAge} Jahre ·{' '}
+                          <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? 'var(--status-booked-text)' : 'var(--text-primary)' }}>
+                            {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
+                          </span>
+                        </div>
+                      </div>
+                      <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ flexShrink: 0 }}>
+                        <Button variant="danger" size="sm" type="submit">Löschen</Button>
+                      </ConfirmDeleteForm>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <form action={createChildPriceRange} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', padding: '16px 20px 0', borderTop: childRanges.length > 0 ? '1px solid var(--border)' : undefined }}>
+                <input type="hidden" name="hotelId" value={selectedHotelId} />
+                <div style={{ display: 'grid', gap: 4, flex: '2 1 120px' }}>
+                  <label style={lbl}>Bezeichnung</label>
+                  <input name="label" placeholder="z. B. Kleinkind" className="ui-input" />
+                </div>
+                <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
+                  <label style={lbl}>Von</label>
+                  <input name="minAge" type="number" min="0" max="17" required placeholder="0" className="ui-input" />
+                </div>
+                <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
+                  <label style={lbl}>Bis</label>
+                  <input name="maxAge" type="number" min="0" max="17" required placeholder="6" className="ui-input" />
+                </div>
+                <div style={{ display: 'grid', gap: 4, flex: '1 1 80px' }}>
+                  <label style={lbl}>€ / Nacht</label>
+                  <input name="pricePerNight" type="number" min="0" step="0.01" required placeholder="0.00" className="ui-input" />
+                </div>
+                <div style={{ alignSelf: 'flex-end', marginLeft: 'auto' }}>
+                  <Button variant="primary" size="sm" type="submit">Hinzufügen</Button>
+                </div>
+              </form>
+            </div>
+          </details>
+        )}
+
+        {/* DYNAMIC PRICING */}
+        {selectedHotelId !== null && (
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
+            <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Dynamische Preise</h2>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-secondary)' }}>Automatische Rabatte und Aufschläge.</p>
+              </div>
+              {caretSvg}
+            </summary>
+            <div style={{ padding: '20px' }}>
+              <form action={saveDynamicPricing} style={{ display: 'grid', gap: 16 }}>
+                <input type="hidden" name="hotelId" value={selectedHotelId} />
+
+                <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
+                  {!hasPro && <ProLockOverlay />}
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)' }}>Last-Minute Rabatt</div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                      <label style={lbl}>Rabatt %</label>
+                      <input name="lastMinuteDiscountPercent" type="number" min="0" max="100" defaultValue={s?.lastMinuteDiscountPercent ?? 0} style={inp} />
+                    </div>
+                    <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                      <label style={lbl}>Tage vor Anreise</label>
+                      <input name="lastMinuteDiscountDays" type="number" min="1" max="90" defaultValue={s?.lastMinuteDiscountDays ?? 7} style={inp} />
+                    </div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--text-disabled)' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
+                </div>
+
+                <div style={{ position: 'relative', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                  {!hasBusiness && <ProLockOverlay plan="business" />}
+                  <div style={{ padding: '16px 18px', display: 'grid', gap: 12, opacity: hasBusiness ? 1 : 0.45, filter: hasBusiness ? 'none' : 'grayscale(0.3)' }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)' }}>Nachfrageaufschlag</div>
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                        <label style={lbl}>Aufschlag %</label>
+                        <input name="occupancySurchargePercent" type="number" min="0" max="100" defaultValue={s?.occupancySurchargePercent ?? 0} style={inp} />
+                      </div>
+                      <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                        <label style={lbl}>Ab Auslastung %</label>
+                        <input name="occupancySurchargeThreshold" type="number" min="1" max="100" defaultValue={s?.occupancySurchargeThreshold ?? 70} style={inp} />
                       </div>
                     </div>
-                    <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ flexShrink: 0 }}>
-                      <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: 'var(--surface-2)', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
-                        Löschen
-                      </button>
-                    </ConfirmDeleteForm>
-                  </div>
-                ))}
-              </div>
-            )}
-            <form action={createChildPriceRange} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', padding: '16px 20px 0', borderTop: childRanges.length > 0 ? '1px solid var(--border)' : undefined }}>
-              <input type="hidden" name="hotelId" value={selectedHotelId} />
-              <div style={{ display: 'grid', gap: 4, flex: '2 1 120px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bezeichnung</label>
-                <input name="label" placeholder="z. B. Kleinkind" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
-              </div>
-              <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Von</label>
-                <input name="minAge" type="number" min="0" max="17" required placeholder="0" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
-              </div>
-              <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bis</label>
-                <input name="maxAge" type="number" min="0" max="17" required placeholder="6" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
-              </div>
-              <div style={{ display: 'grid', gap: 4, flex: '1 1 80px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>€ / Nacht</label>
-                <input name="pricePerNight" type="number" min="0" step="0.01" required placeholder="0.00" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
-              </div>
-              <button type="submit" className="btn-shine" style={{ padding: '8px 16px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-end', marginLeft: 'auto' }}>
-                Hinzufügen
-              </button>
-            </form>
-          </div>
-        </details>
-      )}
-
-      {/* DYNAMIC PRICING */}
-      {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Dynamische Preise</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Automatische Rabatte und Aufschläge.</p>
-            </div>
-            {caretSvg}
-          </summary>
-          <div style={{ padding: '20px' }}>
-          <form action={saveDynamicPricing} style={{ display: 'grid', gap: 16 }}>
-            <input type="hidden" name="hotelId" value={selectedHotelId} />
-
-            <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
-              {!hasPro && <ProLockOverlay />}
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Last-Minute Rabatt</div>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Rabatt %</label>
-                  <input name="lastMinuteDiscountPercent" type="number" min="0" max="100"
-                    defaultValue={s?.lastMinuteDiscountPercent ?? 0}
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                </div>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Tage vor Anreise</label>
-                  <input name="lastMinuteDiscountDays" type="number" min="1" max="90"
-                    defaultValue={s?.lastMinuteDiscountDays ?? 7}
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                </div>
-              </div>
-              <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
-            </div>
-
-            <div style={{ position: 'relative', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)' }}>
-              {!hasBusiness && <ProLockOverlay plan="business" />}
-              <div style={{ padding: '16px 18px', display: 'grid', gap: 12, opacity: hasBusiness ? 1 : 0.45, filter: hasBusiness ? 'none' : 'grayscale(0.3)' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Nachfrageaufschlag</div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                  <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Aufschlag %</label>
-                    <input name="occupancySurchargePercent" type="number" min="0" max="100"
-                      defaultValue={s?.occupancySurchargePercent ?? 0}
-                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
-                  </div>
-                  <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Ab Auslastung %</label>
-                    <input name="occupancySurchargeThreshold" type="number" min="1" max="100"
-                      defaultValue={s?.occupancySurchargeThreshold ?? 70}
-                      style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                    <p style={{ margin: 0, fontSize: 12, color: 'var(--text-disabled)' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
                   </div>
                 </div>
-                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
-              </div>
-            </div>
 
-            {/* LÜCKEN-RABATT */}
-            <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
-              {!hasPro && <ProLockOverlay />}
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Lücken-Rabatt</div>
-              <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Rabatt %</label>
-                  <input name="gapNightDiscount" type="number" min="1" max="80"
-                    defaultValue={s?.gapNightDiscount ?? ''}
-                    placeholder="leer = aus"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+                {/* LÜCKEN-RABATT */}
+                <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
+                  {!hasPro && <ProLockOverlay />}
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)' }}>Lücken-Rabatt</div>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--text-disabled)' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                      <label style={lbl}>Rabatt %</label>
+                      <input name="gapNightDiscount" type="number" min="1" max="80" defaultValue={s?.gapNightDiscount ?? ''} placeholder="leer = aus" style={inp} />
+                    </div>
+                    <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
+                      <label style={lbl}>Max. Lückenlänge (Nächte)</label>
+                      <input name="gapNightMaxLength" type="number" min="1" max="14" defaultValue={s?.gapNightMaxLength ?? ''} placeholder="leer = aus" style={inp} />
+                    </div>
+                  </div>
                 </div>
-                <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Max. Lückenlänge (Nächte)</label>
-                  <input name="gapNightMaxLength" type="number" min="1" max="14"
-                    defaultValue={s?.gapNightMaxLength ?? ''}
-                    placeholder="leer = aus"
-                    style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
+
+                {/* VERFÜGBARKEITS-HINWEISE */}
+                <div style={{ padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+                    <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false} style={{ width: 15, height: 15, accentColor: 'var(--accent)' }} />
+                    Aktivieren
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <label style={{ ...lbl, whiteSpace: 'nowrap' }}>Schwellenwert %</label>
+                    <input name="urgencyThreshold" type="number" min="10" max="90" step="5" defaultValue={s?.urgencyThreshold ?? 40} style={{ ...inp, width: 80 }} />
+                    <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind</span>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* VERFÜGBARKEITS-HINWEISE */}
-            <div style={{ padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
-                <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false}
-                  style={{ width: 15, height: 15, accentColor: 'var(--accent)' }} />
-                Aktivieren
-              </label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>Schwellenwert %</label>
-                <input name="urgencyThreshold" type="number" min="10" max="90" step="5"
-                  defaultValue={s?.urgencyThreshold ?? 40}
-                  style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 80 }} />
-                <span style={{ fontSize: 12, color: 'var(--text-subtle)' }}>Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind</span>
-              </div>
+                <div className="admin-form-actions">
+                  <Button variant="primary" type="submit">Speichern</Button>
+                </div>
+              </form>
             </div>
+          </details>
+        )}
 
-            <div className="admin-form-actions">
-              <button type="submit" className="btn-primary">Speichern</button>
+        {/* STEUEREINSTELLUNGEN */}
+        {selectedHotelId !== null && (
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
+            <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Steuer / Buchhaltung</h2>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-secondary)' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
+              </div>
+              {caretSvg}
+            </summary>
+            <div style={{ padding: '20px' }}>
+              <form action={saveTaxRates} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                <input type="hidden" name="hotelId" value={selectedHotelId} />
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                  <label style={lbl}>MwSt. Zimmerpreis %</label>
+                  <input name="taxRateRoom" type="number" min="0" max="100" step="0.01" defaultValue={Number(s?.taxRateRoom ?? '') || ''} placeholder="z. B. 10" style={inp} />
+                </div>
+                <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
+                  <label style={lbl}>MwSt. Reinigung %</label>
+                  <input name="taxRateCleaning" type="number" min="0" max="100" step="0.01" defaultValue={Number(s?.taxRateCleaning ?? '') || ''} placeholder="z. B. 20" style={inp} />
+                </div>
+                <div className="admin-form-actions" style={{ flex: '1 1 100%' }}>
+                  <Button variant="primary" type="submit">Speichern</Button>
+                </div>
+              </form>
             </div>
-          </form>
-          </div>
-        </details>
-      )}
-      {/* STEUEREINSTELLUNGEN */}
-      {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Steuer / Buchhaltung</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
-            </div>
-            {caretSvg}
-          </summary>
-          <div style={{ padding: '20px' }}>
-            <form action={saveTaxRates} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-              <input type="hidden" name="hotelId" value={selectedHotelId} />
-              <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>MwSt. Zimmerpreis %</label>
-                <input
-                  name="taxRateRoom"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  defaultValue={Number(s?.taxRateRoom ?? '') || ''}
-                  placeholder="z. B. 10"
-                  style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
-                />
-              </div>
-              <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>MwSt. Reinigung %</label>
-                <input
-                  name="taxRateCleaning"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  defaultValue={Number(s?.taxRateCleaning ?? '') || ''}
-                  placeholder="z. B. 20"
-                  style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }}
-                />
-              </div>
-              <div className="admin-form-actions" style={{ flex: '1 1 100%' }}>
-                <button type="submit" className="btn-primary">Speichern</button>
-              </div>
-            </form>
-          </div>
-        </details>
-      )}
+          </details>
+        )}
       </div>
     </main>
   );

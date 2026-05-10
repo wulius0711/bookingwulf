@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { createAdminUser } from '../actions';
+import { Button } from '../../components/ui';
 
 type Hotel = { id: number; name: string; slug: string };
 
@@ -64,12 +65,12 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neuer Benutzer</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Legt einen neuen Admin-Zugang an.</p>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Legt einen neuen Admin-Zugang an.</p>
         </div>
 
         <form action={action} style={{ display: 'grid', gap: 20 }}>
           {state?.error && (
-            <div style={{ padding: '12px 16px', borderRadius: 10, background: '#fef2f2', color: '#b91c1c', fontSize: 14, border: '1px solid #fca5a5' }}>
+            <div style={{ padding: '12px 16px', borderRadius: 10, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', fontSize: 14, border: '1px solid var(--border)' }}>
               {state.error}
             </div>
           )}
@@ -120,16 +121,16 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
                     <option key={h.id} value={h.id}>{h.name} ({h.slug})</option>
                   ))}
                 </select>
-                <span style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Nur für Hotel Admin erforderlich.</span>
+                <span style={{ fontSize: 12, color: 'var(--text-disabled)', marginTop: 2 }}>Nur für Hotel Admin erforderlich.</span>
               </label>
             </div>
           </div>
 
           <div className="admin-form-actions">
             <a href="/admin/users" className="btn-cancel">Abbrechen</a>
-            <button type="submit" disabled={pending} className="btn-primary" style={{ opacity: pending ? 0.6 : 1 }}>
+            <Button variant="primary" type="submit" loading={pending} disabled={pending}>
               {pending ? 'Wird angelegt…' : 'Benutzer anlegen'}
-            </button>
+            </Button>
           </div>
         </form>
 

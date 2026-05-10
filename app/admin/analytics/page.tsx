@@ -207,7 +207,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         <div className="analytics-header">
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Analytics</h1>
-            <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
+            <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>
               {periodDef.label}
             </p>
           </div>
@@ -215,7 +215,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface)' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
           </form>
         </div>
 
@@ -232,7 +232,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           ].map(({ label, value }) => (
             <div key={label} className="analytics-card" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</div>
-              <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{label}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{label}</div>
             </div>
           ))}
         </div>
@@ -245,9 +245,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, minWidth: 480 }}>
                 {monthlyData.map(({ label, count }) => (
                   <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end', minWidth: 0 }}>
-                    <span style={{ fontSize: 10, color: '#9ca3af' }}>{count > 0 ? count : ''}</span>
+                    <span style={{ fontSize: 10, color: 'var(--text-disabled)' }}>{count > 0 ? count : ''}</span>
                     <div style={{ width: '100%', background: '#3b82f6', borderRadius: '4px 4px 0 0', height: `${(count / maxMonthly) * 110}px`, minHeight: count > 0 ? 4 : 0, opacity: 0.85 }} />
-                    <span style={{ fontSize: 9, color: '#9ca3af', whiteSpace: 'nowrap' }}>{label}</span>
+                    <span style={{ fontSize: 9, color: 'var(--text-disabled)', whiteSpace: 'nowrap' }}>{label}</span>
                   </div>
                 ))}
               </div>
@@ -262,12 +262,12 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS[status] ?? '#d1d5db', flexShrink: 0 }} />
                   <span style={{ fontSize: 14, color: 'var(--text-muted)', flex: 1 }}>{STATUS_LABELS[status] ?? status}</span>
                   <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{count}</span>
-                  <span style={{ fontSize: 12, color: '#9ca3af', width: 36, textAlign: 'right' }}>
+                  <span style={{ fontSize: 12, color: 'var(--text-disabled)', width: 36, textAlign: 'right' }}>
                     {total > 0 ? `${((count / total) * 100).toFixed(0)}%` : ''}
                   </span>
                 </div>
               ))}
-              {Object.keys(statusMap).length === 0 && <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Daten</p>}
+              {Object.keys(statusMap).length === 0 && <p style={{ margin: 0, fontSize: 14, color: 'var(--text-disabled)' }}>Keine Daten</p>}
             </div>
           </div>
         </div>
@@ -277,7 +277,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Top Apartments</h2>
             {topApartments.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Daten</p>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--text-disabled)' }}>Keine Daten</p>
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
                 {topApartments.map(({ name, count }) => (
@@ -298,7 +298,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Extras Beliebtheit</h2>
             {topExtras.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Noch keine Extras in Buchungen erfasst.</p>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--text-disabled)' }}>Noch keine Extras in Buchungen erfasst.</p>
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
                 {topExtras.map(({ name, count, revenue }) => (
@@ -306,7 +306,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                     <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 500 }}>{name}</span>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{count}×</div>
-                      {revenue > 0 && <div style={{ fontSize: 11, color: '#6b7280' }}>€ {revenue.toFixed(2)}</div>}
+                      {revenue > 0 && <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>€ {revenue.toFixed(2)}</div>}
                     </div>
                   </div>
                 ))}
@@ -321,9 +321,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           {/* Occupancy */}
           <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Auslastung (12M)</h2>
-            <p style={{ margin: '-8px 0 16px', fontSize: 12, color: '#9ca3af' }}>Gebuchte Nächte von 365 verfügbaren</p>
+            <p style={{ margin: '-8px 0 16px', fontSize: 12, color: 'var(--text-disabled)' }}>Gebuchte Nächte von 365 verfügbaren</p>
             {occupancyData.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Apartments</p>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--text-disabled)' }}>Keine Apartments</p>
             ) : (
               <div style={{ display: 'grid', gap: 12 }}>
                 {occupancyData.map(({ name, bookedNights, pct }) => (
@@ -350,7 +350,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <div className="analytics-card">
             <h2 style={sectionTitleStyle}>Herkunftsländer</h2>
             {topCountries.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 14, color: '#9ca3af' }}>Keine Länderdaten erfasst.</p>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--text-disabled)' }}>Keine Länderdaten erfasst.</p>
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
                 {topCountries.map(({ country, count }) => (

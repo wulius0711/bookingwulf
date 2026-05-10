@@ -173,7 +173,7 @@ export default function GuidedTour() {
         `}</style>
 
         {/* Step indicator */}
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
           Schritt {step + 1} von {TOUR_STEPS.length}
         </div>
 
@@ -193,7 +193,7 @@ export default function GuidedTour() {
               border: 'none',
               background: 'none',
               fontSize: 13,
-              color: '#999',
+              color: 'var(--text-subtle)',
               cursor: 'pointer',
             }}
           >
@@ -207,8 +207,8 @@ export default function GuidedTour() {
               padding: '8px 18px',
               borderRadius: 8,
               border: 'none',
-              background: '#111',
-              color: '#fff',
+              background: 'var(--accent)',
+              color: 'var(--text-on-accent)',
               fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',

@@ -41,7 +41,7 @@ const sectionIntroStyle: React.CSSProperties = {
   margin: '4px 0 0',
   fontSize: 14,
   lineHeight: 1.5,
-  color: '#6b7280',
+  color: 'var(--text-secondary)',
 };
 
 const caretSvg = (
@@ -92,10 +92,10 @@ export default async function GuestPortalSettingsPage() {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Gäste-Lounge</h1>
-          <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085', lineHeight: 1.6 }}>
+          <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
             Die Gäste-Lounge ist eine persönliche Webseite für Ihre Gäste — erreichbar über einen individuellen Link, der automatisch in der Buchungsbestätigung mitgeschickt wird. Dort finden Gäste alles Wichtige auf einen Blick: Ihre Kontaktdaten, WLAN-Zugangsdaten, Parkplatz- und Hausinfos sowie Tipps zur Umgebung.
           </p>
-          <div style={{ marginTop: 12, padding: '10px 14px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
+          <div style={{ marginTop: 12, padding: '10px 14px', background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 13, color: 'var(--status-new-text)', lineHeight: 1.5 }}>
             Die Gäste-Lounge funktioniert auch offline — Gäste können sie nach dem ersten Öffnen ohne Internetverbindung nutzen.
           </div>
         </div>
@@ -120,14 +120,14 @@ export default async function GuestPortalSettingsPage() {
               <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>
                   WhatsApp-Nummer
-                  <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
+                  <span style={{ fontWeight: 400, color: 'var(--text-disabled)', marginLeft: 6 }}>(optional)</span>
                 </label>
                 <input name="whatsappNumber" type="tel" defaultValue={selected.settings?.whatsappNumber ?? ''} placeholder="z. B. +43512123456" style={inputStyle} />
               </div>
               <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>
                   Adresse
-                  <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(für Anreise-Button)</span>
+                  <span style={{ fontWeight: 400, color: 'var(--text-disabled)', marginLeft: 6 }}>(für Anreise-Button)</span>
                 </label>
                 <input name="address" type="text" defaultValue={selected.settings?.address ?? ''} placeholder="z. B. Musterstraße 1, 6020 Innsbruck" style={inputStyle} />
               </div>
@@ -151,7 +151,7 @@ export default async function GuestPortalSettingsPage() {
               <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>
                   Schlüsselübergabe / Anreise-Info
-                  <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
+                  <span style={{ fontWeight: 400, color: 'var(--text-disabled)', marginLeft: 6 }}>(optional)</span>
                 </label>
                 <textarea name="checkinInfo" rows={4} defaultValue={selected.settings?.checkinInfo ?? ''} placeholder="z. B. Der Schlüssel liegt in der Schlüsselbox beim Eingang. Code wird 24h vor Anreise per E-Mail zugeschickt." style={{ ...inputStyle, resize: 'vertical' } as React.CSSProperties} />
               </div>
@@ -178,7 +178,7 @@ export default async function GuestPortalSettingsPage() {
               <div className="settings-row" style={rowStyle}>
                 <label style={labelStyle}>
                   Abreise-Info
-                  <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
+                  <span style={{ fontWeight: 400, color: 'var(--text-disabled)', marginLeft: 6 }}>(optional)</span>
                 </label>
                 <textarea name="checkoutInfo" rows={4} defaultValue={selected.settings?.checkoutInfo ?? ''} placeholder="z. B. Bitte hinterlassen Sie die Schlüssel im Schlüsselfach neben der Eingangstür. Kein Auschecken an der Rezeption nötig." style={{ ...inputStyle, resize: 'vertical' } as React.CSSProperties} />
               </div>
@@ -214,7 +214,7 @@ export default async function GuestPortalSettingsPage() {
               <div className="settings-row" style={rowStyle}>
                 <div>
                   <label style={labelStyle}>Hausordnung</label>
-                  <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4, marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, marginBottom: 6 }}>
                     ℹ️ Wird auch beim Online Check-in angezeigt — der Gast muss sie dort bestätigen.
                   </div>
                 </div>

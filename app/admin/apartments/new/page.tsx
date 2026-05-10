@@ -144,7 +144,7 @@ export default async function NewApartmentPage() {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neues Apartment</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Apartment anlegen und Basisdaten festlegen.</p>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Apartment anlegen und Basisdaten festlegen.</p>
         </div>
 
         <form action={createApartment} style={{ display: 'grid', gap: 24 }}>
@@ -250,7 +250,7 @@ export default async function NewApartmentPage() {
                 <textarea name="description" rows={4} style={{ ...inp, resize: 'vertical' }} />
               </div>
               <div style={fld}>
-                <label style={lbl}>Ausstattung <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: '#9ca3af' }}>(eine pro Zeile)</span></label>
+                <label style={lbl}>Ausstattung <span style={{ fontWeight: 400, textTransform: 'none', fontSize: 11, color: 'var(--text-disabled)' }}>(eine pro Zeile)</span></label>
                 <textarea
                   name="amenities"
                   rows={6}
@@ -277,6 +277,7 @@ export default async function NewApartmentPage() {
           <div className="admin-form-actions">
             <a href="/admin/apartments" className="btn-cancel">Abbrechen</a>
             <button type="submit" className="btn-primary">Apartment anlegen</button>
+
           </div>
 
         </form>

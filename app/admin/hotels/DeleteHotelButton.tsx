@@ -1,6 +1,7 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState } from 'react';
+import { Button, ConfirmDialog } from '../components/ui';
 
 export default function DeleteHotelButton({
   hotelId,
@@ -11,32 +12,32 @@ export default function DeleteHotelButton({
   hotelName: string;
   action: (formData: FormData) => Promise<void>;
 }) {
-  const [pending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    if (!confirm(`Hotel „${hotelName}" und alle zugehörigen Daten unwiderruflich löschen?`)) {
-      e.preventDefault();
-    }
+  async function handleDelete() {
+    setLoading(true);
+    const fd = new FormData();
+    fd.set('id', String(hotelId));
+    await action(fd);
+    setLoading(false);
   }
 
   return (
-    <form action={action} onSubmit={handleSubmit}>
-      <input type="hidden" name="id" value={hotelId} />
-      <button
-        type="submit"
-        disabled={pending}
-        style={{
-          padding: '8px 14px',
-          borderRadius: 8,
-          border: '1px solid #fca5a5',
-          background: 'var(--surface)',
-          color: pending ? '#aaa' : '#dc2626',
-          cursor: pending ? 'not-allowed' : 'pointer',
-          fontSize: 13,
-        }}
-      >
-        {pending ? '…' : 'Löschen'}
-      </button>
-    </form>
+    <>
+      <Button variant="danger" size="sm" onClick={() => setOpen(true)} loading={loading} disabled={loading}>
+        Löschen
+      </Button>
+      <ConfirmDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleDelete}
+        title="Hotel löschen"
+        description={`Hotel „${hotelName}" und alle zugehörigen Daten unwiderruflich löschen?`}
+        confirmLabel="Löschen"
+        confirmText="löschen"
+        dangerous
+      />
+    </>
   );
 }

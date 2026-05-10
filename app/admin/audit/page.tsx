@@ -33,15 +33,15 @@ export default async function AuditPage() {
 
   const th: React.CSSProperties = { padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' };
   const td: React.CSSProperties = { padding: '9px 12px', fontSize: 13, color: 'var(--text-primary)', borderBottom: '1px solid var(--border)', verticalAlign: 'top' };
-  const tdMuted: React.CSSProperties = { ...td, color: '#6b7280' };
+  const tdMuted: React.CSSProperties = { ...td, color: 'var(--text-secondary)' };
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <h1 style={{ margin: '0 0 4px' }}>Audit-Log</h1>
-      <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 24px' }}>Änderungen an haftungsrelevanten Feldern. Letzte 500 Einträge.</p>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: '0 0 24px' }}>Änderungen an haftungsrelevanten Feldern. Letzte 500 Einträge.</p>
 
       {logs.length === 0 ? (
-        <p style={{ color: '#6b7280', fontSize: 14 }}>Noch keine Einträge vorhanden.</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Noch keine Einträge vorhanden.</p>
       ) : (
         <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid var(--border)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -60,8 +60,8 @@ export default async function AuditPage() {
                   <td style={tdMuted}>{fmt(log.changedAt)}</td>
                   <td style={td}>{log.hotel.name}</td>
                   <td style={td}>{FIELD_LABELS[log.field] ?? log.field}</td>
-                  <td style={{ ...td, color: log.oldValue ? '#dc2626' : '#9ca3af', fontFamily: 'monospace', fontSize: 12 }}>{log.oldValue ?? '–'}</td>
-                  <td style={{ ...td, color: log.newValue ? '#16a34a' : '#9ca3af', fontFamily: 'monospace', fontSize: 12 }}>{log.newValue ?? '–'}</td>
+                  <td style={{ ...td, color: log.oldValue ? 'var(--status-cancelled-text)' : 'var(--text-disabled)', fontFamily: 'monospace', fontSize: 12 }}>{log.oldValue ?? '–'}</td>
+                  <td style={{ ...td, color: log.newValue ? 'var(--status-booked-text)' : 'var(--text-disabled)', fontFamily: 'monospace', fontSize: 12 }}>{log.newValue ?? '–'}</td>
                 </tr>
               ))}
             </tbody>

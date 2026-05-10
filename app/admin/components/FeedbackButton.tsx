@@ -85,7 +85,7 @@ export default function FeedbackButton() {
           position: 'fixed', top: '8px', right: '16px', zIndex: 900,
           width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px',
-          cursor: 'pointer', color: '#9ca3af',
+          cursor: 'pointer', color: 'var(--text-subtle)',
         }}
       >
         <Megaphone size={16} style={{ transform: 'scaleX(-1)' }} />
@@ -110,7 +110,7 @@ export default function FeedbackButton() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Feedback geben</h2>
-              <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', lineHeight: 1 }}>
+              <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-subtle)', lineHeight: 1 }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
@@ -118,14 +118,14 @@ export default function FeedbackButton() {
             </div>
 
             {sent ? (
-              <div style={{ textAlign: 'center', padding: '24px 0', color: '#16a34a', fontSize: 15, fontWeight: 600 }}>
+              <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--status-booked-text)', fontSize: 15, fontWeight: 600 }}>
                 ✓ Danke für dein Feedback!
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 14 }}>
                 <div style={{ display: 'grid', gap: 6 }}>
                   <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>
-                    Beschreibung <span style={{ color: '#9ca3af', fontWeight: 400 }}>(erforderlich)</span>
+                    Beschreibung <span style={{ color: 'var(--text-subtle)', fontWeight: 400 }}>(erforderlich)</span>
                   </label>
                   <textarea
                     value={message}
@@ -180,11 +180,11 @@ export default function FeedbackButton() {
                       style={{
                         ...btnBase,
                         border: '1px dashed var(--border)', background: 'var(--surface-2)',
-                        color: '#6b7280', fontWeight: 500,
+                        color: 'var(--text-muted)', fontWeight: 500,
                       }}
                     >
                       + Screenshot hinzufügen
-                      <span style={{ display: 'block', fontSize: 11, color: '#9ca3af', fontWeight: 400, marginTop: 2 }}>
+                      <span style={{ display: 'block', fontSize: 11, color: 'var(--text-subtle)', fontWeight: 400, marginTop: 2 }}>
                         oder Bild aus Zwischenablage einfügen (Strg+V / ⌘V)
                       </span>
                     </button>
@@ -197,7 +197,7 @@ export default function FeedbackButton() {
                   style={{
                     ...btnBase, padding: '11px',
                     background: sending || !message.trim() ? '#9ca3af' : 'var(--accent)',
-                    color: '#fff', border: 'none', fontWeight: 600,
+                    color: 'var(--text-on-accent)', border: 'none', fontWeight: 600,
                     cursor: sending || !message.trim() ? 'not-allowed' : 'pointer',
                   }}
                 >

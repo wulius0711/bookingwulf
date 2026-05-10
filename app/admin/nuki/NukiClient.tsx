@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button, ConfirmDialog } from '../components/ui';
 
 type Lock = { smartlockId: number; name: string };
 
@@ -20,7 +21,7 @@ const panel: React.CSSProperties = {
   gap: 20,
 };
 
-const input: React.CSSProperties = {
+const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
   border: '1px solid var(--border)',
@@ -28,29 +29,8 @@ const input: React.CSSProperties = {
   fontSize: 14,
   fontFamily: 'monospace',
   color: 'var(--text-primary)',
+  background: 'var(--surface-2)',
   boxSizing: 'border-box',
-};
-
-const btnPrimary: React.CSSProperties = {
-  padding: '10px 20px',
-  borderRadius: 8,
-  border: 'none',
-  background: 'var(--accent)',
-  color: '#fff',
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-};
-
-const btnDanger: React.CSSProperties = {
-  padding: '10px 20px',
-  borderRadius: 8,
-  border: '1px solid #fca5a5',
-  background: 'var(--surface)',
-  color: '#dc2626',
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
 };
 
 export default function NukiClient({ initialConnected, initialLocks, initialError }: Props) {
@@ -61,6 +41,7 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
   const [saving, setSaving] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [success, setSuccess] = useState('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   async function handleSave() {
     if (!token.trim()) return;
@@ -87,7 +68,6 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
   }
 
   async function handleRemove() {
-    if (!confirm('Nuki-Verbindung wirklich trennen? Schlösser werden nicht mehr mit Buchungen verknüpft.')) return;
     setRemoving(true);
     await fetch('/api/admin/nuki', { method: 'DELETE' });
     setConnected(false);
@@ -102,39 +82,31 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
       {/* Status */}
       <div style={panel}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            width: 10, height: 10, borderRadius: '50%',
-            background: connected ? '#22c55e' : '#d1d5db',
-            flexShrink: 0,
-          }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: connected ? 'var(--status-booked-text)' : 'var(--border)', flexShrink: 0 }} />
           <div>
             <div style={{ fontWeight: 600, fontSize: 15 }}>
               {connected ? `Verbunden — ${locks.length} Schloss${locks.length !== 1 ? 'schlösser' : ''} gefunden` : 'Nicht verbunden'}
             </div>
             {connected && (
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>
                 Schlösser werden bei Sofortbuchungen automatisch mit einem Zugangscode versehen.
               </div>
             )}
           </div>
         </div>
 
-        {/* Lock list */}
         {locks.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-disabled)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Verfügbare Schlösser
             </div>
             {locks.map((l) => (
-              <div key={l.smartlockId} style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 14,
-              }}>
+              <div key={l.smartlockId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 14 }}>
                 <span style={{ fontWeight: 500 }}>🔒 {l.name}</span>
-                <span style={{ fontSize: 12, color: '#9ca3af', fontFamily: 'monospace' }}>ID {l.smartlockId}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-disabled)', fontFamily: 'monospace' }}>ID {l.smartlockId}</span>
               </div>
             ))}
-            <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>
               Zuweisung pro Apartment: <a href="/admin/apartments" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Apartments verwalten →</a>
             </div>
           </div>
@@ -147,34 +119,37 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
           <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
             {connected ? 'API-Token aktualisieren' : 'Nuki Web API-Token eingeben'}
           </div>
-          <div style={{ fontSize: 13, color: '#6b7280' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
             Den Token finden Sie unter{' '}
             <a href="https://web.nuki.io/#/account" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-primary)' }}>
               web.nuki.io → Account → API
             </a>.
           </div>
         </div>
-        <input
-          type="password"
-          placeholder="Nuki Web API-Token"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          style={input}
-        />
-        {error && <div style={{ fontSize: 13, color: '#dc2626' }}>{error}</div>}
-        {success && <div style={{ fontSize: 13, color: '#16a34a' }}>{success}</div>}
+        <input type="password" placeholder="Nuki Web API-Token" value={token} onChange={(e) => setToken(e.target.value)} style={inputStyle} />
+        {error && <div style={{ fontSize: 13, color: 'var(--status-cancelled-text)' }}>{error}</div>}
+        {success && <div style={{ fontSize: 13, color: 'var(--status-booked-text)' }}>{success}</div>}
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
           {connected && (
-            <button onClick={handleRemove} disabled={removing} style={{ ...btnDanger, opacity: removing ? 0.5 : 1 }}>
+            <Button variant="danger" onClick={() => setConfirmOpen(true)} loading={removing} disabled={removing}>
               Verbindung trennen
-            </button>
+            </Button>
           )}
-          <button onClick={handleSave} disabled={saving || !token.trim()} className="btn-shine" style={{ ...btnPrimary, opacity: saving || !token.trim() ? 0.5 : 1 }}>
+          <Button variant="primary" onClick={handleSave} loading={saving} disabled={saving || !token.trim()}>
             {saving ? 'Wird gespeichert…' : 'Verbindung testen & speichern'}
-          </button>
+          </Button>
         </div>
       </div>
 
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleRemove}
+        title="Verbindung trennen"
+        description="Nuki-Verbindung wirklich trennen? Schlösser werden nicht mehr mit Buchungen verknüpft."
+        confirmLabel="Trennen"
+        dangerous
+      />
     </div>
   );
 }

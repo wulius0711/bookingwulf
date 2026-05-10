@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import DeleteHotelButton from './DeleteHotelButton';
+import { Button } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,7 +81,7 @@ export default async function HotelsPage() {
           <h1 className="page-title">Hotels</h1>
           <p className="page-subtitle">Hotels anlegen und verwalten</p>
         </div>
-        <Link href="/admin/hotels/new" className="btn-primary" style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <Link href="/admin/hotels/new" className="ui-btn ui-btn-primary ui-btn-md" style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
           Neues Hotel
         </Link>
       </div>
@@ -111,7 +112,7 @@ export default async function HotelsPage() {
                     width: 36,
                     height: 36,
                     borderRadius: 10,
-                    background: h.accentColor || '#e5e7eb',
+                    background: h.accentColor || 'var(--border)',
                     flexShrink: 0,
                     border: '1px solid rgba(0,0,0,0.08)',
                   }}
@@ -127,8 +128,8 @@ export default async function HotelsPage() {
                           borderRadius: 8,
                           fontSize: 11,
                           fontWeight: 700,
-                          background: '#fef2f2',
-                          color: '#b91c1c',
+                          background: 'var(--status-cancelled-bg)',
+                          color: 'var(--status-cancelled-text)',
                           textTransform: 'uppercase',
                           letterSpacing: '0.05em',
                         }}
@@ -137,11 +138,11 @@ export default async function HotelsPage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ fontSize: 13, color: '#888' }}>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
                     /{h.slug}
                     {h.email && <span style={{ marginLeft: 12 }}>{h.email}</span>}
                   </div>
-                  <div style={{ fontSize: 12, color: '#aaa' }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-disabled)' }}>
                     {h._count.apartments} Apartments · {h._count.requests} Anfragen
                     {' · '}
                     <span style={{
@@ -149,8 +150,8 @@ export default async function HotelsPage() {
                       borderRadius: 8,
                       fontSize: 11,
                       fontWeight: 600,
-                      background: h.subscriptionStatus === 'active' ? '#dcfce7' : h.subscriptionStatus === 'trialing' ? '#e0f2fe' : '#fef2f2',
-                      color: h.subscriptionStatus === 'active' ? '#166534' : h.subscriptionStatus === 'trialing' ? '#0369a1' : '#b91c1c',
+                      background: h.subscriptionStatus === 'active' ? 'var(--status-booked-bg)' : h.subscriptionStatus === 'trialing' ? 'var(--status-new-bg)' : 'var(--status-cancelled-bg)',
+                      color: h.subscriptionStatus === 'active' ? 'var(--status-booked-text)' : h.subscriptionStatus === 'trialing' ? 'var(--status-new-text)' : 'var(--status-cancelled-text)',
                     }}>
                       {h.subscriptionStatus}
                     </span>
@@ -159,58 +160,22 @@ export default async function HotelsPage() {
               </div>
 
               <div style={{ display: 'flex', gap: 8 }}>
-                <Link
-                  href={`/admin/hotels/${h.id}`}
-                  style={{
-                    padding: '8px 14px',
-                    borderRadius: 8,
-                    border: '1px solid var(--border)',
-                    background: 'var(--surface)',
-                    color: 'var(--text-primary)',
-                    textDecoration: 'none',
-                    fontSize: 13,
-                  }}
-                >
+                <Link href={`/admin/hotels/${h.id}`} className="ui-btn ui-btn-secondary ui-btn-sm" style={{ textDecoration: 'none' }}>
                   Bearbeiten
                 </Link>
 
                 <form action={toggleHotelActive}>
                   <input type="hidden" name="id" value={h.id} />
                   <input type="hidden" name="isActive" value={String(h.isActive)} />
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: 8,
-                      border: '1px solid var(--border)',
-                      background: 'var(--surface)',
-                      color: 'var(--text-muted)',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                    }}
-                  >
+                  <Button variant="secondary" size="sm" type="submit">
                     {h.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                  </button>
+                  </Button>
                 </form>
 
                 {h.subscriptionStatus !== 'trialing' && h.subscriptionStatus !== 'active' && (
                   <form action={resetTrial}>
                     <input type="hidden" name="id" value={h.id} />
-                    <button
-                      type="submit"
-                      style={{
-                        padding: '8px 14px',
-                        borderRadius: 8,
-                        border: '1px solid #0284c7',
-                        background: '#e0f2fe',
-                        color: '#0369a1',
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Trial zurücksetzen
-                    </button>
+                    <Button variant="secondary" size="sm" type="submit">Trial zurücksetzen</Button>
                   </form>
                 )}
 

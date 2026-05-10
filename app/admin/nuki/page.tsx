@@ -51,7 +51,7 @@ export default async function NukiPage() {
       <p className="page-subtitle" style={{ marginBottom: 16 }}>
         Verbinden Sie Ihre Nuki-Schlösser. Bei Sofortbuchungen erhalten Gäste automatisch einen zeitlich begrenzten Zugangscode per E-Mail.
       </p>
-      <div style={{ margin: '0 0 32px', padding: '12px 16px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, fontSize: 13, color: '#1d4ed8', lineHeight: 1.6 }}>
+      <div style={{ margin: '0 0 32px', padding: '12px 16px', background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 13, color: 'var(--status-new-text)', lineHeight: 1.6 }}>
         Falls die Code-Generierung fehlschlägt (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert und Sie erhalten automatisch eine E-Mail-Benachrichtigung, um den Zugang manuell bereitzustellen.
       </div>
 

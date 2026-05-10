@@ -316,34 +316,10 @@ async function sendAdminMessage(formData: FormData) {
 
 function getStatusBadge(status: string) {
   switch (status) {
-    case 'booked':
-      return {
-        label: 'Gebucht',
-        bg: '#e8f5e9',
-        color: '#256029',
-        border: '#b7dfba',
-      };
-    case 'answered':
-      return {
-        label: 'Beantwortet',
-        bg: '#eaf2ff',
-        color: '#2457a6',
-        border: '#bfd4fb',
-      };
-    case 'cancelled':
-      return {
-        label: 'Storniert',
-        bg: '#fdecec',
-        color: '#a63b3b',
-        border: '#f3c3c3',
-      };
-    default:
-      return {
-        label: 'Neu',
-        bg: '#f4f4f4',
-        color: '#555',
-        border: '#ddd',
-      };
+    case 'booked':     return { label: 'Gebucht',     bg: 'var(--status-booked-bg)',    color: 'var(--status-booked-text)',    border: 'transparent' };
+    case 'answered':   return { label: 'Beantwortet', bg: 'var(--status-new-bg)',        color: 'var(--status-new-text)',        border: 'transparent' };
+    case 'cancelled':  return { label: 'Storniert',   bg: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', border: 'transparent' };
+    default:           return { label: 'Neu',          bg: 'var(--status-pending-bg)',   color: 'var(--status-pending-text)',   border: 'transparent' };
   }
 }
 
@@ -602,7 +578,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
 
           <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
             <span style={rowLabel}>Erstellt</span>
-            <span style={{ ...rowValue, color: '#9ca3af' }}>{new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(request.createdAt))}</span>
+            <span style={{ ...rowValue, color: 'var(--text-disabled)' }}>{new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(request.createdAt))}</span>
           </div>
         </div>
 
@@ -631,7 +607,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)', fontWeight: 500 }}>
                 Speichern
               </button>
-              {saved === 'language' && <span style={{ fontSize: 12, color: '#16a34a' }}>✓ Gespeichert</span>}
+              {saved === 'language' && <span style={{ fontSize: 12, color: 'var(--status-booked-text)' }}>✓ Gespeichert</span>}
             </form>
           </div>
 
@@ -649,7 +625,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
           <div style={{ padding: '14px 24px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
             <div>
               <strong style={{ fontSize: 14 }}>Check-in E-Mail</strong>
-              <span style={{ marginLeft: 10, fontSize: 12, color: '#9ca3af' }}>
+              <span style={{ marginLeft: 10, fontSize: 12, color: 'var(--text-disabled)' }}>
                 {request.checkinEmailSentAt
                   ? `Gesendet am ${new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(request.checkinEmailSentAt))}`
                   : 'Noch nicht gesendet'}
@@ -670,23 +646,23 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               <button
                 type="submit"
                 className="btn-shine"
-                style={{ padding: '8px 18px', borderRadius: 8, border: 'none', background: '#111', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                style={{ padding: '8px 18px', borderRadius: 8, border: 'none', background: 'var(--accent)', color: 'var(--text-on-accent)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
               >
                 {request.checkinEmailSentAt ? 'Erneut senden' : 'Jetzt senden'}
               </button>
             </form>
           </div>
           {saved === 'checkin-email' && (
-            <div style={{ padding: '0 24px 14px', fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ E-Mail wurde gesendet</div>
+            <div style={{ padding: '0 24px 14px', fontSize: 13, color: 'var(--status-booked-text)', fontWeight: 500 }}>✓ E-Mail wurde gesendet</div>
           )}
         </div>
       )}
 
       {/* ─── Nachrichtenthread ─── */}
       {!canUseMessages ? (
-        <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: '#9ca3af' }}>
+        <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: 'var(--text-secondary)' }}>
           🔒 Direktnachrichten sind ab dem <strong style={{ color: 'var(--text-primary)' }}>Business-Plan</strong> verfügbar.{' '}
-          <a href="/admin/billing" style={{ color: '#111', fontWeight: 600 }}>Jetzt upgraden →</a>
+          <a href="/admin/billing" style={{ color: 'var(--accent)', fontWeight: 600 }}>Jetzt upgraden →</a>
         </div>
       ) : (
       <div style={{
@@ -699,7 +675,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border)' }}>
           <strong style={{ fontSize: 15 }}>Nachrichten</strong>
           {request.messages.length > 0 && (
-            <span style={{ marginLeft: 8, fontSize: 12, color: '#9ca3af' }}>
+            <span style={{ marginLeft: 8, fontSize: 12, color: 'var(--text-disabled)' }}>
               {request.messages.length} Nachricht{request.messages.length !== 1 ? 'en' : ''}
             </span>
           )}
@@ -708,7 +684,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         {/* Thread */}
         <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 80 }}>
           {request.messages.length === 0 && (
-            <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>
+            <p style={{ color: 'var(--text-disabled)', fontSize: 13, margin: 0 }}>
               Noch keine Nachrichten — schreiben Sie dem Gast direkt.
             </p>
           )}
@@ -723,7 +699,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   maxWidth: '75%',
                   padding: '10px 14px',
                   borderRadius: isHotel ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
-                  background: isHotel ? '#111' : 'var(--surface-3)',
+                  background: isHotel ? 'var(--primitive-gray-900)' : 'var(--surface-3)',
                   color: isHotel ? '#fff' : 'var(--text-primary)',
                   fontSize: 14,
                   lineHeight: 1.6,
@@ -732,7 +708,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 }}>
                   {msg.body}
                 </div>
-                <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 3 }}>
+                <div style={{ fontSize: 11, color: 'var(--text-disabled)', marginTop: 3 }}>
                   {senderLabel} · {new Intl.DateTimeFormat('de-AT', {
                     day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
                   }).format(new Date(msg.createdAt))}
@@ -764,7 +740,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               }}
             />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, color: '#9ca3af' }}>
+              <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>
                 Gast erhält eine E-Mail mit Antwort-Link.
               </span>
               <button
@@ -774,8 +750,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   padding: '9px 20px',
                   borderRadius: 8,
                   border: 'none',
-                  background: '#111',
-                  color: '#fff',
+                  background: 'var(--accent)',
+                  color: 'var(--text-on-accent)',
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: 'pointer',

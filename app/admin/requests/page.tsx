@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { DeleteAllRequestsButton } from './DeleteButtons';
 import RequestList from './RequestList';
 import ExportButton from './ExportButton';
+import { EmptyState } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,12 +72,10 @@ export default async function RequestsPage() {
       </div>
 
       {requests.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Keine Buchungen vorhanden.</p>
-          <p style={{ fontSize: 13, color: '#9ca3af' }}>
-            Sobald Gäste eine Anfrage über das Widget senden, erscheint sie hier.
-          </p>
-        </div>
+        <EmptyState
+          title="Keine Buchungen vorhanden."
+          description="Sobald Gäste eine Anfrage über das Widget senden, erscheint sie hier."
+        />
       ) : (
         <RequestList requests={requests} apartments={apartments} isSuperAdmin={isSuperAdmin} />
       )}

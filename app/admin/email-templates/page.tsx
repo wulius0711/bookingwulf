@@ -221,13 +221,13 @@ export default async function EmailTemplatesPage() {
 
 
       {/* Language hint */}
-      <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 18px', marginBottom: 16, fontSize: 13, color: '#92400e' }}>
+      <div style={{ background: 'var(--status-pending-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 18px', marginBottom: 16, fontSize: 13, color: 'var(--status-pending-text)' }}>
         Templates werden auf Deutsch bearbeitet. Die Sprache der Gast-Mails lässt sich pro Buchung in der Buchungsdetailansicht einstellen.
       </div>
 
       {/* Placeholder reference */}
       <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
-        <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
+        <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
           {PLACEHOLDERS.map(({ key, desc }) => (
             <span key={key} style={{ fontSize: 13, color: 'var(--text-muted)' }}>
@@ -248,7 +248,7 @@ export default async function EmailTemplatesPage() {
                   <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
                     <div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{label}</div>
-                      <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>{description}</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>{description}</div>
                     </div>
                     <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
                   </summary>
@@ -304,7 +304,7 @@ export default async function EmailTemplatesPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Online Check-in</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
@@ -321,9 +321,9 @@ export default async function EmailTemplatesPage() {
                   defaultValue={s?.preArrivalReminderDays ?? 3}
                   style={{ ...inputStyle, width: 120 }} />
               </div>
-              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#0369a1', lineHeight: 1.6 }}>
+              <div style={{ background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-new-text)', lineHeight: 1.6 }}>
                 📋 <strong>Hausordnung</strong> wird jetzt zentral unter{' '}
-                <a href="/admin/settings" style={{ color: '#0369a1', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
+                <a href="/admin/settings" style={{ color: 'var(--status-new-text)', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
                 gepflegt — der Gast muss sie beim Online Check-in bestätigen.
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -340,7 +340,7 @@ export default async function EmailTemplatesPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-in E-Mail — Automatisch</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
@@ -357,7 +357,7 @@ export default async function EmailTemplatesPage() {
                   defaultValue={s?.checkinEmailDays ?? 3}
                   style={{ ...inputStyle, width: 120 }} />
               </div>
-              <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#15803d', lineHeight: 1.6 }}>
+              <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-booked-text)', lineHeight: 1.6 }}>
                 ℹ️ Die E-Mail wird nur einmalig gesendet. Manuell versendete Mails werden nicht doppelt versendet.
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -374,7 +374,7 @@ export default async function EmailTemplatesPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-out-Erinnerung</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
@@ -398,7 +398,7 @@ export default async function EmailTemplatesPage() {
                   style={{ ...inputStyle, width: 160 }} />
               </div>
               <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: '#9ca3af', fontSize: 11 }}>(optional)</span></label>
+                <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: 'var(--text-disabled)', fontSize: 11 }}>(optional)</span></label>
                 <textarea name="checkoutReminderText" rows={4}
                   defaultValue={s?.checkoutReminderText ?? ''}
                   placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
@@ -432,7 +432,7 @@ export default async function EmailTemplatesPage() {
             <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Bewertungsanfrage</div>
-                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
               </div>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>

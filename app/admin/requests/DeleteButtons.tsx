@@ -1,37 +1,56 @@
 'use client';
 
+import { useState } from 'react';
 import { deleteRequest, deleteAllRequests } from './request-actions';
+import { Button, ConfirmDialog } from '../components/ui';
 
 export function DeleteRequestButton({ requestId }: { requestId: number }) {
+  const [open, setOpen] = useState(false);
+
+  async function handleDelete() {
+    const fd = new FormData();
+    fd.set('id', String(requestId));
+    await deleteRequest(fd);
+  }
+
   return (
-    <form
-      action={deleteRequest}
-      onSubmit={(e) => { if (!confirm('Anfrage #' + requestId + ' wirklich löschen?')) e.preventDefault(); }}
-    >
-      <input type="hidden" name="id" value={requestId} />
-      <button
-        type="submit"
-        style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface-2)', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-      >
-        Anfrage löschen
-      </button>
-    </form>
+    <>
+      <Button variant="danger" size="sm" onClick={() => setOpen(true)}>Anfrage löschen</Button>
+      <ConfirmDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleDelete}
+        title="Anfrage löschen"
+        description={`Anfrage #${requestId} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`}
+        confirmLabel="Löschen"
+        dangerous
+      />
+    </>
   );
 }
 
 export function DeleteAllRequestsButton({ hotelSlug, count }: { hotelSlug: string; count: number }) {
+  const [open, setOpen] = useState(false);
+
+  async function handleDelete() {
+    const fd = new FormData();
+    fd.set('hotelSlug', hotelSlug);
+    await deleteAllRequests(fd);
+  }
+
   return (
-    <form
-      action={deleteAllRequests}
-      onSubmit={(e) => { if (!confirm(`Alle ${count} Anfragen wirklich unwiderruflich löschen?`)) e.preventDefault(); }}
-    >
-      <input type="hidden" name="hotelSlug" value={hotelSlug} />
-      <button
-        type="submit"
-        style={{ padding: '10px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface-2)', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
-      >
-        Alle löschen ({count})
-      </button>
-    </form>
+    <>
+      <Button variant="danger" size="sm" onClick={() => setOpen(true)}>Alle löschen ({count})</Button>
+      <ConfirmDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleDelete}
+        title="Alle Anfragen löschen"
+        description={`Alle ${count} Anfragen wirklich unwiderruflich löschen?`}
+        confirmLabel="Alle löschen"
+        confirmText="löschen"
+        dangerous
+      />
+    </>
   );
 }

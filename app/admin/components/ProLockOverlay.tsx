@@ -23,8 +23,9 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
             left: pos.x + 14,
             top: pos.y + 14,
             padding: '7px 14px',
-            background: '#1e293b',
-            color: '#fff',
+            background: 'var(--surface-2)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border)',
             fontSize: 12,
             fontWeight: 500,
             borderRadius: 8,
@@ -68,14 +69,14 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
             <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>
               {planLabel} Feature
             </h2>
-            <p style={{ margin: '0 0 24px', fontSize: 14, color: '#475569', lineHeight: 1.6 }}>
+            <p style={{ margin: '0 0 24px', fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               Dieses Feature ist ab dem {planLabel} Plan verfügbar. Upgrade jetzt und schalte alle {planLabel}-Features frei.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button
                 onClick={() => router.push('/admin/billing')}
                 className="btn-shine"
-                style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+                style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: 'var(--text-on-accent)', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
               >
                 Zu den Plänen
               </button>

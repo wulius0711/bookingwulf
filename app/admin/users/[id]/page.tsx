@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
 import { assignHotel, unassignHotel, AssignHotelState } from '../actions';
 import AssignHotelForm from './AssignHotelForm';
+import { Button } from '../../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,14 +45,14 @@ export default async function UserHotelsPage({ params }: PageProps) {
 
   return (
     <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 600 }}>
-      <a href="/admin/users" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none' }}>← Zurück</a>
+      <a href="/admin/users" style={{ fontSize: 13, color: 'var(--text-secondary)', textDecoration: 'none' }}>← Zurück</a>
       <h1 className="page-title" style={{ marginTop: 12, marginBottom: 4 }}>Hotels verwalten</h1>
-      <p style={{ margin: '0 0 28px', fontSize: 14, color: '#667085' }}>{user.email}</p>
+      <p style={{ margin: '0 0 28px', fontSize: 14, color: 'var(--text-secondary)' }}>{user.email}</p>
 
       {/* Assigned hotels */}
       <div style={{ display: 'grid', gap: 10, marginBottom: 28 }}>
         {assigned.length === 0 && (
-          <p style={{ fontSize: 14, color: '#9ca3af' }}>Noch kein Hotel zugewiesen.</p>
+          <p style={{ fontSize: 14, color: 'var(--text-disabled)' }}>Noch kein Hotel zugewiesen.</p>
         )}
         {assigned.map((a) => (
           <div key={a.hotelId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', background: 'var(--surface)' }}>
@@ -64,9 +65,7 @@ export default async function UserHotelsPage({ params }: PageProps) {
             <form action={unassignHotel}>
               <input type="hidden" name="userId" value={userId} />
               <input type="hidden" name="hotelId" value={a.hotelId} />
-              <button type="submit" style={{ padding: '5px 12px', border: '1px solid #fca5a5', background: 'var(--surface)', color: '#dc2626', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>
-                Entfernen
-              </button>
+              <Button variant="danger" size="sm" type="submit">Entfernen</Button>
             </form>
           </div>
         ))}
@@ -77,7 +76,7 @@ export default async function UserHotelsPage({ params }: PageProps) {
         <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '20px 20px', background: 'var(--surface-2)' }}>
           <h2 style={{ margin: '0 0 14px', fontSize: 16, color: 'var(--text-primary)' }}>Hotel hinzufügen</h2>
           {assigned.length > 0 && (
-            <p style={{ margin: '0 0 12px', fontSize: 13, color: '#6b7280' }}>
+            <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--text-secondary)' }}>
               Nur möglich wenn das Hotel auf Business-Plan ist.
             </p>
           )}

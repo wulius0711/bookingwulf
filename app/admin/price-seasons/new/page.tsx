@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { writeAuditLog } from '@/src/lib/audit';
 import { redirect } from 'next/navigation';
+import { Button } from '../../components/ui';
 
 type PageProps = { searchParams: Promise<{ start?: string; end?: string }> };
 
@@ -101,7 +102,7 @@ export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
               </div>
               <div className="admin-form-actions">
                 <a href="/admin/price-seasons" className="btn-cancel">Abbrechen</a>
-                <button type="submit" className="btn-primary">Speichern</button>
+                <Button variant="primary" type="submit">Speichern</Button>
               </div>
             </form>
           </div>

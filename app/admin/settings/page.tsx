@@ -77,7 +77,7 @@ const headlineStyle: React.CSSProperties = {
 const sublineStyle: React.CSSProperties = {
   margin: '6px 0 0',
   fontSize: 14,
-  color: '#667085',
+  color: 'var(--text-secondary)',
 };
 
 const selectorWrapStyle: React.CSSProperties = {
@@ -109,7 +109,7 @@ const sectionIntroStyle: React.CSSProperties = {
   margin: '4px 0 0',
   fontSize: 14,
   lineHeight: 1.5,
-  color: '#6b7280',
+  color: 'var(--text-secondary)',
 };
 
 const rowStyle: React.CSSProperties = {
@@ -174,7 +174,7 @@ const previewSubStyle: React.CSSProperties = {
   margin: '8px 0 18px',
   fontSize: 14,
   lineHeight: 1.5,
-  color: '#6b7280',
+  color: 'var(--text-secondary)',
 };
 
 const iframeStyle: React.CSSProperties = {
@@ -501,7 +501,7 @@ export default async function Page({ searchParams }: PageProps) {
                         <span style={labelStyle}>
                           {field === 'headline' ? 'Eigene Schrift (Headline)' : 'Eigene Schrift (Fließtext)'}
                         </span>
-                        <span style={{ fontSize: 13, color: '#9ca3af' }}>+ Schrift hochladen</span>
+                        <span style={{ fontSize: 13, color: 'var(--text-disabled)' }}>+ Schrift hochladen</span>
                       </div>
                     )}
                   </div>
@@ -578,7 +578,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div style={{ padding: '0 28px 26px', opacity: fullBranding ? 1 : 0.4 }}>
                 {fullBranding
                   ? <SettingsPresets hotelId={selected.id} initialPresets={selected.settingsPresets} />
-                  : <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Presets gespeichert.</p>
+                  : <p style={{ fontSize: 13, color: 'var(--text-disabled)', margin: 0 }}>Noch keine Presets gespeichert.</p>
                 }
               </div>
               {!fullBranding && <ProLockOverlay />}
@@ -629,20 +629,20 @@ export default async function Page({ searchParams }: PageProps) {
               <div>
                 <h2 style={sectionTitleStyle}>Embed-Code</h2>
                 <p style={sectionIntroStyle}>
-                  Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
+                  Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: 'var(--bg-surface-raised)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
                 </p>
               </div>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
             <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
                 <EmbedCode
                   code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}"></script>`}
                 />
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
                 <EmbedCode
                   code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}" data-lang="en"></script>`}
                 />
@@ -671,27 +671,28 @@ export default async function Page({ searchParams }: PageProps) {
                   placeholder="https://deine-website.at/buchen"
                   style={{ ...inputStyle, marginTop: 8 }}
                 />
-                <p style={{ margin: '6px 0 0', fontSize: 12, color: '#9ca3af' }}>
+                <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--text-disabled)' }}>
                   Ohne Ziel-URL leiten Gäste auf bookingwulf.com/widget.html weiter.
                 </p>
+
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Embed-Code</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Embed-Code</div>
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Deutsch</div>
                   <EmbedCode
                     code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
                   />
                 </div>
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
                   <EmbedCode
                     code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="en"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
                   />
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
                 <iframe
                   src={`/mini-widget.html?hotel=${encodeURIComponent(selected.slug)}`}
                   style={{ width: '100%', height: 180, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}

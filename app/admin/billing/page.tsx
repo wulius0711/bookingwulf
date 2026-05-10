@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PLANS, PlanKey } from '@/src/lib/plans';
+import { Button } from '../components/ui';
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  active:    { label: 'Aktiv',       color: '#16a34a', bg: '#dcfce7' },
-  trialing:  { label: 'Testphase',   color: '#0284c7', bg: '#e0f2fe' },
-  past_due:  { label: 'Zahlung offen', color: '#d97706', bg: '#fef3c7' },
-  cancelled: { label: 'Gekündigt',   color: '#dc2626', bg: '#fee2e2' },
-  inactive:  { label: 'Inaktiv',     color: '#6b7280', bg: '#f3f4f6' },
+  active:    { label: 'Aktiv',           color: 'var(--status-booked-text)',    bg: 'var(--status-booked-bg)'    },
+  trialing:  { label: 'Testphase',       color: 'var(--status-new-text)',       bg: 'var(--status-new-bg)'       },
+  past_due:  { label: 'Zahlung offen',   color: 'var(--status-pending-text)',   bg: 'var(--status-pending-bg)'   },
+  cancelled: { label: 'Gekündigt',       color: 'var(--status-cancelled-text)', bg: 'var(--status-cancelled-bg)' },
+  inactive:  { label: 'Inaktiv',         color: 'var(--text-secondary)',        bg: 'var(--bg-surface-raised)'   },
 };
 
 export default function BillingPage() {
@@ -129,13 +130,13 @@ export default function BillingPage() {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Abonnement</h1>
-          <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Plan verwalten für {hotel?.name}</p>
+          <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Plan verwalten für {hotel?.name}</p>
         </div>
 
         {/* Current plan */}
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '24px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 4 }}>Aktueller Plan</div>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4 }}>Aktueller Plan</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               {PLANS[currentPlan as PlanKey]?.name ?? 'Starter'}
             </div>
@@ -143,26 +144,26 @@ export default function BillingPage() {
               {statusInfo.label}
             </span>
             {status === 'trialing' && hotel?.trialEndsAt && (
-              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: '#6b7280' }}>
+              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: 'var(--text-secondary)' }}>
                 Testphase endet am {new Date(hotel.trialEndsAt).toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' })}
               </span>
             )}
             {status === 'inactive' && hotel?.trialEndsAt && new Date(hotel.trialEndsAt) < new Date() && (
-              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: '#dc2626' }}>
+              <span style={{ display: 'block', marginTop: 6, fontSize: 13, color: 'var(--status-cancelled-text)' }}>
                 Testphase abgelaufen — bitte Plan aktivieren.
               </span>
             )}
           </div>
           {isActive && (
-            <div title={status === 'trialing' ? 'Verfügbar sobald ein kostenpflichtiges Abonnement aktiv ist.' : undefined} style={{ display: 'inline-block' }}>
-              <button
-                className="btn-secondary"
+            <div title={status === 'trialing' ? 'Verfügbar sobald ein kostenpflichtiges Abonnement aktiv ist.' : undefined}>
+              <Button
+                variant="secondary"
                 onClick={status === 'trialing' ? undefined : openPortal}
                 disabled={actionLoading || status === 'trialing'}
-                style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 14, fontWeight: 600, cursor: status === 'trialing' ? 'not-allowed' : 'pointer', color: status === 'trialing' ? '#9ca3af' : 'var(--text-muted)', opacity: status === 'trialing' ? 0.6 : 1 }}
+                loading={actionLoading && status !== 'trialing'}
               >
                 Abonnement verwalten
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -182,12 +183,12 @@ export default function BillingPage() {
 
         {/* Billing interval toggle */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <span style={{ fontSize: 14, color: billingInterval === 'month' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
+          <span style={{ fontSize: 14, color: billingInterval === 'month' ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
           <button
             onClick={() => setBillingInterval(billingInterval === 'month' ? 'year' : 'month')}
             style={{
               width: 48, height: 26, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 3,
-              background: billingInterval === 'year' ? '#111827' : '#d1d5db',
+              background: billingInterval === 'year' ? 'var(--accent)' : 'var(--border)',
               display: 'flex', alignItems: 'center',
               justifyContent: billingInterval === 'year' ? 'flex-end' : 'flex-start',
               transition: 'background 0.2s ease',
@@ -195,7 +196,7 @@ export default function BillingPage() {
           >
             <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', display: 'block' }} />
           </button>
-          <span style={{ fontSize: 14, color: billingInterval === 'year' ? '#111827' : '#6b7280', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
+          <span style={{ fontSize: 14, color: billingInterval === 'year' ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
             Jährlich
             {billingInterval === 'year' && (
               <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)', fontSize: 12, fontWeight: 700 }}>spare 10%</span>
@@ -205,12 +206,12 @@ export default function BillingPage() {
 
         {/* Bundle plan indicator (only shown when on bundle_all) */}
         {currentPlan === 'bundle_all' && (
-          <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)', border: '2px solid #0284c7', borderRadius: 16 }}>
+          <div style={{ padding: '20px 24px', background: 'var(--status-new-bg)', border: '2px solid var(--status-new-text)', borderRadius: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
               <span style={{ fontSize: 22 }}>⭐</span>
               <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>hotelwulf Bundle</div>
             </div>
-            <p style={{ margin: 0, fontSize: 14, color: '#0369a1', lineHeight: 1.6 }}>
+            <p style={{ margin: 0, fontSize: 14, color: 'var(--status-new-text)', lineHeight: 1.6 }}>
               Du hast das hotelwulf Bundle — alle Plattformen inklusive. Für Änderungen an deinem Abonnement wende dich an den Support.
             </p>
           </div>
@@ -227,7 +228,7 @@ export default function BillingPage() {
                 className="plan-card"
                 style={{
                   background: isCurrent ? 'var(--surface-2)' : 'var(--surface)',
-                  border: `2px solid ${isCurrent ? '#e5e7eb' : key === 'pro' ? '#111827' : '#e5e7eb'}`,
+                  border: `2px solid ${isCurrent ? 'var(--border)' : key === 'pro' ? 'var(--accent)' : 'var(--border)'}`,
                   borderRadius: 16,
                   padding: 24,
                   display: 'flex',
@@ -237,7 +238,7 @@ export default function BillingPage() {
                 }}
               >
                 {key === 'pro' && (
-                  <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: '#111827', color: '#fff', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
+                  <div style={{ position: 'absolute', top: -12, left: 20, padding: '3px 12px', background: 'var(--accent)', color: 'var(--text-on-accent)', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
                     BESTER DEAL
                   </div>
                 )}
@@ -246,10 +247,10 @@ export default function BillingPage() {
                   <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{plan.name}</div>
                   <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginTop: 8, letterSpacing: '-0.02em' }}>
                     € {billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
-                    <span style={{ fontSize: 14, fontWeight: 400, color: '#6b7280' }}> / Monat</span>
+                    <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--text-secondary)' }}> / Monat</span>
                   </div>
                   {billingInterval === 'year' && (
-                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
                       = € {plan.priceYearly * 12} / Jahr
                     </div>
                   )}
@@ -257,50 +258,30 @@ export default function BillingPage() {
 
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>
                   {plan.features.map((f) => (
-                    <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>
-                      <span style={{ color: '#10b981', fontWeight: 700 }}>✓</span> {f}
+                    <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'var(--text-primary)' }}>
+                      <span style={{ color: 'var(--status-booked-text)', fontWeight: 700 }}>✓</span> {f}
                     </li>
                   ))}
                 </ul>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <button
-                    className="btn-primary"
+                  <Button
+                    variant="primary"
                     onClick={() => handlePlanAction(key)}
                     disabled={actionLoading || isCurrent || isBundle}
-                    style={{
-                      padding: '10px 16px',
-                      borderRadius: 8,
-                      background: 'var(--accent)',
-                      color: '#fff',
-                      border: 'none',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: isCurrent || isBundle ? 'default' : 'pointer',
-                      opacity: isCurrent || isBundle ? 0.4 : actionLoading ? 0.6 : 1,
-                    }}
+                    loading={actionLoading && !isCurrent && !isBundle}
                   >
                     {isCurrent ? 'Ausgewählt' : 'Auswählen'}
-                  </button>
+                  </Button>
 
                   {status === 'trialing' && !isBundle && (
-                    <button
+                    <Button
+                      variant="secondary"
                       onClick={() => handleCheckout(key)}
                       disabled={actionLoading}
-                      style={{
-                        padding: '10px 16px',
-                        borderRadius: 8,
-                        background: 'var(--surface)',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--border)',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        opacity: actionLoading ? 0.6 : 1,
-                      }}
                     >
                       Jetzt kaufen
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -312,61 +293,29 @@ export default function BillingPage() {
       {/* Welcome modal */}
       {showWelcome && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: 24,
-            animation: 'fadeIn 0.25s ease',
-          }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24, animation: 'fadeIn 0.25s ease' }}
           onClick={closeWelcome}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: 'var(--surface)',
-              borderRadius: 20,
-              padding: 'clamp(20px, 5vw, 36px) clamp(16px, 4vw, 32px)',
-              maxWidth: 480,
-              width: '100%',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
-              animation: 'scaleIn 0.25s ease',
-            }}
+            style={{ background: 'var(--surface)', borderRadius: 20, padding: 'clamp(20px, 5vw, 36px) clamp(16px, 4vw, 32px)', maxWidth: 480, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'scaleIn 0.25s ease' }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
             <h2 style={{ margin: '0 0 8px', fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>
               Willkommen!
             </h2>
-            <p style={{ margin: '0 0 16px', fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+            <p style={{ margin: '0 0 16px', fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
               Dein Hotel-Konto wurde erfolgreich erstellt. Du hast jetzt eine
               <strong> 14-tägige kostenlose Testphase</strong>, in der du alle Features ausprobieren kannst.
             </p>
-            <ul style={{ margin: '0 0 20px', padding: '0 0 0 18px', fontSize: 14, color: '#475569', lineHeight: 1.8 }}>
+            <ul style={{ margin: '0 0 20px', padding: '0 0 0 18px', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
               <li>Wähle hier einen Plan — du kannst jederzeit wechseln</li>
               <li>Alle Features des gewählten Plans sind sofort verfügbar</li>
               <li>Erst nach der Testphase wird eine Zahlung fällig</li>
             </ul>
-            <button
-              onClick={closeWelcome}
-              className="btn-shine"
-              style={{
-                width: '100%',
-                padding: '12px 20px',
-                borderRadius: 8,
-                background: 'var(--accent)',
-                color: '#fff',
-                border: 'none',
-                fontSize: 15,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
+            <Button variant="primary" onClick={closeWelcome} style={{ width: '100%' }}>
               Plan auswählen
-            </button>
+            </Button>
           </div>
         </div>
       )}

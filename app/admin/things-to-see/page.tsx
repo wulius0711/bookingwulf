@@ -25,11 +25,11 @@ export default async function ThingsToSeePage() {
       <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 6 }}>
         Umgebung
       </h1>
-      <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 8 }}>
+      <p style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 8 }}>
         Restaurants, Sehenswürdigkeiten und Aktivitäten für Ihre Gäste — einmal einpflegen, immer verfügbar.
       </p>
-      <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 32 }}>
-        Erscheint in der Gäste-Lounge unter dem Tab <strong style={{ color: '#6b7280' }}>Umgebung</strong>.
+      <p style={{ fontSize: 13, color: 'var(--text-disabled)', marginBottom: 32 }}>
+        Erscheint in der Gäste-Lounge unter dem Tab <strong style={{ color: 'var(--text-secondary)' }}>Umgebung</strong>.
       </p>
       <ThingsToSeeManager
         hotelId={hotelId!}

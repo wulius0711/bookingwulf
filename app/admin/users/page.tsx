@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
+import { Button } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,7 +63,7 @@ export default async function UsersPage() {
             Admin-Zugänge verwalten
           </p>
         </div>
-        <Link href="/admin/users/new" className="btn-primary">
+        <Link href="/admin/users/new" className="ui-btn ui-btn-primary ui-btn-md">
           Neuer Benutzer
         </Link>
       </div>
@@ -95,7 +96,7 @@ export default async function UsersPage() {
                       style={{
                         marginLeft: 8,
                         fontSize: 11,
-                        color: '#888',
+                        color: 'var(--text-disabled)',
                         fontWeight: 400,
                       }}
                     >
@@ -111,8 +112,8 @@ export default async function UsersPage() {
                       borderRadius: 8,
                       fontSize: 11,
                       fontWeight: 700,
-                      background: u.role === 'super_admin' ? '#111' : '#e8f0fe',
-                      color: u.role === 'super_admin' ? '#fff' : '#1a56db',
+                      background: u.role === 'super_admin' ? 'var(--accent)' : 'var(--status-new-bg)',
+                      color: u.role === 'super_admin' ? 'var(--text-on-accent)' : 'var(--status-new-text)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
                     }}
@@ -121,7 +122,7 @@ export default async function UsersPage() {
                   </span>
 
                   {u.hotel && (
-                    <span style={{ fontSize: 13, color: '#555' }}>
+                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
                       {u.hotel.name}
                     </span>
                   )}
@@ -133,8 +134,8 @@ export default async function UsersPage() {
                         borderRadius: 8,
                         fontSize: 11,
                         fontWeight: 700,
-                        background: '#fef2f2',
-                        color: '#b91c1c',
+                        background: 'var(--status-cancelled-bg)',
+                        color: 'var(--status-cancelled-text)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em',
                       }}
@@ -148,47 +149,20 @@ export default async function UsersPage() {
               {u.id !== session.userId && (
                 <div style={{ display: 'flex', gap: 8 }}>
                   {u.role === 'hotel_admin' && (
-                    <a
-                      href={`/admin/users/${u.id}`}
-                      style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-muted)', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}
-                    >
+                    <a href={`/admin/users/${u.id}`} className="ui-btn ui-btn-secondary ui-btn-sm" style={{ textDecoration: 'none' }}>
                       Hotels
                     </a>
                   )}
                   <form action={toggleActive}>
                     <input type="hidden" name="id" value={u.id} />
                     <input type="hidden" name="isActive" value={String(u.isActive)} />
-                    <button
-                      type="submit"
-                      style={{
-                        padding: '8px 14px',
-                        borderRadius: 8,
-                        border: '1px solid var(--border)',
-                        background: 'var(--surface)',
-                        color: 'var(--text-muted)',
-                        cursor: 'pointer',
-                        fontSize: 13,
-                      }}
-                    >
+                    <Button variant="secondary" size="sm" type="submit">
                       {u.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                    </button>
+                    </Button>
                   </form>
 
                   <ConfirmDeleteForm action={deleteUser} id={u.id} message={`Benutzer „${u.email}" wirklich löschen?`}>
-                    <button
-                      type="submit"
-                      style={{
-                        padding: '8px 14px',
-                        borderRadius: 8,
-                        border: '1px solid #fca5a5',
-                        background: 'var(--surface)',
-                        color: '#dc2626',
-                        cursor: 'pointer',
-                        fontSize: 13,
-                      }}
-                    >
-                      Löschen
-                    </button>
+                    <Button variant="danger" size="sm" type="submit">Löschen</Button>
                   </ConfirmDeleteForm>
                 </div>
               )}

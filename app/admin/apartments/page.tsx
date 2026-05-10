@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ApartmentCard from './ApartmentCard';
+import { EmptyState } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -108,15 +109,9 @@ export default async function ApartmentsAdminPage() {
         <div style={{ display: 'flex', gap: 12, alignItems: 'end', flexWrap: 'wrap' }}>
           {apartments.length > 0 && (
             <Link
-              className="btn-primary"
+              className="ui-btn ui-btn-primary ui-btn-md"
               href="/admin/apartments/new"
-              style={{
-                textDecoration: 'none',
-                padding: '12px 18px',
-                background: '#111',
-                color: '#fff',
-                borderRadius: 8,
-              }}
+              style={{ textDecoration: 'none' }}
             >
               Neues Apartment
             </Link>
@@ -125,11 +120,14 @@ export default async function ApartmentsAdminPage() {
       </div>
 
       {apartments.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Noch keine Apartments vorhanden.</p>
-          <a className="btn-primary" href="/admin/apartments/new" style={{ padding: '10px 20px', borderRadius: 8, background: '#111', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <EmptyState
+            title="Noch keine Apartments vorhanden."
+            description="Lege dein erstes Apartment an."
+          />
+          <Link href="/admin/apartments/new" className="ui-btn ui-btn-primary ui-btn-md" style={{ textDecoration: 'none' }}>
             Neues Apartment anlegen
-          </a>
+          </Link>
         </div>
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>

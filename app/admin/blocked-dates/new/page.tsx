@@ -39,7 +39,7 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
     redirect('/admin/blocked-dates');
   }
 
-  const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
+  const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
   const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)', boxSizing: 'border-box' };
   const fieldWrap: React.CSSProperties = { display: 'grid', gap: 4 };
 
@@ -49,7 +49,7 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neue Blockierung</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Zeitraum für ein Apartment sperren.</p>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Zeitraum für ein Apartment sperren.</p>
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>

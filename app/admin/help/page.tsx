@@ -100,8 +100,8 @@ export default function HelpPage() {
               {s.plan && (
                 <span style={{
                   fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4,
-                  background: s.plan === 'Business' ? '#fef3c7' : '#ede9fe',
-                  color: s.plan === 'Business' ? '#92400e' : '#5b21b6',
+                  background: s.plan === 'Business' ? 'var(--status-pending-bg)' : '#ede9fe',
+                  color: s.plan === 'Business' ? 'var(--status-pending-text)' : '#5b21b6',
                   letterSpacing: '0.04em', flexShrink: 0,
                 }}>
                   {s.plan.toUpperCase()}
@@ -143,14 +143,14 @@ function Note({ children }: { children: React.ReactNode }) {
 }
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#1e40af', margin: '12px 0' }}>
+    <div style={{ background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: 'var(--status-new-text)', margin: '12px 0' }}>
       {children}
     </div>
   );
 }
 function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', fontWeight: 600, textDecoration: 'underline', textDecorationColor: '#9ca3af', textUnderlineOffset: 3 }}>
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', fontWeight: 600, textDecoration: 'underline', textDecorationColor: 'var(--text-disabled)', textUnderlineOffset: 3 }}>
       {children}
     </a>
   );
@@ -161,7 +161,7 @@ function InternalLink({ id, children }: { id: string; children: React.ReactNode 
   return (
     <button
       onClick={() => navigate(id)}
-      style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', fontSize: 'inherit', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline dashed', textDecorationColor: '#9ca3af', textUnderlineOffset: 3 }}
+      style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', fontSize: 'inherit', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline dashed', textDecorationColor: 'var(--text-disabled)', textUnderlineOffset: 3 }}
     >
       {children}
     </button>
@@ -179,13 +179,13 @@ function PlanNote({ plan, feature }: { plan: 'Pro' | 'Business'; feature?: strin
   const isPro = plan === 'Pro';
   return (
     <div style={{
-      background: isPro ? '#f5f3ff' : '#fffbeb',
-      border: `1px solid ${isPro ? '#ddd6fe' : '#fde68a'}`,
+      background: isPro ? '#f5f3ff' : 'var(--status-pending-bg)',
+      border: `1px solid ${isPro ? '#ddd6fe' : 'var(--border)'}`,
       borderRadius: 8, padding: '10px 14px', fontSize: 13,
-      color: isPro ? '#5b21b6' : '#92400e', margin: '12px 0',
+      color: isPro ? '#5b21b6' : 'var(--status-pending-text)', margin: '12px 0',
       display: 'flex', alignItems: 'center', gap: 8,
     }}>
-      <span style={{ fontWeight: 700, padding: '1px 6px', borderRadius: 4, background: isPro ? '#ede9fe' : '#fef3c7', fontSize: 11 }}>
+      <span style={{ fontWeight: 700, padding: '1px 6px', borderRadius: 4, background: isPro ? '#ede9fe' : 'var(--status-pending-bg)', fontSize: 11 }}>
         {plan}
       </span>
       {feature
@@ -614,7 +614,7 @@ function PreiseSection() {
         Anzahl Tage liegt (z.B. 10 % bei Anreise in den nächsten 7 Tagen). Im Widget als grünes Badge.
       </P>
 
-      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: '#92400e', background: '#fef3c7', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
+      <H3>Belegungsbasierter Aufschlag <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--status-pending-text)', background: 'var(--status-pending-bg)', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Business</span></H3>
       <P>
         Wenn die Auslastung einen konfigurierbaren Schwellwert überschreitet (z.B. 80 %), wird
         automatisch ein prozentualer Aufschlag angewendet. Im Widget als gelbes Badge.

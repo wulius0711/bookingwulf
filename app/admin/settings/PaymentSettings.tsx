@@ -55,7 +55,7 @@ function ToggleRow({ name, label, description, checked, onChange, disabled }: {
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 0', opacity: disabled ? 0.4 : 1 }}>
       <div>
         <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)', lineHeight: 1.3 }}>{label}</div>
-        {description && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2, lineHeight: 1.4 }}>{description}</div>}
+        {description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, lineHeight: 1.4 }}>{description}</div>}
       </div>
       <IosToggle name={name} checked={disabled ? false : checked} onChange={disabled ? () => {} : onChange} />
     </div>
@@ -77,7 +77,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
 
       {/* Aktive Zahlungsmethoden */}
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
-        <div style={{ padding: '12px 16px 0', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+        <div style={{ padding: '12px 16px 0', fontSize: 11, fontWeight: 700, color: 'var(--text-disabled)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
           Zahlungsmethoden
         </div>
 
