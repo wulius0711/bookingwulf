@@ -22,13 +22,22 @@ export function RadiusField({
   const [value, setValue] = useState(parseRadius(defaultValue));
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Dispatch native input event so SettingsLivePreview picks up the change
   useEffect(() => {
     if (!inputRef.current) return;
     const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
     nativeSetter?.call(inputRef.current, `${value}px`);
     inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
   }, [value]);
+
+  useEffect(() => {
+    function handle(e: Event) {
+      const val = (e as CustomEvent).detail?.[name];
+      if (val == null) return;
+      setValue(parseRadius(val));
+    }
+    document.addEventListener('preset-apply', handle);
+    return () => document.removeEventListener('preset-apply', handle);
+  }, [name]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>

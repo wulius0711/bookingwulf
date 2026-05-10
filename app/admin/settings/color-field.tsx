@@ -50,6 +50,18 @@ export function ColorField({
     document.dispatchEvent(new CustomEvent('settings-color-changed', { detail: { name, value: combined } }));
   }, [combined, name]);
 
+  useEffect(() => {
+    function handle(e: Event) {
+      const val = (e as CustomEvent).detail?.[name];
+      if (val == null) return;
+      const p = parseColor(String(val));
+      setHex(p.hex);
+      setAlpha(p.alpha);
+    }
+    document.addEventListener('preset-apply', handle);
+    return () => document.removeEventListener('preset-apply', handle);
+  }, [name]);
+
   return (
     <div style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

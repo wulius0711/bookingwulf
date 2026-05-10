@@ -15,16 +15,6 @@ type Preset = {
   buttonRadius: number | null;
 };
 
-const FIELD_MAP: Record<string, string> = {
-  accentColor: 'accentColor',
-  backgroundColor: 'backgroundColor',
-  cardBackground: 'cardBackground',
-  textColor: 'textColor',
-  mutedTextColor: 'mutedTextColor',
-  borderColor: 'borderColor',
-  cardRadius: 'cardRadius',
-  buttonRadius: 'buttonRadius',
-};
 
 export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: number; initialPresets: Preset[] }) {
   const [presets, setPresets] = useState<Preset[]>(initialPresets);
@@ -32,6 +22,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   const [nameInput, setNameInput] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [appliedHint, setAppliedHint] = useState(false);
 
   function getCurrentValues(): Partial<Preset> {
     const get = (name: string) => (document.querySelector(`[name="${name}"]`) as HTMLInputElement)?.value || null;
@@ -48,17 +39,8 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   }
 
   function applyPreset(preset: Preset) {
-    const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
-    Object.entries(FIELD_MAP).forEach(([key]) => {
-      const val = preset[key as keyof Preset];
-      const el = document.querySelector(`[name="${key}"]`) as HTMLInputElement;
-      if (el && val !== null && val !== undefined) {
-        nativeSetter?.call(el, String(val));
-        el.dispatchEvent(new Event('input', { bubbles: true }));
-        el.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
-    document.dispatchEvent(new CustomEvent('settings-preset-applied'));
+    document.dispatchEvent(new CustomEvent('preset-apply', { detail: preset }));
+    setAppliedHint(true);
   }
 
   async function savePreset() {
@@ -141,6 +123,13 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
           <button type="button" onClick={() => deletePreset(preset.id)} style={{ ...presetBtnStyle, color: '#dc2626', borderColor: '#fecaca' }}>Löschen</button>
         </div>
       ))}
+
+      {appliedHint && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 14px', background: 'var(--accent)', borderRadius: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-on-accent)' }}>Preset angewendet — jetzt speichern, damit das Widget aktualisiert wird.</span>
+          <button type="button" onClick={() => setAppliedHint(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-on-accent)', fontSize: 16, lineHeight: 1, padding: 0, opacity: 0.8 }}>×</button>
+        </div>
+      )}
 
       {error && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{error}</p>}
     </div>
