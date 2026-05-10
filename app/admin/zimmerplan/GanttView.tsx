@@ -133,7 +133,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         <div style={{ borderRadius: '20px 20px 0 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
             <div>
-              <div id="apt-cal-title" style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
+              <div id="apt-cal-title" style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
                 <select
                   value={aptId}
@@ -142,12 +142,12 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                 >
                   {allApts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </select>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: 2, pointerEvents: 'none' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: 2, pointerEvents: 'none' }}>
                   <polyline points="6 9 12 15 18 9"/>
                 </svg>
               </div>
             </div>
-            <button onClick={onClose} aria-label="Schließen" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, lineHeight: 1 }}>
+            <button onClick={onClose} aria-label="Schließen" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: 4, lineHeight: 1 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
@@ -168,10 +168,10 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
           {/* Weekday headers */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 4 }}>
             {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(d => (
-              <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9ca3af', paddingBottom: 6 }}>{d}</div>
+              <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', paddingBottom: 6 }}>{d}</div>
             ))}
           </div>
-          {loading && <div style={{ textAlign: 'center', padding: '24px 0', color: '#9ca3af', fontSize: 13 }}>Lädt…</div>}
+          {loading && <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-secondary)', fontSize: 13 }}>Lädt…</div>}
 
           {weeks.map((week, wi) => {
             const weekStart = week[0];
@@ -269,11 +269,11 @@ const TAB_COLORS: Record<TabType, string> = { blocked: '#ef4444', season: '#3b82
 const TAB_LABELS: Record<TabType, string> = { blocked: 'Sperrzeit', season: 'Preiszeitraum', booking: 'Buchung' };
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '7px 10px', border: '1px solid #334155',
-  borderRadius: 7, fontSize: 13, background: '#273548', color: '#f1f5f9', boxSizing: 'border-box',
+  width: '100%', padding: '7px 10px', border: '1px solid var(--border-default)',
+  borderRadius: 7, fontSize: 13, background: 'var(--bg-surface-raised)', color: 'var(--text-primary)', boxSizing: 'border-box',
 };
 const labelStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, color: '#94a3b8',
+  fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)',
   letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 3,
 };
 const fieldStyle: React.CSSProperties = { display: 'grid', gap: 3 };
@@ -411,7 +411,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af', fontSize: 14 }}>Lädt…</div>
+        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)', fontSize: 14 }}>Lädt…</div>
       ) : (
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
           <div style={{ display: 'flex' }}>
@@ -438,7 +438,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     return (
                       <div key={d} style={{ width: COL_W, flexShrink: 0, textAlign: 'center', fontSize: 10, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, background: isToday ? 'var(--accent)' : 'transparent' }}>
                         <span style={{ fontWeight: 700, color: isToday ? 'var(--text-on-accent)' : isWeekend ? '#6366f1' : '#6b7280' }}>{d.slice(8)}</span>
-                        <span style={{ fontSize: 9, color: isToday ? 'var(--text-on-accent)' : isWeekend ? '#6366f1' : '#9ca3af' }}>{WEEKDAY_SHORT[dow]}</span>
+                        <span style={{ fontSize: 9, color: isToday ? 'var(--text-on-accent)' : isWeekend ? '#6366f1' : 'var(--text-secondary)' }}>{WEEKDAY_SHORT[dow]}</span>
                       </div>
                     );
                   })}
@@ -550,24 +550,24 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selection && (
         <>
           <div aria-hidden="true" onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
               <div>
-                <div id="gantt-create-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+                <div id="gantt-create-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                   {formatDisplay(selection.start)}{selection.start !== selection.end ? ` – ${formatDisplay(selection.end)}` : ''}
                 </div>
-                <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{selection.aptName}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>{selection.aptName}</div>
               </div>
               <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                 {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
                   const locked = tab === 'season' && !hasPro;
                   return (
-                    <button key={tab} onClick={() => { if (!locked) { setActiveTab(tab); setFormError(null); } }} disabled={locked} title={locked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid #334155', cursor: locked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : locked ? '#475569' : '#94a3b8', opacity: locked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <button key={tab} onClick={() => { if (!locked) { setActiveTab(tab); setFormError(null); } }} disabled={locked} title={locked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid var(--border-default)', cursor: locked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : locked ? '#475569' : 'var(--text-secondary)', opacity: locked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
                       {TAB_LABELS[tab]}{locked && <span style={{ fontSize: 10, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 5px', fontWeight: 700, opacity: 1 }}>Pro</span>}
                     </button>
                   );
                 })}
-                <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} aria-label="Schließen" style={{ marginLeft: 4, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+                <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} aria-label="Schließen" style={{ marginLeft: 4, background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
               </div>
             </div>
             <form onSubmit={handleFormSubmit} style={{ padding: '20px', display: 'grid', gap: 18 }}>
@@ -699,12 +699,12 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selectedItem && (
         <>
           <div aria-hidden="true" onClick={() => setSelectedItem(null)} className="gantt-detail-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 100, backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }} />
-          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
-              <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
+              <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                 {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
               </span>
-              <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
+              <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
             <div style={{ padding: '16px 16px 20px' }}>
               {editSuccess ? (
@@ -717,8 +717,8 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       { label: 'Zeitraum', value: `${formatDisplay(selectedItem.data.startDate)} – ${formatDisplay(selectedItem.data.endDate)}` },
                     ].map(({ label, value }) => (
                       <div key={label} style={{ display: 'flex', gap: 8 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
-                        <span style={{ fontSize: 13, color: '#f1f5f9' }}>{value}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+                        <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{value}</span>
                       </div>
                     ))}
                   </div>
@@ -728,10 +728,12 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     </a>
                   </div>
                 </div>
-              ) : selectedItem.data.type === 'ical_sync' ? (
+              ) : (selectedItem.data.type === 'ical_sync' || selectedItem.data.type === 'beds24_sync') ? (
                 (() => {
-                  const parsed = parsePlatform(selectedItem.data.note);
+                  const isIcal = selectedItem.data.type === 'ical_sync';
+                  const parsed = isIcal ? parsePlatform(selectedItem.data.note) : null;
                   const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
+                  const note = !isIcal ? selectedItem.data.note : parsed?.rest;
                   return (
                     <div style={{ display: 'grid', gap: 14 }}>
                       {parsed && ps && (
@@ -743,17 +745,21 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                         {([
                           ['Von', formatDisplay(selectedItem.data.startDate)],
                           ['Bis', formatDisplay(selectedItem.data.endDate)],
-                          ...(parsed?.rest ? [['Bezeichnung', parsed.rest]] : []),
+                          ...(note ? [['Bezeichnung', note]] : []),
                         ] as [string, string][]).map(([label, value]) => (
                           <div key={label} style={{ display: 'flex', gap: 10 }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', width: 80, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
-                            <span style={{ fontSize: 13, color: '#f1f5f9' }}>{value}</span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', width: 100, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
+                            <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{value}</span>
                           </div>
                         ))}
                       </div>
-                      <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.</p>
+                      <p style={{ margin: 0, fontSize: 12, color: 'var(--text-secondary)' }}>
+                        {isIcal
+                          ? 'Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.'
+                          : 'Automatisch synchronisiert via Beds24.'}
+                      </p>
                       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button type="button" onClick={() => setSelectedItem(null)} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Schließen</button>
+                        <button type="button" onClick={() => setSelectedItem(null)} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-secondary)', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Schließen</button>
                       </div>
                     </div>
                   );
@@ -796,7 +802,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button type="button" onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
+                        <button type="button" onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-secondary)', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
                         <button type="button" onClick={async () => {
                           const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
                           if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
