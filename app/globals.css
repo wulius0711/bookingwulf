@@ -74,9 +74,9 @@
 }
 .dark.theme-classic {
   /* Classic = light/white accent in dark mode so buttons are visible */
-  --accent: #e2e8f0;
-  --accent-gradient: linear-gradient(to bottom, #f0f4ff, #e2e8f0);
-  --accent-gradient-hover: linear-gradient(to bottom, #ffffff, #f0f4ff);
+  --accent: #ffffff;
+  --accent-gradient: linear-gradient(to bottom, #ffffff, #f1f5f9);
+  --accent-gradient-hover: linear-gradient(to bottom, #ffffff, #ffffff);
   --accent-light: rgba(255,255,255,0.07);
   --nav-group: #9ca3af;
   --text-on-accent: #111827;
