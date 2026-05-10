@@ -45,20 +45,20 @@
 /* ─── Dark mode ───────────────────────────────────────────────────── */
 .dark,
 [data-theme="dark"] {
-  --page-bg: #080c14;
-  --surface: #0f1520;
-  --surface-2: #161d2e;
-  --surface-3: #1e2640;
-  --border: #1e2a3d;
-  --border-2: #161d2e;
+  --page-bg:   #0f1117;
+  --surface:   #1a1f2e;
+  --surface-2: #222840;
+  --surface-3: #2b3352;
+  --border:    #2d3a58;
+  --border-2:  #222840;
   --text-primary: #f0f4ff;
-  --text-muted: #8896b3;
-  --text-subtle: #4e5a70;
-  --sidebar-bg: #0f1520;
-  --sidebar-border: #1e2a3d;
+  --text-muted:   #8896b3;
+  --text-subtle:  #4e5a70;
+  --sidebar-bg:     #1a1f2e;
+  --sidebar-border: #2d3a58;
   --nav-group: #818cf8;
   --accent-light: rgba(37,99,235,0.15);
-  --background: #080c14;
+  --background: #0f1117;
   --foreground: #f0f4ff;
 }
 .dark.theme-classic {
@@ -74,8 +74,8 @@
 .dark body,
 [data-theme="dark"] body {
   background-image:
-    radial-gradient(ellipse 70% 40% at 20% -5%, #1a2d5a 0%, transparent 60%),
-    radial-gradient(ellipse 50% 30% at 85% 5%, #2d1a5a 0%, transparent 55%);
+    radial-gradient(ellipse 70% 40% at 20% -5%, #1e2f5c 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 85% 5%, #2e1c5c 0%, transparent 55%);
   background-attachment: fixed;
 }
 

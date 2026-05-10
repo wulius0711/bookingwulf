@@ -77,8 +77,8 @@
   /* Backgrounds — alias existing vars */
   --bg-app:            var(--page-bg);
   --bg-surface:        var(--surface);
-  --bg-surface-raised: var(--surface);
-  --bg-surface-sunken: var(--surface-2);
+  --bg-surface-raised: var(--surface-2);
+  --bg-surface-sunken: var(--surface-3);
 
   /* Text — alias existing vars */
   --text-secondary: var(--text-muted);
@@ -128,7 +128,7 @@
 
 .dark,
 [data-theme="dark"] {
-  --border-strong: #2d3d57;
+  --border-strong: #364466;
 
   /* Status colors — desaturated so they don't glow on dark backgrounds */
   --status-new-bg:   rgba(59, 130, 246, 0.12);
