@@ -449,8 +449,12 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: var(--space-12) var(--space-6);
+  padding: var(--space-6);
   gap: var(--space-3);
+}
+
+.ui-empty--standalone {
+  padding: var(--space-12) var(--space-6);
 }
 
 .ui-empty-icon {

@@ -75,6 +75,7 @@ export default async function RequestsPage() {
         <EmptyState
           title="Keine Buchungen vorhanden."
           description="Sobald Gäste eine Anfrage über das Widget senden, erscheint sie hier."
+          className="ui-empty--standalone"
         />
       ) : (
         <RequestList requests={requests} apartments={apartments} isSuperAdmin={isSuperAdmin} />
