@@ -31,6 +31,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     'ui-btn',
     `ui-btn-${variant}`,
     `ui-btn-${size}`,
+    variant === 'primary' ? 'btn-shine' : '',
     className,
   ]
     .filter(Boolean)
