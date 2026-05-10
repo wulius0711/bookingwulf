@@ -50,7 +50,7 @@ export default function PriceSeasonList({
         return (
           <div
             key={s.id}
-            style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+            style={{ border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
           >
             <button
               type="button"
@@ -69,7 +69,7 @@ export default function PriceSeasonList({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: '#111827', flexShrink: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', flexShrink: 0 }}>
                   {s.name || '—'}
                 </span>
                 {isSuperAdmin && s.apartment?.hotel?.name && (() => {
@@ -80,7 +80,7 @@ export default function PriceSeasonList({
                     </span>
                   );
                 })()}
-                <span style={{ fontSize: 13, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 13, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {s.apartment?.name} · {fmt(s.startDate)} – {fmt(s.endDate)}
                 </span>
               </div>
@@ -90,8 +90,8 @@ export default function PriceSeasonList({
             </button>
 
             {isOpen && (
-              <div style={{ padding: '0 18px 18px', borderTop: '1px solid #f3f4f6' }}>
-                <div style={{ display: 'grid', gap: 6, marginTop: 14, fontSize: 14, color: '#374151' }}>
+              <div style={{ padding: '0 18px 18px', borderTop: '1px solid var(--border)' }}>
+                <div style={{ display: 'grid', gap: 6, marginTop: 14, fontSize: 14, color: 'var(--text-primary)' }}>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <span style={{ color: '#9ca3af', width: 160, flexShrink: 0 }}>Apartment</span>
                     <span>{s.apartment?.name}</span>
@@ -115,13 +115,13 @@ export default function PriceSeasonList({
                     type="button"
                     disabled={deleting === s.id}
                     onClick={() => handleDelete(s.id)}
-                    style={{ padding: '6px 14px', border: '1px solid #fecaca', background: '#fff', color: '#dc2626', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, opacity: deleting === s.id ? 0.5 : 1 }}
+                    style={{ padding: '6px 14px', border: '1px solid #fecaca', background: 'var(--surface-2)', color: '#dc2626', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, opacity: deleting === s.id ? 0.5 : 1 }}
                   >
                     {deleting === s.id ? '…' : 'Löschen'}
                   </button>
                   <a
                     href={`/admin/price-seasons/${s.id}/edit`}
-                    style={{ padding: '6px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#374151', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
+                    style={{ padding: '6px 14px', border: '1px solid var(--border)', background: 'var(--surface-2)', color: 'var(--text-muted)', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
                   >
                     Bearbeiten
                   </a>

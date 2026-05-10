@@ -136,7 +136,7 @@ function P({ children }: { children: React.ReactNode }) {
 }
 function Note({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#166534', margin: '12px 0' }}>
+    <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: 'var(--status-booked-text)', margin: '12px 0' }}>
       {children}
     </div>
   );
@@ -1181,7 +1181,7 @@ function NukiSection() {
         6-stelligen Code, schickt ihn zeitlich begrenzt (Anreise bis Abreise) an das Nuki-Schloss
         und fügt ihn in die Buchungsbestätigung an den Gast ein.
       </P>
-      <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, padding: '16px 20px', marginBottom: 16, fontSize: 14, color: '#166534' }}>
+      <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 12, padding: '16px 20px', marginBottom: 16, fontSize: 14, color: 'var(--status-booked-text)' }}>
         <strong>🔑 Beispiel-Code in der Gast-E-Mail:</strong>
         <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: '0.15em', fontFamily: 'monospace', margin: '8px 0 4px' }}>4 8 2 1 9 3</div>
         <div style={{ fontSize: 13 }}>Gültig von Anreise bis Abreise — öffnet das Schloss direkt vor Ort.</div>

@@ -39,7 +39,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 6 };
-const input: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' };
+const input: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)' };
 const select: React.CSSProperties = { ...input };
 
 export default async function VouchersPage() {
@@ -93,7 +93,7 @@ export default async function VouchersPage() {
         </div>
 
         {/* Neue Vorlage */}
-        <div style={{ background: '#fff', borderRadius: 16, padding: 24, border: '1px solid #e5e7eb' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
           <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700 }}>Neue Vorlage</h2>
           <form action={createVoucherTemplate}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 16 }}>
@@ -134,7 +134,7 @@ export default async function VouchersPage() {
 
         {/* Vorlagen-Liste */}
         {templates.length > 0 && (
-          <div style={{ background: '#fff', borderRadius: 16, padding: 24, border: '1px solid #e5e7eb' }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
             <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700 }}>Vorlagen ({templates.length})</h2>
             <div style={{ display: 'grid', gap: 12 }}>
               {templates.map((t) => (
@@ -163,7 +163,7 @@ export default async function VouchersPage() {
         )}
 
         {/* Verkaufte Gutscheine */}
-        <div style={{ background: '#fff', borderRadius: 16, padding: 24, border: '1px solid #e5e7eb' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
           <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700 }}>Verkaufte Gutscheine ({vouchers.length})</h2>
           {vouchers.length === 0 ? (
             <p style={{ fontSize: 14, color: '#9ca3af' }}>Noch keine Gutscheine verkauft.</p>
@@ -186,7 +186,7 @@ export default async function VouchersPage() {
                       <td style={{ padding: '10px 12px', fontWeight: 600 }}>{eur(v.value)}</td>
                       <td style={{ padding: '10px 12px' }}>{eur(v.pricePaid)}</td>
                       <td style={{ padding: '10px 12px' }}>
-                        <span style={{ padding: '3px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: STATUS_COLORS[v.status] || '#f3f4f6', color: STATUS_TEXT[v.status] || '#374151' }}>
+                        <span style={{ padding: '3px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: STATUS_COLORS[v.status] || 'var(--surface-3)', color: STATUS_TEXT[v.status] || 'var(--text-muted)' }}>
                           {STATUS_LABELS[v.status] || v.status}
                         </span>
                       </td>

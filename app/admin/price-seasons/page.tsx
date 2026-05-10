@@ -153,14 +153,14 @@ export default async function PriceSeasonsPage() {
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
       <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
       <div>
-        <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Preisanpassungen</h1>
+        <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Preisanpassungen</h1>
         <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
       </div>
 
       {/* Seasons list */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
             Preiszeiträume · {seasons.length} {seasons.length === 1 ? 'Eintrag' : 'Einträge'}
           </h2>
           <Link href="/admin/price-seasons/new">
@@ -177,7 +177,7 @@ export default async function PriceSeasonsPage() {
             </a>
           </div>
         ) : (
-          <div style={{ padding: '16px 20px', background: '#f9fafb' }}>
+          <div style={{ padding: '16px 20px', background: 'var(--surface-2)' }}>
             <PriceSeasonList seasons={seasons} deleteSeason={deleteSeason} isSuperAdmin={isSuperAdmin} />
           </div>
         )}
@@ -185,10 +185,10 @@ export default async function PriceSeasonsPage() {
 
       {/* ORTSTAXE */}
       {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 16, background: '#f9fafb', display: 'block' }}>
+        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Ortstaxe / Kurtaxe</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Ortstaxe / Kurtaxe</h2>
               <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
             </div>
             {caretSvg}
@@ -207,10 +207,10 @@ export default async function PriceSeasonsPage() {
 
       {/* KINDERPREISE */}
       {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 16, background: '#f9fafb', display: 'block' }}>
+        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Kinderpreise</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Kinderpreise</h2>
               <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Preis pro Kind und Nacht nach Altersgruppe — ohne Saisonbindung.</p>
             </div>
             {caretSvg}
@@ -225,16 +225,16 @@ export default async function PriceSeasonsPage() {
                 {childRanges.map(r => (
                   <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f9fafb' }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, color: '#374151' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</div>
+                      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</div>
                       <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
                         {r.minAge}–{r.maxAge} Jahre ·{' '}
-                        <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : '#111827' }}>
+                        <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : 'var(--text-primary)' }}>
                           {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
                         </span>
                       </div>
                     </div>
                     <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ flexShrink: 0 }}>
-                      <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
+                      <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: 'var(--surface-2)', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
                         Löschen
                       </button>
                     </ConfirmDeleteForm>
@@ -270,10 +270,10 @@ export default async function PriceSeasonsPage() {
 
       {/* DYNAMIC PRICING */}
       {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 16, background: '#f9fafb', display: 'block' }}>
+        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Dynamische Preise</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Dynamische Preise</h2>
               <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Automatische Rabatte und Aufschläge.</p>
             </div>
             {caretSvg}
@@ -282,9 +282,9 @@ export default async function PriceSeasonsPage() {
           <form action={saveDynamicPricing} style={{ display: 'grid', gap: 16 }}>
             <input type="hidden" name="hotelId" value={selectedHotelId} />
 
-            <div style={{ position: 'relative', padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+            <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
               {!hasPro && <ProLockOverlay />}
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Last-Minute Rabatt</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Last-Minute Rabatt</div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
@@ -302,10 +302,10 @@ export default async function PriceSeasonsPage() {
               <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
             </div>
 
-            <div style={{ position: 'relative', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0' }}>
+            <div style={{ position: 'relative', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)' }}>
               {!hasBusiness && <ProLockOverlay plan="business" />}
               <div style={{ padding: '16px 18px', display: 'grid', gap: 12, opacity: hasBusiness ? 1 : 0.45, filter: hasBusiness ? 'none' : 'grayscale(0.3)' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Nachfrageaufschlag</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Nachfrageaufschlag</div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
                     <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Aufschlag %</label>
@@ -325,9 +325,9 @@ export default async function PriceSeasonsPage() {
             </div>
 
             {/* LÜCKEN-RABATT */}
-            <div style={{ position: 'relative', padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
+            <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
               {!hasPro && <ProLockOverlay />}
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Lücken-Rabatt</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Lücken-Rabatt</div>
               <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
@@ -348,8 +348,8 @@ export default async function PriceSeasonsPage() {
             </div>
 
             {/* VERFÜGBARKEITS-HINWEISE */}
-            <div style={{ padding: '16px 18px', background: '#f9fafb', borderRadius: 12, border: '1px solid #f0f0f0', display: 'grid', gap: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
+            <div style={{ padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
                 <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false}
                   style={{ width: 15, height: 15, accentColor: 'var(--accent)' }} />
@@ -373,10 +373,10 @@ export default async function PriceSeasonsPage() {
       )}
       {/* STEUEREINSTELLUNGEN */}
       {selectedHotelId !== null && (
-        <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 16, background: '#f9fafb', display: 'block' }}>
+        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 16, background: 'var(--surface-2)', display: 'block' }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Steuer / Buchhaltung</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Steuer / Buchhaltung</h2>
               <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
             </div>
             {caretSvg}

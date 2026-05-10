@@ -70,8 +70,8 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
         </div>
         <div className="gantt-controls">
           {/* View toggle */}
-          <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: 8, overflow: 'hidden' }}>
-            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : '#fff', color: view === 'gantt' ? '#fff' : '#374151', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
+          <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : 'var(--surface)', color: view === 'gantt' ? '#fff' : 'var(--text-muted)', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
             <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
           </div>
         </div>
@@ -83,18 +83,18 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
       {/* Tag-Navigation */}
       {view === 'tag' && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
-          <button onClick={() => handleDateChange(shiftDay(date, -1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
+          <button onClick={() => handleDateChange(shiftDay(date, -1))} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
           <span style={{ fontWeight: 700, fontSize: 15, textAlign: 'center' }}>{formatDayLabel(date)}</span>
-          <button onClick={() => handleDateChange(shiftDay(date, 1))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
+          <button onClick={() => handleDateChange(shiftDay(date, 1))} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
           {!isToday && (
-            <button onClick={() => handleDateChange(todayIso())} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}>Heute</button>
+            <button onClick={() => handleDateChange(todayIso())} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)' }}>Heute</button>
           )}
-          <input type="date" value={date} onChange={(e) => handleDateChange(e.target.value)} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111827', cursor: 'pointer' }} />
+          <input type="date" value={date} onChange={(e) => handleDateChange(e.target.value)} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, background: 'var(--surface)', color: 'var(--text-primary)', cursor: 'pointer' }} />
         </div>
       )}
 
       {/* Card wrapper */}
-      {view === 'tag' && <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+      {view === 'tag' && <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '24px 24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
         {/* Summary badges */}
         <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <Badge color="#dcfce7" text="#16a34a" label={`${freieCount} Frei`} />
@@ -168,7 +168,7 @@ function ApartmentCardEl({ card, date }: { card: ApartmentCard; date: string }) 
       minHeight: 140,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <span style={{ fontWeight: 700, fontSize: 15, color: '#111827', lineHeight: 1.3 }}>{card.name}</span>
+        <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', lineHeight: 1.3 }}>{card.name}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: dotColor, whiteSpace: 'nowrap' }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, display: 'inline-block' }} />
           {statusLabel}
@@ -187,7 +187,7 @@ function ApartmentCardEl({ card, date }: { card: ApartmentCard; date: string }) 
           </div>
           <div style={{ color: '#6b7280' }}>{formatDate(s.arrival)} – {formatDate(s.departure)}</div>
           {s.checkoutToday && (
-            <div style={{ marginTop: 6, background: '#fef9c3', color: '#854d0e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, display: 'inline-block' }}>
+            <div style={{ marginTop: 6, background: 'var(--status-pending-bg)', color: 'var(--status-pending-text)', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, display: 'inline-block' }}>
               Check-out heute
             </div>
           )}

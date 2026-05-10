@@ -22,8 +22,8 @@ const TYPE_LABELS: Record<string, string> = {
   insurance: 'Versicherung',
 };
 
-const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase' };
-const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' as const, padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' };
+const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' };
+const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' as const, padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface)', color: 'var(--text-primary)' };
 
 export default async function ExtrasPage() {
   const session = await verifySession();
@@ -53,7 +53,7 @@ export default async function ExtrasPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Zusatzleistungen</h1>
+            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Zusatzleistungen</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
               Extras und Versicherungsoptionen pro Hotel konfigurieren.
             </p>
@@ -62,16 +62,16 @@ export default async function ExtrasPage() {
         </div>
 
         {!canUseExtras && (
-          <div style={{ padding: '14px 18px', background: '#fffbeb', border: '1px solid #fef08a', borderRadius: 12, fontSize: 14, color: '#92400e', lineHeight: 1.5 }}>
+          <div style={{ padding: '14px 18px', background: 'var(--status-pending-bg)', border: '1px solid var(--primitive-yellow-500)', borderRadius: 12, fontSize: 14, color: 'var(--status-pending-text)', lineHeight: 1.5 }}>
             <strong>Hinweis:</strong> Im Starter-Plan werden nur Versicherungsoptionen im Widget angezeigt. Für reguläre Zusatzleistungen ist ein Upgrade auf den <strong>Pro-Plan</strong> erforderlich.
           </div>
         )}
 
         {/* Existing extras */}
         {selectedHotel && (
-          <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', background: '#fafafa' }}>
-              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: '#111827' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
                 {selectedHotel.name} — {extras.length} {extras.length === 1 ? 'Eintrag' : 'Einträge'}
               </h2>
             </div>
@@ -85,7 +85,7 @@ export default async function ExtrasPage() {
               <div className="table-scroll">
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     {['Name', 'Typ', 'Abrechnung', 'Preis', 'Link', 'Status', 'Sichtbarkeit', ''].map((h) => (
                       <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: '#6b7280', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{h}</th>
                     ))}
@@ -131,8 +131,8 @@ export default async function ExtrasPage() {
 
         {/* Add new form */}
         {selectedId && (
-          <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: 24 }}>
-            <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 600, color: '#111827', letterSpacing: '-0.02em' }}>Neue Zusatzleistung anlegen</h2>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
+            <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Neue Zusatzleistung anlegen</h2>
             <CreateExtraForm hotelId={selectedId} />
           </div>
         )}

@@ -45,10 +45,10 @@ type Props = {
 
 const inputStyle: React.CSSProperties = {
   padding: '6px 10px',
-  border: '1px solid #d1d5db',
+  border: '1px solid var(--border)',
   borderRadius: 6,
   fontSize: 13,
-  color: '#111',
+  color: 'var(--text-primary)',
   width: '100%',
   boxSizing: 'border-box',
 };
@@ -80,7 +80,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
 
   if (editing) {
     return (
-      <tr style={{ borderBottom: '1px solid #f0f0f0', background: '#fafafa' }}>
+      <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
         <td colSpan={7} style={{ padding: 16 }}>
           <form action={updateAction} style={{ display: 'grid', gap: 12 }}>
             <input type="hidden" name="id" value={extra.id} />
@@ -131,7 +131,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
                     <button type="button" onClick={() => setImageUrl('')} style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: '#374151', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
                   </div>
                 )}
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 12, cursor: uploading ? 'not-allowed' : 'pointer', opacity: uploading ? 0.6 : 1 }}>
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-muted)', fontSize: 12, cursor: uploading ? 'not-allowed' : 'pointer', opacity: uploading ? 0.6 : 1 }}>
                   {uploading ? 'Lädt…' : imageUrl ? 'Anderes Bild' : 'Hochladen'}
                   <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFile} disabled={uploading} style={{ display: 'none' }} />
                 </label>
@@ -153,7 +153,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
             </div>
 
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#111', fontSize: 13, cursor: 'pointer' }}>
+              <button type="button" onClick={() => setEditing(false)} style={{ padding: '7px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 13, cursor: 'pointer' }}>
                 Abbrechen
               </button>
               <button type="submit" className="btn-primary" style={{ padding: '7px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
@@ -167,14 +167,14 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
   }
 
   return (
-    <tr style={{ borderBottom: '1px solid #f9fafb' }}>
+    <tr style={{ borderBottom: '1px solid var(--border)' }}>
       <td style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {extra.imageUrl && (
             <img src={extra.imageUrl} alt="" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
           )}
           <div>
-            <div style={{ fontWeight: 500, color: '#111827' }}>{extra.name}</div>
+            <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{extra.name}</div>
             {extra.description && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{extra.description}</div>}
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
           {TYPE_LABELS[extra.type] ?? extra.type}
         </span>
       </td>
-      <td style={{ padding: '12px 16px', color: '#374151' }}>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</td>
+      <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</td>
       <td style={{ padding: '12px 16px', fontWeight: 600, color: '#111827' }}>{'\u20AC'} {extra.price.toFixed(2)}</td>
       <td style={{ padding: '12px 16px', color: '#6b7280', fontSize: 12 }}>
         {extra.linkUrl ? (
@@ -199,7 +199,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
         <form action={toggleAction} style={{ margin: 0 }}>
           <input type="hidden" name="id" value={extra.id} />
           <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
-          <button type="submit" title={extra.isActive ? 'Klicken zum Deaktivieren' : 'Klicken zum Aktivieren'} style={{ padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', background: extra.isActive ? '#dcfce7' : '#f3f4f6', color: extra.isActive ? '#16a34a' : '#6b7280' }}>
+          <button type="submit" title={extra.isActive ? 'Klicken zum Deaktivieren' : 'Klicken zum Aktivieren'} style={{ padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', background: extra.isActive ? '#dcfce7' : 'var(--surface-3)', color: extra.isActive ? '#16a34a' : 'var(--text-muted)' }}>
             {extra.isActive ? 'Aktiv' : 'Inaktiv'}
           </button>
         </form>
@@ -209,14 +209,14 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
           <form action={toggleWidgetAction} style={{ margin: 0 }}>
             <input type="hidden" name="id" value={extra.id} />
             <input type="hidden" name="showInWidget" value={extra.showInWidget ? 'false' : 'true'} />
-            <button type="submit" title="Im Buchungs-Widget anzeigen" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInWidget ? '#dbeafe' : '#f3f4f6', color: extra.showInWidget ? '#1d4ed8' : '#9ca3af' }}>
+            <button type="submit" title="Im Buchungs-Widget anzeigen" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInWidget ? '#dbeafe' : 'var(--surface-3)', color: extra.showInWidget ? '#1d4ed8' : 'var(--text-subtle)' }}>
               Widget{extra.showInWidget ? ' ✓' : ''}
             </button>
           </form>
           <form action={toggleUpsellAction} style={{ margin: 0 }}>
             <input type="hidden" name="id" value={extra.id} />
             <input type="hidden" name="showInUpsell" value={extra.showInUpsell ? 'false' : 'true'} />
-            <button type="submit" title="Im Bestätigungs-E-Mail als Upsell anbieten" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInUpsell ? '#dcfce7' : '#f3f4f6', color: extra.showInUpsell ? '#16a34a' : '#9ca3af' }}>
+            <button type="submit" title="Im Bestätigungs-E-Mail als Upsell anbieten" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.showInUpsell ? '#dcfce7' : 'var(--surface-3)', color: extra.showInUpsell ? '#16a34a' : 'var(--text-subtle)' }}>
               Upsell{extra.showInUpsell ? ' ✓' : ''}
             </button>
           </form>
@@ -224,12 +224,12 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
       </td>
       <td style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={() => setEditing(true)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#374151' }}>
+          <button type="button" onClick={() => setEditing(true)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 12, cursor: 'pointer', color: 'var(--text-muted)' }}>
             Bearbeiten
           </button>
           <form action={deleteAction} onSubmit={(e) => { if (!confirm(`Zusatzleistung „${extra.name}" wirklich löschen?`)) e.preventDefault(); }}>
             <input type="hidden" name="id" value={extra.id} />
-            <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
+            <button type="submit" style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #fecaca', background: 'var(--surface-2)', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>
               Löschen
             </button>
           </form>

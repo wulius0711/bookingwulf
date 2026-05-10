@@ -73,7 +73,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
 
       {/* Wien info */}
       {mode === 'wien' && (
-        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#15803d', display: 'grid', gap: 6 }}>
+        <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: 'var(--status-booked-text)', display: 'grid', gap: 6 }}>
           <div style={{ fontWeight: 600, marginBottom: 2 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
           {WIEN_INFO.map(({ label, rate }) => (
             <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>

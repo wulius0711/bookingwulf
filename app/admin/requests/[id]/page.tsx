@@ -381,7 +381,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
   const cardRadius: number = settings?.cardRadius ?? 12;
   const buttonRadius: number = settings?.buttonRadius ?? 999;
 
-  const cardBackground = '#fff';
+  const cardBackground = 'var(--surface)';
   const isSuperAdmin = session.hotelId === null;
   const textColor = settings?.textColor || '#111';
   const borderColor = settings?.borderColor || '#ddd';
@@ -413,7 +413,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
     new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
   const rowLabel: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#9ca3af', letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 };
-  const rowValue: React.CSSProperties = { fontSize: 14, color: '#111', lineHeight: 1.5 };
+  const rowValue: React.CSSProperties = { fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.5 };
 
   return (
     <main
@@ -422,7 +422,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
     >
       {/* Back + delete */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
-        <Link href="/admin/requests" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid #e5e7eb', textDecoration: 'none', color: '#374151', background: '#fff', fontSize: 13, fontWeight: 500 }}>
+        <Link href="/admin/requests" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', textDecoration: 'none', color: 'var(--text-muted)', background: 'var(--surface)', fontSize: 13, fontWeight: 500 }}>
           ← Alle Anfragen
         </Link>
         {isSuperAdmin && <DeleteRequestButton requestId={request.id} />}
@@ -444,7 +444,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
       </div>
 
       {/* Main card */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
 
         {/* Info grid */}
         <div style={{ padding: '24px 28px', display: 'grid', gap: 16 }}>
@@ -483,7 +483,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             return (
               <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
                 <span style={rowLabel}>Preis</span>
-                <div style={{ fontSize: 13, color: '#374151', background: '#f9fafb', border: '1px solid #f0f0f0', borderRadius: 10, padding: '12px 14px', display: 'grid', gap: 6 }}>
+                <div style={{ fontSize: 13, color: 'var(--text-muted)', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', display: 'grid', gap: 6 }}>
                   {isBeds24 && pricing.beds24Items && pricing.beds24Items.length > 0 ? (
                     <>
                       {pricing.beds24Items.map((item, i) => (
@@ -521,9 +521,9 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                       )}
                     </>
                   )}
-                  <div style={{ borderTop: '1px solid #e5e7eb', marginTop: 4, paddingTop: 6, display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                    <span style={{ fontWeight: 700, color: '#111' }}>Gesamt</span>
-                    <span style={{ fontWeight: 700, color: '#111' }}>{fmtEur(pricing.total)}</span>
+                  <div style={{ borderTop: '1px solid var(--border)', marginTop: 4, paddingTop: 6, display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                    <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Gesamt</span>
+                    <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{fmtEur(pricing.total)}</span>
                   </div>
                 </div>
               </div>
@@ -533,7 +533,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
           {request.message && (
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'start' }}>
               <span style={rowLabel}>Mitteilung</span>
-              <span style={{ ...rowValue, background: '#f9fafb', padding: '10px 12px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>{request.message}</span>
+              <span style={{ ...rowValue, background: 'var(--surface-2)', padding: '10px 12px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>{request.message}</span>
             </div>
           )}
 
@@ -542,12 +542,12 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               <span style={rowLabel}>Check-in</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 {request.checkinCompletedAt ? (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: '#dcfce7', color: '#15803d', fontSize: 12, fontWeight: 700 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)', fontSize: 12, fontWeight: 700 }}>
                     ✓ Ausgefüllt {new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(request.checkinCompletedAt))}
                     {request.checkinArrivalTime && ` · Ankunft: ${request.checkinArrivalTime}`}
                   </span>
                 ) : (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: '#fef3c7', color: '#92400e', fontSize: 12, fontWeight: 700 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 8, background: 'var(--status-pending-bg)', color: 'var(--status-pending-text)', fontSize: 12, fontWeight: 700 }}>
                     ⏳ Ausstehend
                   </span>
                 )}
@@ -561,7 +561,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 </a>
               </div>
               {request.checkinNotes && (
-                <div style={{ gridColumn: '2', marginTop: 4, fontSize: 13, color: '#374151', background: '#f9fafb', padding: '8px 10px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>
+                <div style={{ gridColumn: '2', marginTop: 4, fontSize: 13, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '8px 10px', borderRadius: 8, whiteSpace: 'pre-wrap' }}>
                   {request.checkinNotes}
                 </div>
               )}
@@ -607,7 +607,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px solid #f3f4f6' }} />
+        <div style={{ borderTop: '1px solid var(--border)' }} />
 
         {/* Actions */}
         <div style={{ padding: '20px 28px', display: 'grid', gap: 20 }}>
@@ -617,7 +617,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             <span style={rowLabel}>Mail-Sprache</span>
             <form action={updateLanguage} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="hidden" name="id" value={request.id} />
-              <select name="language" defaultValue={request.language || 'de'} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: '#fff', color: '#111' }}>
+              <select name="language" defaultValue={request.language || 'de'} style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, background: 'var(--surface-2)', color: 'var(--text-primary)' }}>
                 <option value="de">Deutsch</option>
                 <option value="en">English</option>
                 <option value="it">Italiano</option>
@@ -628,7 +628,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 <option value="cs">Čeština</option>
                 <option value="ru">Русский</option>
               </select>
-              <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151', fontWeight: 500 }}>
+              <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)', fontWeight: 500 }}>
                 Speichern
               </button>
               {saved === 'language' && <span style={{ fontSize: 12, color: '#16a34a' }}>✓ Gespeichert</span>}
@@ -645,8 +645,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
 
       {/* ─── Check-in E-Mail ─── */}
       {request.email && (
-        <div style={{ marginTop: 16, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
-          <div style={{ padding: '14px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+        <div style={{ marginTop: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ padding: '14px 24px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
             <div>
               <strong style={{ fontSize: 14 }}>Check-in E-Mail</strong>
               <span style={{ marginLeft: 10, fontSize: 12, color: '#9ca3af' }}>
@@ -663,7 +663,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
           </div>
           <div style={{ padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 13, color: '#6b7280' }}>
-              An: <strong style={{ color: '#111' }}>{request.email}</strong>
+              An: <strong style={{ color: 'var(--text-primary)' }}>{request.email}</strong>
             </span>
             <form action={sendCheckinEmail}>
               <input type="hidden" name="requestId" value={request.id} />
@@ -684,8 +684,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
 
       {/* ─── Nachrichtenthread ─── */}
       {!canUseMessages ? (
-        <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: '#fafafa', fontSize: 13, color: '#9ca3af' }}>
-          🔒 Direktnachrichten sind ab dem <strong style={{ color: '#111' }}>Business-Plan</strong> verfügbar.{' '}
+        <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: '#9ca3af' }}>
+          🔒 Direktnachrichten sind ab dem <strong style={{ color: 'var(--text-primary)' }}>Business-Plan</strong> verfügbar.{' '}
           <a href="/admin/billing" style={{ color: '#111', fontWeight: 600 }}>Jetzt upgraden →</a>
         </div>
       ) : (
@@ -696,7 +696,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         background: cardBackground,
         overflow: 'hidden',
       }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border)' }}>
           <strong style={{ fontSize: 15 }}>Nachrichten</strong>
           {request.messages.length > 0 && (
             <span style={{ marginLeft: 8, fontSize: 12, color: '#9ca3af' }}>
@@ -723,8 +723,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   maxWidth: '75%',
                   padding: '10px 14px',
                   borderRadius: isHotel ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
-                  background: isHotel ? '#111' : '#f3f4f6',
-                  color: isHotel ? '#fff' : '#111',
+                  background: isHotel ? '#111' : 'var(--surface-3)',
+                  color: isHotel ? '#fff' : 'var(--text-primary)',
                   fontSize: 14,
                   lineHeight: 1.6,
                   whiteSpace: 'pre-wrap',

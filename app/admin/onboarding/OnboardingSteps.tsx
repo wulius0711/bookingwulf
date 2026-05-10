@@ -39,7 +39,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
           <p style={{ fontSize: 17, color: '#374151', lineHeight: 1.6, margin: '0 0 16px' }}>
             <strong>{hotelName}</strong> wurde erfolgreich erstellt. Wir zeigen Ihnen kurz, was bookingwulf alles kann.
           </p>
-          <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a', fontWeight: 500 }}>
+          <div style={{ padding: '12px 16px', background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 10, fontSize: 14, color: 'var(--status-booked-text)', fontWeight: 500 }}>
             ✓ 14 Tage kostenlos testen — alle Funktionen inklusive, keine Kreditkarte nötig.
           </div>
         </div>
@@ -55,25 +55,25 @@ export default function OnboardingSteps({ hotelName }: Props) {
           {featureRow('📋', 'Anfragen', 'Alle Gästeanfragen laufen hier ein. Status ändern (Neu → Beantwortet → Gebucht) — die E-Mail an den Gast geht automatisch raus.')}
 
           {/* Kalender highlight */}
-          <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>📅</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Kalender</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Kalender</span>
               <span style={{ fontSize: 11, fontWeight: 600, background: '#111', color: '#fff', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Tipp</span>
             </div>
             <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
-              Monatsansicht aller Buchungen und Sperrzeiten. Zeitraum per <strong style={{ color: '#374151' }}>Drag & Drop</strong> markieren — dann direkt eine Buchung, Sperrzeit oder Preiszeitraum anlegen, ohne die Seite zu verlassen.
+              Monatsansicht aller Buchungen und Sperrzeiten. Zeitraum per <strong style={{ color: 'var(--text-primary)' }}>Drag & Drop</strong> markieren — dann direkt eine Buchung, Sperrzeit oder Preiszeitraum anlegen, ohne die Seite zu verlassen.
             </div>
           </div>
 
-          <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>🏠</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Zimmerplan</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Zimmerplan</span>
               <span style={{ fontSize: 11, fontWeight: 600, background: '#111', color: '#fff', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Tipp</span>
             </div>
             <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
-              Gantt-Übersicht aller Apartments. Zeitraum per <strong style={{ color: '#374151' }}>Drag & Drop</strong> markieren — dann direkt eine Buchung, Sperrzeit oder Preiszeitraum anlegen, ohne die Seite zu verlassen.
+              Gantt-Übersicht aller Apartments. Zeitraum per <strong style={{ color: 'var(--text-primary)' }}>Drag & Drop</strong> markieren — dann direkt eine Buchung, Sperrzeit oder Preiszeitraum anlegen, ohne die Seite zu verlassen.
             </div>
           </div>
           {featureRow('📊', 'Analytics', 'Buchungsstatistiken: Auslastung, Umsatz, beliebteste Zeiträume (ab Business-Plan).')}
@@ -101,10 +101,10 @@ export default function OnboardingSteps({ hotelName }: Props) {
           <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
             Passen Sie bookingwulf an Ihr Hotel an.
           </p>
-          <div style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>🎨</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Widget & Design</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Widget & Design</span>
               <span style={{ fontSize: 11, fontWeight: 600, background: '#111', color: '#fff', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Tipp</span>
             </div>
             <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
@@ -205,8 +205,8 @@ export default function OnboardingSteps({ hotelName }: Props) {
         {/* Card */}
         <div
           style={{
-            background: '#fff',
-            border: '1px solid #e5e7eb',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
             borderRadius: 20,
             padding: '36px 40px',
             boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
@@ -215,7 +215,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
           <div style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
             Schritt {step + 1} von {steps.length}
           </div>
-          <h2 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 20px', color: '#111', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 20px', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
             {current.title}
           </h2>
 
@@ -231,9 +231,9 @@ export default function OnboardingSteps({ hotelName }: Props) {
                 style={{
                   padding: '10px 20px',
                   borderRadius: 8,
-                  border: '1px solid #ddd',
-                  background: '#fff',
-                  color: step === 0 ? '#ccc' : '#111',
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface)',
+                  color: step === 0 ? 'var(--text-subtle)' : 'var(--text-primary)',
                   fontSize: 14,
                   fontWeight: 500,
                   cursor: step === 0 ? 'default' : 'pointer',

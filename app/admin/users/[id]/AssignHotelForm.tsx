@@ -27,7 +27,7 @@ export default function AssignHotelForm({
       <select
         name="hotelId"
         required
-        style={{ flex: 1, padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111', minWidth: 180 }}
+        style={{ flex: 1, padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)', minWidth: 180 }}
       >
         <option value="">Hotel auswählen…</option>
         {available.map((h) => (

@@ -28,7 +28,7 @@ type PageProps = { searchParams: SearchParams };
 const pageStyle: React.CSSProperties = {
   minHeight: '100vh',
   background: 'var(--page-bg)',
-  color: '#111111',
+  color: 'var(--text-primary)',
   fontFamily:
     'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 };
@@ -41,8 +41,8 @@ const shellStyle: React.CSSProperties = {
 };
 
 const panelStyle: React.CSSProperties = {
-  background: '#ffffff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 22,
   boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)',
 };
@@ -71,7 +71,7 @@ const headlineStyle: React.CSSProperties = {
   fontSize: 28,
   fontWeight: 600,
   letterSpacing: '-0.03em',
-  color: '#0f172a',
+  color: 'var(--text-primary)',
 };
 
 const sublineStyle: React.CSSProperties = {
@@ -89,9 +89,9 @@ const selectorWrapStyle: React.CSSProperties = {
 };
 
 const sectionStyle: React.CSSProperties = {
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--border)',
   borderRadius: 18,
-  background: '#f9fafb',
+  background: 'var(--surface-2)',
   padding: '26px 28px',
   display: 'grid',
   gap: 18,
@@ -101,7 +101,7 @@ const sectionTitleStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 20,
   lineHeight: 1.15,
-  color: '#111827',
+  color: 'var(--text-primary)',
   letterSpacing: '-0.02em',
 };
 
@@ -118,7 +118,7 @@ const rowStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12,
-  color: '#4b5563',
+  color: 'var(--text-muted)',
   fontWeight: 700,
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
@@ -127,11 +127,11 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '11px 12px',
-  border: '1px solid #d1d5db',
+  border: '1px solid var(--border)',
   borderRadius: 10,
   fontSize: 14,
-  background: '#ffffff',
-  color: '#111111',
+  background: 'var(--surface)',
+  color: 'var(--text-primary)',
   outline: 'none',
 };
 
@@ -154,9 +154,9 @@ const actionRowStyle: React.CSSProperties = {
 const secondaryButtonStyle: React.CSSProperties = {
   padding: '10px 16px',
   borderRadius: 8,
-  background: '#ffffff',
-  color: '#111111',
-  border: '1px solid #d1d5db',
+  background: 'var(--surface)',
+  color: 'var(--text-primary)',
+  border: '1px solid var(--border)',
   cursor: 'pointer',
   fontSize: 14,
   fontWeight: 600,
@@ -167,7 +167,7 @@ const previewTitleStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 22,
   lineHeight: 1.15,
-  color: '#111827',
+  color: 'var(--text-primary)',
 };
 
 const previewSubStyle: React.CSSProperties = {
@@ -180,9 +180,9 @@ const previewSubStyle: React.CSSProperties = {
 const iframeStyle: React.CSSProperties = {
   width: '100%',
   height: 980,
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--border)',
   borderRadius: 16,
-  background: '#ffffff',
+  background: 'var(--surface)',
 };
 
 
@@ -288,7 +288,7 @@ export default async function Page({ searchParams }: PageProps) {
             <input type="hidden" name="hotelId" value={selected.id} />
 
             {/* BENACHRICHTIGUNGEN */}
-            <details className="settings-section" open style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" open style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Benachrichtigungen</h2>
@@ -311,7 +311,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* RECHTLICHES */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Rechtliches</h2>
@@ -344,7 +344,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* ZAHLUNGSARTEN & BANKDATEN */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Zahlungsarten & Bankdaten</h2>
@@ -377,7 +377,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* DESIGN */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Design</h2>
@@ -445,7 +445,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* TYPOGRAFIE */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Typografie</h2>
@@ -567,7 +567,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* PRESETS */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block', position: 'relative' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block', position: 'relative' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Design-Presets</h2>
@@ -585,7 +585,7 @@ export default async function Page({ searchParams }: PageProps) {
             </details>
 
             {/* FEATURES */}
-            <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+            <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Features</h2>
@@ -617,14 +617,14 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
 
             {saved === '1' && (
-              <div className="success-banner" style={{ padding: '12px 16px', background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 10, fontSize: 14, color: '#16a34a' }}>
+              <div className="success-banner" style={{ padding: '12px 16px', background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 10, fontSize: 14, color: 'var(--status-booked-text)' }}>
                 Einstellungen gespeichert.
               </div>
             )}
           </form>
 
           {/* EMBED CODE */}
-          <details id="embed-code" className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details id="embed-code" className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Embed-Code</h2>
@@ -651,7 +651,7 @@ export default async function Page({ searchParams }: PageProps) {
           </details>
 
           {/* MINI WIDGET */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Mini-Widget</h2>
@@ -694,7 +694,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
                 <iframe
                   src={`/mini-widget.html?hotel=${encodeURIComponent(selected.slug)}`}
-                  style={{ width: '100%', height: 180, border: '1px solid #e5e7eb', borderRadius: 12, background: '#fff', display: 'block' }}
+                  style={{ width: '100%', height: 180, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}
                   scrolling="no"
                   title="Mini-Widget Vorschau"
                 />
@@ -703,7 +703,7 @@ export default async function Page({ searchParams }: PageProps) {
           </details>
 
           {/* Widget Configs */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block', position: 'relative' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block', position: 'relative' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Widget-Konfigurationen</h2>

@@ -11,7 +11,7 @@ export function DeleteRequestButton({ requestId }: { requestId: number }) {
       <input type="hidden" name="id" value={requestId} />
       <button
         type="submit"
-        style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: '#fff', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+        style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface-2)', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
       >
         Anfrage löschen
       </button>
@@ -28,7 +28,7 @@ export function DeleteAllRequestsButton({ hotelSlug, count }: { hotelSlug: strin
       <input type="hidden" name="hotelSlug" value={hotelSlug} />
       <button
         type="submit"
-        style={{ padding: '10px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: '#fff', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+        style={{ padding: '10px 16px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface-2)', color: '#dc2626', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
       >
         Alle löschen ({count})
       </button>
