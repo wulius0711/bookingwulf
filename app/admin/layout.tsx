@@ -9,6 +9,7 @@ import GuidedTour from './components/GuidedTour'
 import AdminChatWidget from './components/AdminChatWidget'
 import FeedbackButton from './components/FeedbackButton'
 import { ThemeProvider } from './components/ThemeProvider'
+import './components/ui/ui.css'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
