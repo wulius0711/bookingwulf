@@ -87,8 +87,8 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
           </form>
         )}
 
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
-          <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16 }}>
+          <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)', borderRadius: '16px 16px 0 0' }}>
             <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
               {ranges.length} {ranges.length === 1 ? 'Sperrzeit' : 'Sperrzeiten'}
             </h2>
