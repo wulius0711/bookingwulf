@@ -121,10 +121,8 @@
   background: var(--bg-surface-sunken);
 }
 
-/* Shine sweep on hover — matches .btn-shine from globals.css */
-.ui-btn-primary::after,
-.ui-btn-secondary::after,
-.ui-btn-ghost::after {
+/* Shine sweep on hover — only on accent-colored buttons */
+.ui-btn-primary::after {
   content: '';
   position: absolute;
   top: -50px;
@@ -137,9 +135,7 @@
   pointer-events: none;
   z-index: 1;
 }
-.ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::after,
-.ui-btn-secondary:hover:not(:disabled):not([data-loading="true"])::after,
-.ui-btn-ghost:hover:not(:disabled):not([data-loading="true"])::after {
+.ui-btn-primary:hover:not(:disabled):not([data-loading="true"])::after {
   left: 120%;
 }
 

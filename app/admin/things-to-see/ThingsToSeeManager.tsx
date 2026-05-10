@@ -221,7 +221,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
+                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
                 <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={addManual} disabled={isPending || !manualData.title.trim()}>Hinzufügen</button>
               </div>
             </div>
@@ -288,7 +288,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
+                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
                 <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={saveEdit}>Speichern</button>
               </div>
             </div>
