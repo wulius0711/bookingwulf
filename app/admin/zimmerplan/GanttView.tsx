@@ -437,8 +437,8 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     const isWeekend = dow === 0 || dow === 6;
                     return (
                       <div key={d} style={{ width: COL_W, flexShrink: 0, textAlign: 'center', fontSize: 10, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, background: isToday ? 'var(--accent)' : 'transparent' }}>
-                        <span style={{ fontWeight: 700, color: isToday ? '#fff' : isWeekend ? '#6366f1' : '#6b7280' }}>{d.slice(8)}</span>
-                        <span style={{ fontSize: 9, color: isToday ? 'rgba(255,255,255,0.8)' : isWeekend ? '#6366f1' : '#9ca3af' }}>{WEEKDAY_SHORT[dow]}</span>
+                        <span style={{ fontWeight: 700, color: isToday ? 'var(--text-on-accent)' : isWeekend ? '#6366f1' : '#6b7280' }}>{d.slice(8)}</span>
+                        <span style={{ fontSize: 9, color: isToday ? 'var(--text-on-accent)' : isWeekend ? '#6366f1' : '#9ca3af' }}>{WEEKDAY_SHORT[dow]}</span>
                       </div>
                     );
                   })}

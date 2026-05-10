@@ -71,8 +71,8 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
         <div className="gantt-controls">
           {/* View toggle */}
           <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
-            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : 'var(--surface)', color: view === 'gantt' ? '#fff' : 'var(--text-muted)', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
-            <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid #d1d5db', background: view === 'tag' ? 'var(--accent)' : '#fff', color: view === 'tag' ? '#fff' : '#374151', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
+            <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : 'var(--surface)', color: view === 'gantt' ? 'var(--text-on-accent)' : 'var(--text-muted)', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
+            <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid var(--border)', background: view === 'tag' ? 'var(--accent)' : 'var(--surface)', color: view === 'tag' ? 'var(--text-on-accent)' : 'var(--text-muted)', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
           </div>
         </div>
       </div>
