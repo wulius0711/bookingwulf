@@ -89,7 +89,7 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
                 <input type="text" name="note" placeholder="z. B. Familienurlaub" style={inputStyle} />
               </div>
               <div className="admin-form-actions">
-                <a href="/admin/blocked-dates" className="btn-cancel">Abbrechen</a>
+                <a href="/admin/blocked-dates" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
                 <button type="submit" className="ui-btn ui-btn-primary ui-btn-md">Speichern</button>
               </div>
             </form>

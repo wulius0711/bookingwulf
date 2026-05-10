@@ -101,7 +101,7 @@ export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
                 </div>
               </div>
               <div className="admin-form-actions">
-                <a href="/admin/price-seasons" className="btn-cancel">Abbrechen</a>
+                <a href="/admin/price-seasons" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
                 <Button variant="primary" type="submit">Speichern</Button>
               </div>
             </form>

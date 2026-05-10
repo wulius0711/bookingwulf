@@ -133,7 +133,7 @@ export default async function EditHotelPage({ params }: PageProps) {
           </div>
 
           <div className="admin-form-actions" style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
-            <a href="/admin/hotels" className="btn-cancel">Abbrechen</a>
+            <a href="/admin/hotels" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
             <Button variant="primary" type="submit">Speichern</Button>
           </div>
         </form>

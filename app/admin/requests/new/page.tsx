@@ -160,7 +160,7 @@ export default async function NewRequestPage({ searchParams }: PageProps) {
               </div>
 
               <div className="admin-form-actions">
-                <a href="/admin/requests" className="btn-cancel">Abbrechen</a>
+                <a href="/admin/requests" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
                 <button type="submit" className="ui-btn ui-btn-primary ui-btn-md">Speichern</button>
               </div>
 

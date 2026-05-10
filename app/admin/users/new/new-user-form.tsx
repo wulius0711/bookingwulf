@@ -127,7 +127,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
           </div>
 
           <div className="admin-form-actions">
-            <a href="/admin/users" className="btn-cancel">Abbrechen</a>
+            <a href="/admin/users" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
             <Button variant="primary" type="submit" loading={pending} disabled={pending}>
               {pending ? 'Wird angelegt…' : 'Benutzer anlegen'}
             </Button>

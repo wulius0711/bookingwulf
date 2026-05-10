@@ -199,10 +199,6 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
 }
 
-.overflow-wrap-anywhere {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
 
 .table-scroll {
   overflow-x: auto;
@@ -372,13 +368,6 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: minmax(0, 760px) minmax(340px, 1fr);
 }
 
-/* Apartment edit form: label + input rows */
-.apt-edit-row {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  align-items: start;
-  gap: 16px;
-}
 
 /* Calendar: horizontal scroll on mobile */
 .calendar-scroll {
@@ -461,16 +450,6 @@ button, a[role="button"], input[type="submit"] {
   }
 }
 
-/* Hotel select in superadmin filter rows */
-.hotel-filter-select {
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  background: var(--surface);
-  color: var(--text-primary);
-  max-width: 100%;
-}
 
 .settings-row {
   display: grid;
@@ -632,18 +611,6 @@ button, a[role="button"], input[type="submit"] {
   color: var(--text-primary) !important;
 }
 
-/* Secondary/outline buttons */
-.dark .btn-secondary,
-[data-theme="dark"] .btn-secondary {
-  background: var(--surface-2) !important;
-  border-color: var(--border) !important;
-  color: var(--text-primary) !important;
-}
-.dark .btn-secondary:hover:not(:disabled),
-[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
-  background: var(--surface-3) !important;
-  border-color: var(--text-subtle) !important;
-}
 
 /* Mobile topbar */
 .dark .mobile-topbar,
@@ -678,10 +645,6 @@ button, a[role="button"], input[type="submit"] {
 }
 
 @media (max-width: 768px) {
-  .apt-edit-row {
-    grid-template-columns: 1fr;
-  }
-
   .zimmerplan-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
@@ -766,13 +729,6 @@ button, a[role="button"], input[type="submit"] {
     padding-right: 16px !important;
   }
 
-  .settings-color-row {
-    grid-template-columns: 1fr 1fr !important;
-  }
-
-  .deposit-grid {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 details.settings-section > summary span {
@@ -791,21 +747,6 @@ details.settings-section[open] > summary span {
   padding-top: 16px;
 }
 
-
-.btn-cancel {
-  padding: 11px 20px;
-  background: var(--surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  margin-right: auto;
-}
 
 .admin-page h1 {
   font-size: 28px !important;
@@ -849,10 +790,6 @@ details.settings-section[open] > summary span {
     grid-template-columns: 1fr;
   }
 
-  /* Status buttons wrap on mobile */
-  .status-btn-group {
-    flex-wrap: wrap;
-  }
 }
 
 /* ─── details/summary reset ─────────────────────────────────────── */
@@ -996,16 +933,6 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
 }
 
 /* ─── Button hover & press effects ─────────────────────────────── */
-.btn-secondary {
-  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-}
-.btn-secondary:hover:not(:disabled) {
-  background: var(--surface-2) !important;
-  border-color: var(--text-subtle) !important;
-}
-.btn-secondary:active:not(:disabled) {
-  transform: scale(0.97);
-}
 
 /* Shine sweep on hover */
 .btn-shine {

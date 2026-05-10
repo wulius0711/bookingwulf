@@ -125,7 +125,7 @@ export default async function NewHotelPage() {
           </div>
 
           <div className="admin-form-actions">
-            <a href="/admin/hotels" className="btn-cancel">Abbrechen</a>
+            <a href="/admin/hotels" className="ui-btn ui-btn-secondary ui-btn-md">Abbrechen</a>
             <Button variant="primary" type="submit">Hotel anlegen</Button>
           </div>
 
