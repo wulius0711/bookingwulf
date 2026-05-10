@@ -76,7 +76,7 @@
 .dark.theme-classic {
   /* Classic = light/white accent in dark mode so buttons are visible */
   --accent: #ffffff;
-  --shimmer-color: rgba(0, 0, 0, 0.12);
+  --shimmer-color: rgba(0, 0, 0, 0.18);
   --accent-gradient: linear-gradient(to bottom, #ffffff, #f1f5f9);
   --accent-gradient-hover: linear-gradient(to bottom, #ffffff, #ffffff);
   --accent-light: rgba(255,255,255,0.07);
@@ -937,6 +937,10 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
 /* ─── Button hover & press effects ─────────────────────────────── */
 
 /* Shine sweep on hover */
+.dark.theme-classic .btn-shine::after,
+.dark.theme-classic .ui-btn-primary::after {
+  background: rgba(0, 0, 0, 0.18) !important;
+}
 .btn-shine {
   position: relative;
   overflow: hidden;
