@@ -93,10 +93,10 @@ export default async function HotelsPage() {
             <div
               key={h.id}
               style={{
-                border: '1px solid #e5e7eb',
+                border: '1px solid var(--border)',
                 borderRadius: 14,
                 padding: '18px 20px',
-                background: '#fff',
+                background: 'var(--surface)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -117,7 +117,7 @@ export default async function HotelsPage() {
                   }}
                 />
                 <div style={{ display: 'grid', gap: 3 }}>
-                  <div style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>
+                  <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>
                     {h.name}
                     {!h.isActive && (
                       <span
@@ -164,9 +164,9 @@ export default async function HotelsPage() {
                   style={{
                     padding: '8px 14px',
                     borderRadius: 8,
-                    border: '1px solid #d1d5db',
-                    background: '#fff',
-                    color: '#111',
+                    border: '1px solid var(--border)',
+                    background: 'var(--surface)',
+                    color: 'var(--text-primary)',
                     textDecoration: 'none',
                     fontSize: 13,
                   }}
@@ -182,9 +182,9 @@ export default async function HotelsPage() {
                     style={{
                       padding: '8px 14px',
                       borderRadius: 8,
-                      border: '1px solid #d1d5db',
-                      background: '#fff',
-                      color: '#555',
+                      border: '1px solid var(--border)',
+                      background: 'var(--surface)',
+                      color: 'var(--text-muted)',
                       cursor: 'pointer',
                       fontSize: 13,
                     }}

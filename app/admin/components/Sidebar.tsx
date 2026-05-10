@@ -100,8 +100,8 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
             left: pos.x + 14,
             top: pos.y + 14,
             zIndex: 9999,
-            background: '#1e293b',
-            color: '#fff',
+            background: 'var(--text-primary)',
+            color: 'var(--surface)',
             fontSize: 12,
             fontWeight: 500,
             padding: '5px 10px',
@@ -118,7 +118,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
               height: 0,
               borderLeft: '5px solid transparent',
               borderRight: '5px solid transparent',
-              borderBottom: '5px solid #1e293b',
+              borderBottom: '5px solid var(--text-primary)',
             }} />
             Ab {upgradeLabel} Plan verfügbar
           </span>
@@ -140,7 +140,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
         borderRadius: 8,
         fontSize: 13,
         fontWeight: active ? 600 : 500,
-        color: active ? 'var(--accent)' : '#555',
+        color: active ? 'var(--accent)' : 'var(--text-muted)',
         textDecoration: 'none',
         background: active ? 'var(--accent-light)' : 'transparent',
         borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
@@ -190,7 +190,7 @@ function NavGroup({ group }: { group: NavGroup }) {
           cursor: 'pointer',
           fontSize: 14,
           fontWeight: 700,
-          color: '#6b7280',
+          color: 'var(--text-primary)',
           letterSpacing: 0,
           textTransform: 'none',
         }}
@@ -265,7 +265,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
             <button
               type="submit"
               title="Abmelden"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -288,7 +288,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         <div style={{
           position: 'sticky',
           bottom: 0,
-          background: 'var(--sidebar-bg, #fff)',
+          background: 'var(--sidebar-bg)',
           borderTop: '1px solid var(--sidebar-border)',
           padding: '12px 16px',
           display: 'flex',
@@ -297,13 +297,13 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
         }}>
           {(isSuperAdmin ? userHotels.length > 0 : userHotels.length > 1) && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <label htmlFor="hotel-switcher" style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</label>
+              <label htmlFor="hotel-switcher" style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Anlage</label>
               <select
                 id="hotel-switcher"
                 value={activeHotelId ?? ''}
                 disabled={switching}
                 onChange={(e) => handleHotelSwitch(e.target.value)}
-                style={{ padding: '6px 8px', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, color: '#111', background: '#fafafa', cursor: 'pointer', opacity: switching ? 0.5 : 1 }}
+                style={{ padding: '6px 8px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, color: 'var(--text-primary)', background: 'var(--surface-2)', cursor: 'pointer', opacity: switching ? 0.5 : 1 }}
               >
                 {isSuperAdmin && <option value="">Alle</option>}
                 {userHotels.map((h) => (
@@ -313,7 +313,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
             </div>
           )}
           <ThemeSwitcher />
-          <span style={{ fontSize: 12, color: '#9ca3af', wordBreak: 'break-all' }}>{email}</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', wordBreak: 'break-all' }}>{email}</span>
         </div>
       </aside>
     </>

@@ -38,8 +38,8 @@ export default async function UserHotelsPage({ params }: PageProps) {
   const atLimit = assigned.length >= 2;
 
   const inputStyle: React.CSSProperties = {
-    padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8,
-    fontSize: 14, background: '#fff', color: '#111', width: '100%',
+    padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8,
+    fontSize: 14, background: 'var(--surface)', color: 'var(--text-primary)', width: '100%',
   };
 
   return (
@@ -54,17 +54,17 @@ export default async function UserHotelsPage({ params }: PageProps) {
           <p style={{ fontSize: 14, color: '#9ca3af' }}>Noch kein Hotel zugewiesen.</p>
         )}
         {assigned.map((a) => (
-          <div key={a.hotelId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 16px', background: '#fff' }}>
+          <div key={a.hotelId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', background: 'var(--surface)' }}>
             <div>
-              <span style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>{a.hotel.name}</span>
-              <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: '#6b7280', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 5, padding: '2px 7px' }}>
+              <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{a.hotel.name}</span>
+              <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 5, padding: '2px 7px' }}>
                 {a.hotel.plan}
               </span>
             </div>
             <form action={unassignHotel}>
               <input type="hidden" name="userId" value={userId} />
               <input type="hidden" name="hotelId" value={a.hotelId} />
-              <button type="submit" style={{ padding: '5px 12px', border: '1px solid #fca5a5', background: '#fff', color: '#dc2626', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>
+              <button type="submit" style={{ padding: '5px 12px', border: '1px solid #fca5a5', background: 'var(--surface)', color: '#dc2626', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>
                 Entfernen
               </button>
             </form>
@@ -74,8 +74,8 @@ export default async function UserHotelsPage({ params }: PageProps) {
 
       {/* Add hotel */}
       {!atLimit && available.length > 0 && (
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: '20px 20px', background: '#fafafa' }}>
-          <h2 style={{ margin: '0 0 14px', fontSize: 16, color: '#111' }}>Hotel hinzufügen</h2>
+        <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '20px 20px', background: 'var(--surface-2)' }}>
+          <h2 style={{ margin: '0 0 14px', fontSize: 16, color: 'var(--text-primary)' }}>Hotel hinzufügen</h2>
           {assigned.length > 0 && (
             <p style={{ margin: '0 0 12px', fontSize: 13, color: '#6b7280' }}>
               Nur möglich wenn das Hotel auf Business-Plan ist.
@@ -86,7 +86,7 @@ export default async function UserHotelsPage({ params }: PageProps) {
       )}
 
       {atLimit && (
-        <p style={{ fontSize: 13, color: '#6b7280', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 16px' }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px' }}>
           Limit erreicht: Business-Plan erlaubt max. 2 Hotelanlagen pro Benutzer.
         </p>
       )}

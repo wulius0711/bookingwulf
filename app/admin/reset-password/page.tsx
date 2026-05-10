@@ -19,13 +19,13 @@ export default function ResetPasswordPage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        background: '#f5f5f7',
+        background: 'var(--page-bg)',
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--surface)',
           borderRadius: 16,
           padding: '40px 48px',
           width: '100%',
@@ -33,7 +33,7 @@ export default function ResetPasswordPage() {
           boxShadow: '0 2px 24px rgba(0,0,0,0.08)',
         }}
       >
-        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: '#111' }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>
           Neues Passwort
         </h1>
 
@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
                 style={{
                   padding: '10px 14px',
                   borderRadius: 8,
-                  border: '1px solid #d1d5db',
+                  border: '1px solid var(--border)',
                   fontSize: 14,
                   outline: 'none',
                   color: '#111',
@@ -111,7 +111,7 @@ export default function ResetPasswordPage() {
                 style={{
                   padding: '10px 14px',
                   borderRadius: 8,
-                  border: '1px solid #d1d5db',
+                  border: '1px solid var(--border)',
                   fontSize: 14,
                   outline: 'none',
                   color: '#111',

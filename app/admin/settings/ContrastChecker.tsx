@@ -149,8 +149,8 @@ function Suggestion({ suggested, fieldName, onApply }: { suggested: string; fiel
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 5,
         fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 6,
-        background: '#fff', border: '1px solid #d1d5db', cursor: 'pointer',
-        color: '#374151',
+        background: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer',
+        color: 'var(--text-muted)',
       }}
     >
       <span style={{ width: 12, height: 12, borderRadius: 3, background: suggested, border: '1px solid rgba(0,0,0,0.1)', flexShrink: 0 }} />
@@ -195,7 +195,7 @@ export default function ContrastChecker({
   ];
 
   return (
-    <div style={{ marginTop: 16, padding: '12px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }}>
+    <div style={{ marginTop: 16, padding: '12px 14px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10 }}>
       <div style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 10 }}>
         Barrierefreiheit (WCAG Kontrast)
       </div>

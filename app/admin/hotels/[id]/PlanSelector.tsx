@@ -34,7 +34,7 @@ export default function PlanSelector({ hotelId, currentPlan, plans }: Props) {
       <select
         value={selected}
         onChange={(e) => setSelected(e.target.value)}
-        style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: '#f9fafb', color: '#111' }}
+        style={{ padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)' }}
       >
         {plans.map((p) => (
           <option key={p.key} value={p.key}>{p.name}</option>

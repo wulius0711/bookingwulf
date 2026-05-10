@@ -115,10 +115,14 @@
   --status-error-text: var(--primitive-red-700);
 
   /* Destructive actions */
-  --danger:        var(--primitive-red-600);
-  --danger-hover:  var(--primitive-red-700);
-  --danger-subtle: var(--primitive-red-50);
-  --danger-text:   var(--primitive-red-800);
+  --danger:           var(--primitive-red-600);
+  --danger-hover:     var(--primitive-red-700);
+  --danger-subtle:    var(--primitive-red-50);
+  --danger-text:      var(--primitive-red-800);
+  --btn-danger-bg:       #dc2626;
+  --btn-danger-bg-hover: #b91c1c;
+  --text-on-danger:      #ffffff;
+  --overlay-bg:          rgba(0, 0, 0, 0.4);
 }
 
 /* ── Semantic Tokens — Dark Mode ──────────────────────────────────────── */
@@ -147,10 +151,14 @@
   --status-error-text: #f87171;
 
   /* Destructive — lighter so they're readable on dark surfaces */
-  --danger:        #f87171;
-  --danger-hover:  #fca5a5;
-  --danger-subtle: rgba(239, 68, 68, 0.12);
-  --danger-text:   #f87171;
+  --danger:           #f87171;
+  --danger-hover:     #fca5a5;
+  --danger-subtle:    rgba(239, 68, 68, 0.12);
+  --danger-text:      #f87171;
+  --btn-danger-bg:       #ef4444;
+  --btn-danger-bg-hover: #dc2626;
+  --text-on-danger:      #ffffff;
+  --overlay-bg:          rgba(0, 0, 0, 0.6);
 
   /* Shadows — heavier in dark mode */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);

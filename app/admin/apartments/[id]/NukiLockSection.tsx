@@ -30,7 +30,7 @@ export default function NukiLockSection({ apartmentId, currentSmartlockId, locks
   }
 
   return (
-    <section style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '24px 28px', marginTop: 24 }}>
+    <section style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '24px 28px', marginTop: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
         <span style={{ fontSize: 16 }}>🔑</span>
         <span style={{ fontWeight: 700, fontSize: 15 }}>Nuki-Schloss</span>
@@ -43,7 +43,7 @@ export default function NukiLockSection({ apartmentId, currentSmartlockId, locks
         <select
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          style={{ flex: 1, padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, color: '#111' }}
+          style={{ flex: 1, padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, color: 'var(--text-primary)' }}
         >
           <option value="">— Kein Schloss —</option>
           {locks.map((l) => (

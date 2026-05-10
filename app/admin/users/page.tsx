@@ -75,10 +75,10 @@ export default async function UsersPage() {
             <div
               key={u.id}
               style={{
-                border: '1px solid #e5e7eb',
+                border: '1px solid var(--border)',
                 borderRadius: 14,
                 padding: '16px 20px',
-                background: '#fff',
+                background: 'var(--surface)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -88,7 +88,7 @@ export default async function UsersPage() {
               }}
             >
               <div style={{ display: 'grid', gap: 4 }}>
-                <div style={{ fontWeight: 600, fontSize: 15, color: '#111' }}>
+                <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-primary)' }}>
                   {u.email}
                   {u.id === session.userId && (
                     <span
@@ -150,7 +150,7 @@ export default async function UsersPage() {
                   {u.role === 'hotel_admin' && (
                     <a
                       href={`/admin/users/${u.id}`}
-                      style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', color: '#374151', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}
+                      style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-muted)', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}
                     >
                       Hotels
                     </a>
@@ -163,9 +163,9 @@ export default async function UsersPage() {
                       style={{
                         padding: '8px 14px',
                         borderRadius: 8,
-                        border: '1px solid #d1d5db',
-                        background: '#fff',
-                        color: '#555',
+                        border: '1px solid var(--border)',
+                        background: 'var(--surface)',
+                        color: 'var(--text-muted)',
                         cursor: 'pointer',
                         fontSize: 13,
                       }}
@@ -181,7 +181,7 @@ export default async function UsersPage() {
                         padding: '8px 14px',
                         borderRadius: 8,
                         border: '1px solid #fca5a5',
-                        background: '#fff',
+                        background: 'var(--surface)',
                         color: '#dc2626',
                         cursor: 'pointer',
                         fontSize: 13,

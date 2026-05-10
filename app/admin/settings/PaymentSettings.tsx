@@ -29,7 +29,7 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
       <input type="checkbox" name={name} checked={checked} onChange={onChange} style={{ opacity: 0, width: 0, height: 0, position: 'absolute' }} />
       <span style={{
         position: 'absolute', inset: 0,
-        background: checked ? '#1e293b' : '#d1d5db',
+        background: checked ? 'var(--accent)' : 'var(--border-strong)',
         borderRadius: 26,
         transition: 'background 0.2s',
       }} />
@@ -54,7 +54,7 @@ function ToggleRow({ name, label, description, checked, onChange, disabled }: {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 0', opacity: disabled ? 0.4 : 1 }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 500, color: '#111827', lineHeight: 1.3 }}>{label}</div>
+        <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)', lineHeight: 1.3 }}>{label}</div>
         {description && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2, lineHeight: 1.4 }}>{description}</div>}
       </div>
       <IosToggle name={name} checked={disabled ? false : checked} onChange={disabled ? () => {} : onChange} />
@@ -63,7 +63,7 @@ function ToggleRow({ name, label, description, checked, onChange, disabled }: {
 }
 
 const divider: React.CSSProperties = {
-  height: 1, background: '#e5e7eb', margin: '0',
+  height: 1, background: 'var(--border)', margin: '0',
 };
 
 export default function PaymentSettings({ initialValues, inputStyle, labelStyle }: Props) {
@@ -76,7 +76,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
     <div style={{ display: 'grid', gap: 24 }}>
 
       {/* Aktive Zahlungsmethoden */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
         <div style={{ padding: '12px 16px 0', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
           Zahlungsmethoden
         </div>
@@ -92,7 +92,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           />
         </div>
         {bankTransfer && (
-          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
+          <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface-2)', padding: '14px 16px', display: 'grid', gap: 10 }}>
             <div>
               <label style={labelStyle}>Kontoinhaber</label>
               <input name="bankAccountHolder" type="text" defaultValue={initialValues.bankAccountHolder} placeholder="Max Mustermann" style={inputStyle} />
@@ -105,7 +105,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
               <label style={labelStyle}>BIC / SWIFT</label>
               <input name="bankBic" type="text" defaultValue={initialValues.bankBic} placeholder="BKAUATWW" style={inputStyle} />
             </div>
-            <div style={{ height: 1, background: '#e5e7eb', margin: '4px 0' }} />
+            <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
             <div style={{ paddingLeft: 16 }}>
               <ToggleRow
                 name="depositEnabled"
@@ -137,7 +137,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           </div>
         )}
 
-        <div style={{ height: 1, background: '#e5e7eb' }} />
+        <div style={{ height: 1, background: 'var(--border)' }} />
 
         {/* PayPal */}
         <div style={{ padding: '0 16px' }}>
@@ -150,7 +150,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           />
         </div>
         {paypal && (
-          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
+          <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface-2)', padding: '14px 16px', display: 'grid', gap: 10 }}>
             <div>
               <label style={labelStyle}>PayPal Client ID</label>
               <input name="paypalClientId" type="text" defaultValue={initialValues.paypalClientId} placeholder="AaBbCc…" style={inputStyle} />
@@ -162,7 +162,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           </div>
         )}
 
-        <div style={{ height: 1, background: '#e5e7eb' }} />
+        <div style={{ height: 1, background: 'var(--border)' }} />
 
         {/* Stripe */}
         <div style={{ padding: '0 16px' }}>
@@ -175,7 +175,7 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
           />
         </div>
         {stripe && (
-          <div style={{ borderTop: '1px solid #f3f4f6', background: '#fafafa', padding: '14px 16px', display: 'grid', gap: 10 }}>
+          <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface-2)', padding: '14px 16px', display: 'grid', gap: 10 }}>
             <div>
               <label style={labelStyle}>Publishable Key</label>
               <input name="stripePublishableKey" type="text" defaultValue={initialValues.stripePublishableKey} placeholder="pk_live_…" style={inputStyle} />

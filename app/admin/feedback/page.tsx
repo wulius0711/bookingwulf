@@ -40,12 +40,12 @@ export default async function FeedbackPage() {
           {items.map((item) => (
             <div
               key={item.id}
-              style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 18px' }}
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 18px' }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                   {item.hotelName && (
-                    <span style={{ fontSize: 12, fontWeight: 600, background: '#f3f4f6', color: '#374151', padding: '2px 8px', borderRadius: 6 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '2px 8px', borderRadius: 6 }}>
                       {item.hotelName}
                     </span>
                   )}
@@ -63,7 +63,7 @@ export default async function FeedbackPage() {
                   <DeleteFeedbackButton action={deleteFeedback.bind(null, item.id)} />
                 </div>
               </div>
-              <p style={{ margin: 0, fontSize: 14, color: '#111', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                 {item.message}
               </p>
               {item.screenshot && <ScreenshotPreview src={item.screenshot} />}

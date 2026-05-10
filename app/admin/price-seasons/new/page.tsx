@@ -47,8 +47,8 @@ export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
     redirect('/admin/price-seasons');
   }
 
-  const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
-  const input: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: '#f9fafb', color: '#111', boxSizing: 'border-box' };
+  const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
+  const input: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface-2)', color: 'var(--text-primary)', boxSizing: 'border-box' };
   const field: React.CSSProperties = { display: 'grid', gap: 4 };
 
   return (
@@ -56,13 +56,13 @@ export default async function NewPriceSeasonPage({ searchParams }: PageProps) {
       <div style={{ maxWidth: 560, display: 'grid', gap: 24 }}>
 
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neuer Preiszeitraum</h1>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Saisonalen Preis für ein Apartment festlegen.</p>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neuer Preiszeitraum</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-muted)' }}>Saisonalen Preis für ein Apartment festlegen.</p>
         </div>
 
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
-            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Details</h2>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Details</h2>
           </div>
           <div style={{ padding: '20px', display: 'grid', gap: 16 }}>
             <form action={createSeason} style={{ display: 'grid', gap: 16 }}>

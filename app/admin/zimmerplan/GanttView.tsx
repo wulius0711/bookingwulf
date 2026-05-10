@@ -111,7 +111,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
     ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type })),
   ];
 
-  const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
+  const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
 
   return (
     <div
@@ -125,13 +125,13 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
         aria-modal="true"
         aria-labelledby="apt-cal-title"
         className="apt-calendar-modal"
-        style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 460, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', marginBottom: 24 }}
+        style={{ background: 'var(--surface)', borderRadius: 20, width: '100%', maxWidth: 460, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', marginBottom: 24 }}
         onClick={(e) => e.stopPropagation()}
       >
 
         {/* Header + month nav */}
         <div style={{ borderRadius: '20px 20px 0 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
             <div>
               <div id="apt-cal-title" style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Belegung</div>
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
@@ -153,7 +153,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
               </svg>
             </button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f3f4f6', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid var(--border)', flexWrap: 'wrap' }}>
             <button onClick={() => setMonthIso(prevMonth(monthIso))} style={btnStyle}>‹</button>
             <span style={{ fontWeight: 700, fontSize: 15, flex: 1, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
             {!isCurrentMonth && (
@@ -402,24 +402,24 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
     <div style={{ position: 'relative' }}>
       {/* Month nav */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
-        <button onClick={() => setMonthIso(prevMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
+        <button onClick={() => setMonthIso(prevMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>‹</button>
         <span style={{ fontWeight: 700, fontSize: 15, minWidth: 160, textAlign: 'center' }}>{formatMonthLabel(from)}</span>
-        <button onClick={() => setMonthIso(nextMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
+        <button onClick={() => setMonthIso(nextMonth(monthIso))} style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>›</button>
         {monthIso !== monthStart(todayIso) && (
-          <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#374151' }}>Heute</button>
+          <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)' }}>Heute</button>
         )}
       </div>
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af', fontSize: 14 }}>Lädt…</div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
           <div style={{ display: 'flex' }}>
             {/* Apt label column */}
             <div style={{ width: LABEL_W, flexShrink: 0, borderRight: '1px solid #e5e7eb' }}>
-              <div style={{ height: 40, borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }} />
+              <div style={{ height: 40, borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }} />
               {apartments.map((apt, i) => (
-                <div key={apt.id} onClick={() => setCalApt(apt)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCalApt(apt); } }} role="button" tabIndex={0} className="gantt-apt-label" style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}>
+                <div key={apt.id} onClick={() => setCalApt(apt)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCalApt(apt); } }} role="button" tabIndex={0} className="gantt-apt-label" style={{ height: ROW_H, display: 'flex', alignItems: 'center', padding: '0 14px', borderBottom: i < apartments.length - 1 ? '1px solid var(--border)' : 'none', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer' }}>
                   {apt.name}
                 </div>
               ))}
@@ -430,13 +430,13 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
               <div style={{ width: totalW, minWidth: '100%' }}>
 
                 {/* Day headers */}
-                <div style={{ display: 'flex', height: 40, borderBottom: '1px solid #e5e7eb', background: '#f9fafb', position: 'sticky', top: 0, zIndex: 2 }}>
+                <div style={{ display: 'flex', height: 40, borderBottom: '1px solid var(--border)', background: 'var(--surface-2)', position: 'sticky', top: 0, zIndex: 2 }}>
                   {days.map((d) => {
                     const isToday = d === todayIso;
                     const dow = new Date(d + 'T12:00:00Z').getUTCDay();
                     const isWeekend = dow === 0 || dow === 6;
                     return (
-                      <div key={d} style={{ width: COL_W, flexShrink: 0, textAlign: 'center', fontSize: 10, borderRight: '1px solid #f3f4f6', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, background: isToday ? 'var(--accent)' : 'transparent' }}>
+                      <div key={d} style={{ width: COL_W, flexShrink: 0, textAlign: 'center', fontSize: 10, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, background: isToday ? 'var(--accent)' : 'transparent' }}>
                         <span style={{ fontWeight: 700, color: isToday ? '#fff' : isWeekend ? '#6366f1' : '#6b7280' }}>{d.slice(8)}</span>
                         <span style={{ fontSize: 9, color: isToday ? 'rgba(255,255,255,0.8)' : isWeekend ? '#6366f1' : '#9ca3af' }}>{WEEKDAY_SHORT[dow]}</span>
                       </div>
@@ -448,7 +448,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                 {apartments.map((apt, i) => (
                   <div
                     key={apt.id}
-                    style={{ height: ROW_H, position: 'relative', borderBottom: i < apartments.length - 1 ? '1px solid #f3f4f6' : 'none', display: 'flex', cursor: 'crosshair', userSelect: 'none' }}
+                    style={{ height: ROW_H, position: 'relative', borderBottom: i < apartments.length - 1 ? '1px solid var(--border)' : 'none', display: 'flex', cursor: 'crosshair', userSelect: 'none' }}
                     onMouseDown={(e) => {
                       if ((e.target as HTMLElement).closest('[data-bar]')) return;
                       const day = dayFromMouseX(e.clientX);
@@ -473,7 +473,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       const isToday = d === todayIso;
                       const highlighted = inDragHighlight(apt.id, d);
                       return (
-                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid #f3f4f6', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? '#fafafa' : 'transparent' }} />
+                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid var(--border)', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? 'var(--surface-2)' : 'transparent' }} />
                       );
                     })}
 

@@ -11,8 +11,8 @@ type Props = {
 };
 
 const panel: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 16,
   padding: '28px 32px',
   display: 'flex',
@@ -23,11 +23,11 @@ const panel: React.CSSProperties = {
 const input: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #d1d5db',
+  border: '1px solid var(--border)',
   borderRadius: 8,
   fontSize: 14,
   fontFamily: 'monospace',
-  color: '#111',
+  color: 'var(--text-primary)',
   boxSizing: 'border-box',
 };
 
@@ -46,7 +46,7 @@ const btnDanger: React.CSSProperties = {
   padding: '10px 20px',
   borderRadius: 8,
   border: '1px solid #fca5a5',
-  background: '#fff',
+  background: 'var(--surface)',
   color: '#dc2626',
   fontSize: 14,
   fontWeight: 600,
@@ -128,14 +128,14 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
             {locks.map((l) => (
               <div key={l.smartlockId} style={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '10px 14px', background: '#f9fafb', borderRadius: 8, fontSize: 14,
+                padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 14,
               }}>
                 <span style={{ fontWeight: 500 }}>🔒 {l.name}</span>
                 <span style={{ fontSize: 12, color: '#9ca3af', fontFamily: 'monospace' }}>ID {l.smartlockId}</span>
               </div>
             ))}
             <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>
-              Zuweisung pro Apartment: <a href="/admin/apartments" style={{ color: '#111', fontWeight: 600 }}>Apartments verwalten →</a>
+              Zuweisung pro Apartment: <a href="/admin/apartments" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Apartments verwalten →</a>
             </div>
           </div>
         )}
@@ -149,7 +149,7 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
           </div>
           <div style={{ fontSize: 13, color: '#6b7280' }}>
             Den Token finden Sie unter{' '}
-            <a href="https://web.nuki.io/#/account" target="_blank" rel="noopener noreferrer" style={{ color: '#111' }}>
+            <a href="https://web.nuki.io/#/account" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-primary)' }}>
               web.nuki.io → Account → API
             </a>.
           </div>

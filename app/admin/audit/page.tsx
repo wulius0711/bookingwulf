@@ -31,8 +31,8 @@ export default async function AuditPage() {
     include: { hotel: { select: { name: true } } },
   });
 
-  const th: React.CSSProperties = { padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#6b7280', letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid #e5e7eb', whiteSpace: 'nowrap' };
-  const td: React.CSSProperties = { padding: '9px 12px', fontSize: 13, color: '#111', borderBottom: '1px solid #f3f4f6', verticalAlign: 'top' };
+  const th: React.CSSProperties = { padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' };
+  const td: React.CSSProperties = { padding: '9px 12px', fontSize: 13, color: 'var(--text-primary)', borderBottom: '1px solid var(--border)', verticalAlign: 'top' };
   const tdMuted: React.CSSProperties = { ...td, color: '#6b7280' };
 
   return (
@@ -43,7 +43,7 @@ export default async function AuditPage() {
       {logs.length === 0 ? (
         <p style={{ color: '#6b7280', fontSize: 14 }}>Noch keine Einträge vorhanden.</p>
       ) : (
-        <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid #e5e7eb' }}>
+        <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid var(--border)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
@@ -56,7 +56,7 @@ export default async function AuditPage() {
             </thead>
             <tbody>
               {logs.map((log) => (
-                <tr key={log.id} style={{ background: '#fff' }}>
+                <tr key={log.id} style={{ background: 'var(--surface)' }}>
                   <td style={tdMuted}>{fmt(log.changedAt)}</td>
                   <td style={td}>{log.hotel.name}</td>
                   <td style={td}>{FIELD_LABELS[log.field] ?? log.field}</td>

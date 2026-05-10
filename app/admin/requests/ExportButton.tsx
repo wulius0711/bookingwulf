@@ -29,13 +29,13 @@ export default function ExportButton() {
         onClick={() => setOpen(true)}
         style={{
           padding: '8px 14px',
-          background: '#fff',
-          border: '1px solid #d1d5db',
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
           borderRadius: 8,
           fontSize: 13,
           fontWeight: 600,
           cursor: 'pointer',
-          color: '#374151',
+          color: 'var(--text-muted)',
           display: 'flex',
           alignItems: 'center',
           gap: 6,
@@ -56,10 +56,10 @@ export default function ExportButton() {
           onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
         >
           <div style={{
-            background: '#fff', borderRadius: 16, padding: 28, width: '100%', maxWidth: 420,
+            background: 'var(--surface)', borderRadius: 16, padding: 28, width: '100%', maxWidth: 420,
             boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
           }}>
-            <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 600, color: '#111827' }}>
+            <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 600, color: 'var(--text-primary)' }}>
               Buchhaltungsexport
             </h2>
             <p style={{ margin: '0 0 20px', fontSize: 13, color: '#6b7280' }}>
@@ -76,7 +76,7 @@ export default function ExportButton() {
                     type="date"
                     value={from}
                     onChange={e => setFrom(e.target.value)}
-                    style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
                   />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -87,7 +87,7 @@ export default function ExportButton() {
                     type="date"
                     value={to}
                     onChange={e => setTo(e.target.value)}
-                    style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -117,8 +117,8 @@ export default function ExportButton() {
               <button
                 onClick={() => setOpen(false)}
                 style={{
-                  padding: '10px 18px', background: '#fff', color: '#374151',
-                  border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, cursor: 'pointer',
+                  padding: '10px 18px', background: 'var(--surface)', color: 'var(--text-muted)',
+                  border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, cursor: 'pointer',
                 }}
               >
                 Abbrechen

@@ -17,6 +17,7 @@
   --surface-3: #f3f4f6;
   --border: #e5e7eb;
   --border-2: #f3f4f6;
+  --border-strong: #9ca3af;
   --text-primary: #0f172a;
   --text-muted: #6b7280;
   --text-subtle: #9ca3af;
@@ -49,11 +50,12 @@
   --surface:   #1a1f2e;
   --surface-2: #222840;
   --surface-3: #2b3352;
-  --border:    #2d3a58;
-  --border-2:  #222840;
+  --border:        #2d3a58;
+  --border-2:      #222840;
+  --border-strong: #6b7a9e;
   --text-primary: #f0f4ff;
   --text-muted:   #8896b3;
-  --text-subtle:  #4e5a70;
+  --text-subtle:  #6b7a9e;
   --sidebar-bg:     #1a1f2e;
   --sidebar-border: #2d3a58;
   --nav-group: #818cf8;
@@ -549,12 +551,65 @@ button, a[role="button"], input[type="submit"] {
 .dark .admin-page > div[style*="background"],
 .dark .admin-page > div > div[style*="background"],
 .dark .admin-page > div > section[style*="background"],
+.dark .admin-page a > div[style*="background"],
 [data-theme="dark"] .admin-page .two-col div[style*="background"],
 [data-theme="dark"] .admin-page > div[style*="background"],
 [data-theme="dark"] .admin-page > div > div[style*="background"],
-[data-theme="dark"] .admin-page > div > section[style*="background"] {
+[data-theme="dark"] .admin-page > div > section[style*="background"],
+[data-theme="dark"] .admin-page a > div[style*="background"] {
   background: var(--surface) !important;
   border-color: var(--border) !important;
+}
+
+/* ─── Dark mode: hardcoded gray text → readable token values ────── */
+/* Covers the most common light-mode neutral colors used in inline   */
+/* styles. Uses substring match; safe because the codebase uses the  */
+/* `background` shorthand (not `background-color`) for these values. */
+
+.dark .admin-page [style*="color:#374151"],
+.dark .admin-page [style*="color: #374151"],
+[data-theme="dark"] .admin-page [style*="color:#374151"],
+[data-theme="dark"] .admin-page [style*="color: #374151"] {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-page [style*="color:#4b5563"],
+.dark .admin-page [style*="color: #4b5563"],
+.dark .admin-page [style*="color:#555"],
+.dark .admin-page [style*="color: #555"],
+.dark .admin-page [style*="color:#666"],
+.dark .admin-page [style*="color: #666"],
+.dark .admin-page [style*="color:#6b7280"],
+.dark .admin-page [style*="color: #6b7280"],
+.dark .admin-page [style*="color:#667085"],
+.dark .admin-page [style*="color: #667085"],
+.dark .admin-page [style*="color:#475569"],
+.dark .admin-page [style*="color: #475569"],
+.dark .admin-page [style*="color:#9ca3af"],
+.dark .admin-page [style*="color: #9ca3af"],
+.dark .admin-page [style*="color:#999"],
+.dark .admin-page [style*="color: #999"],
+.dark .admin-page [style*="color:#aaa"],
+.dark .admin-page [style*="color: #aaa"],
+[data-theme="dark"] .admin-page [style*="color:#4b5563"],
+[data-theme="dark"] .admin-page [style*="color: #4b5563"],
+[data-theme="dark"] .admin-page [style*="color:#555"],
+[data-theme="dark"] .admin-page [style*="color: #555"],
+[data-theme="dark"] .admin-page [style*="color:#666"],
+[data-theme="dark"] .admin-page [style*="color: #666"],
+[data-theme="dark"] .admin-page [style*="color:#6b7280"],
+[data-theme="dark"] .admin-page [style*="color: #6b7280"],
+[data-theme="dark"] .admin-page [style*="color:#667085"],
+[data-theme="dark"] .admin-page [style*="color: #667085"],
+[data-theme="dark"] .admin-page [style*="color:#475569"],
+[data-theme="dark"] .admin-page [style*="color: #475569"],
+[data-theme="dark"] .admin-page [style*="color:#9ca3af"],
+[data-theme="dark"] .admin-page [style*="color: #9ca3af"],
+[data-theme="dark"] .admin-page [style*="color:#999"],
+[data-theme="dark"] .admin-page [style*="color: #999"],
+[data-theme="dark"] .admin-page [style*="color:#aaa"],
+[data-theme="dark"] .admin-page [style*="color: #aaa"] {
+  color: var(--text-muted) !important;
 }
 
 /* Input / select / textarea */

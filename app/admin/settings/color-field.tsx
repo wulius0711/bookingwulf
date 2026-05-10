@@ -51,7 +51,7 @@ export function ColorField({
   }, [combined, name]);
 
   return (
-    <div style={{ padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+    <div style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <span style={{ ...labelStyle, flex: 1, minWidth: 0, margin: 0 }}>{label}</span>
 
@@ -70,7 +70,7 @@ export function ColorField({
           <input
             value={hex}
             onChange={(e) => setHex(e.target.value)}
-            style={{ width: 88, padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontFamily: 'monospace', background: '#fff', color: '#111', outline: 'none' }}
+            style={{ width: 88, padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontFamily: 'monospace', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none' }}
           />
 
           <input type="hidden" name={name} value={combined} />

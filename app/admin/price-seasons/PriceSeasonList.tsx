@@ -43,6 +43,7 @@ export default function PriceSeasonList({
       <style>{`
         .price-season-grid { display: grid; gap: 12px; align-items: start; }
         @media (min-width: 640px) { .price-season-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
+        .dark .season-card, [data-theme="dark"] .season-card { background: var(--surface-2) !important; }
       `}</style>
       <div className="price-season-grid">
       {seasons.map((s) => {
@@ -50,6 +51,7 @@ export default function PriceSeasonList({
         return (
           <div
             key={s.id}
+            className="season-card"
             style={{ border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
           >
             <button
@@ -93,19 +95,19 @@ export default function PriceSeasonList({
               <div style={{ padding: '0 18px 18px', borderTop: '1px solid var(--border)' }}>
                 <div style={{ display: 'grid', gap: 6, marginTop: 14, fontSize: 14, color: 'var(--text-primary)' }}>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <span style={{ color: '#9ca3af', width: 160, flexShrink: 0 }}>Apartment</span>
+                    <span style={{ color: 'var(--text-muted)', width: 160, flexShrink: 0 }}>Apartment</span>
                     <span>{s.apartment?.name}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <span style={{ color: '#9ca3af', width: 160, flexShrink: 0 }}>Zeitraum</span>
+                    <span style={{ color: 'var(--text-muted)', width: 160, flexShrink: 0 }}>Zeitraum</span>
                     <span>{fmt(s.startDate)} – {fmt(s.endDate)}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <span style={{ color: '#9ca3af', width: 160, flexShrink: 0 }}>Preis / Nacht</span>
+                    <span style={{ color: 'var(--text-muted)', width: 160, flexShrink: 0 }}>Preis / Nacht</span>
                     <span>€ {s.pricePerNight}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <span style={{ color: '#9ca3af', width: 160, flexShrink: 0 }}>Mindestaufenthalt</span>
+                    <span style={{ color: 'var(--text-muted)', width: 160, flexShrink: 0 }}>Mindestaufenthalt</span>
                     <span>{s.minStay} Nacht{s.minStay !== 1 ? 'ä' : ''}e</span>
                   </div>
                 </div>

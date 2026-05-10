@@ -1,0 +1,157 @@
+/* bookingwulf v2 marketing site — scoped styles */
+
+:root {
+  --bw-black: #0f172a;
+  --bw-gray-muted: #64748b;
+  --bw-border: #e2e8f0;
+  --bw-surface: #f8fafc;
+  --bw-green: #16a34a;
+  --bw-green-bg: #f0fdf4;
+  --bw-green-border: #bbf7d0;
+  --bw-transition: 200ms ease;
+  --bw-transition-slow: 350ms ease;
+  --bw-radius-card: 1rem;
+  --bw-radius-btn: 0.75rem;
+  --bw-shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --bw-shadow-card-hover: 0 10px 30px -8px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.06);
+  --bw-shadow-widget: 0 24px 60px -12px rgb(0 0 0 / 0.18);
+}
+
+/* ── Scroll-in animations ─────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .bw-animate {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .bw-animate.bw-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .bw-animate-delay-1 { transition-delay: 0.08s; }
+  .bw-animate-delay-2 { transition-delay: 0.16s; }
+  .bw-animate-delay-3 { transition-delay: 0.24s; }
+  .bw-animate-delay-4 { transition-delay: 0.32s; }
+}
+
+/* ── Badge pulse ──────────────────────────────────────────────── */
+@keyframes bw-badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.28); }
+  50%       { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+}
+.bw-badge-pulse {
+  animation: bw-badge-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── Subtle float for widget preview ─────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes bw-float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-7px); }
+  }
+  .bw-float { animation: bw-float 5s ease-in-out infinite; }
+}
+
+/* ── Card hover lift ─────────────────────────────────────────── */
+.bw-card {
+  border-radius: var(--bw-radius-card);
+  border: 1px solid var(--bw-border);
+  background: #fff;
+  box-shadow: var(--bw-shadow-card);
+  transition: transform var(--bw-transition-slow), box-shadow var(--bw-transition-slow), border-color var(--bw-transition);
+}
+.bw-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--bw-shadow-card-hover);
+  border-color: #cbd5e1;
+}
+
+/* ── Button base ─────────────────────────────────────────────── */
+.bw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bw-radius-btn);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform var(--bw-transition), box-shadow var(--bw-transition), background var(--bw-transition), color var(--bw-transition), border-color var(--bw-transition);
+  cursor: pointer;
+  border: none;
+  outline-offset: 3px;
+}
+.bw-btn:hover    { transform: translateY(-1px); }
+.bw-btn:active   { transform: translateY(0); }
+.bw-btn:focus-visible { outline: 2px solid var(--bw-black); }
+
+.bw-btn-primary {
+  background: var(--bw-black);
+  color: #fff;
+  padding: 0.8125rem 1.75rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+}
+.bw-btn-primary:hover { background: #1e293b; box-shadow: 0 6px 20px -4px rgb(0 0 0 / 0.3); }
+
+.bw-btn-secondary {
+  background: #fff;
+  color: var(--bw-black);
+  padding: 0.8125rem 1.75rem;
+  border: 1.5px solid var(--bw-border);
+}
+.bw-btn-secondary:hover { border-color: #94a3b8; box-shadow: 0 4px 12px -4px rgb(0 0 0 / 0.1); }
+
+/* ── Nav link underline on active ────────────────────────────── */
+.bw-nav-link {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--bw-gray-muted);
+  text-decoration: none;
+  transition: color var(--bw-transition);
+}
+.bw-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--bw-black);
+  border-radius: 2px;
+  transition: width var(--bw-transition-slow);
+}
+.bw-nav-link:hover        { color: var(--bw-black); }
+.bw-nav-link:hover::after { width: 100%; }
+.bw-nav-link[aria-current="page"] { color: var(--bw-black); }
+.bw-nav-link[aria-current="page"]::after { width: 100%; }
+
+/* ── FAQ accordion ───────────────────────────────────────────── */
+.bw-faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bw-faq-answer.bw-faq-open {
+  max-height: 320px;
+}
+
+/* ── Step connector line ─────────────────────────────────────── */
+.bw-step-connector {
+  position: absolute;
+  left: 23px;
+  top: 52px;
+  bottom: -32px;
+  width: 1px;
+  background: linear-gradient(to bottom, #e2e8f0, transparent);
+}
+
+/* ── Section label ───────────────────────────────────────────── */
+.bw-section-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bw-green);
+  margin-bottom: 0.75rem;
+}

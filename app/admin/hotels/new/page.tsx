@@ -8,18 +8,18 @@ export const dynamic = 'force-dynamic';
 const inp: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--border)',
   borderRadius: 8,
   fontSize: 14,
-  background: '#f9fafb',
-  color: '#111',
+  background: 'var(--surface-2)',
+  color: 'var(--text-primary)',
   boxSizing: 'border-box',
 };
 
 const lbl: React.CSSProperties = {
   fontSize: 12,
   fontWeight: 700,
-  color: '#4b5563',
+  color: 'var(--text-muted)',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
   marginBottom: 4,
@@ -29,16 +29,16 @@ const lbl: React.CSSProperties = {
 const fld: React.CSSProperties = { display: 'grid', gap: 4 };
 
 const card: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 16,
   overflow: 'hidden',
 };
 
 const cardHead: React.CSSProperties = {
-  background: '#fafafa',
+  background: 'var(--surface-2)',
   padding: '14px 20px',
-  borderBottom: '1px solid #f3f4f6',
+  borderBottom: '1px solid var(--border)',
 };
 
 const cardBody: React.CSSProperties = { padding: '20px', display: 'grid', gap: 16 };
@@ -77,7 +77,7 @@ export default async function NewHotelPage() {
       <div style={{ maxWidth: 640, display: 'grid', gap: 24 }}>
 
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neues Hotel</h1>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neues Hotel</h1>
           <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Grunddaten für ein neues Hotel anlegen.</p>
         </div>
 
@@ -85,7 +85,7 @@ export default async function NewHotelPage() {
 
           <div style={card}>
             <div style={cardHead}>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Stammdaten</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Stammdaten</h2>
             </div>
             <div style={cardBody}>
               <div style={fld}>
@@ -112,7 +112,7 @@ export default async function NewHotelPage() {
 
           <div style={card}>
             <div style={cardHead}>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Design & Status</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Design & Status</h2>
             </div>
             <div style={cardBody}>
               <ColorField label="Akzentfarbe" name="accentColor" defaultValue="#111827" labelStyle={lbl} />

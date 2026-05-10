@@ -29,7 +29,7 @@ export default function DeleteHotelButton({
           padding: '8px 14px',
           borderRadius: 8,
           border: '1px solid #fca5a5',
-          background: '#fff',
+          background: 'var(--surface)',
           color: pending ? '#aaa' : '#dc2626',
           cursor: pending ? 'not-allowed' : 'pointer',
           fontSize: 13,

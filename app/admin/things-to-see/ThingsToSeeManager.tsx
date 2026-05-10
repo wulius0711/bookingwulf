@@ -136,14 +136,14 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
 
   const filtered = filterCat === 'all' ? items : items.filter((i) => i.category === filterCat);
 
-  const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', border: '1.5px solid #e5e7eb', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', boxSizing: 'border-box' };
+  const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', boxSizing: 'border-box' };
   const btn: React.CSSProperties = { padding: '7px 14px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
 
   return (
     <div style={{ display: 'grid', gap: 24 }}>
 
       {/* Search */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: 20 }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20 }}>
         <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10 }}>Ort suchen & importieren</div>
         <div style={{ position: 'relative' }} ref={dropdownRef}>
           <input
@@ -154,16 +154,16 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
           />
           <span style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', fontSize: 16 }}>🔍</span>
           {(suggestions.length > 0 || loadingSuggestions) && (
-            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1.5px solid #e5e7eb', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, marginTop: 4, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, marginTop: 4, overflow: 'hidden' }}>
               {loadingSuggestions && <div style={{ padding: '12px 14px', fontSize: 13, color: '#9ca3af' }}>Suche …</div>}
               {suggestions.map((s) => (
                 <button
                   key={s.placeId}
                   onClick={() => importPlace(s.placeId)}
                   disabled={isPending}
-                  style={{ width: '100%', padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: '1px solid var(--border)', fontFamily: 'inherit' }}
                 >
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>{s.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{s.title}</div>
                   <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{s.subtitle}</div>
                 </button>
               ))}
@@ -174,14 +174,14 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
         <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 8 }}>
           Wählen Sie einen Eintrag aus den Vorschlägen — Name, Adresse und Kategorie werden automatisch übernommen.
         </p>
-        <div style={{ borderTop: '1px solid #f0f0f0', marginTop: 12, paddingTop: 12 }}>
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 12, paddingTop: 12 }}>
           {!showManualForm ? (
-            <button style={{ ...btn, background: '#f3f4f6', color: '#374151', fontSize: 13 }} onClick={() => setShowManualForm(true)}>
+            <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', fontSize: 13 }} onClick={() => setShowManualForm(true)}>
               + Manuell hinzufügen
             </button>
           ) : (
             <div style={{ display: 'grid', gap: 10 }}>
-              <div style={{ fontWeight: 700, fontSize: 13, color: '#374151' }}>Manuell hinzufügen</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-muted)' }}>Manuell hinzufügen</div>
               <div className="two-col-grid" style={{ gap: 10 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 4 }}>Titel *</label>
@@ -218,7 +218,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button style={{ ...btn, background: '#f3f4f6', color: '#374151' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
+                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => setShowManualForm(false)}>Abbrechen</button>
                 <button style={{ ...btn, background: '#111827', color: '#fff' }} onClick={addManual} disabled={isPending || !manualData.title.trim()}>Hinzufügen</button>
               </div>
             </div>
@@ -229,11 +229,11 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
       {/* Filter */}
       {items.length > 0 && (
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button onClick={() => setFilterCat('all')} style={{ ...btn, background: filterCat === 'all' ? '#111827' : '#f3f4f6', color: filterCat === 'all' ? '#fff' : '#374151' }}>
+          <button onClick={() => setFilterCat('all')} style={{ ...btn, background: filterCat === 'all' ? '#111827' : 'var(--surface-2)', color: filterCat === 'all' ? '#fff' : 'var(--text-muted)' }}>
             Alle ({items.length})
           </button>
           {CATEGORIES.filter((c) => items.some((i) => i.category === c.value)).map((c) => (
-            <button key={c.value} onClick={() => setFilterCat(c.value)} style={{ ...btn, background: filterCat === c.value ? '#111827' : '#f3f4f6', color: filterCat === c.value ? '#fff' : '#374151' }}>
+            <button key={c.value} onClick={() => setFilterCat(c.value)} style={{ ...btn, background: filterCat === c.value ? '#111827' : 'var(--surface-2)', color: filterCat === c.value ? '#fff' : 'var(--text-muted)' }}>
               {c.icon} {c.label} ({items.filter((i) => i.category === c.value).length})
             </button>
           ))}
@@ -248,7 +248,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
       )}
 
       {filtered.map((item) => (
-        <div key={item.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', opacity: item.isActive ? 1 : 0.5 }}>
+        <div key={item.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', opacity: item.isActive ? 1 : 0.5 }}>
           {editId === item.id ? (
             <div style={{ padding: 20, display: 'grid', gap: 12 }}>
               <div className="two-col-grid" style={{ gap: 12 }}>
@@ -285,7 +285,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                 </div>
               )}
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button style={{ ...btn, background: '#f3f4f6', color: '#374151' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
+                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
                 <button className="btn-shine" style={{ ...btn, background: '#111827', color: '#fff' }} onClick={saveEdit}>Speichern</button>
               </div>
             </div>
@@ -302,18 +302,18 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
                     </div>
                     <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{catLabel(item.category)}</div>
                     {item.address && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.address}</div>}
-                    {item.description && <div style={{ fontSize: 12, color: '#374151', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</div>}
+                    {item.description && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</div>}
                     {item.apartmentId && apartments.length > 1 && (
                       <div style={{ marginTop: 5 }}>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', background: '#f3f4f6', borderRadius: 6, padding: '2px 7px' }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--surface-2)', borderRadius: 6, padding: '2px 7px' }}>
                           {apartments.find((a) => a.id === item.apartmentId)?.name ?? 'Wohnung'}
                         </span>
                       </div>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                    <button style={{ ...btn, background: '#f3f4f6', color: '#374151', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
-                    <button style={{ ...btn, background: item.isActive ? '#dcfce7' : '#f3f4f6', color: item.isActive ? '#166534' : '#6b7280', padding: '5px 10px' }} onClick={() => toggleActive(item.id, !item.isActive)}>
+                    <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
+                    <button style={{ ...btn, background: item.isActive ? '#dcfce7' : 'var(--surface-2)', color: item.isActive ? '#166534' : 'var(--text-muted)', padding: '5px 10px' }} onClick={() => toggleActive(item.id, !item.isActive)}>
                       {item.isActive ? 'Aktiv' : 'Inaktiv'}
                     </button>
                     <button style={{ ...btn, background: '#fef2f2', color: '#dc2626', padding: '5px 10px' }} onClick={() => deleteItem(item.id)}>🗑️</button>

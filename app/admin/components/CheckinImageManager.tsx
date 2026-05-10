@@ -25,7 +25,7 @@ export default function CheckinImageManager({
   const [isPending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const inp: React.CSSProperties = { width: '100%', padding: '8px 11px', border: '1.5px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
+  const inp: React.CSSProperties = { width: '100%', padding: '8px 11px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
   const btn: React.CSSProperties = { padding: '6px 12px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -78,12 +78,12 @@ export default function CheckinImageManager({
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
         {images.map((img) => (
-          <div key={img.id} style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden', background: '#fff' }}>
+          <div key={img.id} style={{ border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', background: 'var(--surface)' }}>
             <div style={{ position: 'relative' }}>
               <img src={img.imageUrl} alt={img.caption ?? ''} style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
               <button
                 onClick={() => deleteImage(img.id)}
-                style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, padding: '3px 7px', cursor: 'pointer' }}
+                style={{ position: 'absolute', top: '6px', right: '6px', background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: 12, padding: '3px 7px', cursor: 'pointer' }}
               >
                 ✕
               </button>
@@ -99,7 +99,7 @@ export default function CheckinImageManager({
                     autoFocus
                   />
                   <div style={{ display: 'flex', gap: 6 }}>
-                    <button style={{ ...btn, background: '#f3f4f6', color: '#374151', flex: 1 }} onClick={() => setEditId(null)}>Abbrechen</button>
+                    <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', flex: 1 }} onClick={() => setEditId(null)}>Abbrechen</button>
                     <button style={{ ...btn, background: '#111827', color: '#fff', flex: 1 }} onClick={() => saveCaption(img.id)} disabled={isPending}>OK</button>
                   </div>
                 </div>
@@ -108,7 +108,7 @@ export default function CheckinImageManager({
                   onClick={() => { setEditId(img.id); setEditCaption(img.caption ?? ''); }}
                   style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, fontFamily: 'inherit' }}
                 >
-                  <span style={{ fontSize: 12, color: img.caption ? '#374151' : '#9ca3af' }}>
+                  <span style={{ fontSize: 12, color: img.caption ? 'var(--text-muted)' : '#9ca3af' }}>
                     {img.caption || '+ Beschreibung'}
                   </span>
                 </button>
@@ -121,7 +121,7 @@ export default function CheckinImageManager({
       <div>
         <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
         <button
-          style={{ ...btn, background: '#f3f4f6', color: '#374151' }}
+          style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }}
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
         >

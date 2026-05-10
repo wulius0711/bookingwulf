@@ -165,13 +165,13 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#111' }}>Outreach</h1>
+          <h1 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>Outreach</h1>
           <p style={{ margin: 0, fontSize: 14, color: '#6b7280' }}>{leads.length} potenzielle Kunden</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button
             onClick={() => setNewLeadOpen(true)}
-            style={{ padding: '8px 16px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#374151' }}
+            style={{ padding: '8px 16px', background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text-muted)' }}
           >
             + Lead
           </button>
@@ -200,9 +200,9 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
             style={{
               padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600,
               border: '1px solid',
-              borderColor: filter === tab ? '#111827' : '#e5e7eb',
-              background: filter === tab ? '#111827' : '#fff',
-              color: filter === tab ? '#fff' : '#374151',
+              borderColor: filter === tab ? '#111827' : 'var(--border)',
+              background: filter === tab ? '#111827' : 'var(--surface)',
+              color: filter === tab ? '#fff' : 'var(--text-muted)',
               cursor: 'pointer',
             }}
           >
@@ -213,15 +213,15 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
 
       {/* New lead form */}
       {newLeadOpen && (
-        <div style={{ marginBottom: 20, padding: 20, background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12 }}>
+        <div style={{ marginBottom: 20, padding: 20, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 12 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 12 }}>
             {(['betrieb', 'inhaber', 'email', 'phone', 'region', 'website'] as const).map(field => (
               <input key={field} placeholder={{ betrieb: 'Betrieb', inhaber: 'Inhaber', email: 'E-Mail', phone: 'Telefon', region: 'Region', website: 'Website' }[field]} value={newLead[field]}
                 onChange={e => setNewLead(p => ({ ...p, [field]: e.target.value }))}
-                style={{ padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }} />
+                style={{ padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13 }} />
             ))}
             <select value={newLead.kontaktPer} onChange={e => setNewLead(p => ({ ...p, kontaktPer: e.target.value }))}
-              style={{ padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13, color: newLead.kontaktPer ? '#111' : '#9ca3af' }}>
+              style={{ padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, color: newLead.kontaktPer ? 'var(--text-primary)' : '#9ca3af' }}>
               <option value="">Kontakt per…</option>
               <option value="E-Mail">E-Mail</option>
               <option value="Telefon">Telefon</option>
@@ -230,18 +230,18 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={createLead} className="btn-shine" style={{ padding: '7px 16px', background: '#111827', color: '#fff', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
-            <button onClick={() => setNewLeadOpen(false)} style={{ padding: '7px 16px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
+            <button onClick={() => setNewLeadOpen(false)} style={{ padding: '7px 16px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
           </div>
         </div>
       )}
 
       {/* Table */}
-      <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid #e5e7eb' }}>
+      <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid var(--border)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+            <tr style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
               {['Betrieb', 'Inhaber', 'E-Mail', 'Telefon', 'Kontakt per', 'Region', 'Status', 'Gesendet', 'Aktionen'].map(h => (
-                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#374151', fontSize: 12, whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: 'var(--text-muted)', fontSize: 12, whiteSpace: 'nowrap' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -250,12 +250,12 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
               const isEditing = editId === lead.id;
               const sc = STATUS_COLORS[lead.status] || STATUS_COLORS['neu'];
               return (
-                <tr key={lead.id} style={{ borderBottom: '1px solid #f3f4f6', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
-                  <td style={{ padding: '10px 14px', fontWeight: 600, color: '#111' }}>
+                <tr key={lead.id} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'var(--surface)' : 'var(--surface-2)' }}>
+                  <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {isEditing
                       ? <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                          <input value={editData.betrieb ?? ''} onChange={e => setEditData(p => ({ ...p, betrieb: e.target.value }))} placeholder="Betrieb" style={{ width: 130, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
-                          <input value={editData.website ?? ''} onChange={e => setEditData(p => ({ ...p, website: e.target.value }))} placeholder="Website" style={{ width: 130, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                          <input value={editData.betrieb ?? ''} onChange={e => setEditData(p => ({ ...p, betrieb: e.target.value }))} placeholder="Betrieb" style={{ width: 130, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
+                          <input value={editData.website ?? ''} onChange={e => setEditData(p => ({ ...p, website: e.target.value }))} placeholder="Website" style={{ width: 130, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
                         </div>
                       : <div>
                           {lead.betrieb}
@@ -263,42 +263,42 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                         </div>
                     }
                   </td>
-                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                  <td style={{ padding: '10px 14px', color: 'var(--text-muted)' }}>
                     {isEditing
-                      ? <input value={editData.inhaber ?? ''} onChange={e => setEditData(p => ({ ...p, inhaber: e.target.value }))} style={{ width: 120, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      ? <input value={editData.inhaber ?? ''} onChange={e => setEditData(p => ({ ...p, inhaber: e.target.value }))} style={{ width: 120, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
                       : (lead.inhaber || '–')
                     }
                   </td>
-                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                  <td style={{ padding: '10px 14px', color: 'var(--text-muted)' }}>
                     {isEditing
-                      ? <input value={editData.email ?? ''} onChange={e => setEditData(p => ({ ...p, email: e.target.value }))} style={{ width: 160, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      ? <input value={editData.email ?? ''} onChange={e => setEditData(p => ({ ...p, email: e.target.value }))} style={{ width: 160, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
                       : lead.email
                         ? <a href={`mailto:${lead.email}`} style={{ color: '#1d4ed8', textDecoration: 'none' }}>{lead.email}</a>
                         : <span style={{ color: '#d1d5db' }}>–</span>
                     }
                   </td>
-                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                  <td style={{ padding: '10px 14px', color: 'var(--text-muted)' }}>
                     {isEditing
-                      ? <input value={editData.phone ?? ''} onChange={e => setEditData(p => ({ ...p, phone: e.target.value }))} style={{ width: 120, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      ? <input value={editData.phone ?? ''} onChange={e => setEditData(p => ({ ...p, phone: e.target.value }))} style={{ width: 120, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
                       : lead.phone
-                        ? <a href={`tel:${lead.phone}`} style={{ color: '#374151', textDecoration: 'none' }}>{lead.phone}</a>
+                        ? <a href={`tel:${lead.phone}`} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{lead.phone}</a>
                         : <span style={{ color: '#d1d5db' }}>–</span>
                     }
                   </td>
-                  <td style={{ padding: '10px 14px', color: '#374151' }}>
+                  <td style={{ padding: '10px 14px', color: 'var(--text-muted)' }}>
                     {isEditing
-                      ? <select value={editData.kontaktPer ?? ''} onChange={e => setEditData(p => ({ ...p, kontaktPer: e.target.value }))} style={{ padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }}>
+                      ? <select value={editData.kontaktPer ?? ''} onChange={e => setEditData(p => ({ ...p, kontaktPer: e.target.value }))} style={{ padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }}>
                           <option value="">–</option>
                           <option value="E-Mail">E-Mail</option>
                           <option value="Telefon">Telefon</option>
                           <option value="Persönlich">Persönlich</option>
                         </select>
-                      : <span style={{ color: lead.kontaktPer ? '#374151' : '#d1d5db' }}>{lead.kontaktPer || '–'}</span>
+                      : <span style={{ color: lead.kontaktPer ? 'var(--text-muted)' : '#d1d5db' }}>{lead.kontaktPer || '–'}</span>
                     }
                   </td>
                   <td style={{ padding: '10px 14px', color: '#6b7280' }}>
                     {isEditing
-                      ? <input value={editData.region ?? ''} onChange={e => setEditData(p => ({ ...p, region: e.target.value }))} placeholder="Region" style={{ width: 110, padding: '4px 7px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 12 }} />
+                      ? <input value={editData.region ?? ''} onChange={e => setEditData(p => ({ ...p, region: e.target.value }))} placeholder="Region" style={{ width: 110, padding: '4px 7px', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12 }} />
                       : (lead.region || '–')
                     }
                   </td>
@@ -318,7 +318,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                     {isEditing ? (
                       <div style={{ display: 'flex', gap: 6 }}>
                         <button onClick={() => saveEdit(lead.id)} className="btn-shine" style={{ padding: '4px 10px', background: '#111827', color: '#fff', border: 'none', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Speichern</button>
-                        <button onClick={() => setEditId(null)} style={{ padding: '4px 10px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Abbrechen</button>
+                        <button onClick={() => setEditId(null)} style={{ padding: '4px 10px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Abbrechen</button>
                       </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -339,7 +339,7 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                         )}
                         <button
                           onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '', website: lead.website ?? '', region: lead.region ?? '' }); }}
-                          style={{ padding: '4px 8px', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: '#374151' }}
+                          style={{ padding: '4px 8px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: 'var(--text-muted)' }}
                         >
                           Bearbeiten
                         </button>

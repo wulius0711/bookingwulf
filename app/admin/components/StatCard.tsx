@@ -42,11 +42,11 @@ const cardStyle: React.CSSProperties = {
 export default function StatCard({ label, value, href, highlight }: StatCardProps) {
   return (
     <Link href={href} style={{ textDecoration: 'none' }}>
-      <div style={{ ...cardStyle, ...(highlight ? { borderColor: '#fca5a5', background: '#fef2f2' } : {}) }}>
-        <div style={{ fontSize: 32, fontWeight: 700, color: highlight ? '#dc2626' : '#111' }}>
+      <div style={{ ...cardStyle, ...(highlight ? { borderColor: 'var(--primitive-red-300)', background: 'var(--danger-subtle)' } : {}) }}>
+        <div style={{ fontSize: 32, fontWeight: 700, color: highlight ? 'var(--danger)' : 'var(--text-primary)' }}>
           <CountUp target={value} />
         </div>
-        <div style={{ fontSize: 13, color: highlight ? '#dc2626' : '#666', marginTop: 4 }}>
+        <div style={{ fontSize: 13, color: highlight ? 'var(--danger)' : 'var(--text-muted)', marginTop: 4 }}>
           {label}
         </div>
       </div>

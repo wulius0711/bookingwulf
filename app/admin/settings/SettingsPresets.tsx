@@ -95,7 +95,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   }
 
   const labelStyle = { fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' as const, letterSpacing: '0.05em' };
-  const presetBtnStyle = { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid #e5e7eb', background: '#fff', cursor: 'pointer', color: '#374151' };
+  const presetBtnStyle = { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', color: 'var(--text-muted)' };
 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
@@ -116,7 +116,7 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
             onChange={e => setNameInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') savePreset(); if (e.key === 'Escape') setShowNameInput(false); }}
             placeholder="Preset-Name"
-            style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }}
+            style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 14 }}
           />
           <button type="button" className="btn-shine" onClick={savePreset} disabled={saving || !nameInput.trim()} style={{ ...presetBtnStyle, background: 'var(--accent)', color: '#fff', border: 'none' }}>
             {saving ? '…' : 'OK'}
@@ -130,12 +130,12 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
       )}
 
       {presets.map(preset => (
-        <div key={preset.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 8 }}>
+        <div key={preset.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8 }}>
           <div style={{ display: 'flex', gap: 6, flex: 1, alignItems: 'center' }}>
             {[preset.accentColor, preset.backgroundColor, preset.cardBackground].filter(Boolean).map((c, i) => (
-              <span key={i} style={{ width: 16, height: 16, borderRadius: 4, background: c!, border: '1px solid #e5e7eb', flexShrink: 0 }} />
+              <span key={i} style={{ width: 16, height: 16, borderRadius: 4, background: c!, border: '1px solid var(--border)', flexShrink: 0 }} />
             ))}
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginLeft: 4 }}>{preset.name}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginLeft: 4 }}>{preset.name}</span>
           </div>
           <button type="button" onClick={() => applyPreset(preset)} style={presetBtnStyle}>Anwenden</button>
           <button type="button" onClick={() => deletePreset(preset.id)} style={{ ...presetBtnStyle, color: '#dc2626', borderColor: '#fecaca' }}>Löschen</button>

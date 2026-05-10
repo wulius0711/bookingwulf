@@ -47,9 +47,9 @@ export default function StatusButtons({ requestId, currentStatus, guestEmail, ac
               style={{
                 padding: '10px 14px',
                 borderRadius: 8,
-                border: active ? '1px solid #111' : '1px solid #ccc',
-                background: active ? '#111' : '#fff',
-                color: disabled ? '#aaa' : active ? '#fff' : '#111',
+                border: active ? '1px solid var(--text-primary)' : '1px solid #ccc',
+                background: active ? 'var(--text-primary)' : 'var(--surface)',
+                color: disabled ? '#aaa' : active ? '#fff' : 'var(--text-primary)',
                 cursor: disabled ? 'default' : 'pointer',
               }}
             >

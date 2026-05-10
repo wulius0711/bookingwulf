@@ -72,7 +72,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
 
   return (
     <div className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 0', flexWrap: 'wrap' }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: '#4b5563', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         {url ? (
           <>
@@ -84,7 +84,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
               onClick={handleDelete}
               disabled={loading}
               title="Font entfernen"
-              style={{ background: 'none', border: '1px solid #e5e7eb', borderRadius: 6, padding: '4px 8px', fontSize: 12, color: '#9ca3af', cursor: loading ? 'default' : 'pointer' }}
+              style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 6, padding: '4px 8px', fontSize: 12, color: '#9ca3af', cursor: loading ? 'default' : 'pointer' }}
             >
               {loading ? '…' : '× Entfernen'}
             </button>
@@ -96,7 +96,7 @@ export default function FontUploadRow({ field, initialUrl }: Props) {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={loading}
-              style={{ border: '1px solid #d1d5db', borderRadius: 6, padding: '6px 12px', fontSize: 13, color: '#374151', background: '#f9fafb', cursor: loading ? 'default' : 'pointer' }}
+              style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '6px 12px', fontSize: 13, color: 'var(--text-muted)', background: 'var(--surface-2)', cursor: loading ? 'default' : 'pointer' }}
             >
               {loading ? 'Wird hochgeladen…' : '+ Schrift hochladen'}
             </button>

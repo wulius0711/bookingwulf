@@ -13,7 +13,7 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
       <input type="checkbox" name={name} checked={checked} onChange={onChange} style={{ opacity: 0, width: 0, height: 0, position: 'absolute' }} />
       <span style={{
         position: 'absolute', inset: 0,
-        background: checked ? '#1e293b' : '#d1d5db',
+        background: checked ? 'var(--accent)' : 'var(--border-strong)',
         borderRadius: 26,
         transition: 'background 0.2s',
       }} />
@@ -21,7 +21,7 @@ function IosToggle({ name, checked, onChange }: { name: string; checked: boolean
         position: 'absolute',
         width: 20, height: 20,
         left: 3, top: 3,
-        background: '#fff',
+        background: '#fff', // toggle knob – keep white
         borderRadius: '50%',
         transform: checked ? 'translateX(20px)' : 'translateX(0)',
         transition: 'transform 0.2s',
@@ -59,13 +59,13 @@ export default function FeatureToggles({ initialValues }: Props) {
   }
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
       {toggles.map(([key, label], i) => (
         <div key={key}>
-          {i > 0 && <div style={{ height: 1, background: '#e5e7eb', margin: '0 16px' }} />}
+          {i > 0 && <div style={{ height: 1, background: 'var(--border)', margin: '0 16px' }} />}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '13px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 14, fontWeight: 500, color: '#111827' }}>{label}</span>
+              <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</span>
               {key === 'enableInstantBooking' && (
                 <InfoTooltip text="Gäste können verbindlich buchen statt nur anfragen. Buchungen werden sofort bestätigt." />
               )}
@@ -74,8 +74,8 @@ export default function FeatureToggles({ initialValues }: Props) {
           </div>
         </div>
       ))}
-      <div style={{ height: 1, background: '#f3f4f6' }} />
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '13px 16px 13px 32px', background: '#fafafa' }}>
+      <div style={{ height: 1, background: 'var(--border)' }} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '13px 16px 13px 32px', background: 'var(--surface-2)' }}>
         <span style={{ fontSize: 13, color: '#6b7280' }}>Nur Buchung — Anfrage ausblenden</span>
         <IosToggle name="hideRequestOption" checked={!!values.hideRequestOption} onChange={() => toggle('hideRequestOption')} />
       </div>

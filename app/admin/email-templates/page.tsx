@@ -194,7 +194,7 @@ export default async function EmailTemplatesPage() {
   const labelStyle: React.CSSProperties = {
     fontSize: 12,
     fontWeight: 700,
-    color: '#4b5563',
+    color: 'var(--text-muted)',
     letterSpacing: '0.06em',
     textTransform: 'uppercase',
     display: 'block',
@@ -204,11 +204,11 @@ export default async function EmailTemplatesPage() {
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #d1d5db',
+    border: '1px solid var(--border)',
     borderRadius: 8,
     fontSize: 14,
-    background: '#fff',
-    color: '#111',
+    background: 'var(--surface)',
+    color: 'var(--text-primary)',
     boxSizing: 'border-box',
   };
 
@@ -226,12 +226,12 @@ export default async function EmailTemplatesPage() {
       </div>
 
       {/* Placeholder reference */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
+      <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
         <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
           {PLACEHOLDERS.map(({ key, desc }) => (
-            <span key={key} style={{ fontSize: 13, color: '#374151' }}>
-              <code style={{ background: '#e2e8f0', borderRadius: 4, padding: '1px 6px', fontFamily: 'monospace', fontSize: 12 }}>{key}</code>
+            <span key={key} style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+              <code style={{ background: 'var(--surface-3)', borderRadius: 4, padding: '1px 6px', fontFamily: 'monospace', fontSize: 12 }}>{key}</code>
               {' '}{desc}
             </span>
           ))}
@@ -244,21 +244,21 @@ export default async function EmailTemplatesPage() {
             {TEMPLATE_TYPES.map(({ type, label, description, defaultSubject, defaultBody }) => {
               const saved = getTemplate(type);
               return (
-                <details key={type} style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden' }}>
+                <details key={type} style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
                   <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
                     <div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{label}</div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{label}</div>
                       <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>{description}</div>
                     </div>
                     <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
                   </summary>
-                  <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                  <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                       <a
                         href={`/api/admin/email-preview?type=${type}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}
+                        style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}
                       >
                         Vorschau
                       </a>
@@ -300,20 +300,20 @@ export default async function EmailTemplatesPage() {
 
       {/* ONLINE CHECK-IN */}
       {hotel && (
-        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 32 }}>
+        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 32 }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Online Check-in</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Online Check-in</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
-          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
             <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false}
                   style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Online Check-in aktivieren</span>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Online Check-in aktivieren</span>
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
@@ -336,20 +336,20 @@ export default async function EmailTemplatesPage() {
 
       {/* CHECK-IN E-MAIL AUTO-VERSAND */}
       {hotel && (
-        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 12 }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-in E-Mail — Automatisch</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-in E-Mail — Automatisch</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
-          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
             <form action={saveCheckinEmailSettings} style={{ display: 'grid', gap: 14 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false}
                   style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Automatischen Versand aktivieren</span>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Automatischen Versand aktivieren</span>
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>X Tage vor Anreise senden</label>
@@ -370,17 +370,17 @@ export default async function EmailTemplatesPage() {
 
       {/* CHECKOUT REMINDER */}
       {hotel && (
-        <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', marginTop: 12 }}>
+        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 12 }}>
           <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Check-out-Erinnerung</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-out-Erinnerung</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
             </div>
             <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
           </summary>
-          <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>
                 Vorschau
               </a>
             </div>
@@ -388,7 +388,7 @@ export default async function EmailTemplatesPage() {
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
                   style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Check-out-Erinnerung aktivieren</span>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Check-out-Erinnerung aktivieren</span>
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Check-out-Zeit</label>
@@ -404,7 +404,7 @@ export default async function EmailTemplatesPage() {
                   placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
                   style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
               </div>
-              <div style={{ height: 1, background: '#f3f4f6' }} />
+              <div style={{ height: 1, background: 'var(--border)' }} />
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Betreff</label>
                 <input type="text" name="checkoutReminderSubject"
@@ -428,17 +428,17 @@ export default async function EmailTemplatesPage() {
       {/* BEWERTUNGSANFRAGE */}
       {hotel && (
         <div style={{ position: 'relative', marginTop: 12 }}>
-          <details style={{ border: '1px solid #e5e7eb', borderRadius: 14, background: '#fff', overflow: 'hidden', opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
+          <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
             <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>Bewertungsanfrage</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Bewertungsanfrage</div>
                 <div style={{ fontSize: 13, color: '#6b7280', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
               </div>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
-            <div style={{ borderTop: '1px solid #f3f4f6', padding: '18px 20px' }}>
+            <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#374151', textDecoration: 'none' }}>
+                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>
                   Vorschau
                 </a>
               </div>
@@ -446,7 +446,7 @@ export default async function EmailTemplatesPage() {
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false}
                   style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: '#111' }}>Bewertungsanfrage aktivieren</span>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Bewertungsanfrage aktivieren</span>
               </label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div style={{ display: 'grid', gap: 4 }}>
@@ -463,7 +463,7 @@ export default async function EmailTemplatesPage() {
                   placeholder="https://g.page/r/…/review"
                   style={inputStyle} />
               </div>
-              <div style={{ height: 1, background: '#f3f4f6' }} />
+              <div style={{ height: 1, background: 'var(--border)' }} />
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Betreff</label>
                 <input type="text" name="reviewRequestSubject"

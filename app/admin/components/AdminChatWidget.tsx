@@ -104,8 +104,8 @@ export default function AdminChatWidget() {
         aria-expanded={open}
         aria-controls="chat-panel"
         style={{
-          position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
-          width: 52, height: 52, borderRadius: '50%',
+          position: 'fixed', bottom: '28px', right: '28px', zIndex: 9999,
+          width: '52px', height: '52px', borderRadius: '50%',
           background: ACCENT, border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
@@ -133,21 +133,21 @@ export default function AdminChatWidget() {
           style={{
           position: 'fixed', bottom: 92, right: 28, zIndex: 9998,
           width: 360, maxWidth: 'calc(100vw - 56px)',
-          background: '#fff', borderRadius: 16,
+          background: 'var(--surface)', borderRadius: 16,
           boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-          border: '1px solid #e5e7eb',
+          border: '1px solid var(--border)',
           display: 'flex', flexDirection: 'column',
           maxHeight: '60vh',
         }}>
           {/* Header */}
-          <div style={{ padding: '14px 16px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#111' }}>bookingwulf Assistent</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>bookingwulf Assistent</div>
               <div style={{ fontSize: 11, color: '#6b7280' }}>Fragen zur Bedienung</div>
             </div>
             {messages.length > 0 && (
@@ -166,10 +166,10 @@ export default function AdminChatWidget() {
           {/* Plan gate */}
           {planError ? (
             <div style={{ padding: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 13, color: '#374151', marginBottom: 12 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
                 Der Assistent ist ab dem <strong>Pro-Plan</strong> verfügbar.
               </div>
-              <a href="/admin/billing" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'underline' }}>
+              <a href="/admin/billing" style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'underline' }}>
                 Jetzt upgraden →
               </a>
             </div>
@@ -186,8 +186,8 @@ export default function AdminChatWidget() {
                   <div key={i} style={{
                     alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
-                    background: m.role === 'user' ? ACCENT : '#f3f4f6',
-                    color: m.role === 'user' ? '#fff' : '#111',
+                    background: m.role === 'user' ? ACCENT : 'var(--surface-2)',
+                    color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
                     borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                     padding: '8px 12px',
                     fontSize: 13,
@@ -198,7 +198,7 @@ export default function AdminChatWidget() {
                   </div>
                 ))}
                 {loading && (
-                  <div style={{ alignSelf: 'flex-start', background: '#f3f4f6', borderRadius: '12px 12px 12px 2px', padding: '8px 14px', fontSize: 20, color: '#9ca3af', letterSpacing: 2 }}>
+                  <div style={{ alignSelf: 'flex-start', background: 'var(--surface-2)', borderRadius: '12px 12px 12px 2px', padding: '8px 14px', fontSize: 20, color: '#9ca3af', letterSpacing: 2 }}>
                     ···
                   </div>
                 )}
@@ -206,7 +206,7 @@ export default function AdminChatWidget() {
               </div>
 
               {/* Input */}
-              <div style={{ padding: '10px 12px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: 8 }}>
+              <div style={{ padding: '10px 12px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
                 <input
                   ref={inputRef}
                   value={input}
@@ -215,9 +215,9 @@ export default function AdminChatWidget() {
                   placeholder="Frage stellen …"
                   disabled={loading}
                   style={{
-                    flex: 1, border: '1px solid #e5e7eb', borderRadius: 8,
+                    flex: 1, border: '1px solid var(--border)', borderRadius: 8,
                     padding: '8px 12px', fontSize: 13, outline: 'none',
-                    background: loading ? '#f9fafb' : '#fff',
+                    background: loading ? 'var(--surface-2)' : 'var(--surface)',
                   }}
                 />
                 <button
@@ -225,7 +225,7 @@ export default function AdminChatWidget() {
                   disabled={loading || !input.trim()}
                   style={{
                     padding: '8px 14px', borderRadius: 8, border: 'none',
-                    background: loading || !input.trim() ? '#e5e7eb' : ACCENT,
+                    background: loading || !input.trim() ? 'var(--border)' : ACCENT,
                     color: loading || !input.trim() ? '#9ca3af' : '#fff',
                     fontSize: 13, fontWeight: 600, cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s',

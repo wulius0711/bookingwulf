@@ -28,7 +28,7 @@ export default function LoginPage() {
     >
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--surface)',
           borderRadius: 16,
           padding: '40px 48px',
           width: '100%',

@@ -11,17 +11,17 @@ export const dynamic = 'force-dynamic';
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '11px 12px',
-  border: '1px solid #d1d5db',
+  border: '1px solid var(--border)',
   borderRadius: 10,
   fontSize: 14,
-  background: '#ffffff',
-  color: '#111111',
+  background: 'var(--surface)',
+  color: 'var(--text-primary)',
   outline: 'none',
 };
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12,
-  color: '#4b5563',
+  color: 'var(--text-muted)',
   fontWeight: 700,
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
@@ -33,7 +33,7 @@ const sectionTitleStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 20,
   lineHeight: 1.15,
-  color: '#111827',
+  color: 'var(--text-primary)',
   letterSpacing: '-0.02em',
 };
 
@@ -91,7 +91,7 @@ export default async function GuestPortalSettingsPage() {
       <div style={{ maxWidth: 800, display: 'grid', gap: 24 }}>
 
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: '#0f172a' }}>Gäste-Lounge</h1>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Gäste-Lounge</h1>
           <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085', lineHeight: 1.6 }}>
             Die Gäste-Lounge ist eine persönliche Webseite für Ihre Gäste — erreichbar über einen individuellen Link, der automatisch in der Buchungsbestätigung mitgeschickt wird. Dort finden Gäste alles Wichtige auf einen Blick: Ihre Kontaktdaten, WLAN-Zugangsdaten, Parkplatz- und Hausinfos sowie Tipps zur Umgebung.
           </p>
@@ -104,7 +104,7 @@ export default async function GuestPortalSettingsPage() {
           <input type="hidden" name="hotelId" value={selected.id} />
 
           {/* KONTAKT */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Kontakt & Erreichbarkeit</h2>
@@ -135,7 +135,7 @@ export default async function GuestPortalSettingsPage() {
           </details>
 
           {/* ANREISE */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Anreise</h2>
@@ -166,7 +166,7 @@ export default async function GuestPortalSettingsPage() {
           </details>
 
           {/* ABREISE */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Abreise</h2>
@@ -186,7 +186,7 @@ export default async function GuestPortalSettingsPage() {
           </details>
 
           {/* HAUSINFOS */}
-          <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
               <div>
                 <h2 style={sectionTitleStyle}>Hausinfos / Gästemappe</h2>
@@ -233,7 +233,7 @@ export default async function GuestPortalSettingsPage() {
         </form>
 
         {/* UMGEBUNG */}
-        <details className="settings-section" style={{ border: '1px solid #e5e7eb', borderRadius: 18, background: '#f9fafb', display: 'block' }}>
+        <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
           <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={sectionTitleStyle}>Umgebung</h2>

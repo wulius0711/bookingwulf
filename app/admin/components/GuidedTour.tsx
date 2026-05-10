@@ -155,7 +155,7 @@ export default function GuidedTour() {
           top: tooltipTop,
           left: tooltipLeft,
           width: 320,
-          background: '#fff',
+          background: 'var(--surface)',
           borderRadius: 12,
           padding: '20px 22px',
           boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
@@ -177,11 +177,11 @@ export default function GuidedTour() {
           Schritt {step + 1} von {TOUR_STEPS.length}
         </div>
 
-        <div style={{ fontWeight: 700, fontSize: 16, color: '#111', marginBottom: 6 }}>
+        <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)', marginBottom: 6 }}>
           {current!.title}
         </div>
 
-        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.55, margin: '0 0 18px' }}>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.55, margin: '0 0 18px' }}>
           {current!.text}
         </p>
 

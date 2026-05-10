@@ -168,9 +168,9 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   const linkStyle: React.CSSProperties = {
     padding: '8px 14px',
     borderRadius: 8,
-    border: '1px solid #e5e7eb',
-    background: '#fff',
-    color: '#374151',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text-muted)',
     textDecoration: 'none',
     fontSize: 14,
     fontWeight: 500,
@@ -187,7 +187,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
-          <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: '#111', textAlign: 'center' }}>
+          <span className="calendar-nav-title" style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', textAlign: 'center' }}>
             {MONTH_NAMES[month]} {year}
           </span>
           <Link href={nextLink} style={linkStyle}>→</Link>
@@ -196,7 +196,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       </div>
 
       {/* Drag-select hint */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 10, fontSize: 13, color: '#6b7280', marginBottom: 8, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 13, color: '#6b7280', marginBottom: 8, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 16 }}>💡</span>
         <span>Zeitraum im Kalender per Drag markieren, dann:</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
@@ -215,8 +215,8 @@ export default async function CalendarPage({ searchParams }: PageProps) {
           { label: 'Gebuchte Nächte', value: totalNights },
           { label: 'Storniert', value: cancelledCount },
         ].map(({ label, value }) => (
-          <div key={label} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '12px 20px', minWidth: 110 }}>
-            <div style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{value}</div>
+          <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 20px', minWidth: 110 }}>
+            <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>{value}</div>
             <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{label}</div>
           </div>
         ))}

@@ -13,15 +13,15 @@ type Props = {
 };
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb',
-  borderRadius: 8, fontSize: 14, boxSizing: 'border-box', background: '#fff',
+  width: '100%', padding: '10px 12px', border: '1px solid var(--border)',
+  borderRadius: 8, fontSize: 14, boxSizing: 'border-box', background: 'var(--surface)',
 };
 const btnStyle: React.CSSProperties = {
   padding: '9px 18px', borderRadius: 8, border: 'none', background: '#111',
   color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
 };
 const btnOutline: React.CSSProperties = {
-  ...btnStyle, background: '#fff', color: '#374151', border: '1px solid #e5e7eb',
+  ...btnStyle, background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--border)',
 };
 
 export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, host }: Props) {
@@ -89,10 +89,10 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
   }
 
   const cardStyle: React.CSSProperties = {
-    background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16,
+    background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16,
     padding: '24px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)', marginBottom: 20,
   };
-  const sectionTitle: React.CSSProperties = { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#111' };
+  const sectionTitle: React.CSSProperties = { fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' };
 
   return (
     <div style={{ maxWidth: 620 }}>
@@ -164,7 +164,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
           <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.5 }}>
             Tragen Sie diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
-          <code style={{ display: 'block', padding: '10px 14px', background: '#f4f4f5', borderRadius: 8, fontSize: 13, color: '#374151', wordBreak: 'break-all' }}>
+          <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-muted)', wordBreak: 'break-all' }}>
             {host}/api/beds24-webhook?token=<span style={{ color: '#9ca3af' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
           </code>
         </div>
@@ -185,15 +185,15 @@ function MappingRow({ apt, initialValue, onSave }: { apt: Apartment; initialValu
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 160px auto', gap: 8, alignItems: 'center' }}>
-      <span style={{ fontSize: 14, color: '#111', fontWeight: 500 }}>{apt.name}</span>
+      <span style={{ fontSize: 14, color: 'var(--text-primary)', fontWeight: 500 }}>{apt.name}</span>
       <input
         type="text"
         value={value}
         onChange={e => setValue(e.target.value)}
         placeholder="Room ID"
-        style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, boxSizing: 'border-box' }}
+        style={{ padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, boxSizing: 'border-box' }}
       />
-      <button onClick={handleSave} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', fontSize: 13, cursor: 'pointer', color: saved ? '#16a34a' : '#374151', fontWeight: saved ? 700 : 400 }}>
+      <button onClick={handleSave} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: saved ? '#16a34a' : 'var(--text-muted)', fontWeight: saved ? 700 : 400 }}>
         {saved ? '✓' : 'Speichern'}
       </button>
     </div>

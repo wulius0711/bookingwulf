@@ -52,22 +52,22 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #d1d5db',
+    border: '1px solid var(--border)',
     borderRadius: 8,
     fontSize: 14,
-    color: '#111',
+    color: 'var(--text-primary)',
     boxSizing: 'border-box',
   };
 
   return (
-    <div style={{ marginTop: 32, border: '1px solid #e5e7eb', borderRadius: 16, padding: 24, background: '#fff' }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 6px', color: '#111' }}>Kalender-Sync (iCal)</h2>
+    <div style={{ marginTop: 32, border: '1px solid var(--border)', borderRadius: 16, padding: 24, background: 'var(--surface)' }}>
+      <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 6px', color: 'var(--text-primary)' }}>Kalender-Sync (iCal)</h2>
       <p style={{ fontSize: 14, color: '#666', margin: '0 0 20px' }}>
         Synchronisieren Sie Verfügbarkeiten mit Airbnb, Booking.com und anderen Plattformen.
       </p>
 
       {/* Export URL */}
-      <div style={{ marginBottom: 24, padding: 16, background: '#f9fafb', borderRadius: 10, border: '1px solid #eee' }}>
+      <div style={{ marginBottom: 24, padding: 16, background: 'var(--surface-2)', borderRadius: 10, border: '1px solid var(--border)' }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
           Export-URL (für Airbnb / Booking.com)
         </div>
@@ -76,13 +76,13 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
             type="text"
             readOnly
             value={exportUrl}
-            style={{ ...inputStyle, background: '#fff', fontSize: 13, fontFamily: 'monospace' }}
+            style={{ ...inputStyle, background: 'var(--surface-2)', fontSize: 13, fontFamily: 'monospace' }}
             onClick={(e) => (e.target as HTMLInputElement).select()}
           />
           <button
             type="button"
             onClick={() => navigator.clipboard.writeText(exportUrl)}
-            style={{ padding: '10px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+            style={{ padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             Kopieren
           </button>
@@ -100,9 +100,9 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
           </div>
           <div style={{ display: 'grid', gap: 10 }}>
             {feeds.map((feed) => (
-              <div key={feed.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '12px 16px', border: '1px solid #eee', borderRadius: 10, background: '#fafafa', flexWrap: 'wrap' }}>
+              <div key={feed.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '12px 16px', border: '1px solid var(--border)', borderRadius: 10, background: 'var(--surface-2)', flexWrap: 'wrap' }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>{feed.name}</div>
+                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{feed.name}</div>
                   <div style={{ fontSize: 12, color: '#999', wordBreak: 'break-all' }}>{feed.url}</div>
                   <div style={{ fontSize: 11, color: feed.lastError ? '#dc2626' : '#16a34a', marginTop: 4 }}>
                     {feed.lastError
@@ -117,7 +117,7 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
                     type="button"
                     onClick={() => handleSync(feed.id)}
                     disabled={syncing === feed.id}
-                    style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#111' }}
+                    style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 12, cursor: 'pointer', color: 'var(--text-primary)' }}
                   >
                     {syncing === feed.id ? 'Sync...' : 'Jetzt syncen'}
                   </button>
@@ -125,7 +125,7 @@ export default function IcalSection({ apartmentId, hotelSlug, feeds, addFeedActi
                     <input type="hidden" name="feedId" value={feed.id} />
                     <button
                       type="submit"
-                      style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #fecaca', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}
+                      style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #fecaca', background: 'var(--surface)', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}
                     >
                       Entfernen
                     </button>

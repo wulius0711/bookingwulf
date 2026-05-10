@@ -112,7 +112,7 @@ async function SuperAdminDashboard() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: 12 }}>
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 15, color: '#111' }}>
+                      <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>
                         {h.name}
                         {!h.isActive && (
                           <span style={{ marginLeft: 8, fontSize: 11, color: '#999' }}>Inaktiv</span>
@@ -205,7 +205,7 @@ async function SuperAdminDashboard() {
                   >
                     <div style={cardStyle}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                        <div style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>
+                        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>
                           {r.firstname || ''} {r.lastname}
                         </div>
                         <span style={{
@@ -360,7 +360,7 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
               >
                 <div style={cardStyle}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: '#111' }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>
                       {r.firstname || ''} {r.lastname}
                     </div>
                     <span style={{
@@ -410,7 +410,7 @@ const headlineStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 32,
   fontWeight: 700,
-  color: '#0f172a',
+  color: 'var(--text-primary)',
   letterSpacing: '-0.03em',
 };
 

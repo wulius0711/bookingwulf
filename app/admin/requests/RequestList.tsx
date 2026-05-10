@@ -18,10 +18,10 @@ type ApartmentLookup = { id: number; name: string };
 
 function getStatusBadge(status: string) {
   switch (status) {
-    case 'booked':     return { label: 'Gebucht',     bg: '#e8f5e9', color: '#256029', border: '#b7dfba' };
-    case 'answered':   return { label: 'Beantwortet', bg: '#eaf2ff', color: '#2457a6', border: '#bfd4fb' };
-    case 'cancelled':  return { label: 'Storniert',   bg: '#fdecec', color: '#a63b3b', border: '#f3c3c3' };
-    default:           return { label: 'Neu',          bg: '#f4f4f4', color: '#555',    border: '#ddd' };
+    case 'booked':     return { label: 'Gebucht',     bg: 'var(--status-booked-bg)',    color: 'var(--status-booked-text)',    border: 'transparent' };
+    case 'answered':   return { label: 'Beantwortet', bg: 'var(--status-new-bg)',        color: 'var(--status-new-text)',        border: 'transparent' };
+    case 'cancelled':  return { label: 'Storniert',   bg: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', border: 'transparent' };
+    default:           return { label: 'Neu',          bg: 'var(--status-pending-bg)',   color: 'var(--status-pending-text)',   border: 'transparent' };
   }
 }
 
@@ -57,13 +57,13 @@ export default function RequestList({ requests, apartments, isSuperAdmin }: {
               justifyContent: 'space-between',
               gap: 12,
               padding: '12px 16px',
-              border: '1px solid #e5e7eb',
+              border: '1px solid var(--border)',
               borderRadius: 10,
-              background: '#fff',
+              background: 'var(--surface)',
               cursor: 'pointer',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1, flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 600, fontSize: 14, color: '#111827', flexShrink: 0 }}>{name}</span>
+                <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', flexShrink: 0 }}>{name}</span>
 
                 {isSuperAdmin && r.hotel?.name && (
                   <span style={{
@@ -75,11 +75,11 @@ export default function RequestList({ requests, apartments, isSuperAdmin }: {
                   </span>
                 )}
 
-                <span style={{ fontSize: 13, color: '#6b7280', flexShrink: 0 }}>
+                <span style={{ fontSize: 13, color: 'var(--text-muted)', flexShrink: 0 }}>
                   {fmt(r.arrival)} – {fmt(r.departure)}
                 </span>
 
-                <span style={{ fontSize: 13, color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 13, color: 'var(--text-subtle)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {aptNames}
                 </span>
               </div>

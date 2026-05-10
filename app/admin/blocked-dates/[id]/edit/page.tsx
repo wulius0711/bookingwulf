@@ -56,11 +56,11 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
   const fieldStyle: React.CSSProperties = {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #d1d5db',
+    border: '1px solid var(--border)',
     borderRadius: 8,
     fontSize: 14,
-    background: '#ffffff',
-    color: '#111',
+    background: 'var(--surface)',
+    color: 'var(--text-primary)',
     boxSizing: 'border-box',
   };
 
@@ -78,9 +78,9 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
 
   return (
     <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 560 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 24 }}>Sperrzeit bearbeiten</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24 }}>Sperrzeit bearbeiten</h1>
 
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: '28px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '28px 28px', boxShadow: '0 4px 16px rgba(15,23,42,0.06)' }}>
       <form action={updateBlockedDate} style={{ display: 'grid', gap: 16 }}>
         <div style={fieldWrap}>
           <label style={labelStyle}>Apartment</label>
@@ -106,7 +106,7 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
           {range.type === 'booking' ? (
             <>
               <input type="hidden" name="type" value="booking" />
-              <div style={{ ...fieldStyle, color: '#6b7280', background: '#f9fafb' }}>Buchung (automatisch)</div>
+              <div style={{ ...fieldStyle, color: 'var(--text-muted)', background: 'var(--surface-2)' }}>Buchung (automatisch)</div>
             </>
           ) : (
             <select name="type" defaultValue={range.type} style={fieldStyle}>

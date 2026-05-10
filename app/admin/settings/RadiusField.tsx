@@ -31,7 +31,7 @@ export function RadiusField({
   }, [value]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
       <span style={{ ...labelStyle, flex: 1, minWidth: 0, margin: 0 }}>{label}</span>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
@@ -57,12 +57,12 @@ export function RadiusField({
           style={{
             width: 68,
             padding: '7px 10px',
-            border: '1px solid #d1d5db',
+            border: '1px solid var(--border)',
             borderRadius: 8,
             fontSize: 13,
             fontFamily: 'monospace',
-            background: '#fff',
-            color: '#111',
+            background: 'var(--surface)',
+            color: 'var(--text-primary)',
             outline: 'none',
             textAlign: 'center',
           }}

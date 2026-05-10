@@ -154,7 +154,7 @@ export default async function PriceSeasonsPage() {
       <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
       <div>
         <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Preisanpassungen</h1>
-        <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
+        <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-muted)' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
       </div>
 
       {/* Seasons list */}
@@ -171,7 +171,7 @@ export default async function PriceSeasonsPage() {
         </div>
         {seasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-            <p style={{ fontSize: 15, color: '#6b7280', marginBottom: 16 }}>Keine Preiszeiträume vorhanden.</p>
+            <p style={{ fontSize: 15, color: 'var(--text-muted)', marginBottom: 16 }}>Keine Preiszeiträume vorhanden.</p>
             <a href="/admin/price-seasons/new" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
               Neuen Preiszeitraum anlegen
             </a>
@@ -189,7 +189,7 @@ export default async function PriceSeasonsPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Ortstaxe / Kurtaxe</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
+              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Wird automatisch zur Buchungssumme addiert und im Widget ausgewiesen.</p>
             </div>
             {caretSvg}
           </summary>
@@ -211,22 +211,22 @@ export default async function PriceSeasonsPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Kinderpreise</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Preis pro Kind und Nacht nach Altersgruppe — ohne Saisonbindung.</p>
+              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Preis pro Kind und Nacht nach Altersgruppe — ohne Saisonbindung.</p>
             </div>
             {caretSvg}
           </summary>
           <div style={{ padding: '0 0 16px' }}>
             {childRanges.length === 0 ? (
-              <div style={{ padding: '24px 20px', fontSize: 13, color: '#9ca3af' }}>
+              <div style={{ padding: '24px 20px', fontSize: 13, color: 'var(--text-subtle)' }}>
                 Noch keine Altersgruppen. Kinder sind standardmäßig kostenlos.
               </div>
             ) : (
               <div>
                 {childRanges.map(r => (
-                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid #f9fafb' }}>
+                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderBottom: '1px solid var(--border)' }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{r.label || <span style={{ color: '#9ca3af' }}>—</span>}</div>
-                      <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>
+                      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{r.label || <span style={{ color: 'var(--text-subtle)' }}>—</span>}</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
                         {r.minAge}–{r.maxAge} Jahre ·{' '}
                         <span style={{ fontWeight: 600, color: Number(r.pricePerNight) === 0 ? '#16a34a' : 'var(--text-primary)' }}>
                           {Number(r.pricePerNight) === 0 ? 'Gratis' : `€ ${Number(r.pricePerNight).toFixed(2)} / Nacht`}
@@ -242,22 +242,22 @@ export default async function PriceSeasonsPage() {
                 ))}
               </div>
             )}
-            <form action={createChildPriceRange} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', padding: '16px 20px 0', borderTop: childRanges.length > 0 ? '1px solid #f3f4f6' : undefined }}>
+            <form action={createChildPriceRange} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', padding: '16px 20px 0', borderTop: childRanges.length > 0 ? '1px solid var(--border)' : undefined }}>
               <input type="hidden" name="hotelId" value={selectedHotelId} />
               <div style={{ display: 'grid', gap: 4, flex: '2 1 120px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bezeichnung</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bezeichnung</label>
                 <input name="label" placeholder="z. B. Kleinkind" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
               </div>
               <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Von</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Von</label>
                 <input name="minAge" type="number" min="0" max="17" required placeholder="0" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
               </div>
               <div style={{ display: 'grid', gap: 4, flex: '1 1 60px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bis</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bis</label>
                 <input name="maxAge" type="number" min="0" max="17" required placeholder="6" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
               </div>
               <div style={{ display: 'grid', gap: 4, flex: '1 1 80px' }}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>€ / Nacht</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>€ / Nacht</label>
                 <input name="pricePerNight" type="number" min="0" step="0.01" required placeholder="0.00" style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
               </div>
               <button type="submit" className="btn-shine" style={{ padding: '8px 16px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', alignSelf: 'flex-end', marginLeft: 'auto' }}>
@@ -274,7 +274,7 @@ export default async function PriceSeasonsPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Dynamische Preise</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>Automatische Rabatte und Aufschläge.</p>
+              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>Automatische Rabatte und Aufschläge.</p>
             </div>
             {caretSvg}
           </summary>
@@ -287,19 +287,19 @@ export default async function PriceSeasonsPage() {
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Last-Minute Rabatt</div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Rabatt %</label>
                   <input name="lastMinuteDiscountPercent" type="number" min="0" max="100"
                     defaultValue={s?.lastMinuteDiscountPercent ?? 0}
                     style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                 </div>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Tage vor Anreise</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Tage vor Anreise</label>
                   <input name="lastMinuteDiscountDays" type="number" min="1" max="90"
                     defaultValue={s?.lastMinuteDiscountDays ?? 7}
                     style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                 </div>
               </div>
-              <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
+              <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>0% = deaktiviert. Gilt wenn Anreise innerhalb der angegebenen Tage liegt.</p>
             </div>
 
             <div style={{ position: 'relative', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)' }}>
@@ -308,19 +308,19 @@ export default async function PriceSeasonsPage() {
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Nachfrageaufschlag</div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Aufschlag %</label>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Aufschlag %</label>
                     <input name="occupancySurchargePercent" type="number" min="0" max="100"
                       defaultValue={s?.occupancySurchargePercent ?? 0}
                       style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                   </div>
                   <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Ab Auslastung %</label>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Ab Auslastung %</label>
                     <input name="occupancySurchargeThreshold" type="number" min="1" max="100"
                       defaultValue={s?.occupancySurchargeThreshold ?? 70}
                       style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                   </div>
                 </div>
-                <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>0% = deaktiviert. Aufschlag greift wenn die Auslastung den Schwellwert überschreitet.</p>
               </div>
             </div>
 
@@ -328,17 +328,17 @@ export default async function PriceSeasonsPage() {
             <div style={{ position: 'relative', padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
               {!hasPro && <ProLockOverlay />}
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>Lücken-Rabatt</div>
-              <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
+              <p style={{ margin: 0, fontSize: 12, color: 'var(--text-subtle)' }}>Kurze freie Lücken zwischen zwei Buchungen automatisch vergünstigen.</p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Rabatt %</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Rabatt %</label>
                   <input name="gapNightDiscount" type="number" min="1" max="80"
                     defaultValue={s?.gapNightDiscount ?? ''}
                     placeholder="leer = aus"
                     style={{ padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14 }} />
                 </div>
                 <div style={{ display: 'grid', gap: 6, flex: '1 1 100px' }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Max. Lückenlänge (Nächte)</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Max. Lückenlänge (Nächte)</label>
                   <input name="gapNightMaxLength" type="number" min="1" max="14"
                     defaultValue={s?.gapNightMaxLength ?? ''}
                     placeholder="leer = aus"
@@ -356,11 +356,11 @@ export default async function PriceSeasonsPage() {
                 Aktivieren
               </label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', whiteSpace: 'nowrap' }}>Schwellenwert %</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>Schwellenwert %</label>
                 <input name="urgencyThreshold" type="number" min="10" max="90" step="5"
                   defaultValue={s?.urgencyThreshold ?? 40}
                   style={{ padding: '6px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, width: 80 }} />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind</span>
+                <span style={{ fontSize: 12, color: 'var(--text-subtle)' }}>Banner wenn weniger als X % der Nächte im angezeigten Monat frei sind</span>
               </div>
             </div>
 
@@ -377,7 +377,7 @@ export default async function PriceSeasonsPage() {
           <summary style={{ padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Steuer / Buchhaltung</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
+              <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-subtle)' }}>MwSt.-Sätze für den Buchhaltungsexport (CSV). AT: Zimmer 10 %, Reinigung 20 %. DE: Zimmer 7 %, Reinigung 19 %.</p>
             </div>
             {caretSvg}
           </summary>
@@ -385,7 +385,7 @@ export default async function PriceSeasonsPage() {
             <form action={saveTaxRates} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
               <input type="hidden" name="hotelId" value={selectedHotelId} />
               <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>MwSt. Zimmerpreis %</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>MwSt. Zimmerpreis %</label>
                 <input
                   name="taxRateRoom"
                   type="number"
@@ -398,7 +398,7 @@ export default async function PriceSeasonsPage() {
                 />
               </div>
               <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>MwSt. Reinigung %</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>MwSt. Reinigung %</label>
                 <input
                   name="taxRateCleaning"
                   type="number"

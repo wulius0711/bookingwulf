@@ -80,10 +80,11 @@ export default function FeedbackButton() {
       <button
         onClick={() => setOpen(true)}
         title="Feedback geben"
+        suppressHydrationWarning
         style={{
-          position: 'fixed', top: 8, right: 16, zIndex: 900,
-          width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 8,
+          position: 'fixed', top: '8px', right: '16px', zIndex: 900,
+          width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px',
           cursor: 'pointer', color: '#9ca3af',
         }}
       >
@@ -102,13 +103,13 @@ export default function FeedbackButton() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#fff', borderRadius: 16, padding: '28px 28px 24px',
+              background: 'var(--surface)', borderRadius: 16, padding: '28px 28px 24px',
               width: '100%', maxWidth: 420,
               boxShadow: '0 20px 60px rgba(15,23,42,0.18)', display: 'grid', gap: 16,
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#111' }}>Feedback geben</h2>
+              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Feedback geben</h2>
               <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', lineHeight: 1 }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -123,7 +124,7 @@ export default function FeedbackButton() {
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 14 }}>
                 <div style={{ display: 'grid', gap: 6 }}>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)' }}>
                     Beschreibung <span style={{ color: '#9ca3af', fontWeight: 400 }}>(erforderlich)</span>
                   </label>
                   <textarea
@@ -134,9 +135,9 @@ export default function FeedbackButton() {
                     rows={4}
                     required
                     style={{
-                      width: '100%', padding: '10px 12px', border: '1px solid #d1d5db',
+                      width: '100%', padding: '10px 12px', border: '1px solid var(--border)',
                       borderRadius: 8, fontSize: 14, resize: 'vertical', outline: 'none',
-                      lineHeight: 1.6, boxSizing: 'border-box', color: '#111',
+                      lineHeight: 1.6, boxSizing: 'border-box', color: 'var(--text-primary)',
                     }}
                   />
                 </div>
@@ -155,7 +156,7 @@ export default function FeedbackButton() {
                       <img
                         src={screenshot}
                         alt="Screenshot"
-                        style={{ width: '100%', borderRadius: 8, border: '1px solid #e5e7eb', display: 'block', maxHeight: 160, objectFit: 'cover' }}
+                        style={{ width: '100%', borderRadius: 8, border: '1px solid var(--border)', display: 'block', maxHeight: 160, objectFit: 'cover' }}
                       />
                       <button
                         type="button"
@@ -178,7 +179,7 @@ export default function FeedbackButton() {
                       onClick={() => fileRef.current?.click()}
                       style={{
                         ...btnBase,
-                        border: '1px dashed #d1d5db', background: '#f9fafb',
+                        border: '1px dashed var(--border)', background: 'var(--surface-2)',
                         color: '#6b7280', fontWeight: 500,
                       }}
                     >
@@ -206,7 +207,7 @@ export default function FeedbackButton() {
                 <button
                   type="button"
                   onClick={handleClose}
-                  style={{ ...btnBase, background: 'none', border: '1px solid #e5e7eb', color: '#374151' }}
+                  style={{ ...btnBase, background: 'none', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
                 >
                   Abbrechen
                 </button>

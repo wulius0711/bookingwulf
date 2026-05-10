@@ -197,7 +197,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const avgNights = total > 0 ? (allRequests.reduce((s, r) => s + r.nights, 0) / total).toFixed(1) : '0.0';
   const avgGuests = total > 0 ? (allRequests.reduce((s, r) => s + r.adults + r.children, 0) / total).toFixed(1) : '0.0';
 
-  const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: '#111827', letterSpacing: '-0.01em' };
+  const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' };
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -206,16 +206,16 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         {/* Header */}
         <div className="analytics-header">
           <div>
-            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Analytics</h1>
+            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Analytics</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>
               {periodDef.label}
             </p>
           </div>
           <form method="GET" className="analytics-period-form">
-            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff' }}>
+            <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface)' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid #d1d5db', background: '#fff', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
+            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
           </form>
         </div>
 
@@ -231,7 +231,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             { label: 'Ø Buchungswert', value: `€ ${avgBookingValue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
           ].map(({ label, value }) => (
             <div key={label} className="analytics-card" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>{value}</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</div>
               <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{label}</div>
             </div>
           ))}
@@ -260,8 +260,8 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               {Object.entries(statusMap).sort((a, b) => b[1] - a[1]).map(([status, count]) => (
                 <div key={status} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS[status] ?? '#d1d5db', flexShrink: 0 }} />
-                  <span style={{ fontSize: 14, color: '#374151', flex: 1 }}>{STATUS_LABELS[status] ?? status}</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>{count}</span>
+                  <span style={{ fontSize: 14, color: 'var(--text-muted)', flex: 1 }}>{STATUS_LABELS[status] ?? status}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{count}</span>
                   <span style={{ fontSize: 12, color: '#9ca3af', width: 36, textAlign: 'right' }}>
                     {total > 0 ? `${((count / total) * 100).toFixed(0)}%` : ''}
                   </span>
@@ -283,10 +283,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 {topApartments.map(({ name, count }) => (
                   <div key={name}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{name}</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{count}×</span>
+                      <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>{name}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{count}×</span>
                     </div>
-                    <div style={{ height: 6, background: '#f3f4f6', borderRadius: 99 }}>
+                    <div style={{ height: 6, background: 'var(--border)', borderRadius: 99 }}>
                       <div style={{ height: '100%', width: `${(count / maxApt) * 100}%`, background: '#3b82f6', borderRadius: 99, opacity: 0.8 }} />
                     </div>
                   </div>
@@ -302,10 +302,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
                 {topExtras.map(({ name, count, revenue }) => (
-                  <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f9fafb' }}>
-                    <span style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>{name}</span>
+                  <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 500 }}>{name}</span>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{count}×</div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{count}×</div>
                       {revenue > 0 && <div style={{ fontSize: 11, color: '#6b7280' }}>€ {revenue.toFixed(2)}</div>}
                     </div>
                   </div>
@@ -329,10 +329,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 {occupancyData.map(({ name, bookedNights, pct }) => (
                   <div key={name}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{name}</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{bookedNights} N. · {pct}%</span>
+                      <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>{name}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{bookedNights} N. · {pct}%</span>
                     </div>
-                    <div style={{ height: 8, background: '#f3f4f6', borderRadius: 99 }}>
+                    <div style={{ height: 8, background: 'var(--border)', borderRadius: 99 }}>
                       <div style={{
                         height: '100%',
                         width: `${pct}%`,
@@ -356,10 +356,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 {topCountries.map(({ country, count }) => (
                   <div key={country}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{country}</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{count}</span>
+                      <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 500 }}>{country}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{count}</span>
                     </div>
-                    <div style={{ height: 6, background: '#f3f4f6', borderRadius: 99 }}>
+                    <div style={{ height: 6, background: 'var(--border)', borderRadius: 99 }}>
                       <div style={{ height: '100%', width: `${(count / maxCountry) * 100}%`, background: '#8b5cf6', borderRadius: 99, opacity: 0.8 }} />
                     </div>
                   </div>

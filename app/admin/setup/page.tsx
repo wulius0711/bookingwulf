@@ -15,14 +15,14 @@ export default async function SetupPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#f5f5f7',
+        background: 'var(--page-bg)',
         fontFamily:
           'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--surface)',
           borderRadius: 16,
           padding: '40px 48px',
           width: '100%',
@@ -30,7 +30,7 @@ export default async function SetupPage() {
           boxShadow: '0 2px 24px rgba(0,0,0,0.08)',
         }}
       >
-        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: '#111' }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>
           Ersteinrichtung
         </h1>
         <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>

@@ -412,7 +412,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
   const fmtDate = (d: Date) =>
     new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
-  const rowLabel: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#9ca3af', letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 };
+  const rowLabel: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 };
   const rowValue: React.CSSProperties = { fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.5 };
 
   return (
@@ -488,7 +488,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                     <>
                       {pricing.beds24Items.map((item, i) => (
                         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                          <span style={{ color: '#6b7280' }}>{item.description || item.type}</span>
+                          <span style={{ color: 'var(--text-muted)' }}>{item.description || item.type}</span>
                           <span style={{ fontWeight: 500 }}>{fmtEur(item.amount)}</span>
                         </div>
                       ))}
@@ -497,25 +497,25 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                     <>
                       {roomTotal > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                          <span style={{ color: '#6b7280' }}>Zimmerpreis</span>
+                          <span style={{ color: 'var(--text-muted)' }}>Zimmerpreis</span>
                           <span style={{ fontWeight: 500 }}>{fmtEur(roomTotal)}</span>
                         </div>
                       )}
                       {cleaningTotal > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                          <span style={{ color: '#6b7280' }}>Reinigung</span>
+                          <span style={{ color: 'var(--text-muted)' }}>Reinigung</span>
                           <span style={{ fontWeight: 500 }}>{fmtEur(cleaningTotal)}</span>
                         </div>
                       )}
                       {(pricing.extrasTotal ?? 0) > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                          <span style={{ color: '#6b7280' }}>Extras</span>
+                          <span style={{ color: 'var(--text-muted)' }}>Extras</span>
                           <span style={{ fontWeight: 500 }}>{fmtEur(pricing.extrasTotal!)}</span>
                         </div>
                       )}
                       {(pricing.ortstaxeTotal ?? 0) > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                          <span style={{ color: '#6b7280' }}>Ortstaxe</span>
+                          <span style={{ color: 'var(--text-muted)' }}>Ortstaxe</span>
                           <span style={{ fontWeight: 500 }}>{fmtEur(pricing.ortstaxeTotal!)}</span>
                         </div>
                       )}
@@ -555,7 +555,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/checkin/${request.checkinToken}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}
+                  style={{ fontSize: 12, color: 'var(--text-muted)', textDecoration: 'underline' }}
                 >
                   Link öffnen
                 </a>
@@ -566,8 +566,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 </div>
               )}
               {(request.checkinBirthdate || request.checkinNationality || request.checkinDocNumber) && (
-                <div style={{ gridColumn: '2', marginTop: 8, fontSize: 13, color: '#374151', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Meldedaten</div>
+                <div style={{ gridColumn: '2', marginTop: 8, fontSize: 13, color: 'var(--text-primary)', background: 'var(--status-new-bg)', border: '1px solid var(--primitive-blue-100)', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--status-new-text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Meldedaten</div>
                   {(request.salutation || request.firstname || request.lastname) && (
                     <div>Name: <strong>{[request.salutation, request.firstname, request.lastname].filter(Boolean).join(' ')}</strong></div>
                   )}
@@ -591,7 +591,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/gast/${request.checkinToken}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}
+                  style={{ fontSize: 12, color: 'var(--text-muted)', textDecoration: 'underline' }}
                 >
                   Link öffnen
                 </a>
@@ -656,13 +656,13 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
               </span>
             </div>
             {!request.hotel?.emailTemplates?.length && (
-              <a href="/admin/email-templates" style={{ fontSize: 12, color: '#6b7280', textDecoration: 'underline' }}>
+              <a href="/admin/email-templates" style={{ fontSize: 12, color: 'var(--text-muted)', textDecoration: 'underline' }}>
                 Vorlage einrichten →
               </a>
             )}
           </div>
           <div style={{ padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 13, color: '#6b7280' }}>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               An: <strong style={{ color: 'var(--text-primary)' }}>{request.email}</strong>
             </span>
             <form action={sendCheckinEmail}>

@@ -194,7 +194,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
     <div style={{ position: 'relative' }}>
       <div
         className="calendar-scroll"
-        style={{ background: '#fff', borderRadius: 16, border: '1px solid #e5e7eb' }}
+        style={{ background: 'var(--surface)', borderRadius: 16, border: '1px solid var(--border)' }}
         onMouseLeave={() => {
           if (isDragging && dragStart && dragEnd) {
             const [lo, hi] = compareDates(dragStart, dragEnd);
@@ -207,7 +207,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
       >
         <div className="calendar-grid">
           {/* Weekday headers */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '2px solid #e5e7eb' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '2px solid var(--border)' }}>
             {WEEKDAYS.map((day, i) => (
               <div key={day} style={{ padding: '10px 8px', textAlign: 'center', fontSize: 11, fontWeight: 700, color: i >= 5 ? '#ef4444' : '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 {day}
@@ -217,10 +217,10 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
 
           {/* Weeks */}
           {weeks.map((week, wi) => (
-            <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: wi < weeks.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+            <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: wi < weeks.length - 1 ? '1px solid var(--border)' : 'none' }}>
               {week.map((key, di) => {
                 if (!key) return (
-                  <div key={di} className="calendar-cell-empty" style={{ background: '#fafafa', borderRight: di < 6 ? '1px solid #f3f4f6' : 'none' }} />
+                  <div key={di} className="calendar-cell-empty" style={{ background: 'var(--surface-2)', borderRight: di < 6 ? '1px solid var(--border)' : 'none' }} />
                 );
 
                 const bookings = dayBookings[key] ?? [];
@@ -237,9 +237,9 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                     onMouseDown={() => handleMouseDown(key)}
                     onMouseEnter={() => handleMouseEnter(key)}
                     onMouseUp={() => handleMouseUp(key)}
-                    style={{ background: selected ? '#ede9fe' : isWeekend ? '#fafafa' : '#fff', borderRight: di < 6 ? '1px solid #f3f4f6' : 'none', cursor: 'pointer', userSelect: 'none', outline: selected ? '1px solid #a78bfa' : 'none', outlineOffset: -1 }}
+                    style={{ background: selected ? '#ede9fe' : isWeekend ? 'var(--surface-2)' : 'var(--surface)', borderRight: di < 6 ? '1px solid var(--border)' : 'none', cursor: 'pointer', userSelect: 'none', outline: selected ? '1px solid #a78bfa' : 'none', outlineOffset: -1 }}
                   >
-                    <div style={{ width: 26, height: 26, borderRadius: '50%', background: isToday ? '#111' : 'transparent', color: isToday ? '#fff' : isWeekend ? '#ef4444' : '#374151', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, marginBottom: 4, flexShrink: 0 }}>
+                    <div style={{ width: 26, height: 26, borderRadius: '50%', background: isToday ? '#111' : 'transparent', color: isToday ? '#fff' : isWeekend ? '#ef4444' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, marginBottom: 4, flexShrink: 0 }}>
                       {dayNum}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -247,7 +247,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         const p: Record<string, number> = { booked: 0, answered: 1, new: 2 };
                         return (p[a.status] ?? 3) - (p[b.status] ?? 3);
                       }).slice(0, 4).map((req) => (
-                        <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: STATUS_BG[req.status] ?? '#f3f4f6', borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: STATUS_COLORS[req.status] ?? '#9ca3af', fontSize: 10, color: '#111', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte`}>
+                        <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: STATUS_BG[req.status] ?? '#f3f4f6', borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: STATUS_COLORS[req.status] ?? '#9ca3af', fontSize: 10, color: 'var(--text-primary)', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte`}>
                           <span className="calendar-chip-label">{req.isArrival ? '↘ ' : ''}{req.firstname ? req.firstname[0] + '. ' : ''}{req.lastname}{req.aptName ? ` · ${req.aptName}` : ''}</span>
                         </button>
                       ))}

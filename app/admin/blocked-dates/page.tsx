@@ -52,7 +52,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
       <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: '#0f172a' }}>Sperrzeiten</h1>
+            <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Sperrzeiten</h1>
             <p style={{ margin: '6px 0 0', fontSize: 14, color: '#667085' }}>Zeiträume für Apartments sperren.</p>
           </div>
           <Link href="/admin/blocked-dates/new">
@@ -70,14 +70,14 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
             <select
               name="hotel"
               defaultValue={selectedHotelId !== null ? String(selectedHotelId) : ''}
-              style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, background: '#fff', color: '#111' }}
+              style={{ padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface)', color: 'var(--text-primary)' }}
             >
               <option value="">Alle Hotels</option>
               {hotels.map((h) => (
                 <option key={h.id} value={h.id}>{h.name}</option>
               ))}
             </select>
-            <button type="submit" style={{ padding: '8px 14px', border: '1px solid #d1d5db', background: '#fff', color: '#111', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            <button type="submit" style={{ padding: '8px 14px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
               Filtern
             </button>
             {selectedHotelId !== null && (
@@ -88,9 +88,9 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
           </form>
         )}
 
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-          <div style={{ background: '#fafafa', padding: '14px 20px', borderBottom: '1px solid #f3f4f6' }}>
-            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ background: 'var(--surface-2)', padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+            <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
               {ranges.length} {ranges.length === 1 ? 'Sperrzeit' : 'Sperrzeiten'}
             </h2>
           </div>
@@ -102,7 +102,7 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
               </a>
             </div>
           ) : (
-            <div style={{ padding: '16px 20px', background: '#f9fafb' }}>
+            <div style={{ padding: '16px 20px', background: 'var(--surface-2)' }}>
               <BlockedDateList ranges={ranges} deleteBlockedDate={deleteBlockedDate} isSuperAdmin={isSuperAdmin} />
             </div>
           )}

@@ -34,10 +34,10 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
   return (
     <div
       style={{
-        border: '1px solid #ddd',
+        border: '1px solid var(--border)',
         borderRadius: 14,
-        background: '#fff',
-        color: '#111',
+        background: 'var(--surface)',
+        color: 'var(--text-primary)',
         overflow: 'hidden',
       }}
     >
@@ -53,7 +53,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
           cursor: 'pointer',
           userSelect: 'none',
           transition: 'background 0.15s ease',
-          background: open ? '#fafafa' : '#fff',
+          background: open ? 'var(--surface-2)' : 'var(--surface)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
@@ -129,7 +129,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
         }}
       >
         <div style={{ overflow: 'hidden' }}>
-          <div style={{ padding: '0 20px 20px', borderTop: '1px solid #eee' }}>
+          <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--border)' }}>
             <div
               style={{
                 display: 'grid',
@@ -178,10 +178,10 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                 style={{
                   textDecoration: 'none',
                   padding: '10px 14px',
-                  border: '1px solid #111',
+                  border: '1px solid var(--border)',
                   borderRadius: 8,
-                  color: '#111',
-                  background: '#fff',
+                  color: 'var(--text-primary)',
+                  background: 'var(--surface)',
                   fontSize: 13,
                   fontWeight: 500,
                 }}
@@ -195,10 +195,10 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                   type="submit"
                   style={{
                     padding: '10px 14px',
-                    border: '1px solid #111',
+                    border: '1px solid var(--border)',
                     borderRadius: 8,
-                    color: '#111',
-                    background: '#fff',
+                    color: 'var(--text-primary)',
+                    background: 'var(--surface)',
                     cursor: 'pointer',
                     fontSize: 13,
                     fontWeight: 500,
@@ -217,7 +217,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
                     border: '1px solid #c43c57',
                     borderRadius: 8,
                     color: '#c43c57',
-                    background: '#fff',
+                    background: 'var(--surface)',
                     cursor: 'pointer',
                     fontSize: 13,
                     fontWeight: 500,

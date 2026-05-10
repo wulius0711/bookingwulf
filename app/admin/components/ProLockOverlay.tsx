@@ -55,7 +55,7 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#fff',
+              background: 'var(--surface)',
               borderRadius: 20,
               padding: '32px 28px',
               maxWidth: 420,
@@ -65,7 +65,7 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
             }}
           >
             <div style={{ fontSize: 36, marginBottom: 12 }}>🔒</div>
-            <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>
+            <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>
               {planLabel} Feature
             </h2>
             <p style={{ margin: '0 0 24px', fontSize: 14, color: '#475569', lineHeight: 1.6 }}>
@@ -81,7 +81,7 @@ export default function ProLockOverlay({ plan = 'pro' }: { plan?: 'pro' | 'busin
               </button>
               <button
                 onClick={() => setShowBanner(false)}
-                style={{ padding: '10px 20px', borderRadius: 8, background: '#fff', color: '#374151', border: '1px solid #d1d5db', fontSize: 14, cursor: 'pointer' }}
+                style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--border)', fontSize: 14, cursor: 'pointer' }}
               >
                 Schließen
               </button>

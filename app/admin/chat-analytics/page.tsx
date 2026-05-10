@@ -91,7 +91,7 @@ export default async function ChatAnalyticsPage({
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {includeTests && testCount > 0 && (
             <form action={deleteAllTestLogs}>
-              <button type="submit" style={{ fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1px solid #fca5a5', background: '#fff', color: '#dc2626', cursor: 'pointer' }}>
+              <button type="submit" style={{ fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface)', color: '#dc2626', cursor: 'pointer' }}>
                 Alle Tests löschen
               </button>
             </form>
@@ -100,9 +100,9 @@ export default async function ChatAnalyticsPage({
             href={includeTests ? '/admin/chat-analytics' : '/admin/chat-analytics?showTests=1'}
             style={{
               fontSize: 13, fontWeight: 600, padding: '7px 14px',
-              borderRadius: 8, border: '1px solid #e5e7eb',
-              background: includeTests ? '#111' : '#fff',
-              color: includeTests ? '#fff' : '#374151',
+              borderRadius: 8, border: '1px solid var(--border)',
+              background: includeTests ? '#111' : 'var(--surface)',
+              color: includeTests ? '#fff' : 'var(--text-muted)',
               textDecoration: 'none', whiteSpace: 'nowrap',
             }}
           >
@@ -118,9 +118,9 @@ export default async function ChatAnalyticsPage({
           { label: 'Diese Woche', value: weekCount, sub: 'letzte 7 Tage', color: '#10b981' },
           { label: 'Top-Thema', value: topCategory ? (CATEGORY_LABELS[topCategory] ?? topCategory) : '—', sub: topCategory ? `${categoryCounts[0]._count.category}×` : null, color: '#f59e0b', small: true },
         ].map((s) => (
-          <div key={s.label} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '18px 20px', borderTop: `3px solid ${s.color}` }}>
+          <div key={s.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '18px 20px', borderTop: `3px solid ${s.color}` }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{s.label}</div>
-            <div style={{ fontSize: s.small ? 18 : 30, fontWeight: 800, color: '#111', lineHeight: 1.1 }}>{s.value}</div>
+            <div style={{ fontSize: s.small ? 18 : 30, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>{s.value}</div>
             {s.sub && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{s.sub}</div>}
           </div>
         ))}
@@ -128,7 +128,7 @@ export default async function ChatAnalyticsPage({
 
       {/* Category bars */}
       {categoryCounts.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, padding: '20px 24px', marginBottom: 28 }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px', marginBottom: 28 }}>
           <h2 style={{ fontSize: 14, fontWeight: 700, margin: '0 0 16px', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Themen-Verteilung</h2>
           <div style={{ display: 'grid', gap: 10 }}>
             {categoryCounts.map((c) => {
@@ -139,7 +139,7 @@ export default async function ChatAnalyticsPage({
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#374151', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {CATEGORY_LABELS[c.category] ?? c.category}
                   </span>
-                  <div style={{ height: 8, borderRadius: 99, background: '#f3f4f6', overflow: 'hidden' }}>
+                  <div style={{ height: 8, borderRadius: 99, background: 'var(--surface-3)', overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 99, transition: 'width 0.3s ease' }} />
                   </div>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textAlign: 'right' }}>{c._count.category}</span>
@@ -165,8 +165,8 @@ export default async function ChatAnalyticsPage({
                 <details
                   key={log.id}
                   style={{
-                    background: '#fff',
-                    border: '1px solid #e5e7eb',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
                     borderLeft: `3px solid ${log.isSuperAdmin ? '#fbbf24' : color}`,
                     borderRadius: 12,
                     opacity: log.isSuperAdmin ? 0.75 : 1,
@@ -183,11 +183,11 @@ export default async function ChatAnalyticsPage({
                         </span>
                       )}
                       {log.hotel && (
-                        <span style={{ fontSize: 12, color: '#6b7280', background: '#f9fafb', borderRadius: 6, padding: '2px 8px', border: '1px solid #e5e7eb', flexShrink: 0 }}>
+                        <span style={{ fontSize: 12, color: 'var(--text-muted)', background: 'var(--surface-2)', borderRadius: 6, padding: '2px 8px', border: '1px solid var(--border)', flexShrink: 0 }}>
                           {log.hotel.name}
                         </span>
                       )}
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {log.question}
                       </span>
                     </div>

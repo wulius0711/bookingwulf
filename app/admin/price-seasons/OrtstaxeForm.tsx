@@ -38,7 +38,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
 
       {/* Mode selector */}
       <div style={{ display: 'grid', gap: 8 }}>
-        <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Modus</label>
+        <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Modus</label>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {([
             { value: 'off',    label: 'Deaktiviert' },
@@ -51,9 +51,10 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
               style={{
                 display: 'flex', alignItems: 'center', gap: 6, fontSize: 14,
                 cursor: 'pointer', padding: '8px 14px',
-                border: `1px solid ${mode === value ? 'var(--accent)' : '#e5e7eb'}`,
+                border: `1px solid ${mode === value ? 'var(--accent)' : 'var(--border)'}`,
                 borderRadius: 8,
-                background: mode === value ? 'color-mix(in srgb, var(--accent) 8%, #fff)' : '#fff',
+                background: mode === value ? 'color-mix(in srgb, var(--accent) 10%, var(--surface))' : 'var(--surface)',
+                color: 'var(--text-primary)',
                 transition: 'border-color 0.15s, background 0.15s',
               }}
             >
@@ -73,7 +74,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
 
       {/* Wien info */}
       {mode === 'wien' && (
-        <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--primitive-green-100)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: 'var(--status-booked-text)', display: 'grid', gap: 6 }}>
+        <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: 'var(--status-booked-text)', display: 'grid', gap: 6 }}>
           <div style={{ fontWeight: 600, marginBottom: 2 }}>Automatische Sätze (Wiener Ortstaxe, WKO)</div>
           {WIEN_INFO.map(({ label, rate }) => (
             <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
@@ -88,7 +89,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
       {mode === 'custom' && (
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>€ pro Person / Nacht</label>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>€ pro Person / Nacht</label>
             <input
               name="ortstaxePerPersonPerNight"
               type="number" min="0.01" step="0.01"
@@ -99,7 +100,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
             />
           </div>
           <div style={{ display: 'grid', gap: 6, flex: '1 1 140px' }}>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>Mindestalter (Kinder frei)</label>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Mindestalter (Kinder frei)</label>
             <input
               name="ortstaxeMinAge"
               type="number" min="0" step="1"
@@ -116,7 +117,7 @@ export default function OrtstaxeForm({ action, hotelId, initialMode, initialRate
           {pending ? 'Speichern…' : 'Speichern'}
         </button>
         {saved && (
-          <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>
+          <span style={{ fontSize: 13, color: 'var(--status-booked-text)', fontWeight: 500 }}>
             ✓ Gespeichert
           </span>
         )}

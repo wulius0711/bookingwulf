@@ -7,11 +7,11 @@ type Hotel = { id: number; name: string; slug: string };
 
 const inp: React.CSSProperties = {
   padding: '10px 12px',
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--border)',
   borderRadius: 8,
   fontSize: 14,
-  background: '#f9fafb',
-  color: '#111',
+  background: 'var(--surface-2)',
+  color: 'var(--text-primary)',
   width: '100%',
   boxSizing: 'border-box',
 };
@@ -19,7 +19,7 @@ const inp: React.CSSProperties = {
 const lbl: React.CSSProperties = {
   fontSize: 12,
   fontWeight: 700,
-  color: '#4b5563',
+  color: 'var(--text-muted)',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
   marginBottom: 4,
@@ -29,16 +29,16 @@ const lbl: React.CSSProperties = {
 const fld: React.CSSProperties = { display: 'grid', gap: 4 };
 
 const card: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
+  background: 'var(--surface)',
+  border: '1px solid var(--border)',
   borderRadius: 16,
   overflow: 'hidden',
 };
 
 const cardHead: React.CSSProperties = {
-  background: '#fafafa',
+  background: 'var(--surface-2)',
   padding: '14px 20px',
-  borderBottom: '1px solid #f3f4f6',
+  borderBottom: '1px solid var(--border)',
 };
 
 const cardBody: React.CSSProperties = { padding: '20px', display: 'grid', gap: 16 };
@@ -48,11 +48,11 @@ const radioLabelStyle: React.CSSProperties = {
   alignItems: 'center',
   gap: 8,
   padding: '10px 16px',
-  border: '1px solid #e5e7eb',
+  border: '1px solid var(--border)',
   borderRadius: 8,
   fontSize: 14,
   cursor: 'pointer',
-  background: '#f9fafb',
+  background: 'var(--surface-2)',
 };
 
 export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
@@ -63,7 +63,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
       <div style={{ maxWidth: 600, display: 'grid', gap: 24 }}>
 
         <div>
-          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: '#0f172a' }}>Neuer Benutzer</h1>
+          <h1 style={{ margin: 0, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Neuer Benutzer</h1>
           <p style={{ margin: '4px 0 0', fontSize: 14, color: '#667085' }}>Legt einen neuen Admin-Zugang an.</p>
         </div>
 
@@ -76,7 +76,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
 
           <div style={card}>
             <div style={cardHead}>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Zugangsdaten</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Zugangsdaten</h2>
             </div>
             <div style={cardBody}>
               <label style={fld}>
@@ -96,7 +96,7 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
 
           <div style={card}>
             <div style={cardHead}>
-              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111827' }}>Rolle & Hotel</h2>
+              <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Rolle & Hotel</h2>
             </div>
             <div style={cardBody}>
               <div style={fld}>
