@@ -832,10 +832,6 @@ details[open] > summary .card-caret { transform: rotate(180deg); }
   background: var(--page-bg);
 }
 
-/* Fullscreen mode — sidebar hidden, content fills viewport */
-[data-fullscreen="true"] .admin-sidebar { transform: translateX(-220px); }
-[data-fullscreen="true"] .admin-main { margin-left: 0; }
-
 .admin-sidebar {
   width: 220px;
   height: 100vh;
