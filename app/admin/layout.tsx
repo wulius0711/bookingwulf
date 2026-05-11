@@ -8,7 +8,6 @@ import Sidebar from './components/Sidebar'
 import GuidedTour from './components/GuidedTour'
 import AdminChatWidget from './components/AdminChatWidget'
 import FeedbackButton from './components/FeedbackButton'
-import FullscreenButton from './components/FullscreenButton'
 import { ThemeProvider } from './components/ThemeProvider'
 import './components/ui/ui.css'
 
@@ -131,7 +130,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       />
 
       <div className="admin-main">
-        <FullscreenButton />
         <FeedbackButton />
         <main id="admin-content" style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
         <footer
