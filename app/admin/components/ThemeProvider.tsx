@@ -33,19 +33,15 @@ function applyMode(mode: Mode) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<Mode>('light');
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const saved = localStorage.getItem('admin-dark');
+    if (saved !== null) return saved === 'true' ? 'dark' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin-dark');
-    let resolved: Mode;
-    if (saved !== null) {
-      resolved = saved === 'true' ? 'dark' : 'light';
-    } else {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    setMode(resolved);
-    // Sync attribute (class is already set by the no-flash script)
-    document.documentElement.setAttribute('data-theme', resolved);
+    document.documentElement.setAttribute('data-theme', mode);
   }, []);
 
   function toggleMode() {

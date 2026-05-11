@@ -656,7 +656,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 
 | Seite | Plan | Funktion |
 |---|---|---|
-| `/admin` | Alle | Dashboard (offene Anfragen, nächste Ankünfte) |
+| `/admin` | Alle | Dashboard — anpassbares Widget-System (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert |
 | `/admin/requests` | Alle | Buchungsanfragen verwalten |
 | `/admin/requests/[id]` | Alle | Detailansicht, Messaging (Business) |
 | `/admin/calendar` | Alle | Monatskalender mit Sperrzeiten + Buchungen |
