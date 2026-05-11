@@ -232,10 +232,11 @@ export default function DashboardClient({
   }[];
   zimmerplanData: AptData[];
 }) {
-  const [prefs, setPrefs] = useState<Prefs>(DEFAULT);
+  const [prefs, setPrefs] = useState<Prefs>(() => {
+    if (typeof window === 'undefined') return DEFAULT;
+    return loadPrefs();
+  });
   const [customizing, setCustomizing] = useState(false);
-
-  useEffect(() => { setPrefs(loadPrefs()); }, []);
 
   function toggle(id: WidgetId) {
     setPrefs((prev) => {
@@ -365,7 +366,7 @@ export default function DashboardClient({
                             {arrival.toLocaleDateString('de-AT')} · {r.nights} Nächte · {r.adults} Erw.
                           </div>
                         </div>
-                        <span style={{
+                        <span suppressHydrationWarning style={{
                           fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, flexShrink: 0,
                           background: daysUntil === 0 ? 'rgba(22,163,74,0.15)' : daysUntil <= 2 ? 'rgba(234,85,4,0.12)' : 'var(--surface-2)',
                           color: daysUntil === 0 ? '#4ade80' : daysUntil <= 2 ? '#EA5504' : 'var(--text-muted)',
