@@ -11,6 +11,7 @@ import StatusButtons from './StatusButtons';
 import { DeleteRequestButton } from '../DeleteButtons';
 import CopyLinkButton from '../../components/CopyLinkButton';
 import InfoTooltip from '../../components/InfoTooltip';
+import Button from '../../components/ui/Button';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -604,9 +605,9 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 <option value="cs">Čeština</option>
                 <option value="ru">Русский</option>
               </select>
-              <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)', fontWeight: 500 }}>
+              <Button variant="secondary" size="sm" type="submit">
                 Speichern
-              </button>
+              </Button>
               {saved === 'language' && <span style={{ fontSize: 12, color: 'var(--status-booked-text)' }}>✓ Gespeichert</span>}
             </form>
           </div>

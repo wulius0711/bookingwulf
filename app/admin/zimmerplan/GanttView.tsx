@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
+import Button from '../components/ui/Button';
 
 type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number };
 type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string };
@@ -666,9 +667,9 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
 
                   {formError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{formError}</div>}
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button type="submit" style={{ padding: '7px 18px', background: TAB_COLORS[activeTab], color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                    <Button type="submit" style={{ background: TAB_COLORS[activeTab] }}>
                       Speichern
-                    </button>
+                    </Button>
                   </div>
                 </>
               )}
@@ -802,15 +803,15 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button type="button" onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-secondary)', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
-                        <button type="button" onClick={async () => {
+                        <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
+                        <Button variant="danger" size="sm" type="button" onClick={async () => {
                           const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
                           if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
                           else setEditError((await res.json()).error ?? 'Fehler');
-                        }} style={{ padding: '6px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Wirklich löschen</button>
+                        }}>Wirklich löschen</Button>
                       </div>
                     )}
-                    <button type="submit" style={{ padding: '6px 18px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
+                    <Button variant="danger" size="sm" type="submit">Speichern</Button>
                   </div>
                 </form>
               )}

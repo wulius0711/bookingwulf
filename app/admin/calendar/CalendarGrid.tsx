@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useTransition, useRef } from 'react';
+import Button from '../components/ui/Button';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -403,9 +404,9 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 {error && <div role="alert" style={{ fontSize: 12, color: '#dc2626' }}>{error}</div>}
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <button type="submit" disabled={isPending} style={{ padding: '7px 18px', background: TAB_COLORS[activeTab], color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: isPending ? 'wait' : 'pointer', opacity: isPending ? 0.7 : 1 }}>
-                    {isPending ? 'Speichern…' : 'Speichern'}
-                  </button>
+                  <Button type="submit" loading={isPending} style={{ background: TAB_COLORS[activeTab] }}>
+                    Speichern
+                  </Button>
                 </div>
               </>
             )}
@@ -452,12 +453,12 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       <button onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
-                        <button onClick={async () => {
+                        <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
+                        <Button variant="danger" size="sm" type="button" onClick={async () => {
                           const res = await fetch('/api/admin/booking', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
                           if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800); }
                           else setEditError((await res.json()).error ?? 'Fehler');
-                        }} style={{ padding: '6px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Wirklich löschen</button>
+                        }}>Wirklich löschen</Button>
                       </div>
                     )}
                   </div>
@@ -532,15 +533,15 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button type="button" onClick={() => setConfirmDelete(false)} style={{ padding: '6px 12px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
-                        <button type="button" onClick={async () => {
+                        <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
+                        <Button variant="danger" size="sm" type="button" onClick={async () => {
                           const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
                           if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800); }
                           else setEditError((await res.json()).error ?? 'Fehler');
-                        }} style={{ padding: '6px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Wirklich löschen</button>
+                        }}>Wirklich löschen</Button>
                       </div>
                     )}
-                    <button type="submit" style={{ padding: '6px 18px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
+                    <Button variant="danger" size="sm" type="submit">Speichern</Button>
                   </div>
                 </form>
               )}

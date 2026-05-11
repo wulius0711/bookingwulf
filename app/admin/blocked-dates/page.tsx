@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import BlockedDateList from './BlockedDateList';
 import { EmptyState } from '../components/ui';
+import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,9 +77,9 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
                 <option key={h.id} value={h.id}>{h.name}</option>
               ))}
             </select>
-            <button type="submit" style={{ padding: '8px 14px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+            <Button variant="secondary" type="submit">
               Filtern
-            </button>
+            </Button>
             {selectedHotelId !== null && (
               <a href="/admin/blocked-dates" style={{ fontSize: 13, color: 'var(--text-secondary)', textDecoration: 'none' }}>
                 Zurücksetzen

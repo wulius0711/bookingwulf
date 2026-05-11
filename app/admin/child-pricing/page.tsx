@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { createChildPriceRange, updateChildPriceRange, deleteChildPriceRange } from './actions';
 import ConfirmDeleteForm from '../components/ConfirmDeleteForm';
+import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
 
@@ -92,9 +93,9 @@ export default async function ChildPricingPage() {
                       </span>
                     </div>
                     <ConfirmDeleteForm action={deleteChildPriceRange} id={r.id} message={`Altersgruppe „${r.label || r.minAge + '–' + r.maxAge + ' Jahre'}" wirklich löschen?`} style={{ marginLeft: 'auto' }}>
-                      <button type="submit" style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #fecaca', background: 'var(--surface)', fontSize: 12, cursor: 'pointer', color: '#dc2626', whiteSpace: 'nowrap' }}>
+                      <Button variant="danger" size="sm" type="submit">
                         Löschen
-                      </button>
+                      </Button>
                     </ConfirmDeleteForm>
                   </div>
                 ))}
@@ -140,9 +141,9 @@ export default async function ChildPricingPage() {
               </div>
 
               <div className="child-form-submit">
-                <button type="submit" className="btn-shine" style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--accent)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                <Button variant="primary" type="submit">
                   Hinzufügen
-                </button>
+                </Button>
               </div>
             </form>
           </div>

@@ -3,6 +3,7 @@ import { decrypt } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
 import { deleteChatLog, deleteAllTestLogs } from './actions';
+import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Chat-Auswertung — bookingwulf Admin' };
@@ -91,9 +92,9 @@ export default async function ChatAnalyticsPage({
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {includeTests && testCount > 0 && (
             <form action={deleteAllTestLogs}>
-              <button type="submit" style={{ fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface)', color: '#dc2626', cursor: 'pointer' }}>
+              <Button variant="danger" size="sm" type="submit">
                 Alle Tests löschen
-              </button>
+              </Button>
             </form>
           )}
           <a

@@ -1,5 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
 
@@ -215,7 +216,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             <select name="period" defaultValue={periodKey} style={{ padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, background: 'var(--surface)' }}>
               {PERIODS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-            <button type="submit" style={{ padding: '9px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap' }}>Laden</button>
+            <Button variant="secondary" type="submit">Laden</Button>
           </form>
         </div>
 
