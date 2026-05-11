@@ -10,7 +10,12 @@ import AdminChatWidget from './components/AdminChatWidget'
 import FeedbackButton from './components/FeedbackButton'
 import FullscreenButton from './components/FullscreenButton'
 import { ThemeProvider } from './components/ThemeProvider'
+import type { Metadata } from 'next'
 import './components/ui/ui.css'
+
+export const metadata: Metadata = {
+  manifest: '/admin-manifest.json',
+};
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
