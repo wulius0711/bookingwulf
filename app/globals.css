@@ -290,6 +290,8 @@ button, a[role="button"], input[type="submit"] {
 }
 
 @media (max-width: 768px) {
+  .hide-on-mobile { display: none !important; }
+
   .admin-page {
     padding: 20px 12px;
   }
