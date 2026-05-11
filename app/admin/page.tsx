@@ -74,7 +74,7 @@ async function SuperAdminDashboard() {
   ];
 
   return (
-    <main className="admin-page" style={pageStyle}>
+    <main className="admin-page w-lg">
       <div style={{ marginBottom: 28 }}>
         <h1 style={headlineStyle}>Übersicht</h1>
         <p style={sublineStyle}>Alle Hotels auf einen Blick</p>
@@ -105,8 +105,8 @@ async function SuperAdminDashboard() {
               return (
                 <div
                   key={h.id}
+                  className="admin-card"
                   style={{
-                    ...cardStyle,
                     opacity: h.isActive ? 1 : 0.5,
                     borderLeft: `4px solid ${h.accentColor || '#e5e7eb'}`,
                   }}
@@ -204,7 +204,7 @@ async function SuperAdminDashboard() {
                     href={`/admin/requests/${r.id}`}
                     style={{ textDecoration: 'none' }}
                   >
-                    <div style={cardStyle}>
+                    <div className="admin-card">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                         <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>
                           {r.firstname || ''} {r.lastname}
@@ -349,10 +349,6 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
 
 /* ---------- styles ---------- */
 
-const pageStyle: React.CSSProperties = {
-  maxWidth: 1100,
-};
-
 const headlineStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 32,
@@ -383,13 +379,6 @@ const sectionTitleStyle: React.CSSProperties = {
   fontWeight: 700,
   color: 'var(--text-primary)',
   letterSpacing: '-0.01em',
-};
-
-const cardStyle: React.CSSProperties = {
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
-  borderRadius: 12,
-  padding: '14px 16px',
 };
 
 const linkBtnStyle: React.CSSProperties = {

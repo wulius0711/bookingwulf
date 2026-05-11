@@ -36,7 +36,7 @@ export default async function AuditPage() {
   const tdMuted: React.CSSProperties = { ...td, color: 'var(--text-secondary)' };
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page">
       <h1 style={{ margin: '0 0 4px' }}>Audit-Log</h1>
       <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: '0 0 24px' }}>Änderungen an haftungsrelevanten Feldern. Letzte 500 Einträge.</p>
 

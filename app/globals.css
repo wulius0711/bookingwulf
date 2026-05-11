@@ -184,6 +184,28 @@ button, a[role="button"], input[type="submit"] {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   color: var(--text-primary);
 }
+.admin-page.w-sm { max-width: 720px; }
+.admin-page.w-md { max-width: 960px; }
+.admin-page.w-lg { max-width: 1100px; }
+
+.admin-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.admin-card-lg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+}
+.admin-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
 
 /* Auto-fit: 4 cols desktop → 2 cols mobile */
 .stat-grid {

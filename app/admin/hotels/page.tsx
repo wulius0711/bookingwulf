@@ -67,7 +67,7 @@ export default async function HotelsPage() {
   });
 
   return (
-    <main className="admin-page" style={{ maxWidth: 960 }}>
+    <main className="admin-page w-md">
       <div
         style={{
           display: 'flex',

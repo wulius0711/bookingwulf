@@ -74,7 +74,7 @@ export default async function NewRequestPage({ searchParams }: PageProps) {
   const field: React.CSSProperties = { display: 'grid', gap: 4 };
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page">
       <div style={{ maxWidth: 560, display: 'grid', gap: 24 }}>
 
         <div>

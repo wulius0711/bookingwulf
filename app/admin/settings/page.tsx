@@ -29,8 +29,6 @@ const pageStyle: React.CSSProperties = {
   minHeight: '100vh',
   background: 'var(--page-bg)',
   color: 'var(--text-primary)',
-  fontFamily:
-    'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 };
 
 const shellStyle: React.CSSProperties = {

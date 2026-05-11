@@ -74,7 +74,7 @@ export default async function NewHotelPage() {
   }
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page">
       <div style={{ maxWidth: 640, display: 'grid', gap: 24 }}>
 
         <div>

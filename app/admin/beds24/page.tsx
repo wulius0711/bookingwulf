@@ -45,7 +45,7 @@ export default async function Beds24Page() {
   const host = `https://${headerStore.get('host') ?? 'bookingwulf.com'}`;
 
   return (
-    <main className="admin-page" style={{ maxWidth: 960 }}>
+    <main className="admin-page w-md">
       <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
         <h1 style={{ margin: 0 }}>Beds24 Channel Manager</h1>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>

@@ -247,7 +247,7 @@ export default function DashboardClient({
   }
 
   return (
-    <main className="admin-page" style={{ maxWidth: 1100 }}>
+    <main className="admin-page w-lg">
       {/* Header */}
       <div style={{ marginBottom: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{

@@ -88,7 +88,7 @@ export default async function ApartmentsAdminPage() {
   });
 
   return (
-    <main className="admin-page" style={{ maxWidth: 960 }}>
+    <main className="admin-page w-md">
       <div
         style={{
           display: 'flex',
