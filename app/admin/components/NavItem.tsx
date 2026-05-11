@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function NavItem({
   href,
@@ -22,7 +23,7 @@ export default function NavItem({
 
   if (!locked) {
     return (
-      <a
+      <Link
         href={href}
         data-tour={`nav-${tourId}`}
         style={{
@@ -38,7 +39,7 @@ export default function NavItem({
         }}
       >
         {label}
-      </a>
+      </Link>
     );
   }
 
