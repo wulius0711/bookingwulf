@@ -24,8 +24,8 @@ export default function PwaInstallBanner() {
   if (!show) return null;
 
   return (
-    <div style={{
-      position: 'fixed', top: 56, left: '50%', transform: 'translateX(-50%)',
+    <div className="pwa-banner" style={{
+      position: 'fixed', top: 56, left: '50%',
       zIndex: 1000, display: 'flex', alignItems: 'center', gap: 12,
       background: '#eff6ff', border: '1px solid #bfdbfe',
       borderRadius: 12, padding: '12px 16px',

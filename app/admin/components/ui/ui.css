@@ -24,6 +24,18 @@
   to   { opacity: 1; transform: translateY(0);   }
 }
 
+@keyframes banner-slide-in {
+  0%   { transform: translateX(-50%) translateY(-140%); opacity: 0; }
+  60%  { transform: translateX(-50%) translateY(6px);   opacity: 1; }
+  80%  { transform: translateX(-50%) translateY(-3px);  opacity: 1; }
+  100% { transform: translateX(-50%) translateY(0);     opacity: 1; }
+}
+
+.pwa-banner {
+  animation: banner-slide-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform: translateX(-50%);
+}
+
 /* ── Screen-reader only ───────────────────────────────────────────────── */
 
 .ui-sr-only {
