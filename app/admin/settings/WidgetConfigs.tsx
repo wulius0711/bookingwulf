@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { saveWidgetConfig, deleteWidgetConfig } from './widget-config-actions';
 import InfoTooltip from '../components/InfoTooltip';
 import { EmbedCode } from './EmbedCode';
+import Button from '../components/ui/Button';
 
 // persists across React re-renders and remounts within the same browser session
 const sessionCreated = new Map<number, number>();
@@ -86,10 +87,10 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
               <code style={{ fontSize: 12, color: '#6b7280' }}>data-config=&quot;{c.slug}&quot;</code>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button" onClick={() => openEdit(c)} style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer' }}>Bearbeiten</button>
+              <Button variant="secondary" size="sm" type="button" onClick={() => openEdit(c)}>Bearbeiten</Button>
               <form action={deleteWidgetConfig} onSubmit={(e) => { if (!confirm(`Config „${c.name}" löschen?`)) e.preventDefault(); }}>
                 <input type="hidden" name="id" value={c.id} />
-                <button type="submit" style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #fca5a5', background: 'var(--surface)', color: '#dc2626', fontSize: 13, cursor: 'pointer' }}>Löschen</button>
+                <Button variant="danger" size="sm" type="submit">Löschen</Button>
               </form>
             </div>
           </div>
