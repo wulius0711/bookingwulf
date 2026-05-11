@@ -221,7 +221,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
           </span>
         </td>
         <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</td>
-        <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>{'€'} {extra.price.toFixed(2)}</td>
+        <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', minWidth: 90 }}>€ {extra.price.toFixed(2)}</td>
         <td style={{ padding: '12px 16px' }}>
           {extra.linkUrl ? (
             <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-text)', textDecoration: 'none' }}>Link</a>
