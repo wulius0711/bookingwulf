@@ -32,7 +32,7 @@ export default function PwaInstallBanner() {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--accent)', flexShrink: 0 }}>
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
-      <span>Als App installieren: Menü <strong>→ App installieren</strong> für Fullscreen ohne Browser-Chrome</span>
+      <span>Tipp (Chrome/Edge): In der <strong>Adressleiste</strong> auf das Installieren-Icon klicken — Admin als App ohne Browser-Chrome öffnen</span>
       <button onClick={dismiss} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16, padding: '0 4px', lineHeight: 1 }}>×</button>
     </div>
   );
