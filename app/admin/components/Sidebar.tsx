@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { logout } from '../login/actions';
-import ThemeSwitcher from './ThemeSwitcher';
+import dynamic from 'next/dynamic';
+const ThemeSwitcher = dynamic(() => import('./ThemeSwitcher'), { ssr: false });
 
 type NavItemDef = {
   href: string;

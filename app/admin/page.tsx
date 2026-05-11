@@ -2,7 +2,9 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import StatCard from './components/StatCard';
-import DashboardClient from './components/DashboardClient';
+import dynamic from 'next/dynamic';
+
+const DashboardClient = dynamic(() => import('./components/DashboardClient'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 

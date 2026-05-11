@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from './ThemeProvider';
 
@@ -19,17 +19,12 @@ function applyTheme(key: ThemeKey) {
 }
 
 export default function ThemeSwitcher() {
-  const [theme, setTheme] = useState<ThemeKey>('indigo');
+  const [theme, setTheme] = useState<ThemeKey>(() => {
+    const saved = localStorage.getItem('admin-theme') as ThemeKey | null;
+    return saved && THEMES.some(t => t.key === saved) ? saved : 'indigo';
+  });
   const { mode } = useTheme();
   const isDark = mode === 'dark';
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('admin-theme') as ThemeKey | null;
-    if (savedTheme && THEMES.some(t => t.key === savedTheme)) {
-      setTheme(savedTheme);
-      applyTheme(savedTheme);
-    }
-  }, []);
 
   function handleTheme(key: ThemeKey) {
     setTheme(key);
