@@ -15,6 +15,10 @@ import './components/ui/ui.css'
 
 export const metadata: Metadata = {
   manifest: '/admin-manifest.json',
+  title: {
+    default: 'bookingwulf Admin',
+    template: '%s — bookingwulf Admin',
+  },
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
