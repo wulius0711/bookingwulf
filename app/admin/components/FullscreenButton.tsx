@@ -1,28 +1,40 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
 
 const LS_KEY = 'admin_fullscreen';
 
 export default function FullscreenButton() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const wants = useRef(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     wants.current = localStorage.getItem(LS_KEY) === 'true';
-    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', onChange);
-    return () => document.removeEventListener('fullscreenchange', onChange);
-  }, []);
 
-  // Re-enter fullscreen after navigation (user gesture still active from link click)
-  useEffect(() => {
-    if (wants.current && !document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-  }, [pathname]);
+    const onFullscreenChange = () => {
+      const inFs = !!document.fullscreenElement;
+      setIsFullscreen(inFs);
+      if (!inFs && wants.current) {
+        // Exited unexpectedly (navigation) — re-enter while gesture is still active
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && document.fullscreenElement) {
+        // User pressed Escape intentionally — clear wants
+        wants.current = false;
+        localStorage.setItem(LS_KEY, 'false');
+      }
+    };
+
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+  }, []);
 
   function toggle() {
     if (!document.fullscreenElement) {
