@@ -193,6 +193,7 @@ button, a[role="button"], input[type="submit"] {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
+
 /* Two-column layout → stacks on mobile */
 .two-col {
   display: grid;
@@ -321,6 +322,21 @@ button, a[role="button"], input[type="submit"] {
 
   .help-mobile-nav::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ─── Dashboard ─────────────────────────────────────────────────── */
+.dash-two-col {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .dashboard-h1 {
+    font-size: 22px !important;
+    letter-spacing: -0.02em !important;
+  }
+  .dash-two-col {
+    grid-template-columns: 1fr !important;
   }
 }
 

@@ -2,6 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import Link from 'next/link';
 import StatCard from './components/StatCard';
+import DashboardClient from './components/DashboardClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -264,7 +265,17 @@ async function SuperAdminDashboard() {
 /* ========== HOTEL ADMIN ========== */
 
 async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
-  const [hotel, requestGroups, recentRequests] = await Promise.all([
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const in14days = new Date(today);
+  in14days.setDate(today.getDate() + 14);
+  const zimmerEnd = new Date(today.getTime() + 14 * 86400000);
+
+  function toIso(d: Date) {
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+  }
+
+  const [hotel, requestGroups, recentRequests, upcomingArrivals, zimmerApts, zimmerRequests, zimmerBlocks] = await Promise.all([
     prisma.hotel.findUnique({
       where: { id: hotelId },
       include: { _count: { select: { apartments: true } } },
@@ -278,6 +289,24 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
       where: { hotelId },
       take: 8,
       orderBy: { createdAt: 'desc' },
+    }),
+    prisma.request.findMany({
+      where: { hotelId, status: { in: ['booked', 'confirmed'] }, arrival: { gte: today, lte: in14days } },
+      orderBy: { arrival: 'asc' },
+      select: { id: true, firstname: true, lastname: true, arrival: true, departure: true, nights: true, adults: true },
+    }),
+    prisma.apartment.findMany({
+      where: { hotelId },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.request.findMany({
+      where: { hotelId, status: { in: ['booked', 'confirmed'] }, arrival: { lte: new Date(zimmerEnd.toISOString().slice(0, 10) + 'T23:59:59.999Z') }, departure: { gte: today } },
+      select: { id: true, firstname: true, lastname: true, arrival: true, departure: true, selectedApartmentIds: true },
+    }),
+    prisma.blockedRange.findMany({
+      where: { hotelId, startDate: { lte: zimmerEnd }, endDate: { gt: today } },
+      select: { id: true, apartmentId: true, startDate: true, endDate: true, note: true, type: true },
     }),
   ]);
 
@@ -294,109 +323,27 @@ async function HotelAdminDashboard({ hotelId }: { hotelId: number }) {
     { label: 'Neu',        value: newCount,                href: '/admin/requests', highlight: newCount > 0 },
   ];
 
+  const zimmerplanData = zimmerApts.map((apt) => ({
+    id: apt.id,
+    name: apt.name,
+    bookings: zimmerRequests
+      .filter((r) => r.selectedApartmentIds.split(',').map(Number).includes(apt.id))
+      .map((r) => ({ id: r.id, kind: 'booking' as const, startDate: toIso(r.arrival), endDate: toIso(r.departure), label: [r.firstname, r.lastname].filter(Boolean).join(' '), requestId: r.id })),
+    blocks: zimmerBlocks
+      .filter((b) => b.apartmentId === apt.id || b.apartmentId === null)
+      .map((b) => ({ id: b.id, kind: 'blocked' as const, startDate: toIso(b.startDate), endDate: toIso(b.endDate), note: b.note, type: b.type })),
+  }));
+
   return (
-    <main className="admin-page" style={pageStyle}>
-      <div style={{ marginBottom: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 12,
-            background: hotel.accentColor || '#e5e7eb',
-            border: '1px solid rgba(0,0,0,0.08)',
-            flexShrink: 0,
-          }}
-        />
-        <div>
-          <h1 style={headlineStyle}>{hotel.name}</h1>
-          <p style={sublineStyle}>Dein Hotel auf einen Blick</p>
-        </div>
-      </div>
-
-      {/* STAT CARDS */}
-      <div className="stat-grid" style={statsRowStyle}>
-        {stats.map((s) => (
-          <StatCard key={s.label} label={s.label} value={s.value} href={s.href} highlight={s.highlight} />
-        ))}
-      </div>
-
-      {/* STATUS BREAKDOWN */}
-      {totalRequests > 0 && (
-        <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap' }}>
-          {(['new', 'answered', 'booked', 'cancelled'] as const).map((st) =>
-            (byStatus[st] ?? 0) > 0 ? (
-              <span
-                key={st}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  background: statusColor(st).bg,
-                  color: statusColor(st).color,
-                  border: `1px solid ${statusColor(st).border}`,
-                }}
-              >
-                {byStatus[st]} {statusLabel(st)}
-              </span>
-            ) : null,
-          )}
-        </div>
-      )}
-
-      {/* RECENT REQUESTS */}
-      <h2 style={sectionTitleStyle}>Letzte Anfragen</h2>
-      <div style={{ display: 'grid', gap: 10 }}>
-        {recentRequests.length === 0 ? (
-          <p style={{ fontSize: 14, color: '#888' }}>Noch keine Anfragen.</p>
-        ) : (
-          recentRequests.map((r) => {
-            const sc = statusColor(r.status);
-            return (
-              <Link
-                key={r.id}
-                href={`/admin/requests/${r.id}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <div style={cardStyle}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>
-                      {r.firstname || ''} {r.lastname}
-                    </div>
-                    <span style={{
-                      padding: '2px 10px',
-                      borderRadius: 8,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      background: sc.bg,
-                      color: sc.color,
-                      border: `1px solid ${sc.border}`,
-                      flexShrink: 0,
-                    }}>
-                      {statusLabel(r.status)}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
-                    {new Date(r.arrival).toLocaleDateString('de-AT')} –{' '}
-                    {new Date(r.departure).toLocaleDateString('de-AT')} · {r.nights} Nächte ·{' '}
-                    {r.adults} Erw.{r.children ? `, ${r.children} Kinder` : ''}
-                  </div>
-                  <div style={{ fontSize: 11, color: '#bbb', marginTop: 4 }}>
-                    {new Date(r.createdAt).toLocaleString('de-AT')}
-                  </div>
-                </div>
-              </Link>
-            );
-          })
-        )}
-
-        {recentRequests.length > 0 && (
-          <Link href="/admin/requests" style={{ ...linkBtnStyle, textAlign: 'center' }}>
-            Alle Anfragen →
-          </Link>
-        )}
-      </div>
-    </main>
+    <DashboardClient
+      hotel={{ name: hotel.name, accentColor: hotel.accentColor }}
+      stats={stats}
+      byStatus={byStatus}
+      totalRequests={totalRequests}
+      recentRequests={recentRequests}
+      upcomingArrivals={upcomingArrivals.map(r => ({ ...r, arrival: r.arrival.toISOString(), departure: r.departure.toISOString() }))}
+      zimmerplanData={zimmerplanData}
+    />
   );
 }
 
