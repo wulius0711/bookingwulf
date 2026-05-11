@@ -27,7 +27,7 @@ export default async function FeedbackPage() {
   }
 
   return (
-    <main className="admin-page" style={{ maxWidth: 800 }}>
+    <main className="admin-page" style={{ maxWidth: 960 }}>
       <h1 style={{ margin: 0 }}>Feedback</h1>
       <p className="page-subtitle" style={{ marginBottom: 28 }}>
         Eingegangene Rückmeldungen von Nutzern

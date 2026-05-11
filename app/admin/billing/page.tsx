@@ -126,7 +126,7 @@ export default function BillingPage() {
 
   return (
     <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 900, display: 'grid', gap: 24 }}>
+      <div style={{ maxWidth: 1100, display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Abonnement</h1>

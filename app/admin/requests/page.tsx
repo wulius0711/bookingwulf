@@ -46,7 +46,7 @@ export default async function RequestsPage() {
       : [];
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ maxWidth: 960 }}>
       <div
         style={{
           display: 'flex',

@@ -80,7 +80,7 @@ export default async function ChatAnalyticsPage({
   const topCategory = categoryCounts[0]?.category;
 
   return (
-    <main className="admin-page" style={{ maxWidth: 900 }}>
+    <main className="admin-page" style={{ maxWidth: 960 }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>

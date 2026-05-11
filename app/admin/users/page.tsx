@@ -47,7 +47,7 @@ export default async function UsersPage() {
   });
 
   return (
-    <main style={{ padding: 40, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', maxWidth: 900 }}>
+    <main className="admin-page" style={{ maxWidth: 960 }}>
       <div
         style={{
           display: 'flex',
