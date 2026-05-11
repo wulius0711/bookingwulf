@@ -59,7 +59,7 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
   const isToday = date === todayIso();
 
   return (
-    <div className="admin-page" style={{ maxWidth: 1100 }}>
+    <div className="admin-page">
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
