@@ -170,7 +170,7 @@ export default function HomePage() {
             {[
               { label: `${CONTENT.pain.commissionPct}% OTA-Provision`, value: `−€ ${commission.toLocaleString('de-DE')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
               { label: 'bookingwulf Pro',                               value: `€ ${CONTENT.pain.bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: '€ 119/Monat · jederzeit kündbar', tone: 'neutral'  as const },
-              { label: 'Ihre Ersparnis',                                value: saving > 0 ? `bis zu € ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit Ihrem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
+              { label: 'Ihre Ersparnis',                                value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit Ihrem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
             ].map((item, i) => (
               <div
                 key={item.label}
@@ -178,7 +178,10 @@ export default function HomePage() {
                 style={item.tone === 'positive' ? { background: 'var(--v4-green)' } : undefined}
               >
                 <p className={`text-xs font-bold uppercase tracking-widest mb-2 ${item.tone === 'positive' ? 'text-white/80' : 'text-slate-400'}`}>{item.label}</p>
-                <p className={`text-[32px] font-extrabold tracking-tight mb-1.5 ${item.tone === 'negative' ? 'text-red-400' : 'text-white'}`}>{item.value}</p>
+                {item.tone === 'positive' && saving > 0 && (
+                  <span className="block text-xs font-semibold text-white/60 mb-0.5 uppercase tracking-widest">bis zu</span>
+                )}
+                <p className={`text-[32px] font-extrabold tracking-tight mb-1.5 whitespace-nowrap ${item.tone === 'negative' ? 'text-red-400' : 'text-white'}`}>{item.value}</p>
                 <p className={`text-xs ${item.tone === 'positive' ? 'text-white/70' : 'text-slate-500'}`}>{item.note}</p>
               </div>
             ))}

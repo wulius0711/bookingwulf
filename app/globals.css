@@ -121,6 +121,10 @@
 
 /* Dark mode disabled for admin panel consistency */
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
