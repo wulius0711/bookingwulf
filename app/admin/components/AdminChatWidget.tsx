@@ -7,8 +7,18 @@ type ChatMessage = { role: 'user' | 'assistant'; text: string };
 const STORAGE_KEY = 'bw_chat_messages';
 const ACCENT = 'var(--accent)';
 
+function getIconColor(): string {
+  try {
+    const dark = localStorage.getItem('admin-dark') === 'true';
+    const theme = localStorage.getItem('admin-theme') ?? 'indigo';
+    if (dark && theme === 'classic') return '#111827';
+  } catch {}
+  return '#ffffff';
+}
+
 export default function AdminChatWidget() {
   const [open, setOpen] = useState(false);
+  const [iconColor, setIconColor] = useState('#ffffff');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,6 +27,8 @@ export default function AdminChatWidget() {
   const sendingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => { setIconColor(getIconColor()); }, []);
 
   useEffect(() => {
     try {
@@ -115,11 +127,11 @@ export default function AdminChatWidget() {
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M5 5l10 10M15 5L5 15" stroke={iconColor} strokeWidth="2" strokeLinecap="round"/>
           </svg>
         ) : (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         )}
       </button>
