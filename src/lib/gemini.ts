@@ -72,7 +72,17 @@ BETRIEB:
 - Betrieb → Analytics: Auswertungen zu Buchungsvolumen, Umsatz, Auslastung (Business-Plan).
 
 VERWALTUNG:
-- Verwaltung → Apartments: Apartments anlegen und bearbeiten (Name, Beschreibung, Kapazität, Basispreis, Fotos, Ausstattung).
+- Verwaltung → Apartments: Apartments anlegen und bearbeiten. Die Bearbeitungsseite (Apartment bearbeiten) hat folgende Sektionen:
+  - Allgemein: Name, Aktiv/Inaktiv-Toggle, Sortierreihenfolge
+  - Kapazität: max. Erwachsene, Kinder, Babys
+  - Details: Zusatzinformationen zum Apartment
+  - Preise: Basispreis und Preiseinstellungen
+  - Beschreibung & Ausstattung: Freitext-Beschreibung, Ausstattungsliste
+  - Gäste-Lounge (Apartment-Ebene): Apartment-spezifische Inhalte für die Gäste-Lounge — z.B. apartmentspezifische Hausregeln oder Hinweise, die nur für dieses Apartment gelten. NICHT zu verwechseln mit Konfiguration → Gäste-Lounge (Hotel-Ebene), wo Kontakt, Hausinfos und Umgebungstipps für alle Apartments gepflegt werden.
+  - Bilder: Fotos hochladen und verwalten
+  - Check-in-Fotos: Bilder für die Anreisebeschreibung (z.B. Schlüsselbox-Standort)
+  - iCal: Kalender-Feeds für Sync mit Booking.com, Airbnb etc.
+  - Nuki: Smartlock diesem Apartment zuordnen
 - Verwaltung → Preisanpassungen: Saisonale Aufschläge oder Rabatte definieren, z.B. Hochsaison +20% (Pro-Plan).
 - Verwaltung → Sperrzeiten: Zeiträume sperren, in denen keine Buchungen möglich sind.
 - Verwaltung → Zusatzleistungen: Optionale Extras für Gäste konfigurieren, z.B. Frühstück, Parkplatz (Pro-Plan).
@@ -126,7 +136,7 @@ function buildSystemPrompt(): string {
 
 Deine Aufgabe: Nutzern erklären wie sie bookingwulf bedienen. Beantworte alle Fragen — auch kurze und kontextbezogene wie "Was mache ich hier?" oder "Wofür ist das?".
 
-WICHTIG zur aktuellen Seite: Wenn eine aktuelle Seite angegeben ist, nutze sie NUR als Kontext bei unklaren Fragen ohne konkretes Thema. Fragt der Nutzer explizit nach einem anderen Bereich (z.B. "Kalender", "Apartments", "Preise"), beantworte GENAU das — ignoriere dann die aktuelle Seite vollständig.
+WICHTIG zur aktuellen Seite: Wenn eine aktuelle Seite angegeben ist, nutze sie als primären Kontext. Fragen mit "hier" (z.B. "Was mache ich hier?", "Was ist hier die Gäste-Lounge?") beziehen sich IMMER auf die aktuelle Seite und ihre Sektionen — niemals auf eine andere Seite. Fragt der Nutzer explizit nach einem komplett anderen Bereich ohne "hier" (z.B. "Wie funktioniert der Kalender?"), beantworte GENAU das. Sage niemals dem Nutzer er befinde sich auf einer Seite, wenn das nicht der aktuellen Seite entspricht.
 
 ${STATIC_NAV_DESCRIPTIONS}
 
