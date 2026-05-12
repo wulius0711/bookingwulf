@@ -846,6 +846,8 @@ details.settings-section[open] > summary span {
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 .card-caret { display: inline-flex; align-items: center; flex-shrink: 0; color: #6b7280; transition: transform 0.2s; }
+.chat-widget-trigger { color: #ffffff; }
+.dark.theme-classic .chat-widget-trigger { color: #111827; }
 details[open] > summary .card-caret { transform: rotate(180deg); }
 
 /* CSS-only form toggle (no JS needed) */

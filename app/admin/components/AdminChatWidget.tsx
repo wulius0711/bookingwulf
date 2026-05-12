@@ -103,6 +103,7 @@ export default function AdminChatWidget() {
         aria-label="Assistent öffnen"
         aria-expanded={open}
         aria-controls="chat-panel"
+        className="chat-widget-trigger"
         style={{
           position: 'fixed', bottom: '28px', right: '28px', zIndex: 9999,
           width: '52px', height: '52px', borderRadius: '50%',
@@ -110,7 +111,6 @@ export default function AdminChatWidget() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
           transition: 'background 0.15s',
-          color: 'var(--text-on-accent)',
         }}
       >
         {open ? (
