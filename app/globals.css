@@ -76,6 +76,7 @@
 .dark.theme-classic {
   /* Classic = light/white accent in dark mode so buttons are visible */
   --accent: #ffffff;
+  --toggle-thumb: #111827;
   --shimmer-gradient: linear-gradient(100deg, rgba(0,0,0,0) 20%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 80%);
   --accent-gradient: linear-gradient(to bottom, #ffffff, #f1f5f9);
   --accent-gradient-hover: linear-gradient(to bottom, #ffffff, #ffffff);
@@ -846,6 +847,14 @@ details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 .card-caret { display: inline-flex; align-items: center; flex-shrink: 0; color: #6b7280; transition: transform 0.2s; }
 details[open] > summary .card-caret { transform: rotate(180deg); }
+
+/* CSS-only form toggle (no JS needed) */
+.form-toggle { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: var(--text-primary); user-select: none; }
+.form-toggle input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.form-toggle .toggle-track { position: relative; width: 44px; height: 24px; background: var(--border-strong); border-radius: 12px; transition: background 0.2s; flex-shrink: 0; }
+.form-toggle input[type="checkbox"]:checked + .toggle-track { background: var(--accent); }
+.form-toggle .toggle-thumb { position: absolute; width: 18px; height: 18px; top: 3px; left: 3px; background: var(--toggle-thumb, #fff); border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.25); transition: transform 0.2s; pointer-events: none; }
+.form-toggle input[type="checkbox"]:checked + .toggle-track .toggle-thumb { transform: translateX(20px); }
 .settings-section > summary { align-items: center !important; }
 
 /* ─── Skip link ─────────────────────────────────────────────────── */

@@ -178,8 +178,9 @@ export default async function NewApartmentPage() {
                 </div>
                 <div style={fld}>
                   <label style={lbl}>Status</label>
-                  <label style={{ display: 'flex', gap: 8, alignItems: 'center', paddingTop: 11, fontSize: 14, color: 'var(--text-primary)' }}>
+                  <label className="form-toggle">
                     <input type="checkbox" name="isActive" defaultChecked />
+                    <span className="toggle-track"><span className="toggle-thumb" /></span>
                     Aktiv
                   </label>
                 </div>

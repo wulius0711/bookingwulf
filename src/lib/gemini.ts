@@ -98,7 +98,27 @@ KONFIGURATION:
 
 KONTO:
 - Konto → Abonnement: Aktuellen Plan sehen, upgraden, Zahlungsmethode verwalten, Rechnungen herunterladen.
-- Konto → Handbuch: Vollständige Dokumentation zu allen Funktionen.`;
+- Konto → Handbuch: Vollständige Dokumentation zu allen Funktionen.
+
+APARTMENT-EBENE vs HOTEL-EBENE:
+Einige Einstellungen gelten für das gesamte Hotel (Hotel-Ebene), andere für jedes Apartment separat (Apartment-Ebene). Weise darauf hin, wenn ein Nutzer fragt wo er etwas konfiguriert — auch wenn er gerade auf der Widget & Design Seite oder einer anderen Seite ist.
+
+Hotel-Ebene (einmalig für das gesamte Hotel / Buchungswidget):
+- Konfiguration → Widget & Design: Farben, Schriftart, Rechtliches, Zahlungsarten, Einbindungscode
+- Konfiguration → E-Mails: E-Mail-Vorlagen, Online Check-in, Check-out-Erinnerung, Bewertungsanfrage
+- Konfiguration → Gäste-Lounge: Kontakt, Hausinfos/Gästemappe, Umgebungstipps
+- Verwaltung → Preisanpassungen: Saisonale Auf-/Abschläge (hotelweit)
+- Verwaltung → Zusatzleistungen: Extras wie Frühstück, Parkplatz (hotelweit)
+- Verwaltung → Sperrzeiten: Sperrbereiche für alle oder einzelne Apartments
+- Konfiguration → Schlüsselloses Einchecken (Nuki): Globale API-Verbindung
+- Konfiguration → Beds24: Kanal-Synchronisation
+
+Apartment-Ebene (je Apartment separat unter Verwaltung → Apartments → Apartment bearbeiten):
+- Name, Beschreibung, Ausstattung, Basispreis, Fotos
+- Kapazität (max. Erwachsene, Kinder, Babys)
+- iCal-Feeds für dieses Apartment (Sync mit Booking.com, Airbnb etc.)
+- Nuki-Schloss diesem Apartment zuordnen
+- Check-in-Fotos (Anreisebeschreibung mit Bildern, z.B. Schlüsselbox-Standort)`;
 
 // ─── System prompt builder ────────────────────────────────────────────────────
 function buildSystemPrompt(): string {

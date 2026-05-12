@@ -126,8 +126,9 @@ export default async function EditHotelPage({ params }: PageProps) {
 
           <div style={{ ...s.field, alignItems: 'center', marginBottom: 0 }} className="he-field">
             <label style={s.label}>Status</label>
-            <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: 'var(--text-primary)' }}>
+            <label className="form-toggle">
               <input type="checkbox" name="isActive" defaultChecked={hotel.isActive} />
+              <span className="toggle-track"><span className="toggle-thumb" /></span>
               Aktiv
             </label>
           </div>

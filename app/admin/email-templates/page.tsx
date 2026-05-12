@@ -310,10 +310,10 @@ export default async function EmailTemplatesPage() {
           </summary>
           <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
             <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false}
-                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Online Check-in aktivieren</span>
+              <label className="form-toggle">
+                <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Online Check-in aktivieren
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
@@ -346,10 +346,10 @@ export default async function EmailTemplatesPage() {
           </summary>
           <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
             <form action={saveCheckinEmailSettings} style={{ display: 'grid', gap: 14 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false}
-                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Automatischen Versand aktivieren</span>
+              <label className="form-toggle">
+                <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Automatischen Versand aktivieren
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>X Tage vor Anreise senden</label>
@@ -385,10 +385,10 @@ export default async function EmailTemplatesPage() {
               </a>
             </div>
             <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false}
-                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Check-out-Erinnerung aktivieren</span>
+              <label className="form-toggle">
+                <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Check-out-Erinnerung aktivieren
               </label>
               <div style={{ display: 'grid', gap: 4 }}>
                 <label style={labelStyle}>Check-out-Zeit</label>
@@ -443,10 +443,10 @@ export default async function EmailTemplatesPage() {
                 </a>
               </div>
             <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false}
-                  style={{ width: 16, height: 16, accentColor: 'var(--accent)' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>Bewertungsanfrage aktivieren</span>
+              <label className="form-toggle">
+                <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Bewertungsanfrage aktivieren
               </label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div style={{ display: 'grid', gap: 4 }}>

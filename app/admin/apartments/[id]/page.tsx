@@ -22,7 +22,7 @@ const detailsStyle: React.CSSProperties = { border: '1px solid var(--border)', b
 const summaryStyle: React.CSSProperties = { padding: '16px 20px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' };
 const cardTitle: React.CSSProperties = { margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' };
 const cardBody: React.CSSProperties = { padding: '4px 20px 20px', display: 'grid', gap: 16 };
-const caret = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, transition: 'transform 0.2s', color: 'var(--text-disabled)' }}><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const caret = <svg className="card-caret" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'block', marginBottom: 4 };
 const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', background: 'var(--surface-2)', boxSizing: 'border-box' };
@@ -234,9 +234,10 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <label style={labelStyle}>Name</label>
                 <input name="name" defaultValue={apartment.name} style={inputStyle} required />
               </div>
-              <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
-                <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, color: 'var(--text-primary)', cursor: 'pointer' }}>
+              <div>
+                <label className="form-toggle">
                   <input type="checkbox" name="isActive" defaultChecked={apartment.isActive} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
                   Aktiv
                 </label>
               </div>

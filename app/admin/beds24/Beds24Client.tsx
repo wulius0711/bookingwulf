@@ -102,8 +102,9 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
               <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--status-booked-text)' }}>Verbunden</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer' }}>
-                <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} style={{ accentColor: 'var(--accent)' }} />
+              <label className="form-toggle">
+                <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
                 Sync aktiv
               </label>
               <Button variant="secondary" size="sm" onClick={() => setConfirmOpen(true)}>Trennen</Button>

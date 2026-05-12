@@ -335,8 +335,9 @@ export default async function PriceSeasonsPage() {
                 {/* VERFÜGBARKEITS-HINWEISE */}
                 <div style={{ padding: '16px 18px', background: 'var(--surface-2)', borderRadius: 12, border: '1px solid var(--border)', display: 'grid', gap: 12 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)' }}>Verfügbarkeits-Hinweise (🔥 Banner)</div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
-                    <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false} style={{ width: 15, height: 15, accentColor: 'var(--accent)' }} />
+                  <label className="form-toggle">
+                    <input type="checkbox" name="showUrgencySignals" defaultChecked={s?.showUrgencySignals ?? false} />
+                    <span className="toggle-track"><span className="toggle-thumb" /></span>
                     Aktivieren
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

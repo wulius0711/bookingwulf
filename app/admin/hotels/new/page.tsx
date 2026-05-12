@@ -117,10 +117,11 @@ export default async function NewHotelPage() {
             </div>
             <div style={cardBody}>
               <ColorField label="Akzentfarbe" name="accentColor" defaultValue="#111827" labelStyle={lbl} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="checkbox" name="isActive" id="isActive" defaultChecked style={{ width: 16, height: 16 }} />
-                <label htmlFor="isActive" style={{ fontSize: 14, color: 'var(--text-primary)' }}>Aktiv</label>
-              </div>
+              <label className="form-toggle">
+                <input type="checkbox" name="isActive" defaultChecked />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Aktiv
+              </label>
             </div>
           </div>
 

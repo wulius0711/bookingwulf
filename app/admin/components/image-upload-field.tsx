@@ -49,7 +49,7 @@ export function ImageUploadField({
   return (
     <div
       style={{
-        border: '1px solid #eee',
+        border: '1px solid var(--border)',
         borderRadius: 8,
         padding: 12,
         display: 'grid',
@@ -69,7 +69,7 @@ export function ImageUploadField({
               height: 140,
               objectFit: 'cover',
               borderRadius: 8,
-              border: '1px solid #eee',
+              border: '1px solid var(--border)',
               display: 'block',
             }}
           />

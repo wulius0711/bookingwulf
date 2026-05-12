@@ -92,13 +92,9 @@ export default function ExportButton() {
                 </div>
               </div>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#374151', cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={includeCancelled}
-                  onChange={e => setIncludeCancelled(e.target.checked)}
-                  style={{ width: 15, height: 15, accentColor: 'var(--accent)' }}
-                />
+              <label className="form-toggle">
+                <input type="checkbox" checked={includeCancelled} onChange={e => setIncludeCancelled(e.target.checked)} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
                 Stornierte Buchungen einschließen
               </label>
             </div>
