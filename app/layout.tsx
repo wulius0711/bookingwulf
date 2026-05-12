@@ -47,7 +47,7 @@ export default function RootLayout({
         <Script
           id="dark-mode-init"
           strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: `(function(){try{if(!window.location.pathname.startsWith('/admin'))return;var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=d==='true'||(d===null&&s);if(dark){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.style.colorScheme='light';}var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();` }}
+          dangerouslySetInnerHTML={{ __html: `(function(){try{if(!window.location.pathname.startsWith('/admin'))return;var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=d==='true'||(d===null&&s);if(dark){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');document.documentElement.style.colorScheme='dark';document.documentElement.style.backgroundColor='#0f1117';document.body&&(document.body.style.backgroundColor='#0f1117');}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.style.colorScheme='light';}var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();` }}
         />
         <CookieBanner />
         {children}
