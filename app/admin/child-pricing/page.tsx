@@ -43,7 +43,7 @@ export default async function ChildPricingPage() {
     : null;
 
   return (
-    <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ maxWidth: 720, background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <style>{`
         .child-range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .child-range-label { flex: 1 1 120px; color: #374151; font-size: 14px; }
@@ -57,7 +57,7 @@ export default async function ChildPricingPage() {
           .child-form-submit { grid-column: 1 / -1; }
         }
       `}</style>
-      <div style={{ maxWidth: 720, display: 'grid', gap: 24 }}>
+      <div style={{ display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Kinderpreise</h1>

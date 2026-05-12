@@ -201,8 +201,8 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' };
 
   return (
-    <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 1100, display: 'grid', gap: 24 }}>
+    <main className="admin-page" style={{ maxWidth: 1100, background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ display: 'grid', gap: 24 }}>
 
         {/* Header */}
         <div className="analytics-header">

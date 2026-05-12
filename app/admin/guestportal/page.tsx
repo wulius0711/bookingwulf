@@ -86,8 +86,8 @@ export default async function GuestPortalSettingsPage() {
   ]);
 
   return (
-    <main className="admin-page" style={{ minHeight: '100vh', background: 'var(--page-bg)', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
+    <main className="admin-page" style={{ maxWidth: 960, minHeight: '100vh', background: 'var(--page-bg)', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+      <div style={{ display: 'grid', gap: 24 }}>
 
         <div>
           <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Gäste-Lounge</h1>

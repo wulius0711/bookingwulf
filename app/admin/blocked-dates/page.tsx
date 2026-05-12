@@ -50,8 +50,8 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
   });
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
+    <main className="admin-page" style={{ maxWidth: 960, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
+      <div style={{ display: 'grid', gap: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Sperrzeiten</h1>

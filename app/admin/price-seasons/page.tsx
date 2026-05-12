@@ -153,8 +153,8 @@ export default async function PriceSeasonsPage() {
   });
 
   return (
-    <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 960, display: 'grid', gap: 24 }}>
+    <main className="admin-page" style={{ maxWidth: 960, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', background: 'var(--page-bg)', minHeight: '100vh' }}>
+      <div style={{ display: 'grid', gap: 24 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 32, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Preisanpassungen</h1>
           <p style={{ margin: '6px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>Saisonale Preise, dynamische Rabatte und Abgaben.</p>
