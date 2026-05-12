@@ -1,0 +1,207 @@
+/* ── v4 design tokens ───────────────────────────────────────── */
+:root {
+  --v4-green:        #108ba9;
+  --v4-green-hover:  #0e7d99;
+  --v4-green-light:  #e4f4f8;
+  --v4-green-border: #90cce0;
+  --v4-navy:         #0f172a;
+  --v4-navy-2:       #1e293b;
+  --v4-body:         #555e6d;
+  --v4-muted:        #94a3b8;
+  --v4-border:       #e2e8f0;
+  --v4-surface:      #f8fafc;
+  --v4-shadow:       0 2px 12px rgba(0, 0, 0, 0.07);
+  --v4-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --v4-radius-card:  12px;
+  --v4-radius-btn:   8px;
+}
+
+/* ── Container ──────────────────────────────────────────────── */
+.v4-container {
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ── Section spacing ────────────────────────────────────────── */
+.v4-section { padding-top: 100px; padding-bottom: 100px; }
+
+/* ── Typography ─────────────────────────────────────────────── */
+.v4-eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--v4-green);
+  margin-bottom: 14px;
+}
+
+.v4-h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.07;
+  letter-spacing: -0.025em;
+  color: var(--v4-navy);
+}
+
+.v4-h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--v4-navy);
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.v4-card {
+  border-radius: var(--v4-radius-card);
+  border: 1px solid var(--v4-border);
+  background: #fff;
+  box-shadow: var(--v4-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.v4-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--v4-shadow-hover);
+  border-color: #cbd5e1;
+}
+
+.v4-card-dark {
+  border-radius: var(--v4-radius-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.v4-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--v4-radius-btn);
+  font-size: 15px;
+  font-weight: 600;
+  height: 44px;
+  padding: 0 22px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease,
+              border-color 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.v4-btn:focus-visible { outline: 2px solid var(--v4-green); outline-offset: 3px; }
+.v4-btn:hover  { transform: translateY(-1px); }
+.v4-btn:active { transform: translateY(0); }
+
+.v4-btn-primary { background: var(--v4-green); color: #fff; }
+.v4-btn-primary:hover {
+  background: var(--v4-green-hover);
+  box-shadow: 0 4px 14px rgba(16, 139, 169, 0.30);
+}
+
+.v4-btn-ghost {
+  background: transparent;
+  color: var(--v4-navy);
+  border: 1.5px solid var(--v4-border);
+}
+.v4-btn-ghost:hover { border-color: #94a3b8; background: var(--v4-surface); }
+
+.v4-btn-outline-green {
+  background: transparent;
+  color: var(--v4-green);
+  border: 1.5px solid var(--v4-green);
+}
+.v4-btn-outline-green:hover { background: var(--v4-green-light); }
+
+.v4-btn-white { background: #fff; color: var(--v4-navy); }
+.v4-btn-white:hover { background: #f1f5f9; }
+
+.v4-btn-ghost-white {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+.v4-btn-ghost-white:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.8); }
+
+/* ── Scroll-in animation ────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .v4-animate {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .v4-animate.v4-visible { opacity: 1; transform: translateY(0); }
+  .v4-d1 { transition-delay: 0.07s; }
+  .v4-d2 { transition-delay: 0.14s; }
+  .v4-d3 { transition-delay: 0.21s; }
+  .v4-d4 { transition-delay: 0.28s; }
+}
+
+/* ── Badge pulse ────────────────────────────────────────────── */
+@keyframes v4-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 139, 169, 0.25); }
+  50%       { box-shadow: 0 0 0 7px rgba(16, 139, 169, 0); }
+}
+.v4-badge-pulse { animation: v4-pulse 2.5s ease-in-out infinite; }
+
+/* ── Widget float ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes v4-float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-6px); }
+  }
+  .v4-float { animation: v4-float 4.5s ease-in-out infinite; }
+}
+
+/* ── Step connector ─────────────────────────────────────────── */
+.v4-step-connector {
+  position: absolute;
+  left: 23px;
+  top: 44px;
+  bottom: -26px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--v4-green-border), transparent);
+  z-index: 0;
+}
+
+/* ── FAQ accordion ──────────────────────────────────────────── */
+.v4-faq-body {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+.v4-faq-body.open { max-height: 400px; opacity: 1; }
+
+/* ── Nav link ───────────────────────────────────────────────── */
+.v4-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.v4-nav-link:hover                { color: #fff; }
+.v4-nav-link[aria-current="page"] { color: #fff; }
+
+/* ── Feature icon hover ─────────────────────────────────────── */
+.v4-icon-hover { transition: transform 0.2s ease; }
+.v4-card:hover .v4-icon-hover { transform: scale(1.1); }
+
+/* ── Grain texture (dark sections) ─────────────────────────── */
+.v4-grain {
+  position: relative;
+  isolation: isolate;
+}
+.v4-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: -1;
+}

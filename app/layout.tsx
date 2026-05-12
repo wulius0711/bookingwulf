@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
+import Script from "next/script";
 import CookieBanner from "./components/CookieBanner";
 import "./globals.css";
 
@@ -42,10 +43,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(!window.location.pathname.startsWith('/admin'))return;var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=d==='true'||(d===null&&s);if(dark){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.style.colorScheme='light';}var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();` }} />
-      </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Script
+          id="dark-mode-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: `(function(){try{if(!window.location.pathname.startsWith('/admin'))return;var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=d==='true'||(d===null&&s);if(dark){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.style.colorScheme='light';}var t=localStorage.getItem('admin-theme');if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();` }}
+        />
         <CookieBanner />
         {children}
       </body>

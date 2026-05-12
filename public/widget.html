@@ -521,7 +521,6 @@
       .price-box {
         background: #111111;
         color: #fff;
-        min-height: 110px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -529,6 +528,7 @@
         padding: 18px 20px;
         border-radius: calc(var(--radius) + 4px);
         box-shadow: var(--shadow);
+        align-self: stretch;
       }
 
       .price-box small {
@@ -536,6 +536,10 @@
         text-transform: uppercase;
         letter-spacing: 0.06em;
         opacity: 0.82;
+      }
+
+      .price-box #totalBoxVat {
+        opacity: 0.38;
       }
 
       .price-box strong {

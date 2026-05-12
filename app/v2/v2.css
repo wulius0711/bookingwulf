@@ -66,6 +66,17 @@
   border-color: #cbd5e1;
 }
 
+/* ── Dark-bg card variant (e.g. pain section on slate-950) ──── */
+.bw-card-dark {
+  border-radius: var(--bw-radius-card);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--bw-shadow-card);
+  transition: transform var(--bw-transition-slow), box-shadow var(--bw-transition-slow);
+}
+.bw-card-dark:hover {
+  box-shadow: var(--bw-shadow-card-hover);
+}
+
 /* ── Button base ─────────────────────────────────────────────── */
 .bw-btn {
   display: inline-flex;

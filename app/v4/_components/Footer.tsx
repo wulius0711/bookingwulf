@@ -10,17 +10,17 @@ const LEGAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-white" role="contentinfo">
-      <div className="max-w-275 mx-auto px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="border-t bg-white" style={{ borderColor: 'var(--v4-border)' }} role="contentinfo">
+      <div className="v4-container py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img src="/bookingwulf-logo.png" alt="bookingwulf" className="h-5 w-auto opacity-50" />
-          <span className="text-xs text-slate-400">© {new Date().getFullYear()} bookingwulf</span>
+          <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" className="h-5 w-auto opacity-40 brightness-0" />
+          <span className="text-xs" style={{ color: 'var(--v4-muted)' }}>© {new Date().getFullYear()} bookingwulf</span>
         </div>
         <nav aria-label="Rechtliche Links">
           <ul className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 list-none m-0 p-0">
             {LEGAL_LINKS.map(({ href, label }) => (
               <li key={href}>
-                <Link href={href} className="text-xs text-slate-400 hover:text-slate-700 transition-colors">{label}</Link>
+                <Link href={href} className="text-xs transition-colors hover:text-slate-700" style={{ color: 'var(--v4-muted)' }}>{label}</Link>
               </li>
             ))}
           </ul>
