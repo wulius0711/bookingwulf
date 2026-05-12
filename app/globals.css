@@ -184,6 +184,16 @@ button, a[role="button"], input[type="submit"] {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   color: var(--text-primary);
 }
+/* Replace native white focus ring on all raw admin buttons */
+.admin-layout button:not(.ui-btn):focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.admin-layout button:not(.ui-btn) {
+  outline: none;
+}
+
 .admin-page.w-sm { max-width: 720px; }
 .admin-page.w-md { max-width: 960px; }
 .admin-page.w-lg { max-width: 1100px; }

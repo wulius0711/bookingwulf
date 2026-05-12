@@ -175,9 +175,9 @@ export default function WidgetConfigs({ hotelId, hotelSlug, configs, host }: Pro
           </form>
         </div>
       ) : totalCount < 1 ? (
-        <button type="button" onClick={openNew} style={{ padding: '10px 20px', borderRadius: 8, background: 'var(--surface)', color: 'var(--text-primary)', border: '1px dashed var(--border)', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}>
+        <Button variant="secondary" type="button" onClick={openNew} style={{ border: '1px dashed var(--border)', width: '100%', justifyContent: 'flex-start' }}>
           + Neue Konfiguration
-        </button>
+        </Button>
       ) : null}
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Button from '../components/ui/Button';
 
 type Lead = {
   id: number;
@@ -229,8 +230,8 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
             </select>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={createLead} className="btn-shine" style={{ padding: '7px 16px', background: '#111827', color: '#fff', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Speichern</button>
-            <button onClick={() => setNewLeadOpen(false)} className="btn-shine" style={{ padding: '7px 16px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 7, fontSize: 13, cursor: 'pointer' }}>Abbrechen</button>
+            <Button variant="primary" size="sm" type="button" onClick={createLead}>Speichern</Button>
+            <Button variant="secondary" size="sm" type="button" onClick={() => setNewLeadOpen(false)}>Abbrechen</Button>
           </div>
         </div>
       )}
@@ -317,38 +318,30 @@ export default function OutreachClient({ initialLeads, zohoConfigured }: Props) 
                   <td style={{ padding: '10px 14px' }}>
                     {isEditing ? (
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button onClick={() => saveEdit(lead.id)} className="btn-shine" style={{ padding: '4px 10px', background: '#111827', color: '#fff', border: 'none', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Speichern</button>
-                        <button onClick={() => setEditId(null)} className="btn-shine" style={{ padding: '4px 10px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>Abbrechen</button>
+                        <Button variant="primary" size="sm" type="button" onClick={() => saveEdit(lead.id)}>Speichern</Button>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => setEditId(null)}>Abbrechen</Button>
                       </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                         {lead.status !== 'gesendet' && lead.status !== 'kein-interesse' && lead.status !== 'abgeschlossen' && zohoConfigured && (
-                          <button
-                            onClick={() => { if (window.confirm(`E-Mail an ${lead.email} senden?`)) sendEmail(lead); }}
+                          <Button
+                            variant="primary" size="sm" type="button"
+                            loading={sending === lead.id}
                             disabled={sending === lead.id || !lead.email}
                             title={!lead.email ? 'Keine E-Mail-Adresse' : 'E-Mail senden'}
-                            style={{
-                              padding: '4px 10px', background: '#1d4ed8', color: '#fff', border: 'none',
-                              borderRadius: 6, fontSize: 12, fontWeight: 600,
-                              cursor: (sending === lead.id || !lead.email) ? 'not-allowed' : 'pointer',
-                              opacity: !lead.email ? 0.4 : 1,
-                            }}
+                            style={!lead.email ? { opacity: 0.4 } : undefined}
+                            onClick={() => { if (window.confirm(`E-Mail an ${lead.email} senden?`)) sendEmail(lead); }}
                           >
                             {sending === lead.id ? '…' : 'Senden'}
-                          </button>
+                          </Button>
                         )}
-                        <button
+                        <Button
+                          variant="ghost" size="sm" type="button"
                           onClick={() => { setEditId(lead.id); setEditData({ betrieb: lead.betrieb, inhaber: lead.inhaber ?? '', email: lead.email ?? '', phone: lead.phone ?? '', kontaktPer: lead.kontaktPer ?? '', website: lead.website ?? '', region: lead.region ?? '' }); }}
-                          style={{ padding: '4px 8px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: 'var(--text-muted)' }}
                         >
                           Bearbeiten
-                        </button>
-                        <button
-                          onClick={() => deleteLead(lead.id)}
-                          style={{ padding: '4px 8px', background: 'transparent', border: '1px solid #fee2e2', borderRadius: 6, fontSize: 12, cursor: 'pointer', color: '#dc2626' }}
-                        >
-                          ✕
-                        </button>
+                        </Button>
+                        <Button variant="danger" size="sm" type="button" onClick={() => deleteLead(lead.id)}>✕</Button>
                       </div>
                     )}
                   </td>

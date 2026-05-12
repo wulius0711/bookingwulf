@@ -14,6 +14,7 @@ import WidgetConfigs from './WidgetConfigs';
 import InfoTooltip from '../components/InfoTooltip';
 import StandardButton from './StandardButton';
 import SaveButton from '../components/SaveButton';
+import Button from '../components/ui/Button';
 import FeatureToggles from './FeatureToggles';
 import FontUploadRow from './FontUploadRow';
 import PaymentSettings from './PaymentSettings';
@@ -148,18 +149,6 @@ const actionRowStyle: React.CSSProperties = {
 
 
 
-const secondaryButtonStyle: React.CSSProperties = {
-  padding: '10px 16px',
-  borderRadius: 8,
-  background: 'var(--surface)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border)',
-  cursor: 'pointer',
-  fontSize: 14,
-  fontWeight: 600,
-  textDecoration: 'none',
-};
-
 const previewTitleStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 22,
@@ -275,9 +264,7 @@ export default async function Page({ searchParams }: PageProps) {
                 ))}
               </select>
 
-              <button type="submit" style={secondaryButtonStyle}>
-                Laden
-              </button>
+              <Button variant="secondary" type="submit">Laden</Button>
             </form>
           )}
 
@@ -608,7 +595,7 @@ export default async function Page({ searchParams }: PageProps) {
 
             {/* ACTIONS */}
             <div style={{ ...actionRowStyle, justifyContent: 'flex-end' }}>
-              <StandardButton hotelId={selected.id} style={secondaryButtonStyle} />
+              <StandardButton hotelId={selected.id} />
 
               <SaveButton />
             </div>

@@ -200,9 +200,9 @@ function MappingRow({ apt, initialValue, onSave }: { apt: Apartment; initialValu
         placeholder="Room ID"
         style={{ padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, boxSizing: 'border-box', background: 'var(--surface)', color: 'var(--text-primary)' }}
       />
-      <button onClick={handleSave} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: saved ? 'var(--status-booked-text)' : 'var(--text-secondary)', fontWeight: saved ? 700 : 400 }}>
+      <Button variant="secondary" size="sm" type="button" onClick={handleSave} style={saved ? { color: 'var(--status-booked-text)', fontWeight: 700 } : undefined}>
         {saved ? '✓' : 'Speichern'}
-      </button>
+      </Button>
     </div>
   );
 }

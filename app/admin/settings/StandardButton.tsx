@@ -2,8 +2,9 @@
 
 import { useTransition } from 'react';
 import { resetHotelSettings } from './actions';
+import Button from '../components/ui/Button';
 
-export default function StandardButton({ hotelId, style }: { hotelId: number; style?: React.CSSProperties }) {
+export default function StandardButton({ hotelId }: { hotelId: number }) {
   const [pending, startTransition] = useTransition();
 
   function handleClick() {
@@ -14,8 +15,8 @@ export default function StandardButton({ hotelId, style }: { hotelId: number; st
   }
 
   return (
-    <button type="button" onClick={handleClick} style={style} disabled={pending}>
+    <Button variant="secondary" type="button" onClick={handleClick} loading={pending}>
       {pending ? 'Wird zurückgesetzt…' : 'Standard'}
-    </button>
+    </Button>
   );
 }

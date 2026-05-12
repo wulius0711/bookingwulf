@@ -450,7 +450,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', paddingTop: 4 }}>
                     <a href={`/admin/requests`} style={{ fontSize: 13, color: '#94a3b8', textDecoration: 'underline', lineHeight: '32px' }}>Zur Anfragenübersicht →</a>
                     {!confirmDelete ? (
-                      <button onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
+                      <Button variant="danger" size="sm" type="button" onClick={() => setConfirmDelete(true)}>Löschen</Button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
                         <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
@@ -489,7 +489,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       </div>
                       <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.</p>
                       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button type="button" onClick={() => setSelectedItem(null)} style={{ padding: '6px 16px', background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>Schließen</button>
+                        <Button variant="ghost" size="sm" type="button" onClick={() => setSelectedItem(null)}>Schließen</Button>
                       </div>
                     </div>
                   );
@@ -530,7 +530,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
                     {!confirmDelete ? (
-                      <button type="button" onClick={() => setConfirmDelete(true)} style={{ padding: '6px 14px', background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Löschen</button>
+                      <Button variant="danger" size="sm" type="button" onClick={() => setConfirmDelete(true)}>Löschen</Button>
                     ) : (
                       <div style={{ display: 'flex', gap: 6 }}>
                         <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Button from '../components/ui/Button';
 
 type Preset = {
   id: number;
@@ -77,16 +78,13 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
   }
 
   const labelStyle = { fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' as const, letterSpacing: '0.05em' };
-  const presetBtnStyle = { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', color: 'var(--text-muted)' };
 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={labelStyle}>Gespeicherte Presets ({presets.length}/3)</span>
         {presets.length < 3 && !showNameInput && (
-          <button type="button" className="btn-shine" onClick={() => setShowNameInput(true)} style={{ ...presetBtnStyle, background: 'var(--accent)', color: '#fff', border: 'none' }}>
-            + Speichern
-          </button>
+          <Button variant="primary" size="sm" type="button" onClick={() => setShowNameInput(true)}>+ Speichern</Button>
         )}
       </div>
 
@@ -100,10 +98,8 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
             placeholder="Preset-Name"
             style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 14 }}
           />
-          <button type="button" className="btn-shine" onClick={savePreset} disabled={saving || !nameInput.trim()} style={{ ...presetBtnStyle, background: 'var(--accent)', color: '#fff', border: 'none' }}>
-            {saving ? '…' : 'OK'}
-          </button>
-          <button type="button" onClick={() => setShowNameInput(false)} style={presetBtnStyle}>Abbrechen</button>
+          <Button variant="primary" size="sm" type="button" loading={saving} onClick={savePreset} disabled={saving || !nameInput.trim()}>OK</Button>
+          <Button variant="secondary" size="sm" type="button" onClick={() => setShowNameInput(false)}>Abbrechen</Button>
         </div>
       )}
 
@@ -119,15 +115,15 @@ export default function SettingsPresets({ hotelId, initialPresets }: { hotelId: 
             ))}
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginLeft: 4 }}>{preset.name}</span>
           </div>
-          <button type="button" onClick={() => applyPreset(preset)} style={presetBtnStyle}>Anwenden</button>
-          <button type="button" onClick={() => deletePreset(preset.id)} style={{ ...presetBtnStyle, color: '#dc2626', borderColor: '#fecaca' }}>Löschen</button>
+          <Button variant="secondary" size="sm" type="button" onClick={() => applyPreset(preset)}>Anwenden</Button>
+          <Button variant="danger" size="sm" type="button" onClick={() => deletePreset(preset.id)}>Löschen</Button>
         </div>
       ))}
 
       {appliedHint && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 14px', background: 'var(--accent)', borderRadius: 8 }}>
           <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-on-accent)' }}>Preset angewendet — jetzt speichern, damit das Widget aktualisiert wird.</span>
-          <button type="button" onClick={() => setAppliedHint(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-on-accent)', fontSize: 16, lineHeight: 1, padding: 0, opacity: 0.8 }}>×</button>
+          <Button variant="ghost" size="sm" type="button" onClick={() => setAppliedHint(false)} style={{ color: 'var(--text-on-accent)', opacity: 0.8, padding: '0 4px' }}>×</Button>
         </div>
       )}
 
