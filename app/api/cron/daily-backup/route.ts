@@ -57,6 +57,7 @@ export async function GET(req: Request) {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 
   // Delete backups older than RETENTION_DAYS
