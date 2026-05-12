@@ -194,10 +194,6 @@ button, a[role="button"], input[type="submit"] {
   outline: none;
 }
 
-.admin-page.w-sm { max-width: 720px; }
-.admin-page.w-md { max-width: 960px; }
-.admin-page.w-lg { max-width: 1100px; }
-
 .admin-card {
   background: var(--surface);
   border: 1px solid var(--border);

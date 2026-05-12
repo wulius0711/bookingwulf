@@ -74,7 +74,7 @@ async function SuperAdminDashboard() {
   ];
 
   return (
-    <main className="admin-page w-lg">
+    <main className="admin-page" style={{ maxWidth: 1100 }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={headlineStyle}>Übersicht</h1>
         <p style={sublineStyle}>Alle Hotels auf einen Blick</p>

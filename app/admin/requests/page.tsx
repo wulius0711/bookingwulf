@@ -46,7 +46,7 @@ export default async function RequestsPage() {
       : [];
 
   return (
-    <main className="admin-page w-md">
+    <main className="admin-page" style={{ maxWidth: 960 }}>
       <div
         style={{
           display: 'flex',

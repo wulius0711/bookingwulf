@@ -43,7 +43,7 @@ export default async function NukiPage() {
   }
 
   return (
-    <main className="admin-page w-sm">
+    <main className="admin-page" style={{ maxWidth: 720 }}>
       <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
         <h1 style={{ margin: 0 }}>Schlüsselloses Einchecken</h1>
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>

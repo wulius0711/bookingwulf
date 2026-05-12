@@ -21,7 +21,7 @@ export default async function ThingsToSeePage() {
     : [[], []];
 
   return (
-    <main className="admin-page w-sm">
+    <main className="admin-page" style={{ maxWidth: 720 }}>
       <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 6 }}>
         Umgebung
       </h1>
