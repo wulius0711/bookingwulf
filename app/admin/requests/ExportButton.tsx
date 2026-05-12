@@ -104,7 +104,7 @@ export default function ExportButton() {
                 onClick={download}
                 className="btn-shine"
                 style={{
-                  flex: 1, padding: '10px 0', background: 'var(--accent)', color: '#fff',
+                  flex: 1, padding: '10px 0', background: 'var(--accent)', color: 'var(--text-on-accent)',
                   border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
                 }}
               >

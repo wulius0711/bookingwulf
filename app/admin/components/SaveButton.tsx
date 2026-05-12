@@ -32,7 +32,7 @@ export default function SaveButton({
         style={{
           padding: '10px 20px',
           background: 'var(--accent)',
-          color: '#fff',
+          color: 'var(--text-on-accent)',
           border: 'none',
           borderRadius: 8,
           fontSize: 14,
