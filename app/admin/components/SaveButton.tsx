@@ -20,6 +20,7 @@ export default function SaveButton({
   const instantBookingRef = useRef(initialInstantBooking);
   const anyPaymentRef = useRef(initialAnyPayment);
   const [blocked, setBlocked] = useState(false);
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (wasPending.current && !pending) {
@@ -33,7 +34,6 @@ export default function SaveButton({
   useEffect(() => {
     function update() { setBlocked(instantBookingRef.current && !anyPaymentRef.current); }
 
-    // Set initial blocked state after hydration
     update();
 
     const onInstant = (e: Event) => { instantBookingRef.current = (e as CustomEvent<{ enabled: boolean }>).detail.enabled; update(); };
@@ -54,9 +54,10 @@ export default function SaveButton({
     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
       <button
         type={blocked ? 'button' : 'submit'}
-        disabled={isDisabled}
+        disabled={pending}
         className="btn-shine"
-        title={blocked ? 'Bitte zuerst eine Zahlungsart aktivieren' : undefined}
+        onMouseMove={blocked ? (e) => setTooltipPos({ x: e.clientX, y: e.clientY }) : undefined}
+        onMouseLeave={blocked ? () => setTooltipPos(null) : undefined}
         style={{
           padding: '10px 20px',
           background: blocked ? 'var(--primitive-gray-300)' : 'var(--accent)',
@@ -72,13 +73,28 @@ export default function SaveButton({
       >
         {pending ? `${label}…` : label}
       </button>
+      {tooltipPos && (
+        <span style={{
+          position: 'fixed',
+          left: tooltipPos.x + 14,
+          top: tooltipPos.y + 14,
+          padding: '7px 14px',
+          background: 'var(--surface-2)',
+          color: 'var(--text-primary)',
+          border: '1px solid var(--border)',
+          fontSize: 12,
+          fontWeight: 500,
+          borderRadius: 8,
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+        }}>
+          Verbindliche Buchung ist aktiv. Bitte zuerst eine Zahlungsart aktivieren.
+        </span>
+      )}
       {saved && !blocked && (
         <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ Gespeichert</span>
-      )}
-      {blocked && (
-        <span style={{ fontSize: 13, color: 'var(--primitive-yellow-700)', fontWeight: 500 }}>
-          Zahlungsart fehlt
-        </span>
       )}
     </div>
   );
