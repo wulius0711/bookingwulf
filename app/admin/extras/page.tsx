@@ -31,7 +31,7 @@ export default async function ExtrasPage() {
   const canUseExtras = isSuperAdmin || hasPlanAccess(hotelPlan, 'pro');
 
   return (
-    <main className="admin-page" style={{ maxWidth: 960, background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <main className="admin-page" style={{ background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ display: 'grid', gap: 24 }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>

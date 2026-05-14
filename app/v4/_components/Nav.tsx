@@ -6,9 +6,10 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { href: '/v4/features', label: 'Features' },
-  { href: '/v4/preise',   label: 'Preise' },
-  { href: '/v4/demo',     label: 'Demo' },
+  { href: '/v4/features',        label: 'Features' },
+  { href: '/v4/der-unterschied', label: 'Der Unterschied' },
+  { href: '/v4/preise',          label: 'Preise' },
+  { href: '/v4/demo',            label: 'Demo' },
 ];
 
 export default function Nav() {
