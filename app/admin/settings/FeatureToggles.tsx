@@ -78,7 +78,7 @@ export default function FeatureToggles({ initialValues, anyPaymentEnabled }: Pro
       {showPaymentWarning && (
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px', background: 'var(--primitive-yellow-50)', border: '1px solid var(--primitive-yellow-100)', borderRadius: 8, fontSize: 13, color: 'var(--primitive-yellow-800)', lineHeight: 1.45 }}>
           <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}>⚠️</span>
-          Verbindliche Buchung ist aktiv, aber keine Zahlungsart konfiguriert. Bitte unter <strong>Zahlungsarten</strong> mindestens eine Methode aktivieren.
+          <span>Verbindliche Buchung aktiv, aber keine Zahlungsart konfiguriert — bitte mindestens eine Methode unter <strong>Zahlungsarten</strong> aktivieren.</span>
         </div>
       )}
     <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
