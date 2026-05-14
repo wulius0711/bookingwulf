@@ -11,7 +11,7 @@
 |--------|-----|-------|
 | App (Live) | bookingwulf.com/admin | E-Mail + Passwort |
 | Vercel | vercel.com | — |
-| Neon (Datenbank) | console.neon.tech | — |
+| Railway (Datenbank) | railway.app | — |
 | Stripe | dashboard.stripe.com | — |
 | Resend (E-Mail) | resend.com | — |
 | Sentry (Monitoring) | sentry.io | — |
@@ -120,25 +120,29 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Feature | Priorität | Plan | Status |
 |---------|-----------|------|--------|
 | Beds24 Channel Manager | Hoch | Pro | ✅ Live |
-| Verpflegungsarten (Frühstück, Halbpension) | Mittel | Pro | 📋 Geplant |
-| Preislisten-Widget (standalone, ohne Buchungsflow) | Niedrig | Alle | 📋 Geplant |
 | Vorauszahlung via Stripe | Hoch | Business | ✅ Live (Hotel-eigener Stripe-Account) |
 | Automatisierte Trigger-E-Mails (Upsell T-7, Anreise T-1, Bewertung T+1) | Hoch | Pro | 📋 Geplant (Bewertung T+X ✅ Live, Upsell in Bestätigungs-E-Mail ✅ Live) |
-| Gast-Portal (Buchungsübersicht, Check-in/out, Extras, Hausinfos, Umgebung) | — | Alle | ✅ Live (Mai 2026) — offline-fähig via Service Worker |
-| Verfügbarkeits-Widget (Gantt-Kalender einbettbar auf Hotel-Website) | Niedrig | Add-on €9/Mo | 💡 Idee |
-| Review-System / Bewertungen | Mittel | Pro | 💡 Idee |
 | Gutschein- & Rabattcodes | Mittel | Pro | ✅ Live (Mai 2026) — Kauf via Stripe, PDF per E-Mail, Wert- & Nächte-Gutscheine, Einlösung im Widget |
+| DATEV / Buchhaltungsexport (CSV mit Steuerpositionen) | Mittel | Alle | ✅ Live |
+| Verpflegungsarten (Frühstück, Halbpension) | Mittel | Pro | 📋 Geplant |
+| Review-System / Bewertungen | Mittel | Pro | 💡 Idee |
 | Preisvergleichs-Badge im Widget ("X% günstiger als Booking.com") | Mittel | Pro | 💡 Idee |
 | Last-Minute Blind Booking — Gast bucht ohne Zimmerwahl, bekommt verfügbares Apartment zugewiesen + konfigurierbaren Rabatt (z.B. 30%). Betreiber wählt welche Apartments qualifizieren. Erscheint im Widget wenn Anreise ≤ X Tage. | Mittel | Pro + Business | 💡 Idee |
-| Workation-Paket — Zimmer + Arbeitsplatz kombinierbar als Zusatzleistung, Zielgruppe Remote Worker. Konfigurierbar als Extra mit eigenem Preis und Beschreibung. | Niedrig | Pro + Business | 💡 Idee |
 | Housekeeping-Modul (Reinigungsaufgaben per Magic-Link) | Mittel | Pro | 💡 Idee |
-| DATEV / Buchhaltungsexport (CSV mit Steuerpositionen) | Mittel | Alle | ✅ Live |
+| **"Heute"-Dashboard-Block** — tägliche Zusammenfassung oben im Admin: Anreisen heute, offene Anfragen, nächste freie Nacht, unbeantwortete Nachrichten (wenn Messaging live). Kein KI, nur smarte Aufbereitung vorhandener Daten. | Mittel | Alle | 💡 Idee |
+| **Guest Journey Add-on** — Pre-Arrival Mail + Messenger + Extras-Upsell (inspiriert von reguest.io): automatisierte Pre-Arrival-Mail T-5 mit personalisiertem Zusatzleistungs-Angebot, In-Stay-Messaging (Chat-ähnlich über Gäste-Lounge), Post-Stay-Upsell für Wiederbucher | Mittel | Add-on ~€19/Mo | 💡 Idee |
+| **Website Builder** — Template-basierter Editor für Hotel-Websites direkt in bookingwulf. Onepager als Standard (Sections ein/aus: Hero, Zimmer, Galerie, Ausstattung, Lage, Buchung, Kontakt), Multipager als Upgrade (eigene Unterseiten pro Zimmer, Aktivitäten, Blog). Buchungs-Widget automatisch eingebettet. Eigene Domain. Competitor: Lodgify. Aufwand: ~6–8 Wochen (Template-Editor) oder 4–6 Monate (vollwertiger visueller Builder). Empfehlung: Onepager-Standard + Multipager als Pro-Feature. | Mittel | Business | 💡 Idee |
+| Preislisten-Widget (standalone, ohne Buchungsflow) | Niedrig | Alle | 📋 Geplant |
+| Verfügbarkeits-Widget (Gantt-Kalender einbettbar auf Hotel-Website) | Niedrig | Add-on €9/Mo | 💡 Idee |
+| Workation-Paket — Zimmer + Arbeitsplatz kombinierbar als Zusatzleistung, Zielgruppe Remote Worker. Konfigurierbar als Extra mit eigenem Preis und Beschreibung. | Niedrig | Pro + Business | 💡 Idee |
+| **Co-Host / KI-Automatisierungen** — KI-gestützte Auto-Replies auf Gästenachrichten (inspiriert von Lodgify Cohost). Gast schreibt → KI antwortet automatisch auf Basis von Hausregeln, Check-in-Infos, FAQ. Betreiber bekommt Zusammenfassung. Ergänzt die bestehende Messaging-Funktion. | Niedrig | Business | 💡 Idee |
 | Google Hotels Free Booking Links (Meta-Suche) | Niedrig | Business | 💡 Idee |
 | Affiliate- / Empfehlungsprogramm für Betreiber | Niedrig | — | 💡 Idee |
 | SMS-Benachrichtigungen | Niedrig | Pro | 💡 Idee |
 | Mehrsprachiges Admin-Panel | Niedrig | Alle | 💡 Idee |
 | Weitere Widget-Sprachen (FR, HR...) | Niedrig | Alle | 💡 Idee |
 | Mobile App (Admin) | Niedrig | Alle | 💡 Idee |
+| Gast-Portal (Buchungsübersicht, Check-in/out, Extras, Hausinfos, Umgebung) | — | Alle | ✅ Live (Mai 2026) — offline-fähig via Service Worker |
 
 ---
 
@@ -257,6 +261,52 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 - Visuell nicht anpassbar an das eigene Branding
 - jQuery-Abhängigkeit kann mit moderner Website-Technik kollidieren
 - DSGVO-Risiko durch Drittanbieter-Ressourcen auf jeder Seite
+
+### Lodgify
+
+Internationaler All-in-One-Anbieter, einer der bekanntesten Namen im Segment.
+
+**Produkt:**
+- **Website Builder** — ersetzt die eigene Website komplett (eigene Domain, Templates, SEO-Tools). Kernprodukt seit Jahren: lodgify.com/vacation-rental-website-builder
+- **Booking Engine** — Direktbuchung integriert in die Lodgify-Website
+- **Channel Manager** — Sync mit Airbnb, Booking.com, VRBO etc.
+- **Lodgify Cohost (Pre-Launch)** — KI-gestützte Automatisierung: Auto-Reply auf Gästenachrichten, operative Aufgaben, tägliche Zusammenfassungen. Noch kein Preis bekannt, Warteliste.
+
+**Preise:** ~€17–50+/Mo je nach Plan (Website Builder inklusive)
+
+**Preisstruktur (Stand Mai 2026, EUR, jährliche Abrechnung):**
+| Plan | Preis | Limit |
+|------|-------|-------|
+| Basic | —€/Mo (unklar) | max. 1 Property |
+| Starter | —€/Mo (unklar) | max. 2 Properties |
+| Professional | €96/Mo (war €120) | unlimitiert |
+| Ultimate | €128/Mo (war €160) | unlimitiert |
+
+- **Basic** (max. 1 Property): Unified Calendar (Airbnb, Vrbo, Booking.com), AI-powered Unified Inbox, Easy Self-Onboarding
+- **Starter** (max. 2 Properties): + No-code Website Builder + Booking Widget, Custom Rates & Secure Payments, Personalized Onboarding mit Lodgify-Expert
+- **Professional** (€96/Mo): + Automated Messages, Google Vacation Rentals, Damage Protection Pre-Authorization, Manual Payment Collection, E-Mail & Tel.-Support
+- **Ultimate** (€128/Mo): + Task Management, Automated Check-in, Owner Payments/Reports, Guest Invoices & Advanced Analytics, Guest Guidebook Mobile App, Free Turno Subscription (Reinigungskoordination), Priority Support
+**Über alle Pläne:** 0% Buchungsgebühren, 7 Tage Free Trial, keine Setup-Gebühren
+
+**Features die bookingwulf (noch) nicht hat:**
+- Dynamic Pricing (KI, via Beyond-Integration)
+- Damage Protection / Kaution-Vorauthorisierung
+- Google Vacation Rentals Integration
+- Guest Registration (automatisierte Meldepflicht in 18+ Ländern)
+- Gäste-Rechnungen
+- White-Label
+
+**Kernunterschied zu bookingwulf:**
+Lodgify ist ein vollständiges PMS für Property Manager mit mehreren Objekten, international ausgerichtet. bookingwulf ist ein fokussiertes Direktbuchungs-Widget für kleine Betriebe im DACH-Raum. Der Preisvergleich für 1 Property klingt günstig ($25/Mo), aber für 10+ Objekte wird Lodgify teuer — und bringt Komplexität mit die eine österreichische Pension nicht braucht.
+
+**Strategische Einschätzung:**
+Der "Direct Plan" (kostenlos) ist ein Angriff auf den Entry-Level-Markt — Lodgify will früh Nutzer binden. bookingwulfs Moat: DACH-Fokus, persönlicher Support, einfacheres Setup, kein Lock-in in ein Ökosystem das man nicht vollständig nutzt.
+
+**Pitch-Angriffspunkte:**
+- „Lodgify ist für Property Manager mit 10+ Objekten gebaut — Sie haben eine Pension"
+- „Bei Lodgify zahlen Sie für Dynamic Pricing, Guest Registration und White-Label — brauchen Sie das?"
+- „bookingwulf ist in 5 Minuten auf Ihrer bestehenden Website — kein Replatforming"
+- „Auf Deutsch, mit direktem Support — kein internationales Ticket-System"
 
 ## Messaging / Kernbotschaft
 
@@ -459,9 +509,7 @@ Alternativen:
 | Deployments | Vercel — jedes Deploy bleibt gespeichert, 1-Klick-Rollback | ✅ Aktiv |
 | Buchungsdaten | Wöchentliches CSV per Cron (So 03:00 UTC) → support@bookingwulf.com | ✅ Aktiv seit Mai 2026 |
 | DB-Volldump | Tägliches JSON-Backup aller Tabellen → Vercel Blob (backups/YYYY-MM-DD.json), 30 Tage Retention | ✅ Aktiv seit Mai 2026 |
-| Datenbank | Neon Free Plan — kein Point-in-Time Recovery | ⚠️ Upgrade empfohlen (Juni 2026) |
-
-**Neon Upgrade-Empfehlung:** Bei Wachstum auf Launch Plan (~$19/Mo) upgraden → 7 Tage Point-in-Time Recovery. Erinnerung: Juni 2026.
+| Datenbank | Railway PostgreSQL (Amsterdam/EU) — Hobby $5/Mo, kein Sleeping, always-on | ✅ Aktiv seit Mai 2026 |
 
 ---
 
@@ -471,7 +519,7 @@ Alternativen:
 |---------|-------------|---------|
 | Framework | Next.js (App Router) | 16.2.2 |
 | UI | React + Tailwind CSS v4 | 19.2.4 |
-| Datenbank | PostgreSQL via Neon (Frankfurt) | — |
+| Datenbank | PostgreSQL via Railway (Amsterdam/EU) | — |
 | ORM | Prisma | 7.7.0 |
 | Auth | JWT (jose + Node.js crypto) | — |
 | Zahlung | Stripe SDK | 22.0.2 |
@@ -487,6 +535,7 @@ Alternativen:
 
 > Wichtige Produkt- und Business-Entscheidungen hier festhalten
 
+- **Mai 2026 — Prio gering: E-Mail-Provider Wechsel (Resend → Brevo)** — Brevo ist EU-Unternehmen (Paris), DSGVO-konformer als Resend (US). Brevo Free: 9.000 E-Mails/Mo (vs. Resend 3.000), Paid: €25/Mo → 20k (Resend $20 → 50k). Kein nativer React-Email-Support, aber React Email rendert zu HTML → kein echter Verlust. Wechselaufwand: ~3–4h (SDK tauschen, `resend.emails.send()` → Brevo API, API-Key). Empfehlung: erst wechseln wenn Kunde aktiv nach EU-only fragt oder Volumen stark steigt.
 - **Mai 2026:** Custom-Feature-Service — Hotels können hotel-spezifische Features gegen Einmalzahlung (€250–800 je Komplexität) beauftragen. Technisch sauber hinter Feature-Flag gebaut, landet auf der Roadmap und wird bei Nachfrage in einen Plan integriert (Pilot-Kunde bekommt es gratis weiter). Kommunikation: persönlich im Onboarding oder per CTA in der Trial-Bestätigungsmail — nicht öffentlich, um unrealistische Anfragen zu vermeiden. USP: direkter Kontakt zum Entwickler, kein Ticket-System, Kunde gestaltet die Plattform mit. Pricing-Argument: nicht nach Stunden, sondern nach Wert für den Kunden.
 - **April 2026:** Pricing-Strategie Add-ons vs. Pläne: Features grundsätzlich in Pläne integrieren, Add-ons nur für echte Spalter-Features (manche wollen es unbedingt, andere nie). Vorauszahlung → Business (kein eigener Add-on), um den USP "0% Provision / keine Gebühren" zu schützen. Keine eigene Transaktionsgebühr — Stripe-Fees laufen direkt über den Kunden-Account. Trigger-E-Mails → Pro.
 - **April 2026:** Almenparadies Gaistal als erster Pilot-Kunde live
@@ -495,4 +544,33 @@ Alternativen:
 - **Design-Entscheid:** Keine inline Styles — immer CSS-Klassen (verhindert Theme-Konflikte)
 - **Architektur-Entscheid:** Multi-Tenancy via hotelId (kein Schema-Splitting), Daten physisch in Frankfurt
 - **Auth-Entscheid:** Kein Auth.js / NextAuth — eigene JWT-Implementierung für volle Kontrolle
+- **Mai 2026 — Idee: Operative Automatisierungen ("Weniger Routinearbeit")** — Inspiriert von Lodgify Cohost. Kein KI nötig — einfache "wenn X dann Y" Trigger lösen 90% der Fälle:
+  1. **Reinigungs-Trigger** — nach Check-out automatisch E-Mail/SMS an konfigurierte Reinigungs-Kontakte. Schon als "Housekeeping-Modul" in Roadmap. Erweiterung: Betreiber legt im Admin eine "Reinigungskontakt"-E-Mail an, bekommt nach jedem Check-out automatisch eine Benachrichtigung mit Apartment-Name, Check-out-Zeit, nächster Anreise.
+  2. **Check-in Koordination (T-1 Mail)** — automatische Mail an Gast einen Tag vor Anreise: Anreise-Infos, Türcode/Schlüsselanweisung, Check-in-Zeit, Kontakt bei Problemen. Teil des Guest Journey Add-ons.
+  3. **Late Check-out / Early Check-in Anfragen** — Gast kann direkt über Gäste-Lounge anfragen, Betreiber bestätigt mit einem Klick im Admin. Kein E-Mail-Ping-Pong.
+  4. **Stornierungskoordination** — bei Stornierung automatisch Reinigungsteam abbestellen (E-Mail) + optionale Benachrichtigung an den Betreiber.
+  - **Positionierung:** "Ihr Ablauf läuft — auch wenn Sie nicht am Handy sind." Kein KI-Versprechen, aber konkret und vertrauenswürdig für kleine Betriebe.
+
+- **Mai 2026 — Idee: Tägliche Zusammenfassung als Benachrichtigung** — Dieselben Daten wie der "Heute"-Dashboard-Block, aber als Push/Nachricht: "2 Anreisen heute · 1 offene Anfrage · Nächste freie Nacht: 14. Juni." Betreiber muss nicht einloggen. Optionen nach Aufwand:
+  1. **E-Mail (empfohlen, Prio 1)** — Cron-Job täglich 07:00, Resend bereits vorhanden, Opt-in im Admin. ~1 Tag Aufwand.
+  2. **PWA Web Push (Prio 2)** — Service Worker bereits vorhanden, kostenlos, kein Drittanbieter. Einschränkung: iOS erst ab 16.4 + PWA muss installiert sein.
+  3. **Telegram Bot (Prio 3)** — kostenlos, keine Meta-Verifizierung, Betreiber verbindet Account einmalig im Admin. Nische, aber schnell umsetzbar.
+  4. **WhatsApp Business API (später)** — mächtigste Reichweite, aber Meta-Verifizierung + approved Templates + Kosten (~€0.05–0.10/Msg). Erst bei skalierterer Nutzerbasis sinnvoll.
+
+- **Mai 2026 — Idee: "Heute"-Dashboard-Block** — Inspiriert von Lodgify Cohost ("Wenn etwas Aufmerksamkeit braucht, erfahren Sie es sofort"). Kleiner Block oben im Admin-Dashboard mit täglicher Handlungsübersicht: "2 Gäste reisen heute an · 1 unbeantwortete Anfrage · Nächste freie Nacht: 14. Juni". Keine KI nötig — nur smarte Aggregation vorhandener DB-Daten (Buchungen, Anfragen, Nachrichten, Kalender). LP-Argument: "Behalten Sie den Überblick — ohne täglich reinzuschauen." Technisch: Server Component im Dashboard, ~1 Tag Aufwand.
+
+- **Mai 2026 — Idee: Guest Journey Add-on** (inspiriert von reguest.io): Optionales Add-on (~€19/Mo) das den Buchungsflow nach der Bestätigung verlängert und aktiv Mehrwert + Umsatz generiert. Drei Säulen:
+  1. **Pre-Arrival Mail (T-5)** — Automatische personalisierte E-Mail 5 Tage vor Anreise. Inhalt: Willkommenstext, Anreise-Infos (Anfahrt, Parkplatz, Check-in-Zeit), ausgewählte Extras aus dem Katalog mit 1-Klick-Buchung (Link in Gäste-Lounge), optionaler Upgrade-Angebot (z.B. größeres Zimmer). Hotel konfiguriert Vorlage im Admin, Platzhalter werden automatisch befüllt.
+  2. **In-Stay Messenger** — Einfacher Chat-Kanal über die Gäste-Lounge. Gast schreibt, Betreiber antwortet im Admin (Push-Notification oder Mail-Fallback). Kein WhatsApp-Ersatz, aber Low-Friction-Kanal für "Handtücher fehlen", "Was empfehlen Sie zum Abendessen?" etc. Differenziert vs. reguest.io: kein separates Tool, direkt in der Gäste-Lounge.
+  3. **Post-Stay Upsell** — E-Mail T+3 nach Abreise: Wiederbucher-Rabatt-Code (z.B. 10% auf nächsten Aufenthalt), Link zum Widget mit vorausgefüllten Daten, optionale Review-Anfrage (Google / eigenes System). Ziel: Stammgäste direkt binden, Provision für Folgebuchungen eliminieren.
+  - **Positionierung vs. reguest.io:** reguest.io kostet je nach Paket €50–200+/Mo und ist ein eigenständiges Tool mit PMS-Integration. bookingwulf-Variante ist leichtgewichtig, direkt im bestehenden Buchungsflow integriert, kein separates Dashboard für den Gast. USP: "Alles in einem" — keine zweite App, keine zweite Anmeldung.
+  - **Technisch:** Pre-Arrival Mail = neuer Trigger-Typ im bestehenden E-Mail-System (Resend). Messenger = einfache message-Tabelle in DB, Admin-View mit Unread-Badge. Post-Stay = bestehender Bewertungs-Trigger erweitern.
+  - **Pricing-Überlegung:** Add-on weil nicht alle Betreiber aktive Kommunikation wollen (Ferienwohnungen ohne Personal). Pro-Plan-Betreiber als Zielgruppe. Eventuell in künftigem "Business+" Plan inklusive.
+  - **Extras-Katalog (Ideen für Pre-Arrival Upsell):**
+    - *Essen & Trinken:* Frühstück dazubuchen · Halbpension / Abendessen · Willkommenskorb (Wein, Brot, lokale Produkte) · Frühstück aufs Zimmer am ersten Morgen
+    - *Anreise & Komfort:* Früherer Check-in (z.B. ab 12 statt 15 Uhr) · Später Check-out (z.B. bis 13 statt 11 Uhr) · Parkplatz reservieren · Transfer vom Bahnhof/Flughafen
+    - *Besondere Anlässe:* Blumen / Dekoration aufs Zimmer · Flasche Sekt oder Wein · Geburtstagstorte · Romantik-Paket (Kerzen, Rosenblätter)
+    - *Haustier:* Hund mitbringen (Aufpreis pro Nacht) · Hundebett / -napf bereitstellen
+    - *Während des Aufenthalts:* Massagen / Wellness-Anwendungen · Leihfahrräder / E-Bikes · Skiverleih-Kooperation (in Bergregionen besonders relevant) · Ausflugstipps mit Buchung (geführte Wanderung etc.) · Wäscheservice
+
 - **Mai 2026:** Beds24-Gäste erhalten Zugang zur Gäste-Lounge — beim Beds24-Webhook wird beim Erstellen einer Buchung automatisch ein `checkinToken` generiert. Im Admin-Buchungsdetail gibt es eine „Gäste-Lounge"-Zeile mit „Link öffnen" und „Link kopieren". Kein automatischer E-Mail-Versand — Hotel schickt den Link selbst über den jeweiligen Kanal (Airbnb-Chat, WhatsApp etc.).

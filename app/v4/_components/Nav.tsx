@@ -65,14 +65,14 @@ export default function Nav() {
         <ul className="px-5 pt-2 pb-4 flex flex-col gap-0.5 list-none m-0 p-0">
           {NAV_LINKS.map(({ href, label }) => (
             <li key={href}>
-              <Link href={href} className="block py-2.5 text-sm font-medium text-slate-300 hover:text-white transition-colors" aria-current={pathname === href ? 'page' : undefined}>
+              <Link href={href} onClick={() => setOpen(false)} className="block py-2.5 text-sm font-medium text-slate-300 hover:text-white transition-colors" aria-current={pathname === href ? 'page' : undefined}>
                 {label}
               </Link>
             </li>
           ))}
           <li className="pt-3 mt-1 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <Link href="/admin/login" className="block text-center py-2.5 text-sm font-medium text-slate-400 hover:text-white transition-colors">Login</Link>
-            <Link href="/register" className="v4-btn v4-btn-primary w-full justify-center">Kostenlos testen</Link>
+            <Link href="/admin/login" onClick={() => setOpen(false)} className="block text-center py-2.5 text-sm font-medium text-slate-400 hover:text-white transition-colors">Login</Link>
+            <Link href="/register" onClick={() => setOpen(false)} className="v4-btn v4-btn-primary w-full justify-center">Kostenlos testen</Link>
           </li>
         </ul>
       </div>
