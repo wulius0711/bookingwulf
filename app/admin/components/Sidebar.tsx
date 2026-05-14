@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { logout } from '../login/actions';
 import dynamic from 'next/dynamic';
 const ThemeSwitcher = dynamic(() => import('./ThemeSwitcher'), { ssr: false });
@@ -142,7 +143,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
   }
 
   return (
-    <a
+    <Link
       href={href}
       data-tour={`nav-${tourId}`}
       className="sidebar-nav-item"
@@ -163,7 +164,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
     >
       {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0 }}>{iconEl}</span>}
       {label}
-    </a>
+    </Link>
   );
 }
 
