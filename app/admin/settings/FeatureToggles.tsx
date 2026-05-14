@@ -53,6 +53,10 @@ export default function FeatureToggles({ initialValues, anyPaymentEnabled }: Pro
     return () => window.removeEventListener('bw:payment-change', handler);
   }, []);
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('bw:instant-booking-change', { detail: { enabled: values.enableInstantBooking } }));
+  }, [values.enableInstantBooking]);
+
   const showPaymentWarning = values.enableInstantBooking && !livePaymentAvailable;
 
   function toggle(key: string) {
@@ -64,6 +68,7 @@ export default function FeatureToggles({ initialValues, anyPaymentEnabled }: Pro
       if (key === 'hideRequestOption' && next.hideRequestOption) {
         next.enableInstantBooking = true;
       }
+      window.dispatchEvent(new CustomEvent('bw:instant-booking-change', { detail: { enabled: next.enableInstantBooking } }));
       return next;
     });
   }
