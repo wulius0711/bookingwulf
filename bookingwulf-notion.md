@@ -509,6 +509,7 @@ Alternativen:
 | Deployments | Vercel — jedes Deploy bleibt gespeichert, 1-Klick-Rollback | ✅ Aktiv |
 | Buchungsdaten | Wöchentliches CSV per Cron (So 03:00 UTC) → support@bookingwulf.com | ✅ Aktiv seit Mai 2026 |
 | DB-Volldump | Tägliches JSON-Backup aller Tabellen → Vercel Blob (backups/YYYY-MM-DD.json), 30 Tage Retention | ✅ Aktiv seit Mai 2026 |
+| pg_dump | GitHub Actions täglich 03:00 UTC → `.sql.gz` als Artifact, 30 Tage Retention. Restore: `gunzip -c backup-YYYY-MM-DD.sql.gz \| psql "$DATABASE_URL_RAILWAY"` | ✅ Aktiv seit Mai 2026 |
 | Datenbank | Railway PostgreSQL (Amsterdam/EU) — Hobby $5/Mo, kein Sleeping, always-on | ✅ Aktiv seit Mai 2026 |
 
 ---

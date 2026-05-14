@@ -1,7 +1,7 @@
 # bookingwulf — Interne Dokumentation
 
 > Stand: Mai 2026  
-> Stack: Next.js 16 · React 19 · PostgreSQL (Neon/Frankfurt) · Stripe · Resend · Vercel
+> Stack: Next.js 16 · React 19 · PostgreSQL (Railway/Amsterdam) · Stripe · Resend · Vercel
 
 ---
 
@@ -76,7 +76,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
           └──────────┬──────────────────────┘
                      │ Prisma ORM
           ┌──────────▼──────────────────────┐
-          │  PostgreSQL (Neon, Frankfurt)   │
+          │  PostgreSQL (Railway, Amsterdam/EU)   │
           └─────────────────────────────────┘
 ```
 
@@ -93,7 +93,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 | Framework | Next.js (App Router) | 16.2.2 |
 | UI | React | 19.2.4 |
 | Sprache | TypeScript | 5 |
-| Datenbank | PostgreSQL via Neon | — |
+| Datenbank | PostgreSQL via Railway | — |
 | ORM | Prisma | 7.7.0 |
 | Auth | jose (JWT) + Node.js crypto | — |
 | Zahlung | Stripe SDK | 22.0.2 |
@@ -960,7 +960,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 
 | Variable | Beschreibung |
 |---|---|
-| `DATABASE_URL` | PostgreSQL-Verbindung (Neon) |
+| `DATABASE_URL` | PostgreSQL-Verbindung (Railway) |
 | `ADMIN_SESSION_SECRET` | JWT-Signatur-Schlüssel (mind. 32 Zeichen) |
 | `NEXT_PUBLIC_APP_URL` | Basis-URL (z.B. `https://bookingwulf.com`) |
 | `STRIPE_SECRET_KEY` | Stripe API-Key (live: `sk_live_...`) |
@@ -1017,7 +1017,7 @@ Rate Limiting ist in-memory (`src/lib/rate-limit.ts`) — resettet bei Serverres
 
 ### Datenbank
 
-Neon PostgreSQL (Serverless). Migrationen via:
+Railway PostgreSQL (always-on, kein Sleeping). Migrationen via:
 ```bash
 npx prisma migrate deploy
 ```
@@ -1030,7 +1030,14 @@ npx prisma migrate deploy
 
 **Vollständiger DB-Dump (JSON):** Cron `/api/cron/daily-backup` läuft täglich 02:00 UTC. Exportiert alle Tabellen (Hotels, Apartments, Buchungen, Settings etc.) als JSON in Vercel Blob unter `backups/YYYY-MM-DD.json`. Retention: 30 Tage, ältere Backups werden automatisch gelöscht. Einsehbar im Vercel Dashboard → Storage → Blob.
 
-**Datenbank (Neon):** Aktuell Free Plan — kein Point-in-Time Recovery. Bei Wachstum Upgrade auf Launch Plan (~$19/Mo) für 7 Tage PITR empfohlen. Neon-Projekt: "Booking App", Region AWS Europe Central 1 (Frankfurt). Branch: `production`.
+**pg_dump via GitHub Actions:** `.github/workflows/db-backup.yml` läuft täglich 03:00 UTC. Erstellt einen vollständigen PostgreSQL-Dump (`backup-YYYY-MM-DD.sql.gz`) und speichert ihn als GitHub Actions Artifact — 30 Tage Retention. Abrufbar unter: GitHub → Actions → Daily DB Backup → Artifacts.
+
+Restore:
+```bash
+gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"
+```
+
+**Datenbank (Railway):** Hobby Plan ($5/Mo) — always-on, kein Sleeping. Projekt: "bookingwulf", PostgreSQL-Service.
 
 ### Build
 
@@ -1267,7 +1274,7 @@ Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/eventwulf` → `e
 
 ### Datenspeicherung
 
-- **Datenbank:** Neon PostgreSQL, Region AWS Europe Central 1 (Frankfurt, EU)
+- **Datenbank:** Railway PostgreSQL, EU-Region
 - **Uploads:** Vercel Blob (global CDN)
 - **E-Mails (transaktional):** Resend Inc. (USA) — SCCs vorhanden
 - **E-Mails (Outreach):** Zoho Corporation — Versand über `smtp.zoho.eu`
