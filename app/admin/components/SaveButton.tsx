@@ -6,13 +6,19 @@ import { useEffect, useRef, useState } from 'react';
 export default function SaveButton({
   label = 'Speichern',
   style,
+  initialInstantBooking = false,
+  initialAnyPayment = true,
 }: {
   label?: string;
   style?: React.CSSProperties;
+  initialInstantBooking?: boolean;
+  initialAnyPayment?: boolean;
 }) {
   const { pending } = useFormStatus();
   const [saved, setSaved] = useState(false);
   const wasPending = useRef(false);
+  const instantBookingRef = useRef(initialInstantBooking);
+  const anyPaymentRef = useRef(initialAnyPayment);
   const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
@@ -25,13 +31,13 @@ export default function SaveButton({
   }, [pending]);
 
   useEffect(() => {
-    let instantBooking = false;
-    let anyPayment = true;
+    function update() { setBlocked(instantBookingRef.current && !anyPaymentRef.current); }
 
-    function update() { setBlocked(instantBooking && !anyPayment); }
+    // Set initial blocked state after hydration
+    update();
 
-    const onInstant = (e: Event) => { instantBooking = (e as CustomEvent<{ enabled: boolean }>).detail.enabled; update(); };
-    const onPayment = (e: Event) => { anyPayment = (e as CustomEvent<{ anyEnabled: boolean }>).detail.anyEnabled; update(); };
+    const onInstant = (e: Event) => { instantBookingRef.current = (e as CustomEvent<{ enabled: boolean }>).detail.enabled; update(); };
+    const onPayment = (e: Event) => { anyPaymentRef.current = (e as CustomEvent<{ anyEnabled: boolean }>).detail.anyEnabled; update(); };
 
     window.addEventListener('bw:instant-booking-change', onInstant);
     window.addEventListener('bw:payment-change', onPayment);
@@ -39,6 +45,7 @@ export default function SaveButton({
       window.removeEventListener('bw:instant-booking-change', onInstant);
       window.removeEventListener('bw:payment-change', onPayment);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isDisabled = pending || blocked;

@@ -602,7 +602,14 @@ export default async function Page({ searchParams }: PageProps) {
             <div style={{ ...actionRowStyle, justifyContent: 'flex-end' }}>
               <StandardButton hotelId={selected.id} />
 
-              <SaveButton />
+              <SaveButton
+                initialInstantBooking={selected.settings?.enableInstantBooking ?? false}
+                initialAnyPayment={
+                  (selected.settings?.bankTransferEnabled ?? false) ||
+                  (selected.settings?.paypalEnabled ?? false) ||
+                  (selected.settings?.stripeEnabled ?? false)
+                }
+              />
             </div>
 
             {saved === '1' && (
