@@ -240,6 +240,9 @@ function NavGroup({ group }: { group: NavGroup }) {
 export default function Sidebar({ navGroups, email, activeHotelId, userHotels, isSuperAdmin }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   useEffect(() => {
     if (!mobileOpen) return;
