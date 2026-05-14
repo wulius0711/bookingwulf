@@ -5,6 +5,7 @@ import InfoTooltip from '../components/InfoTooltip';
 
 type Props = {
   initialValues: Record<string, boolean>;
+  anyPaymentEnabled: boolean;
 };
 
 function IosToggle({ name, checked, onChange }: { name: string; checked: boolean; onChange: () => void }) {
@@ -42,8 +43,9 @@ const toggles: [string, string][] = [
   ['enableInstantBooking', 'Verbindliche Buchung anbieten'],
 ];
 
-export default function FeatureToggles({ initialValues }: Props) {
+export default function FeatureToggles({ initialValues, anyPaymentEnabled }: Props) {
   const [values, setValues] = useState(initialValues);
+  const showPaymentWarning = values.enableInstantBooking && !anyPaymentEnabled;
 
   function toggle(key: string) {
     setValues((prev) => {
@@ -59,6 +61,13 @@ export default function FeatureToggles({ initialValues }: Props) {
   }
 
   return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      {showPaymentWarning && (
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px', background: 'var(--primitive-yellow-50)', border: '1px solid var(--primitive-yellow-100)', borderRadius: 8, fontSize: 13, color: 'var(--primitive-yellow-800)', lineHeight: 1.45 }}>
+          <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}>⚠️</span>
+          Verbindliche Buchung ist aktiv, aber keine Zahlungsart konfiguriert. Bitte unter <strong>Zahlungsarten</strong> mindestens eine Methode aktivieren.
+        </div>
+      )}
     <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden' }}>
       {toggles.map(([key, label], i) => (
         <div key={key}>
@@ -79,6 +88,7 @@ export default function FeatureToggles({ initialValues }: Props) {
         <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Nur Buchung — Anfrage ausblenden</span>
         <IosToggle name="hideRequestOption" checked={!!values.hideRequestOption} onChange={() => toggle('hideRequestOption')} />
       </div>
+    </div>
     </div>
   );
 }

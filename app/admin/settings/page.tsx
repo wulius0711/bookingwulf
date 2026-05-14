@@ -589,6 +589,11 @@ export default async function Page({ searchParams }: PageProps) {
                     enableInstantBooking: selected.settings?.enableInstantBooking ?? false,
                     hideRequestOption: selected.settings?.hideRequestOption ?? false,
                   }}
+                  anyPaymentEnabled={
+                    (selected.settings?.bankTransferEnabled ?? false) ||
+                    (selected.settings?.paypalEnabled ?? false) ||
+                    (selected.settings?.stripeEnabled ?? false)
+                  }
                 />
               </div>
             </details>
