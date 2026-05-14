@@ -66,11 +66,27 @@ const divider: React.CSSProperties = {
   height: 1, background: 'var(--border)', margin: '0',
 };
 
+function InlineHint({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px', background: 'var(--primitive-yellow-50)', border: '1px solid var(--primitive-yellow-100)', borderRadius: 8, fontSize: 13, color: 'var(--primitive-yellow-800)', lineHeight: 1.45 }}>
+      <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}>⚠️</span>
+      {children}
+    </div>
+  );
+}
+
 export default function PaymentSettings({ initialValues, inputStyle, labelStyle }: Props) {
   const [bankTransfer, setBankTransfer] = useState(initialValues.bankTransferEnabled);
   const [paypal, setPaypal] = useState(initialValues.paypalEnabled);
+  const [paypalClientId, setPaypalClientId] = useState(initialValues.paypalClientId);
+  const [paypalClientSecret, setPaypalClientSecret] = useState(initialValues.paypalClientSecret);
   const [stripe, setStripe] = useState(initialValues.stripeEnabled);
+  const [stripePublishableKey, setStripePublishableKey] = useState(initialValues.stripePublishableKey);
+  const [stripeSecretKey, setStripeSecretKey] = useState(initialValues.stripeSecretKey);
   const [deposit, setDeposit] = useState(initialValues.depositEnabled);
+
+  const paypalIncomplete = paypal && (!paypalClientId.trim() || !paypalClientSecret.trim());
+  const stripeIncomplete = stripe && (!stripePublishableKey.trim() || !stripeSecretKey.trim());
 
   return (
     <div style={{ display: 'grid', gap: 24 }}>
@@ -151,13 +167,16 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
         </div>
         {paypal && (
           <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface-2)', padding: '14px 16px', display: 'grid', gap: 10 }}>
+            {paypalIncomplete && (
+              <InlineHint>Client ID und Client Secret sind erforderlich, um PayPal zu aktivieren.</InlineHint>
+            )}
             <div>
               <label style={labelStyle}>PayPal Client ID</label>
-              <input name="paypalClientId" type="text" defaultValue={initialValues.paypalClientId} placeholder="AaBbCc…" style={inputStyle} />
+              <input name="paypalClientId" type="text" value={paypalClientId} onChange={(e) => setPaypalClientId(e.target.value)} placeholder="AaBbCc…" style={inputStyle} required />
             </div>
             <div>
               <label style={labelStyle}>PayPal Client Secret</label>
-              <input name="paypalClientSecret" type="password" defaultValue={initialValues.paypalClientSecret} placeholder="••••••••" style={inputStyle} />
+              <input name="paypalClientSecret" type="password" value={paypalClientSecret} onChange={(e) => setPaypalClientSecret(e.target.value)} placeholder="••••••••" style={inputStyle} required />
             </div>
           </div>
         )}
@@ -176,13 +195,16 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
         </div>
         {stripe && (
           <div style={{ borderTop: '1px solid var(--border)', background: 'var(--surface-2)', padding: '14px 16px', display: 'grid', gap: 10 }}>
+            {stripeIncomplete && (
+              <InlineHint>Publishable Key und Secret Key sind erforderlich, um Kreditkartenzahlung zu aktivieren.</InlineHint>
+            )}
             <div>
               <label style={labelStyle}>Publishable Key</label>
-              <input name="stripePublishableKey" type="text" defaultValue={initialValues.stripePublishableKey} placeholder="pk_live_…" style={inputStyle} />
+              <input name="stripePublishableKey" type="text" value={stripePublishableKey} onChange={(e) => setStripePublishableKey(e.target.value)} placeholder="pk_live_…" style={inputStyle} required />
             </div>
             <div>
               <label style={labelStyle}>Secret Key</label>
-              <input name="stripeSecretKey" type="password" defaultValue={initialValues.stripeSecretKey} placeholder="sk_live_…" style={inputStyle} />
+              <input name="stripeSecretKey" type="password" value={stripeSecretKey} onChange={(e) => setStripeSecretKey(e.target.value)} placeholder="sk_live_…" style={inputStyle} required />
             </div>
           </div>
         )}
