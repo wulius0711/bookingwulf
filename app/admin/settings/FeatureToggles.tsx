@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InfoTooltip from '../components/InfoTooltip';
 
 type Props = {
@@ -45,7 +45,15 @@ const toggles: [string, string][] = [
 
 export default function FeatureToggles({ initialValues, anyPaymentEnabled }: Props) {
   const [values, setValues] = useState(initialValues);
-  const showPaymentWarning = values.enableInstantBooking && !anyPaymentEnabled;
+  const [livePaymentAvailable, setLivePaymentAvailable] = useState(anyPaymentEnabled);
+
+  useEffect(() => {
+    const handler = (e: Event) => setLivePaymentAvailable((e as CustomEvent<{ anyEnabled: boolean }>).detail.anyEnabled);
+    window.addEventListener('bw:payment-change', handler);
+    return () => window.removeEventListener('bw:payment-change', handler);
+  }, []);
+
+  const showPaymentWarning = values.enableInstantBooking && !livePaymentAvailable;
 
   function toggle(key: string) {
     setValues((prev) => {

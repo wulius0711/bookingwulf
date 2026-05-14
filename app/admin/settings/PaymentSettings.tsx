@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Props = {
   initialValues: {
@@ -87,6 +87,10 @@ export default function PaymentSettings({ initialValues, inputStyle, labelStyle 
 
   const paypalIncomplete = paypal && (!paypalClientId.trim() || !paypalClientSecret.trim());
   const stripeIncomplete = stripe && (!stripePublishableKey.trim() || !stripeSecretKey.trim());
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('bw:payment-change', { detail: { anyEnabled: bankTransfer || paypal || stripe } }));
+  }, [bankTransfer, paypal, stripe]);
 
   return (
     <div style={{ display: 'grid', gap: 24 }}>
