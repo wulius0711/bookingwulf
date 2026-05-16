@@ -28,6 +28,7 @@
 17. Beds24 Channel Manager
 18. Datenschutz & DSGVO
 22. Gäste-Portal
+23. Launch Readiness & Infrastruktur-Hardening
 
 ---
 
@@ -1013,7 +1014,7 @@ Deployment via GitHub-Integration. Jeder Push auf `main` löst ein Deployment au
 | `GET /api/blocked-dates` | 30/IP/min |
 | `GET /api/ical` | 20/IP/min |
 
-Rate Limiting ist in-memory (`src/lib/rate-limit.ts`) — resettet bei Serverrestart. Für Multi-Instance-Deployments wäre Redis nötig.
+Rate Limiting via Upstash Redis (`src/lib/rate-limit.ts`) — persistent, cross-instance korrekt. Fällt bei Redis-Ausfall auf "fail open" zurück (Requests werden durchgelassen, kein Fehler für den User).
 
 ### Datenbank
 
@@ -1331,6 +1332,7 @@ Hinweis: Static Files aus `/public` (Widget-HTMLs) werden von diesen Headers nic
 - Cookie-Flags: `httpOnly`, `secure` (Produktion), `sameSite: lax`
 - Session-TTL: 24 Stunden
 - `verifySession()` auf allen Admin-Routen und Admin-API-Endpunkten
+- `ADMIN_SESSION_SECRET`: starker 48-Byte-Random-Secret (gesetzt Mai 2026) — muss bei Rotation in Vercel Dashboard + `.env.local` aktualisiert werden
 
 ### Passwörter
 
@@ -1339,7 +1341,11 @@ Hinweis: Static Files aus `/public` (Widget-HTMLs) werden von diesen Headers nic
 
 ### Rate Limiting
 
-In-Memory-Rate-Limiter (`src/lib/rate-limit.ts`), angewendet auf:
+Upstash Redis (`@upstash/redis`, `src/lib/rate-limit.ts`). Funktionsweise: `INCR key` + `EXPIRE key windowSek` (nur beim ersten Hit). Bei Redis-Ausfall: fail open (Request wird durchgelassen, `console.error`).
+
+**Warum Upstash statt in-memory?** Vercel läuft auf mehreren Instanzen gleichzeitig. In-Memory-Counter wären pro-Instanz — ein User könnte das Limit umgehen, indem er Requests auf verschiedene Instanzen verteilt. Upstash Redis ist HTTP-basiert (kein TCP-Pool nötig, ideal für Serverless) und hält die Zähler zentral.
+
+Env Vars: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (Vercel + `.env.local`).
 
 | Route | Limit |
 |-------|-------|
@@ -1477,3 +1483,67 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 `POST /api/vouchers/validate` prüft Code (beide Typen `value` + `nights`), Hotel-Zugehörigkeit, Status `active` und Ablaufdatum. Gibt `{ valid, voucher: { id, code, value } }` zurück. Der Rabatt (= `voucher.value`, max. Buchungstotal) wird in der Preisübersicht angezeigt. Bei Buchungs-Submit wird `voucherCode` mitgesendet und der Gutschein serverseitig auf `redeemed` gesetzt.
 
 **Nächte-Gutscheine:** Der Kaufpreis (`value` in €) wird als Rabatt abgezogen — identisch zu Wertgutscheinen. Der Unterschied liegt nur in der Darstellung auf dem PDF (`2 Nächte` statt `€ 280`). Differenzen (teureres Zimmer) regelt das Hotel in seinen AGB.
+
+---
+
+## 23. Launch Readiness & Infrastruktur-Hardening
+
+> Stand: Mai 2026. Vollständige Security-Analyse durchgeführt.
+
+### Erledigte Fixes (Mai 2026)
+
+| Fix | Details |
+|-----|---------|
+| `ADMIN_SESSION_SECRET` | War Literal-Placeholder — jetzt 48-Byte-Random-Secret in Vercel Production |
+| `CRON_SECRET` | War Literal-Placeholder — jetzt 32-Byte-Hex-Secret in Vercel Production |
+| `.env` Dev-Template | Kein schwaches Default-Secret mehr |
+
+### Secret Rotation
+
+Wenn Secrets rotiert werden müssen (z.B. bei Verdacht auf Kompromittierung):
+
+```bash
+# Neuen Secret generieren
+openssl rand -base64 48   # für ADMIN_SESSION_SECRET
+openssl rand -hex 32      # für CRON_SECRET
+
+# In Vercel ersetzen
+vercel env rm ADMIN_SESSION_SECRET production --yes
+echo "NEUER_SECRET" | vercel env add ADMIN_SESSION_SECRET production
+
+# Danach neu deployen
+vercel --prod
+```
+
+Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert (neue Signatur).
+
+### Offene Punkte
+
+**Vor erstem Beta-Kunden:**
+- Backup-Restore einmal manuell verifizieren: GitHub Actions → Daily DB Backup → Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`
+- Alle 3 Zahlungsarten (Banküberweisung, PayPal, Stripe) vollständig mit Sandbox-Credentials testen
+
+**Erledigt (Mai 2026):**
+- ✅ Rate Limiting → Upstash Redis (`@upstash/redis`, INCR+EXPIRE, eu-central-1, Free Tier)
+
+**Wenn Traffic wächst:**
+- Structured Logging für Admin-Aktionen und Integrations-Fehler (Beds24, iCal)
+- Session Revocation (Token-Blocklist in DB oder Redis)
+
+**Bewusst zurückgestellt:**
+- MFA für Admins — kein kritisches Risiko bei kleinen Teams
+- WAF — Vercel deckt Basics ab
+- OpenAPI-Dokumentation
+
+### Infrastruktur-Übersicht
+
+| Schicht | Lösung | Region | Status |
+|---------|--------|--------|--------|
+| Hosting | Vercel Serverless | Global CDN | ✅ |
+| Datenbank | Railway PostgreSQL | Amsterdam/EU | ✅ |
+| DB-Backup täglich (JSON) | Vercel Blob, 30 Tage | — | ✅ |
+| DB-Backup täglich (SQL) | GitHub Actions Artifact, 30 Tage | — | ✅ |
+| Buchungsdaten-Backup | CSV wöchentlich → E-Mail | — | ✅ |
+| Error Tracking | Sentry | EU Ingest | ✅ |
+| E-Mail | Resend | US (DSGVO-konform via DPA) | ✅ |
+| Monitoring | Sentry (10% Tracing) | — | ✅ |

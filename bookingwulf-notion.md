@@ -339,6 +339,7 @@ Alternativen:
 ## 🔴 Dringend / Diese Woche
 
 - [ ] Zahlungsarten mit echten Credentials testen: PayPal Sandbox (developer.paypal.com) + Stripe Test-Keys (pk_test_ / sk_test_ aus dashboard.stripe.com/apikeys) — alle drei Flows durchklicken: Banküberweisung, PayPal-Redirect, Stripe Inline-Zahlung
+- [ ] **Backup-Restore testen** — GitHub Actions → Daily DB Backup → Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`. Backups laufen, aber Restore war nie verifiziert.
 
 ## 🟡 Diese Woche / Bald
 
@@ -347,6 +348,12 @@ Alternativen:
 - [x] Beds24-Gäste haben Zugang zur Gäste-Lounge — Token wird automatisch generiert, Link im Admin kopierbar — Mai 2026
 - [ ] Ersten Pilotkundenerfahrungsbericht (Case Study) erstellen
 - [ ] Google Ads Kampagne planen
+
+## 🔒 Launch Readiness — Infrastruktur
+
+- [x] **Rate Limiting → Upstash Redis** — umgestellt Mai 2026. Zähler sind jetzt persistent und cross-instance korrekt (kein In-Memory-Reset mehr bei Deploy).
+- [ ] **Structured Logging** — Admin-Aktionen und Integrations-Fehler strukturiert loggen (aktuell nur Sentry + console.error)
+- [ ] **Session Revocation** — Admin-JWTs 24h gültig ohne Widerrufsmöglichkeit. Erst relevant bei größeren Team-Accounts.
 
 ## 🧪 Testfälle
 
@@ -485,9 +492,11 @@ Alternativen:
 | SQL Injection | ✅ | Prisma ORM durchgehend, keine unsicheren Raw Queries |
 | Eingabe-Validierung | ✅ | Zod-Schemas auf allen schreibenden Endpunkten |
 | Security Headers | ✅ | HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
-| Rate Limiting | ✅ | Alle öffentlichen APIs abgesichert (30–120 req/Min. per IP) |
+| Rate Limiting | ✅ | Upstash Redis (HTTP-basiert, EU-central-1) — persistent, cross-instance korrekt, Free Tier ($0/Mo) |
 | Beds24 Webhook | ✅ | timingSafeEqual Token-Vergleich; erstellt BlockedRange + Request-Datensatz (CSV-Export) + checkinToken für Gäste-Lounge |
 | CORS | ⚠️ | `*` auf Widget-APIs — gewollt, aber keine zentrale Kontrolle |
+| ADMIN_SESSION_SECRET | ✅ | Starker Random-Secret gesetzt (Mai 2026) — war zuvor Placeholder |
+| CRON_SECRET | ✅ | Starker Random-Secret gesetzt (Mai 2026) — war zuvor Placeholder |
 
 ## Rate Limits (öffentliche APIs)
 
@@ -498,6 +507,15 @@ Alternativen:
 | GET /api/availability-widget | 30/Min. per IP |
 | GET /api/hotel-settings | 60/Min. per IP |
 | GET /api/pricing | 120/Min. per IP |
+
+## Bekannte Limitierungen (kein sofortiger Handlungsbedarf)
+
+| Thema | Status | Wann angehen |
+|-------|--------|--------------|
+| Rate Limiting in-memory | ⚠️ | Wenn ernsthafter Traffic; dann Redis (Upstash) davor schalten |
+| Session Revocation fehlt | ⚠️ | Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit; erst bei echten Team-Kunden relevant |
+| Kein MFA für Admins | ℹ️ | Nice-to-have; kein kritisches Risiko bei kleinen Teams |
+| Backup-Restore nie getestet | ⚠️ | Einmal manuell testen: `gunzip -c backup-YYYY-MM-DD.sql.gz \| psql "$DATABASE_URL_RAILWAY"` |
 
 ---
 
@@ -511,6 +529,58 @@ Alternativen:
 | DB-Volldump | Tägliches JSON-Backup aller Tabellen → Vercel Blob (backups/YYYY-MM-DD.json), 30 Tage Retention | ✅ Aktiv seit Mai 2026 |
 | pg_dump | GitHub Actions täglich 03:00 UTC → `.sql.gz` als Artifact, 30 Tage Retention. Restore: `gunzip -c backup-YYYY-MM-DD.sql.gz \| psql "$DATABASE_URL_RAILWAY"` | ✅ Aktiv seit Mai 2026 |
 | Datenbank | Railway PostgreSQL (Amsterdam/EU) — Hobby $5/Mo, kein Sleeping, always-on | ✅ Aktiv seit Mai 2026 |
+
+---
+
+# 🚦 Launch Readiness (Stand Mai 2026)
+
+> Vollständige Security & Infrastruktur-Analyse — Basis für Pitch und ersten Launch
+
+## Gesamtstatus: ~80 % bereit
+
+Für **Pitch + erste Pilotkunden**: bereit (nach erledigten Fixes).
+Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore-Test.
+
+## Erledigte Fixes (Mai 2026)
+
+| Fix | Details |
+|-----|---------|
+| ✅ `ADMIN_SESSION_SECRET` | War Placeholder-String — jetzt starker 48-Byte-Secret in Vercel Production + `.env.local` |
+| ✅ `CRON_SECRET` | War Placeholder-String — jetzt starker 32-Byte-Hex-Secret in Vercel Production + `.env.local` |
+| ✅ `.env` Dev-Template | `ADMIN_SESSION_SECRET` auf generischen Placeholder (kein „supersecret123" mehr) |
+
+## Offene Punkte (priorisiert)
+
+### Vor erstem Beta-Kunden
+- [ ] **Backup-Restore testen** — einmal manuell durchspielen: GitHub Actions Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`. Aktuell laufen Backups, aber der Restore war nie verifiziert.
+- [ ] **PayPal-Zahlungsflow vollständig testen** — alle 3 Zahlungsarten (Banküberweisung, PayPal-Redirect, Stripe Inline) mit echten Sandbox-Credentials durchklicken
+
+### Vor öffentlichem Launch (wenn Traffic wächst)
+- [ ] **Structured Logging** — Sentry ist drin, aber API-Calls und Admin-Aktionen werden nicht strukturiert geloggt. Wichtig für Debugging bei echten Kunden.
+- [x] **Rate Limiting → Upstash Redis** ✅ — umgestellt Mai 2026. `@upstash/redis`, INCR+EXPIRE, fails open bei Redis-Ausfall.
+- [ ] **Session Revocation** — Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit. Erst relevant wenn Team-Accounts größerer Hotels genutzt werden.
+
+### Nicht nötig (bewusst zurückgestellt)
+- Multi-Factor Authentication für Admins — Nice-to-have, kein kritisches Risiko
+- WAF / DDoS-Protection — Vercel deckt Basics ab
+- OpenAPI-Dokumentation — kein Investor erwartet das beim ersten Pitch
+- Redis sofort — erst wenn Traffic es rechtfertigt
+
+## Infrastruktur-Übersicht (Pitch-tauglich)
+
+| Schicht | Lösung | Status |
+|---------|--------|--------|
+| Hosting | Vercel (Serverless, auto-scaling) | ✅ Live |
+| Datenbank | Railway PostgreSQL, Amsterdam/EU | ✅ Live |
+| CDN | Vercel Edge Network | ✅ Automatisch |
+| Code-Backup | GitHub (jeder Commit) | ✅ |
+| DB-Backup täglich | JSON-Dump → Vercel Blob, 30 Tage | ✅ |
+| DB-Backup täglich | pg_dump → GitHub Actions Artifact, 30 Tage | ✅ |
+| Buchungsdaten-Backup | CSV wöchentlich → E-Mail | ✅ |
+| Error Tracking | Sentry (10% Sampling) | ✅ |
+| Rate Limiting | Upstash Redis (EU-central-1, Free Tier) | ✅ |
+| E-Mail | Resend | ✅ |
+| DSGVO | EU-Daten, Cookie-Banner, opt-in GA | ✅ |
 
 ---
 
