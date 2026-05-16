@@ -45,13 +45,10 @@ export default async function AdminPage() {
 /* ========== SUPER ADMIN ========== */
 
 async function SuperAdminDashboard() {
-  const [hotels, allRequests, recentRequests] = await Promise.all([
+  const [hotels, allRequests, recentRequests, requestsByHotel] = await Promise.all([
     prisma.hotel.findMany({
       orderBy: { name: 'asc' },
-      include: {
-        _count: { select: { apartments: true, requests: true } },
-        requests: { select: { status: true } },
-      },
+      include: { _count: { select: { apartments: true, requests: true } } },
     }),
     prisma.request.groupBy({ by: ['status'], _count: { _all: true } }),
     prisma.request.findMany({
@@ -59,6 +56,7 @@ async function SuperAdminDashboard() {
       orderBy: { createdAt: 'desc' },
       include: { hotel: { select: { name: true, accentColor: true } } },
     }),
+    prisma.request.groupBy({ by: ['hotelId', 'status'], _count: { _all: true } }),
   ]);
 
   const totalApartments = hotels.reduce((s, h) => s + h._count.apartments, 0);
@@ -93,13 +91,12 @@ async function SuperAdminDashboard() {
           <h2 style={sectionTitleStyle}>Hotels</h2>
           <div style={{ display: 'grid', gap: 12 }}>
             {hotels.map((h) => {
-              const byStatus = Object.fromEntries(
-                h.requests.reduce((map, r) => {
-                  const key = r.status === 'confirmed' ? 'new' : r.status;
-                  map.set(key, (map.get(key) ?? 0) + 1);
-                  return map;
-                }, new Map<string, number>()),
-              );
+              const hotelGroups = requestsByHotel.filter((g) => g.hotelId === h.id);
+              const byStatus: Record<string, number> = {};
+              for (const g of hotelGroups) {
+                const key = g.status === 'confirmed' ? 'new' : g.status;
+                byStatus[key] = (byStatus[key] ?? 0) + g._count._all;
+              }
               const newCount = byStatus['new'] ?? 0;
 
               return (
