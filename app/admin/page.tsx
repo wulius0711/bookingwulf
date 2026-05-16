@@ -227,9 +227,11 @@ async function SuperAdminDashboard() {
                             marginRight: 8,
                             padding: '1px 8px',
                             borderRadius: 8,
-                            background: r.hotel.accentColor || '#eee',
-                            color: '#fff',
+                            background: 'var(--surface-2)',
+                            color: r.hotel.accentColor || 'var(--text-muted)',
+                            border: `1px solid ${r.hotel.accentColor || 'var(--border)'}`,
                             fontSize: 11,
+                            fontWeight: 600,
                           }}>
                             {r.hotel.name}
                           </span>
