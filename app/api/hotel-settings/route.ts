@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!rateLimit(`hotel-settings:${ip}`, 60, 60_000).ok) return rateLimitResponse();
+  if (!(await rateLimit(`hotel-settings:${ip}`, 60, 60_000)).ok) return rateLimitResponse();
 
   try {
     const { searchParams } = new URL(req.url);

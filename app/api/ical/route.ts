@@ -12,7 +12,7 @@ import { rateLimit, rateLimitResponse } from '@/src/lib/rate-limit';
 
 export async function GET(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-  if (!rateLimit(`ical:${ip}`, 20, 60_000).ok) return rateLimitResponse();
+  if (!(await rateLimit(`ical:${ip}`, 20, 60_000)).ok) return rateLimitResponse();
 
   const { searchParams } = new URL(req.url);
   const apartmentId = Number(searchParams.get('apartment') || 0);

@@ -48,9 +48,9 @@ export async function POST(req: Request) {
 
     // Rate limit: 10 bookings per IP per 15 min, 3 per email per 5 min
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const { ok: ipOk } = rateLimit(`booking:ip:${ip}`, 10, 15 * 60 * 1000);
+    const { ok: ipOk } = await rateLimit(`booking:ip:${ip}`, 10, 15 * 60 * 1000);
     if (!ipOk) return rateLimitResponse();
-    const { ok: emailOk } = rateLimit(`booking:email:${email}`, 3, 5 * 60 * 1000);
+    const { ok: emailOk } = await rateLimit(`booking:email:${email}`, 3, 5 * 60 * 1000);
     if (!emailOk) return rateLimitResponse();
 
     const arrivalRaw = body.arrival.trim();

@@ -16,7 +16,7 @@ export async function OPTIONS() {
 
 export async function GET(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-  if (!rateLimit(`apartments:${ip}`, 60, 60_000).ok) return rateLimitResponse();
+  if (!(await rateLimit(`apartments:${ip}`, 60, 60_000)).ok) return rateLimitResponse();
 
   try {
     const { searchParams } = new URL(req.url);

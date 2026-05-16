@@ -16,7 +16,7 @@ export async function OPTIONS() {
 
 export async function GET(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-  if (!rateLimit(`blocked-dates:${ip}`, 30, 60_000).ok) return rateLimitResponse();
+  if (!(await rateLimit(`blocked-dates:${ip}`, 30, 60_000)).ok) return rateLimitResponse();
 
   try {
     const blockedRanges = await prisma.blockedRange.findMany({

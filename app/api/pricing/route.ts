@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!rateLimit(`pricing:${ip}`, 120, 60_000).ok) return rateLimitResponse();
+  if (!(await rateLimit(`pricing:${ip}`, 120, 60_000)).ok) return rateLimitResponse();
 
   const { searchParams } = new URL(req.url);
   const hotelId = Number(searchParams.get('hotelId'));

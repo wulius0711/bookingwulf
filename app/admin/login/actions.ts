@@ -15,7 +15,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'E-Mail und Passwort sind erforderlich.' }
   }
 
-  const { ok } = rateLimit(`login:${email}`, 5, 15 * 60 * 1000);
+  const { ok } = await rateLimit(`login:${email}`, 5, 15 * 60 * 1000);
   if (!ok) return { error: 'Zu viele Anmeldeversuche. Bitte warten Sie 15 Minuten.' }
 
   const user = await prisma.adminUser.findUnique({ where: { email } })

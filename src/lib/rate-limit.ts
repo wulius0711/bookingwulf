@@ -1,29 +1,19 @@
-const hits = new Map<string, { count: number; resetAt: number }>();
+import { Redis } from '@upstash/redis';
 
-// Clean up expired entries periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, val] of hits) {
-    if (val.resetAt < now) hits.delete(key);
+const redis = Redis.fromEnv();
+
+export async function rateLimit(key: string, maxRequests: number, windowMs: number): Promise<{ ok: boolean; remaining: number }> {
+  try {
+    const windowSec = Math.ceil(windowMs / 1000);
+    const count = await redis.incr(key);
+    if (count === 1) {
+      await redis.expire(key, windowSec);
+    }
+    return { ok: count <= maxRequests, remaining: Math.max(0, maxRequests - count) };
+  } catch {
+    console.error('[rate-limit] Redis unavailable, failing open');
+    return { ok: true, remaining: maxRequests };
   }
-}, 60_000);
-
-export function rateLimit(key: string, maxRequests: number, windowMs: number): { ok: boolean; remaining: number } {
-  const now = Date.now();
-  const entry = hits.get(key);
-
-  if (!entry || entry.resetAt < now) {
-    hits.set(key, { count: 1, resetAt: now + windowMs });
-    return { ok: true, remaining: maxRequests - 1 };
-  }
-
-  entry.count++;
-
-  if (entry.count > maxRequests) {
-    return { ok: false, remaining: 0 };
-  }
-
-  return { ok: true, remaining: maxRequests - entry.count };
 }
 
 export function rateLimitResponse() {

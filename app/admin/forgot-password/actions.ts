@@ -12,7 +12,7 @@ export async function requestPasswordReset(_state: ForgotState, formData: FormDa
   const email = formData.get('email')?.toString().trim().toLowerCase();
   if (!email) return { error: 'E-Mail ist erforderlich.' };
 
-  const { ok } = rateLimit(`forgot:${email}`, 3, 15 * 60 * 1000);
+  const { ok } = await rateLimit(`forgot:${email}`, 3, 15 * 60 * 1000);
   if (!ok) return { success: true }; // Silently succeed to prevent enumeration
 
   // Always return success to prevent email enumeration
