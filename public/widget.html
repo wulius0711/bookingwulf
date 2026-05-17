@@ -2976,6 +2976,7 @@
           _stripeInstance = window.Stripe(state.settings.stripePublishableKey);
           const elements = _stripeInstance.elements();
           _stripeCard = elements.create('card', {
+            hidePostalCode: true,
             style: { base: { fontSize: '14px', color: '#111827', fontFamily: 'Inter, sans-serif', '::placeholder': { color: '#9ca3af' } } },
           });
         }
@@ -6154,7 +6155,7 @@
           let _stripePmId = null;
           if (paymentMethod.toLowerCase() === 'stripe' && _stripeInstance && _stripeCard) {
             const { paymentMethod: pm, error: pmErr } = await _stripeInstance.createPaymentMethod({ type: 'card', card: _stripeCard });
-            if (pmErr) { showError(pmErr.message || 'Kartenzahlung fehlgeschlagen.'); return; }
+            if (pmErr) { throw new Error(pmErr.message || 'Kartenzahlung fehlgeschlagen.'); }
             _stripePmId = pm.id;
           }
 
