@@ -34,6 +34,6 @@ export async function createFirstAdmin(
     data: { email, passwordHash, role: 'super_admin' },
   })
 
-  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: null })
+  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: null, sessionVersion: 0 })
   redirect('/admin')
 }

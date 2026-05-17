@@ -39,6 +39,7 @@ export async function GET(req: NextRequest) {
     email: user.email,
     role: user.role,
     hotelId: primaryHotelId,
+    sessionVersion: 0,
   });
 
   return NextResponse.redirect(new URL('/admin/onboarding', req.url));
