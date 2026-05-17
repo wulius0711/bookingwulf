@@ -338,7 +338,9 @@ Alternativen:
 
 ## 🔴 Dringend / Diese Woche
 
-- [x] **Zahlungsarten getestet** ✅ — Mai 2026. Alle drei Flows durchgeklickt: Banküberweisung, PayPal-Redirect (Sandbox), Stripe Inline-Zahlung (Test-Keys). Status korrekt, Hotel + Gast E-Mails erhalten.
+- [x] **PayPal-Flow getestet** ✅ — Mai 2026. Sandbox-Credentials, Redirect, Capture, Status "Gebucht", Hotel + Gast E-Mail korrekt.
+- [x] **Stripe-Flow getestet** ✅ — Mai 2026. Test-Keys, Karte 4242 4242 4242 4242, Inline-Zahlung, Status "Gebucht", Hotel + Gast E-Mail korrekt.
+- [ ] **Banküberweisung-Flow testen** — Buchung absenden, prüfen: Gast-Mail enthält IBAN/BIC/Verwendungszweck, Hotel-Mail ankommt, Status im Admin korrekt. Auch Anzahlung-Testfälle (siehe unten) durchgehen.
 - [x] **Backup-Restore getestet** ✅ — Mai 2026. 27 Tabellen, alle Daten korrekt wiederhergestellt. Achtung: pg_dump muss Version 18 sein (Railway läuft auf PG 18.3) — GitHub Action auf `/usr/lib/postgresql/18/bin/pg_dump` umgestellt.
 
 ## 🟡 Diese Woche / Bald
