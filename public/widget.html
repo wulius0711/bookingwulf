@@ -6150,16 +6150,17 @@
             if (termsErr) termsErr.style.display = 'none';
           }
 
+          // Capture Stripe PaymentMethod ID before DOM rebuild destroys the card element
+          let _stripePmId = null;
+          if (paymentMethod.toLowerCase() === 'stripe' && _stripeInstance && _stripeCard) {
+            const { paymentMethod: pm, error: pmErr } = await _stripeInstance.createPaymentMethod({ type: 'card', card: _stripeCard });
+            if (pmErr) { showError(pmErr.message || 'Kartenzahlung fehlgeschlagen.'); return; }
+            _stripePmId = pm.id;
+          }
+
           state.submitting = true;
           renderSummary();
           renderSubmitArea();
-          // renderSubmitArea() rebuilds the DOM via innerHTML, which unmounts the Stripe
-          // card element. Re-mount it immediately so confirmCardPayment works.
-          if (paymentMethod.toLowerCase() === 'stripe' && _stripeCard) {
-            const stripeInfo = document.getElementById('pmInfoStripe');
-            if (stripeInfo) stripeInfo.style.display = '';
-            _stripeCard.mount('#stripeCardMount');
-          }
           const _progressEl = document.getElementById('submitProgress');
           if (_progressEl) _progressEl.textContent = bookingType === 'booking' ? t('progress_confirming') : t('progress_sending');
 
@@ -6263,9 +6264,9 @@
             }
 
             // If Stripe: confirm card payment inline
-            if (result.clientSecret && _stripeInstance && _stripeCard) {
+            if (result.clientSecret && _stripeInstance && _stripePmId) {
               const { paymentIntent, error } = await _stripeInstance.confirmCardPayment(result.clientSecret, {
-                payment_method: { card: _stripeCard },
+                payment_method: _stripePmId,
               });
               if (error) {
                 throw new Error(error.message || 'Kartenzahlung fehlgeschlagen.');
