@@ -553,7 +553,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 
 ### Vor erstem Beta-Kunden
 - [x] **Backup-Restore getestet** ✅ — Mai 2026. Railway Test-Environment erstellt, Artifact eingespielt, 27 Tabellen + alle Daten vorhanden.
-- [ ] **PayPal-Zahlungsflow vollständig testen** — alle 3 Zahlungsarten (Banküberweisung, PayPal-Redirect, Stripe Inline) mit echten Sandbox-Credentials durchklicken
+- [x] **PayPal-Zahlungsflow getestet** ✅ — Mai 2026. Sandbox-Test erfolgreich: Redirect, Capture, Status "Gebucht", Hotel + Gast E-Mail alles korrekt. Hinweis: `PAYPAL_SANDBOX=true` Env Var für Sandbox-Tests, danach wieder entfernen.
 
 ### Vor öffentlichem Launch (wenn Traffic wächst)
 - [ ] **Structured Logging** — Sentry ist drin, aber API-Calls und Admin-Aktionen werden nicht strukturiert geloggt. Wichtig für Debugging bei echten Kunden.
