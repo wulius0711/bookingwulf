@@ -307,7 +307,8 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
   userId: number,
   email: string,
   role: 'hotel_admin' | 'super_admin',
-  hotelId: number | null   // null = Super-Admin
+  hotelId: number | null,   // null = Super-Admin
+  sessionVersion: number    // für Session Revocation
 }
 ```
 
@@ -317,6 +318,18 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 - Super-Admin (`hotelId === null`) hat Zugriff auf alle Hotels
 - Abo-Status wird im Layout geprüft → Weiterleitung zu `/admin/billing` bei `inactive`
 - Trial-Ablauf wird serverseitig geprüft und ggf. auf `inactive` gesetzt
+
+### Session Revocation
+
+`AdminUser.sessionVersion` (Int, default 0) wird bei jedem Login in den JWT mitgespeichert. `verifySession()` prüft bei jedem Request ob die Version im Token mit der aktuellen DB-Version übereinstimmt — Mismatch → sofort abgemeldet.
+
+**SuperAdmin kann unter `/admin/users` pro User:**
+- **"Sessions beenden"** — `sessionVersion++` → alle aktiven Tokens sofort ungültig, User wird beim nächsten Request abgemeldet. User kann sich aber neu einloggen.
+- **"Deaktivieren"** — zukünftige Logins geblockt (`isActive = false`).
+
+**Typische Use-Cases:**
+- Laptop gestohlen / Token kompromittiert → "Sessions beenden"
+- Mitarbeiter gekündigt → "Deaktivieren" + "Sessions beenden" kombinieren
 
 ---
 

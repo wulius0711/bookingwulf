@@ -355,7 +355,7 @@ Alternativen:
 
 - [x] **Rate Limiting → Upstash Redis** — umgestellt Mai 2026. Zähler sind jetzt persistent und cross-instance korrekt (kein In-Memory-Reset mehr bei Deploy).
 - [x] **Structured Logging → Axiom** ✅ — umgestellt Mai 2026. `src/lib/logger.ts` sendet JSON-Events (`booking.created`, `payment.confirmed`, `payment.failed`, `email.sent`, `email.error`, `booking.error`) direkt an Axiom (EU Central 1, Free Tier 50GB/Mo). Fällt still zurück wenn `AXIOM_TOKEN` fehlt.
-- [ ] **Session Revocation** — Admin-JWTs 24h gültig ohne Widerrufsmöglichkeit. Erst relevant bei größeren Team-Accounts.
+- [x] **Session Revocation** ✅ — Mai 2026. `sessionVersion` auf AdminUser — bei jedem Login im JWT, bei jedem Request gegen DB geprüft. SuperAdmin kann unter `/admin/users` Sessions sofort beenden (Token kompromittiert / Laptop gestohlen) oder User deaktivieren (Mitarbeiter gekündigt).
 
 ## 🧪 Testfälle
 
@@ -515,7 +515,7 @@ Alternativen:
 | Thema | Status | Wann angehen |
 |-------|--------|--------------|
 | Rate Limiting in-memory | ✅ | Upstash Redis — umgestellt Mai 2026 |
-| Session Revocation fehlt | ⚠️ | Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit; erst bei echten Team-Kunden relevant |
+| Session Revocation | ✅ | sessionVersion-Mechanismus — Mai 2026 |
 | Kein MFA für Admins | ℹ️ | Nice-to-have; kein kritisches Risiko bei kleinen Teams |
 | Backup-Restore getestet | ✅ | Mai 2026 — 27 Tabellen, alle Daten OK. pg_dump 18 erforderlich (Railway PG 18.3) |
 
