@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { retrievePaymentIntent } from '@/src/lib/stripe-server';
 import { getResend, getFromEmail, buildEmailHtml, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, type Lang } from '@/src/lib/email-i18n';
+import { log } from '@/src/lib/logger';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
 
     const pi = await retrievePaymentIntent(secretKey, paymentIntentId);
     if (pi.status !== 'succeeded') {
+      log('payment.failed', { method: 'stripe', requestId: request.id, hotelId: request.hotel?.id, reason: pi.status });
       return NextResponse.json({ success: false, message: 'Zahlung noch nicht abgeschlossen.' }, { status: 402, headers: corsHeaders });
     }
 
@@ -63,6 +65,7 @@ export async function POST(req: NextRequest) {
       where: { id: request.id },
       data: { status: 'booked', paypalOrderId: paymentIntentId },
     });
+    log('payment.confirmed', { method: 'stripe', requestId: request.id, hotelId: request.hotel?.id });
 
     // Block dates
     const apartmentIds = request.selectedApartmentIds
@@ -130,11 +133,14 @@ export async function POST(req: NextRequest) {
       }
     } catch (emailErr) {
       console.error('[Stripe confirm] email error:', emailErr);
+      log('email.error', { template: 'stripe_confirmation', requestId: request.id, error: emailErr instanceof Error ? emailErr.message : String(emailErr) });
     }
 
+    log('email.sent', { template: 'stripe_confirmation', requestId: request.id });
     return NextResponse.json({ success: true }, { headers: corsHeaders });
   } catch (err) {
     console.error('[Stripe confirm] error:', err);
+    log('booking.error', { route: 'stripe/confirm', error: err instanceof Error ? err.message : String(err) });
     return NextResponse.json({ success: false, message: 'Serverfehler.' }, { status: 500, headers: corsHeaders });
   }
 }

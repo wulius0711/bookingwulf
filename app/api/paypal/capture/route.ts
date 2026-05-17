@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { getPaypalAccessToken, capturePaypalOrder } from '@/src/lib/paypal';
 import { getResend, getFromEmail, buildEmailHtml, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, type Lang } from '@/src/lib/email-i18n';
+import { log } from '@/src/lib/logger';
 
 function fmtDate(d: Date, locale = 'de-AT'): string {
   return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(d);
@@ -63,6 +64,7 @@ export async function GET(req: NextRequest) {
     const { status, captureId } = await capturePaypalOrder(accessToken, token);
 
     if (status !== 'COMPLETED') {
+      log('payment.failed', { method: 'paypal', requestId, hotelId: request.hotel?.id, reason: status });
       return NextResponse.redirect(`${base}/booking-confirmed?status=error`);
     }
 
@@ -75,6 +77,7 @@ export async function GET(req: NextRequest) {
       where: { id: requestId },
       data: { status: 'booked', paypalOrderId: captureId },
     });
+    log('payment.confirmed', { method: 'paypal', requestId, hotelId: request.hotel?.id });
 
     // Block dates
     if (apartmentIds.length > 0) {
@@ -142,11 +145,14 @@ export async function GET(req: NextRequest) {
       }
     } catch (emailErr) {
       console.error('[PayPal capture] email error:', emailErr);
+      log('email.error', { template: 'paypal_confirmation', requestId, error: emailErr instanceof Error ? emailErr.message : String(emailErr) });
     }
 
+    log('email.sent', { template: 'paypal_confirmation', requestId });
     return NextResponse.redirect(`${base}/booking-confirmed?status=success&id=${requestId}`);
   } catch (err) {
     console.error('[PayPal capture] error:', err);
+    log('booking.error', { route: 'paypal/capture', error: err instanceof Error ? err.message : String(err) });
     return NextResponse.redirect(`${base}/booking-confirmed?status=error`);
   }
 }

@@ -7,6 +7,7 @@ import { createNukiCode } from '@/src/lib/nuki';
 import { pushBooking } from '@/src/lib/beds24';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { calculateOrtstaxe } from '@/src/lib/ortstaxe';
+import { log } from '@/src/lib/logger';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -237,6 +238,8 @@ export async function POST(req: Request) {
         ...(checkinToken ? { checkinToken } : {}),
       },
     });
+
+    log('booking.created', { requestId: requestEntry.id, hotelId: hotel.id, status: requestEntry.status, method: paymentMethod, nights, total: totalBookingPrice });
 
     // PayPal redirect flow — return approval URL, skip blocking and emails
     if (isPaypalBooking) {
@@ -652,7 +655,10 @@ export async function POST(req: Request) {
       }
     } catch (mailError) {
       console.error('Mail error:', mailError);
+      log('email.error', { requestId: requestEntry.id, hotelId: hotel.id, error: mailError instanceof Error ? mailError.message : String(mailError) });
     }
+
+    log('email.sent', { template: 'booking_notification', requestId: requestEntry.id, hotelId: hotel.id });
 
     // Redeem voucher for confirmed bank-transfer bookings only
     if (bookingType === 'booking' && body.voucherCode) {
@@ -669,6 +675,7 @@ export async function POST(req: Request) {
     return Response.json({ success: true, requestId: requestEntry.id }, { headers: corsHeaders });
   } catch (error) {
     console.error(error);
+    log('booking.error', { error: error instanceof Error ? error.message : String(error) });
     return Response.json({ success: false, message: 'Fehler beim Speichern der Buchung.' }, { status: 500, headers: corsHeaders });
   }
 }
