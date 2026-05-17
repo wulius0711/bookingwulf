@@ -339,7 +339,7 @@ Alternativen:
 ## 🔴 Dringend / Diese Woche
 
 - [ ] Zahlungsarten mit echten Credentials testen: PayPal Sandbox (developer.paypal.com) + Stripe Test-Keys (pk_test_ / sk_test_ aus dashboard.stripe.com/apikeys) — alle drei Flows durchklicken: Banküberweisung, PayPal-Redirect, Stripe Inline-Zahlung
-- [ ] **Backup-Restore testen** — GitHub Actions → Daily DB Backup → Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`. Backups laufen, aber Restore war nie verifiziert.
+- [x] **Backup-Restore getestet** ✅ — Mai 2026. 27 Tabellen, alle Daten korrekt wiederhergestellt. Achtung: pg_dump muss Version 18 sein (Railway läuft auf PG 18.3) — GitHub Action auf `/usr/lib/postgresql/18/bin/pg_dump` umgestellt.
 
 ## 🟡 Diese Woche / Bald
 
@@ -515,7 +515,7 @@ Alternativen:
 | Rate Limiting in-memory | ⚠️ | Wenn ernsthafter Traffic; dann Redis (Upstash) davor schalten |
 | Session Revocation fehlt | ⚠️ | Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit; erst bei echten Team-Kunden relevant |
 | Kein MFA für Admins | ℹ️ | Nice-to-have; kein kritisches Risiko bei kleinen Teams |
-| Backup-Restore nie getestet | ⚠️ | Einmal manuell testen: `gunzip -c backup-YYYY-MM-DD.sql.gz \| psql "$DATABASE_URL_RAILWAY"` |
+| Backup-Restore getestet | ✅ | Mai 2026 — 27 Tabellen, alle Daten OK. pg_dump 18 erforderlich (Railway PG 18.3) |
 
 ---
 
@@ -552,7 +552,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 ## Offene Punkte (priorisiert)
 
 ### Vor erstem Beta-Kunden
-- [ ] **Backup-Restore testen** — einmal manuell durchspielen: GitHub Actions Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`. Aktuell laufen Backups, aber der Restore war nie verifiziert.
+- [x] **Backup-Restore getestet** ✅ — Mai 2026. Railway Test-Environment erstellt, Artifact eingespielt, 27 Tabellen + alle Daten vorhanden.
 - [ ] **PayPal-Zahlungsflow vollständig testen** — alle 3 Zahlungsarten (Banküberweisung, PayPal-Redirect, Stripe Inline) mit echten Sandbox-Credentials durchklicken
 
 ### Vor öffentlichem Launch (wenn Traffic wächst)

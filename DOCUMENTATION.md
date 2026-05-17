@@ -1520,7 +1520,7 @@ Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert 
 ### Offene Punkte
 
 **Vor erstem Beta-Kunden:**
-- Backup-Restore einmal manuell verifizieren: GitHub Actions → Daily DB Backup → Artifact herunterladen → `gunzip -c backup-YYYY-MM-DD.sql.gz | psql "$DATABASE_URL_RAILWAY"`
+- ✅ Backup-Restore verifiziert (Mai 2026): 27 Tabellen, alle Daten korrekt. Hinweis: lokaler `psql` muss PG 18 sein (`\unrestrict` Warnung bei älteren Versionen ist harmlos aber pg_dump muss 18 sein)
 - Alle 3 Zahlungsarten (Banküberweisung, PayPal, Stripe) vollständig mit Sandbox-Credentials testen
 
 **Erledigt (Mai 2026):**
