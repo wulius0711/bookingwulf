@@ -92,18 +92,18 @@ export async function POST(req: Request) {
         include: { blockedRanges: true, priceSeasons: true },
       }),
       prisma.request.findMany({
-        where: { hotelId: hotel.id, status: 'booked', arrival: { lt: departure }, departure: { gt: arrival } },
+        where: { hotelId: hotel.id, status: { in: ['booked', 'pending_paypal', 'pending_stripe'] }, arrival: { lt: departure }, departure: { gt: arrival } },
         select: { selectedApartmentIds: true },
       }),
       gapEnabled
         ? prisma.request.findMany({
-            where: { hotelId: hotel.id, status: 'booked', departure: { gte: arrivalNorm, lt: nextDay(arrivalNorm) } },
+            where: { hotelId: hotel.id, status: { in: ['booked', 'pending_paypal', 'pending_stripe'] }, departure: { gte: arrivalNorm, lt: nextDay(arrivalNorm) } },
             select: { selectedApartmentIds: true },
           })
         : Promise.resolve([]),
       gapEnabled
         ? prisma.request.findMany({
-            where: { hotelId: hotel.id, status: 'booked', arrival: { gte: departureNorm, lt: nextDay(departureNorm) } },
+            where: { hotelId: hotel.id, status: { in: ['booked', 'pending_paypal', 'pending_stripe'] }, arrival: { gte: departureNorm, lt: nextDay(departureNorm) } },
             select: { selectedApartmentIds: true },
           })
         : Promise.resolve([]),

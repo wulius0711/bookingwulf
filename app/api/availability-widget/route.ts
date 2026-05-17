@@ -54,7 +54,7 @@ export async function GET(req: Request) {
       prisma.request.findMany({
         where: {
           hotelId: hotel.id,
-          status: 'booked',
+          status: { in: ['booked', 'pending_paypal', 'pending_stripe'] },
           arrival: { lt: to },
           departure: { gt: from },
         },
