@@ -23,7 +23,7 @@ jobs:
         run: |
           set -eo pipefail
           if [ -z "$DATABASE_URL" ]; then echo "ERROR: DATABASE_URL_RAILWAY secret not set"; exit 1; fi
-          pg_dump "$DATABASE_URL" --no-owner --no-acl | gzip > backup-$(date +%Y-%m-%d).sql.gz
+          /usr/lib/postgresql/18/bin/pg_dump "$DATABASE_URL" --no-owner --no-acl | gzip > backup-$(date +%Y-%m-%d).sql.gz
           SIZE=$(stat -c%s backup-$(date +%Y-%m-%d).sql.gz)
           if [ "$SIZE" -lt 1000 ]; then echo "ERROR: Backup file suspiciously small ($SIZE bytes)"; exit 1; fi
           echo "Backup OK: $SIZE bytes"
