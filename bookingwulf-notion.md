@@ -338,7 +338,7 @@ Alternativen:
 
 ## 🔴 Dringend / Diese Woche
 
-- [ ] Zahlungsarten mit echten Credentials testen: PayPal Sandbox (developer.paypal.com) + Stripe Test-Keys (pk_test_ / sk_test_ aus dashboard.stripe.com/apikeys) — alle drei Flows durchklicken: Banküberweisung, PayPal-Redirect, Stripe Inline-Zahlung
+- [x] **Zahlungsarten getestet** ✅ — Mai 2026. Alle drei Flows durchgeklickt: Banküberweisung, PayPal-Redirect (Sandbox), Stripe Inline-Zahlung (Test-Keys). Status korrekt, Hotel + Gast E-Mails erhalten.
 - [x] **Backup-Restore getestet** ✅ — Mai 2026. 27 Tabellen, alle Daten korrekt wiederhergestellt. Achtung: pg_dump muss Version 18 sein (Railway läuft auf PG 18.3) — GitHub Action auf `/usr/lib/postgresql/18/bin/pg_dump` umgestellt.
 
 ## 🟡 Diese Woche / Bald
@@ -554,6 +554,8 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 ### Vor erstem Beta-Kunden
 - [x] **Backup-Restore getestet** ✅ — Mai 2026. Railway Test-Environment erstellt, Artifact eingespielt, 27 Tabellen + alle Daten vorhanden.
 - [x] **PayPal-Zahlungsflow getestet** ✅ — Mai 2026. Sandbox-Test erfolgreich: Redirect, Capture, Status "Gebucht", Hotel + Gast E-Mail alles korrekt. Hinweis: `PAYPAL_SANDBOX=true` Env Var für Sandbox-Tests, danach wieder entfernen.
+- [x] **Stripe-Zahlungsflow getestet** ✅ — Mai 2026. Test-Keys (pk_test_ / sk_test_), Karte 4242 4242 4242 4242, Inline-Zahlung im Widget. PLZ-Feld ausgeblendet (`hidePostalCode: true`). Status "Gebucht", Hotel + Gast E-Mail korrekt.
+- [x] **"Zahlung offen" Status** ✅ — Mai 2026. Buchungen mit ausstehender Zahlung (`pending_stripe`, `pending_paypal`) erscheinen im Admin mit gelbem Badge "Zahlung offen". Hotel kann manuell bestätigen oder stornieren (z.B. nach telefonischer Klärung).
 
 ### Vor öffentlichem Launch (wenn Traffic wächst)
 - [ ] **Structured Logging** — Sentry ist drin, aber API-Calls und Admin-Aktionen werden nicht strukturiert geloggt. Wichtig für Debugging bei echten Kunden.

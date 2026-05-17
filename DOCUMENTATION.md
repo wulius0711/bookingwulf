@@ -641,9 +641,20 @@ Eingerichtet vom Hotelier in `Konfiguration → Widget & Design → Zahlungsarte
 - `automatic_payment_methods: { enabled: true, allow_redirects: 'never' }` — kein Redirect, Zahlung bleibt inline im Widget
 - Gibt `clientSecret` zurück → Widget ruft `stripe.confirmCardPayment()` auf
 
+**Widget-Flow (Karte bleibt erhalten):**
+- `createPaymentMethod()` wird *vor* jedem DOM-Rebuild aufgerufen (PM-ID in `_stripePmId` zwischenspeichern)
+- `confirmCardPayment(clientSecret, { payment_method: _stripePmId })` verwendet die gespeicherte ID
+- Card-Element mit `hidePostalCode: true` (österr. PLZ 4-stellig, würde sonst rot angezeigt)
+
 **Confirm-Endpunkt** (`POST /api/stripe/confirm`):
 - Verifiziert `PaymentIntent.status === 'succeeded'`
 - Setzt Request-Status auf `'booked'`, legt BlockedRanges an, sendet E-Mails
+
+**Status-Flow:**
+- Form-Submit → Buchung mit `pending_stripe` angelegt
+- Zahlung erfolgreich → `booked`
+- Zahlung fehlgeschlagen/abgebrochen → bleibt `pending_stripe`, erscheint im Admin mit Badge "Zahlung offen" (gelb)
+- Hotel kann manuell bestätigen (`booked`) oder stornieren (`cancelled`)
 
 ### Preise
 
