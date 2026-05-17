@@ -108,3 +108,18 @@ export async function unassignHotel(formData: FormData): Promise<void> {
 
   redirect(`/admin/users/${userId}`);
 }
+
+export async function revokeUserSessions(formData: FormData): Promise<void> {
+  const session = await verifySession();
+  if (session.role !== 'super_admin') return;
+
+  const userId = Number(formData.get('userId'));
+  if (!userId) return;
+
+  await prisma.adminUser.update({
+    where: { id: userId },
+    data: { sessionVersion: { increment: 1 } },
+  });
+
+  redirect(`/admin/users/${userId}`);
+}

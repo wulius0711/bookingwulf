@@ -1,7 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
-import { assignHotel, unassignHotel, AssignHotelState } from '../actions';
+import { assignHotel, unassignHotel, revokeUserSessions, AssignHotelState } from '../actions';
 import AssignHotelForm from './AssignHotelForm';
 import { Button } from '../../components/ui';
 
@@ -89,6 +89,17 @@ export default async function UserHotelsPage({ params }: PageProps) {
           Limit erreicht: Business-Plan erlaubt max. 2 Hotelanlagen pro Benutzer.
         </p>
       )}
+
+      <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+        <h2 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--text-primary)' }}>Sessions beenden</h2>
+        <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--text-secondary)' }}>
+          Alle aktiven Sitzungen dieses Benutzers sofort ungültig machen. Der Benutzer wird beim nächsten Request abgemeldet.
+        </p>
+        <form action={revokeUserSessions}>
+          <input type="hidden" name="userId" value={userId} />
+          <Button variant="danger" size="sm" type="submit">Sessions widerrufen</Button>
+        </form>
+      </div>
     </main>
   );
 }

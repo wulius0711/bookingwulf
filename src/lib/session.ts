@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import { encrypt, decrypt, type SessionPayload } from './session-crypto'
+import { prisma } from './prisma'
 
 export type { SessionPayload } from './session-crypto'
 export { encrypt, decrypt }
@@ -31,5 +32,13 @@ export const verifySession = cache(async (): Promise<SessionPayload> => {
   const token = cookieStore.get('admin_session')?.value
   const payload = await decrypt(token)
   if (!payload) redirect('/admin/login')
+  const user = await prisma.adminUser.findUnique({
+    where: { id: payload.userId },
+    select: { sessionVersion: true },
+  })
+  if (!user || user.sessionVersion !== payload.sessionVersion) {
+    cookieStore.delete('admin_session')
+    redirect('/admin/login')
+  }
   return payload
 })

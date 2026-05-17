@@ -18,7 +18,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   const { ok } = await rateLimit(`login:${email}`, 5, 15 * 60 * 1000);
   if (!ok) return { error: 'Zu viele Anmeldeversuche. Bitte warten Sie 15 Minuten.' }
 
-  const user = await prisma.adminUser.findUnique({ where: { email } })
+  const user = await prisma.adminUser.findUnique({ where: { email }, select: { id: true, email: true, role: true, hotelId: true, isActive: true, isEmailVerified: true, emailVerifyToken: true, passwordHash: true, sessionVersion: true } })
 
   if (!user || !user.isActive) {
     return { error: 'Ungültige Anmeldedaten.' }
@@ -43,7 +43,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   });
   const primaryHotelId = userHotels[0]?.hotelId ?? user.hotelId ?? null;
 
-  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: primaryHotelId })
+  await createSession({ userId: user.id, email: user.email, role: user.role, hotelId: primaryHotelId, sessionVersion: user.sessionVersion })
 
   // redirect() after createSession causes white screen because cookie change
   // invalidates the client router cache within the same /admin layout.

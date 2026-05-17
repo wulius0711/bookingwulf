@@ -5,6 +5,7 @@ export type SessionPayload = {
   email: string
   role: string
   hotelId: number | null
+  sessionVersion: number
 }
 
 function getSecret(): Uint8Array {
@@ -36,6 +37,7 @@ export async function decrypt(token: string | undefined): Promise<SessionPayload
       email: p.email as string,
       role: p.role as string,
       hotelId: (p.hotelId as number | null | undefined) ?? null,
+      sessionVersion: (p.sessionVersion as number | undefined) ?? 0,
     }
   } catch {
     return null
