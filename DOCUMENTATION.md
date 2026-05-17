@@ -600,6 +600,28 @@ Importiert externe Kalender (Airbnb, Booking.com) als `BlockedRange`-Einträge.
 
 ---
 
+## 10b. Structured Logging (Axiom)
+
+**`src/lib/logger.ts`** — zentraler Logger, fire-and-forget:
+- Schreibt immer strukturiertes JSON auf `console.log` (→ Vercel Logs)
+- Sendet parallel per HTTP an Axiom (`AXIOM_TOKEN` Env Var, Dataset `bookingwulf-logs`, EU Central 1)
+- Fällt still zurück wenn Token fehlt — kein Request wird blockiert
+
+**Log-Events (aktuell):**
+
+| Event | Route | Felder |
+|---|---|---|
+| `booking.created` | `/api/request` | `requestId, hotelId, status, method, nights, total` |
+| `payment.confirmed` | `/api/stripe/confirm`, `/api/paypal/capture` | `method, requestId, hotelId` |
+| `payment.failed` | `/api/stripe/confirm`, `/api/paypal/capture` | `method, requestId, hotelId, reason` |
+| `email.sent` | alle Zahlungs-Routen | `template, requestId` |
+| `email.error` | alle Zahlungs-Routen | `template, requestId, error` |
+| `booking.error` | `/api/request`, Zahlungs-Routen | `route, error` |
+
+**Axiom:** [app.axiom.co](https://app.axiom.co) → Dataset `bookingwulf-logs` → Query z.B. `event == "payment.failed"` für alle fehlgeschlagenen Zahlungen.
+
+---
+
 ## 11. Stripe-Integration
 
 > **Zwei unabhängige Stripe-Kontexte:**
@@ -1536,9 +1558,10 @@ Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert 
 
 **Erledigt (Mai 2026):**
 - ✅ Rate Limiting → Upstash Redis (`@upstash/redis`, INCR+EXPIRE, eu-central-1, Free Tier)
+- ✅ Structured Logging → Axiom (`src/lib/logger.ts`, JSON-Events, EU Central 1, Free Tier 50 GB/Mo)
 
 **Wenn Traffic wächst:**
-- Structured Logging für Admin-Aktionen und Integrations-Fehler (Beds24, iCal)
+- Structured Logging für Admin-Aktionen und Integrations-Fehler (Beds24, iCal) — Basis-Events bereits live, erweiterbar
 - Session Revocation (Token-Blocklist in DB oder Redis)
 
 **Bewusst zurückgestellt:**

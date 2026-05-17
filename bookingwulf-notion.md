@@ -354,7 +354,7 @@ Alternativen:
 ## 🔒 Launch Readiness — Infrastruktur
 
 - [x] **Rate Limiting → Upstash Redis** — umgestellt Mai 2026. Zähler sind jetzt persistent und cross-instance korrekt (kein In-Memory-Reset mehr bei Deploy).
-- [ ] **Structured Logging** — Admin-Aktionen und Integrations-Fehler strukturiert loggen (aktuell nur Sentry + console.error)
+- [x] **Structured Logging → Axiom** ✅ — umgestellt Mai 2026. `src/lib/logger.ts` sendet JSON-Events (`booking.created`, `payment.confirmed`, `payment.failed`, `email.sent`, `email.error`, `booking.error`) direkt an Axiom (EU Central 1, Free Tier 50GB/Mo). Fällt still zurück wenn `AXIOM_TOKEN` fehlt.
 - [ ] **Session Revocation** — Admin-JWTs 24h gültig ohne Widerrufsmöglichkeit. Erst relevant bei größeren Team-Accounts.
 
 ## 🧪 Testfälle
@@ -514,7 +514,7 @@ Alternativen:
 
 | Thema | Status | Wann angehen |
 |-------|--------|--------------|
-| Rate Limiting in-memory | ⚠️ | Wenn ernsthafter Traffic; dann Redis (Upstash) davor schalten |
+| Rate Limiting in-memory | ✅ | Upstash Redis — umgestellt Mai 2026 |
 | Session Revocation fehlt | ⚠️ | Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit; erst bei echten Team-Kunden relevant |
 | Kein MFA für Admins | ℹ️ | Nice-to-have; kein kritisches Risiko bei kleinen Teams |
 | Backup-Restore getestet | ✅ | Mai 2026 — 27 Tabellen, alle Daten OK. pg_dump 18 erforderlich (Railway PG 18.3) |
@@ -560,7 +560,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 - [x] **"Zahlung offen" Status** ✅ — Mai 2026. Buchungen mit ausstehender Zahlung (`pending_stripe`, `pending_paypal`) erscheinen im Admin mit gelbem Badge "Zahlung offen". Hotel kann manuell bestätigen oder stornieren (z.B. nach telefonischer Klärung).
 
 ### Vor öffentlichem Launch (wenn Traffic wächst)
-- [ ] **Structured Logging** — Sentry ist drin, aber API-Calls und Admin-Aktionen werden nicht strukturiert geloggt. Wichtig für Debugging bei echten Kunden.
+- [x] **Structured Logging → Axiom** ✅ — umgestellt Mai 2026. Booking-Events strukturiert in Axiom (EU Central 1). Siehe oben.
 - [x] **Rate Limiting → Upstash Redis** ✅ — umgestellt Mai 2026. `@upstash/redis`, INCR+EXPIRE, fails open bei Redis-Ausfall.
 - [ ] **Session Revocation** — Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit. Erst relevant wenn Team-Accounts größerer Hotels genutzt werden.
 
@@ -568,7 +568,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 - Multi-Factor Authentication für Admins — Nice-to-have, kein kritisches Risiko
 - WAF / DDoS-Protection — Vercel deckt Basics ab
 - OpenAPI-Dokumentation — kein Investor erwartet das beim ersten Pitch
-- Redis sofort — erst wenn Traffic es rechtfertigt
+- ~~Redis sofort~~ — erledigt (Upstash Redis, Mai 2026)
 
 ## Infrastruktur-Übersicht (Pitch-tauglich)
 
