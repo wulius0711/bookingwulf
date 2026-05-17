@@ -18,10 +18,12 @@ type ApartmentLookup = { id: number; name: string };
 
 function getStatusBadge(status: string) {
   switch (status) {
-    case 'booked':     return { label: 'Gebucht',     bg: 'var(--status-booked-bg)',    color: 'var(--status-booked-text)',    border: 'transparent' };
-    case 'answered':   return { label: 'Beantwortet', bg: 'var(--status-new-bg)',        color: 'var(--status-new-text)',        border: 'transparent' };
-    case 'cancelled':  return { label: 'Storniert',   bg: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', border: 'transparent' };
-    default:           return { label: 'Neu',          bg: 'var(--status-pending-bg)',   color: 'var(--status-pending-text)',   border: 'transparent' };
+    case 'booked':          return { label: 'Gebucht',       bg: 'var(--status-booked-bg)',    color: 'var(--status-booked-text)',    border: 'transparent' };
+    case 'answered':        return { label: 'Beantwortet',   bg: 'var(--status-new-bg)',        color: 'var(--status-new-text)',        border: 'transparent' };
+    case 'cancelled':       return { label: 'Storniert',     bg: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', border: 'transparent' };
+    case 'pending_stripe':
+    case 'pending_paypal':  return { label: 'Zahlung offen', bg: 'var(--status-pending-bg)',   color: 'var(--status-pending-text)',   border: 'transparent' };
+    default:                return { label: 'Neu',            bg: 'var(--status-new-bg)',        color: 'var(--status-new-text)',        border: 'transparent' };
   }
 }
 
