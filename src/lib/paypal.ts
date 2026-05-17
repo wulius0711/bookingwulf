@@ -1,4 +1,6 @@
-const PAYPAL_BASE = 'https://api-m.paypal.com';
+const PAYPAL_BASE = process.env.PAYPAL_SANDBOX === 'true'
+  ? 'https://api-m.sandbox.paypal.com'
+  : 'https://api-m.paypal.com';
 
 export async function getPaypalAccessToken(clientId: string, clientSecret: string): Promise<string> {
   const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
