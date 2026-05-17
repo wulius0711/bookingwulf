@@ -390,6 +390,8 @@ model Request {
   checkoutRequestedAt    DateTime?
   upsellNotifiedAt       DateTime?
 
+  paymentReminderSentAt DateTime? // set when hotel is notified of pending payment
+
   beds24BookingId String? @unique // set for bookings synced from Beds24 webhook
 
   messages RequestMessage[]
