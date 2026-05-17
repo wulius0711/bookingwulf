@@ -37,6 +37,22 @@ async function toggleActive(formData: FormData) {
   redirect('/admin/users');
 }
 
+async function revokeSessionsInline(formData: FormData) {
+  'use server';
+
+  const session = await verifySession();
+  if (session.role !== 'super_admin') return;
+
+  const id = Number(formData.get('id'));
+  if (!id || id === session.userId) return;
+
+  await prisma.adminUser.update({
+    where: { id },
+    data: { sessionVersion: { increment: 1 } },
+  });
+  redirect('/admin/users');
+}
+
 export default async function UsersPage() {
   const session = await verifySession();
   if (session.role !== 'super_admin') redirect('/admin');
@@ -159,6 +175,11 @@ export default async function UsersPage() {
                     <Button variant="secondary" size="sm" type="submit">
                       {u.isActive ? 'Deaktivieren' : 'Aktivieren'}
                     </Button>
+                  </form>
+
+                  <form action={revokeSessionsInline}>
+                    <input type="hidden" name="id" value={u.id} />
+                    <Button variant="secondary" size="sm" type="submit">Sessions beenden</Button>
                   </form>
 
                   <ConfirmDeleteForm action={deleteUser} id={u.id} message={`Benutzer „${u.email}" wirklich löschen?`}>
