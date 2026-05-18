@@ -194,7 +194,7 @@ export default function BillingPage() {
               transition: 'background 0.2s ease',
             }}
           >
-            <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', display: 'block' }} />
+            <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--toggle-thumb, #fff)', display: 'block' }} />
           </button>
           <span style={{ fontSize: 14, color: billingInterval === 'year' ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
             Jährlich
