@@ -182,7 +182,7 @@ export default function BillingPage() {
         )}
 
         {/* Billing interval toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '24px 0' }}>
           <span style={{ fontSize: 14, color: billingInterval === 'month' ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: billingInterval === 'month' ? 600 : 400 }}>Monatlich</span>
           <button
             onClick={() => setBillingInterval(billingInterval === 'month' ? 'year' : 'month')}
