@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
         const locale = LANG_TO_LOCALE[lang];
 
         // Hotel notification
-        await resend.emails.send({
+        const hotelMailResult = await resend.emails.send({
           from: getFromEmail(),
           to: receiverEmail,
           subject: `PayPal-Zahlung eingegangen — Buchung #${request.id} — ${fmtDate(request.arrival)} bis ${fmtDate(request.departure)}`,
@@ -123,9 +123,12 @@ export async function GET(req: NextRequest) {
             footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${request.id}</p>`,
           }),
         });
+        if (hotelMailResult.error) {
+          log('email.error', { template: 'paypal_hotel', requestId, error: JSON.stringify(hotelMailResult.error) });
+        }
 
         // Guest confirmation
-        await resend.emails.send({
+        const guestMailResult = await resend.emails.send({
           from: getFromEmail(),
           to: request.email,
           subject: i18n.bookingSubject(hotel.name),
@@ -142,6 +145,9 @@ export async function GET(req: NextRequest) {
             footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${request.id}</p>`,
           }),
         });
+        if (guestMailResult.error) {
+          log('email.error', { template: 'paypal_guest', requestId, error: JSON.stringify(guestMailResult.error) });
+        }
       }
     } catch (emailErr) {
       console.error('[PayPal capture] email error:', emailErr);
