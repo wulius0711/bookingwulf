@@ -138,7 +138,8 @@ export async function GET(req: NextRequest) {
             title: i18n.bookingTitle,
             preheader: `${fmtDate(request.arrival, locale)} – ${fmtDate(request.departure, locale)}`,
             body: `
-              <p style="font-size:15px;color:#374151;margin:0 0 16px;">${i18n.greeting(request.firstname ?? '')}</p>
+              <p style="font-size:15px;color:#374151;margin:0 0 8px;">${i18n.greeting(request.firstname ?? '')}</p>
+              <p style="font-size:15px;color:#374151;margin:0 0 24px;">${i18n.bookingBody} ${lang === 'de' ? 'Ihre Zahlung via PayPal wurde erfolgreich verarbeitet.' : 'Your PayPal payment has been successfully processed.'}</p>
               ${buildInfoBlock(i18n.period, `${fmtDate(request.arrival, locale)} — ${fmtDate(request.departure, locale)} (${i18n.nights(request.nights)})`)}
               ${buildInfoBlock(i18n.guests, i18n.adults(request.adults) + (request.children ? i18n.children(request.children) : ''))}
             `,
