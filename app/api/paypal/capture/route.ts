@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
         const hotelMailResult = await resend.emails.send({
           from: getFromEmail(),
           to: receiverEmail,
-          subject: `PayPal-Zahlung eingegangen — Buchung #${request.id} — ${fmtDate(request.arrival)} bis ${fmtDate(request.departure)}`,
+          subject: `Neue Buchung #${request.id} — PayPal-Zahlung bestätigt — ${fmtDate(request.arrival)} bis ${fmtDate(request.departure)}`,
           html: buildEmailHtml({
             hotelName: hotel.name,
             accentColor: accent,
