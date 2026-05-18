@@ -646,6 +646,32 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
           </details>
 
+          {/* VERFÜGBARKEITS-WIDGET */}
+          <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
+            <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
+              <div>
+                <h2 style={sectionTitleStyle}>Verfügbarkeits-Widget</h2>
+                <p style={sectionIntroStyle}>
+                  Monatskalender mit Frei/Belegt-Übersicht — als iframe auf deiner Website einbindbar.
+                </p>
+              </div>
+              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+            </summary>
+            <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <EmbedCode
+                code={`<iframe src="https://bookingwulf.com/availability-widget.html?hotel=${selected.slug}&months=2" width="100%" height="420" frameborder="0" style="border-radius:12px;"></iframe>`}
+              />
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
+                <iframe
+                  src={`/availability-widget.html?hotel=${encodeURIComponent(selected.slug)}&months=2`}
+                  style={{ width: '100%', height: 380, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}
+                  title="Verfügbarkeits-Widget Vorschau"
+                />
+              </div>
+            </div>
+          </details>
+
           {/* MINI WIDGET */}
           <details className="settings-section" style={{ border: '1px solid var(--border)', borderRadius: 18, background: 'var(--surface-2)', display: 'block' }}>
             <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
