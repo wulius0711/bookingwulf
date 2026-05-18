@@ -13,8 +13,11 @@ export async function getPaypalAccessToken(clientId: string, clientSecret: strin
     body: 'grant_type=client_credentials',
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`PayPal token request failed (${res.status}): ${text}`);
+    const body = await res.json().catch(() => ({})) as Record<string, string>;
+    if (body.error === 'invalid_client') {
+      throw new Error('PayPal: ungültige Credentials (invalid_client) — bitte Live-Zugangsdaten in Admin → Einstellungen → Zahlungen hinterlegen');
+    }
+    throw new Error(`PayPal token request failed (${res.status}): ${JSON.stringify(body)}`);
   }
   const data = await res.json();
   return data.access_token as string;
