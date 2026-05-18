@@ -242,7 +242,7 @@ export default function PreisePage() {
           </div>
 
           <div className="v4-table-wrap v4-table-wrap-pricing">
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 440, tableLayout: 'fixed' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, minWidth: 440, tableLayout: 'fixed' }}>
               <thead>
                 <tr>
                   <th className="sticky-col-header" style={{ textAlign: 'left', padding: '12px 16px', width: '40%', boxShadow: 'inset 0 -2px 0 var(--v4-border)', position: 'sticky', top: 64, background: '#fff', zIndex: 5 }} />
@@ -254,32 +254,57 @@ export default function PreisePage() {
                 </tr>
               </thead>
               <tbody>
-                {COMPARISON.flatMap(({ group, rows }) => [
-                  <tr key={`g-${group}`}>
-                    <td colSpan={4} style={{ padding: '20px 16px 8px', fontSize: 12, fontWeight: 700, color: 'var(--v4-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      {group}
-                    </td>
+                {COMPARISON.flatMap(({ group, rows }, gi) => [
+                  // spacer before each group (including first — creates gap to thead)
+                  <tr key={`spacer-${group}`} aria-hidden>
+                    <td colSpan={4} style={{ height: gi === 0 ? 16 : 12, padding: 0 }} />
                   </tr>,
-                  ...rows.map((row, ri) => (
-                    <tr key={`${group}-${row.label}`} style={{ borderBottom: ri === rows.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                      <td style={{ padding: '10px 16px', fontSize: 15, color: 'var(--v4-body)' }}>{row.label}</td>
-                      {PLAN_KEYS.map((k) => (
-                        <td key={k} style={{ padding: '10px 16px', textAlign: 'center', background: k === 'pro' ? 'rgba(16,139,169,0.04)' : 'transparent' }}>
-                          <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Cell val={row[k]} isPro={k === 'pro'} />
-                          </div>
+                  // group header
+                  <tr key={`g-${group}`}>
+                    <td colSpan={4} className="v4-table-group">{group}</td>
+                  </tr>,
+                  // data rows
+                  ...rows.map((row, ri) => {
+                    const isLast = ri === rows.length - 1;
+                    return (
+                      <tr key={`${group}-${row.label}`}>
+                        <td style={{
+                          padding: '10px 16px', fontSize: 15, color: 'var(--v4-body)',
+                          borderLeft: '1px solid var(--v4-border)',
+                          borderBottom: isLast ? '1px solid var(--v4-border)' : '1px solid #f1f5f9',
+                          borderRadius: isLast ? '0 0 0 8px' : undefined,
+                        }}>
+                          {row.label}
                         </td>
-                      ))}
-                    </tr>
-                  )),
+                        {PLAN_KEYS.map((k, ki) => {
+                          const isLastCol = ki === PLAN_KEYS.length - 1;
+                          return (
+                            <td key={k} style={{
+                              padding: '10px 16px', textAlign: 'center',
+                              background: k === 'pro' ? 'rgba(16,139,169,0.04)' : 'transparent',
+                              borderRight: isLastCol ? '1px solid var(--v4-border)' : undefined,
+                              borderBottom: isLast ? '1px solid var(--v4-border)' : '1px solid #f1f5f9',
+                              borderRadius: isLast && isLastCol ? '0 0 8px 0' : undefined,
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Cell val={row[k]} isPro={k === 'pro'} />
+                              </div>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  }),
                 ])}
+                {/* spacer before price row */}
+                <tr aria-hidden><td colSpan={4} style={{ height: 20, padding: 0 }} /></tr>
                 {/* Price + CTA at bottom */}
-                <tr style={{ borderTop: '2px solid var(--v4-border)' }}>
-                  <td style={{ padding: '20px 16px 8px', fontSize: 15, fontWeight: 600, color: 'var(--v4-navy)' }}>
+                <tr>
+                  <td style={{ padding: '20px 16px 8px', fontSize: 15, fontWeight: 600, color: 'var(--v4-navy)', borderTop: '2px solid var(--v4-border)' }}>
                     {billing === 'year' ? 'Preis / Monat (jährlich)' : 'Preis / Monat'}
                   </td>
                   {plans.map(({ key, priceMonthly, priceYearly }) => (
-                    <td key={key} style={{ padding: '20px 16px 8px', textAlign: 'center', background: key === 'pro' ? 'rgba(16,139,169,0.04)' : 'transparent' }}>
+                    <td key={key} style={{ padding: '20px 16px 8px', textAlign: 'center', background: key === 'pro' ? 'rgba(16,139,169,0.04)' : 'transparent', borderTop: '2px solid var(--v4-border)' }}>
                       <div style={{ fontSize: 26, fontWeight: 800, color: key === 'pro' ? 'var(--v4-green)' : 'var(--v4-navy)' }}>
                         € {billing === 'year' ? priceYearly : priceMonthly}
                       </div>
