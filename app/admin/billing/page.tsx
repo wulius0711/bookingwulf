@@ -198,9 +198,7 @@ export default function BillingPage() {
           </button>
           <span style={{ fontSize: 14, color: billingInterval === 'year' ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: billingInterval === 'year' ? 600 : 400 }}>
             Jährlich
-            {billingInterval === 'year' && (
-              <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)', fontSize: 12, fontWeight: 700 }}>spare 10%</span>
-            )}
+            <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 6, background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)', fontSize: 12, fontWeight: 700, visibility: billingInterval === 'year' ? 'visible' : 'hidden' }}>10% sparen</span>
           </span>
         </div>
 
@@ -249,11 +247,9 @@ export default function BillingPage() {
                     € {billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
                     <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--text-secondary)' }}> / Monat</span>
                   </div>
-                  {billingInterval === 'year' && (
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
-                      = € {plan.priceYearly * 12} / Jahr
-                    </div>
-                  )}
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, visibility: billingInterval === 'year' ? 'visible' : 'hidden' }}>
+                    = € {plan.priceYearly * 12} / Jahr
+                  </div>
                 </div>
 
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>

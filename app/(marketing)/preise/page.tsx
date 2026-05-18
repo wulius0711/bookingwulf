@@ -28,6 +28,7 @@ const COMPARISON: FeatureGroup[] = [
       { label: 'Buchungsanfrage', starter: true, pro: true, business: true },
       { label: 'Direktbuchung mit Zahlung', starter: true, pro: true, business: true },
       { label: 'Zimmerplan', starter: true, pro: true, business: true },
+      { label: 'Mini-Widget (einbettbar)', starter: true, pro: true, business: true },
       { label: 'Online Check-in für Gäste', starter: true, pro: true, business: true },
       { label: 'Widget doppelt einsetzbar (Anfrage & Buchung)', starter: false, pro: true, business: true },
     ],
@@ -35,6 +36,7 @@ const COMPARISON: FeatureGroup[] = [
   {
     group: 'Preise & Verfügbarkeit',
     rows: [
+      { label: 'Verfügbarkeits-Widget (einbettbar)', starter: false, pro: true, business: true },
       { label: 'iCal-Sync (Airbnb & Booking.com)', starter: true, pro: true, business: true },
       { label: 'Preissaisons & Mindestaufenthalt', starter: false, pro: true, business: true },
       { label: 'Last-Minute Rabatt', starter: false, pro: true, business: true },

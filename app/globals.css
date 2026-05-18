@@ -255,6 +255,7 @@ button, a[role="button"], input[type="submit"] {
 
 .plan-grid {
   grid-template-columns: repeat(3, 1fr);
+  align-items: start;
 }
 
 .analytics-chart-row {
