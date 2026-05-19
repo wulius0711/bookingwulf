@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
     // Update request to booked, save capture ID
     await prisma.request.update({
       where: { id: requestId },
-      data: { status: 'booked', paypalOrderId: captureId },
+      data: { status: 'booked', paypalOrderId: captureId, checkinToken: crypto.randomUUID() },
     });
     log('payment.confirmed', { method: 'paypal', requestId, hotelId: request.hotel?.id });
 

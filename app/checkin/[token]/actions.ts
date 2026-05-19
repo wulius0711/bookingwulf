@@ -24,6 +24,7 @@ export async function submitCheckin(formData: FormData) {
     where: { checkinToken: token },
     select: {
       id: true,
+      status: true,
       checkinCompletedAt: true,
       salutation: true,
       firstname: true,
@@ -40,7 +41,7 @@ export async function submitCheckin(formData: FormData) {
     },
   });
 
-  if (!request || request.checkinCompletedAt) redirect(`/checkin/${token}`);
+  if (!request || request.status !== 'booked' || request.checkinCompletedAt) redirect(`/checkin/${token}`);
 
   // Build guest list from form: primary guest + additional guests from guestsJson
   type AdditionalGuest = { type: 'adult' | 'child'; firstname: string; lastname: string; birthday?: string };

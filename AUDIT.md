@@ -11,7 +11,7 @@
 | 1 | Registration & Onboarding | ✅ Abgeschlossen | 2026-05-19 |
 | 2 | Buchungs-Flow (Anfrage → Buchung → Bestätigung) | ✅ Abgeschlossen | 2026-05-19 |
 | 3 | Gäste-Lounge | ✅ Abgeschlossen | 2026-05-19 |
-| 4 | Online Check-in | 🔲 Ausstehend | — |
+| 4 | Online Check-in | ✅ Abgeschlossen | 2026-05-19 |
 | 5 | Benachrichtigungen & Cron-Jobs | 🔲 Ausstehend | — |
 
 ---
@@ -666,3 +666,167 @@ Login liest `user.sessionVersion` aus der DB. Für neue User (Default 0) stimmt 
 | `src/lib/password.ts` | scrypt Hash + Verify |
 | `src/lib/rate-limit.ts` | Upstash Rate-Limiter |
 | `prisma/schema.prisma` | Vollständiges Datenmodell |
+
+---
+
+## Phase 4 — Online Check-in
+
+**Datum:** 2026-05-19
+
+---
+
+## 1. Check-in Seite (`/checkin/[token]`)
+
+**Token-Auflösung:**
+- ✅ Lookup via `checkinToken` (unique) — kein Kollisionsrisiko
+- ❌ **Kein Status-Check** — stornierte Buchungen konnten das Formular aufrufen und Meldezettel-Daten wurden in den Record geschrieben (P1 — behoben 2026-05-19)
+- ✅ Idempotenz: `completed`-State zeigt Erfolgs-Screen statt erneutem Formular
+
+**Formular-Felder:**
+- ✅ Ankunftszeit (Select mit vordefinierten Werten)
+- ✅ Meldedaten pro Gast (Geburtsdatum, Staatsangehörigkeit, Ausweisnummer)
+- ✅ Zusatzgäste aus `guestsJson` korrekt eingebunden
+- ✅ Hausordnung-Bestätigung (Checkbox + `required`)
+- ⚠️ Kein Server-Side-Input-Validation auf `notes`, `birthdate`, `nationality`, `docNumber` (P3)
+
+**Server Action `submitCheckin`:**
+- ❌ **Kein Status-Check** — auch nach Behebung des Page-Gates war die Action angreifbar (direkter POST) (P1 — behoben 2026-05-19)
+- ✅ Idempotenz: `checkinCompletedAt` als Guard gegen doppelte Einreichung
+- ✅ Hotel-Benachrichtigung per E-Mail (mit vollständigen Meldedaten)
+- ✅ Redirect nach Abschluss zu `/gast/${token}` (Status-Gate greift dort ebenfalls)
+
+---
+
+## 2. Gäste-Portal Server Actions (`/gast/[token]/actions.ts`)
+
+**`getRequest()` — gemeinsame Hilfsfunktion:**
+- ❌ **Kein Status-Check** — `sendGuestMessage`, `requestCheckout`, `bookExtra` konnten auf stornierten Buchungen operieren (P2 — behoben 2026-05-19)
+- ✅ `if (!request) throw` — unbekannter Token schlägt fehl
+
+**`bookExtra`:**
+- ✅ `exclusiveGroup`-Logik korrekt: andere Extras der Gruppe werden aus `extrasJson` entfernt
+- ✅ Einmalige Upsell-Benachrichtigung ans Hotel via `upsellNotifiedAt`-Guard
+- ✅ Hotel-Ownership-Check via `hotelId` vor jedem Extra-Zugriff
+
+**`requestCheckout`:**
+- ✅ Idempotenz: `if (request.checkoutRequestedAt) return`
+- ✅ Hotel-E-Mail nicht blockierend (try/catch)
+
+**`sendGuestMessage`:**
+- ✅ Längen-Validierung: `trimmed.length > 2000 → throw`
+- ✅ Nachrichten-Leak ausgeschlossen: scopiert auf `requestId`
+
+---
+
+## 3. Check-in-Crons
+
+**`/api/cron/pre-arrival-reminder`:**
+- ✅ Bearer-Auth mit `CRON_SECRET`
+- ✅ Idempotenz: `checkinReminderSentAt: null` als Guard
+- ✅ Filter: `status: 'booked'`, `checkinToken: { not: null }`, `checkinCompletedAt: null`
+- ✅ Datum-Berechnung: UTC-basiert mit `setHours(0,0,0,0)` + 1-Tages-Fenster — korrekt für österr. Buchungen
+
+**`/api/cron/checkin-email`:**
+- ✅ Bearer-Auth mit `CRON_SECRET`
+- ✅ Idempotenz: `checkinEmailSentAt: null` als Guard (eigener Guard, unabhängig von pre-arrival)
+- ✅ Template-Support: `checkin_guest`-Template mit `{{nukiCode}}` und `{{portalUrl}}`
+- ⚠️ `checkin-email` und `pre-arrival-reminder` können am selben Tag feuern (beide Default: 3 Tage vor Anreise) — zwei E-Mails am selben Tag möglich (P3)
+
+---
+
+## 4. Token-Generierung (Vollständigkeit)
+
+| Buchungsweg | checkinToken generiert | Nach Fix |
+|---|---|---|
+| Banküberweisung (`/api/request`) | ✅ | ✅ |
+| Admin-Bestätigung (`updateBookingStatus`) | ✅ | ✅ |
+| Beds24-Webhook | ✅ | ✅ |
+| PayPal Capture | ❌ | ✅ Behoben 2026-05-19 |
+| Stripe Confirm | ❌ | ✅ Behoben 2026-05-19 |
+
+Ohne `checkinToken` keine Gäste-Lounge, kein Pre-Arrival-Reminder, keine Check-in-E-Mail für PayPal/Stripe-Buchungen.
+
+---
+
+## 5. Edge Cases
+
+| # | Szenario | Ergebnis |
+|---|----------|---------|
+| 1 | Stornierte Buchung → `/checkin/[token]` | ✅ 404 (nach Fix) |
+| 2 | Stornierte Buchung → `submitCheckin` direkt | ✅ Redirect (nach Fix) |
+| 3 | Stornierte Buchung → `bookExtra` | ✅ Throw (nach Fix) |
+| 4 | `submitCheckin` doppelt absenden | ✅ Idempotenz via `checkinCompletedAt` |
+| 5 | `preArrivalEnabled = false` → `/checkin/[token]` | ✅ 404 |
+| 6 | Gast ohne `guestsJson` (nur Hauptgast) | ✅ `additionalGuests = []` — kein Crash |
+| 7 | PayPal/Stripe Buchung ohne checkinToken | ✅ Token wird jetzt bei Capture/Confirm generiert (nach Fix) |
+| 8 | Buchung mit `checkinToken = null` → Cron | ✅ Filter `checkinToken: { not: null }` schließt aus |
+
+---
+
+### P1 — Datenkorrektheit
+
+| ID | Problem | Datei | Status |
+|----|---------|-------|--------|
+| CI-P1-1 | **Kein Status-Gate in Check-in** — stornierte Buchungen konnten Meldezettel-Formular aufrufen und Daten einreichen | `app/checkin/[token]/page.tsx`, `app/checkin/[token]/actions.ts` | ✅ Behoben 2026-05-19 |
+
+### P2 — UX / Vollständigkeit
+
+| ID | Problem | Datei | Status |
+|----|---------|-------|--------|
+| CI-P2-1 | **Gäste-Portal-Actions ohne Status-Check** — `sendGuestMessage`, `requestCheckout`, `bookExtra` operierten auf stornierten Buchungen | `app/gast/[token]/actions.ts` | ✅ Behoben 2026-05-19 |
+| CI-P2-2 | **Kein checkinToken für PayPal/Stripe** — kein Gäste-Lounge-Link, kein Pre-Arrival-Reminder für direkte Zahlungsbuchungen | `app/api/paypal/capture/route.ts`, `app/api/stripe/confirm/route.ts` | ✅ Behoben 2026-05-19 |
+
+### P3 — Nice-to-Have
+
+| ID | Problem |
+|----|---------|
+| CI-P3-1 | Kein Server-Side-Längencheck auf `notes`, `birthdate`, `nationality`, `docNumber` in `submitCheckin` |
+| CI-P3-2 | `checkinDocNumber` (Reisepassnummer) im Klartext in DB gespeichert — DSGVO-dokumentationswürdig |
+| CI-P3-3 | `checkin-email` + `pre-arrival-reminder` können am selben Tag feuern (beide Default 3 Tage vor Anreise) |
+
+---
+
+## Geprüfte Dateien (Phase 4)
+
+| Datei | Rolle |
+|-------|-------|
+| `app/checkin/[token]/page.tsx` | Online Check-in Formular (SSR) |
+| `app/checkin/[token]/actions.ts` | Server Action — Meldezettel-Einreichung |
+| `app/gast/[token]/actions.ts` | Server Actions — Nachrichten, Extras, Checkout |
+| `app/api/cron/checkin-email/route.ts` | Cron — Check-in-Info-Mail vor Anreise |
+| `app/api/cron/pre-arrival-reminder/route.ts` | Cron — Check-in-Link-Reminder |
+| `app/api/paypal/capture/route.ts` | PayPal Capture (checkinToken-Fix) |
+| `app/api/stripe/confirm/route.ts` | Stripe Confirm (checkinToken-Fix) |
+| `app/api/admin/checkin-images/route.ts` | Admin CRUD für Check-in-Fotos |
+| `prisma/schema.prisma` (Request, CheckinImage) | Meldedaten-Felder, Check-in-Bilder-Modell |
+
+---
+
+## Abschluss-Summary
+
+**Datum abgeschlossen:** 2026-05-19
+
+### Gefundene Issues (Phasen 1–3)
+
+| Priorität | Gefunden | Behoben | Bewusst zurückgestellt |
+|---|---|---|---|
+| **P0** | 0 | — | — |
+| **P1** | 12 | 12 | 0 |
+| **P2** | 17 | 15 | 2 |
+| **P3** | 17 | 3 | 14 |
+| **Gesamt** | **46** | **30** | **16** |
+
+Bewusst zurückgestellte P2-Items: `P2-4` (Onboarding-Status nicht persistiert — rein informativ, kein Schaden), `P2-9` (Session Sliding Expiry — Aufwand/Nutzen nicht gegeben).
+
+Behobene P3-Items: `B-P3-1` (iCal exportiert keine offenen Anfragen mehr), `B-P3-3` (Nuki-Code für PayPal/Stripe), `B-P3-5` (Gast-E-Mail bei Admin-Manualbuchung).
+
+### Zusätzliche DSGVO-Fixes (außerhalb Audit-Phasen, 2026-05-19)
+
+- **Weekly-Backup-Cron entfernt:** CSV mit vollständigen Gastdaten wurde wöchentlich per E-Mail (Resend) versandt — Verstoß gegen Art. 32 DSGVO (unverschlüsselt, Resend speichert Anhänge). Ersetzt durch On-Demand-Export im Admin (`GET /api/admin/export`, Session-Auth).
+- **Daily-Backup auf `access: 'private'`:** Vercel Blob-Dumps waren öffentlich per URL erreichbar (Security by Obscurity). Jetzt `private` + Download nur via `/api/admin/backups` mit Super-Admin-Session.
+
+### Gesamtbewertung
+
+Das System ist nach Abschluss der Phasen 1–3 produktionstauglich: Alle P1-Findings (Datenkorrektheit, Sicherheit) sind behoben — dazu zählen die TOCTOU-Doppelbuchungslücke, die Session-Revocation, das Auth-Layout-Fallthrough, die verwaisten Pending-Records und der fehlende BlockedRange-Cleanup bei Stornierungen. Der Buchungsflow ist end-to-end konsistent (Bank / PayPal / Stripe / Admin) mit korrektem Beds24-Push und Nuki-Code-Generierung. Die Gäste-Lounge ist status-gate-gesichert, Zugangscodes werden nach Abreise ausgeblendet. Die zwei offenen P2-Items betreffen nur UX-Komfort ohne Datenrisiko. Die 14 offenen P3-Items sind dokumentierte Qualitätslücken ohne akuten Handlungsbedarf.
+
+> ⚠️ **Offen (P3):** Phase 4 (Online Check-in) und Phase 5 (Benachrichtigungen & Cron-Jobs) wurden noch nicht auditiert — sie sind im Phasen-Überblick als ausstehend markiert.

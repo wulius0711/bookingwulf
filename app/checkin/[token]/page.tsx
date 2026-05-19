@@ -15,6 +15,7 @@ export default async function CheckinPage({ params }: Props) {
     where: { checkinToken: token },
     select: {
       id: true,
+      status: true,
       firstname: true,
       lastname: true,
       arrival: true,
@@ -31,7 +32,7 @@ export default async function CheckinPage({ params }: Props) {
     },
   });
 
-  if (!request) notFound();
+  if (!request || request.status !== 'booked') notFound();
 
   const settings = request.hotelId
     ? await prisma.hotelSettings.findUnique({

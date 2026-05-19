@@ -187,7 +187,7 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | hotelId | Int | FK → Hotel |
-| status | String | `new` / `confirmed` / `booked` / `cancelled` / `pending_paypal` / `pending_stripe` |
+| status | String | `new` / `answered` / `booked` / `cancelled` / `pending_paypal` / `pending_stripe` |
 | arrival / departure | DateTime | Reisezeitraum |
 | nights | Int | Anzahl Nächte |
 | adults / children | Int | Gästezahl |
@@ -198,6 +198,35 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | language | String | `de` / `en` / `it` |
 | extrasJson | Json | Gebuchte Zusatzleistungen (Zeilenpositionen mit key, name, type, subtotal) |
 | pricingJson | Json? | Vollständiger Preis-Snapshot bei Buchungserstellung: `{ apartments: [{name, total, cleaning}], extrasTotal, ortstaxeTotal, total }` |
+| paymentMethod | String? | `'bank'` / `'paypal'` / `'stripe'` — gesetzt bei Buchungserstellung |
+| paypalOrderId | String? | PayPal Order ID (oder Stripe Payment Intent ID — Feldname historisch) |
+| checkinToken | String? | UUID v4, unique — persönlicher Link für Gäste-Lounge `/gast/[token]` |
+| nukiCode | String? | 6-stelliger Türcode (nur wenn Nuki konfiguriert + Pro+) |
+| nukiAuthIds | String? | Kommagetrennte `smartlockId:authId`-Paare für spätere Code-Löschung |
+| beds24BookingId | String? | Unique-Key für idempotentes Upsert bei Beds24-Webhook |
+| checkinCompletedAt | DateTime? | Zeitstempel wenn Gast Online-Check-in ausgefüllt hat |
+| checkinArrivalTime | String? | Vom Gast angegebene Ankunftszeit (z.B. „15:00") |
+| checkinNotes | String? | Freitext-Notizen des Gastes beim Check-in |
+| checkoutRequestedAt | DateTime? | Zeitstempel wenn Gast Check-out angefordert hat |
+| checkinReminderSentAt | DateTime? | Guard: Pre-Arrival-Reminder nur einmal senden |
+| checkoutReminderSentAt | DateTime? | Guard: Checkout-Erinnerung nur einmal senden |
+| reviewRequestSentAt | DateTime? | Guard: Bewertungsanfrage nur einmal senden |
+
+### Status-Übergänge (State Machine)
+
+Server-seitig erzwungen in `updateBookingStatus` (`app/admin/requests/[id]/page.tsx`).
+
+| Von | Erlaubte Ziele | Auslöser |
+|---|---|---|
+| `new` | `answered`, `booked`, `cancelled` | Admin manuell |
+| `answered` | `new`, `booked`, `cancelled` | Admin manuell |
+| `booked` | `cancelled` | Admin manuell (Stornierung) |
+| `cancelled` | — | Terminal, keine weiteren Übergänge |
+| `pending_paypal` | `booked`, `cancelled` | PayPal Capture / Admin / Cron (48h Ablauf) |
+| `pending_stripe` | `booked`, `cancelled` | Stripe Confirm / Admin / Cron (48h Ablauf) |
+
+Seiteneffekte bei `→ booked`: checkinToken generieren (wenn `preArrivalEnabled`), BlockedRange anlegen, Beds24-Push, Nuki-Code erstellen (wenn konfiguriert + Pro+), Gast-E-Mail senden.  
+Seiteneffekte bei `→ cancelled`: BlockedRange löschen (`note LIKE 'Buchung #${id}%'`), Gast-Stornierungsmail senden.
 
 ### HotelExtra *(Zusatzleistungen)*
 
@@ -254,9 +283,17 @@ Pro Hotel definierbare Altersgruppen mit Preis pro Kind/Nacht. Felder: `minAge`,
 
 ### EmailTemplate *(Benutzerdefinierte E-Mails, Pro+)*
 
-Pro Hotel und Typ (`request_guest`, `booking_guest`, `cancellation_guest`, `request_hotel`) speicherbare Vorlage mit Template-Variablen: `{{guestName}}`, `{{guestLastName}}`, `{{arrival}}`, `{{departure}}`, `{{nights}}`, `{{apartmentName}}`, `{{hotelName}}`, `{{bookingId}}`.
+Pro Hotel und Typ speicherbare Vorlage mit Template-Variablen: `{{guestName}}`, `{{guestLastName}}`, `{{arrival}}`, `{{departure}}`, `{{nights}}`, `{{apartmentName}}`, `{{hotelName}}`, `{{bookingId}}`.
 
-`cancellation_guest` wird beim Setzen des Status auf `cancelled` verwendet (Fallback auf i18n-Standard wenn nicht gesetzt).
+| Typ | Verwendet bei | Fallback wenn nicht gesetzt |
+|---|---|---|
+| `request_guest` | Buchungsanfrage-Eingang (Widget) | i18n-Standard |
+| `booking_guest` | Sofortbuchung via Widget, PayPal, Stripe (Kreditkarte) | i18n-Standard |
+| `cancellation_guest` | Status → `cancelled` (Admin) | i18n-Standard |
+| `request_hotel` | Neue Anfrage (Hotel-Benachrichtigung) | hardcoded |
+| `checkin_guest` | Check-in Info Mail (manuell + Cron) | Kurztext „wir freuen uns auf Ihren Aufenthalt" |
+
+> **Onboarding-Hinweis:** `checkin_guest` muss im Admin unter *E-Mail-Vorlagen → Check-in Infos* einmalig gespeichert werden, damit der individuelle Fließtext erscheint.
 
 ### IcalFeed
 
@@ -608,15 +645,41 @@ Pro Einbettungsort kann ein eigenes `config`-Slug konfiguriert werden mit eigene
 
 ### Gesendete E-Mails
 
-| Auslöser | Empfänger | Vorlage |
+#### Transaktionale E-Mails (direkt ausgelöst)
+
+| Auslöser | Empfänger | Bedingung |
 |---|---|---|
-| Registrierung | Hotelbetreiber | Welcome + Trial-Info |
-| Buchungsanfrage | Hotel | Anfrage-Benachrichtigung (Deutsch) |
-| Buchungsanfrage | Gast | Bestätigung (de/en/it, anpassbar) |
-| Sofortbuchung | Hotel | Buchungs-Benachrichtigung |
-| Sofortbuchung | Gast | Buchungsbestätigung |
-| Abo-Abschluss | Hotelbetreiber | Plan-Bestätigung |
-| Passwort-Reset | Admin-Nutzer | Reset-Link (1h gültig) |
+| Registrierung | Hotelbetreiber | Immer — E-Mail-Verifikationslink (24h gültig) |
+| Abo-Abschluss | Hotelbetreiber | Stripe `checkout.session.completed` |
+| Zahlungsfehlschlag (Abo) | Hotelbetreiber | Stripe `invoice.payment_failed` |
+| Passwort-Reset | Admin-Nutzer | Immer — Reset-Link (1h gültig) |
+| Neue Buchungsanfrage | Hotel | `bookingType='request'` — Deutsch |
+| Neue Buchungsanfrage | Gast | `bookingType='request'` — de/en/it, anpassbar |
+| Sofortbuchung Banküberweisung | Hotel | `bookingType='booking'`, `paymentMethod='bank'` |
+| Sofortbuchung Banküberweisung | Gast | wie oben, inkl. Bankdaten — de/en/it |
+| PayPal Zahlung bestätigt | Hotel | Nach `/api/paypal/capture` |
+| PayPal Zahlung bestätigt | Gast | Nach `/api/paypal/capture` — de/en/it |
+| Stripe Zahlung bestätigt | Hotel | Nach `/api/stripe/confirm` |
+| Stripe Zahlung bestätigt | Gast | Nach `/api/stripe/confirm` — de/en/it |
+| Admin-Manualbuchung | Gast | `POST /api/admin/booking` mit `status='booked'` |
+| Admin bestätigt Anfrage (`→ booked`) | Gast | `updateBookingStatus` — Buchungsbestätigung |
+| Stornierung (`→ cancelled`) | Gast | `updateBookingStatus` — via `cancellation_guest`-Template |
+| Check-in abgeschlossen | Hotel | Wenn Gast Online-Check-in ausfüllt (`completeCheckin`) |
+| Check-out angefordert | Hotel | Wenn Gast Check-out anfordert (`requestCheckout`) |
+| Gutschein gekauft | Käufer | Nach Stripe-Zahlung — immer, inkl. PDF-Anhang |
+| Gutschein gekauft | Empfänger | Nach Stripe-Zahlung — wenn `recipientEmail` gesetzt und abweichend |
+
+#### Cron-E-Mails (zeitgesteuert)
+
+| Cron-Route | Empfänger | Bedingung | Idempotenz-Guard |
+|---|---|---|---|
+| `/api/cron/expire-trials` — Tag+3 | Hotelbetreiber | `subscriptionStatus='inactive'`, E-Mail 1 noch nicht gesendet | `trialEmail1SentAt IS NULL` |
+| `/api/cron/expire-trials` — Tag+7 | Hotelbetreiber | E-Mail 1 gesendet, E-Mail 2 noch nicht | `trialEmail2SentAt IS NULL` |
+| `/api/cron/payment-reminder` | Hotel | Offene Banküberweisungen (alle 30 Min) | — |
+| `/api/cron/checkin-email` | Gast | Anreisetag 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
+| `/api/cron/pre-arrival-reminder` | Gast | Anreise − X Tage 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
+| `/api/cron/checkout-reminder` | Gast | Abreisetag 09:00 Wien, `checkoutReminderEnabled` | `checkoutReminderSentAt IS NULL` |
+| `/api/cron/review-request` | Gast | Abreise − X Tage 11:00 Wien, `reviewRequestEnabled` (Pro+), `reviewRequestLink` gesetzt | `reviewRequestSentAt IS NULL` |
 
 ### E-Mail-Aufbau (`src/lib/email.ts`)
 
@@ -654,6 +717,10 @@ Importiert externe Kalender (Airbnb, Booking.com) als `BlockedRange`-Einträge.
 3. Alte `BlockedRange`-Einträge vom Typ `ical_sync` für diesen Feed löschen
 4. Neue Einträge für alle Events erstellen
 5. `lastSyncAt` oder `lastError` aktualisieren
+
+### iCal-Export (`GET /api/ical`)
+
+Der eigene iCal-Feed exportiert Buchungen für externe Kalender (Beds24, OTAs). Nur Buchungen mit `status='booked'` erscheinen als VEVENT — offene Anfragen (`new`, `answered`) werden bewusst ausgeschlossen, damit OTAs Daten nicht für unbestätigte Anfragen sperren.
 
 ### Trigger
 
@@ -1042,6 +1109,32 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/admin/hotel-color` | GET | Accent-Farbe des Hotels abrufen |
 | `/api/admin/hungrywulf` | POST / DELETE | hungrywulf für Hotel aktivieren (inkl. Provisionierung) / deaktivieren (Super-Admin) |
 | `/api/admin/hungrywulf-link` | GET | Signierten Magic-Link für hungrywulf-Login generieren (60 s TTL) |
+| `/api/admin/things-to-see` | GET/POST/PATCH/DELETE | Umgebungstipps (ThingsToSee) verwalten |
+| `/api/admin/checkin-images` | GET/POST/DELETE | Check-in-Fotos (Schlüsselübergabe etc.) verwalten |
+| `/api/admin/places-search` | GET | Google Places Autocomplete für Umgebungstipp-Import |
+| `/api/admin/places-details` | GET | Google Places Details + Foto für Import |
+| `/api/admin/feedback` | POST/DELETE | Feedback-Meldungen einreichen / löschen |
+| `/api/admin/backups` | GET | Backup-Liste oder Download (nur Super-Admin; `?date=YYYY-MM-DD` für Download) |
+
+### Gäste-Lounge (tokenbasiert, kein Auth)
+
+| Route | Methode | Beschreibung |
+|---|---|---|
+| `/api/gast/[token]` | GET | Buchungsdaten für Gäste-Portal (polling, kein Session-Cookie nötig) |
+
+### Cron-Routen (Bearer-Token `CRON_SECRET`, keine Session)
+
+| Route | UTC-Zeitplan | Wien (Winter) | Beschreibung |
+|---|---|---|---|
+| `/api/ical-sync` | `*/30 * * * *` | alle 30 Min | Externe iCal-Feeds synchronisieren |
+| `/api/cleanup-requests` | `0 3 1 * *` | 1. des Monats 04:00 | Anfragen > 3 Jahre löschen |
+| `/api/cron/expire-trials` | `0 8 * * *` | 09:00 | Trial-Ablauf-Sequenz + Abandoned-Payment-Expiry (48h) |
+| `/api/cron/payment-reminder` | `*/30 * * * *` | alle 30 Min | Offene Banküberweisungs-Erinnerung ans Hotel |
+| `/api/cron/checkout-reminder` | `0 8 * * *` | 09:00 | Check-out-Erinnerung am Abreisetag |
+| `/api/cron/checkin-email` | `0 9 * * *` | 10:00 | Check-in-Info-Mail am Anreisetag |
+| `/api/cron/pre-arrival-reminder` | `0 9 * * *` | 10:00 | Pre-Arrival-Reminder X Tage vor Anreise |
+| `/api/cron/review-request` | `0 10 * * *` | 11:00 | Bewertungsanfrage X Tage nach Abreise |
+| `/api/cron/daily-backup` | `0 2 * * *` | 03:00 | Vollständiger DB-Dump → Vercel Blob (private, 30 Tage) |
 
 ### Sicherheitsschichten
 
@@ -1098,10 +1191,19 @@ Deployment via GitHub-Integration. Jeder Push auf `main` löst ein Deployment au
 
 **Cron Jobs (`vercel.json`):**
 
-| Route | Intervall | Zweck |
-|---|---|---|
-| `/api/ical-sync` | alle 30 Min | Externe Kalender synchronisieren |
-| `/api/cleanup-requests` | 1. des Monats, 3:00 Uhr | Anfragen > 3 Jahre löschen |
+Alle Cron-Routen erfordern den `Authorization: Bearer <CRON_SECRET>` Header. Vollständige Route-Tabelle mit Zeitplänen: siehe Abschnitt 13 → Cron-Routen.
+
+| Route | UTC | Wien (Winter) | Zweck |
+|---|---|---|---|
+| `/api/ical-sync` | `*/30 * * * *` | alle 30 Min | Externe Kalender synchronisieren |
+| `/api/cleanup-requests` | `0 3 1 * *` | 04:00, 1. des Monats | Anfragen > 3 Jahre löschen |
+| `/api/cron/expire-trials` | `0 8 * * *` | 09:00 tägl. | Trial-Ablauf + Abandoned-Payment-Expiry |
+| `/api/cron/payment-reminder` | `*/30 * * * *` | alle 30 Min | Banküberweisung-Erinnerung |
+| `/api/cron/checkout-reminder` | `0 8 * * *` | 09:00 tägl. | Check-out-Erinnerung |
+| `/api/cron/checkin-email` | `0 9 * * *` | 10:00 tägl. | Check-in-Info-Mail |
+| `/api/cron/pre-arrival-reminder` | `0 9 * * *` | 10:00 tägl. | Pre-Arrival-Reminder |
+| `/api/cron/review-request` | `0 10 * * *` | 11:00 tägl. | Bewertungsanfrage |
+| `/api/cron/daily-backup` | `0 2 * * *` | 03:00 tägl. | DB-Dump → Vercel Blob (private) |
 
 ### Rate Limits (öffentliche Endpunkte)
 
@@ -1126,9 +1228,9 @@ npx prisma migrate deploy
 
 **Code:** GitHub — jeder Commit ist eine vollständige Sicherung des Quellcodes. Rollback via `git revert` oder Vercel-Deployment-History (ein Klick im Dashboard).
 
-**Buchungsdaten (CSV):** Cron `/api/cron/weekly-backup` läuft jeden Sonntag 03:00 UTC und sendet alle Buchungen aller Hotels als CSV-Anhang an `SUPER_ADMIN_EMAIL`. Excel-kompatibel (UTF-8 BOM).
+**Buchungsdaten-Export (On-Demand):** Admin → Anfragen/Buchungen → Export-Button. CSV mit Datumsfilter (`from`, `to`), optionalem Storno-Flag, MwSt.-Aufschlüsselung (Netto/Brutto). Route: `GET /api/admin/export` (Session-Auth). DSGVO-konform: kein automatischer Versand per E-Mail.
 
-**Vollständiger DB-Dump (JSON):** Cron `/api/cron/daily-backup` läuft täglich 02:00 UTC. Exportiert alle Tabellen (Hotels, Apartments, Buchungen, Settings etc.) als JSON in Vercel Blob unter `backups/YYYY-MM-DD.json`. Retention: 30 Tage, ältere Backups werden automatisch gelöscht. Einsehbar im Vercel Dashboard → Storage → Blob.
+**Vollständiger DB-Dump (JSON):** Cron `/api/cron/daily-backup` läuft täglich 02:00 UTC. Exportiert alle Tabellen als JSON in Vercel Blob unter `backups/YYYY-MM-DD.json` mit `access: 'private'` (nicht öffentlich erreichbar). Retention: 30 Tage. Download für Super-Admin: `GET /api/admin/backups?date=YYYY-MM-DD`.
 
 **pg_dump via GitHub Actions:** `.github/workflows/db-backup.yml` läuft täglich 03:00 UTC. Erstellt einen vollständigen PostgreSQL-Dump (`backup-YYYY-MM-DD.sql.gz`) und speichert ihn als GitHub Actions Artifact — 30 Tage Retention. Abrufbar unter: GitHub → Actions → Daily DB Backup → Artifacts.
 
@@ -1386,7 +1488,7 @@ Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/eventwulf` → `e
 
 | Datentyp | Frist | Mechanismus |
 |---|---|---|
-| Buchungsanfragen | 3 Jahre | Automatisch (Cron, 1. des Monats) |
+| Buchungsanfragen | 3 Jahre | Automatisch (Cron `/api/cleanup-requests`, 1. des Monats) |
 | Session-Cookies | 24 Stunden | Automatisch (JWT TTL) |
 | Passwort-Reset-Tokens | 1 Stunde | Automatisch (Ablaufzeit) |
 | Nutzerkonten | Bei Kündigung | Manuell auf Anfrage |
@@ -1485,6 +1587,37 @@ Widget-APIs (`/api/hotel-settings`, `/api/availability-quick`, `/api/availabilit
 Jede Buchung erhält ein `checkinToken` (UUID v4). Der Link `bookingwulf.com/gast/[token]` ist der persönliche Gäste-Bereich — ohne Login, nur per Token zugänglich.
 
 **Daten werden beim Seitenaufruf serverseitig geladen** (`app/gast/[token]/page.tsx`) und an `GuestPortal.tsx` (Client-Komponente) übergeben. Für Live-Aktualisierungen (Nachrichten-Polling) gibt es zusätzlich `GET /api/gast/[token]`.
+
+### Token-Lebenszyklus
+
+- **Generierung:** `crypto.randomUUID()` bei Status-Übergang → `booked` (Bank-Transfer: `/api/request`; Admin-Bestätigung: `updateBookingStatus`; PayPal/Stripe: nach Capture/Confirm; Beds24-Webhook: bei eingehenden OTA-Buchungen). Nur wenn `preArrivalEnabled = true` im Admin-Bestätigungsweg, sonst immer.
+- **Ablauf:** Kein Ablaufdatum. Der Link bleibt dauerhaft gültig, ist aber durch das Status-Gate abgesichert.
+- **Eindeutigkeit:** `@unique`-Constraint im Schema, UUID v4 — kein Kollisionsrisiko.
+
+### Status-Gate
+
+| Request-Status | `/gast/[token]` (SSR) | `/api/gast/[token]` (API) |
+|---|---|---|
+| `booked` | 200 — Portal geladen | 200 — JSON |
+| `cancelled` | 410 — neutrale „Buchung storniert"-Seite | 410 — `{ error: 'Diese Buchung wurde storniert.' }` |
+| `new` / `answered` / `pending_*` | 404 (`notFound()`) | 404 |
+| Token unbekannt | 404 | 404 |
+| Token malformed (≠ 36 Zeichen) | — | 400 |
+
+### Nuki-Code-Lebenszyklus
+
+- **Sichtbar:** Nur wenn `new Date() <= request.departure` (server-seitig geprüft in Page + API-Route)
+- **Nach Abreise:** `nukiCode: null` in der Response — Code bleibt in der DB, wird aber nicht ausgegeben
+- **Löschung aus Nuki:** Nicht automatisch — manuell via Nuki-App oder als zukünftiger Cron
+
+### Plan-abhängige Features
+
+| Feature | Mindestplan |
+|---|---|
+| Online-Check-in | Alle (wenn `preArrivalEnabled`) |
+| Nuki-Zugangscode im Portal | Pro+ |
+| Nachrichten (Messaging) | Business |
+| Bewertungsanfrage-Link | Pro+ |
 
 ### Navigation
 
@@ -1615,6 +1748,11 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 | **Beds24-Push PayPal/Stripe** | Capture + Confirm pushen Buchung sofort zu Beds24 (non-blocking) |
 | **Beds24-Push Admin-Confirm** | `updateBookingStatus` pusht zu Beds24 wenn Anfrage auf `booked` gesetzt wird |
 | **Admin-Manualbuchung BlockedRange** | `POST /api/admin/booking` erstellt jetzt BlockedRange für `status='booked'` |
+| **iCal-Status-Filter** | `/api/ical` exportiert nur `status='booked'` — offene Anfragen blockieren keine OTA-Dates mehr |
+| **Nuki-Code für PayPal/Stripe** | `capture` + `confirm` generieren Nuki-Code (zuvor nur bei Bank-Transfer) |
+| **Status-Machine Admin** | `updateBookingStatus` erzwingt erlaubte Übergänge — `cancelled → booked` nicht mehr möglich |
+| **DSGVO: Weekly-Backup-Cron entfernt** | CSV mit Gastdaten per E-Mail (Resend) abgestellt; ersetzt durch On-Demand-Export im Admin |
+| **DSGVO: Daily-Backup private** | Vercel Blob `access: 'private'` — JSON-Dumps nicht mehr öffentlich per URL erreichbar; Download via `/api/admin/backups` (Super-Admin) |
 
 ### Secret Rotation
 
@@ -1660,9 +1798,9 @@ Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert 
 |---------|--------|--------|--------|
 | Hosting | Vercel Serverless | Global CDN | ✅ |
 | Datenbank | Railway PostgreSQL | Amsterdam/EU | ✅ |
-| DB-Backup täglich (JSON) | Vercel Blob, 30 Tage | — | ✅ |
+| DB-Backup täglich (JSON, private) | Vercel Blob, 30 Tage | — | ✅ |
 | DB-Backup täglich (SQL) | GitHub Actions Artifact, 30 Tage | — | ✅ |
-| Buchungsdaten-Backup | CSV wöchentlich → E-Mail | — | ✅ |
+| Buchungsdaten-Export | On-Demand CSV im Admin (Session-Auth) | — | ✅ |
 | Error Tracking | Sentry | EU Ingest | ✅ |
 | E-Mail | Resend | US (DSGVO-konform via DPA) | ✅ |
 | Monitoring | Sentry (10% Tracing) | — | ✅ |

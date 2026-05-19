@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     // Confirm booking
     await prisma.request.update({
       where: { id: request.id },
-      data: { status: 'booked', paypalOrderId: paymentIntentId },
+      data: { status: 'booked', paypalOrderId: paymentIntentId, checkinToken: crypto.randomUUID() },
     });
     log('payment.confirmed', { method: 'stripe', requestId: request.id, hotelId: request.hotel?.id });
 

@@ -9,7 +9,7 @@ async function getRequest(token: string) {
     where: { checkinToken: token },
     include: { hotel: { select: { name: true, email: true, accentColor: true } } },
   });
-  if (!request) throw new Error('Buchung nicht gefunden');
+  if (!request || request.status !== 'booked') throw new Error('Buchung nicht gefunden');
   return request;
 }
 
