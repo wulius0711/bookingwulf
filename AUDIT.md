@@ -12,7 +12,7 @@
 | 2 | Buchungs-Flow (Anfrage → Buchung → Bestätigung) | ✅ Abgeschlossen | 2026-05-19 |
 | 3 | Gäste-Lounge | ✅ Abgeschlossen | 2026-05-19 |
 | 4 | Online Check-in | ✅ Abgeschlossen | 2026-05-19 |
-| 5 | Benachrichtigungen & Cron-Jobs | 🔲 Ausstehend | — |
+| 5 | Benachrichtigungen & Cron-Jobs | ✅ Abgeschlossen | 2026-05-19 |
 
 ---
 
@@ -829,4 +829,78 @@ Behobene P3-Items: `B-P3-1` (iCal exportiert keine offenen Anfragen mehr), `B-P3
 
 Das System ist nach Abschluss der Phasen 1–3 produktionstauglich: Alle P1-Findings (Datenkorrektheit, Sicherheit) sind behoben — dazu zählen die TOCTOU-Doppelbuchungslücke, die Session-Revocation, das Auth-Layout-Fallthrough, die verwaisten Pending-Records und der fehlende BlockedRange-Cleanup bei Stornierungen. Der Buchungsflow ist end-to-end konsistent (Bank / PayPal / Stripe / Admin) mit korrektem Beds24-Push und Nuki-Code-Generierung. Die Gäste-Lounge ist status-gate-gesichert, Zugangscodes werden nach Abreise ausgeblendet. Die zwei offenen P2-Items betreffen nur UX-Komfort ohne Datenrisiko. Die 14 offenen P3-Items sind dokumentierte Qualitätslücken ohne akuten Handlungsbedarf.
 
-> ⚠️ **Offen (P3):** Phase 4 (Online Check-in) und Phase 5 (Benachrichtigungen & Cron-Jobs) wurden noch nicht auditiert — sie sind im Phasen-Überblick als ausstehend markiert.
+---
+
+## Phase 5 — Benachrichtigungen & Cron-Jobs
+
+**Status:** ✅ Abgeschlossen — 2026-05-19
+
+### Scope
+
+Alle 9 Vercel-Cron-Jobs + Cron-Infrastruktur (Auth, Idempotenz, Retention).
+
+| Route | Schedule (UTC) | Zweck |
+|---|---|---|
+| `/api/ical-sync` | alle 30 min | iCal-Feeds synchronisieren |
+| `/api/cleanup-requests` | 3:00, 1. jeden Monat | Requests älter als 3 Jahre löschen (DSGVO) |
+| `/api/cron/pre-arrival-reminder` | 9:00 | Check-in-Erinnerung an Gast (N Tage vor Anreise) |
+| `/api/cron/checkin-email` | 9:00 | Angepasste Check-in-Info-E-Mail (Hotelvorlage) |
+| `/api/cron/checkout-reminder` | 8:00 | Check-out-Erinnerung am Abreisetag |
+| `/api/cron/review-request` | 10:00 | Bewertungsanfrage N Tage nach Abreise (Pro) |
+| `/api/cron/daily-backup` | 2:00 | Vollständiger DB-Dump → Vercel Blob (private) |
+| `/api/cron/payment-reminder` | alle 30 min | Hotelbetreiber bei offener Zahlung benachrichtigen |
+| `/api/cron/expire-trials` | 8:00 | Trial ablaufen lassen + Auto-Delete nach 14 Tagen |
+
+### Positive Befunde
+
+- Alle 9 Cron-Routes prüfen `Authorization: Bearer CRON_SECRET` ✅
+- Alle gastbezogenen Crons haben Idempotenz-Guards (DB-Felder `*SentAt`) ✅
+- `expire-trials` Auto-Delete erst nach beiden Warn-E-Mails (Safety-Gates) ✅
+- `delete-account` prüft `deletionTokenExpiresAt: { gt: new Date() }` ✅
+- `daily-backup` seit Phase-3-Fix `access: 'private'` ✅
+- `cleanup-requests` löscht Requests älter als 3 Jahre (DSGVO Art. 5) ✅
+- `expire-trials` Step 5 storniert `pending_paypal`/`pending_stripe` nach 48 h ✅
+- `confirmed`-Status in `checkout-reminder` + `review-request` ist korrekte Legacy-Behandlung ✅
+
+### Issues
+
+| ID | Priorität | Beschreibung | Datei | Status |
+|---|---|---|---|---|
+| CI5-P2-1 | P2 | `email: { not: undefined }` — Prisma entfernt `undefined`-Werte aus WHERE, Filter ist No-Op; Null-E-Mails werden unnötig abgefragt (durch Loop-Guard `if (!r.email) continue` abgefangen) | `app/api/cron/checkin-email/route.ts:32` | ✅ Behoben |
+| CI5-P3-1 | P3 | Theoretisches TOCTOU bei Idempotenz-Guards (Read-then-Write) — bei paralleler Ausführung könnten doppelte E-Mails gesendet werden; Vercel-Cron garantiert Single-Instance | alle guest-facing crons | 🔲 Akzeptiert |
+
+### Geänderte Dateien
+
+| Datei | Änderung |
+|---|---|
+| `app/api/cron/checkin-email/route.ts` | `{ not: undefined }` → `{ not: null }` |
+
+---
+
+## Abschluss-Summary (alle Phasen)
+
+**Datum abgeschlossen:** 2026-05-19
+
+### Gefundene Issues (Phasen 1–5)
+
+| Priorität | Gefunden | Behoben | Bewusst zurückgestellt |
+|---|---|---|---|
+| **P0** | 0 | — | — |
+| **P1** | 14 | 14 | 0 |
+| **P2** | 18 | 16 | 2 |
+| **P3** | 20 | 5 | 15 |
+| **Gesamt** | **52** | **35** | **17** |
+
+Phase 4 neue Findings: `CI-P1-1` (Check-in ohne Status-Gate), `CI-P2-1` (Gast-Actions ohne Status-Gate), `CI-P2-2` (fehlender `checkinToken` bei PayPal/Stripe).
+Phase 5 neues Finding: `CI5-P2-1` (`email: { not: undefined }` No-Op-Filter).
+
+Bewusst zurückgestellte P2-Items: `P2-4` (Onboarding-Status nicht persistiert), `P2-9` (Session Sliding Expiry).
+
+### Zusätzliche DSGVO-Fixes (außerhalb Audit-Phasen, 2026-05-19)
+
+- **Weekly-Backup-Cron entfernt:** CSV mit vollständigen Gastdaten wurde wöchentlich per E-Mail (Resend) versandt — Verstoß gegen Art. 32 DSGVO (unverschlüsselt, Resend speichert Anhänge). Ersetzt durch On-Demand-Export im Admin (`GET /api/admin/export`, Session-Auth).
+- **Daily-Backup auf `access: 'private'`:** Vercel Blob-Dumps waren öffentlich per URL erreichbar (Security by Obscurity). Jetzt `private` + Download nur via `/api/admin/backups` mit Super-Admin-Session.
+
+### Gesamtbewertung
+
+Das System ist nach Abschluss aller 5 Audit-Phasen produktionstauglich. Alle P1-Findings sind behoben: TOCTOU-Doppelbuchungslücke, Session-Revocation, Auth-Layout-Fallthrough, verwaiste Pending-Records, fehlender BlockedRange-Cleanup, Check-in-Status-Gates und fehlende `checkinToken`-Generierung bei PayPal/Stripe. Der Buchungsflow ist end-to-end konsistent mit korrektem Beds24-Push und Nuki-Code-Generierung. Alle 9 Cron-Jobs sind korrekt auth-gesichert und idempotent. Die zwei offenen P2-Items betreffen UX-Komfort ohne Datenrisiko. Die 15 offenen P3-Items sind dokumentierte Qualitätslücken ohne akuten Handlungsbedarf.
