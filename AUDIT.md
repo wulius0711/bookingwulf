@@ -10,8 +10,8 @@
 |-------|---------|--------|-------|
 | 1 | Registration & Onboarding | ✅ Abgeschlossen | 2026-05-19 |
 | 2 | Buchungs-Flow (Anfrage → Buchung → Bestätigung) | ✅ Abgeschlossen | 2026-05-19 |
-| 3 | Payment-Flow (Stripe, PayPal, Anzahlung, Refund) | 🔲 Ausstehend | — |
-| 4 | Gäste-Portal & Online Check-in | 🔲 Ausstehend | — |
+| 3 | Gäste-Lounge | ✅ Abgeschlossen | 2026-05-19 |
+| 4 | Online Check-in | 🔲 Ausstehend | — |
 | 5 | Benachrichtigungen & Cron-Jobs | 🔲 Ausstehend | — |
 
 ---
@@ -495,6 +495,134 @@ Login liest `user.sessionVersion` aus der DB. Für neue User (Default 0) stimmt 
 | B-P3-3 | Nuki-Zugangscode wird nicht für PayPal/Stripe-Buchungen generiert (nur Bank-Transfer) |
 | B-P3-4 | `paypalOrderId`-Feld speichert auch Stripe Payment Intent ID (irreführender Feldname) |
 | B-P3-5 | Admin-Manualbuchung sendet keine Gast-E-Mail |
+
+---
+
+---
+
+## Phase 3 — Gäste-Lounge
+
+**Datum:** 2026-05-19
+
+---
+
+## 1. Token-Generierung & -Auflösung
+
+**Generierung:**
+- ✅ Token (`crypto.randomUUID()`, 36 Zeichen) wird nur bei bestätigten Buchungen gesetzt:
+  - Sofortbuchung Bank-Transfer: in `/api/request` bei `bookingType='booking'`
+  - Admin-Bestätigung Anfrage: in `updateBookingStatus` bei `new/answered → booked`
+  - Beds24-Webhook: generiert Token bei eingehenden OTA-Buchungen
+- ✅ `checkinToken String? @unique` — Unique Constraint in Schema, kein Kollisionsrisiko
+- ✅ Token in Bestätigungs-E-Mail korrekt verlinkt (via `bookingIcalUrl`-Helper)
+
+**Auflösung `/api/gast/[token]` + `/gast/[token]`:**
+- ✅ Malformed Token (≠ 36 Zeichen) → 400 Bad Request
+- ✅ Unbekannter Token → 404 Not Found
+- ❌ **Kein Status-Check** — Stornierte Buchungen gaben vollständige Gast-Daten inkl. Zugangscode zurück (P1 — behoben 2026-05-19)
+- ❌ **Zugangscode nach Abreise sichtbar** — `nukiCode` wurde nach `departure` nicht ausgeblendet (P1 — behoben 2026-05-19)
+
+**Entscheidung — Pre-Booking-Status (`new`, `answered`, `pending_*`):**
+→ `notFound()` / 404. Diese Zustände haben in der Regel noch kein `checkinToken`, und ein Gast der die Lounge besucht bevor die Buchung bestätigt ist, soll keine Daten sehen. Token-Null-Einträge können ohnehin nicht mit `findUnique({ where: { checkinToken } })` gefunden werden.
+
+---
+
+## 2. Daten-Isolation & Cross-Property-Risiko
+
+- ✅ Alle DB-Queries scopen auf `request.hotelId` — kein Cross-Hotel-Datenleak möglich
+- ✅ `thingsToSee` gefiltert nach `hotelId` + optional `apartmentId` (apartment-spezifische Tipps)
+- ✅ `hotelExtra` gefiltert nach `hotelId` + `isActive: true`
+- ✅ Messages scopen auf `requestId` (kein Cross-Buchungs-Leak)
+- ✅ `checkinImages` gefiltert: Apartment-Bilder überschreiben Hotel-Bilder (korrekte Fallback-Logik)
+- ✅ Apartment-Overrides (WiFi, Parking, Hausregeln, etc.): erstes gebuchtes Apartment gewinnt, Hotel als Fallback
+- ✅ Übersetzungen: `aptTr` überschreibt `hotelTr` korrekt (spread-merge)
+
+**Kein Cross-Property-Datenleak identifiziert.**
+
+---
+
+## 3. Google Maps / Lokale Ausflugstipps
+
+**Architektur:**
+- Google Places API wird **ausschließlich im Admin** genutzt (`/api/admin/places-search`, `/api/admin/places-details`)
+- ✅ API-Key `GOOGLE_PLACES_API_KEY` ist serverseitig — nie im Client-Bundle
+- ✅ Beide Admin-Endpoints hinter `verifySession()` (kein öffentlicher Zugang)
+- ✅ Daten werden bei Import in `ThingsToSee`-Tabelle gespeichert (DB-Cache)
+
+**Gäste-Lounge selbst:**
+- ✅ Keine Live-Google-Requests auf der Gast-Seite — nur `mapsUrl` als gespeicherter Link
+- ✅ Kein API-Key-Exposure gegenüber Gästen möglich
+- ✅ Cache-Invalidierung: Admin ändert Eintrag → DB wird sofort aktualisiert → Gast sieht nächsten Seitenaufruf neuen Stand
+
+**Edge Cases:**
+- ✅ Keine Tipps konfiguriert → `thingsToSee.length === 0` → GuestPortal rendert Sektion nicht (leer)
+- ✅ `GOOGLE_PLACES_API_KEY` fehlt → Admin-Import gibt 500 zurück (Gäste unberührt)
+
+---
+
+## 4. Upselling / Extras
+
+- ✅ Extras gefiltert nach `hotelId + isActive + (showInWidget || showInUpsell)`
+- ✅ Bereits gebuchte Extras korrekt markiert via `serverBookedExtraIds` (aus `extrasJson`-Snapshot)
+- ✅ `exclusiveGroup`-Feld korrekt weitergereicht für Variantengruppen-Logik im Frontend
+
+---
+
+## 5. Kommunikation (Nachrichten)
+
+- ✅ Messages scopen auf `requestId` — kein Message-Leak zwischen Buchungen
+- Kein weiterer Handlungsbedarf in Phase 3
+
+---
+
+## 6. Edge Cases
+
+| # | Szenario | Ergebnis |
+|---|----------|---------|
+| 1 | Stornierte Buchung → Lounge aufrufen | ✅ 410 Gone + neutrale Meldung (nach Fix) |
+| 2 | Token nach Abreisedatum → Zugangscode sichtbar | ✅ `nukiCode: null` nach `departure < now` (nach Fix) |
+| 3 | Unbekannter Token | ✅ 404 |
+| 4 | Malformed Token (≠ 36 Zeichen) | ✅ 400 |
+| 5 | `pending_paypal` / `pending_stripe` Token (theoretisch) | ✅ 404 (status !== 'booked') |
+| 6 | Buchung ohne `checkinToken` (null) | ✅ `findUnique({ where: { checkinToken: null } })` trifft keinen Datensatz |
+| 7 | Apartment ohne Bilder | ✅ `images[0]?.imageUrl ?? null` — kein Crash |
+| 8 | Keine Ausflugstipps konfiguriert | ✅ Leeres Array — GuestPortal rendert keine Sektion |
+
+---
+
+### P1 — Datenkorrektheit
+
+| ID | Problem | Datei | Status |
+|----|---------|-------|--------|
+| G-P1-1 | **Kein Status-Gate** — Stornierte + Pre-Booking-Buchungen gaben vollständige Gast-Daten inkl. Zugangscode zurück | `app/api/gast/[token]/route.ts`, `app/gast/[token]/page.tsx` | ✅ Behoben 2026-05-19 |
+| G-P1-2 | **Zugangscode nach Abreise sichtbar** — `nukiCode` wurde nach `request.departure` nicht ausgeblendet | `app/api/gast/[token]/route.ts`, `app/gast/[token]/page.tsx` | ✅ Behoben 2026-05-19 |
+
+### P2 — UX / Vollständigkeit
+
+*(Keine P2-Findings identifiziert)*
+
+### P3 — Nice-to-Have
+
+| ID | Problem |
+|----|---------|
+| G-P3-1 | `generateMetadata` in `page.tsx` prüft Status nicht → `<title>Meine Buchung — HotelXY</title>` auch für stornierte Buchungen |
+| G-P3-2 | Token-Validierung prüft nur `length === 36`, kein UUID-Regex (`/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i`) |
+| G-P3-3 | Kein Ablaufdatum auf `checkinToken` — Link bleibt unbegrenzt gültig (bewusste Design-Entscheidung, kein Sicherheitsrisiko da Status-Gate vorhanden) |
+
+---
+
+## Geprüfte Dateien (Phase 3)
+
+| Datei | Rolle |
+|-------|-------|
+| `app/gast/[token]/page.tsx` | SSR-Seite der Gäste-Lounge |
+| `app/gast/[token]/GuestPortal.tsx` | Client-Komponente (UI) |
+| `app/gast/[token]/actions.ts` | Server Actions (Check-in, Messages) |
+| `app/api/gast/[token]/route.ts` | API-Handler (für PWA/Client-Fetch) |
+| `app/api/admin/things-to-see/route.ts` | Admin CRUD für Ausflugstipps |
+| `app/api/admin/places-search/route.ts` | Google Places Autocomplete (Admin) |
+| `app/api/admin/places-details/route.ts` | Google Places Details + Photo (Admin) |
+| `prisma/schema.prisma` (ThingsToSee) | Datenmodell Ausflugstipps |
 
 ---
 

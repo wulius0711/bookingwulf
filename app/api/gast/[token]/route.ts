@@ -35,10 +35,6 @@ export async function GET(_req: Request, { params }: Params) {
       language: true,
       selectedApartmentIds: true,
       hotelId: true,
-      messages: {
-        orderBy: { createdAt: 'asc' },
-        select: { id: true, sender: true, body: true, createdAt: true },
-      },
     },
   });
 
@@ -46,7 +42,17 @@ export async function GET(_req: Request, { params }: Params) {
     return NextResponse.json({ error: 'Buchung nicht gefunden' }, { status: 404 });
   }
 
-  const [hotel, apartments, extras, thingsToSee] = await Promise.all([
+  if (request.status === 'cancelled') {
+    return NextResponse.json({ error: 'Diese Buchung wurde storniert.' }, { status: 410 });
+  }
+  if (request.status !== 'booked') {
+    return NextResponse.json({ error: 'Buchung nicht gefunden' }, { status: 404 });
+  }
+
+  const isAfterCheckout = new Date() > new Date(request.departure);
+  const apartmentIds = request.selectedApartmentIds.split(',').map(Number).filter(Boolean);
+
+  const [hotel, apartmentRows, apartmentImages, extras, thingsToSee, messages] = await Promise.all([
     prisma.hotel.findUnique({
       where: { id: request.hotelId! },
       select: {
@@ -72,14 +78,13 @@ export async function GET(_req: Request, { params }: Params) {
       },
     }),
     prisma.apartment.findMany({
-      where: {
-        id: { in: request.selectedApartmentIds.split(',').map(Number).filter(Boolean) },
-      },
-      select: {
-        id: true,
-        name: true,
-        images: { take: 1, orderBy: { id: 'asc' }, select: { imageUrl: true, altText: true } },
-      },
+      where: { id: { in: apartmentIds } },
+      select: { id: true, name: true },
+    }),
+    prisma.apartmentImage.findMany({
+      where: { apartmentId: { in: apartmentIds } },
+      orderBy: { id: 'asc' },
+      select: { apartmentId: true, imageUrl: true, altText: true },
     }),
     prisma.hotelExtra.findMany({
       where: {
@@ -106,7 +111,17 @@ export async function GET(_req: Request, { params }: Params) {
       select: { id: true, category: true, title: true, description: true, address: true, mapsUrl: true, imageUrl: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
     }),
+    prisma.requestMessage.findMany({
+      where: { requestId: request.id },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, sender: true, body: true, createdAt: true },
+    }),
   ]);
+
+  const apartments = apartmentRows.map((apt) => ({
+    ...apt,
+    images: apartmentImages.filter((img) => img.apartmentId === apt.id).slice(0, 1).map(({ imageUrl, altText }) => ({ imageUrl, altText })),
+  }));
 
   const bookedExtraKeys: string[] = Array.isArray(request.extrasJson)
     ? (request.extrasJson as { key: string }[]).map((e) => e.key)
@@ -127,7 +142,7 @@ export async function GET(_req: Request, { params }: Params) {
       paymentMethod: request.paymentMethod,
       pricingJson: request.pricingJson,
       extrasJson: request.extrasJson,
-      nukiCode: request.nukiCode,
+      nukiCode: isAfterCheckout ? null : request.nukiCode,
       checkinCompleted: !!request.checkinCompletedAt,
       checkinArrivalTime: request.checkinArrivalTime,
       checkoutRequested: !!request.checkoutRequestedAt,
@@ -153,7 +168,7 @@ export async function GET(_req: Request, { params }: Params) {
     apartments,
     allExtras: extras.map((e) => ({ ...e, price: Number(e.price) })),
     serverBookedExtraIds: extras.filter((e) => bookedExtraKeys.includes(e.key)).map((e) => e.id),
-    messages: request.messages,
+    messages,
     thingsToSee,
     token,
   });

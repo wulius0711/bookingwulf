@@ -59,6 +59,22 @@ export default async function GastPage({ params }: Props) {
 
   if (!request) notFound();
 
+  // Status gate
+  if (request.status === 'cancelled') {
+    return (
+      <main style={{ minHeight: '100vh', background: '#f5f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+        <div style={{ maxWidth: 400, textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✕</div>
+          <h1 style={{ margin: '0 0 12px', fontSize: 22, fontWeight: 700, color: '#0f172a' }}>Buchung storniert</h1>
+          <p style={{ margin: 0, fontSize: 15, color: '#6b7280', lineHeight: 1.6 }}>Diese Buchung wurde storniert. Bitte wende dich bei Fragen direkt an die Unterkunft.</p>
+        </div>
+      </main>
+    );
+  }
+  if (request.status !== 'booked') notFound();
+
+  const isAfterCheckout = new Date() > request.departure;
+
   const apartmentIds = request.selectedApartmentIds
     .split(',')
     .map(Number)
@@ -190,7 +206,7 @@ export default async function GastPage({ params }: Props) {
         paymentMethod: request.paymentMethod,
         pricingJson: request.pricingJson as Record<string, unknown> | null,
         extrasJson: request.extrasJson as unknown[] | null,
-        nukiCode: request.nukiCode,
+        nukiCode: isAfterCheckout ? null : request.nukiCode,
         checkinCompleted: !!request.checkinCompletedAt,
         checkinArrivalTime: request.checkinArrivalTime,
         checkoutRequested: !!request.checkoutRequestedAt,
