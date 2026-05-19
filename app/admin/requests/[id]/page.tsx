@@ -147,6 +147,17 @@ async function updateBookingStatus(formData: FormData) {
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
 
+  // Enforce valid state-machine transitions
+  const validNext: Record<string, string[]> = {
+    new:            ['answered', 'booked', 'cancelled'],
+    answered:       ['new', 'booked', 'cancelled'],
+    booked:         ['cancelled'],
+    cancelled:      [],
+    pending_paypal: ['cancelled'],
+    pending_stripe: ['cancelled'],
+  };
+  if (!(validNext[request.status] ?? []).includes(status)) return;
+
   // Generate checkin token when booking is confirmed
   let checkinToken: string | null = null;
   if (status === 'booked' && !request.checkinToken) {

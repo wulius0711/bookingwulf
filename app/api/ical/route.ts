@@ -46,7 +46,7 @@ export async function GET(req: Request) {
   const requests = await prisma.request.findMany({
     where: {
       hotelId: apartment.hotelId,
-      status: { in: ['new', 'booked'] },
+      status: { in: ['booked'] },
       selectedApartmentIds: { contains: String(apartment.id) },
     },
     select: { id: true, arrival: true, departure: true, firstname: true, lastname: true, status: true },

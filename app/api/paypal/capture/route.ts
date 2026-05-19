@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { getPaypalAccessToken, capturePaypalOrder } from '@/src/lib/paypal';
 import { pushBooking } from '@/src/lib/beds24';
+import { createNukiCode } from '@/src/lib/nuki';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { getResend, getFromEmail, buildEmailHtml, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, type Lang } from '@/src/lib/email-i18n';
 import { log } from '@/src/lib/logger';
@@ -45,9 +47,10 @@ export async function GET(req: NextRequest) {
       include: {
         hotel: {
           select: {
-            id: true, name: true, email: true, accentColor: true,
+            id: true, name: true, email: true, accentColor: true, plan: true,
             settings: { select: { paypalClientId: true, paypalClientSecret: true } },
             emailTemplates: { where: { type: 'booking_guest' } },
+            nukiConfig: { select: { apiToken: true } },
           },
         },
       },
@@ -128,6 +131,38 @@ export async function GET(req: NextRequest) {
       }
     } catch (beds24Err) {
       console.error('[Beds24] PayPal capture sync failed:', beds24Err);
+    }
+
+    // Nuki access code
+    if (request.hotel?.nukiConfig && hasPlanAccess(request.hotel.plan ?? 'starter', 'pro')) {
+      try {
+        const apts = await prisma.apartment.findMany({
+          where: { id: { in: apartmentIds } },
+          select: { id: true, nukiSmartlockId: true },
+        });
+        const code = Math.floor(100000 + Math.random() * 900000);
+        const authIds: string[] = [];
+        for (const apt of apts) {
+          if (!apt.nukiSmartlockId) continue;
+          const authId = await createNukiCode(
+            request.hotel.nukiConfig.apiToken,
+            apt.nukiSmartlockId,
+            `${request.firstname ?? ''} ${request.lastname} #${request.id}`,
+            request.arrival,
+            request.departure,
+            code,
+          );
+          authIds.push(`${apt.nukiSmartlockId}:${authId}`);
+        }
+        if (authIds.length > 0) {
+          await prisma.request.update({
+            where: { id: request.id },
+            data: { nukiCode: String(code), nukiAuthIds: authIds.join(',') },
+          });
+        }
+      } catch (nukiErr) {
+        console.error('[Nuki] PayPal capture code generation failed:', nukiErr);
+      }
     }
 
     // Send emails
