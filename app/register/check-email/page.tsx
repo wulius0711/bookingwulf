@@ -12,9 +12,15 @@ export default function CheckEmailPage() {
           <p style={{ margin: '0 0 20px', fontSize: 15, color: '#6b7280', lineHeight: 1.6 }}>
             Wir haben Ihnen einen Bestätigungslink geschickt. Bitte prüfen Sie Ihr Postfach und klicken Sie auf den Link, um Ihr Konto zu aktivieren.
           </p>
-          <p style={{ margin: 0, fontSize: 13, color: '#9ca3af', lineHeight: 1.5 }}>
+          <p style={{ margin: '0 0 16px', fontSize: 13, color: '#9ca3af', lineHeight: 1.5 }}>
             Der Link ist 24 Stunden gültig. Bei Problemen wenden Sie sich an{' '}
             <a href="mailto:support@bookingwulf.com" style={{ color: '#374151', fontWeight: 600 }}>support@bookingwulf.com</a>.
+          </p>
+          <p style={{ margin: 0, fontSize: 13, color: '#9ca3af' }}>
+            Keine Mail erhalten?{' '}
+            <a href="/register/resend-verification" style={{ color: '#374151', fontWeight: 600, textDecoration: 'none' }}>
+              Erneut senden
+            </a>
           </p>
         </div>
 
