@@ -702,6 +702,37 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         </div>
       )}
 
+      {/* ─── Rückerstattungs-Hinweis ─── */}
+      {request.status === 'cancelled' && request.paypalOrderId && (request.paymentMethod === 'stripe' || request.paymentMethod === 'paypal') && (() => {
+        const isStripe = request.paymentMethod === 'stripe';
+        const dashboardUrl = isStripe
+          ? `https://dashboard.stripe.com/payments/${request.paypalOrderId}`
+          : 'https://www.paypal.com/activity';
+        const pricing = request.pricingJson as { total?: number } | null;
+        return (
+          <div style={{ marginTop: 16, padding: '14px 18px', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 12, fontSize: 14, color: '#92400e', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>↩</span>
+            <div style={{ flex: 1 }}>
+              <strong>Rückerstattung ausstehend</strong>
+              <p style={{ margin: '4px 0 0', fontSize: 13, color: '#b45309', lineHeight: 1.5 }}>
+                Diese Buchung wurde per <strong>{isStripe ? 'Stripe' : 'PayPal'}</strong> bezahlt
+                {pricing?.total ? ` (${pricing.total.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' })})` : ''}.
+                Bitte erstattte den Betrag direkt im {isStripe ? 'Stripe' : 'PayPal'}-Dashboard.
+                {!isStripe && <> Transaktions-ID: <code style={{ background: '#fef3c7', padding: '1px 4px', borderRadius: 4, fontSize: 12 }}>{request.paypalOrderId}</code></>}
+              </p>
+            </div>
+            <a
+              href={dashboardUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ flexShrink: 0, padding: '7px 14px', background: '#111827', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}
+            >
+              {isStripe ? 'Zur Zahlung →' : 'PayPal öffnen →'}
+            </a>
+          </div>
+        );
+      })()}
+
       {/* ─── Nachrichtenthread ─── */}
       {!canUseMessages ? (
         <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: 'var(--text-secondary)' }}>
