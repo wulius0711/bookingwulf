@@ -676,7 +676,7 @@ Pro Einbettungsort kann ein eigenes `config`-Slug konfiguriert werden mit eigene
 | `/api/cron/expire-trials` — Tag+3 | Hotelbetreiber | `subscriptionStatus='inactive'`, E-Mail 1 noch nicht gesendet | `trialEmail1SentAt IS NULL` |
 | `/api/cron/expire-trials` — Tag+7 | Hotelbetreiber | E-Mail 1 gesendet, E-Mail 2 noch nicht | `trialEmail2SentAt IS NULL` |
 | `/api/cron/payment-reminder` | Hotel | Offene Banküberweisungen (alle 30 Min) | — |
-| `/api/cron/checkin-email` | Gast | Anreisetag 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
+| `/api/cron/checkin-email` | Gast | Anreise − X Tage (default 3) 10:00 Wien, `checkinEmailEnabled` | `checkinEmailSentAt IS NULL` |
 | `/api/cron/pre-arrival-reminder` | Gast | Anreise − X Tage 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
 | `/api/cron/checkout-reminder` | Gast | Abreisetag 09:00 Wien, `checkoutReminderEnabled` | `checkoutReminderSentAt IS NULL` |
 | `/api/cron/review-request` | Gast | Abreise − X Tage 11:00 Wien, `reviewRequestEnabled` (Pro+), `reviewRequestLink` gesetzt | `reviewRequestSentAt IS NULL` |
@@ -1131,7 +1131,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/cron/expire-trials` | `0 8 * * *` | 09:00 | Trial-Ablauf-Sequenz + Abandoned-Payment-Expiry (48h) |
 | `/api/cron/payment-reminder` | `*/30 * * * *` | alle 30 Min | Offene Banküberweisungs-Erinnerung ans Hotel |
 | `/api/cron/checkout-reminder` | `0 8 * * *` | 09:00 | Check-out-Erinnerung am Abreisetag |
-| `/api/cron/checkin-email` | `0 9 * * *` | 10:00 | Check-in-Info-Mail am Anreisetag |
+| `/api/cron/checkin-email` | `0 9 * * *` | 10:00 | Check-in-Info-Mail X Tage vor Anreise (default 3) |
 | `/api/cron/pre-arrival-reminder` | `0 9 * * *` | 10:00 | Pre-Arrival-Reminder X Tage vor Anreise |
 | `/api/cron/review-request` | `0 10 * * *` | 11:00 | Bewertungsanfrage X Tage nach Abreise |
 | `/api/cron/daily-backup` | `0 2 * * *` | 03:00 | Vollständiger DB-Dump → Vercel Blob (private, 30 Tage) |

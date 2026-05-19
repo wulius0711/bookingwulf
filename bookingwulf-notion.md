@@ -527,8 +527,7 @@ Alternativen:
 |-------|---------|--------|
 | Code | GitHub — jeder Commit wiederherstellbar | ✅ Aktiv |
 | Deployments | Vercel — jedes Deploy bleibt gespeichert, 1-Klick-Rollback | ✅ Aktiv |
-| Buchungsdaten | Wöchentliches CSV per Cron (So 03:00 UTC) → support@bookingwulf.com | ✅ Aktiv seit Mai 2026 |
-| DB-Volldump | Tägliches JSON-Backup aller Tabellen → Vercel Blob (backups/YYYY-MM-DD.json), 30 Tage Retention | ✅ Aktiv seit Mai 2026 |
+| DB-Volldump | Tägliches JSON-Backup aller Tabellen → Vercel Blob private (backups/YYYY-MM-DD.json), 30 Tage Retention. Download via Super-Admin (`/api/admin/backups`) | ✅ Aktiv seit Mai 2026 |
 | pg_dump | GitHub Actions täglich 03:00 UTC → `.sql.gz` als Artifact, 30 Tage Retention. Restore: `gunzip -c backup-YYYY-MM-DD.sql.gz \| psql "$DATABASE_URL_RAILWAY"` | ✅ Aktiv seit Mai 2026 |
 | Datenbank | Railway PostgreSQL (Amsterdam/EU) — Hobby $5/Mo, kein Sleeping, always-on | ✅ Aktiv seit Mai 2026 |
 
@@ -578,9 +577,8 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 | Datenbank | Railway PostgreSQL, Amsterdam/EU | ✅ Live |
 | CDN | Vercel Edge Network | ✅ Automatisch |
 | Code-Backup | GitHub (jeder Commit) | ✅ |
-| DB-Backup täglich | JSON-Dump → Vercel Blob, 30 Tage | ✅ |
+| DB-Backup täglich | JSON-Dump → Vercel Blob (private), 30 Tage | ✅ |
 | DB-Backup täglich | pg_dump → GitHub Actions Artifact, 30 Tage | ✅ |
-| Buchungsdaten-Backup | CSV wöchentlich → E-Mail | ✅ |
 | Error Tracking | Sentry (10% Sampling) | ✅ |
 | Rate Limiting | Upstash Redis (EU-central-1, Free Tier) | ✅ |
 | E-Mail | Resend | ✅ |

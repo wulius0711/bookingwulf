@@ -873,7 +873,7 @@ Alle 9 Vercel-Cron-Jobs + Cron-Infrastruktur (Auth, Idempotenz, Retention).
 
 | Datei | Änderung |
 |---|---|
-| `app/api/cron/checkin-email/route.ts` | `{ not: undefined }` → `{ not: null }` |
+| `app/api/cron/checkin-email/route.ts` | Toter `email`-Filter entfernt (`Request.email` ist non-nullable `String`) |
 
 ---
 
