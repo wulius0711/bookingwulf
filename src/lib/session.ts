@@ -37,7 +37,6 @@ export const verifySession = cache(async (): Promise<SessionPayload> => {
     select: { sessionVersion: true },
   })
   if (!user || user.sessionVersion !== payload.sessionVersion) {
-    cookieStore.delete('admin_session')
     redirect('/admin/login')
   }
   return payload
