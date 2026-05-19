@@ -123,6 +123,10 @@ export default function BillingPage() {
   const status = hotel?.subscriptionStatus ?? 'inactive';
   const statusInfo = STATUS_LABELS[status] ?? STATUS_LABELS.inactive;
   const isActive = status === 'active' || status === 'trialing';
+  const daysLeft = status === 'trialing' && hotel?.trialEndsAt
+    ? Math.ceil((new Date(hotel.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+  const showTrialWarning = daysLeft !== null && daysLeft <= 3 && daysLeft >= 0;
 
   return (
     <main className="admin-page" style={{ maxWidth: 1100, background: 'var(--page-bg)', minHeight: '100vh', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -167,6 +171,16 @@ export default function BillingPage() {
             </div>
           )}
         </div>
+
+        {showTrialWarning && (
+          <div style={{ padding: '14px 18px', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 12, fontSize: 14, color: '#9a3412', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
+            <span>
+              <strong>Testphase endet {daysLeft === 0 ? 'heute' : `in ${daysLeft} Tag${daysLeft === 1 ? '' : 'en'}`}.</strong>{' '}
+              Wähle jetzt einen Plan, um deinen Betrieb ohne Unterbrechung fortzusetzen.
+            </span>
+          </div>
+        )}
 
         {error && (
           <div style={{ padding: '12px 16px', background: 'var(--status-error-bg)', border: '1px solid var(--primitive-red-300)', borderRadius: 10, fontSize: 14, color: 'var(--status-error-text)' }}>

@@ -223,10 +223,50 @@ export async function POST(req: Request) {
         const customerId = invoice.customer as string;
         if (!customerId) break;
 
-        await prisma.hotel.updateMany({
+        const failedHotel = await prisma.hotel.findFirst({
           where: { stripeCustomerId: customerId },
+          select: { id: true, name: true, email: true },
+        });
+        if (!failedHotel) break;
+
+        await prisma.hotel.update({
+          where: { id: failedHotel.id },
           data: { subscriptionStatus: 'past_due' },
         });
+
+        try {
+          const resend = getResend();
+          if (resend && failedHotel.email) {
+            await resend.emails.send({
+              from: getFromEmail(),
+              to: failedHotel.email,
+              subject: 'Zahlung fehlgeschlagen — bookingwulf',
+              html: buildEmailHtml({
+                hotelName: 'bookingwulf',
+                title: 'Zahlung fehlgeschlagen',
+                body: `
+                  <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+                    Hallo,<br/><br/>
+                    leider konnte die Zahlung für Ihr bookingwulf-Abonnement (<strong>${failedHotel.name}</strong>) nicht verarbeitet werden.
+                  </p>
+                  <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
+                    Bitte aktualisieren Sie Ihre Zahlungsdaten im Kundenportal, um Ihren Service aufrechtzuerhalten.
+                  </p>
+                  <p style="margin:0 0 24px;">
+                    <a href="https://bookingwulf.com/admin/billing" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
+                      Abonnement verwalten
+                    </a>
+                  </p>
+                  <p style="font-size:13px;color:#9ca3af;line-height:1.5;margin:0;">
+                    Bei Fragen erreichen Sie uns unter support@bookingwulf.com.
+                  </p>
+                `,
+              }),
+            });
+          }
+        } catch (e) {
+          console.error('Payment failed mail error:', e);
+        }
         break;
       }
     }
