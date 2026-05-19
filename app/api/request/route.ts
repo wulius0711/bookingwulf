@@ -216,6 +216,29 @@ export async function POST(req: Request) {
     const isInstantBooking = bookingType === 'booking';
     const checkinToken = isInstantBooking ? crypto.randomUUID() : null;
 
+    // Server-side availability guard for instant bookings (prevents TOCTOU double-booking)
+    if (bookingType === 'booking') {
+      const conflicting = await prisma.request.findMany({
+        where: {
+          hotelId: hotel.id,
+          status: { in: ['booked', 'pending_paypal', 'pending_stripe'] },
+          arrival: { lt: departure },
+          departure: { gt: arrival },
+        },
+        select: { selectedApartmentIds: true },
+      });
+      const aptIdSet = new Set(selectedApartmentIds.map(String));
+      const requestConflict = conflicting.some(r =>
+        r.selectedApartmentIds.split(',').some(id => aptIdSet.has(id.trim()))
+      );
+      const blockedConflict = requestConflict ? false : !!(await prisma.blockedRange.findFirst({
+        where: { apartmentId: { in: selectedApartmentIds }, startDate: { lt: departure }, endDate: { gt: arrival } },
+      }));
+      if (requestConflict || blockedConflict) {
+        return Response.json({ success: false, message: 'Diese Daten sind leider nicht mehr verfügbar.' }, { status: 409, headers: corsHeaders });
+      }
+    }
+
     // Save to DB
     const isPaypalBooking = paymentMethod.toLowerCase() === 'paypal' && bookingType === 'booking';
     const isStripeBooking = paymentMethod.toLowerCase() === 'stripe' && bookingType === 'booking';
@@ -265,6 +288,7 @@ export async function POST(req: Request) {
         }
       } catch (paypalErr) {
         console.error('[PayPal] order creation failed:', paypalErr);
+        await prisma.request.delete({ where: { id: requestEntry.id } }).catch(() => {});
         return Response.json({ success: false, message: 'PayPal-Zahlung konnte nicht gestartet werden.' }, { status: 502, headers: corsHeaders });
       }
       // PayPal credentials missing
@@ -290,6 +314,7 @@ export async function POST(req: Request) {
         return Response.json({ success: false, message: 'Stripe nicht konfiguriert.' }, { status: 500, headers: corsHeaders });
       } catch (stripeErr) {
         console.error('[Stripe] PaymentIntent creation failed:', stripeErr);
+        await prisma.request.delete({ where: { id: requestEntry.id } }).catch(() => {});
         return Response.json({ success: false, message: 'Kartenzahlung konnte nicht gestartet werden.' }, { status: 502, headers: corsHeaders });
       }
     }

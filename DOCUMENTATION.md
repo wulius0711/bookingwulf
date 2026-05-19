@@ -435,17 +435,22 @@ UI: `/admin/hotels/[id]` → Karte „Plan" → `PlanSelector`-Client-Komponente
 2. Zod-Validierung
 3. Hotel + Apartments laden
 4. Preis berechnen (season-aware, inkl. Extras)
-5. Request in DB speichern
+5. Server-Side Availability-Check (nur bookingType='booking'):
+   - Conflicting Requests (booked/pending_paypal/pending_stripe) prüfen
+   - BlockedRange-Überschneidung prüfen
+   - → 409 wenn belegt
+6. Request in DB speichern
    - Anfrage (bookingType='request')     → status='new'
    - Sofortbuchung (Banküberweisung)     → status='booked'
    - Sofortbuchung via PayPal            → status='pending_paypal'
    - Sofortbuchung via Stripe            → status='pending_stripe'
-6. Bei bookingType='booking' (außer PayPal/Stripe): BlockedRange pro Apartment erstellen
-7. Hotel-Benachrichtigung (Deutsch) senden
-8. Gast-Bestätigung (Sprache auto-erkannt: de/en/it) senden
-9a. Banküberweisung/Anfrage: { success: true, requestId }
-9b. PayPal-Buchung: { success: true, paypalOrderId, approveUrl } → Widget leitet weiter
-9c. Stripe-Buchung: { success: true, clientSecret, requestId } → Widget bestätigt inline
+7. PayPal/Stripe-Fehler: Request sofort wieder löschen (kein verwaister Record)
+8. Bei bookingType='booking' (Banküberweisung): BlockedRange + Beds24-Push
+9. Hotel-Benachrichtigung (Deutsch) senden
+10. Gast-Bestätigung (Sprache auto-erkannt: de/en/it) senden
+11a. Banküberweisung/Anfrage: { success: true, requestId }
+11b. PayPal-Buchung: { success: true, approveUrl } → Widget leitet weiter
+11c. Stripe-Buchung: { success: true, clientSecret, requestId } → Widget bestätigt inline
 ```
 
 ### PayPal-Flow (Gast-Zahlung)
@@ -453,10 +458,13 @@ UI: `/admin/hotels/[id]` → Karte „Plan" → `PlanSelector`-Client-Komponente
 ```
 Widget → POST /api/request (payment_method='paypal') → { approveUrl }
          ↓ Weiterleitung zu PayPal
-PayPal → POST /api/paypal/capture { requestId, orderId }
-         → PayPal Order capturen
+PayPal → GET /api/paypal/capture?requestId=&token=
+         → orderId Cross-Check (request.paypalOrderId === token)
+         → PayPal Order capturen via capturePaypalOrder()
          → status → 'booked', BlockedRanges anlegen
+         → Beds24-Push (non-blocking)
          → Hotel- + Gast-E-Mail senden
+         → Redirect: /booking-confirmed?status=success
 ```
 
 ### Stripe-Flow (Gast-Zahlung, inline)
@@ -465,12 +473,27 @@ PayPal → POST /api/paypal/capture { requestId, orderId }
 Widget → POST /api/request (payment_method='stripe') → { clientSecret, requestId }
          ↓ stripe.confirmCardPayment(clientSecret, { payment_method: { card } })
          ↓ POST /api/stripe/confirm { requestId, paymentIntentId }
-           → PaymentIntent status='succeeded' prüfen
+           → Status-Guard: request.status === 'pending_stripe'
+           → PaymentIntent via retrievePaymentIntent() (hotel-eigener Key) auf 'succeeded' prüfen
            → status → 'booked', BlockedRanges anlegen
+           → Beds24-Push (non-blocking)
            → Hotel- + Gast-E-Mail senden
 ```
 
 **Wichtig:** `/api/stripe/confirm` und `/api/paypal/capture` sind die einzigen Endpunkte, die den Request auf `'booked'` setzen und Dates sperren — `/api/request` macht das bei PayPal/Stripe nicht sofort.
+
+### Admin-Buchungsverwaltung (Status-Änderungen)
+
+Über `updateBookingStatus` in `/admin/requests/[id]`:
+- `new → answered`: sendet keine E-Mail
+- `new/answered → booked`: generiert checkinToken (wenn preArrivalEnabled), sendet Gast-Bestätigung, pusht zu Beds24 (non-blocking)
+- `* → cancelled`: sendet Gast-Stornierungsmail, löscht zugehörige BlockedRanges (note contains `Buchung #${id}`)
+
+### Abandoned-Payment-Cleanup (Cron)
+
+Cron `/api/cron/expire-trials` (täglich 08:00) enthält Stage 5:
+- `pending_paypal`/`pending_stripe`-Records älter als 48h → `status = 'cancelled'`
+- Keine BlockedRanges betroffen (werden erst nach Capture/Confirm erstellt)
 
 ### Preisberechnung (Extras)
 
@@ -1584,6 +1607,14 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 | **Self-Service-Löschung** | `/delete-account?token=...` mit Bestätigungsseite |
 | **Resend Verifikation** | `/register/resend-verification` — neuen Bestätigungslink anfordern |
 | **Token-abgelaufen-Seite** | `/register?error=token_expired` zeigt klare Fehlermeldung + CTA |
+| **TOCTOU-Guard** | Server-seitiger Availability-Check vor Buchungserstellung verhindert Doppelbuchungen (Race Condition) |
+| **Orphan-Cleanup** | PayPal/Stripe-Fehler nach DB-Write: `pending_*`-Record wird im Catch-Block sofort gelöscht |
+| **Abandoned-Payment-Expiry** | Cron Stage 5: `pending_paypal`/`pending_stripe` älter als 48h → `cancelled` |
+| **BlockedRange-Cleanup** | Stornierung löscht zugehörige BlockedRanges (`type='booking'`, note contains `Buchung #${id}`) |
+| **PayPal OrderId Cross-Check** | Capture-Endpoint prüft jetzt `request.paypalOrderId === token` |
+| **Beds24-Push PayPal/Stripe** | Capture + Confirm pushen Buchung sofort zu Beds24 (non-blocking) |
+| **Beds24-Push Admin-Confirm** | `updateBookingStatus` pusht zu Beds24 wenn Anfrage auf `booked` gesetzt wird |
+| **Admin-Manualbuchung BlockedRange** | `POST /api/admin/booking` erstellt jetzt BlockedRange für `status='booked'` |
 
 ### Secret Rotation
 

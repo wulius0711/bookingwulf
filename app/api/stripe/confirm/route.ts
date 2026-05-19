@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { retrievePaymentIntent } from '@/src/lib/stripe-server';
+import { pushBooking } from '@/src/lib/beds24';
 import { getResend, getFromEmail, buildEmailHtml, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, type Lang } from '@/src/lib/email-i18n';
 import { log } from '@/src/lib/logger';
@@ -81,6 +82,36 @@ export async function POST(req: NextRequest) {
           note: `Buchung #${request.id} — ${request.firstname ?? ''} ${request.lastname} (Stripe)`,
         })),
       });
+    }
+
+    // Beds24 outbound sync
+    try {
+      const beds24Config = await prisma.beds24Config.findUnique({
+        where: { hotelId: request.hotel!.id },
+        select: { isEnabled: true, refreshToken: true },
+      });
+      if (beds24Config?.isEnabled && apartmentIds.length > 0) {
+        const mappings = await prisma.beds24ApartmentMapping.findMany({
+          where: { apartmentId: { in: apartmentIds } },
+          select: { beds24RoomId: true },
+        });
+        const arrStr = request.arrival.toISOString().slice(0, 10);
+        const depStr = request.departure.toISOString().slice(0, 10);
+        for (const m of mappings) {
+          await pushBooking(beds24Config.refreshToken, {
+            roomId: m.beds24RoomId,
+            arrival: arrStr,
+            departure: depStr,
+            guestName: `${request.firstname ?? ''} ${request.lastname}`.trim(),
+            guestEmail: request.email,
+            numAdults: request.adults,
+            numChildren: request.children ?? 0,
+            externalRef: `BW-${request.id}`,
+          });
+        }
+      }
+    } catch (beds24Err) {
+      console.error('[Beds24] Stripe confirm sync failed:', beds24Err);
     }
 
     // Emails

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { getPaypalAccessToken, capturePaypalOrder } from '@/src/lib/paypal';
+import { pushBooking } from '@/src/lib/beds24';
 import { getResend, getFromEmail, buildEmailHtml, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, type Lang } from '@/src/lib/email-i18n';
 import { log } from '@/src/lib/logger';
@@ -56,6 +57,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(`${base}/booking-confirmed?status=error`);
     }
 
+    // Cross-check: token must match the order ID stored at booking creation
+    if (request.paypalOrderId && request.paypalOrderId !== token) {
+      log('payment.error', { method: 'paypal', requestId, reason: 'order_id_mismatch' });
+      return NextResponse.redirect(`${base}/booking-confirmed?status=error`);
+    }
+
     const { paypalClientId, paypalClientSecret } = request.hotel?.settings ?? {};
     if (!paypalClientId || !paypalClientSecret) {
       return NextResponse.redirect(`${base}/booking-confirmed?status=error`);
@@ -91,6 +98,36 @@ export async function GET(req: NextRequest) {
           note: `Buchung #${request.id} — ${request.firstname ?? ''} ${request.lastname} (PayPal)`,
         })),
       });
+    }
+
+    // Beds24 outbound sync
+    try {
+      const beds24Config = await prisma.beds24Config.findUnique({
+        where: { hotelId: request.hotel!.id },
+        select: { isEnabled: true, refreshToken: true },
+      });
+      if (beds24Config?.isEnabled) {
+        const mappings = await prisma.beds24ApartmentMapping.findMany({
+          where: { apartmentId: { in: apartmentIds } },
+          select: { beds24RoomId: true },
+        });
+        const arrStr = request.arrival.toISOString().slice(0, 10);
+        const depStr = request.departure.toISOString().slice(0, 10);
+        for (const m of mappings) {
+          await pushBooking(beds24Config.refreshToken, {
+            roomId: m.beds24RoomId,
+            arrival: arrStr,
+            departure: depStr,
+            guestName: `${request.firstname ?? ''} ${request.lastname}`.trim(),
+            guestEmail: request.email,
+            numAdults: request.adults,
+            numChildren: request.children ?? 0,
+            externalRef: `BW-${requestId}`,
+          });
+        }
+      }
+    } catch (beds24Err) {
+      console.error('[Beds24] PayPal capture sync failed:', beds24Err);
     }
 
     // Send emails

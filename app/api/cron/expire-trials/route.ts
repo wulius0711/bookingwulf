@@ -165,5 +165,15 @@ export async function GET(req: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, email1Sent, email2Sent, deleted });
+  // Step 5: Cancel abandoned pending_paypal / pending_stripe records older than 48 h
+  const cutoff48h = new Date(now.getTime() - 48 * 60 * 60 * 1000);
+  const { count: paymentsExpired } = await prisma.request.updateMany({
+    where: {
+      status: { in: ['pending_paypal', 'pending_stripe'] },
+      createdAt: { lt: cutoff48h },
+    },
+    data: { status: 'cancelled' },
+  });
+
+  return NextResponse.json({ ok: true, email1Sent, email2Sent, deleted, paymentsExpired });
 }

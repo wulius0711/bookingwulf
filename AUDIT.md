@@ -9,7 +9,7 @@
 | Phase | Bereich | Status | Datum |
 |-------|---------|--------|-------|
 | 1 | Registration & Onboarding | ✅ Abgeschlossen | 2026-05-19 |
-| 2 | Buchungs-Flow (Anfrage → Buchung → Bestätigung) | 🔲 Ausstehend | — |
+| 2 | Buchungs-Flow (Anfrage → Buchung → Bestätigung) | ✅ Abgeschlossen | 2026-05-19 |
 | 3 | Payment-Flow (Stripe, PayPal, Anzahlung, Refund) | 🔲 Ausstehend | — |
 | 4 | Gäste-Portal & Online Check-in | 🔲 Ausstehend | — |
 | 5 | Benachrichtigungen & Cron-Jobs | 🔲 Ausstehend | — |
@@ -348,6 +348,171 @@ Login liest `user.sessionVersion` aus der DB. Für neue User (Default 0) stimmt 
 | P3-7 | Keine "Account löschen"-Funktion |
 | P3-8 | `verify-email` hardcoded `sessionVersion: 0` statt DB-Wert zu lesen |
 | P3-9 | Kein Max-Length auf `hotelName` oder `email` server-seitig |
+
+---
+
+---
+
+## Phase 2 — Buchungs-Flow
+
+**Datum:** 2026-05-19
+
+---
+
+## 1. Verfügbarkeits-Widget (`/api/availability`)
+
+- ✅ Blockiert korrekt für Status `['booked', 'pending_paypal', 'pending_stripe']`
+- ✅ Anfrage-Status (`new`, `answered`) blockiert nicht — korrekt für reine Anfrageformulare
+- ✅ Blockt auch `blockedRange`-Einträge (parallel zu Status-Check)
+- ⚠️ **iCal-Feed** exportiert Anfragen mit Status `'new'` als VEVENT — externe Kanäle (Beds24/OTAs) sehen offene Anfragen als belegt (Design-Entscheidung, birgt OTA-Fehlsperren-Risiko — P3)
+
+---
+
+## 2. Buchungserstellung (`/api/request`)
+
+**Eingabe-Validierung:**
+- ✅ Zod-Schema (`bookingRequestSchema`) — alle Pflichtfelder geprüft
+- ✅ Datumssanierung: `departure > arrival` server-seitig geprüft
+- ✅ Apartment-Hotel-Zuordnung verifiziert (verhindert Cross-Hotel-Buchungen)
+- ✅ Rate-Limiting: 10/15 min per IP, 3/5 min per E-Mail
+
+**Verfügbarkeits-Check:**
+- ❌ **Keine server-seitige Verfügbarkeitsprüfung vor Buchungserstellung** — TOCTOU Race Condition möglich: zwei gleichzeitige Gäste können dieselben Dates buchen (P1 — behoben 2026-05-19)
+
+**DB-Write:**
+- ✅ Bank-Transfer / Sofortbuchung: BlockedRange direkt erstellt
+- ✅ Beds24-Push direkt nach Sofortbuchung (Bank-Transfer)
+- ❌ PayPal/Stripe: `pending_paypal`/`pending_stripe`-Record **vor** Gateway-Call erstellt → verwaister Record bei Fehler (P1 — behoben 2026-05-19)
+
+**E-Mails:**
+- ✅ Hotel-Benachrichtigung + Gast-Mail nur für bestätigte Buchungen (Bank-Transfer/Anfrage) — PayPal/Stripe flows returnen vor dem E-Mail-Block
+
+---
+
+## 3. PayPal-Flow
+
+**`/api/request` → PayPal:**
+- ✅ `pending_paypal`-Status korrekt gesetzt
+- ✅ PayPal OrderId gespeichert in `request.paypalOrderId`
+- ✅ Approval-URL an Frontend zurückgegeben
+
+**`/api/paypal/capture`:**
+- ✅ Status-Guard: bricht ab wenn `status !== 'pending_paypal'` (verhindert Doppel-Capture)
+- ❌ Kein Cross-Check `request.paypalOrderId === token` (P2 — behoben 2026-05-19)
+- ✅ BlockedRange nach Capture erstellt
+- ❌ Kein Beds24-Push nach Capture (P2 — behoben 2026-05-19)
+- ✅ Hotel + Gast-E-Mail nach erfolgreichem Capture
+
+---
+
+## 4. Stripe-Flow
+
+**`/api/request` → Stripe:**
+- ✅ `pending_stripe`-Status korrekt gesetzt
+- ✅ PaymentIntent erstellt, `clientSecret` an Frontend zurückgegeben
+- ⚠️ PI-ID wird erst in `/api/stripe/confirm` gespeichert (kein Vorab-Speichern) → kein serverseitiger PI-Cross-Check möglich (akzeptiertes Risiko: PI wird via `retrievePaymentIntent` mit hotel-eigenem Stripe-Key verifiziert)
+
+**`/api/stripe/confirm`:**
+- ✅ Status-Guard: bricht ab wenn `status !== 'pending_stripe'`
+- ✅ PI via `retrievePaymentIntent` (hotel-eigener Key) auf `succeeded` geprüft
+- ✅ BlockedRange nach Bestätigung erstellt
+- ❌ Kein Beds24-Push nach Confirm (P2 — behoben 2026-05-19)
+- ✅ Hotel + Gast-E-Mail nach erfolgreicher Bestätigung
+
+---
+
+## 5. Admin-Buchungsverwaltung
+
+**`/api/admin/booking` (Manualbuchung):**
+- ✅ Hotel-Ownership-Check (Session.hotelId)
+- ❌ Kein BlockedRange bei Manualbuchung (P2 — behoben 2026-05-19)
+- ❌ Kein Beds24-Push bei Manualbuchung
+- ❌ Keine Gast-E-Mail bei Manualbuchung
+
+**`/admin/requests/[id]` — `updateBookingStatus`:**
+- ✅ Session + Ownership-Check
+- ✅ Stornierung sendet Gast-E-Mail (via `cancellation_guest`-Template oder Default)
+- ✅ Bestätigung generiert checkinToken (wenn preArrivalEnabled)
+- ✅ Bestätigung sendet Gast-Bestätigungs-E-Mail
+- ❌ Status-Machine nicht erzwungen — beliebige Übergänge möglich (z.B. `cancelled → booked`) (P2)
+- ❌ Stornierung löscht BlockedRange nicht (P1 — behoben 2026-05-19)
+- ❌ Anfrage-Bestätigung (`new → booked`) pusht nicht zu Beds24 (P2 — behoben 2026-05-19)
+
+---
+
+## 6. Verfügbarkeits-Konsistenz
+
+| Kanal | Sofortbuchung (Bank) | PayPal/Stripe | Admin-Buchung | Admin-Bestätigung (Anfrage) |
+|-------|---------------------|---------------|---------------|----------------------------|
+| Availability-API (Status) | ✅ | ✅ (`pending_*`→`booked`) | ✅ (`booked`) | ✅ |
+| Availability-API (BlockedRange) | ✅ | ✅ (nach Capture/Confirm) | ✅ (nach Fix) | ✅ nicht nötig (Status genügt) |
+| iCal-Feed (Status) | ✅ | ✅ | ✅ | ✅ |
+| iCal-Feed (BlockedRange) | ✅ | ✅ | ✅ (nach Fix) | — |
+| Beds24-Push | ✅ | ✅ (nach Fix) | — | ✅ (nach Fix) |
+
+---
+
+## 7. Edge Cases
+
+| # | Szenario | Ergebnis |
+|---|----------|---------|
+| 1 | Gast klickt "Buchen" zweimal gleichzeitig | ✅ Server-Side Availability-Check blockiert Zweiten (nach Fix) |
+| 2 | Gast bricht PayPal/Stripe-Zahlung ab | ✅ Pending-Record wird nach 48h via Cron abgebrochen (nach Fix) |
+| 3 | Gateway-Fehler nach DB-Write | ✅ Record wird im Catch-Block gelöscht (nach Fix) |
+| 4 | Admin storniert bezahlte Buchung | ✅ BlockedRange wird mitgelöscht (nach Fix) |
+| 5 | Dates werden zwischen Widget-Check und Submit belegt | ✅ Server-Side Check fängt es ab (nach Fix) |
+| 6 | PayPal Redirect mit falschem Token | ✅ OrderId-Mismatch-Check (nach Fix) |
+| 7 | PayPal Capture wird zweifach aufgerufen | ✅ Status-Guard `pending_paypal` verhindert Doppelverarbeitung |
+| 8 | Beds24 Push schlägt fehl | ✅ Non-blocking (try/catch), Buchung bleibt bestätigt |
+
+---
+
+### P1 — Datenkorrektheit
+
+| ID | Problem | Datei | Status |
+|----|---------|-------|--------|
+| B-P1-1 | **TOCTOU Race Condition** — Keine server-seitige Verfügbarkeitsprüfung → Doppelbuchung möglich | `app/api/request/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P1-2 | **Verwaiste Pending-Records** — PayPal/Stripe-Fehler nach DB-Write lässt `pending_*`-Record stehen, blockiert Dates dauerhaft | `app/api/request/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P1-3 | **Abandoned Payments** — Kein Ablauf für `pending_paypal`/`pending_stripe` bei abgebrochenem Checkout | `app/api/cron/expire-trials/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P1-4 | **Stale BlockedRange bei Stornierung** — Stornierte Buchungen lassen BlockedRange stehen → Dates dauerhaft blockiert | `app/admin/requests/[id]/page.tsx` | ✅ Behoben 2026-05-19 |
+
+### P2 — UX / Vollständigkeit
+
+| ID | Problem | Datei | Status |
+|----|---------|-------|--------|
+| B-P2-1 | **PayPal OrderId nicht cross-gecheckt** — Kein Abgleich `request.paypalOrderId === token` im Capture-Endpoint | `app/api/paypal/capture/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P2-2 | **PayPal/Stripe → kein Beds24-Push** — OTA-Kalender nicht sofort aktualisiert nach Zahlung | `app/api/paypal/capture/route.ts`, `app/api/stripe/confirm/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P2-3 | **Admin Anfrage-Bestätigung → kein Beds24-Push** | `app/admin/requests/[id]/page.tsx` | ✅ Behoben 2026-05-19 |
+| B-P2-4 | **Admin-Manualbuchung ohne BlockedRange** — Availability-API deckt es via Status ab, aber Vollständigkeit fehlt | `app/api/admin/booking/route.ts` | ✅ Behoben 2026-05-19 |
+| B-P2-5 | **Status-Machine nicht erzwungen** — Jeder → Jeder Übergang möglich (z.B. `cancelled → booked`) | `app/admin/requests/[id]/page.tsx` | 🔲 Ausstehend |
+
+### P3 — Nice-to-Have
+
+| ID | Problem |
+|----|---------|
+| B-P3-1 | iCal exportiert offene Anfragen (`status='new'`) als belegt → OTAs sperren Dates für unbestätigte Anfragen |
+| B-P3-2 | Keine automatische Stripe/PayPal-Rückerstattung bei Admin-Stornierung |
+| B-P3-3 | Nuki-Zugangscode wird nicht für PayPal/Stripe-Buchungen generiert (nur Bank-Transfer) |
+| B-P3-4 | `paypalOrderId`-Feld speichert auch Stripe Payment Intent ID (irreführender Feldname) |
+| B-P3-5 | Admin-Manualbuchung sendet keine Gast-E-Mail |
+
+---
+
+## Geprüfte Dateien (Phase 2)
+
+| Datei | Rolle |
+|-------|-------|
+| `app/api/request/route.ts` | Buchungserstellung (alle Modi) |
+| `app/api/availability/route.ts` | Verfügbarkeits-API |
+| `app/api/paypal/capture/route.ts` | PayPal Capture + Bestätigung |
+| `app/api/stripe/confirm/route.ts` | Stripe Bestätigung |
+| `app/api/admin/booking/route.ts` | Admin-Manualbuchung |
+| `app/admin/requests/[id]/page.tsx` | Admin Buchungsverwaltung + Status-Aktionen |
+| `app/admin/requests/[id]/StatusButtons.tsx` | Status-Schaltflächen (Client) |
+| `app/admin/requests/request-actions.ts` | Lösch-Aktionen |
+| `app/api/ical/route.ts` | iCal-Feed (Apartment-Ebene, für Beds24/OTAs) |
+| `app/api/booking-ical/route.ts` | Gast-iCal (einzelne Buchung) |
+| `app/api/cron/expire-trials/route.ts` | Trial-Ablauf + Abandoned-Payment-Cleanup |
 
 ---
 

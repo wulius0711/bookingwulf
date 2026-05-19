@@ -160,6 +160,47 @@ async function updateBookingStatus(formData: FormData) {
 
   await prisma.request.update({ where: { id }, data: { status, ...(checkinToken ? { checkinToken } : {}) } });
 
+  // Remove stale BlockedRanges when a booking is cancelled
+  if (status === 'cancelled') {
+    await prisma.blockedRange.deleteMany({
+      where: { note: { contains: `Buchung #${id}` }, type: 'booking' },
+    });
+  }
+
+  // Push to Beds24 when an Anfrage is confirmed (status was not 'booked' before)
+  if (status === 'booked' && request.status !== 'booked' && request.hotelId) {
+    try {
+      const beds24Config = await prisma.beds24Config.findUnique({
+        where: { hotelId: request.hotelId },
+        select: { isEnabled: true, refreshToken: true },
+      });
+      if (beds24Config?.isEnabled) {
+        const { pushBooking } = await import('@/src/lib/beds24');
+        const aptIds = request.selectedApartmentIds.split(',').map(Number).filter(n => n > 0);
+        const mappings = await prisma.beds24ApartmentMapping.findMany({
+          where: { apartmentId: { in: aptIds } },
+          select: { beds24RoomId: true },
+        });
+        const arrStr = request.arrival.toISOString().slice(0, 10);
+        const depStr = request.departure.toISOString().slice(0, 10);
+        for (const m of mappings) {
+          await pushBooking(beds24Config.refreshToken, {
+            roomId: m.beds24RoomId,
+            arrival: arrStr,
+            departure: depStr,
+            guestName: `${request.firstname ?? ''} ${request.lastname}`.trim(),
+            guestEmail: request.email,
+            numAdults: request.adults,
+            numChildren: request.children ?? 0,
+            externalRef: `BW-${id}`,
+          });
+        }
+      }
+    } catch (beds24Err) {
+      console.error('[Beds24] admin confirm sync failed:', beds24Err);
+    }
+  }
+
   const lang = (request.language || 'de') as Lang;
   const i18n = getEmailTranslations(lang);
   const locale = dateLocale[lang];

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const nights = Math.round((dep.getTime() - arr.getTime()) / 86400000);
 
-    await prisma.request.create({
+    const created = await prisma.request.create({
       data: {
         hotelId: session.hotelId,
         arrival: arr,
@@ -39,6 +39,18 @@ export async function POST(req: NextRequest) {
         status: status || 'booked',
       },
     });
+
+    if ((status || 'booked') === 'booked') {
+      await prisma.blockedRange.create({
+        data: {
+          apartmentId,
+          startDate: arr,
+          endDate: dep,
+          type: 'booking',
+          note: `Buchung #${created.id} — ${firstname || ''} ${lastname}`,
+        },
+      });
+    }
 
     return NextResponse.json({ ok: true });
   } catch {
