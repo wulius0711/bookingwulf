@@ -69,7 +69,7 @@ export async function GET(req: Request) {
 
       const subject = fill(template?.subject ?? `Ihre Check-in Infos — ${hotelName}`);
       const greeting = fill(template?.greeting ?? `Hallo ${guestName},`);
-      const bodyText = fill(template?.body ?? '');
+      const bodyText = fill(template?.body || 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt.');
       const signoff = fill(template?.signoff ?? 'Mit freundlichen Grüßen');
 
       const bodyHtml = `
