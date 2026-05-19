@@ -278,16 +278,23 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 
 1. Formular: Hotelname, Slug (auto-generiert), E-Mail, Passwort
 2. **Honeypot-Feld** (`name="website"`, visuell versteckt) — Bot-Submissions werden lautlos ignoriert
-3. Server Action erstellt `Hotel` + `AdminUser`; `isEmailVerified = false`, `emailVerifyToken` (32-Byte Hex, 24h gültig) gesetzt
-4. `subscriptionStatus = 'trialing'`, `trialEndsAt = jetzt + 14 Tage`
-5. **Bestätigungs-E-Mail** mit Link zu `/api/auth/verify-email?token=...` wird versandt
-6. Weiterleitung zu `/register/check-email` (Hinweisseite, kein Session-Cookie)
+3. **Rate Limit:** 5 Registrierungen/Stunde pro IP (Upstash Redis)
+4. **Validierung:** Passwort 8–128 Zeichen, Slug `/^[a-z0-9-]+$/`, Plan gegen `PLANS`-Keys
+5. Resend-Verfügbarkeit wird vor DB-Writes geprüft — schlägt fehl → Fehlermeldung, kein DB-Write
+6. Bestätigungs-E-Mail wird **vor** DB-Write gesendet — schlägt fehl → Fehlermeldung, kein DB-Write
+7. Server Action erstellt in einer `$transaction`: `Hotel` (inkl. `settings: { create: {} }`) + `AdminUser` + `AdminUserHotel`-Eintrag; `isEmailVerified = false`, `emailVerifyToken` (32-Byte Hex, 24h gültig) gesetzt
+8. `subscriptionStatus = 'trialing'`, `trialEndsAt = jetzt + 14 Tage`
+9. Weiterleitung zu `/register/check-email` (Hinweisseite, kein Session-Cookie)
+
+**Zombie-Cleanup:** Wenn eine Registrierung mit einer E-Mail versucht wird, die einem unverifiziertem + abgelaufenem Account gehört, wird der alte Account (Hotel + AdminUser) vor der neuen Registrierung gelöscht.
+
+**Bestätigungslink erneut senden:** `/register/resend-verification` — Formular mit E-Mail-Eingabe, generiert neuen Token, sendet neue Verifikations-E-Mail. Rate Limit 3/Stunde. Generische Antwort (kein E-Mail-Enumeration). Verlinkung auf `check-email`-Seite und auf Fehlerseite bei abgelaufenem Token.
 
 ### E-Mail-Verifizierung
 
 - Route: `GET /api/auth/verify-email?token=<token>`
 - Token wird in `AdminUser.emailVerifyToken` (unique) gesucht
-- Abgelaufen (`emailVerifyTokenExpiresAt < now`) → Redirect zu `/register?error=token_expired`
+- Abgelaufen (`emailVerifyTokenExpiresAt < now`) → Redirect zu `/register?error=token_expired` → zeigt Fehlerseite mit "Neuen Link anfordern"-CTA → `/register/resend-verification`
 - Gültig → `isEmailVerified = true`, Token-Felder geleert, Session-Cookie gesetzt, Redirect zu `/admin/onboarding`
 - **Bestehende Konten** (vor Einführung der Verifizierung): `emailVerifyToken = null` → Login weiterhin möglich ohne Verifizierung
 
@@ -330,6 +337,29 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 **Typische Use-Cases:**
 - Laptop gestohlen / Token kompromittiert → "Sessions beenden"
 - Mitarbeiter gekündigt → "Deaktivieren" + "Sessions beenden" kombinieren
+
+**Logout invalidiert alle anderen Sessions:** `logout()` inkrementiert `sessionVersion` in der DB → alle aktiven Tokens (z.B. andere Geräte) werden beim nächsten Request abgemeldet.
+
+### Trial-Ablauf-Sequenz
+
+Cron `/api/cron/expire-trials` läuft täglich 08:00 Uhr (Vercel Cron):
+
+| Tag nach Ablauf | Aktion |
+|----------------|--------|
+| 0 | `subscriptionStatus: 'trialing'` → `'inactive'` (auch lazy in `layout.tsx` bei Seitenaufruf) |
+| +3 | E-Mail 1: Login-CTA + diskreter Lösch-Link (einmaliger Token wird generiert, 12 Tage gültig) |
+| +7 | E-Mail 2: Letzte Warnung — "Konto wird in 7 Tagen gelöscht" |
+| +14 | Auto-Delete: Hotel + alle AdminUser (nur wenn beide E-Mails tatsächlich versandt wurden) |
+
+**Self-Service-Löschung:** `/delete-account?token=<token>` — öffentlich zugängliche Seite, validiert Token, zeigt Bestätigungsformular (mit Hotel-Name und Unwiderruflichkeits-Warnung), löscht per Server Action Hotel + AdminUser in Transaction. Verlinkung in beiden Trial-Ablauf-E-Mails.
+
+**Billing-Warn-Banner:** Bei ≤ 3 verbleibenden Trial-Tagen erscheint ein oranges Banner auf der Billing-Seite.
+
+### Hasky — KI-Assistent (Pro+)
+
+`AdminChatWidget` — floating Chat-Button rechts unten im Admin-Panel, sichtbar ab Pro-Plan. Sendet Nutzer-Fragen an `/api/admin/help-chat`, Antworten werden in `SupportChatLog` gespeichert. Verlauf wird im `localStorage` gecacht.
+
+SuperAdmin-Auswertung unter `/admin/chat-analytics` (Themen-Verteilung, letzte Fragen, Test-Logs filterbar).
 
 ---
 
@@ -1543,6 +1573,17 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 | `ADMIN_SESSION_SECRET` | War Literal-Placeholder — jetzt 48-Byte-Random-Secret in Vercel Production |
 | `CRON_SECRET` | War Literal-Placeholder — jetzt 32-Byte-Hex-Secret in Vercel Production |
 | `.env` Dev-Template | Kein schwaches Default-Secret mehr |
+| **Registrierung hardened** | Rate Limit (5/h), Passwort max 128 Zeichen, Slug-Format-Validierung, Resend-Check vor DB-Write, E-Mail vor DB-Write, P2002-Catch |
+| **AdminUserHotel + HotelSettings** | Werden jetzt bei Registrierung in einer Transaction erstellt |
+| **Logout invalidiert Sessions** | `sessionVersion++` bei Logout → andere Geräte abgemeldet |
+| **Beds24 Plan-Gate** | `/admin/beds24` jetzt korrekt hinter Pro-Plan gesperrt |
+| **Zahlungsfehlschlag-E-Mail** | `invoice.payment_failed` Webhook sendet jetzt E-Mail an Hotel-Admin |
+| **Downgrade-Check** | Apartment-Count wird vor Trial-Downgrade gegen Plan-Limit geprüft (409 wenn Überschuss) |
+| **Trial-Warn-Banner** | Oranges Banner auf Billing-Seite wenn ≤ 3 Trial-Tage verbleiben |
+| **Trial-Ablauf-Cron** | Tägl. Cron mit E-Mail-Sequenz (Tag 3 + 7) und Auto-Delete (Tag 14) |
+| **Self-Service-Löschung** | `/delete-account?token=...` mit Bestätigungsseite |
+| **Resend Verifikation** | `/register/resend-verification` — neuen Bestätigungslink anfordern |
+| **Token-abgelaufen-Seite** | `/register?error=token_expired` zeigt klare Fehlermeldung + CTA |
 
 ### Secret Rotation
 
