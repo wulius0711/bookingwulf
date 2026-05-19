@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
           select: {
             id: true, name: true, email: true, accentColor: true,
             settings: { select: { stripeSecretKey: true } },
+            emailTemplates: { where: { type: 'booking_guest' } },
           },
         },
       },
@@ -113,19 +114,38 @@ export async function POST(req: NextRequest) {
           }),
         });
 
+        const guestTpl = hotel.emailTemplates?.[0];
+        const fill = (s: string) => s
+          .replaceAll('{{guestName}}', request.firstname ?? '')
+          .replaceAll('{{guestLastName}}', request.lastname)
+          .replaceAll('{{hotelName}}', hotel.name)
+          .replaceAll('{{arrival}}', fmtDate(request.arrival, locale))
+          .replaceAll('{{departure}}', fmtDate(request.departure, locale))
+          .replaceAll('{{nights}}', String(request.nights))
+          .replaceAll('{{bookingId}}', String(request.id));
+
+        const guestSubject = guestTpl ? fill(guestTpl.subject) : i18n.bookingSubject(hotel.name);
+        const guestGreeting = guestTpl?.greeting ? fill(guestTpl.greeting) : i18n.greeting(request.firstname ?? '');
+        const guestBodyText = guestTpl?.body ? fill(guestTpl.body) : `${i18n.bookingBody} ${ lang === 'de' ? 'Ihre Zahlung via Kreditkarte wurde erfolgreich verarbeitet.' : 'Your credit card payment has been successfully processed.'}`;
+        const guestSignoff = guestTpl?.signoff ? fill(guestTpl.signoff) : i18n.signoff;
+
         await resend.emails.send({
           from: getFromEmail(),
           to: request.email,
-          subject: i18n.bookingSubject(hotel.name),
+          subject: guestSubject,
           html: buildEmailHtml({
             hotelName: hotel.name,
             accentColor: accent,
             title: i18n.bookingTitle,
             preheader: `${fmtDate(request.arrival, locale)} – ${fmtDate(request.departure, locale)}`,
             body: `
-              <p style="font-size:15px;color:#374151;margin:0 0 16px;">${i18n.greeting(request.firstname ?? '')}</p>
+              <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+                ${guestGreeting}<br/><br/>
+                <span style="white-space:pre-wrap;">${guestBodyText.replace(/\n/g, '<br/>')}</span>
+              </p>
               ${buildInfoBlock(i18n.period, `${fmtDate(request.arrival, locale)} — ${fmtDate(request.departure, locale)} (${i18n.nights(request.nights)})`)}
               ${buildInfoBlock(i18n.guests, i18n.adults(request.adults) + (request.children ? i18n.children(request.children) : ''))}
+              <p style="font-size:15px;color:#374151;line-height:1.6;margin:24px 0 0;">${guestSignoff},<br/><strong>${hotel.name}</strong></p>
             `,
             footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchungs-ID: #${request.id}</p>`,
           }),
