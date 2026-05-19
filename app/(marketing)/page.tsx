@@ -207,7 +207,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Provisions-Rechner ───────────────────────────────────── */}
-      <section className="v4-section v4-angled" style={{ background: 'radial-gradient(ellipse 80% 55% at 10% 0%, rgba(16,139,169,0.14) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 90% 100%, rgba(16,139,169,0.09) 0%, transparent 60%), var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="pain-heading">
+      <section className="v4-section v4-angled" style={{ background: 'radial-gradient(ellipse 80% 55% at 10% 0%, rgba(16,139,169,0.30) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 90% 100%, rgba(16,139,169,0.20) 0%, transparent 60%), var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="pain-heading">
         <div className="v4-container text-center">
           <span className="v4-eyebrow v4-animate">{CONTENT.pain.label}</span>
           <h2 id="pain-heading" className="v4-h2 mb-4 v4-animate v4-d1" style={{ color: '#fff' }}>
@@ -301,7 +301,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Pricing ──────────────────────────────────────────────── */}
-      <section id="pricing" className="v4-section v4-grain v4-angled" style={{ background: 'radial-gradient(ellipse 80% 55% at 10% 0%, rgba(16,139,169,0.14) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 90% 100%, rgba(16,139,169,0.09) 0%, transparent 60%), var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="pricing-heading">
+      <section id="pricing" className="v4-section v4-grain v4-angled" style={{ background: 'radial-gradient(ellipse 80% 55% at 10% 0%, rgba(16,139,169,0.30) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 90% 100%, rgba(16,139,169,0.20) 0%, transparent 60%), var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="pricing-heading">
         <div className="v4-container">
           <div className="mb-16 text-center">
             <span className="v4-eyebrow v4-animate">Preise</span>
