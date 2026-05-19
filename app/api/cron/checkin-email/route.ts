@@ -29,7 +29,6 @@ export async function GET(req: Request) {
       where: {
         hotelId: hs.hotelId,
         status: 'booked',
-        email: { not: null },
         checkinEmailSentAt: null,
         arrival: { gte: targetDate, lt: nextDay },
       },
