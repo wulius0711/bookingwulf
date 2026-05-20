@@ -151,7 +151,7 @@ export default function PreisePage() {
       <section className="v4-section bg-white">
         <div className="v4-container text-center" style={{ maxWidth: 680 }}>
           <span className="v4-eyebrow v4-animate">Preise</span>
-          <h1 className="v4-h1 mb-5 v4-animate v4-d1">Kein Abo-Dschungel.<br />Drei klare Pläne.</h1>
+          <h1 className="v4-h1 mb-5 v4-animate v4-d1">Drei klare Pläne.<br />Kein Abo-Dschungel.</h1>
           <p className="v4-animate v4-d2" style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--v4-body)', marginBottom: 36 }}>
             Keine Provision. Keine versteckten Kosten. 14 Tage kostenlos testen — ohne Kreditkarte.
           </p>
