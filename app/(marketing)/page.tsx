@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Ban, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, ShieldCheck, Zap } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
@@ -69,6 +69,23 @@ export default function HomePage() {
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('year');
   const [revenue, setRevenue] = useState(50_000);
 
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroBgY, setHeroBgY] = useState('50%');
+  const [heroOpacity, setHeroOpacity] = useState(1);
+
+  useEffect(() => {
+    function onScroll() {
+      const el = heroRef.current;
+      if (!el) return;
+      const y = window.scrollY;
+      const h = el.offsetHeight;
+      setHeroBgY(`calc(50% + ${Math.round(y * 0.35)}px)`);
+      setHeroOpacity(Math.max(0, 1 - y / (h * 0.65)));
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   useV4Animate();
 
   const plans      = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([k]) => k !== 'bundle_all');
@@ -79,16 +96,18 @@ export default function HomePage() {
     <>
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section
+        ref={heroRef}
         className="v4-section text-center relative overflow-hidden"
         aria-labelledby="hero-heading"
         style={{
           backgroundImage: 'url(https://plus.unsplash.com/premium_photo-1684863506009-c08cb110f40e?auto=format&fit=crop&w=1920&q=80)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPositionX: 'center',
+          backgroundPositionY: heroBgY,
         }}
       >
         <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.55)' }} aria-hidden />
-        <div className="v4-container relative z-10 flex flex-col items-center">
+        <div className="v4-container relative z-10 flex flex-col items-center" style={{ opacity: heroOpacity, willChange: 'opacity' }}>
           <div
             className="v4-badge-pulse inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-10 border"
             style={{ background: 'rgba(16,139,169,0.25)', color: '#90cce0', borderColor: 'rgba(144,204,224,0.35)' }}
@@ -526,19 +545,35 @@ function AnimatedWord() {
 }
 
 function GaesteLoungeMockup() {
-  const [screen, setScreen] = useState(0);
-  const [fading, setFading] = useState(false);
+  const [pos, setPos] = useState(0);
+  const [lastDir, setLastDir] = useState<1 | -1>(1);
+  const [dragDelta, setDragDelta] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const pointerStartX = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const TOTAL = 5;
+
+  const resetTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => { setPos((p) => p + 1); setLastDir(1); }, 2600);
+  };
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setScreen((s) => (s + 1) % 5);
-        setFading(false);
-      }, 350);
-    }, 2600);
-    return () => clearInterval(id);
-  }, []);
+    resetTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const cur = ((pos % TOTAL) + TOTAL) % TOTAL;
+
+  const onPointerStart = (x: number) => { pointerStartX.current = x; setDragging(true); };
+  const onPointerMove  = (x: number) => { if (pointerStartX.current !== null) setDragDelta(x - pointerStartX.current); };
+  const onPointerEnd   = (x: number) => {
+    if (pointerStartX.current === null) return;
+    const dx = x - pointerStartX.current;
+    if (Math.abs(dx) > 40) { const d = dx < 0 ? 1 : -1; setPos((p) => p + d); setLastDir(d); resetTimer(); }
+    setDragDelta(0); setDragging(false); pointerStartX.current = null;
+  };
+  const onPointerCancel = () => { setDragDelta(0); setDragging(false); pointerStartX.current = null; };
 
   const phoneScreens = [
     <PhoneScreen1 key="s1" />,
@@ -549,7 +584,16 @@ function GaesteLoungeMockup() {
   ];
 
   return (
-    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 24px 48px' }}>
+    <div
+      style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 24px 48px', cursor: dragging ? 'grabbing' : 'grab', userSelect: 'none' }}
+      onTouchStart={(e) => onPointerStart(e.touches[0].clientX)}
+      onTouchMove={(e) => onPointerMove(e.touches[0].clientX)}
+      onTouchEnd={(e) => onPointerEnd(e.changedTouches[0].clientX)}
+      onMouseDown={(e) => onPointerStart(e.clientX)}
+      onMouseMove={(e) => onPointerMove(e.clientX)}
+      onMouseUp={(e) => onPointerEnd(e.clientX)}
+      onMouseLeave={onPointerCancel}
+    >
       {/* Radial glow */}
       <div style={{ position: 'absolute', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,139,169,0.13) 0%, transparent 65%)', pointerEvents: 'none' }} aria-hidden />
 
@@ -577,9 +621,24 @@ function GaesteLoungeMockup() {
                   <div style={{ position: 'absolute', right: -3.5, top: '50%', transform: 'translateY(-50%)', width: 2, height: 5, background: '#1C1C1E', borderRadius: 1, opacity: 0.45 }} />
                 </div>
               </div>
-              {/* Content */}
-              <div style={{ height: 362, overflow: 'hidden', opacity: fading ? 0 : 1, transition: 'opacity 0.35s ease' }}>
-                {phoneScreens[screen]}
+              {/* Sliding screens */}
+              <div style={{ height: 362, overflow: 'hidden', position: 'relative' }}>
+                {phoneScreens.map((sc, i) => {
+                  let r = i - cur;
+                  if (r > 2) r -= TOTAL;
+                  if (r < -2) r += TOTAL;
+                  if (Math.abs(r) > 1) return null;
+                  const animate = lastDir === 1 ? r === 0 || r === -1 : r === 0 || r === 1;
+                  return (
+                    <div key={i} style={{
+                      position: 'absolute', top: 0, left: 0, width: '100%',
+                      transform: `translateX(calc(${r * 100}% + ${dragDelta}px))`,
+                      transition: (dragging || !animate) ? 'none' : 'transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    }}>
+                      {sc}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

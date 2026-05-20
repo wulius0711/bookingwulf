@@ -119,6 +119,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 
 | Feature | Priorität | Plan | Status |
 |---------|-----------|------|--------|
+| **Frühbucherbonus / Early Adopter Kampagne** — Temporäre Pricing-Kampagne mit 50 Slots. Early Adopter erhalten dauerhaft günstigere Preise (Starter −€5, Pro −€10, Business −€15/Mo). Technisch: neue Stripe Price IDs für EA-Preise, `Campaign`-Tabelle in DB (maxSlots, endsAt, isActive), `isEarlyAdopter`-Flag auf Hotel. Checkout nutzt EA-Preis solange Kampagne aktiv. Frontend: Strikethrough-Preise + Badge + "Noch X von 50 verfügbar"-Counter. Superadmin-Seite `/admin/campaign` zur Verwaltung. | **Hoch** | — | 📋 Geplant |
 | Beds24 Channel Manager | Hoch | Pro | ✅ Live |
 | Vorauszahlung via Stripe | Hoch | Business | ✅ Live (Hotel-eigener Stripe-Account) |
 | Automatisierte Trigger-E-Mails (Upsell T-7, Anreise T-1, Bewertung T+1) | Hoch | Pro | 📋 Geplant (Bewertung T+X ✅ Live, Upsell in Bestätigungs-E-Mail ✅ Live) |
@@ -138,6 +139,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | **Co-Host / KI-Automatisierungen** — KI-gestützte Auto-Replies auf Gästenachrichten (inspiriert von Lodgify Cohost). Gast schreibt → KI antwortet automatisch auf Basis von Hausregeln, Check-in-Infos, FAQ. Betreiber bekommt Zusammenfassung. Ergänzt die bestehende Messaging-Funktion. | Niedrig | Business | 💡 Idee |
 | Google Hotels Free Booking Links (Meta-Suche) | Niedrig | Business | 💡 Idee |
 | Affiliate- / Empfehlungsprogramm für Betreiber | Niedrig | — | 💡 Idee |
+| **Newsletter-Integration** — Opt-in Checkbox im Buchungsformular, nach Buchung automatischer API-Call (Mailchimp/Brevo), Gast wird in NL-Liste eingetragen (Double-Opt-In). DSGVO: Einwilligung in DB protokollieren (Timestamp, IP). | Niedrig | Pro | 💡 Idee |
 | SMS-Benachrichtigungen | Niedrig | Pro | 💡 Idee |
 | Mehrsprachiges Admin-Panel | Niedrig | Alle | 💡 Idee |
 | Weitere Widget-Sprachen (FR, HR...) | Niedrig | Alle | 💡 Idee |
