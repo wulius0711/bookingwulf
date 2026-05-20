@@ -278,10 +278,10 @@ export default function BillingPage() {
                   <Button
                     variant="primary"
                     onClick={() => handlePlanAction(key)}
-                    disabled={actionLoading || isCurrent || isBundle}
-                    loading={actionLoading && !isCurrent && !isBundle}
+                    disabled={actionLoading || (isCurrent && isActive) || isBundle}
+                    loading={actionLoading && !(isCurrent && isActive) && !isBundle}
                   >
-                    {isCurrent ? 'Ausgewählt' : 'Auswählen'}
+                    {isCurrent && isActive ? 'Ausgewählt' : 'Auswählen'}
                   </Button>
 
                   {status === 'trialing' && !isBundle && (
