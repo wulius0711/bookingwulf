@@ -234,6 +234,10 @@
   z-index: 1;
 }
 
+/* Extra breathing room for sections adjacent to angled sections */
+.v4-section:has(+ .v4-angled) { padding-bottom: 152px; }
+.v4-angled + .v4-section        { padding-top: 152px; }
+
 /* ── Table group header ─────────────────────────────────────── */
 .v4-table-group {
   padding: 14px 16px 10px;
