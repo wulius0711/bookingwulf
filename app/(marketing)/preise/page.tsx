@@ -148,7 +148,7 @@ export default function PreisePage() {
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="v4-section bg-white" style={{ paddingBottom: 50 }}>
+      <section className="v4-section bg-white">
         <div className="v4-container text-center" style={{ maxWidth: 680 }}>
           <span className="v4-eyebrow v4-animate">Preise</span>
           <h1 className="v4-h1 mb-5 v4-animate v4-d1">Kein Abo-Dschungel.<br />Drei klare Pläne.</h1>
