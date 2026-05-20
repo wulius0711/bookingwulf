@@ -300,35 +300,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Admin UX ─────────────────────────────────────────────── */}
-      <section className="v4-section v4-angled" style={{ background: 'var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="admin-heading">
-        <div className="v4-container">
-          <div className="text-center mb-16 v4-animate">
-            <span className="v4-eyebrow" style={{ color: 'var(--v4-green)' }}>Admin</span>
-            <h2 id="admin-heading" className="v4-h2 v4-animate v4-d1" style={{ color: '#fff' }}>Ein Admin der nicht nervt.</h2>
-            <p className="text-[17px] leading-[1.65] v4-animate v4-d2 max-w-xl mx-auto" style={{ color: '#94a3b8', marginTop: '1rem' }}>
-              Kein Dschungel aus Menüs. Keine steile Lernkurve. Alles genau dort, wo man es erwartet — für Betreiber, die lieber Gäste empfangen als Software verwalten.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 v4-animate v4-d2">
-            {[
-              { icon: '⚡', title: 'Sofort einsatzbereit', body: 'Widget einbetten, Apartments anlegen, fertig. Keine Schulung nötig.' },
-              { icon: '📋', title: 'Buchungen auf einen Blick', body: 'Anreisen, Belegungsplan und offene Anfragen — alles auf der Startseite.' },
-              { icon: '🔔', title: 'Automatische Benachrichtigungen', body: 'Check-in-Erinnerungen, Bewertungsanfragen, Check-out — läuft von selbst.' },
-              { icon: '✉️', title: 'E-Mails nach Ihrem Stil', body: 'Vorlagen anpassen, Platzhalter befüllen — kein HTML, kein Entwickler.' },
-              { icon: '🔑', title: 'Digitaler Check-in', body: 'Gäste checken online ein, Meldezettel-Daten kommen direkt ins Admin.' },
-              { icon: '📱', title: 'Gäste-Lounge als PWA', body: 'Informationen, Extras und Nachrichten — alles in einer App-ähnlichen Oberfläche.' },
-            ].map(({ icon, title, body }) => (
-              <div key={title} className="v4-card-dark" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 14, padding: '24px 22px' }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{title}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.6, color: '#94a3b8' }}>{body}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Pricing ──────────────────────────────────────────────── */}
       <section id="pricing" className="v4-section v4-grain v4-angled" style={{ background: 'radial-gradient(ellipse 80% 55% at 10% 0%, rgba(16,139,169,0.30) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 90% 100%, rgba(16,139,169,0.20) 0%, transparent 60%), var(--v4-navy)', paddingTop: 152, paddingBottom: 152 }} aria-labelledby="pricing-heading">
         <div className="v4-container">
