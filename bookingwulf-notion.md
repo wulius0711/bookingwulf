@@ -358,8 +358,19 @@ Alternativen:
 - [x] **Rate Limiting → Upstash Redis** — umgestellt Mai 2026. Zähler sind jetzt persistent und cross-instance korrekt (kein In-Memory-Reset mehr bei Deploy).
 - [x] **Structured Logging → Axiom** ✅ — umgestellt Mai 2026. `src/lib/logger.ts` sendet JSON-Events (`booking.created`, `payment.confirmed`, `payment.failed`, `email.sent`, `email.error`, `booking.error`) direkt an Axiom (EU Central 1, Free Tier 50GB/Mo). Fällt still zurück wenn `AXIOM_TOKEN` fehlt.
 - [x] **Session Revocation** ✅ — Mai 2026. `sessionVersion` auf AdminUser — bei jedem Login im JWT, bei jedem Request gegen DB geprüft. SuperAdmin kann unter `/admin/users` Sessions sofort beenden (Token kompromittiert / Laptop gestohlen) oder User deaktivieren (Mitarbeiter gekündigt).
+- [x] **Redirect-Loop Fix (stale JWT)** ✅ — Mai 2026. `app/admin/login/layout.tsx` prüft jetzt `sessionVersion` gegen DB bevor es zu `/admin` weiterleitet. Ohne Fix: nach Logout bleibt JWT 24h gültig → LoginLayout leitet zu `/admin` → `verifySession` schlägt fehl → Schleife. Playwright-Regression-Test verhindert künftige Regression.
 
 ## 🧪 Testfälle
+
+### E2E-Tests (Playwright) — `npm run test:e2e`
+
+Voraussetzung: Dev-Server läuft auf Port 3000 (`npm run dev`).
+
+- [x] Unauthenticated `/admin` → redirect zu `/admin/login`
+- [x] Falsches Passwort → Fehlermeldung, kein Redirect
+- [x] Gültig einloggen → landet auf `/admin` Dashboard
+- [x] Bereits eingeloggt → `/admin/login` redirectet zu `/admin`
+- [x] **Stale JWT nach Logout → kein Redirect-Loop** (Regression-Test für Mai-2026-Bug)
 
 ### Anzahlung & Bankdaten
 - [ ] Prozentsatz + Apartment ohne Preis → Hinweis erscheint trotzdem
@@ -435,7 +446,8 @@ Alternativen:
 - [x] Widget: View-Toggle + Layout-Toggle — `aria-label` ergänzt
 
 ### Technik
-- [ ] Automatische Tests (E2E für Buchungsflow)
+- [x] Automatische Tests — Playwright E2E, Auth-Flow (Mai 2026) ✅
+- [ ] Automatische Tests — E2E für Buchungsflow (Widget, Zahlungsarten)
 - [ ] Widget Performance (Bundle-Größe, First Paint)
 - [ ] Rate Limiting auf Admin-API-Routen prüfen
 - [ ] Stripe Webhook Retry-Handling prüfen
