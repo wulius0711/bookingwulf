@@ -66,7 +66,7 @@ export default function AGBPage() {
 
       <h2 style={h2}>§ 5 Preise und Zahlung</h2>
       <p style={p}>
-        Alle angegebenen Preise verstehen sich in Euro und exklusive der gesetzlichen Umsatzsteuer, sofern nicht anders angegeben. Die Zahlung erfolgt per Kreditkarte oder anderen von Stripe unterstützten Zahlungsmethoden.
+        Der Anbieter ist Kleinunternehmer gemäß § 6 Abs. 1 Z 27 UStG und stellt keine Umsatzsteuer in Rechnung. Die angegebenen Preise sind Bruttopreise. Die Zahlung erfolgt per Kreditkarte oder anderen von Stripe unterstützten Zahlungsmethoden.
       </p>
       <p style={p}>
         Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Zugang zum Dienst einzuschränken, bis die ausstehenden Beträge beglichen sind.
