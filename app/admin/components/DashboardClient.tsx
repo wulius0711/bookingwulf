@@ -356,7 +356,10 @@ export default function DashboardClient({
               <div style={{ display: 'grid', gap: 8 }}>
                 {upcomingArrivals.map(r => {
                   const arrival = new Date(r.arrival);
-                  const daysUntil = Math.round((arrival.getTime() - Date.now()) / 86400000);
+                  const now = new Date();
+                  const todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                  const arrMid = new Date(arrival.getFullYear(), arrival.getMonth(), arrival.getDate());
+                  const daysUntil = Math.round((arrMid.getTime() - todayMid.getTime()) / 86400000);
                   return (
                     <Link key={r.id} href={`/admin/requests/${r.id}`} style={{ textDecoration: 'none' }}>
                       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>

@@ -12,22 +12,22 @@ const TEMPLATE_TYPES = [
     type: 'request_guest',
     label: 'Buchungsanfrage — Bestätigung an Gast',
     description: 'Wird gesendet wenn ein Gast eine Anfrage abschickt.',
-    defaultSubject: 'Ihre Buchungsanfrage bei {{hotelName}}',
-    defaultBody: 'vielen Dank für Ihre Buchungsanfrage. Wir haben Ihre Daten erhalten und melden uns in Kürze mit den weiteren Details.',
+    defaultSubject: 'Deine Buchungsanfrage bei {{hotelName}}',
+    defaultBody: 'vielen Dank für deine Buchungsanfrage. Wir haben deine Daten erhalten und melden uns in Kürze mit den weiteren Details.',
   },
   {
     type: 'booking_guest',
     label: 'Verbindliche Buchung — Bestätigung an Gast',
     description: 'Wird gesendet wenn ein Gast verbindlich bucht.',
     defaultSubject: 'Buchungsbestätigung bei {{hotelName}}',
-    defaultBody: 'Ihre Buchung ist bestätigt. Wir freuen uns auf Ihren Besuch!',
+    defaultBody: 'Deine Buchung ist bestätigt. Wir freuen uns auf deinen Besuch!',
   },
   {
     type: 'cancellation_guest',
     label: 'Stornobestätigung — Bestätigung an Gast',
     description: 'Wird gesendet wenn eine Buchung storniert wird.',
-    defaultSubject: 'Ihre Buchung wurde storniert — {{hotelName}}',
-    defaultBody: 'Ihre Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
+    defaultSubject: 'Deine Buchung wurde storniert — {{hotelName}}',
+    defaultBody: 'Deine Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir dir gerne zur Verfügung.',
   },
   {
     type: 'request_hotel',
@@ -40,8 +40,8 @@ const TEMPLATE_TYPES = [
     type: 'checkin_guest',
     label: 'Check-in Infos — Benachrichtigung an den Gast',
     description: 'Vorlage für Check-in Infos — manuell aus der Buchungsdetailansicht oder automatisch X Tage vor Anreise.',
-    defaultSubject: 'Ihre Check-in Infos — {{hotelName}}',
-    defaultBody: 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier Ihre Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
+    defaultSubject: 'Deine Check-in Infos — {{hotelName}}',
+    defaultBody: 'wir freuen uns auf deinen Aufenthalt! Anbei die wichtigsten Check-in Infos für deinen Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier deine Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
   },
 ] as const;
 

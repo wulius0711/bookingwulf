@@ -175,7 +175,7 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
         </div>
         {error && <p style={{ fontSize: 13, color: 'var(--status-cancelled-text)', marginTop: 8 }}>{error}</p>}
         <p style={{ fontSize: 12, color: 'var(--text-disabled)', marginTop: 8 }}>
-          Wählen Sie einen Eintrag aus den Vorschlägen — Name, Adresse und Kategorie werden automatisch übernommen.
+          Wähle einen Eintrag aus den Vorschlägen — Name, Adresse und Kategorie werden automatisch übernommen.
         </p>
         <div style={{ borderTop: '1px solid var(--border)', marginTop: 12, paddingTop: 12 }}>
           {!showManualForm ? (

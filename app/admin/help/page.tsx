@@ -22,7 +22,7 @@ const sections = [
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
-  { id: 'assistent',     title: 'KI-Assistent',          plan: 'Pro',      content: AssistentSection },
+  { id: 'assistent',     title: 'Hasky',                  plan: 'Pro',      content: AssistentSection },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
 ];
 
@@ -45,7 +45,7 @@ export default function HelpPage() {
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <h1 style={{ margin: 0 }}>Handbuch</h1>
       <p className="page-subtitle" style={{ marginBottom: 32 }}>
-        Alles was Sie wissen müssen, um Bookingwulf optimal zu nutzen.
+        Alles was du wissen musst, um Bookingwulf optimal zu nutzen.
       </p>
 
       {/* Mobile: horizontal scrollable nav */}
@@ -262,13 +262,13 @@ function BuchungenSection() {
       <H2>Buchungen & Anfragen</H2>
       <P>
         Alle Anfragen, die über das Widget eingehen, erscheinen unter <strong>Anfragen</strong>.
-        Von hier aus können Sie Anfragen beantworten, bestätigen oder stornieren.
+        Von hier aus kannst du Anfragen beantworten, bestätigen oder stornieren.
       </P>
       <H3>Status einer Anfrage</H3>
       <div style={{ display: 'grid', gap: 8, margin: '12px 0' }}>
         {[
           { label: 'Neu',          color: '#f4f4f4', text: '#555',    desc: 'Anfrage eingegangen, noch nicht bearbeitet.' },
-          { label: 'Beantwortet',  color: '#eaf2ff', text: '#2457a6', desc: 'Sie haben geantwortet — keine automatische Mail wird ausgelöst.' },
+          { label: 'Beantwortet',  color: '#eaf2ff', text: '#2457a6', desc: 'Du hast geantwortet — keine automatische Mail wird ausgelöst.' },
           { label: 'Gebucht',      color: '#e8f5e9', text: '#256029', desc: 'Buchung bestätigt. Gast erhält automatisch eine Bestätigungsmail.' },
           { label: 'Storniert',    color: '#fdecec', text: '#a63b3b', desc: 'Buchung storniert. Gast erhält automatisch eine Stornomail.' },
         ].map((s) => (
@@ -283,7 +283,7 @@ function BuchungenSection() {
       <H3>Nachricht senden</H3>
       <PlanNote plan="Business" feature="Direktnachrichten an Gäste" />
       <P>
-        In der Buchungsdetailansicht können Sie dem Gast eine individuelle Nachricht schicken.
+        In der Buchungsdetailansicht kannst du dem Gast eine individuelle Nachricht schicken.
         Diese wird als E-Mail in der gewählten Sprache des Gastes versendet.
       </P>
       <H3>Sprache pro Buchung</H3>
@@ -294,14 +294,14 @@ function BuchungenSection() {
         Browser-Sprache des Gastes ermittelt und kann jederzeit manuell geändert werden.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Setzen Sie den Status auf <strong>„Beantwortet"</strong> wenn Sie per
-        E-Mail oder Telefon direkt geantwortet haben — so behalten Sie den Überblick ohne eine
+        <strong>Tipp:</strong> Setze den Status auf <strong>„Beantwortet"</strong> wenn du per
+        E-Mail oder Telefon direkt geantwortet hast — so behältst du den Überblick ohne eine
         zusätzliche automatische Mail auszulösen.
       </Tip>
       <H3>Buchhaltungsexport (CSV)</H3>
       <P>
-        Über den Button <strong>„CSV Export"</strong> oben rechts auf der Anfragen-Seite können Sie
-        alle bestätigten Buchungen als CSV-Datei herunterladen — geeignet für Ihren Steuerberater
+        Über den Button <strong>„CSV Export"</strong> oben rechts auf der Anfragen-Seite kannst du
+        alle bestätigten Buchungen als CSV-Datei herunterladen — geeignet für deinen Steuerberater
         oder die Übergabe an DATEV.
       </P>
       <P>
@@ -314,7 +314,7 @@ function BuchungenSection() {
         Ortstaxe und Gesamtbetrag.
       </P>
       <P>
-        Die MwSt.-Sätze (z.B. AT: Zimmer 10%, Reinigung 20%) hinterlegen Sie einmalig unter
+        Die MwSt.-Sätze (z.B. AT: Zimmer 10%, Reinigung 20%) hinterlegst du einmalig unter
         <strong> Preisanpassungen → Steuer / Buchhaltung</strong>.
       </P>
       <Tip>
@@ -359,7 +359,7 @@ function KalenderSection() {
       </div>
       <H3>Zeitraum per Drag anlegen</H3>
       <P>
-        Halten Sie die Maustaste gedrückt und ziehen Sie über mehrere Tage, um einen Zeitraum zu markieren.
+        Halte die Maustaste gedrückt und ziehe über mehrere Tage, um einen Zeitraum zu markieren.
         Nach dem Loslassen öffnet sich ein Formular zum direkten Anlegen von:
       </P>
       <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, paddingLeft: 20, margin: '6px 0 12px' }}>
@@ -370,8 +370,8 @@ function KalenderSection() {
       <P>Start- und Enddatum sind im Formular editierbar, falls der gewünschte Zeitraum über einen Monatswechsel hinausgeht.</P>
       <H3>Navigation</H3>
       <P>
-        Mit den Pfeilen links und rechts wechseln Sie den Monat. Der Button <strong>„Heute"</strong> bringt
-        Sie direkt zum aktuellen Monat zurück.
+        Mit den Pfeilen links und rechts wechselst du den Monat. Der Button <strong>„Heute"</strong> bringt
+        dich direkt zum aktuellen Monat zurück.
       </P>
       <H3>KPI-Leiste</H3>
       <P>
@@ -379,7 +379,7 @@ function KalenderSection() {
         Stornierungen für den gewählten Monat zusammengefasst.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Klicken Sie auf einen Eintrag im Kalender um direkt zur entsprechenden Übersicht zu gelangen.
+        <strong>Tipp:</strong> Klicke auf einen Eintrag im Kalender um direkt zur entsprechenden Übersicht zu gelangen.
       </Tip>
     </div>
   );
@@ -398,13 +398,13 @@ function ZimmerplanSection() {
         Die Hauptansicht zeigt alle Apartments als monatliches Gantt-Diagramm: jede Zeile ein
         Apartment, jede Spalte ein Tag. Buchungen erscheinen als <strong style={{ color: '#166534' }}>grüne Balken</strong>,
         Sperrzeiten je nach Herkunft farbig (Airbnb rot, Booking.com blau, manuell amber).
-        Mit den Pfeilen links wechseln Sie den Monat, <strong>„Heute"</strong> springt zum aktuellen Monat.
+        Mit den Pfeilen links wechselst du den Monat, <strong>„Heute"</strong> springt zum aktuellen Monat.
       </P>
       <H3>Sperrzeiten & Buchungen anlegen</H3>
       <P>
-        Ziehen Sie in einer Apartment-Zeile mit gedrückter Maustaste einen Zeitraum auf — die
+        Ziehe in einer Apartment-Zeile mit gedrückter Maustaste einen Zeitraum auf — die
         markierten Tage werden lila hervorgehoben. Nach dem Loslassen öffnet sich ein Formular
-        mit dem Apartment und den Daten bereits vorausgefüllt. Wählen Sie den Typ:
+        mit dem Apartment und den Daten bereits vorausgefüllt. Wähle den Typ:
       </P>
       <ul style={{ margin: '6px 0 14px', paddingLeft: 20, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>
         <li><strong>Sperrzeit</strong> — Eigennutzung oder sonstiger Block</li>
@@ -439,7 +439,7 @@ function ZimmerplanSection() {
       <P>
         Bei belegten Apartments werden Gastname, verbleibende Tage sowie Anreise- und Abreisedatum
         angezeigt. Fällt die Abreise auf den gewählten Tag, erscheint ein <strong>„Check-out heute"</strong>-Badge.
-        Mit dem Datumsfeld oben rechts können Sie jeden Tag prüfen.
+        Mit dem Datumsfeld oben rechts kannst du jeden Tag prüfen.
       </P>
     </div>
   );
@@ -456,7 +456,7 @@ function AnalyticsSection() {
       </P>
       <H3>Zeitraum auswählen</H3>
       <P>
-        Oben rechts können Sie den Auswertungszeitraum filtern: letzter Monat, 3 Monate, 6 Monate,
+        Oben rechts kannst du den Auswertungszeitraum filtern: letzter Monat, 3 Monate, 6 Monate,
         12 Monate, 2 Jahre oder gesamter Zeitraum. Als Superadmin kann zusätzlich nach Hotel gefiltert werden.
       </P>
       <H3>Kennzahlen (KPIs)</H3>
@@ -490,7 +490,7 @@ function ApartmentsSection() {
     <div>
       <H2>Apartments verwalten</H2>
       <P>
-        Unter <strong>Apartments</strong> legen Sie alle buchbaren Einheiten an — Zimmer,
+        Unter <strong>Apartments</strong> legst du alle buchbaren Einheiten an — Zimmer,
         Appartements, Suiten oder Häuser.
       </P>
       <H3>Limits je Plan</H3>
@@ -508,13 +508,13 @@ function ApartmentsSection() {
       </div>
       <H3>Apartment anlegen</H3>
       <Step num={1} title="Apartment hinzufügen">
-        Geben Sie Name, Beschreibung, maximale Personenanzahl und Basispreis pro Nacht ein.
+        Gib Name, Beschreibung, maximale Personenanzahl und Basispreis pro Nacht ein.
       </Step>
       <Step num={2} title="Bilder hochladen">
-        Laden Sie ein oder mehrere Bilder hoch. Das erste Bild wird als Vorschaubild im Widget angezeigt.
+        Lade ein oder mehrere Bilder hoch. Das erste Bild wird als Vorschaubild im Widget angezeigt.
       </Step>
       <Step num={3} title="Speichern">
-        Das Apartment erscheint sofort im Widget auf Ihrer Website.
+        Das Apartment erscheint sofort im Widget auf deiner Website.
       </Step>
       <H3>Basispreis vs. Saisons</H3>
       <P>
@@ -529,7 +529,7 @@ function ApartmentsSection() {
 
       <H3>Kalender-Sync (iCal)</H3>
       <P>
-        In der Detailansicht jedes Apartments finden Sie den Abschnitt <strong>Kalender-Sync</strong>.
+        In der Detailansicht jedes Apartments findest du den Abschnitt <strong>Kalender-Sync</strong>.
         Damit lassen sich Verfügbarkeiten mit Airbnb, Booking.com und anderen Plattformen
         automatisch abgleichen — in beide Richtungen.
       </P>
@@ -538,7 +538,7 @@ function ApartmentsSection() {
           <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', marginBottom: 4 }}>Export-URL</div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
             Eine eindeutige iCal-URL für das Apartment. Diese URL bei Airbnb oder Booking.com als
-            importierten Kalender hinterlegen — so werden Ihre Buchungen dort automatisch als
+            importierten Kalender hinterlegen — so werden deine Buchungen dort automatisch als
             blockiert angezeigt.
           </div>
         </div>
@@ -547,12 +547,12 @@ function ApartmentsSection() {
           <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
             Die iCal-URL von Airbnb oder Booking.com eintragen. Buchungen von dort werden
             automatisch als Sperrzeiten übernommen und verhindern Doppelbuchungen.
-            Mit <strong>„Jetzt syncen"</strong> können Sie den Abgleich manuell anstoßen.
+            Mit <strong>„Jetzt syncen"</strong> kannst du den Abgleich manuell anstoßen.
           </div>
         </div>
       </div>
       <Tip>
-        <strong>Tipp:</strong> Tragen Sie bei Airbnb unter <em>Kalender → Verfügbarkeit → Anderen
+        <strong>Tipp:</strong> Trage bei Airbnb unter <em>Kalender → Verfügbarkeit → Anderen
         Kalender importieren</em> die Export-URL ein, und umgekehrt die Airbnb-iCal-URL hier als
         Import-Feed — dann laufen beide Richtungen synchron.
       </Tip>
@@ -566,21 +566,21 @@ function PreiseSection() {
     <div>
       <H2>Preisanpassungen</H2>
       <P>
-        Unter <strong>Preisanpassungen</strong> verwalten Sie saisonale Preise, Abgaben, Kinderpreise
+        Unter <strong>Preisanpassungen</strong> verwaltest du saisonale Preise, Abgaben, Kinderpreise
         und automatische Rabatte — alles auf einer Seite.
       </P>
 
       <H3>Preiszeiträume <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
       <P>Für bestimmte Zeiträume abweichende Preise pro Nacht festlegen — z.B. für Hochsaison, Weihnachten oder Messen.</P>
       <Step num={1} title="Zeitraum wählen">
-        Geben Sie Start- und Enddatum der Saison ein.
+        Gib Start- und Enddatum der Saison ein.
       </Step>
       <Step num={2} title="Preis pro Nacht festlegen">
         Dieser Preis gilt für alle Apartments in diesem Zeitraum, sofern kein apartmentspezifischer
         Preis angegeben ist.
       </Step>
       <Step num={3} title="Mindestaufenthalt (optional)">
-        Sie können pro Saison eine Mindestanzahl an Nächten festlegen. Apartments mit zu kurzem
+        Du kannst pro Saison eine Mindestanzahl an Nächten festlegen. Apartments mit zu kurzem
         Aufenthalt werden im Widget als nicht buchbar markiert.
       </Step>
       <Step num={4} title="Speichern">
@@ -651,10 +651,10 @@ function SperrzeitenSection() {
       </P>
       <H3>Sperrzeit anlegen</H3>
       <Step num={1} title="Apartment wählen">
-        Wählen Sie das Apartment, das gesperrt werden soll.
+        Wähle das Apartment, das gesperrt werden soll.
       </Step>
       <Step num={2} title="Zeitraum eingeben">
-        Geben Sie Start- und Enddatum ein.
+        Gib Start- und Enddatum ein.
       </Step>
       <Step num={3} title="Speichern">
         Das Apartment ist im Widget für diesen Zeitraum sofort gesperrt.
@@ -730,7 +730,7 @@ function ExtrasSection() {
         ablehnen — beides wird in der Buchungsübersicht und in den E-Mails angezeigt.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Halten Sie Zusatzleistungen kurz und klar — zu viele Optionen
+        <strong>Tipp:</strong> Halte Zusatzleistungen kurz und klar — zu viele Optionen
         können Gäste überfordern.
       </Tip>
     </div>
@@ -774,7 +774,7 @@ function GastePortalSection() {
         bestätigen, bevor der Check-in abgeschlossen wird.
       </Note>
       <Note>
-        <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet. Sie erhalten beim ersten nachgebuchten Extra automatisch eine E-Mail mit allen offenen Positionen und dem Gesamtbetrag.
+        <strong>Hinweis Extras:</strong> Zusatzleistungen, die der Gast im Portal bucht, werden <strong>nicht online bezahlt</strong> — sie werden zur Buchung hinzugefügt und beim Checkout vor Ort verrechnet. Du erhältst beim ersten nachgebuchten Extra automatisch eine E-Mail mit allen offenen Positionen und dem Gesamtbetrag.
       </Note>
       <H3>Sprache</H3>
       <P>
@@ -796,7 +796,7 @@ function EmailsSection() {
     <div>
       <H2>E-Mails & Check-in</H2>
       <P>
-        Unter <strong>Konfiguration → E-Mails</strong> passen Sie automatische E-Mails an und
+        Unter <strong>Konfiguration → E-Mails</strong> passt du automatische E-Mails an und
         konfigurieren den Online Check-in für Gäste.
       </P>
       <H3>E-Mail Templates <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
@@ -807,8 +807,8 @@ function EmailsSection() {
           { name: 'Eingangsbestätigung',   desc: 'An den Gast sobald eine Anfrage eingeht.' },
           { name: 'Buchungsbestätigung',   desc: 'An den Gast wenn Status auf „Gebucht" gesetzt wird.' },
           { name: 'Stornobestätigung',     desc: 'An den Gast wenn Status auf „Storniert" gesetzt wird. Individuell anpassbar.' },
-          { name: 'Nachricht',             desc: 'Wenn Sie in der Detailansicht eine Nachricht senden. (Business)' },
-          { name: 'Interne Benachrichtigung', desc: 'An Sie, wenn eine neue Anfrage eingeht.' },
+          { name: 'Nachricht',             desc: 'Wenn du in der Detailansicht eine Nachricht sendest. (Business)' },
+          { name: 'Interne Benachrichtigung', desc: 'An dich, wenn eine neue Anfrage eingeht.' },
         ].map((e) => (
           <div key={e.name} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 200, color: 'var(--text-primary)' }}>{e.name}</span>
@@ -823,9 +823,9 @@ function EmailsSection() {
         (Deutsch, Englisch, Italienisch, Französisch, Niederländisch, Spanisch, Polnisch, Tschechisch oder Russisch).
       </P>
       <Note>
-        <strong>Hinweis:</strong> Wenn Sie den Status auf <strong>„Beantwortet"</strong> setzen,
-        wird keine automatische Mail ausgelöst — ideal wenn Sie direkt per Telefon oder E-Mail
-        geantwortet haben.
+        <strong>Hinweis:</strong> Wenn du den Status auf <strong>„Beantwortet"</strong> setzt,
+        wird keine automatische Mail ausgelöst — ideal wenn du direkt per Telefon oder E-Mail
+        geantwortet hast.
       </Note>
 
       <H3>Online Check-in</H3>
@@ -870,14 +870,14 @@ function EinstellungenSection() {
     <div>
       <H2>Widget & Design</H2>
       <P>
-        Unter <strong>Konfiguration → Widget & Design</strong> passen Sie das Widget an das Design
-        Ihrer Website an und konfigurieren grundlegende Parameter.
+        Unter <strong>Konfiguration → Widget & Design</strong> passt du das Widget an das Design
+        deiner Website an und konfigurierst grundlegende Parameter.
       </P>
       <H3>Design</H3>
       <P>
-        Im Abschnitt <strong>Typografie</strong> wählen Sie eine Schriftart für das Widget —
+        Im Abschnitt <strong>Typografie</strong> wählst du eine Schriftart für das Widget —
         z.B. Inter, Lato, Playfair Display oder eine andere Google Font. So lässt sich das Widget
-        an Ihr Corporate Design anpassen.
+        an dein Corporate Design anpassen.
       </P>
       <P>
         Daneben lassen sich Akzentfarbe, Hintergrundfarbe, Eckenradius und weitere visuelle
@@ -889,7 +889,7 @@ function EinstellungenSection() {
       <PlanNote plan="Business" feature="Volles Branding ohne bookingwulf-Hinweis im Widget" />
       <H3>Benachrichtigungs-E-Mail</H3>
       <P>
-        Geben Sie Ihre E-Mail-Adresse ein, an die neue Anfragen gemeldet werden sollen.
+        Gib deine E-Mail-Adresse ein, an die neue Anfragen gemeldet werden sollen.
         Diese Adresse wird auch als Kontaktadresse in Gast-Mails angezeigt.
       </P>
       <H3>Widget-Konfigurationen</H3>
@@ -901,7 +901,7 @@ function EinstellungenSection() {
       </P>
       <H3>Features</H3>
       <P>
-        Im Abschnitt <strong>Features</strong> steuern Sie Verhalten und Umfang des Widgets.
+        Im Abschnitt <strong>Features</strong> steuerst du Verhalten und Umfang des Widgets.
         Jede Option lässt sich unabhängig ein- oder ausschalten:
       </P>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
@@ -923,14 +923,14 @@ function EinstellungenSection() {
 
       <H3>Barrierefreiheits-Check</H3>
       <P>
-        Unterhalb der Farbfelder zeigt ein WCAG-Kontrast-Checker automatisch an, ob Ihre Farbkombinationen
+        Unterhalb der Farbfelder zeigt ein WCAG-Kontrast-Checker automatisch an, ob deine Farbkombinationen
         den Mindestkontrast (AA = 4,5:1) erfüllen. Bei einem Fail erscheint ein Vorschlag für die
         nächstähnliche barrierefreie Farbe — ein Klick darauf übernimmt sie direkt.
       </P>
 
       <H3>Embed-Code</H3>
       <P>
-        Der Embed-Code für Ihre Website ist ebenfalls in den Einstellungen zu finden.
+        Der Embed-Code für deine Website ist ebenfalls in den Einstellungen zu finden.
         Weitere Details unter <InternalLink id="einbindung">Widget einbinden</InternalLink>.
       </P>
     </div>
@@ -1014,13 +1014,13 @@ function GutscheineSection() {
       <H2>Gutscheine</H2>
       <PlanNote plan="Pro" />
       <P>
-        Mit dem Gutschein-Modul können Sie Geschenkgutscheine direkt über Ihre Hotel-Website verkaufen.
+        Mit dem Gutschein-Modul kannst du Geschenkgutscheine direkt über deine Hotel-Website verkaufen.
         Gäste kaufen den Gutschein per Kreditkarte (Stripe), erhalten den Code und ein PDF per E-Mail
         und können ihn bei der nächsten Buchung im Widget einlösen.
       </P>
       <H3>Vorlagen anlegen</H3>
       <P>
-        Unter <strong>Gutscheine</strong> legen Sie Vorlagen an, die dann auf Ihrer Gutschein-Seite
+        Unter <strong>Gutscheine</strong> legst du Vorlagen an, die dann auf deiner Gutschein-Seite
         erscheinen. Jede Vorlage definiert Art, Wert und Laufzeit.
       </P>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
@@ -1041,7 +1041,7 @@ function GutscheineSection() {
       <H3>Kauf-Seite</H3>
       <P>
         Jedes Hotel hat eine öffentliche Gutschein-Seite unter{' '}
-        <Code>bookingwulf.com/gutschein/[ihr-slug]</Code>. Dort sehen Besucher alle aktiven Vorlagen,
+        <Code>bookingwulf.com/gutschein/[dein-slug]</Code>. Dort sehen Besucher alle aktiven Vorlagen,
         wählen eine aus, geben Empfänger- und Absenderdaten ein und bezahlen per Kreditkarte.
         Nach erfolgreicher Zahlung wird der Gutschein-Code automatisch per E-Mail zugestellt —
         inklusive angehängtem PDF.
@@ -1061,12 +1061,12 @@ function GutscheineSection() {
       </P>
       <Tip>
         <strong>Nächte-Gutscheine:</strong> Der Kaufpreis des Gutscheins wird als Rabatt abgezogen.
-        Wenn der Gast ein teureres Zimmer bucht, zahlt er die Differenz — das regeln Sie in Ihren
+        Wenn der Gast ein teureres Zimmer bucht, zahlt er die Differenz — das regelst du in deinen
         Buchungsbedingungen.
       </Tip>
       <H3>Verwaltung</H3>
       <P>
-        Unter <strong>Gutscheine → Verkaufte Gutscheine</strong> sehen Sie alle ausgestellten Codes
+        Unter <strong>Gutscheine → Verkaufte Gutscheine</strong> siehst du alle ausgestellten Codes
         mit Status (ausstehend / aktiv / eingelöst / abgelaufen) und können einzelne Gutscheine
         bei Bedarf manuell auf aktiv setzen.
       </P>
@@ -1079,8 +1079,8 @@ function AbonnementSection() {
     <div>
       <H2>Abonnement</H2>
       <P>
-        Unter <strong>Abonnement</strong> sehen Sie Ihren aktuellen Plan, verwalten Ihre
-        Zahlungsmethode und können jederzeit upgraden oder kündigen.
+        Unter <strong>Abonnement</strong> siehst du deinen aktuellen Plan, verwaltest deine
+        Zahlungsmethode und kannst jederzeit upgraden oder kündigen.
       </P>
       <H3>Verfügbare Pläne</H3>
       <div style={{ display: 'grid', gap: 12, margin: '12px 0 20px' }}>
@@ -1114,7 +1114,7 @@ function AbonnementSection() {
       <H3>14 Tage kostenlos testen</H3>
       <P>
         Jeder neue Account startet automatisch mit einer 14-tägigen Testphase im Business-Plan —
-        ohne Kreditkarte. Nach Ablauf können Sie einen Plan wählen oder das Abo kündigen.
+        ohne Kreditkarte. Nach Ablauf kannst du einen Plan wählen oder das Abo kündigen.
       </P>
       <H3>Kündigung</H3>
       <P>
@@ -1122,7 +1122,7 @@ function AbonnementSection() {
         bezahlten Zeitraums aktiv.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Mit der jährlichen Zahlung sparen Sie ca. 10 % gegenüber der
+        <strong>Tipp:</strong> Mit der jährlichen Zahlung sparst du ca. 10 % gegenüber der
         monatlichen Abrechnung.
       </Tip>
     </div>
@@ -1136,7 +1136,7 @@ function NukiSection() {
       <PlanNote plan="Pro" />
       <P>
         Gäste erhalten nach einer Sofortbuchung automatisch einen 6-stelligen Zugangscode per E-Mail —
-        kein physischer Schlüssel, kein Koordinationsaufwand. Das System kommuniziert direkt mit Ihren
+        kein physischer Schlüssel, kein Koordinationsaufwand. Das System kommuniziert direkt mit deinen
         Nuki-Schlössern über die Nuki Web API.
       </P>
 
@@ -1151,7 +1151,7 @@ function NukiSection() {
       <H3>Einrichtung</H3>
       <Step num={1} title="API-Token erstellen">
         <P>
-          Melden Sie sich unter <strong>web.nuki.io</strong> an → oben rechts auf Ihren Namen klicken →
+          Melde dich unter <strong>web.nuki.io</strong> an → oben rechts auf deinen Namen klicken →
           <strong> API</strong> → <strong>API Token erstellen</strong>. Den Token kopieren.
         </P>
       </Step>
@@ -1192,8 +1192,8 @@ function NukiSection() {
         <li>Pro Apartment kann genau ein Schloss zugewiesen werden.</li>
         <li>Der Code läuft nach der Abreise automatisch ab (wird von Nuki deaktiviert).</li>
         <li>Bei reinen Anfragen (kein Sofortbuchungs-Modus) wird kein Code generiert.</li>
-        <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code. Sie erhalten in diesem Fall automatisch eine E-Mail-Benachrichtigung, damit Sie den Zugang manuell bereitstellen können.</li>
-        <li>Den API-Token können Sie jederzeit aktualisieren oder die Verbindung trennen.</li>
+        <li>Schlägt die Code-Generierung fehl (z.B. Netzwerkfehler), wird die Buchung trotzdem gespeichert — der Gast erhält dann keinen Code. Du erhältst in diesem Fall automatisch eine E-Mail-Benachrichtigung, damit du den Zugang manuell bereitstellen kannst.</li>
+        <li>Den API-Token kannst du jederzeit aktualisieren oder die Verbindung trennen.</li>
       </ul>
     </div>
   );
@@ -1214,7 +1214,7 @@ function Beds24Section() {
         zertifiziert und übermittelt Verfügbarkeiten in beide Richtungen:
       </P>
       <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.9, paddingLeft: 20, margin: '0 0 16px' }}>
-        <li><strong>Buchung bei Ihnen</strong> → bookingwulf meldet sie an Beds24 → Airbnb/Booking.com wird sofort gesperrt</li>
+        <li><strong>Buchung bei dir</strong> → bookingwulf meldet sie an Beds24 → Airbnb/Booking.com wird sofort gesperrt</li>
         <li><strong>Buchung auf Airbnb/Booking.com</strong> → Beds24 schickt Webhook → bookingwulf sperrt sofort</li>
       </ul>
 
@@ -1228,7 +1228,7 @@ function Beds24Section() {
       <H3>Einrichtung</H3>
       <Step num={1} title="Beds24-Account anlegen & Kanäle verbinden">
         <P>
-          Registrieren Sie sich unter <strong>beds24.com</strong> und verbinden Sie dort Airbnb und/oder
+          Registriere dich unter <strong>beds24.com</strong> und verbinde dort Airbnb und/oder
           Booking.com über das Beds24-Dashboard (Channel Manager).
         </P>
       </Step>
@@ -1242,7 +1242,7 @@ function Beds24Section() {
       </Step>
       <Step num={3} title="Zimmer zuordnen">
         <P>
-          Ordnen Sie jedem Apartment die entsprechende <strong>Beds24 Einheit ID</strong> zu
+          Ordne jedem Apartment die entsprechende <strong>Beds24 Einheit ID</strong> zu
           (sichtbar in Beds24 unter Einstellungen → Unterkünfte → Einheiten).
           Danach <strong>Sync aktiv</strong> einschalten.
         </P>
@@ -1257,21 +1257,21 @@ function Beds24Section() {
 
       <H3>Sync-Geschwindigkeit</H3>
       <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
-        <li>Buchung bei Ihnen → Airbnb gesperrt: <strong>~1–2 Minuten</strong></li>
-        <li>Buchung auf Airbnb → bei Ihnen gesperrt: <strong>Echtzeit via Webhook</strong></li>
+        <li>Buchung bei dir → Airbnb gesperrt: <strong>~1–2 Minuten</strong></li>
+        <li>Buchung auf Airbnb → bei dir gesperrt: <strong>Echtzeit via Webhook</strong></li>
         <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
       </ul>
 
       <H3>Gäste-Lounge für Airbnb/Booking.com-Gäste</H3>
       <P>
         Jede Buchung die über Beds24 reinkommt, erhält automatisch einen persönlichen Gäste-Lounge-Link.
-        In der Buchungsdetailansicht finden Sie unter <strong>Gäste-Lounge</strong> einen „Link kopieren"-Button —
-        den Link können Sie dem Gast direkt über Airbnb-Nachrichten, WhatsApp oder E-Mail schicken.
+        In der Buchungsdetailansicht findest du unter <strong>Gäste-Lounge</strong> einen „Link kopieren"-Button —
+        den Link kannst du dem Gast direkt über Airbnb-Nachrichten, WhatsApp oder E-Mail schicken.
       </P>
       <P>
         <strong>Warum kein automatischer Versand?</strong> Airbnb und Booking.com schicken eigene
         Kommunikation an den Gast. Eine zweite E-Mail von bookingwulf wäre verwirrend — deshalb
-        entscheiden Sie selbst, wann und über welchen Kanal Sie den Link teilen.
+        entscheidest du selbst, wann und über welchen Kanal du den Link teilst.
       </P>
     </div>
   );
@@ -1280,24 +1280,24 @@ function Beds24Section() {
 function AssistentSection() {
   return (
     <div>
-      <H2>KI-Assistent</H2>
+      <H2>Hasky</H2>
       <PlanNote plan="Pro" />
       <P>
-        Der bookingwulf-Assistent beantwortet Fragen zur Bedienung des Admin-Bereichs direkt im Chat —
+        Hasky ist dein KI-Assistent direkt im Admin. Er beantwortet Fragen zur Bedienung —
         ohne dass du das Handbuch durchsuchen oder den Support kontaktieren musst.
       </P>
       <H3>Öffnen & verwenden</H3>
       <P>
-        Der Assistent ist als runder Chat-Button unten rechts im Admin sichtbar. Klicke darauf,
+        Hasky ist als runder Chat-Button unten rechts im Admin sichtbar. Klicke darauf,
         tippe deine Frage und bestätige mit Enter oder dem Senden-Button.
       </P>
       <H3>Was du fragen kannst</H3>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
         {[
-          { label: 'Bedienung',     desc: 'Wie funktioniert Sperrzeiten anlegen? Wo finde ich die E-Mail-Vorlagen?' },
-          { label: 'Navigation',    desc: 'Wo ist der Zimmerplan? Wie komme ich zu den Preisanpassungen?' },
+          { label: 'Bedienung',      desc: 'Wie funktioniert Sperrzeiten anlegen? Wo finde ich die E-Mail-Vorlagen?' },
+          { label: 'Navigation',     desc: 'Wo ist der Zimmerplan? Wie komme ich zu den Preisanpassungen?' },
           { label: 'Seitenbezogen',  desc: 'Was mache ich hier? Wofür ist das?' },
-          { label: 'Funktionen',    desc: 'Was kann der Beds24 Channel Manager? Wie funktioniert Nuki?' },
+          { label: 'Funktionen',     desc: 'Was kann der Beds24 Channel Manager? Wie funktioniert Nuki?' },
         ].map((t) => (
           <div key={t.label} style={{ display: 'flex', gap: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 600, minWidth: 130, color: 'var(--text-primary)' }}>{t.label}</span>
@@ -1311,8 +1311,8 @@ function AssistentSection() {
         Über das Papierkorb-Symbol oben rechts im Chat kannst du den Verlauf jederzeit löschen.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Der Assistent kennt die aktuelle Seite — auf vage Fragen wie
-        "Was mache ich hier?" antwortet er konkret zum Bereich, in dem du dich gerade befindest.
+        <strong>Tipp:</strong> Hasky kennt die aktuelle Seite — auf vage Fragen wie
+        „Was mache ich hier?" antwortet er konkret zum Bereich, in dem du dich gerade befindest.
       </Tip>
     </div>
   );
@@ -1328,28 +1328,28 @@ function EinbindungSection() {
       </P>
       <H3>Schritt-für-Schritt</H3>
       <Step num={1} title="Embed-Code kopieren">
-        Gehen Sie zu <strong>Widget & Design</strong> und scrollen Sie zum Abschnitt <strong>„Embed-Code"</strong>.
-        Dort finden Sie Ihren persönlichen Code:
-        <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug"></script>`}</CodeBlock>
-        Klicken Sie auf <strong>„Kopieren"</strong>.
+        Gehe zu <strong>Widget & Design</strong> und scrolle zum Abschnitt <strong>„Embed-Code"</strong>.
+        Dort findest du deinen persönlichen Code:
+        <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="dein-hotel-slug"></script>`}</CodeBlock>
+        Klicke auf <strong>„Kopieren"</strong>.
       </Step>
-      <Step num={2} title="Code auf Ihrer Website einfügen">
-        Fügen Sie den Code in den HTML-Quelltext der Seite ein, auf der das Widget erscheinen soll —
+      <Step num={2} title="Code auf deiner Website einfügen">
+        Füge den Code in den HTML-Quelltext der Seite ein, auf der das Widget erscheinen soll —
         z.B. auf einer Seite namens „Buchen". Der Code muss im <Code>{'<body>'}</Code>-Bereich platziert werden.
       </Step>
       <Step num={3} title="Fertig">
         Das Widget lädt sich automatisch und passt sich der Breite der Seite an.
       </Step>
       <Note>
-        <strong>Wichtig:</strong> Der <Code>data-hotel</Code>-Wert ist Ihr persönlicher Hotel-Slug
-        und bereits vorausgefüllt. Ändern Sie diesen Wert nicht.
+        <strong>Wichtig:</strong> Der <Code>data-hotel</Code>-Wert ist dein persönlicher Hotel-Slug
+        und bereits vorausgefüllt. Ändere diesen Wert nicht.
       </Note>
       <H3>Sprache des Widgets</H3>
       <P>
         Das Widget unterstützt Deutsch und Englisch. Die Sprache wird über das optionale Attribut
         <Code>data-lang</Code> gesteuert:
       </P>
-      <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="ihr-hotel-slug" data-lang="en"></script>`}</CodeBlock>
+      <CodeBlock>{`<script src="https://bookingwulf.com/widget.js" data-hotel="dein-hotel-slug" data-lang="en"></script>`}</CodeBlock>
       <P>
         Mit <Code>data-lang="en"</Code> erscheinen alle Labels, Monatsnamen, Wochentage und
         Meldungen im Widget auf Englisch. Standard ist Deutsch (<Code>de</Code>).
@@ -1401,16 +1401,16 @@ function EinbindungSection() {
         mit vorausgefüllten Daten. Es zeigt außerdem automatisch an, ob der gewählte Zeitraum verfügbar ist.
       </P>
       <Step num={1} title="Ziel-URL festlegen">
-        Gehen Sie zu <strong>Widget & Design</strong> und klappen Sie den Abschnitt <strong>„Mini-Widget"</strong> auf.
-        Tragen Sie unter <strong>„Ziel-URL"</strong> die Seite ein, auf der Ihr Buchungs-Widget eingebunden ist —
-        z.B. <Code>https://ihre-website.at/buchen</Code>. Auch Anker-Links sind möglich:
-        <Code>https://ihre-website.at/buchen#buchungs-widget</Code>.
+        Gehe zu <strong>Widget & Design</strong> und klappe den Abschnitt <strong>„Mini-Widget"</strong> auf.
+        Trage unter <strong>„Ziel-URL"</strong> die Seite ein, auf der dein Buchungs-Widget eingebunden ist —
+        z.B. <Code>https://deine-website.at/buchen</Code>. Auch Anker-Links sind möglich:
+        <Code>https://deine-website.at/buchen#buchungs-widget</Code>.
       </Step>
       <Step num={2} title="Embed-Code kopieren">
-        Darunter finden Sie den Embed-Code in Deutsch und Englisch. Kopieren Sie den gewünschten Code.
+        Darunter findest du den Embed-Code in Deutsch und Englisch. Kopiere den gewünschten Code.
       </Step>
-      <Step num={3} title="Auf Ihrer Website einfügen">
-        Fügen Sie den Code dort ein, wo das Mini-Widget erscheinen soll — z.B. im Header oder Hero-Bereich.
+      <Step num={3} title="Auf deiner Website einfügen">
+        Füge den Code dort ein, wo das Mini-Widget erscheinen soll — z.B. im Header oder Hero-Bereich.
       </Step>
       <Note>
         <strong>Hinweis:</strong> Auf der Ziel-Seite muss das Buchungs-Widget mit <Code>widget.js</Code> eingebunden sein,
@@ -1419,12 +1419,12 @@ function EinbindungSection() {
       <H3>Mehrere Widget-Konfigurationen</H3>
       <PlanNote plan="Pro" feature="Mehrere Widget-Varianten auf verschiedenen Seiten einbinden" />
       <P>
-        Mit dem Pro-Plan können Sie verschiedene Widget-Konfigurationen erstellen und auf
+        Mit dem Pro-Plan kannst du verschiedene Widget-Konfigurationen erstellen und auf
         unterschiedlichen Seiten einbinden — z.B. eine für Anfragen, eine für direkte Buchungen.
       </P>
       <Tip>
-        <strong>Tipp:</strong> Platzieren Sie das Widget auf einer eigenen Unterseite (z.B. „/buchen")
-        und verlinken Sie diese prominent in Ihrer Navigation — das erhöht die Conversion.
+        <strong>Tipp:</strong> Platziere das Widget auf einer eigenen Unterseite (z.B. „/buchen")
+        und verlinke diese prominent in deiner Navigation — das erhöht die Conversion.
       </Tip>
     </div>
   );

@@ -6,7 +6,7 @@ import { deleteChatLog, deleteAllTestLogs } from './actions';
 import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Chat-Auswertung — bookingwulf Admin' };
+export const metadata = { title: 'Hasky-Auswertung — bookingwulf Admin' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   buchungen:  'Buchungen & Anfragen',
@@ -86,8 +86,8 @@ export default async function ChatAnalyticsPage({
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em' }}>Chat-Auswertung</h1>
-          <p style={{ margin: 0, fontSize: 14, color: '#6b7280' }}>Fragen von Nutzern an den KI-Assistenten</p>
+          <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em' }}>Hasky-Auswertung</h1>
+          <p style={{ margin: 0, fontSize: 14, color: '#6b7280' }}>Fragen von Nutzern an Hasky</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {includeTests && testCount > 0 && (

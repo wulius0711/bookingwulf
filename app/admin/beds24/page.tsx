@@ -51,7 +51,7 @@ export default async function Beds24Page() {
         <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: '#f3e8ff', color: '#7c3aed' }}>Pro</span>
       </div>
       <p style={{ margin: '0 0 24px', fontSize: 14, color: 'var(--text-secondary)' }}>
-        Verbinden Sie Ihren Beds24-Account, um Buchungen automatisch mit Airbnb und Booking.com zu synchronisieren.
+        Verbinde deinen Beds24-Account, um Buchungen automatisch mit Airbnb und Booking.com zu synchronisieren.
       </p>
 
       <Beds24Client

@@ -63,14 +63,14 @@ export default async function VoucherConfirmationPage({
           <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: 12 }}>Vielen Dank!</h1>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6 }}>
             {vouchers.length > 1
-              ? `Ihre ${vouchers.length} Gutscheine wurden erfolgreich gekauft.`
-              : 'Ihr Gutschein wurde erfolgreich gekauft.'} Sie erhalten in Kürze eine Bestätigung per E-Mail.
+              ? `Deine ${vouchers.length} Gutscheine wurden erfolgreich gekauft.`
+              : 'Dein Gutschein wurde erfolgreich gekauft.'} Du erhältst in Kürze eine Bestätigung per E-Mail.
           </p>
 
           {vouchers.length > 0 && (
             <div style={{ marginTop: 24 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-                {vouchers.length === 1 ? 'Ihr Gutschein-Code' : 'Ihre Gutschein-Codes'}
+                {vouchers.length === 1 ? 'Dein Gutschein-Code' : 'Deine Gutschein-Codes'}
               </div>
               {vouchers.map(v => (
                 <div key={v.code} className="vc-code-box">

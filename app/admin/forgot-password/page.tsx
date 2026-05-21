@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
           Passwort vergessen
         </h1>
         <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
-          Geben Sie Ihre E-Mail ein. Wir senden Ihnen einen Link zum Zurücksetzen.
+          Gib deine E-Mail ein. Wir senden dir einen Link zum Zurücksetzen.
         </p>
 
         {success ? (

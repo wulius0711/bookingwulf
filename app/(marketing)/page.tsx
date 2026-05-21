@@ -12,29 +12,29 @@ const CONTENT = {
   hero: {
     badge: 'Beta · 14 Tage kostenlos testen',
     h1a:   'Direktbuchungen für',
-    h1b:   'Ihre Unterkunft.',
+    h1b:   'deine Unterkunft.',
     h1c:   'Ohne Provision.',
-    sub:   'Modern und einfach — weil Sie es verdient haben.',
+    sub:   'Modern und einfach — weil du es verdient hast.',
     cta1:  'Kostenlos starten',
     cta2:  'Live-Demo ansehen',
     trust: ['Setup in 5 Min', 'Kein Entwickler', 'DSGVO-konform'],
   },
   pain: {
     label:         'Der versteckte Kostenfaktor',
-    h2:            'Was zahlen Sie wirklich für Buchungsportale?',
-    sub:           'Über Buchungsportale kosten Sie Buchungen bis zu 25% Provision. Mit bookingwulf buchen Gäste direkt — und Sie behalten jeden Cent.',
+    h2:            'Was zahlst du wirklich für Buchungsportale?',
+    sub:           'Über Buchungsportale kosten dich Buchungen bis zu 25% Provision. Mit bookingwulf buchen Gäste direkt — und du behältst jeden Cent.',
     commissionPct: 15,
     bwYearlyCost:  119 * 12,
   },
   features: {
     label: 'Features',
-    h2:    'Alles was Sie brauchen',
+    h2:    'Alles was du brauchst',
     sub:   'Kein Schnickschnack — nur Features die Vermieter wirklich nutzen.',
     items: [
       { icon: ConciergeBell, title: 'Gäste-Lounge',       desc: 'Jeder Gast erhält mit der Buchungsbestätigung einen persönlichen Link — kein Login, kein Download. Buchungsdetails, Zugangscode, Hausinfos und Upselling automatisch befüllt. Lokale Ausflugstipps direkt aus Google Maps importieren — in Sekunden eingerichtet.' },
-      { icon: Ban,           title: 'Keine Provision',    desc: 'Sie behalten jeden Cent jeder Direktbuchung. Keine Transaktionsgebühren.' },
+      { icon: Ban,           title: 'Keine Provision',    desc: 'Du behältst jeden Cent jeder Direktbuchung. Keine Transaktionsgebühren.' },
       { icon: Zap,           title: 'Setup in 5 Minuten', desc: 'Eine Zeile Code — kein Entwickler nötig. Funktioniert mit WordPress, Framer, Wix & Co.' },
-      { icon: Palette,       title: 'Ihr Branding',       desc: 'Farben, Formen und Schrift passend zu Ihrer Website — komplett anpassbar.' },
+      { icon: Palette,       title: 'Dein Branding',      desc: 'Farben, Formen und Schrift passend zu deiner Website — komplett anpassbar.' },
       { icon: Globe,         title: 'Gäste-Kommunikation', desc: 'Automatische E-Mails in 9 Sprachen — Bestätigung, Angebot, Erinnerung. Kein manuelles Eingreifen.' },
       { icon: RefreshCw,     title: 'Channel Sync',       desc: 'Echtzeit-Sync mit Airbnb & Booking.com via Beds24 — keine Doppelbuchungen.' },
       { icon: ShieldCheck,   title: 'DSGVO-konform',      desc: 'Alle Daten auf Servern in der EU — sicher und rechtskonform.' },
@@ -45,20 +45,20 @@ const CONTENT = {
     items: [
       { num: '1', title: 'Registrieren', desc: 'Konto in 30 Sekunden erstellen — keine Kreditkarte nötig.' },
       { num: '2', title: 'Einrichten',   desc: 'Apartments anlegen, Preise setzen, Widget-Design anpassen.' },
-      { num: '3', title: 'Einbauen',     desc: 'Eine Zeile Code auf Ihrer Website — ab sofort direkt buchbar.' },
+      { num: '3', title: 'Einbauen',     desc: 'Eine Zeile Code auf deiner Website — ab sofort direkt buchbar.' },
     ],
   },
   faq: {
     h2:    'Häufige Fragen',
     items: [
-      { q: 'Wie baue ich das Widget ein?',                                        a: 'Sie fügen eine Zeile Code auf Ihrer Website ein — fertig. Kein Entwickler nötig. Funktioniert mit WordPress, Framer, Wix und mehr.' },
+      { q: 'Wie baue ich das Widget ein?',                                        a: 'Du fügst eine Zeile Code auf deiner Website ein — fertig. Kein Entwickler nötig. Funktioniert mit WordPress, Framer, Wix und mehr.' },
       { q: 'Gibt es versteckte Kosten oder Provisionen?',                         a: 'Nein. Nur der monatliche Fixpreis — keine Provision, keine Transaktionsgebühren.' },
       { q: 'Kann ich das Widget für Anfragen und Buchungen gleichzeitig nutzen?', a: 'Ja — zweifach konfigurierbar als Buchungs- und Anfrageformular.' },
-      { q: 'Was passiert nach den 14 kostenlosen Tagen?',                         a: 'Sie wählen einen Plan. Kündigung jederzeit möglich — keine Mindestlaufzeit.' },
+      { q: 'Was passiert nach den 14 kostenlosen Tagen?',                         a: 'Du wählst einen Plan. Kündigung jederzeit möglich — keine Mindestlaufzeit.' },
       { q: 'Wo werden meine Daten gespeichert?',                                  a: 'Auf Servern in der EU — sicher und DSGVO-konform.' },
       { q: 'Funktioniert der Sync mit Airbnb und Booking.com?',                   a: 'Ja — via Beds24 Channel Manager (separater Account nötig, kein Aufpreis von bookingwulf).' },
-      { q: 'Wie migriere ich von anderen Anbietern oder Buchungsportalen?',        a: 'Der Wechsel ist unkompliziert: Apartments neu anlegen, bestehendes Widget durch das bookingwulf-Widget ersetzen, fertig. Bei Fragen begleiten wir Sie persönlich durch die Umstellung.' },
-      { q: 'Wer steckt hinter bookingwulf?',                                      a: 'bookingwulf ist ein Vollzeit-Projekt von Wolfgang Heis, Webentwickler aus Wien. Kein anonymes Konzern-Tool — Sie erreichen mich direkt unter support@bookingwulf.com.' },
+      { q: 'Wie migriere ich von anderen Anbietern oder Buchungsportalen?',        a: 'Der Wechsel ist unkompliziert: Apartments neu anlegen, bestehendes Widget durch das bookingwulf-Widget ersetzen, fertig. Bei Fragen begleiten wir dich persönlich durch die Umstellung.' },
+      { q: 'Wer steckt hinter bookingwulf?',                                      a: 'bookingwulf ist ein Vollzeit-Projekt von Wolfgang Heis, Webentwickler aus Wien. Kein anonymes Konzern-Tool — du erreichst mich direkt unter support@bookingwulf.com.' },
     ],
   },
 };
@@ -159,9 +159,9 @@ export default function HomePage() {
               className="v4-text-body" style={{ fontSize: 18, fontWeight: 400, lineHeight: 1.7, margin: 0 }}
             >
               bookingwulf ist ein Buchungswidget für Pensionen, Hotels und Apartments.
-              Kein Buchungsportal, <span className="v4-text-green font-semibold">keine Provision</span> — Ihre Gäste buchen{' '}
+              Kein Buchungsportal, <span className="v4-text-green font-semibold">keine Provision</span> — deine Gäste buchen{' '}
               <span className="v4-text-green font-semibold">direkt</span> über{' '}
-              <span className="v4-text-green font-semibold">Ihrer Website</span>.
+              <span className="v4-text-green font-semibold">deiner Website</span>.
               Einfach eingebaut, sofort einsatzbereit.
             </p>
           </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
 
           <div className="v4-animate v4-d2 v4-card-dark max-w-xl mx-auto mb-10 p-6 bg-white/12">
             <label htmlFor="revenue-slider" className="block text-sm font-semibold mb-1" style={{ color: '#cbd5e1' }}>
-              Ihr Jahresumsatz über OTA-Portale
+              Dein Jahresumsatz über OTA-Portale
             </label>
             <div className="flex items-center justify-between mb-3">
               <span className="text-[32px] font-extrabold text-white tracking-tight">
@@ -264,7 +264,7 @@ export default function HomePage() {
             {[
               { label: 'OTA-Provision*', value: `−€ ${commission.toLocaleString('de-DE')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
               { label: 'bookingwulf Pro',                               value: `€ ${CONTENT.pain.bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: '€ 119/Monat · jederzeit kündbar', tone: 'neutral'  as const },
-              { label: 'Ihre Ersparnis',                                value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit Ihrem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
+              { label: 'Deine Ersparnis',                               value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit deinem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
             ].map((item, i) => (
               <div
                 key={item.label}
@@ -324,7 +324,7 @@ export default function HomePage() {
         <div className="v4-container">
           <div className="mb-16 text-center">
             <span className="v4-eyebrow v4-animate">Preise</span>
-            <h2 id="pricing-heading" className="v4-h2 mb-3 v4-animate v4-d1" style={{ color: '#fff' }}>Der richtige Plan für Ihren Betrieb</h2>
+            <h2 id="pricing-heading" className="v4-h2 mb-3 v4-animate v4-d1" style={{ color: '#fff' }}>Der richtige Plan für deinen Betrieb</h2>
             <p className="text-[17px] leading-[1.65] v4-animate v4-d2 max-w-xl mx-auto v4-text-muted">Keine Provision. Keine versteckten Kosten. Jederzeit kündbar.</p>
           </div>
 
@@ -437,7 +437,7 @@ export default function HomePage() {
               <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Wolfgang Heis</h3>
               <p className="text-[13px] mb-4 v4-text-muted">Webentwickler · Wien, Österreich</p>
               <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                bookingwulf ist mein Vollzeit-Projekt. Ich entwickle seit über 15 Jahren Webanwendungen — und habe bookingwulf gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichen Sie einen anonymen Support. Bei bookingwulf erreichen Sie mich direkt.
+                bookingwulf ist mein Vollzeit-Projekt. Ich entwickle seit über 15 Jahren Webanwendungen — und habe bookingwulf gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
               </p>
               <a
                 href="mailto:support@bookingwulf.com"
@@ -712,7 +712,7 @@ function PhoneScreen1() {
           </div>
         </div>
         <div style={{ background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 9, padding: '10px', textAlign: 'center' }}>
-          <div style={{ fontSize: 8, fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>🔑 Ihr Zugangscode</div>
+          <div style={{ fontSize: 8, fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>🔑 Dein Zugangscode</div>
           <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: '0.22em', color: '#111' }}>4829</div>
           <div style={{ fontSize: 8, color: '#374151', marginTop: 3 }}>Gültig von Anreise bis Abreise</div>
         </div>
@@ -803,7 +803,7 @@ function PhoneScreen4() {
           <div style={{ display: 'grid', gap: 8, paddingBottom: 4 }}>
             <div>
               <div style={{ background: '#f3f4f6', borderRadius: '9px 9px 9px 3px', padding: '7px 10px', fontSize: 9, lineHeight: 1.5, maxWidth: '88%' }}>
-                Herzlich willkommen! Ihre Anreise am 15. Juni ist bestätigt.
+                Herzlich willkommen! Deine Anreise am 15. Juni ist bestätigt.
               </div>
               <div style={{ fontSize: 7, color: '#9ca3af', marginTop: 2, paddingLeft: 2 }}>Sonnental Hotel · 10:32</div>
             </div>
@@ -833,7 +833,7 @@ function PhoneScreen5() {
               <span style={{ fontWeight: 700 }}>11:00 Uhr</span>
             </div>
             <div style={{ height: 1, background: '#f0f0f0' }} />
-            <p style={{ fontSize: 9, color: '#6b7280', lineHeight: 1.55 }}>Wenn Sie zur Abreise bereit sind, informieren Sie das Team mit einem Klick.</p>
+            <p style={{ fontSize: 9, color: '#6b7280', lineHeight: 1.55 }}>Wenn du zur Abreise bereit bist, informiere das Team mit einem Klick.</p>
             <button style={{ background: ACCENT, color: '#fff', border: 'none', padding: '9px', borderRadius: 7, fontSize: 10, fontWeight: 700, width: '100%' }}>
               Jetzt auschecken
             </button>

@@ -91,7 +91,7 @@ export default function AdminChatWidget() {
       }
       if (!res.ok) {
         const msg = res.status === 429
-          ? 'Der Assistent ist gerade überlastet. Bitte versuche es in einer Minute erneut.'
+          ? 'Hasky ist gerade überlastet. Bitte versuche es in einer Minute erneut.'
           : 'Ein Fehler ist aufgetreten. Bitte versuche es erneut oder wende dich an support@bookingwulf.com.';
         setMessages((prev) => [...prev, { role: 'assistant', text: msg }]);
         return;
@@ -112,7 +112,7 @@ export default function AdminChatWidget() {
       <button
         ref={triggerRef}
         onClick={() => setOpen((o) => !o)}
-        aria-label="Assistent öffnen"
+        aria-label="Hasky öffnen"
         aria-expanded={open}
         aria-controls="chat-panel"
         className="chat-widget-trigger"
@@ -141,7 +141,7 @@ export default function AdminChatWidget() {
         <div
           id="chat-panel"
           role="dialog"
-          aria-label="bookingwulf Assistent"
+          aria-label="Hasky"
           aria-modal="false"
           style={{
           position: 'fixed', bottom: 92, right: 28, zIndex: 9998,
@@ -160,8 +160,8 @@ export default function AdminChatWidget() {
               </svg>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>bookingwulf Assistent</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Fragen zur Bedienung</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Hasky</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Dein KI-Assistent</div>
             </div>
             {messages.length > 0 && (
               <button
@@ -180,7 +180,7 @@ export default function AdminChatWidget() {
           {planError ? (
             <div style={{ padding: 20, textAlign: 'center' }}>
               <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
-                Der Assistent ist ab dem <strong>Pro-Plan</strong> verfügbar.
+                Hasky ist ab dem <strong>Pro-Plan</strong> verfügbar.
               </div>
               <a href="/admin/billing" style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'underline' }}>
                 Jetzt upgraden →
@@ -192,7 +192,7 @@ export default function AdminChatWidget() {
               <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {messages.length === 0 && (
                   <div style={{ fontSize: 13, color: 'var(--text-muted)', textAlign: 'center', marginTop: 8 }}>
-                    Wie kann ich helfen? Stell mir eine Frage zur Bedienung von bookingwulf.
+                    Hallo! Ich bin Hasky — stell mir eine Frage zur Bedienung von bookingwulf.
                   </div>
                 )}
                 {messages.map((m, i) => (

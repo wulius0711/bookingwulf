@@ -236,11 +236,11 @@ export default async function Page({ searchParams }: PageProps) {
       <div style={{ marginBottom: 28 }}>
         <h1 style={headlineStyle}>Widget &amp; Design</h1>
         <p style={sublineStyle}>
-          Daten, Design und Funktionen für Ihr Hotel konfigurieren.
+          Daten, Design und Funktionen für dein Hotel konfigurieren.
         </p>
         <p style={{ ...sublineStyle, marginTop: 4 }}>
           <a href="#embed-code" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 500 }}>
-            Hier finden Sie den Code zum Einbauen auf Ihre Website.
+            Hier findest du den Code zum Einbauen auf deine Website.
           </a>
         </p>
       </div>
@@ -299,7 +299,7 @@ export default async function Page({ searchParams }: PageProps) {
               <summary style={{ padding: '22px 28px', cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, WebkitUserSelect: 'none', userSelect: 'none' }}>
                 <div>
                   <h2 style={sectionTitleStyle}>Rechtliches</h2>
-                  <p style={sectionIntroStyle}>Links zu Ihren Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.</p>
+                  <p style={sectionIntroStyle}>Links zu deinen Buchungsbedingungen und Datenschutzerklärung. Werden im Widget als Pflicht-Checkbox angezeigt.</p>
                 </div>
                 <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
               </summary>
@@ -657,19 +657,22 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
             </summary>
-            <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <EmbedCode
-                code={`<iframe src="https://bookingwulf.com/availability-widget.html?hotel=${selected.slug}&months=2" width="100%" height="420" frameborder="0" style="border-radius:12px;"></iframe>`}
-              />
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
-                <iframe
-                  src={`/availability-widget.html?hotel=${encodeURIComponent(selected.slug)}&months=2`}
-                  style={{ width: '100%', height: 380, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}
-                  title="Verfügbarkeits-Widget Vorschau"
+            <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 16, opacity: hasPro ? 1 : 0.4 }}>
+              {hasPro && <>
+                <EmbedCode
+                  code={`<iframe src="https://bookingwulf.com/availability-widget.html?hotel=${selected.slug}&months=2" width="100%" height="420" frameborder="0" style="border-radius:12px;"></iframe>`}
                 />
-              </div>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
+                  <iframe
+                    src={`/availability-widget.html?hotel=${encodeURIComponent(selected.slug)}&months=2`}
+                    style={{ width: '100%', height: 380, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}
+                    title="Verfügbarkeits-Widget Vorschau"
+                  />
+                </div>
+              </>}
             </div>
+            {!hasPro && <ProLockOverlay />}
           </details>
 
           {/* MINI WIDGET */}

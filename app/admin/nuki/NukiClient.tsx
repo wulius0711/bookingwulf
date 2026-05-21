@@ -120,7 +120,7 @@ export default function NukiClient({ initialConnected, initialLocks, initialErro
             {connected ? 'API-Token aktualisieren' : 'Nuki Web API-Token eingeben'}
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-            Den Token finden Sie unter{' '}
+            Den Token findest du unter{' '}
             <a href="https://web.nuki.io/#/account" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-primary)' }}>
               web.nuki.io → Account → API
             </a>.

@@ -90,9 +90,9 @@ async function sendCheckinEmail(formData: FormData) {
       .replace(/\{\{portalUrl\}\}/g, portalUrl);
   }
 
-  const subject = fill(template?.subject ?? `Ihre Check-in Infos — ${hotelName}`);
+  const subject = fill(template?.subject ?? `Deine Check-in Infos — ${hotelName}`);
   const greeting = fill(template?.greeting ?? `Hallo ${guestName},`);
-  const bodyText = fill(template?.body || 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt.');
+  const bodyText = fill(template?.body || 'wir freuen uns auf deinen Aufenthalt! Anbei die wichtigsten Check-in Infos für deinen Aufenthalt.');
   const signoff = fill(template?.signoff ?? 'Mit freundlichen Grüßen');
 
   const bodyHtml = `
@@ -100,7 +100,7 @@ async function sendCheckinEmail(formData: FormData) {
     <p style="font-size:15px;color:#374151;line-height:1.8;margin:0 0 20px;white-space:pre-wrap;">${bodyText.replace(/\n/g, '<br/>')}</p>
     <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 4px;">${signoff},</p>
     <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 24px;">${hotelName}</p>
-    ${portalUrl ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;"><p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ihre Gästemappe</p><a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;word-break:break-all;">${portalUrl}</a></div>` : ''}
+    ${portalUrl ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;"><p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Deine Gästemappe</p><a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;word-break:break-all;">${portalUrl}</a></div>` : ''}
   `;
 
   const html = buildEmailHtml({
@@ -283,7 +283,7 @@ async function updateBookingStatus(formData: FormData) {
               ${checkinUrl ? `
               <div style="margin-top:16px;padding:16px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
                 <p style="margin:0 0 12px;font-size:14px;color:#374151;font-weight:600;">Online Check-in</p>
-                <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Füllen Sie bitte vorab das Online Check-in Formular aus — das spart Zeit bei der Ankunft.</p>
+                <p style="margin:0 0 14px;font-size:13px;color:#6b7280;line-height:1.5;">Fülle bitte vorab das Online Check-in Formular aus — das spart Zeit bei der Ankunft.</p>
                 <a href="${checkinUrl}" style="display:inline-block;padding:10px 20px;background:${request.hotel?.accentColor || '#111827'};color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
                   Jetzt einchecken →
                 </a>
@@ -771,7 +771,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
         <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 80 }}>
           {request.messages.length === 0 && (
             <p style={{ color: 'var(--text-disabled)', fontSize: 13, margin: 0 }}>
-              Noch keine Nachrichten — schreiben Sie dem Gast direkt.
+              Noch keine Nachrichten — schreibe dem Gast direkt.
             </p>
           )}
           {request.messages.map((msg) => {
@@ -827,7 +827,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>
-                Gast erhält eine E-Mail mit Antwort-Link.
+                Der Gast erhält eine E-Mail mit Antwort-Link.
               </span>
               <button
                 type="submit"

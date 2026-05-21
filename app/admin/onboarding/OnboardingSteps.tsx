@@ -77,6 +77,16 @@ export default function OnboardingSteps({ hotelName }: Props) {
             </div>
           </div>
           {featureRow('📊', 'Analytics', 'Buchungsstatistiken: Auslastung, Umsatz, beliebteste Zeiträume (ab Business-Plan).')}
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>🐺</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>hasky</span>
+              <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent)', color: 'var(--text-on-accent)', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Pro</span>
+            </div>
+            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
+              Ihr KI-Assistent direkt im Admin. Fragen zu Einstellungen, Funktionen oder Abläufen — hasky antwortet sofort, ohne dass Sie das Handbuch aufschlagen müssen.
+            </div>
+          </div>
         </div>
       ),
     },
@@ -130,39 +140,43 @@ export default function OnboardingSteps({ hotelName }: Props) {
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6, margin: '0 0 20px' }}>
             Ihr 14-tägiger Testzeitraum läuft. Wählen Sie ein Paket und entdecken Sie alle Funktionen — kostenlos bis zum Ende des Tests.
           </p>
-          <a
-            href="/admin/billing"
-            className="btn-shine"
-            style={{
-              display: 'inline-block',
-              padding: '12px 28px',
-              background: 'var(--accent)',
-              color: 'var(--text-on-accent)',
-              borderRadius: 8,
-              fontSize: 15,
-              fontWeight: 600,
-              textDecoration: 'none',
-              marginRight: 12,
-            }}
-          >
-            Paket auswählen →
-          </a>
-          <a
-            href="/admin"
-            style={{
-              display: 'inline-block',
-              padding: '12px 20px',
-              background: 'transparent',
-              color: '#6b7280',
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 500,
-              textDecoration: 'none',
-              border: '1px solid #e5e7eb',
-            }}
-          >
-            Später
-          </a>
+          <div style={{ padding: '12px 16px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 24 }}>
+            📖 Das <strong style={{ color: 'var(--text-primary)' }}>Handbuch</strong> unter <em>Konto → Handbuch</em> erklärt jeden Bereich im Detail — jederzeit abrufbar.
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <a
+              href="/admin"
+              style={{
+                display: 'inline-block',
+                padding: '12px 20px',
+                background: 'transparent',
+                color: '#6b7280',
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: 'none',
+                border: '1px solid #e5e7eb',
+              }}
+            >
+              Später
+            </a>
+            <a
+              href="/admin/billing"
+              className="btn-shine"
+              style={{
+                display: 'inline-block',
+                padding: '12px 28px',
+                background: 'var(--accent)',
+                color: 'var(--text-on-accent)',
+                borderRadius: 8,
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}
+            >
+              Paket auswählen →
+            </a>
+          </div>
         </div>
       ),
     },

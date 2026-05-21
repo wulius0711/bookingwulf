@@ -125,7 +125,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
               )}
             </div>
             <p style={{ fontSize: 12, color: 'var(--text-disabled)', margin: 0, lineHeight: 1.5 }}>
-              Den Invite Code generieren Sie in Beds24 unter Einstellungen → Marketplace → API → Invite Code generieren.
+              Den Invite Code generierst du in Beds24 unter Einstellungen → Marketplace → API → Invite Code generieren.
             </p>
           </form>
         )}
@@ -140,7 +140,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         <div style={cardStyle}>
           <p style={sectionTitle}>Zimmer-Zuordnung</p>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
-            Tragen Sie pro Apartment die entsprechende Beds24 Room ID ein. Diese finden Sie in Beds24 unter Einstellungen → Zimmer.
+            Trage pro Apartment die entsprechende Beds24 Room ID ein. Diese findest du in Beds24 unter Einstellungen → Zimmer.
           </p>
           <div style={{ display: 'grid', gap: 12 }}>
             {apartments.map((apt) => (
@@ -160,7 +160,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         <div style={cardStyle}>
           <p style={sectionTitle}>Webhook URL</p>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
-            Tragen Sie diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
+            Trage diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
           <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
             {host}/api/beds24-webhook?token=<span style={{ color: 'var(--text-disabled)' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>

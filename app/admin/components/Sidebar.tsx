@@ -242,6 +242,7 @@ export default function Sidebar({ navGroups, email, activeHotelId, userHotels, i
   const [switching, setSwitching] = useState(false);
   const pathname = usePathname();
 
+
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   useEffect(() => {
