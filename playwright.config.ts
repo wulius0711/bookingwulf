@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'list',
   timeout: 30_000,
   use: {
-    baseURL: 'http://localhost:3099',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
   projects: [
@@ -20,8 +20,8 @@ export default defineConfig({
   webServer: {
     // Dedicated test port — leaves the dev server on 3099 untouched.
     // First run compiles Next.js (~30s); subsequent runs reuse the server.
-    command: 'npm run dev -- --port 3099',
-    url: 'http://localhost:3099',
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120_000,
   },
