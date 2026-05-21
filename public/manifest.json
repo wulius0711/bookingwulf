@@ -2,7 +2,7 @@
   "name": "Meine Buchung",
   "short_name": "Buchung",
   "description": "Ihre persönliche Gäste-Lounge",
-  "start_url": "/gast/",
+  "start_url": "/gast",
   "display": "standalone",
   "background_color": "#f5f7fa",
   "theme_color": "#111827",
@@ -11,6 +11,17 @@
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa-icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
