@@ -10,6 +10,13 @@ export default async function LoginLayout({ children }: { children: React.ReactN
 
   if (!session) return <>{children}</>
 
+  // Stale JWT (logged out → sessionVersion incremented) must not redirect — would loop
+  const user = await prisma.adminUser.findUnique({
+    where: { id: session.userId },
+    select: { sessionVersion: true },
+  })
+  if (!user || user.sessionVersion !== session.sessionVersion) return <>{children}</>
+
   // Super admins go straight to dashboard
   if (session.role === 'super_admin') redirect('/admin')
 
