@@ -15,7 +15,7 @@ export default function AGBPage() {
 
       <h1 style={h1}>Allgemeine Geschäftsbedingungen (AGB)</h1>
 
-      <p style={p}>Stand: April 2026</p>
+      <p style={p}>Stand: Mai 2026</p>
 
       <h2 style={h2}>§ 1 Geltungsbereich</h2>
       <p style={p}>
@@ -56,12 +56,12 @@ export default function AGBPage() {
         Es stehen folgende Pläne zur Verfügung:
       </p>
       <ul style={ul}>
-        <li><strong>Starter</strong> — € 49/Monat</li>
-        <li><strong>Pro</strong> — € 99/Monat</li>
-        <li><strong>Business</strong> — € 199/Monat</li>
+        <li><strong>Starter</strong> — € 59/Monat (bei Jahresabrechnung: € 54/Monat)</li>
+        <li><strong>Pro</strong> — € 119/Monat (bei Jahresabrechnung: € 109/Monat)</li>
+        <li><strong>Business</strong> — € 249/Monat (bei Jahresabrechnung: € 229/Monat)</li>
       </ul>
       <p style={p}>
-        Die Abrechnung erfolgt monatlich über Stripe. Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen.
+        Die Abrechnung erfolgt monatlich oder jährlich im Voraus über Stripe. Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen.
       </p>
 
       <h2 style={h2}>§ 5 Preise und Zahlung</h2>
