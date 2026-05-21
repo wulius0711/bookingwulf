@@ -22,7 +22,7 @@ export default function AGBPage() {
         Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der SaaS-Plattform „bookingwulf" (im Folgenden „Dienst"), betrieben von Wolfgang Heis, Vorgartenstraße 200/8, 1020 Wien, Österreich (im Folgenden „Anbieter").
       </p>
       <p style={p}>
-        Kunden des Dienstes sind Hotelbetreiber und Vermieter von Ferienwohnungen (im Folgenden „Kunde"), die bookingwulf zur Entgegennahme von Buchungsanfragen auf ihrer Website nutzen.
+        Kunden des Dienstes sind ausschließlich Unternehmer im Sinne des § 1 UGB (Hotelbetreiber und Vermieter von Ferienwohnungen, im Folgenden „Kunde"), die bookingwulf zur Entgegennahme von Buchungsanfragen auf ihrer Website nutzen. Eine Nutzung durch Verbraucher im Sinne des KSchG ist ausgeschlossen.
       </p>
 
       <h2 style={h2}>§ 2 Leistungsbeschreibung</h2>

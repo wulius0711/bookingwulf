@@ -26,9 +26,9 @@ export default function ImpressumPage() {
         E-Mail: support@bookingwulf.com
       </p>
 
-      <h2 style={h2}>Umsatzsteuer-ID</h2>
+      <h2 style={h2}>Steuerliche Angaben</h2>
       <p style={p}>
-        Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: [wird nachgetragen]
+        Kleinunternehmer gemäß § 6 Abs. 1 Z 27 UStG — es wird keine Umsatzsteuer in Rechnung gestellt.
       </p>
 
       <h2 style={h2}>Verantwortlich für den Inhalt</h2>
