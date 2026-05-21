@@ -14,7 +14,7 @@ export default function AVVPage() {
       <Link href="/" style={{ fontSize: 13, color: '#666', textDecoration: 'none', display: 'inline-block', marginBottom: 24 }}>← Zurück zur Startseite</Link>
 
       <h1 style={h1}>Auftragsverarbeitungsvertrag (AVV)</h1>
-      <p style={p}>Stand: April 2026 · Gemäß Art. 28 DSGVO</p>
+      <p style={p}>Stand: Mai 2026 · Gemäß Art. 28 DSGVO</p>
 
       <h2 style={h2}>1. Parteien</h2>
       <p style={p}>
@@ -80,7 +80,10 @@ export default function AVVPage() {
         Der Auftragsverarbeiter setzt folgende Unterauftragsverarbeiter ein, denen der Verantwortliche durch Abschluss des Nutzungsvertrags zustimmt:
       </p>
       <ul style={ul}>
-        <li><strong>Neon Inc.</strong> (USA) — Datenbankhosting, Serverstandort Frankfurt (EU). Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Neon Inc.</strong> (USA) — Entwicklungsdatenbank, Serverstandort Frankfurt (EU). Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Railway Corp.</strong> (USA) — Produktionsdatenbank (primäre Datenhaltung). Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Upstash Inc.</strong> (USA) — Redis für Rate Limiting und Session-Schutz (verarbeitet IP-Adressen). Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Axiom Inc.</strong> (UK) — Strukturiertes Logging (Anfragedaten, IP-Adressen). Datenhaltung in der EU.</li>
         <li><strong>Vercel Inc.</strong> (USA) — Application Hosting. Standardvertragsklauseln (SCCs) vereinbart.</li>
         <li><strong>Resend Inc.</strong> (USA) — E-Mail-Versand von Buchungsbenachrichtigungen. Standardvertragsklauseln (SCCs) vereinbart.</li>
         <li><strong>Sentry Inc.</strong> (USA) — Fehler-Monitoring (technische Daten, keine Gästedaten im Regelfall). Standardvertragsklauseln (SCCs) vereinbart.</li>

@@ -16,7 +16,7 @@ export default function DatenschutzPage() {
 
       <h1 style={h1}>Datenschutzerklärung</h1>
 
-      <p style={p}>Stand: April 2026</p>
+      <p style={p}>Stand: Mai 2026</p>
 
       <h2 style={h2}>1. Verantwortlicher</h2>
       <p style={p}>
@@ -88,7 +88,10 @@ export default function DatenschutzPage() {
       <h2 style={h2}>5. Auftragsverarbeiter und Datentransfers</h2>
       <p style={p}>Wir setzen folgende Dienstleister ein:</p>
       <ul style={ul}>
-        <li><strong>Neon Inc.</strong> — PostgreSQL-Datenbank, Serverstandort Frankfurt (EU). Datenhaltung in der EU.</li>
+        <li><strong>Neon Inc.</strong> — PostgreSQL-Entwicklungsdatenbank, Serverstandort Frankfurt (EU). Datenhaltung in der EU.</li>
+        <li><strong>Railway Corp.</strong> (USA) — PostgreSQL-Produktionsdatenbank (primäre Datenhaltung). Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Upstash Inc.</strong> (USA) — Redis-Datenbank für Rate Limiting und Session-Schutz. Dabei werden IP-Adressen kurzfristig verarbeitet. Standardvertragsklauseln (SCCs) vereinbart.</li>
+        <li><strong>Axiom Inc.</strong> (UK) — Strukturiertes Logging für Betrieb und Fehleranalyse. Dabei können Anfragedaten (u. a. IP-Adressen, User-Agents) verarbeitet werden. Datenhaltung in der EU.</li>
         <li><strong>Vercel Inc.</strong> (USA) — Hosting und Bereitstellung der Anwendung. Vercel verarbeitet Anfragedaten auf Edge-Servern weltweit. Datenschutzrichtlinie: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>vercel.com/legal/privacy-policy</a>.</li>
         <li><strong>Resend Inc.</strong> (USA) — E-Mail-Versand (Buchungsbestätigungen, Benachrichtigungen). Datenschutzrichtlinie: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#111', textDecoration: 'underline' }}>resend.com/legal/privacy-policy</a>.</li>
         <li><strong>Stripe Inc.</strong> (USA) — Zahlungsabwicklung. Stripe ist nach dem EU-US Data Privacy Framework zertifiziert.</li>
