@@ -54,7 +54,7 @@ export async function GET(req: Request) {
   const content = JSON.stringify(dump, null, 0);
 
   await put(filename, content, {
-    access: 'private',
+    access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
     allowOverwrite: true,
