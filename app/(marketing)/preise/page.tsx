@@ -82,7 +82,7 @@ const COMPARISON: FeatureGroup[] = [
 const FAQ_ITEMS = [
   {
     q: 'Gibt es eine kostenlose Testphase?',
-    a: 'Ja — 14 Tage kostenlos, keine Kreditkarte erforderlich. Sie können alle Features Ihres gewählten Plans uneingeschränkt testen.',
+    a: 'Ja — 14 Tage kostenlos, keine Kreditkarte erforderlich. Du kannst alle Features deines gewählten Plans uneingeschränkt testen.',
   },
   {
     q: 'Kann ich jederzeit kündigen?',
@@ -90,19 +90,19 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Gibt es versteckte Kosten oder Buchungsprovisionen?',
-    a: 'Nein. Sie zahlen nur den monatlichen Fixpreis — keine Provision pro Buchung, keine Transaktionsgebühren, keine Setupkosten.',
+    a: 'Nein. Du zahlst nur den monatlichen Fixpreis — keine Provision pro Buchung, keine Transaktionsgebühren, keine Setupkosten.',
   },
   {
     q: 'Was ist der Unterschied zwischen monatlicher und jährlicher Abrechnung?',
-    a: 'Bei jährlicher Abrechnung sparen Sie ~10% gegenüber der monatlichen Rate. Der Betrag wird einmalig für 12 Monate in Rechnung gestellt.',
+    a: 'Bei jährlicher Abrechnung sparst du ~10% gegenüber der monatlichen Rate. Der Betrag wird einmalig für 12 Monate in Rechnung gestellt.',
   },
   {
     q: 'Was kostet der Beds24 Channel Manager (Airbnb / Booking.com)?',
-    a: 'Beds24 ist ein separater Drittanbieter mit eigenem kostenpflichtigen Account (ab ca. €9/Mo). bookingwulf verlangt dafür keinen Aufpreis — Sie verbinden einfach Ihren bestehenden Beds24-Account.',
+    a: 'Beds24 ist ein separater Drittanbieter mit eigenem kostenpflichtigen Account (ab ca. €9/Mo). bookingwulf verlangt dafür keinen Aufpreis — Du verbindest einfach deinen bestehenden Beds24-Account.',
   },
   {
     q: 'Was passiert wenn ich mehr Apartments brauche als mein Plan erlaubt?',
-    a: 'Sie können jederzeit in einen größeren Plan wechseln. Ihre bestehenden Daten, Buchungen und Einstellungen bleiben vollständig erhalten.',
+    a: 'Du kannst jederzeit in einen größeren Plan wechseln. Deine bestehenden Daten, Buchungen und Einstellungen bleiben vollständig erhalten.',
   },
 ];
 
@@ -354,7 +354,7 @@ export default function PreisePage() {
             14 Tage kostenlos — ohne Kreditkarte.
           </p>
           <p className="v4-animate v4-d1" style={{ fontSize: 16, color: 'var(--v4-muted)', marginBottom: 40 }}>
-            Danach wählen Sie einen Plan oder hören einfach auf. Kein Risiko.
+            Danach wähle einen Plan oder hör einfach auf. Kein Risiko.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link href="/register" className="v4-btn v4-btn-primary v4-animate v4-d2">Jetzt starten</Link>

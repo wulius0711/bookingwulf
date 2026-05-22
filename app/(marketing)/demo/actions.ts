@@ -34,6 +34,6 @@ ${message || '—'}
     replyTo: email,
   });
 
-  if (error) return { error: 'Senden fehlgeschlagen. Bitte versuchen Sie es später erneut.' };
+  if (error) return { error: 'Senden fehlgeschlagen. Bitte versuche es später erneut.' };
   return { success: true };
 }

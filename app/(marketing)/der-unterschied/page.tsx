@@ -335,7 +335,7 @@ export default function DerUnterschiedPage() {
             Warum sehen Buchungswidgets noch immer so aus?
           </h1>
           <p className="v4-animate v4-d2" style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--v4-body)', marginBottom: 20 }}>
-            Sie haben in Ihre Website investiert. Die Fotografie stimmt, das Design passt zu Ihrem Haus. Und dann öffnet der Gast das Buchungswidget — und landet in einer anderen Welt. Genau so fühlt sich oft auch die tägliche Arbeit im Admin an: unübersichtlich, umständlich, zu viele Klicks für einfache Dinge.
+            Du hast in deine Website investiert. Die Fotografie stimmt, das Design passt zu deinem Haus. Und dann öffnet der Gast das Buchungswidget — und landet in einer anderen Welt. Genau so fühlt sich oft auch die tägliche Arbeit im Admin an: unübersichtlich, umständlich, zu viele Klicks für einfache Dinge.
           </p>
           <p className="v4-animate v4-d3" style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--v4-body)' }}>
             Die meisten Systeme am Markt sind gebaut für Desktop, gebaut für Stabilität — nicht für Conversion oder einfache Bedienung. Weil ein Wechsel aufwändig ist, blieb das Interface wie es war.
@@ -374,7 +374,7 @@ export default function DerUnterschiedPage() {
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--v4-navy)', marginBottom: 4 }}>bookingwulf</div>
                   <div style={{ fontSize: 13, color: 'var(--v4-body)', lineHeight: 1.6 }}>
-                    Nahtlos integriert, mobil-first, an Ihre Farben angepasst. Der Gast merkt nicht, dass er ein fremdes System nutzt.
+                    Nahtlos integriert, mobil-first, an deine Farben angepasst. Der Gast merkt nicht, dass er ein fremdes System nutzt.
                   </div>
                 </div>
               </div>

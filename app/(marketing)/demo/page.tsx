@@ -75,7 +75,7 @@ function DemoForm() {
         </div>
         <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--v4-navy)', marginBottom: 8 }}>Anfrage eingegangen!</div>
         <div style={{ fontSize: 15, color: 'var(--v4-body)', lineHeight: 1.6 }}>
-          Ich melde mich innerhalb von 24 Stunden bei Ihnen. Bis dahin können Sie das Widget oben direkt ausprobieren.
+          Ich melde mich innerhalb von 24 Stunden bei dir. Bis dahin kannst du das Widget oben direkt ausprobieren.
         </div>
       </div>
     );
@@ -148,7 +148,7 @@ export default function DemoPage() {
           <span className="v4-eyebrow v4-animate">Demo</span>
           <h1 className="v4-h1 mb-5 v4-animate v4-d1">bookingwulf selbst erleben.</h1>
           <p className="v4-animate v4-d2" style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--v4-body)' }}>
-            Testen Sie das Widget live — so wie es Ihre Gäste sehen. Kein Login, keine Kreditkarte.
+            Teste das Widget live — so wie es deine Gäste sehen. Kein Login, keine Kreditkarte.
           </p>
         </div>
       </section>
@@ -172,7 +172,7 @@ export default function DemoPage() {
             <span className="v4-eyebrow v4-animate">Persönliche Demo</span>
             <h2 className="v4-h2 v4-animate v4-d1">Demo anfragen</h2>
             <p className="v4-animate v4-d2" style={{ fontSize: 16, color: 'var(--v4-body)', marginTop: 12, lineHeight: 1.7 }}>
-              Sie haben Fragen oder möchten bookingwulf für Ihren Betrieb einrichten? Ich zeige es Ihnen persönlich — per Video-Call, kostenlos.
+              Du hast Fragen oder möchtest bookingwulf für deinen Betrieb einrichten? Ich zeige es dir persönlich — per Video-Call, kostenlos.
             </p>
           </div>
 
@@ -193,7 +193,7 @@ export default function DemoPage() {
       <section className="v4-section v4-grain" style={{ background: 'var(--v4-navy)' }}>
         <div className="v4-container text-center" style={{ maxWidth: 600 }}>
           <p className="v4-animate" style={{ fontSize: 22, fontWeight: 600, color: '#fff', marginBottom: 8, lineHeight: 1.4 }}>
-            Überzeugt? Starten Sie in 5 Minuten.
+            Überzeugt? Starte in 5 Minuten.
           </p>
           <p className="v4-animate v4-d1" style={{ fontSize: 16, color: 'var(--v4-muted)', marginBottom: 40 }}>
             14 Tage kostenlos — ohne Kreditkarte, ohne Risiko.

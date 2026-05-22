@@ -22,7 +22,7 @@ const FEATURES: Feature[] = [
     icon: Building2, label: 'Verwaltung',
     title: 'Multi-Apartment',
     short: 'Beliebig viele Apartments — jede Einheit mit eigenen Preisen, Fotos und Ausstattung. Saisontarife und Aufschläge pro Apartment konfigurierbar.',
-    long: 'Legen Sie jede Einheit mit eigenem Namen, eigenen Fotos, Ausstattungsmerkmalen und Preisstruktur an. Saisontarife, Wochenend-Zuschläge und Mindestaufenthalte sind pro Apartment konfigurierbar. Neue Einheiten sind in Minuten eingerichtet — ohne technisches Wissen.',
+    long: 'Lege jede Einheit mit eigenem Namen, eigenen Fotos, Ausstattungsmerkmalen und Preisstruktur an. Saisontarife, Wochenend-Zuschläge und Mindestaufenthalte sind pro Apartment konfigurierbar. Neue Einheiten sind in Minuten eingerichtet — ohne technisches Wissen.',
     bullets: ['Eigene Bilder & Beschreibung pro Einheit', 'Individuelle Preissaisons & Aufschläge', 'Separate Verfügbarkeitskalender'],
   },
   {
@@ -35,8 +35,8 @@ const FEATURES: Feature[] = [
   {
     icon: Palette, label: 'Design',
     title: 'Individuelles Branding',
-    short: 'Das Widget übernimmt Ihre Primärfarbe, Button-Stil und Schriftart. Kein fremdes Logo, kein bookingwulf-Branding — Ihre Gäste merken nicht, dass sie ein externes System nutzen.',
-    long: 'Das Buchungswidget übernimmt Ihre Primärfarbe, Ihren Button-Stil und Ihre Schriftart — so fügt es sich nahtlos in jede Website ein. Kein bookingwulf-Branding sichtbar.',
+    short: 'Das Widget übernimmt deine Primärfarbe, Button-Stil und Schriftart. Kein fremdes Logo, kein bookingwulf-Branding — deine Gäste merken nicht, dass sie ein externes System nutzen.',
+    long: 'Das Buchungswidget übernimmt deine Primärfarbe, deinen Button-Stil und deine Schriftart — so fügt es sich nahtlos in jede Website ein. Kein bookingwulf-Branding sichtbar.',
     bullets: ['Eigene Primärfarbe & Akzente', 'Button-Radius & Schrift anpassbar', 'Kein fremdes Logo im Widget'],
   },
   {
@@ -71,14 +71,14 @@ const FEATURES: Feature[] = [
     icon: TrendingDown, label: 'Preise',
     title: 'Dynamic Pricing',
     short: 'Last-Minute-Rabatte, Langzeit-Boni, Wochenend-Aufschläge — greifen automatisch nach Ihren Regeln.',
-    long: 'Konfigurieren Sie Regeln, die automatisch greifen: Last-Minute-Rabatt ab 3 Tagen vor Anreise, Langzeit-Rabatt ab 7 Nächten, Wochenend-Aufschlag, Mindestaufenthalt je Saison.',
+    long: 'Konfiguriere Regeln, die automatisch greifen: Last-Minute-Rabatt ab 3 Tagen vor Anreise, Langzeit-Rabatt ab 7 Nächten, Wochenend-Aufschlag, Mindestaufenthalt je Saison.',
     bullets: ['Last-Minute & Langzeit-Rabatte', 'Saison-Mindestaufenthalte', 'Wochenend-Aufschläge'],
   },
   {
     icon: Code2, label: 'Setup',
     title: 'Einbau in 1 Minute',
     short: 'Ein Script-Tag, fertig. Funktioniert mit WordPress, Framer, Wix und jedem CMS.',
-    long: 'Kopieren Sie ein einzelnes Script-Tag auf Ihre Website — das Widget lädt sich selbst, passt sich dem Layout an und ist sofort buchbar. Funktioniert mit WordPress, Framer, Wix, Squarespace und jedem anderen CMS.',
+    long: 'Kopiere ein einzelnes Script-Tag auf deine Website — das Widget lädt sich selbst, passt sich dem Layout an und ist sofort buchbar. Funktioniert mit WordPress, Framer, Wix, Squarespace und jedem anderen CMS.',
     bullets: ['WordPress, Framer, Wix, Squarespace', 'Responsive für alle Bildschirmgrößen', 'Updates automatisch, kein Re-Embed'],
   },
   {
@@ -92,7 +92,7 @@ const FEATURES: Feature[] = [
     icon: Lock, label: 'Smart Home',
     title: 'Nuki-Integration',
     short: 'Nuki-Schloss verbinden, fertig. Zugangscode wird automatisch generiert und dem Gast angezeigt.',
-    long: 'Verbinden Sie Ihr Nuki-Smart-Lock mit bookingwulf: Nach Buchungsbestätigung wird automatisch ein temporärer Zugangscode generiert und dem Gast in der Gäste-Lounge angezeigt.',
+    long: 'Verbinde dein Nuki-Smart-Lock mit bookingwulf: Nach Buchungsbestätigung wird automatisch ein temporärer Zugangscode generiert und dem Gast in der Gäste-Lounge angezeigt.',
     bullets: ['Automatischer Code bei Buchung', 'Code gültig nur für Aufenthaltszeitraum', 'Anzeige in der Gäste-Lounge'],
   },
   {
@@ -241,9 +241,9 @@ export default function FeaturesPage() {
       <section className="v4-section text-center" style={{ paddingBottom: 72 }}>
         <div className="v4-container">
           <span className="v4-eyebrow v4-animate">Features</span>
-          <h1 className="v4-h1 v4-animate v4-d1" style={{ marginBottom: 20 }}>Alles was Sie brauchen</h1>
+          <h1 className="v4-h1 v4-animate v4-d1" style={{ marginBottom: 20 }}>Alles was du brauchst</h1>
           <p className="v4-animate v4-d2" style={{ fontSize: 18, lineHeight: 1.65, color: 'var(--v4-body)', maxWidth: 600, margin: '0 auto' }}>
-            bookingwulf gibt Ihnen alle Werkzeuge für moderne Direktbuchungen —
+            bookingwulf gibt dir alle Werkzeuge für moderne Direktbuchungen —
             ohne unnötige Komplexität, ohne versteckte Kosten.
           </p>
         </div>
