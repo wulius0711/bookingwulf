@@ -18,6 +18,7 @@ export default async function VoucherShopPage({ params, searchParams }: { params
   const templates = await prisma.voucherTemplate.findMany({
     where: { hotelId: hotel.id, isActive: true },
     orderBy: { price: 'asc' },
+    select: { id: true, name: true, type: true, value: true, price: true, description: true, imageUrl: true, validDays: true, translationsJson: true },
   });
 
   if (templates.length === 0) return notFound();
@@ -26,16 +27,21 @@ export default async function VoucherShopPage({ params, searchParams }: { params
     <VoucherShop
       lang={lang}
       hotel={{ slug, name: hotel.name, accentColor: hotel.accentColor || '#111827' }}
-      templates={templates.map((t) => ({
-        id: t.id,
-        name: t.name,
-        type: t.type,
-        value: Number(t.value),
-        price: Number(t.price),
-        description: t.description,
-        imageUrl: t.imageUrl,
-        validDays: t.validDays,
-      }))}
+      templates={templates.map((t) => {
+        const trans = lang !== 'de' && t.translationsJson
+          ? (t.translationsJson as Record<string, { name?: string; description?: string }>)[lang]
+          : null;
+        return {
+          id: t.id,
+          name: trans?.name ?? t.name,
+          type: t.type,
+          value: Number(t.value),
+          price: Number(t.price),
+          description: trans?.description ?? t.description,
+          imageUrl: t.imageUrl,
+          validDays: t.validDays,
+        };
+      })}
     />
   );
 }

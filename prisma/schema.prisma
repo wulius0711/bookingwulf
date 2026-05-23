@@ -614,10 +614,11 @@ model VoucherTemplate {
   price       Decimal  @db.Decimal(10, 2)
   description String?
   imageUrl    String?
-  validDays   Int      @default(365)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  vouchers    Voucher[]
+  validDays        Int      @default(365)
+  isActive         Boolean  @default(true)
+  translationsJson Json?    // { en: { name, description }, it: { ... } }
+  createdAt        DateTime @default(now())
+  vouchers         Voucher[]
 
   @@index([hotelId])
 }
