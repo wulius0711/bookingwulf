@@ -151,8 +151,12 @@ async function handleCheckAvailability(
     };
   });
 
-  const available = results.filter(r => r.available);
-  return { nights, available, unavailableCount: results.length - available.length };
+  const available = results
+    .filter(r => r.available)
+    .sort((a, b) => ('size' in b ? (b.size ?? 0) : 0) - ('size' in a ? (a.size ?? 0) : 0));
+  // Return max 3 to force a focused recommendation instead of a full list
+  const top = available.slice(0, 3);
+  return { nights, available: top, moreAvailable: available.length - top.length };
 }
 
 async function handleGetPropertyInfo(
@@ -282,15 +286,17 @@ Empfehlungslogik — passe deine Empfehlung an den Kontext an:
 - **Remote Work**: WLAN-Qualität, ruhige Lage, Schreibtisch aus Ausstattung hervorheben
 - Nenne immer konkret WARUM du ein Apartment empfiehlst (Ausstattung, Größe, Lage, Anlass)
 - Du kannst Apartments beschreiben und vorempfehlen — aber nenne Preise erst nach check_availability
+- Nach check_availability: empfehle maximal 2 Apartments — das beste zuerst mit Begründung, ein Alternativvorschlag falls sinnvoll. Nicht alle verfügbaren auflisten.
+- Nach einer Empfehlung immer mit einer konkreten Frage abschließen, z.B. "Welches klingt besser für euch?" oder "Soll ich für Apartment 6 einen Buchungslink erstellen?"
 
 Wichtige Regeln:
 - Rufe IMMER check_availability bevor du konkrete Preise oder Verfügbarkeit nennst
 - Frage nach Anreise, Abreise und Personenzahl (inkl. Kinder) falls noch unbekannt
 - Halte dich an Buchungs- und Unterkunftsthemen
 - Antworte auf Deutsch; wechsle auf Englisch wenn der Gast Englisch schreibt
-- Sei freundlich, prägnant und persönlich — kein übertriebenes Marketing
-- Bevor du den Buchungslink generierst: frage zuerst nach 1–2 passenden Extras mit Preis — warte auf die Antwort des Gastes, dann erst den Link liefern
-- Den Buchungslink IMMER in einen Satz einbetten — NIEMALS nur die nackte URL ausgeben. Format: "Wunderbar! Viel Spaß im [Apartment] — hier geht's direkt zur Buchung:\n[URL]" oder ähnlich persönlich
+- Ton: ruhig, klar, direkt — kein Marketing-Speak, keine übertriebenen Adjektive; Ausrufezeichen sparsam einsetzen, nicht am Anfang jeder Antwort
+- Bevor du den Buchungslink generierst: frage kurz und neutral nach 1–2 passenden Extras — keine Verkaufsfloskeln, nur sachlich z.B. "Möchtet ihr noch Frühstück dazunehmen (12 € p.P./Nacht)?" — warte auf Antwort, dann Link
+- Den Buchungslink IMMER so formatieren: kurzer Satz ZUERST, dann URL in der nächsten Zeile, dann ein kurzer freundlicher Abschlusssatz — z.B. "Hier ist der Link für Apartment 6:\nhttps://...\n\nBei Fragen bin ich gerne da."
 - Wähle Extras passend zum Kontext (Familie → Kinderbett, Wellness → Spa etc.)
 
 Unsere Apartments:
@@ -361,9 +367,17 @@ export async function POST(req: Request) {
       if (functionCallParts.length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let text = parts.find((p: any) => p.text)?.text ?? response.text ?? '';
-        // If Gemini returns a bare URL, wrap it in a friendly sentence
-        if (/^https?:\/\/\S+$/.test(text.trim())) {
-          text = `Viel Spaß — hier geht's direkt zur Buchung:\n${text.trim()}`;
+        // If response starts with URL: move trailing text before the link
+        const urlFirst = text.trim().match(/^(https?:\/\/\S+)([\s\S]*)$/);
+        if (urlFirst) {
+          const url = urlFirst[1];
+          const trailing = urlFirst[2].trim();
+          text = trailing
+            ? `Hier ist der Buchungslink:\n${url}\n\n${trailing}`
+            : `Hier ist der Buchungslink:\n${url}\n\nBei Fragen bin ich gerne da.`;
+        } else if (/https?:\/\/\S+$/.test(text.trim())) {
+          // Response ends with URL and no closing sentence — append one
+          text = `${text.trim()}\n\nBei Fragen bin ich gerne da.`;
         }
         return NextResponse.json({ message: text }, { headers: corsHeaders });
       }
