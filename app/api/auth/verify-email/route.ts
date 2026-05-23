@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
-import { createSession } from '@/src/lib/session';
+import { encrypt } from '@/src/lib/session-crypto';
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token');
@@ -34,13 +34,21 @@ export async function GET(req: NextRequest) {
   });
 
   const primaryHotelId = user.userHotels[0]?.hotelId ?? user.hotelId ?? null;
-  await createSession({
+  const token = await encrypt({
     userId: user.id,
     email: user.email,
     role: user.role,
     hotelId: primaryHotelId,
-    sessionVersion: 0,
+    sessionVersion: user.sessionVersion,
   });
 
-  return NextResponse.redirect(new URL('/admin/onboarding', req.url));
+  const response = NextResponse.redirect(new URL('/admin/onboarding', req.url));
+  response.cookies.set('admin_session', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    sameSite: 'lax',
+    path: '/',
+  });
+  return response;
 }
