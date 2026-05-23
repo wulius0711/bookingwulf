@@ -3726,7 +3726,7 @@
               var voucherAnchor = document.getElementById('bw-voucher-anchor');
               var voucherLabel = document.getElementById('bw-voucher-label');
               if (voucherLink) voucherLink.style.display = 'block';
-              if (voucherAnchor) voucherAnchor.href = (API_BASE || '') + '/gutschein/' + HOTEL_SLUG;
+              if (voucherAnchor) voucherAnchor.href = (API_BASE || '') + '/gutschein/' + HOTEL_SLUG + (LANG !== 'de' ? '?lang=' + LANG : '');
               if (voucherLabel) voucherLabel.textContent = t('voucher_gift_btn');
             }
             if (data.settings) {

@@ -4,8 +4,9 @@ import VoucherShop from './VoucherShop';
 
 export const dynamic = 'force-dynamic';
 
-export default async function VoucherShopPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VoucherShopPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string }> }) {
   const { slug } = await params;
+  const { lang = 'de' } = await searchParams;
 
   const hotel = await prisma.hotel.findUnique({
     where: { slug },
@@ -23,6 +24,7 @@ export default async function VoucherShopPage({ params }: { params: Promise<{ sl
 
   return (
     <VoucherShop
+      lang={lang}
       hotel={{ slug, name: hotel.name, accentColor: hotel.accentColor || '#111827' }}
       templates={templates.map((t) => ({
         id: t.id,

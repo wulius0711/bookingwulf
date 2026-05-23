@@ -9,10 +9,11 @@ export default async function VoucherConfirmationPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ codes?: string; code?: string }>;
+  searchParams: Promise<{ codes?: string; code?: string; lang?: string }>;
 }) {
   const { slug } = await params;
-  const { codes, code } = await searchParams;
+  const { codes, code, lang = 'de' } = await searchParams;
+  const en = lang === 'en';
 
   const hotel = await prisma.hotel.findUnique({
     where: { slug },
@@ -33,7 +34,7 @@ export default async function VoucherConfirmationPage({
     : [];
 
   const accent = hotel.accentColor || '#111827';
-  const fmt = (d: Date) => new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
+  const fmt = (d: Date) => new Intl.DateTimeFormat(en ? 'en-GB' : 'de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
 
   return (
     <>
@@ -60,29 +61,31 @@ export default async function VoucherConfirmationPage({
             </svg>
           </div>
           <div style={{ fontSize: 13, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>{hotel.name}</div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: 12 }}>Vielen Dank!</h1>
+          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: 12 }}>{en ? 'Thank you!' : 'Vielen Dank!'}</h1>
           <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.6 }}>
-            {vouchers.length > 1
-              ? `Deine ${vouchers.length} Gutscheine wurden erfolgreich gekauft.`
-              : 'Dein Gutschein wurde erfolgreich gekauft.'} Du erhältst in Kürze eine Bestätigung per E-Mail.
+            {en
+              ? vouchers.length > 1 ? `Your ${vouchers.length} vouchers have been purchased successfully.` : 'Your voucher has been purchased successfully.'
+              : vouchers.length > 1 ? `Deine ${vouchers.length} Gutscheine wurden erfolgreich gekauft.` : 'Dein Gutschein wurde erfolgreich gekauft.'
+            }{' '}
+            {en ? 'You will receive a confirmation email shortly.' : 'Du erhältst in Kürze eine Bestätigung per E-Mail.'}
           </p>
 
           {vouchers.length > 0 && (
             <div style={{ marginTop: 24 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-                {vouchers.length === 1 ? 'Dein Gutschein-Code' : 'Deine Gutschein-Codes'}
+                {en ? (vouchers.length === 1 ? 'Your voucher code' : 'Your voucher codes') : (vouchers.length === 1 ? 'Dein Gutschein-Code' : 'Deine Gutschein-Codes')}
               </div>
               {vouchers.map(v => (
                 <div key={v.code} className="vc-code-box">
                   <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '0.12em', color: '#0f172a', fontFamily: 'monospace' }}>{v.code}</div>
-                  <div style={{ marginTop: 8, fontSize: 13, color: '#9ca3af' }}>Gültig bis {fmt(v.expiresAt)}</div>
+                  <div style={{ marginTop: 8, fontSize: 13, color: '#9ca3af' }}>{en ? 'Valid until' : 'Gültig bis'} {fmt(v.expiresAt)}</div>
                 </div>
               ))}
             </div>
           )}
 
-          <a href={`/gutschein/${slug}`} style={{ display: 'inline-block', marginTop: 20, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}>
-            Weiteren Gutschein kaufen →
+          <a href={`/gutschein/${slug}${en ? '?lang=en' : ''}`} style={{ display: 'inline-block', marginTop: 20, fontSize: 14, color: accent, fontWeight: 600, textDecoration: 'none' }}>
+            {en ? 'Buy another voucher →' : 'Weiteren Gutschein kaufen →'}
           </a>
         </div>
       </div>

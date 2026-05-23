@@ -14,7 +14,8 @@ function generateCode(): string {
 
 export async function POST(req: Request) {
   try {
-    const { hotelSlug, items, senderName, senderEmail, recipientName, recipientEmail, message } = await req.json();
+    const { hotelSlug, items, lang, senderName, senderEmail, recipientName, recipientEmail, message } = await req.json();
+    const safeLang = lang === 'en' ? 'en' : 'de';
 
     if (!hotelSlug || !Array.isArray(items) || items.length === 0 || !senderName || !senderEmail) {
       return NextResponse.json({ error: 'Pflichtfelder fehlen.' }, { status: 400 });
@@ -91,8 +92,8 @@ export async function POST(req: Request) {
       line_items: lineItems,
       customer_email: senderEmail,
       metadata: { voucherIds, hotelId: String(hotel.id) },
-      success_url: `${base}/gutschein/${hotelSlug}/bestaetigung?codes=${encodeURIComponent(codes)}`,
-      cancel_url: `${base}/gutschein/${hotelSlug}`,
+      success_url: `${base}/gutschein/${hotelSlug}/bestaetigung?codes=${encodeURIComponent(codes)}${safeLang !== 'de' ? `&lang=${safeLang}` : ''}`,
+      cancel_url: `${base}/gutschein/${hotelSlug}${safeLang !== 'de' ? `?lang=${safeLang}` : ''}`,
     });
 
     // Store session reference on all vouchers

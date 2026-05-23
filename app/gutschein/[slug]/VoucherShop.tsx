@@ -46,8 +46,59 @@ type Template = {
 
 type Hotel = { slug: string; name: string; accentColor: string };
 
-function eur(n: number) {
-  return new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(n);
+const STRINGS = {
+  de: {
+    title: 'Gutschein kaufen',
+    subtitle: 'Verschenken Sie ein unvergessliches Erlebnis.',
+    validDays: (n: number) => `${n} Tage gültig`,
+    value: 'Wert:',
+    addBtn: '+ Hinzufügen',
+    selected: (n: number) => `${n} ${n === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt`,
+    next: 'Weiter →',
+    total: 'Gesamt',
+    editCart: '← Warenkorb bearbeiten',
+    yourDetails: 'Ihre Angaben',
+    yourName: 'Ihr Name *',
+    yourEmail: 'Ihre E-Mail-Adresse *',
+    recipient: 'Empfänger',
+    recipientNote: 'Der Gutschein wird auch an die Empfänger-E-Mail geschickt.',
+    recipientName: 'Name des Empfängers',
+    recipientEmail: 'E-Mail des Empfängers',
+    personalMsg: 'Persönliche Nachricht',
+    errorRequired: 'Bitte Name und E-Mail angeben.',
+    errorCheckout: 'Fehler beim Starten des Checkouts.',
+    errorGeneric: 'Ein Fehler ist aufgetreten.',
+    redirecting: 'Weiterleitung …',
+    payNow: (price: string) => `Jetzt bezahlen — ${price}`,
+  },
+  en: {
+    title: 'Buy Gift Voucher',
+    subtitle: 'Give the gift of an unforgettable experience.',
+    validDays: (n: number) => `Valid for ${n} days`,
+    value: 'Value:',
+    addBtn: '+ Add',
+    selected: (n: number) => `${n} ${n === 1 ? 'voucher' : 'vouchers'} selected`,
+    next: 'Continue →',
+    total: 'Total',
+    editCart: '← Edit cart',
+    yourDetails: 'Your details',
+    yourName: 'Your name *',
+    yourEmail: 'Your email address *',
+    recipient: 'Recipient',
+    recipientNote: 'The voucher will also be sent to the recipient\'s email.',
+    recipientName: 'Recipient\'s name',
+    recipientEmail: 'Recipient\'s email',
+    personalMsg: 'Personal message',
+    errorRequired: 'Please enter your name and email.',
+    errorCheckout: 'Error starting checkout.',
+    errorGeneric: 'An error occurred.',
+    redirecting: 'Redirecting …',
+    payNow: (price: string) => `Pay now — ${price}`,
+  },
+};
+
+function eur(n: number, lang = 'de') {
+  return new Intl.NumberFormat(lang === 'en' ? 'en-GB' : 'de-AT', { style: 'currency', currency: 'EUR' }).format(n);
 }
 
 function hexLuminance(hex: string): number {
@@ -59,7 +110,8 @@ function hexLuminance(hex: string): number {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
-export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templates: Template[] }) {
+export default function VoucherShop({ hotel, templates, lang = 'de' }: { hotel: Hotel; templates: Template[]; lang?: string }) {
+  const s = STRINGS[lang === 'en' ? 'en' : 'de'];
   const accent = hotel.accentColor;
   const onAccent = hexLuminance(accent) > 0.4 ? '#111827' : '#ffffff';
 
@@ -95,7 +147,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
   async function handleCheckout() {
     if (cartCount === 0) return;
     if (!senderName.trim() || !senderEmail.trim()) {
-      setError('Bitte Name und E-Mail angeben.');
+      setError(s.errorRequired);
       return;
     }
     setError('');
@@ -108,6 +160,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         body: JSON.stringify({
           hotelSlug: hotel.slug,
           items,
+          lang,
           senderName: senderName.trim(),
           senderEmail: senderEmail.trim(),
           recipientName: recipientName.trim() || null,
@@ -116,10 +169,10 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Fehler beim Starten des Checkouts.');
+      if (!res.ok) throw new Error(data.error || s.errorCheckout);
       if (data.url) window.location.href = data.url;
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten.');
+      setError(e instanceof Error ? e.message : s.errorGeneric);
     } finally {
       setLoading(false);
     }
@@ -188,8 +241,8 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
         {/* Header */}
         <div style={{ marginBottom: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--vs-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{hotel.name}</div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--vs-text)' }}>Gutschein kaufen</h1>
-          <p style={{ marginTop: 6, fontSize: 15, color: 'var(--vs-muted)' }}>Verschenken Sie ein unvergessliches Erlebnis.</p>
+          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--vs-text)' }}>{s.title}</h1>
+          <p style={{ marginTop: 6, fontSize: 15, color: 'var(--vs-muted)' }}>{s.subtitle}</p>
         </div>
 
         {step === 'select' && (
@@ -209,17 +262,17 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: 16 }}>{t.name}</div>
                       {t.description && <div style={{ fontSize: 13, color: 'var(--vs-muted)', marginTop: 3, lineHeight: 1.4 }}>{t.description}</div>}
-                      <div style={{ fontSize: 12, color: 'var(--vs-faint)', marginTop: 4 }}>{t.validDays} Tage gültig</div>
+                      <div style={{ fontSize: 12, color: 'var(--vs-faint)', marginTop: 4 }}>{s.validDays(t.validDays)}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price)}</div>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(t.price, lang)}</div>
                         {t.value !== t.price && (
-                          <div style={{ fontSize: 12, color: 'var(--vs-faint)' }}>Wert: {eur(t.value)}</div>
+                          <div style={{ fontSize: 12, color: 'var(--vs-faint)' }}>{s.value} {eur(t.value, lang)}</div>
                         )}
                       </div>
                       {qty === 0 ? (
-                        <button className="vs-qty-btn add-first" onClick={() => addItem(t.id)}>+ Hinzufügen</button>
+                        <button className="vs-qty-btn add-first" onClick={() => addItem(t.id)}>{s.addBtn}</button>
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <button className="vs-qty-btn" onClick={() => removeItem(t.id)}>−</button>
@@ -236,14 +289,14 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             {cartCount > 0 && (
               <div style={{ padding: '6px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'vs-fade-in 0.3s ease both' }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--vs-label)' }}>
-                  {cartCount} {cartCount === 1 ? 'Gutschein' : 'Gutscheine'} ausgewählt
+                  {s.selected(cartCount)}
                 </div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(animatedTotal)}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--vs-accent)' }}>{eur(animatedTotal, lang)}</div>
               </div>
             )}
 
             <button className="vs-btn" disabled={cartCount === 0} onClick={() => setStep('form')} style={{ margin: '4px auto 0', width: '50%' }}>
-              Weiter →
+              {s.next}
             </button>
           </div>
         )}
@@ -258,46 +311,46 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
                     <span style={{ color: 'var(--vs-faint)', fontWeight: 600, marginRight: 6, fontVariantNumeric: 'tabular-nums' }}>{cart.get(t.id)}×</span>
                     {t.name}
                   </div>
-                  <div style={{ fontSize: 14, color: 'var(--vs-label)', fontWeight: 500 }}>{eur((cart.get(t.id)!) * t.price)}</div>
+                  <div style={{ fontSize: 14, color: 'var(--vs-label)', fontWeight: 500 }}>{eur((cart.get(t.id)!) * t.price, lang)}</div>
                 </div>
               ))}
               <div style={{ borderTop: '1px solid var(--vs-border-subtle)', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--vs-text)' }}>Gesamt</span>
-                <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--vs-accent)' }}>{eur(cartTotal)}</span>
+                <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--vs-text)' }}>{s.total}</span>
+                <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--vs-accent)' }}>{eur(cartTotal, lang)}</span>
               </div>
               <button onClick={() => setStep('select')} style={{ marginTop: 10, fontSize: 13, color: 'var(--vs-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: 0, opacity: 0.85 }}>
-                ← Warenkorb bearbeiten
+                {s.editCart}
               </button>
             </div>
 
             <div className="vs-card" style={{ padding: 20 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 16 }}>Ihre Angaben</div>
+              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 16 }}>{s.yourDetails}</div>
               <div style={{ display: 'grid', gap: 14 }}>
                 <div>
-                  <label style={labelStyle}>Ihr Name *</label>
+                  <label style={labelStyle}>{s.yourName}</label>
                   <input style={inputStyle} value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="Max Mustermann" />
                 </div>
                 <div>
-                  <label style={labelStyle}>Ihre E-Mail-Adresse *</label>
+                  <label style={labelStyle}>{s.yourEmail}</label>
                   <input style={inputStyle} type="email" value={senderEmail} onChange={(e) => setSenderEmail(e.target.value)} placeholder="max@beispiel.at" />
                 </div>
               </div>
             </div>
 
             <div className="vs-card" style={{ padding: 20 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Empfänger <span style={{ fontWeight: 400, color: 'var(--vs-faint)', fontSize: 13 }}>(optional)</span></div>
-              <p style={{ fontSize: 13, color: 'var(--vs-muted)', marginBottom: 16, lineHeight: 1.5 }}>Der Gutschein wird auch an die Empfänger-E-Mail geschickt.</p>
+              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{s.recipient} <span style={{ fontWeight: 400, color: 'var(--vs-faint)', fontSize: 13 }}>(optional)</span></div>
+              <p style={{ fontSize: 13, color: 'var(--vs-muted)', marginBottom: 16, lineHeight: 1.5 }}>{s.recipientNote}</p>
               <div style={{ display: 'grid', gap: 14 }}>
                 <div>
-                  <label style={labelStyle}>Name des Empfängers</label>
+                  <label style={labelStyle}>{s.recipientName}</label>
                   <input style={inputStyle} value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Anna Muster" />
                 </div>
                 <div>
-                  <label style={labelStyle}>E-Mail des Empfängers</label>
+                  <label style={labelStyle}>{s.recipientEmail}</label>
                   <input style={inputStyle} type="email" value={recipientEmail} onChange={(e) => setRecipientEmail(e.target.value)} placeholder="anna@beispiel.at" />
                 </div>
                 <div>
-                  <label style={labelStyle}>Persönliche Nachricht</label>
+                  <label style={labelStyle}>{s.personalMsg}</label>
                   <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={3} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Alles Gute zum Geburtstag! 🎉" />
                 </div>
               </div>
@@ -306,7 +359,7 @@ export default function VoucherShop({ hotel, templates }: { hotel: Hotel; templa
             {error && <p style={{ fontSize: 14, color: 'var(--vs-error)' }}>{error}</p>}
 
             <button className="vs-btn" onClick={handleCheckout} disabled={loading}>
-              {loading ? 'Weiterleitung …' : `Jetzt bezahlen — ${eur(cartTotal)}`}
+              {loading ? s.redirecting : s.payNow(eur(cartTotal, lang))}
             </button>
           </div>
         )}
