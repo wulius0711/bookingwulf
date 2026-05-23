@@ -13,14 +13,14 @@ export async function POST(req: Request) {
   try {
     const { code, hotelSlug } = await req.json();
     if (!code || !hotelSlug) {
-      return NextResponse.json({ valid: false, error: 'Code fehlt.' });
+      return NextResponse.json({ valid: false, errorCode: 'missing_code' });
     }
 
     const hotel = await prisma.hotel.findUnique({
       where: { slug: hotelSlug },
       select: { id: true },
     });
-    if (!hotel) return NextResponse.json({ valid: false, error: 'Hotel nicht gefunden.' });
+    if (!hotel) return NextResponse.json({ valid: false, errorCode: 'hotel_not_found' });
 
     const voucher = await prisma.voucher.findFirst({
       where: {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     });
 
     if (!voucher) {
-      return NextResponse.json({ valid: false, error: 'Gutschein nicht gefunden oder bereits eingelöst.' });
+      return NextResponse.json({ valid: false, errorCode: 'not_found' });
     }
 
     return NextResponse.json({
@@ -42,6 +42,6 @@ export async function POST(req: Request) {
     });
   } catch (e) {
     console.error('[vouchers/validate]', e);
-    return NextResponse.json({ valid: false, error: 'Interner Fehler.' });
+    return NextResponse.json({ valid: false, errorCode: 'server_error' });
   }
 }
