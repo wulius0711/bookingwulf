@@ -3,6 +3,7 @@ import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
 import { saveChatbotSettings, scrapeWebsite } from './actions';
 import SaveButton from '../components/SaveButton';
+import FaqEditor from './FaqEditor';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,9 +26,9 @@ export default async function ChatbotPage() {
 
   if (!hotel) redirect('/admin');
 
-  const faqText = hotel.chatbotFaq
-    ? JSON.stringify(hotel.chatbotFaq, null, 2)
-    : '';
+  const faqEntries = Array.isArray(hotel.chatbotFaq)
+    ? (hotel.chatbotFaq as { question: string; answer: string }[])
+    : [];
 
   const scrapedAt = hotel.chatbotScrapedAt
     ? new Intl.DateTimeFormat('de-AT', { dateStyle: 'short', timeStyle: 'short' }).format(hotel.chatbotScrapedAt)
@@ -37,7 +38,7 @@ export default async function ChatbotPage() {
     <main className="admin-page" style={{ maxWidth: 720 }}>
       <h1 style={{ margin: '0 0 4px' }}>Gast-Chatbot</h1>
       <p style={{ margin: '0 0 32px', fontSize: 14, color: 'var(--text-secondary)' }}>
-        KI-Assistent für Gäste — beantworten Fragen, empfehlen Apartments und generieren Buchungslinks.
+        KI-Assistent für Gäste — beantwortet Fragen, empfiehlt Apartments und generiert Buchungslinks.
       </p>
 
       {/* ── Einstellungen ──────────────────────────────────────────── */}
@@ -152,35 +153,12 @@ export default async function ChatbotPage() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────── */}
-      <form action={saveChatbotSettings}>
-        <section className="admin-card" style={{ marginBottom: 24 }}>
-          <h2 style={{ margin: '0 0 6px', fontSize: 16 }}>Manuelle FAQ <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>(optional)</span></h2>
-          <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--text-secondary)' }}>
-            Für Infos die nicht auf der Website stehen. Format: JSON-Array mit <code>question</code> und <code>answer</code>.
-          </p>
-          <textarea
-            name="chatbotFaq"
-            defaultValue={faqText}
-            rows={8}
-            placeholder={'[\n  {"question": "Sind Haustiere erlaubt?", "answer": "Kleine Hunde bis 10 kg sind willkommen."}\n]'}
-            style={{
-              width: '100%', padding: '10px 12px', fontSize: 13, fontFamily: 'monospace',
-              border: '1.5px solid var(--border)', borderRadius: 8,
-              background: 'var(--surface-1)', color: 'var(--text-primary)',
-              outline: 'none', resize: 'vertical', boxSizing: 'border-box',
-            }}
-          />
-
-          {/* Hidden fields to preserve other values when saving FAQ */}
-          <input type="hidden" name="chatbotEnabled" value={hotel.chatbotEnabled ? 'on' : 'off'} />
-          <input type="hidden" name="chatbotName" value={hotel.chatbotName ?? ''} />
-          <input type="hidden" name="chatbotColor" value={hotel.chatbotColor ?? '#1a1a1a'} />
-        </section>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <SaveButton label="FAQ speichern" />
-        </div>
-      </form>
+      <FaqEditor
+        initialFaq={faqEntries}
+        chatbotEnabled={hotel.chatbotEnabled}
+        chatbotName={hotel.chatbotName ?? ''}
+        chatbotColor={hotel.chatbotColor ?? '#1a1a1a'}
+      />
 
     </main>
   );
