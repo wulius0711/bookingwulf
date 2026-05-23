@@ -3,14 +3,14 @@ import { prisma } from '@/src/lib/prisma';
 import { encrypt } from '@/src/lib/session-crypto';
 
 export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get('token');
+  const verifyToken = req.nextUrl.searchParams.get('token');
 
-  if (!token) {
+  if (!verifyToken) {
     return NextResponse.redirect(new URL('/register?error=invalid_token', req.url));
   }
 
   const user = await prisma.adminUser.findUnique({
-    where: { emailVerifyToken: token },
+    where: { emailVerifyToken: verifyToken },
     include: {
       userHotels: { orderBy: { hotelId: 'asc' }, take: 1 },
     },
