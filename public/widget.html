@@ -2915,7 +2915,7 @@
           <div id="bw-voucher-link" style="display:none;text-align:center;padding:14px 0 4px;">
             <a id="bw-voucher-anchor" href="#" target="_blank" rel="noopener" class="bw-voucher-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-              Gutschein verschenken
+              <span id="bw-voucher-label"></span>
             </a>
           </div>
         </aside>
@@ -3068,6 +3068,14 @@
             total_nights: 'Gesamt {n} Nächte',
             incl_vat: 'inkl. MwSt.',
             free: 'Gratis',
+            voucher_redeem: 'Gutschein-Code einlösen',
+            voucher_apply_btn: 'Einlösen',
+            voucher_applied: '✓ Gutschein angewendet',
+            voucher_remove: '✕ Entfernen',
+            voucher_label: 'Gutschein ({code})',
+            voucher_error_invalid: 'Ungültiger Code.',
+            voucher_error_connection: 'Verbindungsfehler.',
+            voucher_gift_btn: 'Gutschein verschenken',
             ortstaxe: 'Ortstaxe',
             ortstaxe_min_age: '(ab {n} J.)',
             extras_per_night: '{name} ({n} Nächte)',
@@ -3197,6 +3205,14 @@
             total_nights: 'Total {n} nights',
             incl_vat: 'incl. VAT',
             free: 'Free',
+            voucher_redeem: 'Redeem voucher code',
+            voucher_apply_btn: 'Redeem',
+            voucher_applied: '✓ Voucher applied',
+            voucher_remove: '✕ Remove',
+            voucher_label: 'Voucher ({code})',
+            voucher_error_invalid: 'Invalid code.',
+            voucher_error_connection: 'Connection error.',
+            voucher_gift_btn: 'Gift a voucher',
             ortstaxe: 'City tax',
             ortstaxe_min_age: '(from {n} y.)',
             extras_per_night: '{name} ({n} nights)',
@@ -3588,8 +3604,10 @@
             if (data.vouchersEnabled) {
               var voucherLink = document.getElementById('bw-voucher-link');
               var voucherAnchor = document.getElementById('bw-voucher-anchor');
+              var voucherLabel = document.getElementById('bw-voucher-label');
               if (voucherLink) voucherLink.style.display = 'block';
               if (voucherAnchor) voucherAnchor.href = (API_BASE || '') + '/gutschein/' + HOTEL_SLUG;
+              if (voucherLabel) voucherLabel.textContent = t('voucher_gift_btn');
             }
             if (data.settings) {
               state.ortstaxeMode = data.settings.ortstaxeMode || 'off';
@@ -5103,7 +5121,7 @@
             if (state.voucherData) {
               const raw = getRawTotal();
               const discount = Math.min(state.voucherData.value, raw);
-              rows += `<div style="${rowStyle}"><span style="color:#16a34a;font-weight:600;">Gutschein (${state.voucherData.code})</span><span style="color:#16a34a;font-weight:600;">−${eur(discount)}</span></div>`;
+              rows += `<div style="${rowStyle}"><span style="color:#16a34a;font-weight:600;">${t('voucher_label', { code: state.voucherData.code })}</span><span style="color:#16a34a;font-weight:600;">−${eur(discount)}</span></div>`;
             }
 
             breakdownEl.innerHTML = rows;
@@ -5122,8 +5140,8 @@
           if (state.voucherData) {
             el.innerHTML =
               '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13px;">' +
-              '<span style="color:#166534;font-weight:600;">✓ Gutschein angewendet</span>' +
-              '<button type="button" id="voucherRemoveBtn" style="font-size:12px;color:#6b7280;background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;">✕ Entfernen</button>' +
+              '<span style="color:#166534;font-weight:600;">' + t('voucher_applied') + '</span>' +
+              '<button type="button" id="voucherRemoveBtn" style="font-size:12px;color:#6b7280;background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;">' + t('voucher_remove') + '</button>' +
               '</div>';
             document.getElementById('voucherRemoveBtn').addEventListener('click', () => {
               state.voucherData = null;
@@ -5139,14 +5157,14 @@
             '<div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;">' +
             '<button type="button" id="voucherToggleBtn" style="width:100%;text-align:left;padding:9px 12px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>' +
-            'Gutschein-Code einlösen' +
+            t('voucher_redeem') +
             '<svg id="voucherChevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>' +
             '</button>' +
             '<div id="voucherInputArea" style="display:none;padding:10px 12px;border-top:1px solid var(--line);">' +
             '<div style="display:flex;gap:8px;">' +
             '<input id="voucherCodeInput" type="text" value="' + state.voucherCode + '" placeholder="XXXX-XXXX-XXXX" maxlength="14" style="flex:1;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:monospace;text-transform:uppercase;outline:none;" />' +
             '<button type="button" id="voucherApplyBtn" style="padding:8px 14px;background:var(--accent,#111827);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">' +
-            (state.voucherLoading ? '…' : 'Einlösen') +
+            (state.voucherLoading ? '…' : t('voucher_apply_btn')) +
             '</button>' +
             '</div>' +
             (state.voucherError ? '<div style="margin-top:6px;font-size:12px;color:#dc2626;">' + state.voucherError + '</div>' : '') +
@@ -5192,10 +5210,10 @@
                 state.voucherError = '';
               } else {
                 state.voucherData = null;
-                state.voucherError = data.error || 'Ungültiger Code.';
+                state.voucherError = data.error || t('voucher_error_invalid');
               }
             } catch {
-              state.voucherError = 'Verbindungsfehler.';
+              state.voucherError = t('voucher_error_connection');
             }
             state.voucherLoading = false;
             renderSummary();
