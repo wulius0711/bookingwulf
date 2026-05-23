@@ -11,6 +11,9 @@ export async function requestDemo(_prev: DemoState, formData: FormData): Promise
   const phone   = (formData.get('phone')   as string | null)?.trim() ?? '';
   const message = (formData.get('message') as string | null)?.trim() ?? '';
 
+  const honeypot = (formData.get('website') as string | null) ?? '';
+  if (honeypot) return { success: true }; // silently ignore bots
+
   if (!name || !hotel || !email) return { error: 'Bitte alle Pflichtfelder ausfüllen.' };
 
   const resend = getResend();

@@ -116,6 +116,8 @@ function DemoForm() {
         <label style={labelStyle}>Nachricht <span style={{ fontWeight: 400, color: 'var(--v4-muted)' }}>(optional)</span></label>
         <textarea name="message" rows={3} placeholder="z.B. aktuelle Software, Anzahl Apartments, Fragen …" style={{ ...inputStyle, resize: 'vertical' }} />
       </div>
+      {/* Honeypot: bots fill this, humans don't */}
+      <input name="website" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
       {state?.error && (
         <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{state.error}</p>
       )}
