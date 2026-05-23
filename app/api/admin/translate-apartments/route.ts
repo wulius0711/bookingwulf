@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { Prisma } from '@/src/generated/prisma';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { autoTranslateFields, translateList } from '@/src/lib/translate';
@@ -13,7 +14,7 @@ export async function POST() {
 
   const apartments = await prisma.apartment.findMany({
     where: {
-      translationsJson: null,
+      translationsJson: { equals: Prisma.DbNull },
       OR: [{ description: { not: null } }, { amenities: { isEmpty: false } }],
     },
     select: { id: true, description: true, amenities: true },
