@@ -17,6 +17,11 @@ async function translateBatch(texts: string[], targetLang: string): Promise<stri
   return data.translations.map((t) => t.text);
 }
 
+export async function translateList(items: string[], targetLang: string): Promise<string[]> {
+  if (!items.length) return items;
+  return translateBatch(items, targetLang);
+}
+
 // Translates a map of { fieldName: deText } into { en: { fieldName: '...' }, it: { fieldName: '...' } }
 // Only non-empty strings are translated. Existing translations are merged in (not overwritten if unchanged).
 export async function autoTranslateFields(

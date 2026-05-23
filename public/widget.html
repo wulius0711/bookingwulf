@@ -6039,7 +6039,7 @@
 
           try {
             const res = await fetch(
-              `${API_BASE}/api/apartments?hotel=${HOTEL_SLUG}`,
+              `${API_BASE}/api/apartments?hotel=${HOTEL_SLUG}&lang=${LANG}`,
             );
             if (!res.ok) {
               throw new Error(

@@ -21,6 +21,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const hotelSlug = searchParams.get('hotel');
+    const lang = searchParams.get('lang') ?? 'de';
 
     if (!hotelSlug) {
       return Response.json(
@@ -52,12 +53,13 @@ export async function GET(req: Request) {
         name: true,
         slug: true,
         description: true,
+        amenities: true,
+        translationsJson: true,
         maxAdults: true,
         maxChildren: true,
         bedrooms: true,
         size: true,
         view: true,
-        amenities: true,
         basePrice: true,
         cleaningFee: true,
         images: {
@@ -77,7 +79,19 @@ export async function GET(req: Request) {
       },
     });
 
-    return Response.json(apartments, {
+    const result = apartments.map((apt) => {
+      const trans = lang !== 'de' && apt.translationsJson
+        ? (apt.translationsJson as Record<string, { description?: string; amenities?: string[] }>)[lang]
+        : null;
+      const { translationsJson: _t, ...rest } = apt;
+      return {
+        ...rest,
+        description: trans?.description ?? apt.description,
+        amenities: trans?.amenities ?? apt.amenities,
+      };
+    });
+
+    return Response.json(result, {
       headers: corsHeaders,
     });
   } catch (error) {

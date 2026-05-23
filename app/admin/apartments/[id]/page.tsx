@@ -8,7 +8,7 @@ import IcalSection from './IcalSection';
 import NukiLockSection from './NukiLockSection';
 import { getNukiLocks } from '@/src/lib/nuki';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
-import { autoTranslateFields } from '@/src/lib/translate';
+import { autoTranslateFields, translateList } from '@/src/lib/translate';
 
 export const dynamic = 'force-dynamic';
 
@@ -146,13 +146,27 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
     const existingApt = await prisma.apartment.findUnique({
       where: { id: apartmentId },
-      select: { gpTranslationsJson: true },
+      select: { gpTranslationsJson: true, translationsJson: true },
     });
 
     const gpTranslationsJson = await autoTranslateFields(
       { checkinInfo: gpCheckinInfo || null, houseRules: gpHouseRules || null, parkingInfo: gpParkingInfo || null, wasteInfo: gpWasteInfo || null },
       existingApt?.gpTranslationsJson as Record<string, Record<string, string>> | null,
     );
+
+    // Translate description + amenities into EN and IT
+    const existingTrans = existingApt?.translationsJson as Record<string, { description?: string; amenities?: string[] }> | null;
+    const descTrans = await autoTranslateFields(
+      { description: description || null },
+      existingTrans ? Object.fromEntries(Object.entries(existingTrans).map(([l, v]) => [l, { description: v.description ?? '' }])) : null,
+    );
+    const translationsJson: Record<string, { description?: string; amenities?: string[] }> = {};
+    for (const lang of ['en', 'it']) {
+      translationsJson[lang] = { description: descTrans[lang]?.description };
+      if (amenities.length) {
+        translationsJson[lang].amenities = await translateList(amenities, lang);
+      }
+    }
 
     await prisma.apartment.update({
       where: { id: apartmentId },
@@ -180,6 +194,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         gpWasteInfo:    gpWasteInfo    || null,
         gpHouseRules:   gpHouseRules   || null,
         gpTranslationsJson,
+        translationsJson,
       },
     });
 

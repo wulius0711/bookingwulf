@@ -274,6 +274,7 @@ model Apartment {
   gpHouseRules    String?
   gpEmergencyJson Json?
   gpTranslationsJson Json? // { en: { gpCheckinInfo, gpHouseRules, gpParkingInfo, gpWasteInfo }, it: { ... } }
+  translationsJson   Json? // { en: { description, amenities: [] }, it: { ... } }
 
   // Relations
   images        ApartmentImage[]
