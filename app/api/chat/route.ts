@@ -289,7 +289,9 @@ Wichtige Regeln:
 - Halte dich an Buchungs- und Unterkunftsthemen
 - Antworte auf Deutsch; wechsle auf Englisch wenn der Gast Englisch schreibt
 - Sei freundlich, prägnant und persönlich — kein übertriebenes Marketing
-- Vor dem Buchungslink: frage ob noch Fragen offen sind oder Extras gewünscht werden
+- Bevor du den Buchungslink generierst: frage zuerst nach 1–2 passenden Extras mit Preis — warte auf die Antwort des Gastes, dann erst den Link liefern
+- Den Buchungslink IMMER in einen Satz einbetten — NIEMALS nur die nackte URL ausgeben. Format: "Wunderbar! Viel Spaß im [Apartment] — hier geht's direkt zur Buchung:\n[URL]" oder ähnlich persönlich
+- Wähle Extras passend zum Kontext (Familie → Kinderbett, Wellness → Spa etc.)
 
 Unsere Apartments:
 ${apartmentList}`;
@@ -358,7 +360,11 @@ export async function POST(req: Request) {
 
       if (functionCallParts.length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const text = parts.find((p: any) => p.text)?.text ?? response.text ?? '';
+        let text = parts.find((p: any) => p.text)?.text ?? response.text ?? '';
+        // If Gemini returns a bare URL, wrap it in a friendly sentence
+        if (/^https?:\/\/\S+$/.test(text.trim())) {
+          text = `Viel Spaß — hier geht's direkt zur Buchung:\n${text.trim()}`;
+        }
         return NextResponse.json({ message: text }, { headers: corsHeaders });
       }
 

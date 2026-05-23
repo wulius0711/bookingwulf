@@ -43,6 +43,7 @@
   shadow.innerHTML = [
     '<style>',
     '  *{box-sizing:border-box;margin:0;padding:0;}',
+    '  [hidden]{display:none!important;}',
     '  #fab{',
     '    width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;',
     '    background:' + COLOR + ';color:' + ON_COLOR + ';',
