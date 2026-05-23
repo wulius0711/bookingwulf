@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { createVoucherTemplate, toggleVoucherTemplate, cancelVoucher } from './actions';
 import DeleteTemplateButton from './DeleteTemplateButton';
 import { Button, EmptyState } from '../components/ui';
+import EditTemplateForm from './EditTemplateForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -129,6 +130,7 @@ export default async function VouchersPage() {
                       {t.description && <div style={{ fontSize: 13, color: 'var(--text-disabled)', marginTop: 2 }}>{t.description}</div>}
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      <EditTemplateForm template={t} />
                       <form action={toggleVoucherTemplate.bind(null, t.id, !t.isActive)}>
                         <Button variant="secondary" size="sm" type="submit">
                           {t.isActive ? 'Deaktivieren' : 'Aktivieren'}
