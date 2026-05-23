@@ -1,9 +1,8 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { createVoucherTemplate, toggleVoucherTemplate, cancelVoucher } from './actions';
-import DeleteTemplateButton from './DeleteTemplateButton';
+import { createVoucherTemplate, cancelVoucher } from './actions';
 import { Button, EmptyState } from '../components/ui';
-import EditTemplateForm from './EditTemplateForm';
+import TemplateCard from './TemplateCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,12 +10,6 @@ const eur = (n: number | { toNumber: () => number }) =>
   new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(
     typeof n === 'number' ? n : n.toNumber()
   );
-
-const TYPE_LABELS: Record<string, string> = {
-  value: 'Wertgutschein',
-  nights: 'Übernachtungsgutschein',
-  service: 'Leistungsgutschein',
-};
 
 const STATUS_COLORS: Record<string, string> = {
   pending: 'var(--status-pending-bg)',
@@ -120,26 +113,10 @@ export default async function VouchersPage() {
             <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700 }}>Vorlagen ({templates.length})</h2>
             <div style={{ display: 'grid', gap: 12 }}>
               {templates.map((t) => (
-                <div key={t.id} style={{ border: '1px solid var(--border)', borderRadius: 12, padding: 16, opacity: t.isActive ? 1 : 0.55 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 15 }}>{t.name}</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>
-                        {TYPE_LABELS[t.type]} · Nennwert {eur(t.value)} · Verkauf {eur(t.price)} · {t.validDays} Tage gültig
-                      </div>
-                      {t.description && <div style={{ fontSize: 13, color: 'var(--text-disabled)', marginTop: 2 }}>{t.description}</div>}
-                    </div>
-                    <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                      <EditTemplateForm template={t} />
-                      <form action={toggleVoucherTemplate.bind(null, t.id, !t.isActive)}>
-                        <Button variant="secondary" size="sm" type="submit">
-                          {t.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                        </Button>
-                      </form>
-                      <DeleteTemplateButton id={t.id} />
-                    </div>
-                  </div>
-                </div>
+                <TemplateCard
+                  key={t.id}
+                  template={{ ...t, value: Number(t.value), price: Number(t.price) }}
+                />
               ))}
             </div>
           </div>
