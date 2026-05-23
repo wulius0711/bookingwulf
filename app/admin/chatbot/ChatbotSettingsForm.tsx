@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import { saveChatbotSettings } from './actions';
-import Toggle from '../components/ui/Toggle';
 import SaveButton from '../components/SaveButton';
 
 const DEFAULT_AVATAR = (
@@ -48,7 +47,26 @@ export default function ChatbotSettingsForm({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
           <input type="hidden" name="chatbotEnabled" value={enabled ? 'on' : 'off'} />
-          <Toggle label="Chatbot aktivieren" checked={enabled} onChange={setEnabled} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: 14, fontWeight: 500 }}>Chatbot aktivieren</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={enabled}
+              onClick={() => setEnabled(v => !v)}
+              style={{
+                width: 44, height: 26, borderRadius: 13, border: 'none', cursor: 'pointer',
+                background: enabled ? '#22c55e' : 'rgba(120,120,120,0.3)',
+                position: 'relative', transition: 'background 0.2s', flexShrink: 0, padding: 0,
+              }}
+            >
+              <span style={{
+                position: 'absolute', top: 3, left: enabled ? 21 : 3,
+                width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+              }} />
+            </button>
+          </div>
 
           <hr style={{ margin: 0, border: 'none', borderTop: '1px solid var(--border)' }} />
 
@@ -64,7 +82,7 @@ export default function ChatbotSettingsForm({
                 title="Bild hochladen"
                 style={{
                   width: 56, height: 56, borderRadius: '50%', border: '2px solid var(--border)',
-                  background: 'var(--accent)', cursor: 'pointer', overflow: 'hidden',
+                  background: '#4b5563', cursor: 'pointer', overflow: 'hidden',
                   padding: 0, flexShrink: 0, position: 'relative',
                 }}
               >
