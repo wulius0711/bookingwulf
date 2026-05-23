@@ -184,12 +184,13 @@
   ].join('\n');
 
   // ── DOM refs ───────────────────────────────────────────────────────────────
-  var fab      = shadow.getElementById('fab');
-  var panel    = shadow.getElementById('panel');
-  var msgsEl   = shadow.getElementById('messages');
-  var typingEl = shadow.getElementById('typing');
-  var textarea = shadow.getElementById('textarea');
-  var sendBtn  = shadow.getElementById('send');
+  var fab        = shadow.getElementById('fab');
+  var panel      = shadow.getElementById('panel');
+  var msgsEl     = shadow.getElementById('messages');
+  var typingEl   = shadow.getElementById('typing');
+  var textarea   = shadow.getElementById('textarea');
+  var sendBtn    = shadow.getElementById('send');
+  var headerName = shadow.getElementById('header-name');
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function escHtml(s) {
@@ -254,6 +255,7 @@
       .then(function(res) { return res.json(); })
       .then(function(data) {
         typingEl.hidden = true;
+        if (data.assistantName && headerName) { headerName.textContent = data.assistantName; }
         if (data.message) {
           messages.push({ role: 'assistant', content: data.message });
           addMessage('assistant', data.message);

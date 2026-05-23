@@ -221,7 +221,7 @@ async function loadHotel(slug: string) {
     where: { slug },
     select: {
       id: true, name: true, slug: true,
-      chatbotEnabled: true, chatbotColor: true,
+      chatbotEnabled: true, chatbotName: true, chatbotColor: true,
       chatbotContext: true, chatbotFaq: true,
       settings: {
         select: {
@@ -265,7 +265,8 @@ function buildSystemPrompt(hotel: NonNullable<Awaited<ReturnType<typeof loadHote
     return `- ${header}${desc}${amenities}`;
   }).join('\n');
 
-  let prompt = `Du bist ein freundlicher und kompetenter Buchungsassistent für ${hotel.name}.
+  const assistantName = hotel.chatbotName || 'Buchungs-Assistent';
+  let prompt = `Du bist ${assistantName}, ein freundlicher und kompetenter Buchungsassistent für ${hotel.name}.
 
 Deine Aufgaben:
 - Beantworte Fragen zur Unterkunft, Ausstattung, Lage, Preisen und Policies
@@ -379,7 +380,7 @@ export async function POST(req: Request) {
           // Response ends with URL and no closing sentence — append one
           text = `${text.trim()}\n\nBei Fragen bin ich gerne da.`;
         }
-        return NextResponse.json({ message: text }, { headers: corsHeaders });
+        return NextResponse.json({ message: text, assistantName: hotel.chatbotName || null }, { headers: corsHeaders });
       }
 
       // Append model's turn (with function calls)

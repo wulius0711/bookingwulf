@@ -44,6 +44,7 @@ model Hotel {
 
   // chatbot
   chatbotEnabled   Boolean   @default(false)
+  chatbotName      String?
   chatbotColor     String    @default("#1a1a1a")
   chatbotContext   String?   // gescrapter Website-Text (via Jina Reader)
   chatbotFaq       Json?     // manuelle Ergänzungen: [{question, answer}]
