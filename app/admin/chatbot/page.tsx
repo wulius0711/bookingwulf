@@ -1,8 +1,8 @@
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
-import { saveChatbotSettings, scrapeWebsite } from './actions';
-import SaveButton from '../components/SaveButton';
+import { scrapeWebsite } from './actions';
+import ChatbotSettingsForm from './ChatbotSettingsForm';
 import FaqEditor from './FaqEditor';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +16,7 @@ export default async function ChatbotPage() {
     select: {
       chatbotEnabled: true,
       chatbotName: true,
+      chatbotAvatar: true,
       chatbotColor: true,
       chatbotContext: true,
       chatbotSourceUrl: true,
@@ -42,69 +43,12 @@ export default async function ChatbotPage() {
       </p>
 
       {/* ── Einstellungen ──────────────────────────────────────────── */}
-      <form action={saveChatbotSettings}>
-        <section className="admin-card" style={{ marginBottom: 24 }}>
-          <h2 style={{ margin: '0 0 20px', fontSize: 16 }}>Einstellungen</h2>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-
-            {/* Toggle */}
-            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-              <span style={{ fontSize: 14, fontWeight: 500 }}>Chatbot aktivieren</span>
-              <input
-                type="checkbox"
-                name="chatbotEnabled"
-                defaultChecked={hotel.chatbotEnabled}
-                style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }}
-              />
-            </label>
-
-            <hr style={{ margin: 0, border: 'none', borderTop: '1px solid var(--border)' }} />
-
-            {/* Name */}
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>
-                Name des Assistenten <span style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>(optional)</span>
-              </label>
-              <input
-                type="text"
-                name="chatbotName"
-                defaultValue={hotel.chatbotName ?? ''}
-                placeholder="Buchungs-Assistent"
-                style={{
-                  width: '100%', padding: '9px 12px', fontSize: 14,
-                  border: '1.5px solid var(--border)', borderRadius: 8,
-                  background: 'var(--surface-1)', color: 'var(--text-primary)',
-                  outline: 'none',
-                }}
-              />
-            </div>
-
-            {/* Farbe */}
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>
-                Akzentfarbe
-              </label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <input
-                  type="color"
-                  name="chatbotColor"
-                  defaultValue={hotel.chatbotColor ?? '#1a1a1a'}
-                  style={{ width: 40, height: 36, padding: 2, border: '1.5px solid var(--border)', borderRadius: 8, cursor: 'pointer' }}
-                />
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                  Farbe des Chat-Buttons und der Nachrichten-Bubbles
-                </span>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 32 }}>
-          <SaveButton label="Speichern" />
-        </div>
-      </form>
+      <ChatbotSettingsForm
+        initialEnabled={hotel.chatbotEnabled}
+        initialName={hotel.chatbotName ?? ''}
+        initialAvatar={hotel.chatbotAvatar ?? null}
+        initialColor={hotel.chatbotColor ?? '#1a1a1a'}
+      />
 
       {/* ── Website-Kontext ────────────────────────────────────────── */}
       <section className="admin-card" style={{ marginBottom: 24 }}>

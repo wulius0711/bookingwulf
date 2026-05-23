@@ -25,6 +25,9 @@
   }
   const ON_COLOR = luminance(COLOR) > 0.4 ? '#111827' : '#ffffff';
 
+  // ── Default avatar SVG ─────────────────────────────────────────────────────
+  var DEFAULT_AVATAR_SVG = '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="14" r="7" fill="rgba(255,255,255,0.9)"/><path d="M6 32c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="rgba(255,255,255,0.9)"/></svg>';
+
   // ── State ──────────────────────────────────────────────────────────────────
   var messages = [];
   var isLoading = false;
@@ -82,11 +85,13 @@
     '    padding:16px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;',
     '  }',
     '  #header-avatar{',
-    '    width:36px;height:36px;border-radius:50%;',
+    '    width:40px;height:40px;border-radius:50%;',
     '    background:rgba(255,255,255,0.2);',
     '    display:flex;align-items:center;justify-content:center;flex-shrink:0;',
+    '    overflow:hidden;',
     '  }',
-    '  #header-avatar svg{width:18px;height:18px;}',
+    '  #header-avatar svg{width:36px;height:36px;}',
+    '  #header-avatar img{width:100%;height:100%;object-fit:cover;}',
     '  #header-text{flex:1;min-width:0;}',
     '  #header-name{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
     '  #header-sub{font-size:12px;opacity:0.75;margin-top:1px;}',
@@ -157,11 +162,7 @@
 
     '<div id="panel" role="dialog" aria-modal="true" aria-label="Buchungs-Assistent">',
     '  <div id="header">',
-    '    <div id="header-avatar">',
-    '      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
-    '        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-    '      </svg>',
-    '    </div>',
+    '    <div id="header-avatar">' + DEFAULT_AVATAR_SVG + '</div>',
     '    <div id="header-text">',
     '      <div id="header-name">Buchungs-Assistent</div>',
     '      <div id="header-sub">Wie kann ich helfen?</div>',
@@ -256,6 +257,16 @@
       .then(function(data) {
         typingEl.hidden = true;
         if (data.assistantName && headerName) { headerName.textContent = data.assistantName; }
+        if (data.avatarUrl) {
+          var avatarEl = shadow.getElementById('header-avatar');
+          if (avatarEl) {
+            var img = document.createElement('img');
+            img.src = data.avatarUrl;
+            img.alt = 'Avatar';
+            avatarEl.innerHTML = '';
+            avatarEl.appendChild(img);
+          }
+        }
         if (data.message) {
           messages.push({ role: 'assistant', content: data.message });
           addMessage('assistant', data.message);
