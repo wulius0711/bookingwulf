@@ -199,7 +199,7 @@
   function formatText(text) {
     return escHtml(text)
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_self">$1</a>')
       .replace(/\n/g, '<br>');
   }
 
