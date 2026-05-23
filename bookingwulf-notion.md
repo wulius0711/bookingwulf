@@ -114,6 +114,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
   - Messaging mit dem Hotel
   - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache)
 - [x] Anpassbares Admin-Dashboard — Widget-System mit Toggles (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert; Mai 2026
+- [x] **Gast-Chatbot** — KI-Buchungsassistent als embeddable Widget (`<script src=".../chat.js" data-hotel="slug" data-color="#hex">`). Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader scrapen. Mai 2026
 
 ## Roadmap (geplant)
 
@@ -136,8 +137,8 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Preislisten-Widget (standalone, ohne Buchungsflow) | Niedrig | Alle | 📋 Geplant |
 | Verfügbarkeits-Widget (Gantt-Kalender einbettbar auf Hotel-Website) | Niedrig | Add-on €9/Mo | 💡 Idee |
 | Workation-Paket — Zimmer + Arbeitsplatz kombinierbar als Zusatzleistung, Zielgruppe Remote Worker. Konfigurierbar als Extra mit eigenem Preis und Beschreibung. | Niedrig | Pro + Business | 💡 Idee |
-| **Co-Host / KI-Automatisierungen** — KI-gestützte Auto-Replies auf Gästenachrichten (inspiriert von Lodgify Cohost). Gast schreibt → KI antwortet automatisch auf Basis von Hausregeln, Check-in-Infos, FAQ. Betreiber bekommt Zusammenfassung. Ergänzt die bestehende Messaging-Funktion. | Niedrig | Business | 💡 Idee |
-| Google Hotels Free Booking Links (Meta-Suche) | Niedrig | Business | 💡 Idee |
+| **Co-Host / KI-Automatisierungen** — KI-gestützte Auto-Replies auf Gästenachrichten **nach der Buchung** (inspiriert von Lodgify Cohost). Unterschied zum Gast-Chatbot: Post-Booking (Operations), nicht Pre-Booking (Sales). Gast schreibt → KI antwortet automatisch auf Basis von Hausregeln, Check-in-Infos, FAQ. Betreiber bekommt Zusammenfassung. Ergänzt die bestehende Messaging-Funktion. | Niedrig | Business | 💡 Idee |
+| **Google Vacation Rentals** (Meta-Suche, kostenlos) — Erscheint in Google-Suche, leitet direkt auf eigene Buchungsseite, **keine Provision**. Technisch: XML-Feed-Endpoint pro Hotel (Verfügbarkeit + Preise) + Google Business Profile Verifikation. Flaschenhals: Google muss bookingwulf als **Connectivity Partner** zulassen (Bewerbungsprozess, Wochen, Mindestanzahl Properties). Unterschied: Google Vacation Rentals = Ferienwohnungen/kleine Hotels, kostenlos. Google Hotel Ads = traditionelle Hotels, CPC/CPS-Modell, bezahlt. → Nächster Schritt: Connectivity Partner Programm bewerben, Feed parallel vorbereiten. | Mittel | Business | 💡 Idee |
 | Affiliate- / Empfehlungsprogramm für Betreiber | Niedrig | — | 💡 Idee |
 | **Newsletter-Integration** — Opt-in Checkbox im Buchungsformular, nach Buchung automatischer API-Call (Mailchimp/Brevo), Gast wird in NL-Liste eingetragen (Double-Opt-In). DSGVO: Einwilligung in DB protokollieren (Timestamp, IP). | Niedrig | Pro | 💡 Idee |
 | SMS-Benachrichtigungen | Niedrig | Pro | 💡 Idee |
@@ -309,6 +310,72 @@ Der "Direct Plan" (kostenlos) ist ein Angriff auf den Entry-Level-Markt — Lodg
 - „Bei Lodgify zahlen Sie für Dynamic Pricing, Guest Registration und White-Label — brauchen Sie das?"
 - „bookingwulf ist in 5 Minuten auf Ihrer bestehenden Website — kein Replatforming"
 - „Auf Deutsch, mit direktem Support — kein internationales Ticket-System"
+
+### Nokumo
+
+Österreichisch/deutschsprachiger Anbieter (nokumo.net/de), kombiniert PMS + Channel Manager + Direktbuchung in einer Plattform.
+
+**Produkt:**
+- Unified Calendar + OTA-Sync (Booking.com, Airbnb, Expedia, VRBO, HRS, Agoda, Trip.com u.a.) — bidirektional, Echtzeit
+- Direktbuchungs-Engine
+- Gäste-Registrierung, automatisierte Rechnungsstellung, Self Check-in
+- Google Hotels / Google Vacation Rentals Integration
+- Nokumo Pay (eigene Zahlungsabwicklung)
+- Website-Baukasten
+
+**Preise:** Nicht öffentlich, 14 Tage Trial ohne Kreditkarte.
+
+**Positionierung:** Einfaches, intuitives PMS als Alternative zu Legacy-Systemen. Slogan: "Professional tools with an intuitive interface." Stärker auf bestehende Hotelbetriebe ausgerichtet als auf Website-first-Direktbuchung.
+
+**Was sie gut machen:**
+- Konkrete Zahlen in der Kommunikation ("30% mehr Umsatz", "doppelt so viele Direktbuchungen")
+- Persona-Cards — 3 klare Zielgruppen (Hotel, Ferienwohnung, Multi-Property)
+- OTA-Logo-Reihe prominent auf der Startseite — signalisiert sofort Integration
+- 14-Tage-Trial ohne Kreditkarte konsequent umgesetzt
+
+**Features die bookingwulf (noch) nicht hat:**
+- Native OTA-Synchronisierung (bookingwulf hat Beds24 als Channel Manager — gleichwertig, anderer Ansatz)
+- Google Hotels / Google Vacation Rentals (auf bookingwulf-Roadmap)
+- Automatisierte Rechnungsstellung
+- Self Check-in ohne Smartlock
+
+**Kernunterschied zu bookingwulf:**
+Nokumo ist ein vollständiges PMS, bookingwulf ein fokussiertes Direktbuchungs-Widget. Nokumo richtet sich an Betriebe die ihren gesamten Operations-Stack ersetzen wollen — bookingwulf ergänzt die eigene Website mit minimalem Aufwand.
+
+---
+
+### Guesty
+
+Enterprise PMS für Short-Term Rental Operators mit Fokus auf Scale (4–200+ Properties). Einer der bekanntesten internationalen Namen im Segment.
+
+**Produkt:**
+- Distribution: 60+ Plattformen in einem unified Calendar
+- Unified Inbox (alle Gästekommunikation zentral)
+- AI-powered Guest App mit digitalem Welcome-Paket
+- Task Scheduling (Reinigung, Maintenance)
+- Smart Lock Integration
+- Dynamic Pricing (ML-basiert)
+- Damage Protection + Liability Insurance
+- AI-powered Guest Verification & Fraud Prevention
+- Owner Portal (für Property Manager mit mehreren Eigentümern)
+- Guesty Pay (eigene Zahlungsabwicklung)
+- Mobile App
+
+**Preise:** Nicht öffentlich. Drei Tiers: Lite (Solo-Hosts), Pro (4–199 Properties), Enterprise (200+). Demo/Sales-Kontakt erforderlich.
+
+**Positionierung:** Operational backbone für wachsende Property Manager. Messaging: "50+ Stunden monatlich gespart", "10x Wachstum", "2.5x Umsatz". Airbnb Preferred Partner.
+
+**Features die bookingwulf (noch) nicht hat:**
+- ML-basiertes Dynamic Pricing
+- Unified Inbox (60+ Plattformen)
+- Guest Verification / Fraud Prevention (KI)
+- Owner Portal (Multi-Eigentümer-Verwaltung)
+- Damage Protection + Versicherungsintegration
+
+**Kernunterschied zu bookingwulf:**
+Guesty ist Enterprise-Software für professionelle Property Manager mit vielen Objekten. Kein relevanter direkter Konkurrent für bookingwulf-Kunden (kleine Betriebe, 1–5 Apartments, DACH-Raum). bookingwulfs Stärke (einfach, leichtgewichtig, Direktbuchung) ist genau Guestys blinder Fleck.
+
+---
 
 ## Messaging / Kernbotschaft
 

@@ -42,6 +42,14 @@ model Hotel {
   eventwulfOrgId   String?
   eventwulfSecret  String?
 
+  // chatbot
+  chatbotEnabled   Boolean   @default(false)
+  chatbotColor     String    @default("#1a1a1a")
+  chatbotContext   String?   // gescrapter Website-Text (via Jina Reader)
+  chatbotFaq       Json?     // manuelle Ergänzungen: [{question, answer}]
+  chatbotSourceUrl String?   // welche URL wurde gescrapt
+  chatbotScrapedAt DateTime? // wann zuletzt gescrapt
+
   settings        HotelSettings?
   settingsPresets HotelSettingsPreset[]
   widgetConfigs   WidgetConfig[]
