@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, Zap } from 'lucide-react';
+import RotatingBadge from './_components/RotatingBadge';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 import ChatDemo from './_components/ChatDemo';
@@ -136,18 +137,8 @@ export default function HomePage() {
             <Link href="/demo"  className="v4-btn v4-btn-ghost-white">{CONTENT.hero.cta2} →</Link>
           </div>
 
-          <div className="flex flex-col items-center gap-2 v4-animate v4-d3">
-            <ul className="flex flex-wrap justify-center gap-2.5 list-none m-0 p-0" aria-label="Kernvorteile">
-              {CONTENT.hero.trust.map((t) => (
-                <li key={t} className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.88)', border: '1px solid rgba(255,255,255,0.18)' }}>
-                  <Check size={12} strokeWidth={2.5} style={{ color: '#50DDFF' }} className="shrink-0" aria-hidden />
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <span className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.88)', border: '1px solid rgba(255,255,255,0.18)' }}>
-              🇦🇹 Österreichisch &amp; unabhängig
-            </span>
+          <div className="v4-animate v4-d3">
+            <RotatingBadge />
           </div>
         </div>
       </section>
