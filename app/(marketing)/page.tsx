@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, Zap } from 'lucide-react';
 import RotatingBadge from './_components/RotatingBadge';
+import BridgeSection from './_components/BridgeSection';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 import ChatDemo from './_components/ChatDemo';
@@ -420,6 +421,9 @@ export default function HomePage() {
           </div>
           <div className="mt-8 v4-animate text-center">
             <Link href="/preise" className="text-sm font-semibold hover:underline underline-offset-4 v4-text-muted">Alle Details zu den Preisen →</Link>
+          </div>
+          <div className="mt-12 v4-animate">
+            <BridgeSection />
           </div>
         </div>
       </section>
