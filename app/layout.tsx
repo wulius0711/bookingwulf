@@ -44,7 +44,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <Script id="theme-init" strategy="beforeInteractive">{`(function(){try{if(!window.location.pathname.startsWith('/admin'))return;var d=localStorage.getItem('admin-dark');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=d==='true'||(d===null&&s);var t=localStorage.getItem('admin-theme');if(dark){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');document.documentElement.style.colorScheme='dark';document.documentElement.style.backgroundColor='#0f1117';document.body&&(document.body.style.backgroundColor='#0f1117');}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.style.colorScheme='light';var bg=t==='classic'?'#f5f5f7':t==='orange'?'#fdf6f0':'#f0f2f8';document.documentElement.style.backgroundColor=bg;document.body&&(document.body.style.backgroundColor=bg);}if(t&&t!=='indigo'&&(t==='classic'||t==='orange'))document.documentElement.classList.add('theme-'+t);}catch(e){}})();`}</Script>
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
         <CookieBanner />
         {children}
       </body>
