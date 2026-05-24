@@ -69,8 +69,10 @@ export default function BridgeSection() {
             </p>
             <button
               onClick={openModal}
-              className="text-[13px] font-semibold px-5 py-2.5 rounded-[10px] whitespace-nowrap"
+              className="text-[13px] font-semibold px-5 py-2.5 rounded-[10px] whitespace-nowrap transition-all duration-200"
               style={{ border: '1.5px solid var(--v4-navy)', background: '#fff', color: 'var(--v4-navy)', cursor: 'pointer' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--v4-green)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--v4-green)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fff'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--v4-navy)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--v4-navy)'; }}
             >
               Mehr erfahren ↗
             </button>
