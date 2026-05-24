@@ -244,7 +244,7 @@ export default function ChatDemo() {
                   textAlign: 'center', cursor: 'default',
                   animation: 'bwPulse 2.5s ease-in-out infinite',
                 }}>
-                  Jetzt verbindlich buchen →
+                  Jetzt buchen →
                 </div>
               </div>
             );
