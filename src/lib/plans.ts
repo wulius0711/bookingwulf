@@ -24,7 +24,7 @@ export const PLANS = {
     maxApartments: Infinity,
     maxUsers: Infinity,
     maxHotels: 2,
-    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Chatbot-Analytics', 'Priority Support'],
   },
   bundle_all: {
     name: 'hotelwulf Bundle',
