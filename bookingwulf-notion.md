@@ -127,6 +127,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Gutschein- & Rabattcodes | Mittel | Pro | ✅ Live (Mai 2026) — Kauf via Stripe, PDF per E-Mail, Wert- & Nächte-Gutscheine, Einlösung im Widget |
 | DATEV / Buchhaltungsexport (CSV mit Steuerpositionen) | Mittel | Alle | ✅ Live |
 | Verpflegungsarten (Frühstück, Halbpension) | Mittel | Pro | 📋 Geplant |
+| **Bridge-Plan (Gäste-Lounge Standalone)** — Für potenzielle Kunden die noch bei Lodgify, Smoobu, easybooking o.ä. unter Vertrag sind. Funktionsweise: ~€39/Mo für die Gäste-Lounge allein (Check-in, Extras-Upsell, Messenger), aber **nur buchbar im Bundle mit einer Pro-Plan-Zusage**. Der Pro-Plan startet mit verzögertem Datum (wenn der Konkurrenz-Vertrag ausläuft), das Bridge-Modul geht dann nahtlos in den vollen Pro-Plan über. Keine 30-Tage-Garantie auf das Bridge-Modul (Leistung wurde erbracht). Vorteil: Kunde steigt sofort ein und bekommt echten Mehrwert, bookingwulf hat die Pro-Zusage bereits in der Tasche. | Hoch | Neuer Plan | 💡 Idee |
 | Review-System / Bewertungen | Mittel | Pro | 💡 Idee |
 | Preisvergleichs-Badge im Widget ("X% günstiger als Booking.com") | Mittel | Pro | 💡 Idee |
 | Last-Minute Blind Booking — Gast bucht ohne Zimmerwahl, bekommt verfügbares Apartment zugewiesen + konfigurierbaren Rabatt (z.B. 30%). Betreiber wählt welche Apartments qualifizieren. Erscheint im Widget wenn Anreise ≤ X Tage. | Mittel | Pro + Business | 💡 Idee |
