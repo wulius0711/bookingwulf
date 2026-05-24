@@ -22,7 +22,8 @@
 11. Stripe-Integration
 12. Admin-Bereich
 13. API-Routen
-14. Umgebungsvariablen
+14. Gast-Chatbot
+15. Umgebungsvariablen
 15. Deployment
 16. Schlüsselloses Einchecken (Nuki)
 17. Beds24 Channel Manager
@@ -1147,7 +1148,95 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 
 ---
 
-## 14. Umgebungsvariablen
+## 14. Gast-Chatbot
+
+KI-Buchungsassistent als embeddables Shadow-DOM-Widget. **Pro-Feature** — nur für Hotels mit Pro- oder Business-Plan zugänglich.
+
+### Architektur
+
+```
+Gast-Website
+  └── <script src="https://bookingwulf.com/chat.js" data-hotel="slug">
+        │
+        ├── Shadow DOM (isoliertes CSS, kein Konflikt mit Hotel-CSS)
+        ├── GET /api/chat?hotel=slug   → lädt Name, Farbe, Avatar
+        └── POST /api/chat            → sendet Nachricht, empfängt Antwort
+              │
+              └── Google Gemini 2.5 Flash (Function Calling)
+                    ├── check_availability   → Prisma → Railway DB
+                    ├── get_property_info    → Hotel-Daten, Apartments, Extras
+                    └── get_booking_url      → generiert vorausgefüllten Buchungslink
+```
+
+- Kein iframe — vollständig in Shadow DOM, funktioniert auf jeder Website
+- Stateless: Gesprächshistory liegt nur im Browser (kein DB-Logging)
+- Mobile: Bottom-Sheet-Layout (72dvh), iOS-Zoom-Fix (`font-size: 16px` auf Input)
+
+### API-Routen
+
+#### `GET /api/chat?hotel=SLUG`
+Gibt Widget-Konfiguration zurück. Wird beim Start automatisch vom Widget gefetcht.
+```json
+{ "name": "Anna", "color": "#108ba9", "avatar": "https://..." }
+```
+
+#### `POST /api/chat`
+Hauptendpunkt — nimmt Gesprächshistory entgegen, gibt Antwort zurück.
+```json
+// Request
+{ "hotelSlug": "mein-hotel", "messages": [{ "role": "user", "parts": [{ "text": "Habt ihr noch was frei?" }] }] }
+
+// Response
+{ "message": "Ja, für diesen Zeitraum haben wir zwei Apartments frei …" }
+```
+
+#### `PATCH /api/chat`
+Wird vom Widget gefeuert wenn der Gast auf den Buchungsbutton klickt — inkrementiert `chatbotBookingClicks` am Hotel-Datensatz.
+```json
+{ "hotel": "mein-hotel-slug" }
+```
+
+### Buchungslink-Button
+
+Enthält die Antwort des Assistenten eine URL (`https://...`), rendert das Widget sie als gepulsten **"Jetzt buchen →"**-Button statt als Inline-Link. Klicks werden via `PATCH /api/chat` gezählt.
+
+### Setup (Admin)
+
+Unter `/admin/chatbot` (Pro-Plan erforderlich):
+
+1. Chatbot aktivieren
+2. Name, Akzentfarbe, Avatar konfigurieren
+3. Website-URL scrapen (Jina Reader) → Bot kennt Lage, Storno, Umgebung
+4. Manuelle FAQ-Einträge ergänzen
+5. Einbindungs-Code (`<script>`-Tag) kopieren und auf der Hotel-Website einfügen
+
+### Buchungslink-Klicks (superAdmin)
+
+Auf `/admin/chatbot` sieht nur der superAdmin einen Zähler wie oft der Buchungsbutton im Chat geklickt wurde. Ist bewusst nicht für Hotel-Admins sichtbar bis das Feature ausgereift ist.
+
+### Datenbankfelder (Hotel-Model)
+
+| Feld | Typ | Beschreibung |
+|------|-----|--------------|
+| `chatbotEnabled` | Boolean | Chatbot aktiv/inaktiv |
+| `chatbotName` | String? | Anzeigename des Assistenten |
+| `chatbotAvatar` | String? | URL zum Profilbild (Vercel Blob) |
+| `chatbotColor` | String | Akzentfarbe (Hex), Default `#1a1a1a` |
+| `chatbotContext` | String? | Gescrapter Website-Text (via Jina Reader) |
+| `chatbotFaq` | Json? | Manuelle Q&A-Einträge `[{question, answer}]` |
+| `chatbotSourceUrl` | String? | Zuletzt gescrapte URL |
+| `chatbotScrapedAt` | DateTime? | Zeitstempel letztes Scraping |
+| `chatbotBookingClicks` | Int | Anzahl Buchungsbutton-Klicks (Default 0) |
+
+### Plan-Gate
+
+- **Pro & Business**: Chatbot-Einstellungen + Widget zugänglich
+- **Starter**: Redirect nach `/admin/billing`
+- **Chatbot-Analytics** (Roadmap): Business-Feature — noch nicht gebaut
+
+---
+
+## 15. Umgebungsvariablen
 
 ### Pflicht
 
@@ -1183,7 +1272,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 
 ---
 
-## 15. Deployment
+## 16. Deployment
 
 ### Vercel
 
