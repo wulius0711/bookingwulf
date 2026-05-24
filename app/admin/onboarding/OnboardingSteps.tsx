@@ -124,6 +124,15 @@ export default function OnboardingSteps({ hotelName }: Props) {
               Benachrichtigungs-E-Mail, AGB-Link und Datenschutz-URL hinterlegen. Diese erscheinen im Buchungsformular für Gäste.
             </div>
           </div>
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>💬</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Gast-Chatbot</span>
+            </div>
+            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
+              KI-Assistent auf Ihrer Hotel-Website: beantwortet Fragen, empfiehlt Apartments und erstellt Buchungslinks. Einmalig aktivieren und einen einzigen Code-Schnipsel auf Ihrer Website einfügen — fertig.
+            </div>
+          </div>
           {featureRow('✉️', 'E-Mail Templates', 'Texte der automatischen Gast-E-Mails anpassen — in mehreren Sprachen (de, en, it, fr u.a.).')}
           {featureRow('🔑', 'Schlüsselloses Einchecken', 'Nuki-Integration: Türschlösser mit Buchungen verknüpfen (ab Pro-Plan).')}
           {featureRow('🔗', 'Beds24 Channel Manager', 'Synchronisiert Verfügbarkeiten und Buchungen mit Airbnb und booking.com (ab Business-Plan). In Vorbereitung — Diese Integration wird schrittweise ausgebaut. Die Verbindung kann bereits konfiguriert werden; automatischer Sync wird mit einem Update aktiviert.')}
