@@ -121,8 +121,10 @@ export default function BridgeSection() {
                   ))}
                   <button
                     type="submit" disabled={pending}
-                    className="mt-1 text-[14px] font-semibold py-3 rounded-[10px] text-white"
+                    className="mt-1 text-[14px] font-semibold py-3 rounded-[10px] text-white transition-all duration-200"
                     style={{ background: 'var(--v4-green)', border: 'none', cursor: pending ? 'not-allowed' : 'pointer', opacity: pending ? 0.7 : 1 }}
+                    onMouseEnter={e => { if (!pending) (e.currentTarget as HTMLButtonElement).style.background = 'var(--v4-green-hover)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--v4-green)'; }}
                   >
                     {pending ? 'Wird gesendet …' : 'Unverbindlich anfragen'}
                   </button>
