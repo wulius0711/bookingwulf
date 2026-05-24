@@ -28,7 +28,7 @@ export default function BridgeSection() {
       {/* Card — 50% Breite, zentriert */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{
-          width: '50%', minWidth: 340,
+          width: '66%', minWidth: 340,
           background: '#fff',
           border: '0.5px solid rgba(0,0,0,0.12)',
           borderRadius: 16,
