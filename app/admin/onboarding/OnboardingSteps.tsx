@@ -128,6 +128,7 @@ export default function OnboardingSteps({ hotelName }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>💬</span>
               <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Gast-Chatbot</span>
+              <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent)', color: 'var(--text-on-accent)', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.03em' }}>Pro</span>
             </div>
             <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.55 }}>
               KI-Assistent auf Ihrer Hotel-Website: beantwortet Fragen, empfiehlt Apartments und erstellt Buchungslinks. Einmalig aktivieren und einen einzigen Code-Schnipsel auf Ihrer Website einfügen — fertig.

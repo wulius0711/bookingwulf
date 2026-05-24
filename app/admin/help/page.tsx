@@ -1323,6 +1323,7 @@ function ChatbotSection() {
   return (
     <div>
       <H2>Gast-Chatbot</H2>
+      <PlanNote plan="Pro" />
       <P>
         Der Gast-Chatbot ist ein KI-Assistent, den du auf deiner Hotel-Website einbinden kannst.
         Er beantwortet Fragen, empfiehlt passende Apartments und generiert direkte Buchungslinks —

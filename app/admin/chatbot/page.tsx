@@ -1,6 +1,7 @@
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
+import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { scrapeWebsite } from './actions';
 import ChatbotSettingsForm from './ChatbotSettingsForm';
 import FaqEditor from './FaqEditor';
@@ -9,12 +10,14 @@ export const dynamic = 'force-dynamic';
 
 export default async function ChatbotPage() {
   const session = await verifySession();
+  const isSuperAdmin = session.role === 'super_admin';
   if (!session.hotelId) redirect('/admin');
 
   const hotel = await prisma.hotel.findUnique({
     where: { id: session.hotelId },
     select: {
       slug: true,
+      plan: true,
       chatbotEnabled: true,
       chatbotName: true,
       chatbotAvatar: true,
@@ -27,6 +30,7 @@ export default async function ChatbotPage() {
   });
 
   if (!hotel) redirect('/admin');
+  if (!isSuperAdmin && !hasPlanAccess(hotel.plan ?? 'starter', 'pro')) redirect('/admin/billing');
 
   const faqEntries = Array.isArray(hotel.chatbotFaq)
     ? (hotel.chatbotFaq as { question: string; answer: string }[])

@@ -114,7 +114,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
   - Messaging mit dem Hotel
   - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache)
 - [x] Anpassbares Admin-Dashboard — Widget-System mit Toggles (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert; Mai 2026
-- [x] **Gast-Chatbot** — KI-Buchungsassistent als embeddable Shadow-DOM-Widget (`<script src="https://bookingwulf.com/chat.js" data-hotel="slug">`). Name, Farbe und Avatar aus Admin-Einstellungen. Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader, manuelle FAQ. Mobile Bottom-Sheet. Gemini 2.5 Flash. → Details: CHATBOT.md. Mai 2026
+- [x] **Gast-Chatbot** (Pro) — KI-Buchungsassistent als embeddable Shadow-DOM-Widget (`<script src="https://bookingwulf.com/chat.js" data-hotel="slug">`). Name, Farbe und Avatar aus Admin-Einstellungen. Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader, manuelle FAQ. Mobile Bottom-Sheet. Gemini 2.5 Flash. → Details: CHATBOT.md. Mai 2026
 
 ## Roadmap (geplant)
 
@@ -137,6 +137,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Preislisten-Widget (standalone, ohne Buchungsflow) | Niedrig | Alle | 📋 Geplant |
 | Verfügbarkeits-Widget (Gantt-Kalender einbettbar auf Hotel-Website) | Niedrig | Add-on €9/Mo | 💡 Idee |
 | Workation-Paket — Zimmer + Arbeitsplatz kombinierbar als Zusatzleistung, Zielgruppe Remote Worker. Konfigurierbar als Extra mit eigenem Preis und Beschreibung. | Niedrig | Pro + Business | 💡 Idee |
+| **Chatbot-Analytics** — Auswertung der Gast-Chatbot-Gespräche: häufigste Fragen, Themen-Verteilung, Konversationsrate (Chat → Buchungslink aufgerufen), Durchschnittliche Gesprächslänge. Dashboard unter `/admin/chatbot-analytics`. Hilft Hoteliers zu verstehen was Gäste beschäftigt und FAQ gezielt zu befüllen. | Mittel | Business | 📋 Geplant |
 | **Co-Host / KI-Automatisierungen** — KI-gestützte Auto-Replies auf Gästenachrichten **nach der Buchung** (inspiriert von Lodgify Cohost). Unterschied zum Gast-Chatbot: Post-Booking (Operations), nicht Pre-Booking (Sales). Gast schreibt → KI antwortet automatisch auf Basis von Hausregeln, Check-in-Infos, FAQ. Betreiber bekommt Zusammenfassung. Ergänzt die bestehende Messaging-Funktion. | Niedrig | Business | 💡 Idee |
 | **Google Vacation Rentals** (Meta-Suche, kostenlos) — Erscheint in Google-Suche, leitet direkt auf eigene Buchungsseite, **keine Provision**. Technisch: XML-Feed-Endpoint pro Hotel (Verfügbarkeit + Preise) + Google Business Profile Verifikation. Flaschenhals: Google muss bookingwulf als **Connectivity Partner** zulassen (Bewerbungsprozess, Wochen, Mindestanzahl Properties). Unterschied: Google Vacation Rentals = Ferienwohnungen/kleine Hotels, kostenlos. Google Hotel Ads = traditionelle Hotels, CPC/CPS-Modell, bezahlt. → Nächster Schritt: Connectivity Partner Programm bewerben, Feed parallel vorbereiten. | Mittel | Business | 💡 Idee |
 | Affiliate- / Empfehlungsprogramm für Betreiber | Niedrig | — | 💡 Idee |
