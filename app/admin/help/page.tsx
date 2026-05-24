@@ -22,6 +22,7 @@ const sections = [
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
+  { id: 'chatbot',       title: 'Gast-Chatbot',           plan: null,       content: ChatbotSection },
   { id: 'assistent',     title: 'Hasky',                  plan: 'Pro',      content: AssistentSection },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
 ];
@@ -1313,6 +1314,75 @@ function AssistentSection() {
       <Tip>
         <strong>Tipp:</strong> Hasky kennt die aktuelle Seite — auf vage Fragen wie
         „Was mache ich hier?" antwortet er konkret zum Bereich, in dem du dich gerade befindest.
+      </Tip>
+    </div>
+  );
+}
+
+function ChatbotSection() {
+  return (
+    <div>
+      <H2>Gast-Chatbot</H2>
+      <P>
+        Der Gast-Chatbot ist ein KI-Assistent, den du auf deiner Hotel-Website einbinden kannst.
+        Er beantwortet Fragen, empfiehlt passende Apartments und generiert direkte Buchungslinks —
+        rund um die Uhr, ohne dass du eingreifen musst.
+      </P>
+
+      <H3>Einrichten</H3>
+      <Step num={1} title="Chatbot aktivieren">
+        Gehe zu <strong>Gast-Chatbot</strong> in der linken Navigation und schalte den Toggle
+        „Chatbot aktivieren" ein.
+      </Step>
+      <Step num={2} title="Name & Aussehen anpassen (optional)">
+        Vergib einen Namen (z.B. „Lisa" oder „Buchungs-Assistent"), wähle eine Akzentfarbe die
+        zu eurer Website passt, und lade ein Avatar-Bild hoch. All das erscheint direkt im Chat-Widget.
+      </Step>
+      <Step num={3} title="Website-Kontext scrapen (empfohlen)">
+        Trage eure Website-URL ein und klicke <strong>„Scrapen"</strong>. Der Chatbot liest
+        daraufhin den Inhalt eurer Seite ein und kann damit Fragen zu Lage, Storno, Anreise,
+        Umgebung und mehr beantworten.
+      </Step>
+      <Step num={4} title="FAQ ergänzen (optional)">
+        Für Infos die nicht auf der Website stehen — z.B. „Sind Haustiere erlaubt?" oder
+        Parkplatz-Details — kannst du manuelle Fragen und Antworten eintragen.
+      </Step>
+      <Step num={5} title="Code auf der Website einbinden">
+        Den fertigen Einbindungs-Code findest du ganz unten auf der Chatbot-Seite.
+        Einmalig vor dem schließenden <Code>{'</body>'}</Code>-Tag auf eurer Website einfügen — fertig.
+      </Step>
+
+      <H3>Was der Chatbot kann</H3>
+      <div style={{ display: 'grid', gap: 8, margin: '8px 0 16px' }}>
+        {[
+          { label: 'Apartments empfehlen', desc: 'Kontextabhängig — für Familien, Paare, Haustiere, Wellness, Budget etc.' },
+          { label: 'Verfügbarkeit prüfen', desc: 'Prüft Zeitraum und Personenzahl und nennt Preise.' },
+          { label: 'Extras vorstellen',    desc: 'Frühstück, Spa, Kinderbett — nur was wirklich passt.' },
+          { label: 'Fragen beantworten',   desc: 'Check-in, Check-out, Parken, WLAN, Storno — aus Website-Kontext und FAQ.' },
+          { label: 'Buchungslink erstellen', desc: 'Direkt zum vorausgefüllten Buchungsformular, mit allen Angaben aus dem Gespräch.' },
+        ].map((t) => (
+          <div key={t.label} style={{ display: 'flex', gap: 10 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 180, color: 'var(--text-primary)' }}>{t.label}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      <Note>
+        <strong>Hinweis:</strong> Der Chatbot legt keine Buchungen an und verarbeitet keine Zahlungen.
+        Er führt den Gast zum Buchungsformular — die Buchung läuft wie gewohnt ab.
+      </Note>
+
+      <H3>Einbindungs-Code</H3>
+      <P>
+        Den Code mit deinem persönlichen Hotel-Slug findest du direkt auf der Chatbot-Seite ganz unten.
+        Er sieht so aus:
+      </P>
+      <CodeBlock>{`<script\n  src="https://bookingwulf.com/chat.js"\n  data-hotel="dein-hotel-slug">\n</script>`}</CodeBlock>
+
+      <Tip>
+        <strong>Tipp:</strong> Name, Farbe und Avatar übernimmt das Widget automatisch aus deinen
+        Admin-Einstellungen — du musst nach einer Änderung nichts am Code auf deiner Website anpassen.
       </Tip>
     </div>
   );
