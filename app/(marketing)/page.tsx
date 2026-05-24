@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Ban, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, ShieldCheck, Zap } from 'lucide-react';
+import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, ShieldCheck, Zap } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 
@@ -36,6 +36,7 @@ const CONTENT = {
       { icon: Zap,           title: 'Setup in 5 Minuten', desc: 'Eine Zeile Code — kein Entwickler nötig. Funktioniert mit WordPress, Framer, Wix & Co.' },
       { icon: Palette,       title: 'Dein Branding',      desc: 'Farben, Formen und Schrift passend zu deiner Website — komplett anpassbar.' },
       { icon: Globe,         title: 'Gäste-Kommunikation', desc: 'Automatische E-Mails in 9 Sprachen — Bestätigung, Angebot, Erinnerung. Kein manuelles Eingreifen.' },
+      { icon: BotMessageSquare, title: 'Gast-Chatbot',    desc: 'KI-Assistent auf deiner Website: beantwortet Fragen, empfiehlt Apartments und erstellt Buchungslinks — rund um die Uhr.' },
       { icon: RefreshCw,     title: 'Channel Sync',       desc: 'Echtzeit-Sync mit Airbnb & Booking.com via Beds24 — keine Doppelbuchungen.' },
       { icon: ShieldCheck,   title: 'DSGVO-konform',      desc: 'Alle Daten auf Servern in der EU — sicher und rechtskonform.' },
     ],

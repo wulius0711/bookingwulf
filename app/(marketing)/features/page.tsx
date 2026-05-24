@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useV4Animate } from '../_components/useV4Animate';
 import {
-  Building2, Calendar, Palette, LayoutGrid, RefreshCw, ToggleLeft,
+  BotMessageSquare, Building2, Calendar, Palette, LayoutGrid, RefreshCw, ToggleLeft,
   ClipboardList, TrendingDown, Globe, Code2, Lock, ShieldCheck,
 } from 'lucide-react';
 
@@ -87,6 +87,13 @@ const FEATURES: Feature[] = [
     short: 'Bestätigungen, Angebote und alle Gäste-E-Mails werden automatisch in der Sprache des Gastes verschickt — 9 Sprachen, keine manuelle Auswahl nötig.',
     long: 'bookingwulf erkennt die Browser-Sprache des Gastes und sendet Bestätigungs- und Angebots-E-Mails automatisch in der passenden Sprache. Alle E-Mail-Texte sind vollständig anpassbar.',
     bullets: ['DE, EN, FR, IT, ES, NL, HR, PL, CS', 'Automatische Spracherkennung', 'Alle Texte individuell anpassbar'],
+  },
+  {
+    icon: BotMessageSquare, label: 'KI',
+    title: 'Gast-Chatbot',
+    short: 'KI-Assistent auf deiner Website — beantwortet Fragen, empfiehlt Apartments und erstellt Buchungslinks. Rund um die Uhr, ohne Aufwand.',
+    long: 'Ein einzelner Script-Tag genügt: Der Chatbot liest den Inhalt deiner Website ein und kennt damit Lage, Storno, Ausstattung und alles Weitere. Er empfiehlt das passende Apartment kontextabhängig (Familie, Paar, Wellness, Budget) und generiert am Ende einen vorausgefüllten Buchungslink direkt im Chat.',
+    bullets: ['Verfügbarkeit & Preise in Echtzeit', 'Extras & Upsells passend zum Kontext', 'Buchungslink direkt im Chat', 'Name, Farbe & Avatar individuell konfigurierbar'],
   },
   {
     icon: Lock, label: 'Smart Home',
