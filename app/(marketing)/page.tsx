@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, ShieldCheck, Zap } from 'lucide-react';
+import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, Zap } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 import ChatDemo from './_components/ChatDemo';
@@ -37,9 +37,8 @@ const CONTENT = {
       { icon: Zap,           title: 'Setup in 5 Minuten', desc: 'Eine Zeile Code — kein Entwickler nötig. Funktioniert mit WordPress, Framer, Wix & Co.' },
       { icon: Palette,       title: 'Dein Branding',      desc: 'Farben, Formen und Schrift passend zu deiner Website — komplett anpassbar.' },
       { icon: Globe,         title: 'Gäste-Kommunikation', desc: 'Automatische E-Mails in 9 Sprachen — Bestätigung, Angebot, Erinnerung. Kein manuelles Eingreifen.' },
-      { icon: BotMessageSquare, title: 'Gast-Chatbot',    desc: 'KI-Assistent auf deiner Website: beantwortet Fragen, empfiehlt Apartments und erstellt Buchungslinks — rund um die Uhr.' },
+      { icon: BotMessageSquare, title: 'Gäste-Assistent',    desc: 'KI-Assistent auf deiner Website: beantwortet Fragen, empfiehlt Apartments und generiert Buchungslinks.' },
       { icon: RefreshCw,     title: 'Channel Sync',       desc: 'Echtzeit-Sync mit Airbnb & Booking.com via Beds24 — keine Doppelbuchungen.' },
-      { icon: ShieldCheck,   title: 'DSGVO-konform',      desc: 'Alle Daten auf Servern in der EU — sicher und rechtskonform.' },
     ],
   },
   steps: {
@@ -221,8 +220,11 @@ export default function HomePage() {
             })}
           </ul>
 
-          <div className="mt-8 v4-animate">
-            <Link href="/features" className="text-sm font-semibold hover:underline underline-offset-4 v4-text-navy">… und noch viel mehr — alle Features ansehen →</Link>
+          <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 v4-animate">
+            <Link href="/features" className="font-semibold hover:underline underline-offset-4 v4-text-navy" style={{ fontSize: 15 }}>.. alle Features ansehen →</Link>
+            <span className="flex items-center gap-1.5" style={{ fontSize: 14, color: '#475569' }}>
+              🇪🇺 DSGVO-konform · Server in Amsterdam
+            </span>
           </div>
         </div>
       </section>
@@ -232,16 +234,16 @@ export default function HomePage() {
         <div className="v4-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="v4-eyebrow v4-animate">Gast-Chatbot</span>
-              <h2 id="chatdemo-heading" className="v4-h2 mb-4 v4-animate v4-d1">Dein KI-Assistent — rund um die Uhr</h2>
+              <span className="v4-eyebrow v4-animate">Gäste-Assistent</span>
+              <h2 id="chatdemo-heading" className="v4-h2 mb-4 v4-animate v4-d1">Dein KI-Assistent auf der Website - rund um die Uhr</h2>
               <p className="text-[17px] leading-[1.65] v4-text-body mb-8 v4-animate v4-d2">
-                Gäste fragen, der Bot antwortet — empfiehlt das passende Apartment, erklärt Extras und erstellt am Ende den vorausgefüllten Buchungslink. Ohne Wartezeit, ohne Aufwand für dich.
+                Gäste fragen, der Assistent antwortet - empfiehlt das passende Apartment, erklärt Extras und erstellt am Ende den vorausgefüllten Buchungslink. Ohne Wartezeit, ohne Aufwand für dich.
               </p>
               <ul className="flex flex-col gap-3 list-none m-0 p-0 v4-animate v4-d3">
                 {[
                   'Verfügbarkeit & Preise in Echtzeit',
                   'Empfiehlt passend zu Familie, Paar, Haustier, Budget …',
-                  'Buchungslink direkt im Chat — vorausgefüllt',
+                  'Buchungslink direkt im Chat - vorausgefüllt',
                   'Einbindung per Script-Tag, eine Minute Setup',
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[15px] v4-text-body">

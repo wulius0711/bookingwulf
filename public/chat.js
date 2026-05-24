@@ -150,6 +150,17 @@
     '  #powered{text-align:center;font-size:10px;color:#9ca3af;padding:6px 0 10px;flex-shrink:0;}',
     '  #powered a{color:#9ca3af;text-decoration:none;}',
     '  #powered a:hover{text-decoration:underline;}',
+    '  .booking-btn{',
+    '    display:block;margin:4px 0 0;padding:11px 16px;',
+    '    background:' + COLOR + ';color:' + ON_COLOR + ';',
+    '    border-radius:10px;font-size:14px;font-weight:700;',
+    '    text-align:center;text-decoration:none;cursor:pointer;',
+    '    animation:bw-booking-pulse 2.2s ease-in-out infinite;',
+    '  }',
+    '  @keyframes bw-booking-pulse{',
+    '    0%,100%{box-shadow:0 0 0 0 ' + COLOR + '4d}',
+    '    50%{box-shadow:0 0 0 8px ' + COLOR + '00}',
+    '  }',
     '</style>',
 
     '<button id="fab" aria-label="Chat öffnen" aria-expanded="false">',
@@ -211,9 +222,8 @@
       var onCol = luminance(cfg.color) > 0.4 ? '#111827' : '#ffffff';
       var s = document.createElement('style');
       s.textContent =
-        '#fab,#header,#send{background:' + cfg.color + '!important;color:' + onCol + '!important;}' +
+        '#fab,#header,#send,.booking-btn{background:' + cfg.color + '!important;color:' + onCol + '!important;}' +
         '.msg.user{background:' + cfg.color + '!important;color:' + onCol + '!important;}' +
-        '.msg a{color:' + cfg.color + '!important;}' +
         '#textarea:focus{border-color:' + cfg.color + '!important;}';
       shadow.appendChild(s);
     }
@@ -232,15 +242,27 @@
   function formatText(text) {
     return escHtml(text)
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_self">$1</a>')
       .replace(/\n/g, '<br>');
   }
 
   function addMessage(role, text) {
+    var urlMatch = role === 'assistant' ? text.match(/(https?:\/\/[^\s]+)/) : null;
+    var displayText = urlMatch ? text.replace(urlMatch[0], '').replace(/\n{3,}/g, '\n\n').trim() : text;
+
     var div = document.createElement('div');
     div.className = 'msg ' + role;
-    div.innerHTML = formatText(text);
+    div.innerHTML = formatText(displayText);
     msgsEl.appendChild(div);
+
+    if (urlMatch) {
+      var btn = document.createElement('a');
+      btn.href = urlMatch[0];
+      btn.target = '_self';
+      btn.className = 'booking-btn';
+      btn.textContent = 'Jetzt buchen →';
+      msgsEl.appendChild(btn);
+    }
+
     msgsEl.scrollTop = msgsEl.scrollHeight;
   }
 

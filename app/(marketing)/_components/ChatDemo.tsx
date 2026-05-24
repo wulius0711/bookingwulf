@@ -17,40 +17,40 @@ const STEPS: Step[] = [
   {
     show: { kind: 'bubble', role: 'guest', text: 'Hallo, habt ihr noch was frei vom 14. bis 18. August? Wir sind 2 Erwachsene und 1 Kind (6 Jahre).' },
     typing: false,
-    delayAfter: 600,
+    delayAfter: 1000,
   },
   {
     show: { kind: 'bubble', role: 'bot', text: 'Hallo! Ja, für diesen Zeitraum haben wir noch zwei Apartments frei:' },
     typing: true,
-    typingMs: 1800,
-    delayAfter: 300,
+    typingMs: 2200,
+    delayAfter: 500,
   },
   {
     show: { kind: 'cards' },
     typing: false,
-    delayAfter: 900,
+    delayAfter: 1400,
   },
   {
     show: { kind: 'bubble', role: 'guest', text: 'Der Bergblick klingt super. Gibt es einen Kinderspielplatz?' },
     typing: false,
-    delayAfter: 600,
+    delayAfter: 1000,
   },
   {
     show: { kind: 'bubble', role: 'bot', text: 'Ja! Direkt auf dem Gelände gibt es einen Spielplatz, außerdem einen Streichelzoo 5 Minuten zu Fuß. Frühstück ist inklusive — Kinder unter 7 Jahren kostenlos.' },
     typing: true,
-    typingMs: 2200,
-    delayAfter: 600,
+    typingMs: 2600,
+    delayAfter: 1000,
   },
   {
     show: { kind: 'bubble', role: 'guest', text: 'Perfekt, dann nehmen wir den Bergblick. Wie buche ich?' },
     typing: false,
-    delayAfter: 600,
+    delayAfter: 1000,
   },
   {
     show: { kind: 'bubble', role: 'bot', text: 'Sehr gerne! Hier ist euer Buchungslink, alles ist schon vorausgefüllt:' },
     typing: true,
-    typingMs: 1600,
-    delayAfter: 400,
+    typingMs: 2000,
+    delayAfter: 600,
   },
   {
     show: { kind: 'button' },
@@ -67,7 +67,7 @@ type Visible =
 
 export default function ChatDemo() {
   const [visible, setVisible] = useState<Visible[]>([]);
-  const [running, setRunning] = useState(false);
+  const runningRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -84,17 +84,17 @@ export default function ChatDemo() {
   }
 
   function runSequence() {
+    clearAll();
+    runningRef.current = true;
     setVisible([]);
-    setRunning(true);
-    let cursor = 0;
 
     function next(stepIdx: number) {
       if (stepIdx >= STEPS.length) {
-        // pause then loop
         schedule(() => {
-          setVisible(prev => prev.map(v => ({ ...v, _fade: true } as Visible)));
-          schedule(runSequence, 600);
-        }, 0);
+          runningRef.current = false;
+          setVisible([]);
+          schedule(runSequence, 800);
+        }, 4000);
         return;
       }
 
@@ -138,7 +138,7 @@ export default function ChatDemo() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !running) {
+        if (entry.isIntersecting && !runningRef.current) {
           runSequence();
         }
       },
@@ -168,11 +168,11 @@ export default function ChatDemo() {
         {/* Header */}
         <div style={{ background: ACCENT, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-            L
+            A
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 6 }}>
-              Lisa
+              Anna
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block', flexShrink: 0 }} />
             </div>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.75)', marginTop: 1 }}>Pension Alpenblick</div>
