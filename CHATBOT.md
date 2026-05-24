@@ -7,72 +7,50 @@ KI-Buchungsassistent als embeddable Widget. Hotelier bindet einen einzigen `<scr
 ```html
 <script
   src="https://bookingwulf.com/chat.js"
-  data-hotel="mein-hotel-slug"
-  data-color="#2d6a4f">
+  data-hotel="mein-hotel-slug">
 </script>
 ```
 
-| Attribut | Pflicht | Beschreibung |
-|----------|---------|-------------|
-| `data-hotel` | ✅ | Hotel-Slug (wie in der URL: `/admin`) |
-| `data-color` | — | Akzentfarbe (Hex), Default `#1a1a1a` |
+Den Code vor dem schließenden `</body>`-Tag einfügen. Name, Farbe und Avatar werden automatisch aus den Admin-Einstellungen geladen — kein weiteres Attribut nötig.
+
+## Setup (Admin-UI)
+
+Unter `/admin/chatbot`:
+
+1. **Chatbot aktivieren** — Toggle einschalten
+2. **Name** — z.B. "Lisa" oder "Buchungs-Assistent"
+3. **Akzentfarbe** — passt Chat-Button und Bubbles an
+4. **Avatar** — optionales Profilbild hochladen (quadratisch, min. 100×100 px)
+5. **Website-Kontext** — URL eingeben und "Scrapen" klicken → Bot kennt Lage, Storno, Umgebung etc.
+6. **FAQ** — manuelle Q&A-Einträge für Infos die nicht auf der Website stehen
+
+Der fertige Einbindungs-Code (mit dem korrekten Slug) wird unten auf der Admin-Seite angezeigt.
 
 ## Was der Bot kann
 
 - Apartments beschreiben und kontextabhängig empfehlen (Familie, Paar, Haustiere, Wellness, Budget…)
 - Verfügbarkeit prüfen und Preise berechnen
-- Extras & Upsells vorstellen (Frühstück, Spa etc. aus den HotelExtras mit `showInUpsell: true`)
+- Extras & Upsells vorstellen (aus HotelExtras mit `showInUpsell: true`)
 - Fragen zu Check-in, Check-out, Parken, WLAN etc. beantworten
 - Direkten Buchungslink generieren (vorausgefüllt mit Daten aus dem Chat)
 
 ## Was der Bot NICHT tut
 
-- Keine Buchungen anlegen (der Gast wird zum bestehenden Buchungsflow weitergeleitet)
+- Keine Buchungen anlegen (Gast wird zum bestehenden Buchungsflow weitergeleitet)
 - Keine Zahlungen verarbeiten
 - Keine Gästedaten speichern (stateless, History im Browser)
 
-## Admin-Setup
-
-### 1. Chatbot aktivieren
-
-In der DB das Hotel-Record updaten:
-```sql
-UPDATE "Hotel" SET "chatbotEnabled" = true WHERE slug = 'mein-hotel-slug';
-```
-→ Admin-UI kommt in einem späteren Release.
-
-### 2. Website-Kontext scrapen (empfohlen)
-
-Den Inhalt der Hotel-Website via Jina Reader in `chatbotContext` speichern:
-
-```bash
-curl "https://r.jina.ai/https://www.mein-hotel.at" > context.txt
-```
-
-Dann in DB:
-```sql
-UPDATE "Hotel"
-SET "chatbotContext" = '<inhalt>', "chatbotSourceUrl" = 'https://www.mein-hotel.at', "chatbotScrapedAt" = NOW()
-WHERE slug = 'mein-hotel-slug';
-```
-
-### 3. Manuelle FAQ (optional)
-
-Für Infos die nicht auf der Website stehen:
-```sql
-UPDATE "Hotel"
-SET "chatbotFaq" = '[{"question":"Sind Haustiere erlaubt?","answer":"Ja, kleine Hunde sind willkommen (max. 10kg). Bitte beim Buchen angeben."}]'
-WHERE slug = 'mein-hotel-slug';
-```
-
-### 4. Buchungslink-Basis
-
-Der Bot nutzt `HotelSettings.miniWidgetTarget` als Basis-URL für Buchungslinks.
-Falls nicht gesetzt: `https://bookingwulf.com/widget/{slug}` (Fallback).
-
 ## API
 
-`POST /api/chat`
+### GET /api/chat?hotel=SLUG
+
+Gibt die Widget-Konfiguration zurück (wird vom Widget beim Start automatisch gefetcht).
+
+```json
+{ "name": "Lisa", "color": "#2d6a4f", "avatar": "https://..." }
+```
+
+### POST /api/chat
 
 ```json
 {
@@ -85,13 +63,25 @@ Falls nicht gesetzt: `https://bookingwulf.com/widget/{slug}` (Fallback).
 
 Response:
 ```json
-{ "message": "Gerne! Für welches Datum planen Sie Ihre Reise?" }
+{
+  "message": "Gerne! Für welches Datum planen Sie Ihre Reise?",
+  "assistantName": "Lisa",
+  "avatarUrl": "https://..."
+}
 ```
 
-## Tools (intern)
+## Tools (intern, Gemini Function Calling)
 
 | Tool | Beschreibung |
 |------|-------------|
-| `check_availability` | Verfügbare Apartments + Preise für Zeitraum + Personenzahl |
+| `check_availability` | Verfügbare Apartments + Preise für Zeitraum + Personenzahl (max. 3 Ergebnisse) |
 | `get_property_info` | Extras, Policies, FAQ-Matches aus DB |
-| `get_booking_url` | Vorausgefüllter Buchungslink |
+| `get_booking_url` | Vorausgefüllter Buchungslink auf Basis von `HotelSettings.miniWidgetTarget` |
+
+## Technisches
+
+- Widget als Shadow DOM — kein CSS-Konflikt mit der Hotel-Website
+- Mobile: Bottom-Sheet (72dvh), iOS-Zoom-Fix (font-size 16px), safe-area-insets
+- KI: Gemini 2.5 Flash via `@google/genai`
+- Avatar-Upload: Vercel Blob unter `chatbot-avatar/{hotelId}-{filename}`
+- Website-Kontext: Jina Reader (`https://r.jina.ai/{url}`), max. 8.000 Zeichen im Prompt

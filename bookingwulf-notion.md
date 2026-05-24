@@ -114,7 +114,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
   - Messaging mit dem Hotel
   - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache)
 - [x] Anpassbares Admin-Dashboard — Widget-System mit Toggles (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert; Mai 2026
-- [x] **Gast-Chatbot** — KI-Buchungsassistent als embeddable Widget (`<script src=".../chat.js" data-hotel="slug" data-color="#hex">`). Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader scrapen. Mai 2026
+- [x] **Gast-Chatbot** — KI-Buchungsassistent als embeddable Shadow-DOM-Widget (`<script src="https://bookingwulf.com/chat.js" data-hotel="slug">`). Name, Farbe und Avatar aus Admin-Einstellungen. Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader, manuelle FAQ. Mobile Bottom-Sheet. Gemini 2.5 Flash. → Details: CHATBOT.md. Mai 2026
 
 ## Roadmap (geplant)
 
