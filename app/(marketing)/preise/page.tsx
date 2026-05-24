@@ -66,6 +66,7 @@ const COMPARISON: FeatureGroup[] = [
     rows: [
       { label: 'Konfigurierbare Extras & Zusatzleistungen', starter: false, pro: true, business: true },
       { label: 'KI-Assistent im Admin', starter: false, pro: true, business: true },
+      { label: 'Gäste-Assistent (KI-Chatbot)', starter: false, pro: true, business: true },
       { label: 'Direktnachrichten an Gäste', starter: false, pro: false, business: true },
       { label: 'Analytics', starter: false, pro: false, business: true },
     ],
