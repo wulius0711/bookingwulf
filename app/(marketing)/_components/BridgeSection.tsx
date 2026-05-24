@@ -60,11 +60,11 @@ export default function BridgeSection() {
 
           {/* Rechte Spalte */}
           <div className="flex flex-col items-center justify-center gap-1 p-7 text-center" style={{ borderLeft: '0.5px solid rgba(0,0,0,0.10)', minWidth: 180 }}>
-            <span className="text-xs font-medium v4-text-muted">Gäste-Lounge</span>
+            <span className="text-xs font-medium" style={{ color: 'var(--v4-body)' }}>Gäste-Lounge</span>
             <div className="text-[40px] font-extrabold tracking-tight" style={{ color: 'var(--v4-navy)', lineHeight: 1 }}>
               €29<span className="text-base font-normal v4-text-muted"> / Mo</span>
             </div>
-            <p className="text-xs v4-text-muted mt-1 mb-4" style={{ lineHeight: 1.5 }}>
+            <p className="text-xs mt-1 mb-4" style={{ lineHeight: 1.5, color: 'var(--v4-body)' }}>
               Nur buchbar mit<br />Pro-Plan-Zusage.<br />Kein Rückgaberecht.
             </p>
             <button
