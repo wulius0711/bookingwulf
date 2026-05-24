@@ -194,6 +194,36 @@
   var sendBtn    = shadow.getElementById('send');
   var headerName = shadow.getElementById('header-name');
 
+  // ── Config fetch ───────────────────────────────────────────────────────────
+  function applyConfig(cfg) {
+    if (cfg.name && headerName) headerName.textContent = cfg.name;
+    if (cfg.avatar) {
+      var avatarEl = shadow.getElementById('header-avatar');
+      if (avatarEl) {
+        var img = document.createElement('img');
+        img.src = cfg.avatar;
+        img.alt = 'Avatar';
+        avatarEl.innerHTML = '';
+        avatarEl.appendChild(img);
+      }
+    }
+    if (cfg.color) {
+      var onCol = luminance(cfg.color) > 0.4 ? '#111827' : '#ffffff';
+      var s = document.createElement('style');
+      s.textContent =
+        '#fab,#header,#send{background:' + cfg.color + '!important;color:' + onCol + '!important;}' +
+        '.msg.user{background:' + cfg.color + '!important;color:' + onCol + '!important;}' +
+        '.msg a{color:' + cfg.color + '!important;}' +
+        '#textarea:focus{border-color:' + cfg.color + '!important;}';
+      shadow.appendChild(s);
+    }
+  }
+
+  fetch(API + '?hotel=' + HOTEL)
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) { if (cfg && !cfg.error) applyConfig(cfg); })
+    .catch(function() {});
+
   // ── Helpers ────────────────────────────────────────────────────────────────
   function escHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -319,6 +319,28 @@ ${apartmentList}`;
   }
 
   return prompt;
+}
+
+// ── Config endpoint (GET) ─────────────────────────────────────────────────────
+
+export async function GET(req: Request) {
+  const slug = new URL(req.url).searchParams.get('hotel');
+  if (!slug) return NextResponse.json({ error: 'hotel erforderlich' }, { status: 400, headers: corsHeaders });
+
+  const hotel = await prisma.hotel.findUnique({
+    where: { slug },
+    select: { chatbotEnabled: true, chatbotName: true, chatbotAvatar: true, chatbotColor: true },
+  });
+
+  if (!hotel || !hotel.chatbotEnabled) {
+    return NextResponse.json({ error: 'Chatbot nicht verfügbar' }, { status: 404, headers: corsHeaders });
+  }
+
+  return NextResponse.json({
+    name: hotel.chatbotName || null,
+    color: hotel.chatbotColor || null,
+    avatar: hotel.chatbotAvatar || null,
+  }, { headers: corsHeaders });
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
