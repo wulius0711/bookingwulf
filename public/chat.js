@@ -74,8 +74,8 @@
 
     '  @media(max-width:480px){',
     '    #panel{',
-    '      position:fixed;bottom:0;right:0;left:0;top:0;',
-    '      width:100%;height:100dvh;border-radius:0;',
+    '      position:fixed;bottom:88px;right:12px;left:12px;',
+    '      width:auto;height:72dvh;max-height:520px;border-radius:20px;',
     '    }',
     '    #fab{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));right:24px;}',
     '    #textarea{font-size:16px;}',
@@ -83,7 +83,7 @@
 
     '  #header{',
     '    background:' + COLOR + ';color:' + ON_COLOR + ';',
-    '    padding:16px 18px;padding-top:max(16px,calc(env(safe-area-inset-top) + 8px));display:flex;align-items:center;gap:12px;flex-shrink:0;',
+    '    padding:16px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;',
     '  }',
     '  #header-avatar{',
     '    width:40px;height:40px;border-radius:50%;',
