@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -438,5 +438,19 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error('[chat]', e);
     return NextResponse.json({ error: 'Interner Fehler.' }, { status: 500, headers: corsHeaders });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const { hotel: slug } = await req.json();
+    if (!slug) return NextResponse.json({ ok: false }, { status: 400, headers: corsHeaders });
+    await prisma.hotel.update({
+      where: { slug },
+      data: { chatbotBookingClicks: { increment: 1 } },
+    });
+    return NextResponse.json({ ok: true }, { headers: corsHeaders });
+  } catch {
+    return NextResponse.json({ ok: false }, { status: 500, headers: corsHeaders });
   }
 }

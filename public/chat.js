@@ -260,6 +260,9 @@
       btn.target = '_self';
       btn.className = 'booking-btn';
       btn.textContent = 'Jetzt buchen →';
+      btn.addEventListener('click', function () {
+        fetch(API, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hotel: HOTEL }) }).catch(function(){});
+      });
       msgsEl.appendChild(btn);
     }
 

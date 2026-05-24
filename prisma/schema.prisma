@@ -50,7 +50,8 @@ model Hotel {
   chatbotContext   String?   // gescrapter Website-Text (via Jina Reader)
   chatbotFaq       Json?     // manuelle Ergänzungen: [{question, answer}]
   chatbotSourceUrl String?   // welche URL wurde gescrapt
-  chatbotScrapedAt DateTime? // wann zuletzt gescrapt
+  chatbotScrapedAt     DateTime? // wann zuletzt gescrapt
+  chatbotBookingClicks Int       @default(0)
 
   settings        HotelSettings?
   settingsPresets HotelSettingsPreset[]

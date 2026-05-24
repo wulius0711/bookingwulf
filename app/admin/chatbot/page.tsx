@@ -26,6 +26,7 @@ export default async function ChatbotPage() {
       chatbotSourceUrl: true,
       chatbotScrapedAt: true,
       chatbotFaq: true,
+      chatbotBookingClicks: true,
     },
   });
 
@@ -108,6 +109,19 @@ export default async function ChatbotPage() {
         chatbotName={hotel.chatbotName ?? ''}
         chatbotColor={hotel.chatbotColor ?? '#1a1a1a'}
       />
+
+      {/* ── Buchungslink-Klicks (nur superAdmin) ─────────────────── */}
+      {isSuperAdmin && (
+        <section className="admin-card" style={{ marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 8px', fontSize: 16 }}>Buchungslink-Klicks</h2>
+          <p style={{ margin: 0, fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>
+            {hotel.chatbotBookingClicks}
+          </p>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--text-secondary)' }}>
+            Mal wurde der Buchungsbutton im Chat geklickt.
+          </p>
+        </section>
+      )}
 
       {/* ── Einbindung ────────────────────────────────────────────── */}
       <section className="admin-card" style={{ marginBottom: 24 }}>
