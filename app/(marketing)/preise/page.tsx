@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Check, Minus } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from '../_components/useV4Animate';
+import BridgeSection from '../_components/BridgeSection';
 
 const PLAN_KEYS = ['starter', 'pro', 'business'] as const;
 
@@ -234,6 +235,9 @@ export default function PreisePage() {
           <p className="text-center v4-animate mt-8" style={{ fontSize: 13, color: 'var(--v4-muted)' }}>
             Keine Kreditkarte erforderlich · Kündigung jederzeit möglich
           </p>
+          <div className="mt-10">
+            <BridgeSection />
+          </div>
         </div>
       </section>
 
