@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, ShieldCheck, Zap } from 'lucide-react';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
+import ChatDemo from './_components/ChatDemo';
 
 const INTRO_WORDS = ['direkt.', 'modern.', 'unabhängig.', 'provisionsfrei.'];
 
@@ -222,6 +223,37 @@ export default function HomePage() {
 
           <div className="mt-8 v4-animate">
             <Link href="/features" className="text-sm font-semibold hover:underline underline-offset-4 v4-text-navy">… und noch viel mehr — alle Features ansehen →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ChatDemo ─────────────────────────────────────────────── */}
+      <section className="v4-section bg-white" aria-labelledby="chatdemo-heading">
+        <div className="v4-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <span className="v4-eyebrow v4-animate">Gast-Chatbot</span>
+              <h2 id="chatdemo-heading" className="v4-h2 mb-4 v4-animate v4-d1">Dein KI-Assistent — rund um die Uhr</h2>
+              <p className="text-[17px] leading-[1.65] v4-text-body mb-8 v4-animate v4-d2">
+                Gäste fragen, der Bot antwortet — empfiehlt das passende Apartment, erklärt Extras und erstellt am Ende den vorausgefüllten Buchungslink. Ohne Wartezeit, ohne Aufwand für dich.
+              </p>
+              <ul className="flex flex-col gap-3 list-none m-0 p-0 v4-animate v4-d3">
+                {[
+                  'Verfügbarkeit & Preise in Echtzeit',
+                  'Empfiehlt passend zu Familie, Paar, Haustier, Budget …',
+                  'Buchungslink direkt im Chat — vorausgefüllt',
+                  'Einbindung per Script-Tag, eine Minute Setup',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-[15px] v4-text-body">
+                    <span style={{ color: '#108ba9', fontWeight: 700, fontSize: 16, lineHeight: 1.4, flexShrink: 0 }}>✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="v4-animate v4-d2 flex justify-center">
+              <ChatDemo />
+            </div>
           </div>
         </div>
       </section>
