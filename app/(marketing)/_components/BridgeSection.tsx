@@ -84,7 +84,7 @@ export default function BridgeSection() {
       {open && (
         <div
           className="fixed inset-0 flex items-center justify-center p-4"
-          style={{ zIndex: 9999, background: 'rgba(23,36,66,0.92)', opacity: visible ? 1 : 0, transition: 'opacity 220ms ease-out' }}
+          style={{ zIndex: 99999, background: 'rgba(23,36,66,0.92)', opacity: visible ? 1 : 0, transition: 'opacity 220ms ease-out' }}
           onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
         >
           <div className="relative w-full p-8" style={{ maxWidth: 480, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)', transform: visible ? 'translateY(0)' : 'translateY(16px)', opacity: visible ? 1 : 0, transition: 'transform 220ms ease-out, opacity 220ms ease-out' }}>
