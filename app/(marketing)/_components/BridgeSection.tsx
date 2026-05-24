@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function BridgeSection() {
   const [open, setOpen] = useState(false);
@@ -81,7 +82,7 @@ export default function BridgeSection() {
       </div>
 
       {/* Modal */}
-      {open && (
+      {open && createPortal(
         <div
           className="fixed inset-0 flex items-center justify-center p-4"
           style={{ zIndex: 99999, background: 'rgba(23,36,66,0.92)', opacity: visible ? 1 : 0, transition: 'opacity 220ms ease-out' }}
@@ -137,7 +138,7 @@ export default function BridgeSection() {
             )}
           </div>
         </div>
-      )}
+      , document.body)}
     </>
   );
 }
