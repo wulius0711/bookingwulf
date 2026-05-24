@@ -14,7 +14,7 @@ export default async function ChatbotPage({ searchParams }: { searchParams: Prom
 
   const { hotel: hotelParam } = await searchParams;
   const hotelId = isSuperAdmin
-    ? hotelParam ? Number(hotelParam) : (await prisma.hotel.findFirst({ select: { id: true }, orderBy: { id: 'asc' } }))?.id ?? null
+    ? hotelParam ? Number(hotelParam) : (session.hotelId ?? (await prisma.hotel.findFirst({ select: { id: true }, orderBy: { id: 'asc' } }))?.id ?? null)
     : session.hotelId;
   if (!hotelId) redirect('/admin');
 
