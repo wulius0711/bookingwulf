@@ -230,7 +230,7 @@ export default function PreisePage() {
               );
             })}
           </div>
-          <p className="text-center v4-animate mt-8" style={{ fontSize: 13, color: '#475569' }}>
+          <p className="text-center v4-animate mt-8" style={{ fontSize: 13, color: 'var(--v4-muted)' }}>
             Keine Kreditkarte erforderlich · Kündigung jederzeit möglich
           </p>
         </div>
