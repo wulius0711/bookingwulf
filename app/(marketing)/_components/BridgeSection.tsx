@@ -4,8 +4,12 @@ import { useState } from 'react';
 
 export default function BridgeSection() {
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
+
+  function openModal() { setOpen(true); setSent(false); requestAnimationFrame(() => setVisible(true)); }
+  function closeModal() { setVisible(false); setTimeout(() => setOpen(false), 220); }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,7 +68,7 @@ export default function BridgeSection() {
               Nur buchbar mit<br />Pro-Plan-Zusage.<br />Kein Rückgaberecht.
             </p>
             <button
-              onClick={() => { setOpen(true); setSent(false); }}
+              onClick={openModal}
               className="text-[13px] font-semibold px-5 py-2.5 rounded-[10px] whitespace-nowrap"
               style={{ border: '1.5px solid var(--v4-navy)', background: '#fff', color: 'var(--v4-navy)', cursor: 'pointer' }}
             >
@@ -78,12 +82,12 @@ export default function BridgeSection() {
       {open && (
         <div
           className="fixed inset-0 flex items-center justify-center p-4"
-          style={{ zIndex: 9999, background: 'rgba(23,36,66,0.92)' }}
-          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+          style={{ zIndex: 9999, background: 'rgba(23,36,66,0.92)', opacity: visible ? 1 : 0, transition: 'opacity 220ms ease-out' }}
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
         >
-          <div className="relative w-full p-8" style={{ maxWidth: 480, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)' }}>
+          <div className="relative w-full p-8" style={{ maxWidth: 480, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)', transform: visible ? 'translateY(0)' : 'translateY(16px)', opacity: visible ? 1 : 0, transition: 'transform 220ms ease-out, opacity 220ms ease-out' }}>
             <button
-              onClick={() => setOpen(false)}
+              onClick={closeModal}
               className="absolute top-4 right-4 text-xl leading-none v4-text-muted"
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               aria-label="Schließen"
