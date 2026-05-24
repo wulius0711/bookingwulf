@@ -8,13 +8,18 @@ import FaqEditor from './FaqEditor';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ChatbotPage() {
+export default async function ChatbotPage({ searchParams }: { searchParams: Promise<{ hotel?: string }> }) {
   const session = await verifySession();
   const isSuperAdmin = session.role === 'super_admin';
-  if (!session.hotelId) redirect('/admin');
+
+  const { hotel: hotelParam } = await searchParams;
+  const hotelId = isSuperAdmin
+    ? hotelParam ? Number(hotelParam) : (await prisma.hotel.findFirst({ select: { id: true }, orderBy: { id: 'asc' } }))?.id ?? null
+    : session.hotelId;
+  if (!hotelId) redirect('/admin');
 
   const hotel = await prisma.hotel.findUnique({
-    where: { id: session.hotelId },
+    where: { id: hotelId },
     select: {
       slug: true,
       plan: true,
