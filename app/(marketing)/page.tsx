@@ -158,7 +158,7 @@ export default function HomePage() {
               bookingwulf ist das österreichische Buchungswidget für Pensionen, Hotels und Apartments.
               Kein Buchungsportal, <span className="v4-text-green font-semibold">keine Provision</span> — deine Gäste buchen{' '}
               <span className="v4-text-green font-semibold">direkt</span> über{' '}
-              <span className="v4-text-green font-semibold">deiner Website</span>.
+              <span className="v4-text-green font-semibold">deine Website</span>.
               Einfach eingebaut, sofort einsatzbereit.
             </p>
           </div>
