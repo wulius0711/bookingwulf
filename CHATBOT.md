@@ -32,7 +32,7 @@ Der fertige Einbindungs-Code (mit dem korrekten Slug) wird unten auf der Admin-S
 - Verfügbarkeit prüfen und Preise berechnen
 - Extras & Upsells vorstellen (aus HotelExtras mit `showInUpsell: true`)
 - Fragen zu Check-in, Check-out, Parken, WLAN etc. beantworten
-- Direkten Buchungslink generieren (vorausgefüllt mit Daten aus dem Chat)
+- Direkten Buchungslink generieren (vorausgefüllt mit Daten aus dem Chat) — erscheint im Chat als gepulster "Jetzt buchen →"-Button
 
 ## Was der Bot NICHT tut
 
