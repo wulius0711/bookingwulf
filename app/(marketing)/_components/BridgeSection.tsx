@@ -32,10 +32,10 @@ export default function BridgeSection() {
 
       {/* Card */}
       <div className="flex justify-center">
-        <div className="grid overflow-hidden" style={{ width: '66%', minWidth: 340, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)', gridTemplateColumns: '1fr auto' }}>
+        <div className="flex flex-col sm:flex-row overflow-hidden" style={{ width: '66%', minWidth: 340, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)' }}>
 
           {/* Linke Spalte */}
-          <div className="p-7">
+          <div className="flex-1 p-7">
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2.5 py-1 mb-3" style={{ background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
               🕐 Noch im Vertrag?
             </span>
@@ -60,7 +60,7 @@ export default function BridgeSection() {
           </div>
 
           {/* Rechte Spalte */}
-          <div className="flex flex-col items-center justify-center gap-1 p-7 text-center" style={{ borderLeft: '0.5px solid rgba(0,0,0,0.10)', minWidth: 180 }}>
+          <div className="flex flex-col items-center justify-center gap-1 p-7 text-center border-t sm:border-t-0 sm:border-l" style={{ borderColor: 'rgba(0,0,0,0.10)' }}>
             <span className="text-xs font-medium" style={{ color: 'var(--v4-body)' }}>Gäste-Lounge</span>
             <div className="text-[40px] font-extrabold tracking-tight" style={{ color: 'var(--v4-navy)', lineHeight: 1 }}>
               €29<span className="text-base font-normal v4-text-muted"> / Mo</span>
