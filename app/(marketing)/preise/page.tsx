@@ -70,7 +70,6 @@ const COMPARISON: FeatureGroup[] = [
       { label: 'Gäste-Assistent (KI-Chatbot)', starter: false, pro: true, business: true },
       { label: 'Direktnachrichten an Gäste', starter: false, pro: false, business: true },
       { label: 'Analytics', starter: false, pro: false, business: true },
-      { label: 'Chatbot-Analytics', starter: false, pro: false, business: true },
     ],
   },
   {
