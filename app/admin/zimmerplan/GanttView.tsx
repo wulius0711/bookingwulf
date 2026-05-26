@@ -270,8 +270,8 @@ const TAB_COLORS: Record<TabType, string> = { blocked: '#ef4444', season: '#3b82
 const TAB_LABELS: Record<TabType, string> = { blocked: 'Sperrzeit', season: 'Preiszeitraum', booking: 'Buchung' };
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '7px 10px', border: '1px solid var(--border-default)',
-  borderRadius: 7, fontSize: 13, background: 'var(--bg-surface-raised)', color: 'var(--text-primary)', boxSizing: 'border-box',
+  width: '100%', padding: '7px 10px', border: '1px solid #334155',
+  borderRadius: 7, fontSize: 13, background: '#273548', color: '#f1f5f9', boxSizing: 'border-box',
 };
 const labelStyle: React.CSSProperties = {
   fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)',
@@ -551,8 +551,8 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selection && (
         <>
           <div aria-hidden="true" onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <div>
                 <div id="gantt-create-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                   {formatDisplay(selection.start)}{selection.start !== selection.end ? ` – ${formatDisplay(selection.end)}` : ''}
@@ -563,7 +563,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                 {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
                   const locked = tab === 'season' && !hasPro;
                   return (
-                    <button key={tab} onClick={() => { if (!locked) { setActiveTab(tab); setFormError(null); } }} disabled={locked} title={locked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid var(--border-default)', cursor: locked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : locked ? '#475569' : 'var(--text-secondary)', opacity: locked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <button key={tab} onClick={() => { if (!locked) { setActiveTab(tab); setFormError(null); } }} disabled={locked} title={locked ? 'Pro-Feature' : undefined} style={{ padding: '4px 10px', borderRadius: 6, border: activeTab === tab ? 'none' : '1px solid #334155', cursor: locked ? 'default' : 'pointer', fontSize: 12, fontWeight: 600, background: activeTab === tab ? TAB_COLORS[tab] : 'transparent', color: activeTab === tab ? '#fff' : locked ? '#475569' : 'var(--text-secondary)', opacity: locked ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 4 }}>
                       {TAB_LABELS[tab]}{locked && <span style={{ fontSize: 10, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 5px', fontWeight: 700, opacity: 1 }}>Pro</span>}
                     </button>
                   );
@@ -700,8 +700,8 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selectedItem && (
         <>
           <div aria-hidden="true" onClick={() => setSelectedItem(null)} className="gantt-detail-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 100, backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }} />
-          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                 {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
               </span>
