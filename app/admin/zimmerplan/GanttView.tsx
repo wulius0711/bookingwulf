@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Button from '../components/ui/Button';
 
@@ -474,7 +475,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       const isToday = d === todayIso;
                       const highlighted = inDragHighlight(apt.id, d);
                       return (
-                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid var(--border)', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, var(--surface))' : isWeekend ? 'var(--surface-2)' : 'var(--surface)' }} />
+                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid var(--border)', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? 'var(--surface-2)' : 'transparent' }} />
                       );
                     })}
 
@@ -548,7 +549,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       )}
 
       {/* ── Create popup (after drag) ── */}
-      {selection && (
+      {selection && createPortal(
         <>
           <div aria-hidden="true" onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
           <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
@@ -676,7 +677,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
             </form>
           </div>
         </>
-      )}
+      , document.body)}
 
       {/* ── Apartment calendar ── */}
       {calApt && (
@@ -697,7 +698,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       )}
 
       {/* ── Bar detail / edit popup ── */}
-      {selectedItem && (
+      {selectedItem && createPortal(
         <>
           <div aria-hidden="true" onClick={() => setSelectedItem(null)} className="gantt-detail-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 100, backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }} />
           <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
@@ -817,7 +818,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
               )}
             </div>
           </div>
-        </>
+        </>, document.body
       )}
     </div>
   );
