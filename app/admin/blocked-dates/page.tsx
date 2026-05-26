@@ -43,8 +43,8 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
 
   const ranges = await prisma.blockedRange.findMany({
     where: selectedHotelId !== null
-      ? { apartment: { hotelId: selectedHotelId } }
-      : undefined,
+      ? { apartment: { hotelId: selectedHotelId }, NOT: { type: 'booking' } }
+      : { NOT: { type: 'booking' } },
     include: { apartment: { include: { hotel: { select: { name: true, settings: { select: { accentColor: true } } } } } } },
     orderBy: { startDate: 'asc' },
   });
