@@ -474,7 +474,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       const isToday = d === todayIso;
                       const highlighted = inDragHighlight(apt.id, d);
                       return (
-                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid var(--border)', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, transparent)' : isWeekend ? 'var(--surface-2)' : 'transparent' }} />
+                        <div key={d} style={{ width: COL_W, flexShrink: 0, height: '100%', borderRight: '1px solid var(--border)', background: highlighted ? '#ede9fe' : isToday ? 'color-mix(in srgb, var(--accent) 6%, var(--surface))' : isWeekend ? 'var(--surface-2)' : 'var(--surface)' }} />
                       );
                     })}
 
