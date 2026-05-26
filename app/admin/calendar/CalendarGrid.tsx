@@ -32,6 +32,13 @@ const STATUS_BG: Record<string, string> = {
   cancelled: '#fee2e2',
 };
 
+const STATUS_TEXT: Record<string, string> = {
+  new: '#1e40af',
+  answered: '#78350f',
+  booked: '#166534',
+  cancelled: '#991b1b',
+};
+
 const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
 export type BookingChip = {
@@ -248,7 +255,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         const p: Record<string, number> = { booked: 0, answered: 1, new: 2 };
                         return (p[a.status] ?? 3) - (p[b.status] ?? 3);
                       }).slice(0, 4).map((req) => (
-                        <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: STATUS_BG[req.status] ?? '#f3f4f6', borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: STATUS_COLORS[req.status] ?? '#9ca3af', fontSize: 10, color: 'var(--text-primary)', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte`}>
+                        <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: STATUS_BG[req.status] ?? '#f3f4f6', borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: STATUS_COLORS[req.status] ?? '#9ca3af', fontSize: 10, color: STATUS_TEXT[req.status] ?? '#111', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte`}>
                           <span className="calendar-chip-label">{req.isArrival ? '↘ ' : ''}{req.firstname ? req.firstname[0] + '. ' : ''}{req.lastname}{req.aptName ? ` · ${req.aptName}` : ''}</span>
                         </button>
                       ))}
