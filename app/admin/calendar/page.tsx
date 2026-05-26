@@ -128,6 +128,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       ...(session.hotelId ? { apartment: { hotelId: session.hotelId } } : {}),
       startDate: { lte: lastDay },
       endDate: { gt: firstDay },
+      NOT: { type: 'booking' },
     },
     include: { apartment: { select: { name: true } } },
   });
