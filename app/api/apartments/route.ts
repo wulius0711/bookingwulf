@@ -62,6 +62,7 @@ export async function GET(req: Request) {
         view: true,
         basePrice: true,
         cleaningFee: true,
+        otaComparisonPrice: true,
         images: {
           orderBy: {
             sortOrder: 'asc',

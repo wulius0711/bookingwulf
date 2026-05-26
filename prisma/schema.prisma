@@ -253,8 +253,9 @@ model Apartment {
   maxChildren Int @default(0)
 
   // Pricing
-  basePrice   Float?
-  cleaningFee Float?
+  basePrice          Float?
+  cleaningFee        Float?
+  otaComparisonPrice Float?
 
   // Compact Content
   size     Int?

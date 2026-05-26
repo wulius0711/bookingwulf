@@ -110,6 +110,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
+    const otaComparisonPriceRaw = String(formData.get('otaComparisonPrice') || '').trim();
 
     const sortOrder = Number(formData.get('sortOrder') || 0);
     const isActive = formData.get('isActive') === 'on';
@@ -129,6 +130,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const size = sizeRaw ? Number(sizeRaw) : null;
     const basePrice = basePriceRaw ? Number(basePriceRaw) : null;
     const cleaningFee = cleaningFeeRaw ? Number(cleaningFeeRaw) : null;
+    const otaComparisonPrice = otaComparisonPriceRaw ? Number(otaComparisonPriceRaw) : null;
 
     const amenities = amenitiesRaw
       .split('\n')
@@ -183,6 +185,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         description: description || null,
         basePrice,
         cleaningFee,
+        otaComparisonPrice,
         sortOrder,
         isActive,
         gpCheckinTime:  gpCheckinTime  || null,
@@ -308,6 +311,10 @@ export default async function EditApartmentPage({ params }: PageProps) {
               <div style={fieldWrap}>
                 <label style={labelStyle}>Reinigungsgebühr (€)</label>
                 <input type="number" step="0.01" name="cleaningFee" defaultValue={apartment.cleaningFee ?? ''} style={inputStyle} />
+              </div>
+              <div style={{ ...fieldWrap, gridColumn: '1 / -1' }}>
+                <label style={labelStyle}>Vergleichspreis OTA (€) <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>— z. B. Booking.com · Leer lassen = nicht anzeigen</span></label>
+                <input type="number" step="0.01" name="otaComparisonPrice" defaultValue={apartment.otaComparisonPrice ?? ''} style={{ ...inputStyle, maxWidth: 200 }} />
               </div>
             </div>
           </details>

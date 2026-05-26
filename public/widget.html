@@ -1459,6 +1459,14 @@
         background: #fef9c3;
         color: #854d0e;
       }
+      .apt-ota-compare {
+        font-size: 0.786rem;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .apt-ota-compare s {
+        color: var(--muted);
+      }
 
       .apt-badge {
         position: absolute;
@@ -4684,6 +4692,11 @@
             const expanded = !!state.expandedDescriptions[ap.id];
             const amenitiesExpanded = !!state.expandedAmenities[ap.id];
 
+            let otaHtml = '';
+            if (ap.otaComparisonPrice && state.settings.showPrices && pricing && pricing.available) {
+              otaHtml = `<div class="apt-ota-compare">Booking.com: <s>${eur(ap.otaComparisonPrice)}</s></div>`;
+            }
+
             let priceHtml = '';
             if (state.settings.showPrices) {
               priceHtml = `<div class="apt-price">${t('apt_price_on_request')}</div>`;
@@ -4893,7 +4906,7 @@
                   </div>
 
                   <div class="apt-actions">
-                    ${priceHtml}
+                    ${otaHtml}${priceHtml}
                     ${
                       status.type === 'available'
                         ? `<button type="button" class="apt-select-btn ${selected ? 'remove' : ''}" data-select="${ap.id}">
