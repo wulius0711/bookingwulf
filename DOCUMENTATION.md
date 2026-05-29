@@ -130,6 +130,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 | hungrywulfEnabled | Boolean | hungrywulf-Tischreservierung freigeschaltet (Super-Admin) |
 | hungrywulfRestaurantId | String? | CUID des Restaurant-Accounts in hungrywulf |
 | hungrywulfSecret | String? | HMAC-Shared-Secret für Magic-Link-Auth (= bookingAppKey in hungrywulf) |
+| isTest | Boolean | Beta-Tester-Konto (default false) — erhält Danke-Mails statt Lösch-Warnungen im Trial-Ablauf |
 
 ### HotelSettings *(UI-Konfiguration)*
 
@@ -314,9 +315,10 @@ Request bekommt `nukiCode` (6-stelliger Code als String) und `nukiAuthIds` (`"sm
 
 ### Registrierung
 
-1. Formular: Hotelname, Slug (auto-generiert), E-Mail, Passwort
+1. Formular: Hotelname, Slug (auto-generiert), E-Mail, Passwort, optionaler Einladungscode
 2. **Honeypot-Feld** (`name="website"`, visuell versteckt) — Bot-Submissions werden lautlos ignoriert
-3. **Rate Limit:** 5 Registrierungen/Stunde pro IP (Upstash Redis)
+3. **Einladungscode (optional):** Wird gegen `BETA_INVITE_CODE` Env-Var geprüft (case-insensitive). Bei Match: `Hotel.isTest = true` → Beta-Tester-Flow aktiv
+4. **Rate Limit:** 5 Registrierungen/Stunde pro IP (Upstash Redis)
 4. **Validierung:** Passwort 8–128 Zeichen, Slug `/^[a-z0-9-]+$/`, Plan gegen `PLANS`-Keys
 5. Resend-Verfügbarkeit wird vor DB-Writes geprüft — schlägt fehl → Fehlermeldung, kein DB-Write
 6. Bestätigungs-E-Mail wird **vor** DB-Write gesendet — schlägt fehl → Fehlermeldung, kein DB-Write
@@ -385,9 +387,9 @@ Cron `/api/cron/expire-trials` läuft täglich 08:00 Uhr (Vercel Cron):
 | Tag nach Ablauf | Aktion |
 |----------------|--------|
 | 0 | `subscriptionStatus: 'trialing'` → `'inactive'` (auch lazy in `layout.tsx` bei Seitenaufruf) |
-| +3 | E-Mail 1: Login-CTA + diskreter Lösch-Link (einmaliger Token wird generiert, 12 Tage gültig) |
-| +7 | E-Mail 2: Letzte Warnung — "Konto wird in 7 Tagen gelöscht" |
-| +14 | Auto-Delete: Hotel + alle AdminUser (nur wenn beide E-Mails tatsächlich versandt wurden) |
+| +3 | E-Mail 1: Login-CTA + diskreter Lösch-Link (einmaliger Token wird generiert, 12 Tage gültig). Beta-Tester (`isTest=true`): Danke-Mail mit Feedback-Bitte statt Ablauf-Warnung |
+| +7 | E-Mail 2: Letzte Warnung — "Konto wird in 7 Tagen gelöscht". Beta-Tester: Danke-Mail + sanfter Lösch-Hinweis |
+| +14 | Auto-Delete: Hotel + alle AdminUser (nur wenn beide E-Mails tatsächlich versandt wurden — gilt auch für Beta-Tester) |
 
 **Self-Service-Löschung:** `/delete-account?token=<token>` — öffentlich zugängliche Seite, validiert Token, zeigt Bestätigungsformular (mit Hotel-Name und Unwiderruflichkeits-Warnung), löscht per Server Action Hotel + AdminUser in Transaction. Verlinkung in beiden Trial-Ablauf-E-Mails.
 
@@ -674,8 +676,8 @@ Pro Einbettungsort kann ein eigenes `config`-Slug konfiguriert werden mit eigene
 
 | Cron-Route | Empfänger | Bedingung | Idempotenz-Guard |
 |---|---|---|---|
-| `/api/cron/expire-trials` — Tag+3 | Hotelbetreiber | `subscriptionStatus='inactive'`, E-Mail 1 noch nicht gesendet | `trialEmail1SentAt IS NULL` |
-| `/api/cron/expire-trials` — Tag+7 | Hotelbetreiber | E-Mail 1 gesendet, E-Mail 2 noch nicht | `trialEmail2SentAt IS NULL` |
+| `/api/cron/expire-trials` — Tag+3 | Hotelbetreiber | `subscriptionStatus='inactive'`, E-Mail 1 noch nicht gesendet. `isTest=false`: Ablauf-Warnung; `isTest=true`: Danke-Mail | `trialEmail1SentAt IS NULL` |
+| `/api/cron/expire-trials` — Tag+7 | Hotelbetreiber | E-Mail 1 gesendet, E-Mail 2 noch nicht. `isTest=false`: Letzte Erinnerung; `isTest=true`: Danke-Mail + sanfter Lösch-Hinweis | `trialEmail2SentAt IS NULL` |
 | `/api/cron/payment-reminder` | Hotel | Offene Banküberweisungen (alle 30 Min) | — |
 | `/api/cron/checkin-email` | Gast | Anreise − X Tage (default 3) 10:00 Wien, `checkinEmailEnabled` | `checkinEmailSentAt IS NULL` |
 | `/api/cron/pre-arrival-reminder` | Gast | Anreise − X Tage 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
