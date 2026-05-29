@@ -531,13 +531,7 @@ input[type="range"] {
   appearance: none;
   height: 6px;
   border-radius: 3px;
-  background: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--accent) 75%, #000) 0%,
-    color-mix(in srgb, var(--accent) 75%, #000) var(--progress, 50%),
-    rgba(128, 128, 128, 0.3) var(--progress, 50%),
-    rgba(128, 128, 128, 0.3) 100%
-  );
+  background: transparent;
   cursor: pointer;
   outline: none;
 }
@@ -545,6 +539,13 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--accent) 75%, #000) 0%,
+    color-mix(in srgb, var(--accent) 75%, #000) var(--progress, 50%),
+    var(--border-strong) var(--progress, 50%),
+    var(--border-strong) 100%
+  );
 }
 
 input[type="range"]::-webkit-slider-thumb {
