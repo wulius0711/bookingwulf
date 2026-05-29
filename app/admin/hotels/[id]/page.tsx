@@ -5,6 +5,7 @@ import { ColorField } from '@/app/admin/settings/color-field';
 import { Button } from '../../components/ui';
 import HungrywulfToggle from './HungrywulfToggle';
 import EventwulfToggle from './EventwulfToggle';
+import IsTestToggle from './IsTestToggle';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import { PLAN_LABEL } from '@/src/lib/plan-gates';
 import PlanSelector from './PlanSelector';
@@ -25,7 +26,7 @@ export default async function EditHotelPage({ params }: PageProps) {
     where: { id: hotelId },
     select: {
       id: true, name: true, slug: true, email: true, phone: true,
-      accentColor: true, isActive: true, plan: true,
+      accentColor: true, isActive: true, plan: true, isTest: true,
       hungrywulfEnabled: true, hungrywulfRestaurantId: true,
       eventwulfEnabled: true, eventwulfOrgId: true,
     },
@@ -175,6 +176,13 @@ export default async function EditHotelPage({ params }: PageProps) {
             <span style={s.integId}>ID: {hotel.eventwulfOrgId}</span>
           )}
           <EventwulfToggle hotelId={hotel.id} enabled={hotel.eventwulfEnabled} />
+        </div>
+
+        <div style={s.integCard}>
+          <div style={s.integIcon}>🧪</div>
+          <div style={s.integName}>Beta-Tester</div>
+          <div style={s.integDesc}>Erhält Danke-Mails statt Lösch-Warnungen nach Trial-Ende</div>
+          <IsTestToggle hotelId={hotel.id} isTest={hotel.isTest} />
         </div>
       </div>
     </main>
