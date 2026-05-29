@@ -99,7 +99,7 @@ export default function RegisterForm() {
 
             <div>
               <label htmlFor="reg-invite" style={labelStyle}>Einladungscode <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
-              <input id="reg-invite" name="inviteCode" type="text" placeholder="z. B. VERBAND2026" style={inputStyle} />
+              <input id="reg-invite" name="inviteCode" type="text" placeholder="Einladungscode eingeben" style={inputStyle} />
             </div>
 
             <input type="hidden" name="plan" value="starter" />
