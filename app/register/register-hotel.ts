@@ -29,6 +29,9 @@ export async function registerHotel(
   const password = formData.get('password')?.toString() ?? '';
   const confirm = formData.get('confirm')?.toString() ?? '';
   const plan = (formData.get('plan')?.toString() ?? 'starter') as PlanKey;
+  const inviteCode = formData.get('inviteCode')?.toString().trim().toUpperCase() ?? '';
+  const betaCode = process.env.BETA_INVITE_CODE?.toUpperCase() ?? '';
+  const isTest = betaCode !== '' && inviteCode === betaCode;
 
   if (!hotelName || !slug || !email || !password || !confirm) {
     return { error: 'Alle Felder sind erforderlich.' };
@@ -117,6 +120,7 @@ export async function registerHotel(
           slug,
           email,
           plan,
+          isTest,
           subscriptionStatus: 'trialing',
           trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
           settings: { create: {} },

@@ -35,7 +35,7 @@ export async function GET(req: Request) {
       trialEmail1SentAt: null,
       email: { not: null },
     },
-    select: { id: true, name: true, email: true },
+    select: { id: true, name: true, email: true, isTest: true },
   });
 
   for (const hotel of email1Hotels) {
@@ -48,11 +48,29 @@ export async function GET(req: Request) {
       await resend?.emails.send({
         from: getFromEmail(),
         to: hotel.email!,
-        subject: 'Deine bookingwulf-Testphase ist abgelaufen',
+        subject: hotel.isTest
+          ? 'Danke für deinen bookingwulf-Test!'
+          : 'Deine bookingwulf-Testphase ist abgelaufen',
         html: buildEmailHtml({
           hotelName: 'bookingwulf',
-          title: 'Deine Testphase ist abgelaufen',
-          body: `
+          title: hotel.isTest ? 'Danke für deinen Test!' : 'Deine Testphase ist abgelaufen',
+          body: hotel.isTest ? `
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+              Hallo ${hotel.name},<br/><br/>
+              vielen Dank, dass du bookingwulf getestet hast! Wir hoffen, du konntest dir einen guten Eindruck verschaffen.
+            </p>
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
+              Dein Feedback ist uns sehr wichtig — was hat funktioniert, was könnte besser sein? Schreib uns einfach zurück.
+            </p>
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
+              Wir würden uns freuen, dich als echten Kunden zu haben. Meld dich jederzeit, wenn du Fragen hast.
+            </p>
+            <p style="margin:0 0 12px;">
+              <a href="${loginUrl}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
+                Jetzt einloggen und Paket wählen →
+              </a>
+            </p>
+          ` : `
             <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
               Hallo,<br/><br/>
               die kostenlose Testphase für <strong>${hotel.name}</strong> ist abgelaufen. Wir würden uns freuen, dich weiterhin dabei zu haben!
@@ -66,9 +84,8 @@ export async function GET(req: Request) {
               </a>
             </p>
             <p style="font-size:13px;color:#9ca3af;line-height:1.6;margin:20px 0 0;">
-              Möchtest du dein Konto lieber löschen lassen?
-              <a href="${deleteUrl}" style="color:#6b7280;">Konto und alle Daten löschen</a>.<br/>
-              In 4 Tagen senden wir dir eine letzte Erinnerung. Danach wird dein Konto nach weiteren 7 Tagen automatisch gelöscht, falls du nichts unternimmst.
+              In 4 Tagen senden wir dir eine letzte Erinnerung. Danach wird dein Konto nach weiteren 7 Tagen automatisch gelöscht, falls du nichts unternimmst.<br/>
+              Möchtest du dein Konto lieber löschen lassen? <a href="${deleteUrl}" style="color:#6b7280;">Konto und alle Daten löschen</a>.
             </p>
           `,
         }),
@@ -93,7 +110,7 @@ export async function GET(req: Request) {
       trialEmail2SentAt: null,
       email: { not: null },
     },
-    select: { id: true, name: true, email: true, deletionToken: true },
+    select: { id: true, name: true, email: true, isTest: true, deletionToken: true },
   });
 
   for (const hotel of email2Hotels) {
@@ -106,18 +123,36 @@ export async function GET(req: Request) {
       await resend?.emails.send({
         from: getFromEmail(),
         to: hotel.email!,
-        subject: 'Letzte Erinnerung — dein bookingwulf-Konto wird in 7 Tagen gelöscht',
+        subject: hotel.isTest
+          ? 'Wie war dein bookingwulf-Test? Wir freuen uns auf dein Feedback!'
+          : 'Letzte Erinnerung — dein bookingwulf-Konto wird in 7 Tagen gelöscht',
         html: buildEmailHtml({
           hotelName: 'bookingwulf',
-          title: 'Letzte Erinnerung',
-          body: `
+          title: hotel.isTest ? 'Wie war dein Test?' : 'Letzte Erinnerung',
+          body: hotel.isTest ? `
             <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-              Hallo,<br/><br/>
-              dies ist unsere letzte Erinnerung: Das Konto für <strong>${hotel.name}</strong> ist inaktiv.
+              Hallo ${hotel.name},<br/><br/>
+              nochmals vielen Dank für deinen Test! Falls du bookingwulf produktiv einsetzen möchtest, freuen wir uns sehr darauf, dich als Kunden zu haben.
+            </p>
+            <p style="font-size:13px;color:#9ca3af;line-height:1.6;margin:0 0 24px;">
+              Nur zur Info: Dein Testkonto wird in 7 Tagen automatisch gelöscht. Falls du weitermachen möchtest, wähl einfach ein Paket.
+            </p>
+            <p style="margin:0 0 12px;">
+              <a href="${loginUrl}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
+                Jetzt einloggen und Paket wählen →
+              </a>
+            </p>
+          ` : `
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
+              Hallo ${hotel.name},<br/><br/>
+              schön, dass du bookingwulf ausprobiert hast — alle deine Daten sind noch da.
             </p>
             <div style="padding:14px 18px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;margin-bottom:24px;font-size:14px;color:#9a3412;line-height:1.6;">
-              ⚠️ Wenn du in den nächsten <strong>7 Tagen</strong> nichts unternimmst, werden dein Konto und alle gespeicherten Daten <strong>unwiderruflich gelöscht</strong>.
+              ⚠️ In <strong>7 Tagen</strong> wird dein Konto unwiderruflich gelöscht, wenn du nichts unternimmst.
             </div>
+            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
+              Die Lösung ist einfach: Melde dich an und wähle ein Paket.
+            </p>
             <p style="margin:0 0 12px;">
               <a href="${loginUrl}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
                 Jetzt einloggen und Paket wählen →
@@ -125,8 +160,7 @@ export async function GET(req: Request) {
             </p>
             ${deleteUrl ? `
             <p style="font-size:13px;color:#9ca3af;line-height:1.6;margin:20px 0 0;">
-              Du möchtest das Konto sofort löschen?
-              <a href="${deleteUrl}" style="color:#6b7280;">Konto und alle Daten jetzt löschen</a>.
+              Du möchtest das Konto sofort löschen? <a href="${deleteUrl}" style="color:#6b7280;">Konto und alle Daten jetzt löschen</a>.
             </p>` : ''}
           `,
         }),
