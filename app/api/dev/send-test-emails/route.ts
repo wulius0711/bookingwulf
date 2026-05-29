@@ -28,7 +28,7 @@ export async function GET(req: Request) {
           vielen Dank, dass du bookingwulf getestet hast! Wir hoffen, du konntest dir einen guten Eindruck verschaffen.
         </p>
         <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
-          Dein Feedback ist uns sehr wichtig — was hat funktioniert, was könnte besser sein? Schreib uns einfach zurück.
+          Dein Feedback ist uns sehr wichtig — was hat funktioniert, was könnte besser sein? Schreib uns an <a href="mailto:support@bookingwulf.com" style="color:#374151;">support@bookingwulf.com</a>.
         </p>
         <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
           Wir würden uns freuen, dich als echten Kunden zu haben. Meld dich jederzeit, wenn du Fragen hast.
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
           die kostenlose Testphase für <strong>${HOTEL_NAME}</strong> ist abgelaufen. Wir würden uns freuen, dich weiterhin dabei zu haben!
         </p>
         <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
-          Melde dich an und wähle ein Paket — alle deine Daten sind noch vorhanden.
+          Melde dich an und wähle ein Paket — alle deine Daten sind noch vorhanden. So nimmst du Anfragen und Buchungen direkt über deine Website entgegen, ganz ohne Provision.
         </p>
         <p style="margin:0 0 12px;">
           <a href="${LOGIN_URL}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
@@ -112,7 +112,7 @@ export async function GET(req: Request) {
           ⚠️ In <strong>7 Tagen</strong> wird dein Konto unwiderruflich gelöscht, wenn du nichts unternimmst.
         </div>
         <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 24px;">
-          Die Lösung ist einfach: Melde dich an und wähle ein Paket.
+          Die Lösung ist einfach: Melde dich an und wähle ein Paket. So läuft die Buchung direkt über deine Website — ohne Provision für externe Plattformen.
         </p>
         <p style="margin:0 0 12px;">
           <a href="${LOGIN_URL}" style="display:inline-block;padding:12px 28px;background:#111827;color:#fff;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
