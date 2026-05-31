@@ -108,6 +108,18 @@ export default function HomePage() {
         <HeroBg />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.2) 60%, transparent 80%), linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 50%)' }} aria-hidden />
         <div className="v4-container relative z-10 flex flex-col justify-end" style={{ opacity: heroOpacity, willChange: 'opacity', minHeight: 520 }}>
+          <div className="v4-animate" style={{ marginBottom: 16 }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.85)',
+              background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: 999, padding: '5px 12px',
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#50DDFF', display: 'inline-block', flexShrink: 0 }} />
+              {CONTENT.hero.badge}
+            </span>
+          </div>
           <h1
             id="hero-heading"
             className="v4-animate text-white"
