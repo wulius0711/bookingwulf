@@ -106,7 +106,7 @@ export default function HomePage() {
         style={{ background: 'var(--v4-navy)', marginTop: -64, paddingTop: 164 }}
       >
         <HeroBg />
-        <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.45)' }} aria-hidden />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.2) 60%, transparent 80%), linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 50%)' }} aria-hidden />
         <div className="v4-container relative z-10 flex flex-col justify-end" style={{ opacity: heroOpacity, willChange: 'opacity', minHeight: 520 }}>
           <h1
             id="hero-heading"

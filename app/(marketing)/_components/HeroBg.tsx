@@ -199,7 +199,7 @@ export default function HeroBg() {
         transformOrigin: 'center top',
         display: 'flex',
         gap: 16,
-        opacity: 0.45,
+        opacity: 0.85,
         pointerEvents: 'none',
         width: 'max-content',
       }}>
@@ -215,9 +215,6 @@ export default function HeroBg() {
       </div>
 
       {/* Edge fade gradients */}
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,0,0,0.9) 0%, transparent 70%)' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.6) 100%)' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.5) 100%)' }} />
     </div>
   );
 }
