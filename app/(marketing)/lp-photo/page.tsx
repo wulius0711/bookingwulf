@@ -3,12 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, Zap } from 'lucide-react';
-import RotatingBadge from './_components/RotatingBadge';
-import BridgeSection from './_components/BridgeSection';
+import RotatingBadge from '../_components/RotatingBadge';
+import BridgeSection from '../_components/BridgeSection';
 import { PLANS } from '@/src/lib/plans';
-import { useV4Animate } from './_components/useV4Animate';
-import ChatDemo from './_components/ChatDemo';
-import HeroBg from './_components/HeroBg';
+import { useV4Animate } from '../_components/useV4Animate';
+import ChatDemo from '../_components/ChatDemo';
 
 const INTRO_WORDS = ['direkt.', 'modern.', 'unabhängig.', 'provisionsfrei.'];
 
@@ -101,21 +100,47 @@ export default function HomePage() {
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="v4-section relative"
+        className="v4-section text-center relative overflow-hidden"
         aria-labelledby="hero-heading"
-        style={{ background: 'var(--v4-navy)', marginTop: -64, paddingTop: 164 }}
+        style={{
+          backgroundImage: 'url(https://plus.unsplash.com/premium_photo-1684863506009-c08cb110f40e?auto=format&fit=crop&w=1920&q=80)',
+          backgroundSize: 'cover',
+          backgroundPositionX: 'center',
+          backgroundPositionY: heroBgY,
+        }}
       >
-        <HeroBg />
-        <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.45)' }} aria-hidden />
-        <div className="v4-container relative z-10 flex flex-col justify-end" style={{ opacity: heroOpacity, willChange: 'opacity', minHeight: 520 }}>
+        <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.55)' }} aria-hidden />
+        <div className="v4-container relative z-10 flex flex-col items-center" style={{ opacity: heroOpacity, willChange: 'opacity' }}>
+          <div
+            className="v4-badge-pulse inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-10 border"
+            style={{ background: 'rgba(16,139,169,0.25)', color: '#90cce0', borderColor: 'rgba(144,204,224,0.35)' }}
+            role="status"
+          >
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#90cce0' }} aria-hidden />
+            {CONTENT.hero.badge}
+          </div>
+
           <h1
             id="hero-heading"
-            className="v4-animate text-white"
-            style={{ fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', margin: 0 }}
+            className="v4-animate mb-6 text-white"
+            style={{ fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em' }}
           >
-            Direktbuchungen<br />für deine Unterkunft.<br />
+            {CONTENT.hero.h1a} {CONTENT.hero.h1b}<br />
             <span style={{ color: '#50DDFF' }}>{CONTENT.hero.h1c}</span>
           </h1>
+
+          <p className="text-[17px] leading-[1.65] mb-10 v4-animate v4-d1" style={{ color: 'rgba(255,255,255,0.82)', maxWidth: 560, whiteSpace: 'pre-line' }}>
+            {CONTENT.hero.sub}
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-3 mb-8 v4-animate v4-d2">
+            <Link href="/register" className="v4-btn v4-btn-primary">{CONTENT.hero.cta1}</Link>
+            <Link href="/demo"  className="v4-btn v4-btn-ghost-white">{CONTENT.hero.cta2} →</Link>
+          </div>
+
+          <div className="v4-animate v4-d3">
+            <RotatingBadge />
+          </div>
         </div>
       </section>
 

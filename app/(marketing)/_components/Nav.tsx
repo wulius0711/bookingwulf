@@ -14,12 +14,27 @@ const NAV_LINKS = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => setOpen(false), [pathname]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50" style={{ background: 'var(--v4-navy)' }}>
+    <header
+      className="sticky top-0 z-50"
+      style={{
+        background: scrolled ? 'var(--v4-navy)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+        transition: 'background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease',
+      }}
+    >
       <nav
         className="v4-container flex items-center justify-between h-16"
         aria-label="Hauptnavigation"

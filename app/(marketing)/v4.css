@@ -1,3 +1,5 @@
+html, body { background: #172442; }
+
 /* ── v4 design tokens ───────────────────────────────────────── */
 :root {
   --v4-green:        #108ba9;
@@ -18,7 +20,7 @@
 
 /* ── Container ──────────────────────────────────────────────── */
 .v4-container {
-  max-width: 1080px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 24px;
@@ -202,12 +204,12 @@
 .v4-nav-link {
   font-size: 15px;
   font-weight: 700;
-  color: #fff;
+  color: #94a3b8;
   text-decoration: none;
   transition: color 0.15s ease;
 }
-.v4-nav-link:hover                { color: #94a3b8; }
-.v4-nav-link[aria-current="page"] { color: #94a3b8; }
+.v4-nav-link:hover                { color: #ffffff; }
+.v4-nav-link[aria-current="page"] { color: #ffffff; }
 
 /* ── Feature icon hover ─────────────────────────────────────── */
 .v4-icon-hover { transition: transform 0.2s ease; }

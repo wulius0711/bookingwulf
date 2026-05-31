@@ -37,7 +37,7 @@ export default function V4Layout({ children }: { children: React.ReactNode }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <Nav />
-      <main>{children}</main>
+      <main style={{ background: 'var(--v4-navy)' }}>{children}</main>
       <Footer />
     </>
   );
