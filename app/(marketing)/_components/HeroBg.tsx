@@ -74,9 +74,9 @@ function CalendarCard() {
             borderRadius: 3,
             fontSize: 7,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: !n ? 'transparent' : booked.includes(n) ? C.accent : C.surface,
-            color: !n ? 'transparent' : booked.includes(n) ? '#fff' : C.muted,
-            fontWeight: booked.includes(n) ? 700 : 400,
+            background: !n ? 'transparent' : booked.includes(n!) ? C.accent : C.surface,
+            color: !n ? 'transparent' : booked.includes(n!) ? '#fff' : C.muted,
+            fontWeight: n && booked.includes(n) ? 700 : 400,
           }}>{n || ''}</div>
         ))}
       </div>
