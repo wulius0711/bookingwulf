@@ -1,7 +1,7 @@
 # 🐺 bookingwulf — Projektübersicht
 
 > Direktbuchungssystem für Hotels & Ferienwohnungen — ohne Provision, ohne Drittplattformen
-> Stand: Mai 2026
+> Stand: Juni 2026
 
 ---
 
@@ -186,8 +186,9 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 
 ## Design-Prinzipien
 
-- Keine inline Styles — immer über CSS-Klassen
-- CSS Custom Properties für Widget-Themes
+- Widget: keine inline Styles — immer über CSS Custom Properties (theming) oder CSS-Klassen
+- Admin: inline Styles für dynamische/komponentenspezifische Werte (z.B. Sidebar aktiv-State, Farben aus DB), statische Styles über CSS-Klassen — kein pauschales Verbot, aber Präferenz für CSS wenn möglich
+- CSS Custom Properties für Widget-Themes und Admin Dark/Light Mode
 - Tailwind CSS v4 im Admin-Panel
 - Einfache Selektoren, keine tiefen Verschachtelungen
 
@@ -511,10 +512,10 @@ Voraussetzung: Dev-Server läuft auf Port 3000 (`npm run dev`).
 - [ ] Verpflegungsarten pro Apartment (Frühstück, Halbpension, ohne) — Pflicht-Selektor im Widget, Preisaufschlag pro Person/Nacht, `ApartmentBoardType`-Tabelle → Pro
 - [ ] Preislisten-Widget (`public/price-widget.html`) — standalone Preistabelle ohne Buchungsflow, optionaler Datepicker berechnet Preis für gewählten Zeitraum, "Anfragen/Buchen"-Button öffnet Haupt-Widget mit vorausgefüllten Daten, 1 Script-Tag Einbindung → Alle Pläne
 - [x] Zahlungsarten: Banküberweisung, PayPal, Stripe (Kreditkarte inline) — alle mit hotel-eigenem Account, live Mai 2026
-- [ ] Gast-Portal (Link in Bestätigungs-E-Mail → Buchungsübersicht, Stornierung)
+- [x] Gast-Portal (Link in Bestätigungs-E-Mail → Buchungsübersicht, Stornierung) — ✅ Live Mai 2026; stand fälschlicherweise noch als offen im Backlog, war aber bereits unter "Live & fertig" (Zeile ~108) und in der Roadmap als abgeschlossen markiert
 - [x] Check-out-Erinnerung: E-Mail am Abreisetag mit Uhrzeit + Hinweisen — live Mai 2026
 - [ ] Automatische Erinnerungs-E-Mail (X Tage vor Anreise)
-- [ ] Bewertungsanfrage nach Abreise (automatische E-Mail)
+- [x] Bewertungsanfrage nach Abreise (automatische E-Mail) — ✅ Live Mai 2026; stand fälschlicherweise noch als offen im Backlog, war aber in der Roadmap bereits als "Live — Pro, Mai 2026" eingetragen
 - [ ] Review-System / Bewertungen im Widget anzeigen
 - [ ] Mehrere Hotels pro Business-Account (aktuell 2 — limit erhöhen oder dynamisch)
 - [x] Gutschein- & Rabattcodes — Wert- & Nächte-Gutscheine, Kauf via Stripe, PDF-Gutschein per E-Mail, Einlösung im Widget mit automatischer Rabattberechnung, Admin-Verwaltung → Pro (live Mai 2026)
