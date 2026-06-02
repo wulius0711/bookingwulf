@@ -561,7 +561,7 @@ Cron `/api/cron/expire-trials` (täglich 08:00) enthält Stage 5:
 
 `widget.js` erstellt ein `<iframe>` das `/widget.html?hotel=...&config=...&lang=...` lädt.
 
-**`data-lang`** — Sprache der Widget-Oberfläche. Unterstützte Werte: `de` (Standard), `en`. Beeinflusst alle Labels, Monatsnamen, Wochentage, Datumsformate und Validierungsmeldungen im Widget. Standardmäßig `de` wenn nicht gesetzt.
+**`data-lang`** — Sprache der Widget-Oberfläche. Unterstützte Werte: `de` (Standard), `en`, `it`. Beeinflusst alle Labels, Monatsnamen, Wochentage, Datumsformate und Validierungsmeldungen im Widget. Standardmäßig `de` wenn nicht gesetzt.
 
 ### Kommunikation iframe ↔ Elternseite
 
@@ -979,7 +979,7 @@ Feature-Toggle `showUrgencySignals` + `urgencyThreshold Int @default(40)` (Hotel
 - **Ladezustand:** `aria-busy="true"` auf dem Apartment-Container während des Ladens
 - **Toggle-Buttons:** `aria-expanded` auf "Mehr lesen" (apt-more) und Ausstattungs-Toggle (apt-amenities-toggle); wird bei State-Änderung aktualisiert
 - **Fokus-Indikatoren:** `:focus-visible` mit `outline: 2px solid var(--accent)` auf allen Buttons, Links und `[tabindex="0"]`-Elementen; Kalender-Tageszellen ebenfalls
-- **iframe:** `title="Buchungsformular"` auf dem `<iframe>`-Element in `IframeWrapper.tsx`
+- **iframe:** `title="Buchungsformular"` und `suppressHydrationWarning` auf dem `<iframe>`-Element in `IframeWrapper.tsx` (verhindert React-Hydration-Warnung durch Browser-Extensions wie Dashlane)
 - **Skip Link:** `<a href="#booking-main">` am Anfang von `<body>`; `id="booking-main"` auf `.booking-shell`; visuell versteckt, bei Fokus sichtbar (position absolute, top: 0 on `:focus`)
 - **View-/Layout-Toggle:** `aria-label` auf alle vier Toggle-Buttons (`viewTop`, `viewSidebar`, `layoutList`, `layoutMasonry`) — ergänzt das bestehende `title`-Attribut
 - **Mini-Widget Labels:** `<span class="field-label">` → `<label for="miniArrival/miniDeparture" class="field-label">` — CSS Adjacent-Sibling-Selektor (`input + .field-label`) bleibt funktional

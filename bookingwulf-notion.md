@@ -146,7 +146,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | **Newsletter-Integration** — Opt-in Checkbox im Buchungsformular, nach Buchung automatischer API-Call (Mailchimp/Brevo), Gast wird in NL-Liste eingetragen (Double-Opt-In). DSGVO: Einwilligung in DB protokollieren (Timestamp, IP). | Niedrig | Pro | 💡 Idee |
 | SMS-Benachrichtigungen | Niedrig | Pro | 💡 Idee |
 | Mehrsprachiges Admin-Panel | Niedrig | Alle | 💡 Idee |
-| Weitere Widget-Sprachen (FR, HR...) | Niedrig | Alle | 💡 Idee |
+| Weitere Widget-Sprachen (FR, HR, NL...) | Niedrig | Alle | 💡 Idee |
 | Mobile App (Admin) | Niedrig | Alle | 💡 Idee |
 | Gast-Portal (Buchungsübersicht, Check-in/out, Extras, Hausinfos, Umgebung) | — | Alle | ✅ Live (Mai 2026) — offline-fähig via Service Worker |
 
@@ -527,6 +527,7 @@ Voraussetzung: Dev-Server läuft auf Port 3000 (`npm run dev`).
 - [ ] Google Hotels Free Booking Links (Meta-Suche-Integration via Datenfeed) → Business
 - [ ] Affiliate- / Empfehlungsprogramm: Betreiber empfehlen bookingwulf, Provision auf erste Zahlungen
 - [ ] SMS-Benachrichtigungen (Check-in Codes, Erinnerungen)
+- [x] Widget-Sprache IT (Italienisch) vollständig implementiert (Juni 2026)
 - [ ] Weitere Widget-Sprachen (FR, HR, NL...)
 - [ ] Mehrsprachiges Admin-Panel (EN)
 
