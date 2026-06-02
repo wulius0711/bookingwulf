@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
+import { autoTranslateFields } from '@/src/lib/translate';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -20,12 +21,27 @@ export async function PATCH(req: Request, { params }: Params) {
 
   const body = await req.json();
 
+  const titleChanged = body.title !== undefined;
+  const descChanged = body.description !== undefined;
+  let titleEn, titleIt, descriptionEn, descriptionIt;
+
+  if (titleChanged || descChanged) {
+    const fields: Record<string, string> = {};
+    if (titleChanged && body.title) fields.title = String(body.title).trim();
+    if (descChanged && body.description) fields.description = body.description.trim();
+    if (Object.keys(fields).length) {
+      const tr = await autoTranslateFields(fields);
+      if (titleChanged) { titleEn = tr.en?.title ?? null; titleIt = tr.it?.title ?? null; }
+      if (descChanged) { descriptionEn = tr.en?.description ?? null; descriptionIt = tr.it?.description ?? null; }
+    }
+  }
+
   const updated = await prisma.thingsToSee.update({
     where: { id },
     data: {
       ...(body.category !== undefined && { category: body.category }),
-      ...(body.title !== undefined && { title: String(body.title).trim() }),
-      ...(body.description !== undefined && { description: body.description?.trim() || null }),
+      ...(titleChanged && { title: String(body.title).trim(), titleEn, titleIt }),
+      ...(descChanged && { description: body.description?.trim() || null, descriptionEn, descriptionIt }),
       ...(body.address !== undefined && { address: body.address?.trim() || null }),
       ...(body.mapsUrl !== undefined && { mapsUrl: body.mapsUrl?.trim() || null }),
       ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl?.trim() || null }),

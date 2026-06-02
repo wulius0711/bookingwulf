@@ -438,7 +438,11 @@ model ThingsToSee {
   apartmentId Int?
   category    String   // 'restaurant' | 'attraction' | 'activity' | 'shopping' | 'emergency'
   title       String
+  titleEn     String?
+  titleIt     String?
   description String?
+  descriptionEn String?
+  descriptionIt String?
   address     String?
   mapsUrl     String?
   imageUrl    String?
@@ -572,6 +576,8 @@ model ChildPriceRange {
   hotelId       Int
   hotel         Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   label         String?
+  labelEn       String?
+  labelIt       String?
   minAge        Int
   maxAge        Int
   pricePerNight Decimal  @db.Decimal(10, 2)

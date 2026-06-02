@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
+import { autoTranslateFields } from '@/src/lib/translate';
 
 async function getHotelId(session: Awaited<ReturnType<typeof verifySession>>, body?: { hotelId?: number }) {
   if (session.hotelId !== null) return session.hotelId;
@@ -27,12 +28,22 @@ export async function POST(req: Request) {
   const body = await req.json();
   const hotelId = await getHotelId(session, body);
 
+  const title = String(body.title ?? '').trim();
+  const description = body.description?.trim() || null;
+  const fields: Record<string, string> = { title };
+  if (description) fields.description = description;
+  const tr = await autoTranslateFields(fields);
+
   const item = await prisma.thingsToSee.create({
     data: {
       hotelId,
       category: body.category ?? 'attraction',
-      title: String(body.title ?? '').trim(),
-      description: body.description?.trim() || null,
+      title,
+      titleEn: tr.en?.title ?? null,
+      titleIt: tr.it?.title ?? null,
+      description,
+      descriptionEn: tr.en?.description ?? null,
+      descriptionIt: tr.it?.description ?? null,
       address: body.address?.trim() || null,
       mapsUrl: body.mapsUrl?.trim() || null,
       imageUrl: body.imageUrl?.trim() || null,

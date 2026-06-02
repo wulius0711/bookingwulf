@@ -88,11 +88,14 @@ export async function POST(req: Request) {
     const bookingType = body.bookingType;
     const showPrices = body.showPrices !== false;
     const browserLang = body.browserLanguage.toLowerCase();
+    const VALID_LANGS: Lang[] = ['de', 'en', 'it', 'fr', 'nl', 'ru', 'pl', 'cs', 'es'];
     const LANG_PREFIXES: [string, Lang][] = [
       ['de', 'de'], ['it', 'it'], ['fr', 'fr'], ['nl', 'nl'],
       ['es', 'es'], ['pl', 'pl'], ['cs', 'cs'], ['ru', 'ru'],
     ];
-    const autoLang: Lang = LANG_PREFIXES.find(([prefix]) => browserLang.startsWith(prefix))?.[1] ?? 'en';
+    const widgetLang = body.widgetLang;
+    const browserDetected: Lang = LANG_PREFIXES.find(([prefix]) => browserLang.startsWith(prefix))?.[1] ?? 'en';
+    const autoLang: Lang = (widgetLang && VALID_LANGS.includes(widgetLang as Lang)) ? (widgetLang as Lang) : browserDetected;
 
     const arrival = new Date(arrivalRaw);
     const departure = new Date(departureRaw);

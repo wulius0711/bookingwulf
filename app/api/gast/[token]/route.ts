@@ -108,7 +108,7 @@ export async function GET(_req: Request, { params }: Params) {
     }),
     prisma.thingsToSee.findMany({
       where: { hotelId: request.hotelId!, isActive: true },
-      select: { id: true, category: true, title: true, description: true, address: true, mapsUrl: true, imageUrl: true },
+      select: { id: true, category: true, title: true, titleEn: true, titleIt: true, description: true, descriptionEn: true, descriptionIt: true, address: true, mapsUrl: true, imageUrl: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
     }),
     prisma.requestMessage.findMany({

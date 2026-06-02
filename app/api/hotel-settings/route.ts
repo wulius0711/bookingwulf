@@ -25,6 +25,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const hotelSlug = searchParams.get('hotel');
     const configSlug = searchParams.get('config') || null;
+    const lang = searchParams.get('lang') || 'de';
 
     if (!hotelSlug) {
       return withCors(
@@ -75,12 +76,12 @@ export async function GET(req: Request) {
           ...(!canUseExtras ? { type: 'insurance' } : {}),
         },
         orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
-        select: { key: true, name: true, type: true, billingType: true, price: true, description: true, imageUrl: true, linkUrl: true },
+        select: { key: true, name: true, nameEn: true, nameIt: true, type: true, billingType: true, price: true, description: true, descriptionEn: true, descriptionIt: true, imageUrl: true, linkUrl: true },
       }),
       prisma.childPriceRange.findMany({
         where: { hotelId: hotel.id },
         orderBy: [{ sortOrder: 'asc' }, { minAge: 'asc' }],
-        select: { id: true, label: true, minAge: true, maxAge: true, pricePerNight: true },
+        select: { id: true, label: true, labelEn: true, labelIt: true, minAge: true, maxAge: true, pricePerNight: true },
       }),
       prisma.voucherTemplate.count({ where: { hotelId: hotel.id, isActive: true } }),
     ]);
@@ -133,7 +134,19 @@ export async function GET(req: Request) {
 
     return withCors(
       NextResponse.json(
-        { success: true, hotel, settings: mergedSettings, extras, childPriceRanges, miniWidgetTarget: mergedSettings?.miniWidgetTarget ?? null, vouchersEnabled },
+        {
+          success: true, hotel, settings: mergedSettings,
+          extras: extras.map(({ nameEn, nameIt, descriptionEn, descriptionIt, ...e }) => ({
+            ...e,
+            name: (lang === 'en' && nameEn) || (lang === 'it' && nameIt) || e.name,
+            description: (lang === 'en' && descriptionEn) || (lang === 'it' && descriptionIt) || e.description,
+          })),
+          childPriceRanges: childPriceRanges.map(({ labelEn, labelIt, ...r }) => ({
+            ...r,
+            label: (lang === 'en' && labelEn) || (lang === 'it' && labelIt) || r.label,
+          })),
+          miniWidgetTarget: mergedSettings?.miniWidgetTarget ?? null, vouchersEnabled,
+        },
         { headers: { 'Cache-Control': 'no-store' } },
       ),
     );

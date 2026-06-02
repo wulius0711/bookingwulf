@@ -2650,8 +2650,8 @@
               </div>
               <div id="apt-sort-bar" style="display:none;justify-content:flex-end;margin-bottom:12px;">
                 <select id="aptSortSelect" style="font-size:0.929rem;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--text);cursor:pointer;appearance:auto;width:fit-content;">
-                  <option value="price_asc">Preis aufsteigend</option>
-                  <option value="price_desc">Preis absteigend</option>
+                  <option value="price_asc"></option>
+                  <option value="price_desc"></option>
                 </select>
               </div>
               <div id="apartments" aria-label="Verfügbare Apartments" aria-live="polite"></div>
@@ -3215,8 +3215,13 @@
             aria_booking_steps: 'Buchungsschritte',
             aria_prev_image: 'Vorheriges Bild',
             aria_next_image: 'Nächstes Bild',
+            aria_view_top: 'Schritte oben',
+            aria_view_sidebar: 'Schritte links',
+            aria_apartments: 'Verfügbare Apartments',
             skip_to_booking: 'Zum Buchungsformular springen',
             ph_notes: 'Besondere Wünsche, Anreisezeit, weitere Hinweise',
+            sort_price_asc: 'Preis aufsteigend',
+            sort_price_desc: 'Preis absteigend',
             ph_street: 'Musterstraße 1',
             ph_zip: '1010',
             ph_city: 'Wien',
@@ -3415,14 +3420,224 @@
             aria_booking_steps: 'Booking steps',
             aria_prev_image: 'Previous image',
             aria_next_image: 'Next image',
+            aria_view_top: 'Steps top',
+            aria_view_sidebar: 'Steps sidebar',
+            aria_apartments: 'Available apartments',
             skip_to_booking: 'Skip to booking form',
             ph_notes: 'Special requests, arrival time, further notes',
+            sort_price_asc: 'Price ascending',
+            sort_price_desc: 'Price descending',
             ph_street: 'Sample Street 1',
             ph_zip: '1010',
             ph_city: 'Vienna',
             apt_none_selected: 'No category selected yet.',
             apt_one_selected: '1 apartment selected.',
             apt_n_selected: '{n} apartments selected.',
+          },
+          it: {
+            months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+            months_short: ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'],
+            weekdays_short: ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'],
+            weekdays_full: ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
+            weekdays_ordered: ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'],
+            cal_prev_month: 'Mese precedente',
+            cal_next_month: 'Mese successivo',
+            cal_today: 'oggi',
+            cal_arrival_selected: 'arrivo selezionato',
+            cal_departure_selected: 'partenza selezionata',
+            cal_hint_arrival: 'Seleziona data di arrivo',
+            cal_hint_departure: 'Seleziona data di partenza …',
+            cal_reset: 'Selezione annullata',
+            cal_status_both: 'Arrivo {from}, partenza {to} selezionati',
+            cal_status_arrival: 'Arrivo {from} selezionato – seleziona data di partenza',
+            night_one: 'notte',
+            night_other: 'notti',
+            urgency_few_remaining: 'Solo {n} {nightWord} disponibili a {month}',
+            urgency_few_nights: 'Poche notti disponibili a {month}',
+            per_night: '/ notte',
+            per_person_per_night: '/ persona / notte',
+            per_person_per_stay: '/ persona',
+            per_stay: '/ soggiorno',
+            apt_not_matching: 'Non adatto',
+            apt_max_guests: 'Max. {adults} adulti · {children} bambini',
+            apt_checking: 'Verifica in corso …',
+            apt_unavailable: 'Non disponibile',
+            apt_unavailable_period: 'Non disponibile nel periodo selezionato',
+            apt_loading: 'Caricamento appartamenti …',
+            apt_none: 'Nessun appartamento disponibile.',
+            apt_price_on_request: 'Prezzo su richiesta',
+            apt_price_details: 'Dettagli prezzo',
+            apt_not_available_price: 'Non disponibile',
+            apt_adults_abbr: 'adulti',
+            apt_selected_badge: '✓ Selezionato',
+            apt_select_btn: 'Seleziona',
+            apt_remove_btn: 'Rimuovi',
+            apt_next_step: 'continua al passo 3',
+            apt_more: 'Leggi di più',
+            apt_less: 'Mostra meno',
+            apt_amenities_toggle: 'Dotazioni',
+            apt_default_desc: 'Appartamento con atmosfera tranquilla e carattere boutique.',
+            cleaning_fee: 'Pulizie finali',
+            gap_discount_row: 'Sconto disponibilità -{pct}%',
+            last_minute_row: 'Last-Minute -{pct}%',
+            surcharge_row: 'Supplemento domanda +{pct}%',
+            gap_discount_badge: '-{pct}% Prezzo speciale',
+            last_minute_badge: '-{pct}% Last-Minute',
+            surcharge_badge: '+{pct}% Alta domanda',
+            included: 'incluso',
+            total_nights: 'Totale {n} notti',
+            incl_vat: 'IVA inclusa',
+            free: 'Gratuito',
+            voucher_redeem: 'Riscatta buono',
+            voucher_apply_btn: 'Applica',
+            voucher_applied: '✓ Buono applicato',
+            voucher_remove: '✕ Rimuovi',
+            voucher_label: 'Buono ({code})',
+            voucher_error_invalid: 'Codice non valido.',
+            voucher_error_connection: 'Errore di connessione.',
+            voucher_error_not_found: 'Buono non trovato o già riscattato.',
+            voucher_error_server: 'Errore del server. Riprova.',
+            voucher_gift_btn: 'Regala un buono',
+            ortstaxe: 'Tassa di soggiorno',
+            ortstaxe_min_age: '(da {n} anni)',
+            extras_per_night: '{name} ({n} notti)',
+            extras_per_person_night: '{name} ({guests} pers., {n} notti)',
+            extras_per_person: '{name} ({guests} persone)',
+            extras_per_stay: '{name} (per soggiorno)',
+            no_extras: 'Nessun servizio aggiuntivo disponibile.',
+            summary_no_apt: 'Nessun appartamento selezionato',
+            summary_no_extras: 'Nessuno selezionato',
+            summary_no_apt_row: 'Nessun appartamento selezionato',
+            summary_period: 'Periodo: {from} - {to}',
+            summary_guests: '{adults} adulti',
+            summary_guests_children: '{adults} adulti, {children} bambini',
+            summary_booking_details: 'Dettagli prenotazione',
+            summary_inquiry_details: 'Dettagli richiesta',
+            summary_extras_row: 'Servizi aggiuntivi',
+            step_booking: 'Prenotazione',
+            step_inquiry: 'Richiesta',
+            child_birthday_one: 'Data di nascita bambino',
+            child_birthday_n: 'Data di nascita bambino {n}',
+            guest_firstname: 'Nome',
+            guest_lastname: 'Cognome',
+            guest_birthday: 'Data di nascita',
+            insurance_heading: 'Assicurazione annullamento viaggio',
+            insurance_intro: 'Prima di partire possono succedere molte cose. Le seguenti assicurazioni coprono i costi in caso di cancellazione o partenza anticipata.',
+            insurance_decline: 'Rinuncio espressamente all\'assicurazione annullamento viaggio.',
+            insurance_more_info: 'ulteriori informazioni',
+            terms_booking_conditions: 'Condizioni di prenotazione',
+            terms_privacy_policy: 'Informativa sulla privacy',
+            terms_accept: 'Accetto {links}.',
+            terms_no_links: 'Ho letto e accetto le condizioni di prenotazione.',
+            terms_join: ' e l\'',
+            submit_request_label: 'Richiesta',
+            submit_request_hint: 'La richiesta è senza impegno. Nessun pagamento anticipato necessario.',
+            submit_request_btn: 'Invia richiesta',
+            submit_booking_label: 'Prenotazione',
+            submit_payment_options: 'Metodi di pagamento',
+            submit_payment_desc: 'Per completare la prenotazione è richiesto un acconto di {amount} entro {days} giorni.',
+            submit_bank_transfer: 'Bonifico bancario',
+            submit_bank_email_hint: 'I dati bancari completi ti verranno inviati nell\'e-mail di conferma.',
+            submit_paypal_full_amount: 'La camera verrà prenotata e la riserva confermata. L\'importo di {amount} è dovuto al momento della prenotazione.',
+            submit_paypal_next_title: 'Come procedere',
+            submit_paypal_step1: 'Un clic su „Paga ora" apre la pagina PayPal',
+            submit_paypal_step2: 'Paga con il metodo preferito (carta di credito, saldo PayPal, rate ecc.)',
+            submit_paypal_step3: 'Segui le istruzioni sulla pagina PayPal fino al completamento',
+            submit_paypal_step4: 'Dopo la ricezione del pagamento riceverai la conferma di prenotazione',
+            submit_credit_card: 'Carta di credito',
+            submit_coming_soon: 'Presto',
+            submit_book_now: 'Prenota ora',
+            submit_send_request: 'Invia richiesta',
+            err_select_dates: 'Seleziona le date di arrivo e partenza.',
+            err_departure_after_arrival: 'La data di partenza deve essere successiva a quella di arrivo.',
+            err_birthday_required: 'Questo campo non può essere vuoto.',
+            err_select_apartment: 'Seleziona almeno un appartamento.',
+            err_apt_unavailable: 'Almeno un appartamento selezionato non è attualmente disponibile.',
+            err_select_insurance: 'Seleziona un\'opzione assicurativa.',
+            err_select_apt_first: 'Prima seleziona almeno un appartamento.',
+            err_field_required: '{label} è un campo obbligatorio.',
+            err_fill_required: 'Compila tutti i campi obbligatori.',
+            err_select_payment: 'Seleziona un metodo di pagamento.',
+            err_accept_terms: 'Accetta le condizioni della richiesta.',
+            progress_confirming: 'Conferma in corso …',
+            progress_sending: 'Invio in corso …',
+            success_booking: 'La sua prenotazione è confermata – riceverà a breve una conferma via e-mail.',
+            success_request: 'Grazie – la sua richiesta è stata inviata con successo.',
+            error_sending: 'Errore durante l\'invio della richiesta.',
+            error_server: 'Errore del server. Riprova.',
+            error_loading_apartments: 'Impossibile caricare gli appartamenti.',
+            min_stay: 'Soggiorno minimo: {n} notti',
+            field_firstname: 'Nome',
+            field_lastname: 'Cognome',
+            field_email: 'E-mail',
+            btn_back: 'Indietro',
+            btn_next: 'Avanti',
+            step_1_label: 'Dati viaggio',
+            step_1_sub: 'Definisci periodo e ospiti',
+            step_2_sub: 'Scegli il tuo alloggio',
+            step_3_label: 'Servizi aggiuntivi',
+            step_3_sub: 'Aggiungi servizi opzionali',
+            step_4_sub: 'Inserisci i dati e invia',
+            screen_travel_intro: 'Seleziona il periodo desiderato e indica quanti ospiti viaggeranno. In base a questi dati ti mostreremo gli appartamenti disponibili e il calcolo del prezzo aggiornato.',
+            screen_travel_micro: 'La disponibilità viene verificata in tempo reale in base alla tua selezione.',
+            screen_apts_title: 'Seleziona appartamento',
+            screen_apts_intro: 'Scegli la categoria più adatta. Le opzioni non disponibili o non adatte verranno contrassegnate.',
+            screen_extras_intro: 'Arricchisci il tuo soggiorno con servizi aggiuntivi selezionati.',
+            screen_contact_title: 'Dati personali',
+            screen_contact_intro: 'Compila tutti i campi obbligatori.',
+            price_box_total: 'Totale attuale',
+            label_adults: 'Adulti',
+            label_children: 'Bambini',
+            label_salutation: 'Titolo',
+            label_phone: 'Telefono',
+            label_notes: 'Note',
+            label_street: 'Via, numero civico',
+            label_zip: 'CAP',
+            label_city: 'Città',
+            label_country: 'Paese',
+            addr_toggle: 'Indirizzo (opzionale)',
+            guest_data_toggle: 'dati altri ospiti',
+            adults_one: '1 adulto',
+            adults_n: '{n} adulti',
+            children_zero: '0 bambini',
+            children_one: '1 bambino',
+            children_n: '{n} bambini',
+            sal_please_select: 'Seleziona',
+            sal_mr: 'Sig.',
+            sal_ms: 'Sig.ra',
+            sal_other: 'Altro',
+            country_AT: 'Austria',
+            country_DE: 'Germania',
+            country_CH: 'Svizzera',
+            country_IT: 'Italia',
+            country_FR: 'Francia',
+            country_NL: 'Paesi Bassi',
+            country_BE: 'Belgio',
+            country_PL: 'Polonia',
+            country_CZ: 'Repubblica Ceca',
+            country_ES: 'Spagna',
+            country_GB: 'Regno Unito',
+            country_other: 'Altro',
+            summary_eyebrow: 'La tua selezione',
+            summary_total_label: 'Totale',
+            aria_gallery: 'Galleria immagini',
+            aria_lightbox_close: 'Chiudi',
+            aria_booking_steps: 'Passaggi prenotazione',
+            aria_prev_image: 'Immagine precedente',
+            aria_next_image: 'Immagine successiva',
+            aria_view_top: 'Passi in alto',
+            aria_view_sidebar: 'Passi a sinistra',
+            aria_apartments: 'Appartamenti disponibili',
+            skip_to_booking: 'Vai al modulo di prenotazione',
+            ph_notes: 'Richieste speciali, orario di arrivo, ulteriori informazioni',
+            sort_price_asc: 'Prezzo crescente',
+            sort_price_desc: 'Prezzo decrescente',
+            ph_street: 'Via Roma 1',
+            ph_zip: '39100',
+            ph_city: 'Bolzano',
+            apt_none_selected: 'Nessuna categoria selezionata.',
+            apt_one_selected: '1 appartamento selezionato.',
+            apt_n_selected: '{n} appartamenti selezionati.',
           },
         };
         function t(key, vars = {}) {
@@ -3526,7 +3741,7 @@
         async function loadHotelSettings() {
           try {
             const res = await fetch(
-              `${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}`,
+              `${API_BASE}/api/hotel-settings?hotel=${HOTEL_SLUG}${WIDGET_CONFIG ? `&config=${encodeURIComponent(WIDGET_CONFIG)}` : ''}${LANG !== 'de' ? `&lang=${LANG}` : ''}`,
             );
             const data = await res.json();
 
@@ -4669,7 +4884,11 @@
           const showSort = state.settings.showPrices && state.apartments.length > 1;
           if (sortBar) sortBar.style.display = showSort ? 'flex' : 'none';
           const sortSel = document.getElementById('aptSortSelect');
-          if (sortSel) sortSel.value = state.sortOrder;
+          if (sortSel) {
+            sortSel.options[0].text = t('sort_price_asc');
+            sortSel.options[1].text = t('sort_price_desc');
+            sortSel.value = state.sortOrder;
+          }
 
           const sortedApartments = [...state.apartments].sort((a, b) => {
             const statusA = getApartmentStatus(a);
@@ -4877,8 +5096,8 @@
                 ${
                   imageCount > 1 && state.settings.enableImageSlider
                     ? `
-                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}" aria-label="Vorheriges Bild">&#8249;</button>
-                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}" aria-label="Nächstes Bild">&#8250;</button>
+                      <button type="button" class="apt-image-nav prev" data-image-prev="${ap.id}" aria-label="${t('aria_prev_image')}">&#8249;</button>
+                      <button type="button" class="apt-image-nav next" data-image-next="${ap.id}" aria-label="${t('aria_next_image')}">&#8250;</button>
                       <div class="apt-image-counter">${imageIndex + 1} / ${imageCount}</div>
                     `
                     : ''
@@ -5855,7 +6074,7 @@
                 return '<div class="pm-cards">' +
                 (showBank ? '<div class="pm-card' + (!defaultPaypal && !defaultStripe ? ' selected' : '') + '" id="pmCardBank"><span class="pm-radio"></span>' + t('submit_bank_transfer') + '</div>' : '') +
                 (showPaypal ? '<div class="pm-card' + (defaultPaypal ? ' selected' : '') + '" id="pmCardPaypal"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" height="20" aria-label="PayPal" style="display:block"><text y="19" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="21" letter-spacing="-0.5"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg></div>' : '') +
-                (showStripe ? '<div class="pm-card' + (defaultStripe ? ' selected' : '') + '" id="pmCardStripe"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 21" height="18" aria-label="Kreditkarte" style="display:block;margin-right:4px"><rect width="32" height="21" rx="3" fill="#e5e7eb"/><rect y="5" width="32" height="5" fill="#9ca3af"/><rect x="4" y="13" width="8" height="3" rx="1" fill="#6b7280"/></svg>Kreditkarte</div>' : '') +
+                (showStripe ? '<div class="pm-card' + (defaultStripe ? ' selected' : '') + '" id="pmCardStripe"><span class="pm-radio"></span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 21" height="18" aria-label="${t('submit_credit_card')}" style="display:block;margin-right:4px"><rect width="32" height="21" rx="3" fill="#e5e7eb"/><rect y="5" width="32" height="5" fill="#9ca3af"/><rect x="4" y="13" width="8" height="3" rx="1" fill="#6b7280"/></svg>${t('submit_credit_card')}</div>' : '') +
                 '</div>';
               })() +
               (() => {
@@ -6425,6 +6644,7 @@
                 bookingType,
                 showPrices: state.settings.showPrices,
                 browserLanguage: navigator.language || '',
+                widgetLang: LANG,
                 voucherCode: state.voucherData ? state.voucherData.code : null,
                 voucherDiscount: state.voucherData ? Math.min(state.voucherData.value, getRawTotal()) : null,
               }),
@@ -6901,6 +7121,12 @@
           if (lightboxPrev) lightboxPrev.setAttribute('aria-label', t('aria_prev_image'));
           const lightboxNext = document.getElementById('lightboxNext');
           if (lightboxNext) lightboxNext.setAttribute('aria-label', t('aria_next_image'));
+          const viewTop = document.getElementById('viewTop');
+          if (viewTop) { viewTop.setAttribute('aria-label', t('aria_view_top')); viewTop.setAttribute('title', t('aria_view_top')); }
+          const viewSidebar = document.getElementById('viewSidebar');
+          if (viewSidebar) { viewSidebar.setAttribute('aria-label', t('aria_view_sidebar')); viewSidebar.setAttribute('title', t('aria_view_sidebar')); }
+          const aptContainer = document.getElementById('apartments');
+          if (aptContainer) aptContainer.setAttribute('aria-label', t('aria_apartments'));
           // Nav buttons
           document.querySelectorAll('[data-next]').forEach((btn) => {
             btn.textContent = t('btn_next');

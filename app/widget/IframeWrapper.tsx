@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function IframeWrapper({ hotel }: { hotel: string }) {
+export default function IframeWrapper({ hotel, lang }: { hotel: string; lang?: string }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function IframeWrapper({ hotel }: { hotel: string }) {
   return (
     <iframe
       ref={iframeRef}
-      src={`/widget.html?hotel=${hotel}`}
+      src={`/widget.html?hotel=${hotel}${lang ? `&lang=${lang}` : ''}`}
       title="Buchungsformular"
       scrolling="no"
       style={{

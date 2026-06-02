@@ -58,7 +58,9 @@ type Extra = {
 type Message = { id: number; sender: string; body: string; createdAt: string };
 
 type ThingToSee = {
-  id: number; category: string; title: string; description: string | null;
+  id: number; category: string;
+  title: string; titleEn: string | null; titleIt: string | null;
+  description: string | null; descriptionEn: string | null; descriptionIt: string | null;
   address: string | null; mapsUrl: string | null; imageUrl: string | null;
 };
 
@@ -753,16 +755,21 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         <div style={{ display: 'flex', gap: 0 }}>
                           {entry.imageUrl && <img src={entry.imageUrl} alt={entry.title} style={{ width: 90, height: 80, objectFit: 'cover', flexShrink: 0 }} loading="lazy" />}
                           <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{entry.title}</div>
-                            {entry.description && (
-                              <details className="desc-details" style={{ marginBottom: 6 }}>
-                                <summary>
-                                  <span className="desc-preview">{entry.description}</span>
-                                  <span className="desc-collapse">{t.less}</span>
-                                </summary>
-                                <span className="desc-full">{entry.description}</span>
-                              </details>
-                            )}
+                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>
+                              {(lang === 'en' && entry.titleEn) || (lang === 'it' && entry.titleIt) || entry.title}
+                            </div>
+                            {entry.description && (() => {
+                              const desc = (lang === 'en' && entry.descriptionEn) || (lang === 'it' && entry.descriptionIt) || entry.description;
+                              return (
+                                <details className="desc-details" style={{ marginBottom: 6 }}>
+                                  <summary>
+                                    <span className="desc-preview">{desc}</span>
+                                    <span className="desc-collapse">{t.less}</span>
+                                  </summary>
+                                  <span className="desc-full">{desc}</span>
+                                </details>
+                              );
+                            })()}
                             {entry.address && <div className="text-muted" style={{ fontSize: 12 }}>{entry.address}</div>}
                           </div>
                           {entry.mapsUrl && (
