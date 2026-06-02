@@ -93,8 +93,8 @@ function fmtTime(iso: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 }
 
-function eur(n: number) {
-  return new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(n);
+function eur(n: number, locale: string) {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(n);
 }
 
 const TRANSLATIONS = {
@@ -715,7 +715,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                         <div className="extra-desc">{(lang === 'en' ? extra.descriptionEn : lang === 'it' ? extra.descriptionIt : null) ?? extra.description}</div>
                       )}
                       <div className="extra-footer">
-                        <span className="extra-price">{eur(extra.price)}</span>
+                        <span className="extra-price">{eur(extra.price, t.locale)}</span>
                         {done ? (
                           <span className={`badge badge-green${freshlyBooked.has(extra.id) ? ' badge-pop' : ''}`}>{t.booked}</span>
                         ) : groupBlocked ? (
