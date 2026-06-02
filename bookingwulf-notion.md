@@ -708,11 +708,16 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 
 | Monat | Uptime | Incidents | Downtime | Ursache |
 |-------|--------|-----------|----------|---------|
-| Mai 2026 | 99.867% | 1 | 4 Stunden | Vercel-seitiger Ausfall (extern, nicht beeinflussbar) |
+| Mai 2026 | 99.867% | 1 | 4 Stunden | Vercel-seitiger Ausfall — aus Kundensicht trotzdem bookingwulf-Ausfall |
 
 **Avg. Response Time Mai 2026:** 683 ms (−22% vs. April) — 66 Peaks >1000 ms, wahrscheinlich Vercel Cold Starts bei selten genutzten API-Routen.
 
 **Monitore mit 0% / 0 Incidents** (`/api/apartments`, `/api/hotel-settings`, `/widget.html`): keine echten Ausfälle — neue Monitore ohne vollständigen Messzeitraum oder falsches Expected-Response-Format in UptimeRobot. Im Dashboard prüfen.
+
+**Handlungsoptionen bei wiederholten Incidents:**
+- **Sofort umsetzbar:** Öffentliche Status-Page via UptimeRobot einrichten — Kunden sehen transparent ob es ein Plattformproblem ist, schützt bookingwulf-Reputation
+- **Bei Häufung (>2×/Quartal):** Hosting-Alternative prüfen (Railway App Hosting, Fly.io) — größerer Migrationsaufwand, aber mehr Unabhängigkeit von Vercel-Incidents
+- **Aktuell:** Einmaliger Incident in unbekanntem Zeitraum davor — noch kein Handlungsbedarf, aber beobachten
 
 ---
 
