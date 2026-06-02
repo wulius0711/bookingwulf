@@ -131,6 +131,7 @@ const TRANSLATIONS = {
     navMessages: 'Nachrichten', navCheckout: 'Abreise',
     cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Sehenswürdigkeit', activity: '🏔️ Aktivität', event: '🎉 Events', shopping: '🛍️ Einkaufen', emergency: '🏥 Wichtiges' },
     locale: 'de-AT',
+    checkinLink: 'Check-In ↗',
     welcomeTitle: 'Herzlich willkommen',
     welcomeMsg: 'Schön, dass du da bist. Wir wünschen dir einen wunderschönen Aufenthalt.',
   },
@@ -167,11 +168,12 @@ const TRANSLATIONS = {
     navMessages: 'Messages', navCheckout: 'Departure',
     cats: { restaurant: '🍽️ Restaurant & Café', attraction: '🏛️ Attraction', activity: '🏔️ Activity', event: '🎉 Events', shopping: '🛍️ Shopping', emergency: '🏥 Important' },
     locale: 'en-GB',
+    checkinLink: 'Check-In ↗',
     welcomeTitle: 'Welcome',
     welcomeMsg: "We're so glad you're here. Wishing you a wonderful stay.",
   },
   it: {
-    guestportal: 'Guest Lounge', night: 'notte', nights: 'notti',
+    guestportal: 'Area Ospiti', night: 'notte', nights: 'notti',
     checkinPending: 'Check-In online in sospeso',
     checkinPendingDesc: "Compilalo ora e risparmia tempo all'arrivo.",
     checkinDone: 'Check-In completato',
@@ -203,6 +205,7 @@ const TRANSLATIONS = {
     navMessages: 'Messaggi', navCheckout: 'Partenza',
     cats: { restaurant: '🍽️ Ristorante & Caffè', attraction: '🏛️ Attrazione', activity: '🏔️ Attività', event: '🎉 Eventi', shopping: '🛍️ Shopping', emergency: '🏥 Importante' },
     locale: 'it-IT',
+    checkinLink: 'Check-In ↗',
     welcomeTitle: 'Benvenuti',
     welcomeMsg: 'Siamo felici di avervi qui. Vi auguriamo un soggiorno meraviglioso.',
   },
@@ -512,7 +515,7 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
               {hotel.preArrivalEnabled && !booking.checkinCompleted && (
                 <a href={`/checkin/${token}`} className="header-checkin-btn">
-                  Check-In ↗
+                  {t.checkinLink}
                 </a>
               )}
               <div style={{ display: 'flex', gap: 4 }}>
