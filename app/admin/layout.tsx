@@ -157,6 +157,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>AGB</a>
           <a href="/avv" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>AVV</a>
           <a href="mailto:support@bookingwulf.com" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Support</a>
+          <a href="https://stats.uptimerobot.com/pdSc77juPW" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>System Status</a>
         </footer>
       </div>
 
