@@ -680,7 +680,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 ### Vor öffentlichem Launch (wenn Traffic wächst)
 - [x] **Structured Logging → Axiom** ✅ — umgestellt Mai 2026. Booking-Events strukturiert in Axiom (EU Central 1). Siehe oben.
 - [x] **Rate Limiting → Upstash Redis** ✅ — umgestellt Mai 2026. `@upstash/redis`, INCR+EXPIRE, fails open bei Redis-Ausfall.
-- [ ] **Session Revocation** — Admin-JWTs sind 24h gültig ohne Widerrufsmöglichkeit. Erst relevant wenn Team-Accounts größerer Hotels genutzt werden.
+- [x] **Session Revocation** ✅ — Mai 2026. `sessionVersion`-Mechanismus auf AdminUser; bei Login im JWT mitgeschickt, bei jedem Request gegen DB geprüft. Stand hier fälschlicherweise noch als offen — war bereits unter "Launch Readiness — Infrastruktur" als erledigt vermerkt.
 
 ### Nicht nötig (bewusst zurückgestellt)
 - Multi-Factor Authentication für Admins — Nice-to-have, kein kritisches Risiko
@@ -692,6 +692,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 
 | Schicht | Lösung | Status |
 |---------|--------|--------|
+| Uptime-Monitoring | UptimeRobot (Mai 2026: 99.867%, 1 Incident) | ✅ Aktiv |
 | Hosting | Vercel (Serverless, auto-scaling) | ✅ Live |
 | Datenbank | Railway PostgreSQL, Amsterdam/EU | ✅ Live |
 | CDN | Vercel Edge Network | ✅ Automatisch |
@@ -702,6 +703,16 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 | Rate Limiting | Upstash Redis (EU-central-1, Free Tier) | ✅ |
 | E-Mail | Resend | ✅ |
 | DSGVO | EU-Daten, Cookie-Banner, opt-in GA | ✅ |
+
+## Uptime-Historie
+
+| Monat | Uptime | Incidents | Downtime | Ursache |
+|-------|--------|-----------|----------|---------|
+| Mai 2026 | 99.867% | 1 | 4 Stunden | Vercel-seitiger Ausfall (extern, nicht beeinflussbar) |
+
+**Avg. Response Time Mai 2026:** 683 ms (−22% vs. April) — 66 Peaks >1000 ms, wahrscheinlich Vercel Cold Starts bei selten genutzten API-Routen.
+
+**Monitore mit 0% / 0 Incidents** (`/api/apartments`, `/api/hotel-settings`, `/widget.html`): keine echten Ausfälle — neue Monitore ohne vollständigen Messzeitraum oder falsches Expected-Response-Format in UptimeRobot. Im Dashboard prüfen.
 
 ---
 
