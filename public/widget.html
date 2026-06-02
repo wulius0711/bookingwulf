@@ -5570,8 +5570,8 @@
                 state.voucherError = '';
               } else {
                 state.voucherData = null;
-                const errKey = 'voucher_error_' + (data.errorCode || 'invalid');
-                state.voucherError = t(errKey) || t('voucher_error_invalid');
+                const VOUCHER_ERROR_KEYS = { not_found: 'voucher_error_not_found', server_error: 'voucher_error_server', connection: 'voucher_error_connection' };
+                state.voucherError = t(VOUCHER_ERROR_KEYS[data.errorCode] ?? 'voucher_error_invalid');
               }
             } catch {
               state.voucherError = t('voucher_error_connection');
