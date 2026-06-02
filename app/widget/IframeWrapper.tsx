@@ -43,6 +43,7 @@ export default function IframeWrapper({ hotel, lang }: { hotel: string; lang?: s
 
   return (
     <iframe
+      suppressHydrationWarning
       ref={iframeRef}
       src={`/widget.html?hotel=${hotel}${lang ? `&lang=${lang}` : ''}`}
       title="Buchungsformular"
