@@ -625,7 +625,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div>
                 <h2 style={sectionTitleStyle}>Embed-Code</h2>
                 <p style={sectionIntroStyle}>
-                  Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: 'var(--bg-surface-raised)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für die englische Version.
+                  Diesen Code auf deiner Hotel-Website einfügen, z.&nbsp;B. auf der Seite &bdquo;Buchen&ldquo;. Verwende <code style={{ background: 'var(--bg-surface-raised)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="en"</code> für Englisch, <code style={{ background: 'var(--bg-surface-raised)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>data-lang="it"</code> für Italienisch.
                 </p>
               </div>
               <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
@@ -641,6 +641,12 @@ export default async function Page({ searchParams }: PageProps) {
                 <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
                 <EmbedCode
                   code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}" data-lang="en"></script>`}
+                />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Italiano</div>
+                <EmbedCode
+                  code={`<script src="https://${headerStore.get('host') || 'deine-domain.com'}/widget.js" data-hotel="${selected.slug}" data-lang="it"></script>`}
                 />
               </div>
             </div>
@@ -713,6 +719,12 @@ export default async function Page({ searchParams }: PageProps) {
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>English</div>
                   <EmbedCode
                     code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="en"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
+                  />
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Italiano</div>
+                  <EmbedCode
+                    code={`<script src="https://${headerStore.get('host') || 'bookingwulf.com'}/mini-widget.js" data-hotel="${selected.slug}" data-lang="it"${selected.settings?.miniWidgetTarget ? ` data-target="${selected.settings.miniWidgetTarget}"` : ''}></script>`}
                   />
                 </div>
               </div>
