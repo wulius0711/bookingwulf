@@ -181,7 +181,7 @@
       (function () {
         var qp = new URLSearchParams(location.search);
         var hotel  = qp.get('hotel')  || '';
-        var lang   = qp.get('lang')   || 'de';
+        var lang   = ['de','en','it'].includes(qp.get('lang')) ? qp.get('lang') : 'de';
         var target = qp.get('target') || '';
         var months = parseInt(qp.get('months') || '3', 10) || 3;
         var base   = location.origin;
@@ -200,6 +200,13 @@
             free: 'Available', booked: 'Booked', blocked: 'Blocked',
             loading: 'Loading…', error: 'Error loading data.', empty: 'No apartments available.',
             prev: 'Previous month', next: 'Next month',
+          },
+          it: {
+            months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+            days:   ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'],
+            free: 'Libero', booked: 'Occupato', blocked: 'Bloccato',
+            loading: 'Caricamento…', error: 'Errore durante il caricamento.', empty: 'Nessun appartamento disponibile.',
+            prev: 'Mese precedente', next: 'Mese successivo',
           },
         };
         var t = T[lang] || T.de;

@@ -256,7 +256,7 @@
         const HOTEL_SLUG = qp.get('hotel') || 'default';
         const WIDGET_CONFIG = qp.get('config') || '';
         let BOOKING_PAGE = qp.get('target') || '';
-        const LANG = qp.get('lang') === 'en' ? 'en' : 'de';
+        const LANG = ['de','en','it'].includes(qp.get('lang')) ? qp.get('lang') : 'de';
 
         const T = {
           de: {
@@ -280,6 +280,17 @@
             availNo: 'Not available',
             adultsDown: 'Fewer adults', adultsUp: 'More adults',
             adultsGroup: 'Adults',
+          },
+          it: {
+            arrival: 'Arrivo', departure: 'Partenza', adults: 'Adult.',
+            request: 'Richiesta', book: 'Prenota',
+            error: 'Seleziona le date di arrivo e partenza.',
+            titleDefault: 'Richiesta & Prenotazione', titleBook: 'Prenota ora', titleRequest: 'Richiedi ora',
+            availChecking: 'Verifica disponibilità …',
+            availYes: 'Disponibile',
+            availNo: 'Non disponibile',
+            adultsDown: 'Meno adulti', adultsUp: 'Più adulti',
+            adultsGroup: 'Adulti',
           },
         }[LANG];
 
