@@ -716,8 +716,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 
 **Handlungsoptionen bei wiederholten Incidents:**
 - **Sofort umsetzbar:** Öffentliche Status-Page via UptimeRobot einrichten — Kunden sehen transparent ob es ein Plattformproblem ist, schützt bookingwulf-Reputation
-- **Bei Häufung (>2×/Quartal):** Hosting-Alternative prüfen (Railway App Hosting, Fly.io) — größerer Migrationsaufwand, aber mehr Unabhängigkeit von Vercel-Incidents
-- **Aktuell:** Einmaliger Incident in unbekanntem Zeitraum davor — noch kein Handlungsbedarf, aber beobachten
+- **Aktuell:** Einmaliger Incident — noch kein Handlungsbedarf, aber beobachten. Kein Hosting-Wechsel sinnvoll: andere Anbieter (Railway, Fly.io) haben ebenfalls Ausfälle, echter Schutz wäre nur Multi-Region-Redundanz (Enterprise-Niveau, überdimensioniert)
 
 ---
 
