@@ -82,7 +82,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 - [x] Verfügbarkeits-basierter Preisaufschlag (Business)
 - [x] iCal-Sync (Airbnb, Booking.com — alle 30 Min. automatisch)
 - [x] Sofortbuchung & Anfragemodus (pro Widget konfigurierbar)
-- [x] E-Mails automatisch dreisprachig (DE / EN / IT)
+- [x] E-Mails automatisch neunsprachig (DE / EN / IT / FR / NL / RU / PL / CS / ES)
 - [x] Anpassbare E-Mail-Templates mit Variablen (Pro)
 - [x] Branding (Farben, Schriften, Radius, Layout)
 - [x] Zusatzleistungen & Versicherungen (4 Abrechnungstypen)
@@ -112,7 +112,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
   - Hausinfos / Gästemappe (WLAN, Parkplatz, Müll, Hausordnung, Notfallnummern)
   - Umgebungstipps (Restaurants, Aktivitäten, Events — manuell + Google Places)
   - Messaging mit dem Hotel
-  - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache)
+  - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache) — UI-Strings nur DE/EN/IT, E-Mails 9 Sprachen
 - [x] Anpassbares Admin-Dashboard — Widget-System mit Toggles (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert; Mai 2026
 - [x] **Gast-Chatbot** (Pro) — KI-Buchungsassistent als embeddable Shadow-DOM-Widget (`<script src="https://bookingwulf.com/chat.js" data-hotel="slug">`). Name, Farbe und Avatar aus Admin-Einstellungen. Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader, manuelle FAQ. Mobile Bottom-Sheet. Gemini 2.5 Flash. → Details: CHATBOT.md. Mai 2026
 
@@ -201,7 +201,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 |---------|-------------|-----------|
 | Ferienwohnungen (2–10 Einheiten) | Häufig noch kein Buchungssystem | 🔴 Hoch |
 | Kleinhotels (10–30 Zimmer) | Unzufrieden mit Provision | 🔴 Hoch |
-| Berghotels / Pensionen (Alpen) | Starke Saisonalität, dreisprachig wichtig | 🔴 Hoch |
+| Berghotels / Pensionen (Alpen) | Starke Saisonalität, mehrsprachig wichtig | 🔴 Hoch |
 | Bauernhöfe mit Urlaub | Wenig Technik-Erfahrung, brauchen Einfachheit | 🟡 Mittel |
 | Boutique-Hotels (30–80 Zimmer) | Mehr Ansprüche, höherer LTV | 🟡 Mittel |
 
@@ -223,7 +223,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 |-------------|---------------------|-------------------|
 | 0 % Provision | 15–20 % Provision | Teuer, komplex |
 | 1 Script-Tag Einbindung | Eigene Plattform nötig | Aufwändige Integration |
-| Dreisprachig (DE/EN/IT) | — | Teilweise |
+| E-Mails 9-sprachig, Widget DE/EN | — | Teilweise |
 | DSGVO-konform, EU-Daten | Drittland-Transfer | Je nach Anbieter |
 | Eigene Website bleibt zentral | Gäste werden abgelenkt | — |
 | Ab €49/Mo | Provisionsbasiert | Ab €100+/Mo |
@@ -377,6 +377,39 @@ Enterprise PMS für Short-Term Rental Operators mit Fokus auf Scale (4–200+ Pr
 
 **Kernunterschied zu bookingwulf:**
 Guesty ist Enterprise-Software für professionelle Property Manager mit vielen Objekten. Kein relevanter direkter Konkurrent für bookingwulf-Kunden (kleine Betriebe, 1–5 Apartments, DACH-Raum). bookingwulfs Stärke (einfach, leichtgewichtig, Direktbuchung) ist genau Guestys blinder Fleck.
+
+---
+
+### HotelNetSolutions — OnePageBooking
+
+Österreichisch/deutschsprachiger Anbieter aus dem DACH-Hotelmarkt. Fokus auf klassische Booking Engine für Individualhotels und Hotelgruppen.
+
+**Technisch:**
+- Booking Engine: **Angular** (Legacy-Build, `main-es2015.js`-Bundle-Naming deutet auf Angular 8–11, ca. 2019–2021)
+- Marketing-Site: **WordPress + Elementor** — kein moderner Stack
+- Cookie Consent: Usercentrics
+
+**Production Bugs (live beobachtet bei Krumers Alpin, 4★ Superior, Seefeld):**
+- `TypeError: Cannot read properties of null (reading 'find')` in der Kern-Booking-Logik (Extras/Zusatzleistungen) — nicht abgefangener Null-Pointer
+- `TypeError: Cannot read properties of null (reading 'addEventListener')` in `share-modal.js` — kaputter UI-Button
+- `404` auf `calendar-back-last-day.png` — fehlendes Asset im Kalender
+- Veraltetes PWA-Meta-Tag (`apple-mobile-web-app-capable` deprecated)
+- Erkenntnis: **Ein etablierter, zahlender Premium-Kunde hat nachweisbare JS-Fehler in Production** — kein Ausreißer, sondern Zeichen von schwachem QA
+
+**Buchungsflow:**
+- „One Page" = alles auf einer langen Scroll-Seite → unübersichtlich bei viel Inhalt
+- Auf Mobile besonders problematisch (langes Scrollen vor Payment)
+- Kein modernes Schritt-für-Schritt-UI
+
+**Preise:** Nicht öffentlich, Kontaktanfrage erforderlich. Branchenüblich €50–200+/Mo.
+
+**Pitch-Angriffspunkte:**
+- „Ihr aktuelles Buchungssystem hat offene JavaScript-Fehler in Production — Ihre Gäste bemerken das"
+- Veralteter Tech-Stack, kein aktives QA-Monitoring erkennbar
+- WordPress-Marketing-Site signalisiert wenig Engineering-Investition
+- „bookingwulf wird aktiv gewartet und weiterentwickelt — kein Legacy-Ballast"
+
+> **Muster:** Auch etablierte, teure Anbieter liefern fehlerhafte Software aus. Das ist kein Einzelfall — sondern ein strukturelles Problem bei Anbietern die keinen Druck von modernen Alternativen spüren. bookingwulf-Vorteil: aktiver Dev-Zyklus, moderner Stack, direkter Support.
 
 ---
 

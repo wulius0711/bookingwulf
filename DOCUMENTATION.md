@@ -42,7 +42,7 @@ bookingwulf ist ein SaaS-Buchungssystem für Hotels und Ferienwohnungen. Hotelbe
 - Multi-Apartment-Verwaltung mit Bildern, Preissaisons und Sperrzeiten
 - Echtzeit-Verfügbarkeitsprüfung
 - iCal-Sync mit Airbnb & Booking.com
-- Automatische E-Mails (Gast + Hotel), dreisprachig (de/en/it)
+- Automatische E-Mails (Gast + Hotel), neunsprachig (de/en/it/fr/nl/ru/pl/cs/es)
 - Anpassbares Branding (Farben, Schriften, Layout)
 - Zusatzleistungen & Versicherungen
 - Stripe-Abonnements (Starter / Pro / Business)

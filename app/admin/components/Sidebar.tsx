@@ -43,6 +43,34 @@ const NAV_ICONS: Record<string, React.ReactNode> = {
   vouchers: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>,
 };
 
+const NAV_COLORS: Record<string, string> = {
+  overview:    '#6366f1',
+  requests:    '#3b82f6',
+  roomplan:    '#f59e0b',
+  calendar:    '#06b6d4',
+  analytics:   '#8b5cf6',
+  apartments:  '#22c55e',
+  prices:      '#10b981',
+  blocked:     '#ef4444',
+  extras:      '#f97316',
+  vouchers:    '#ec4899',
+  settings:    '#64748b',
+  guestportal: '#0ea5e9',
+  emails:      '#a855f7',
+  chat:        '#14b8a6',
+  nuki:        '#78716c',
+  beds24:      '#84cc16',
+  billing:     '#f59e0b',
+  help:        '#94a3b8',
+  surroundings:'#16a34a',
+  hungrywulf:  '#dc2626',
+  eventwulf:   '#7c3aed',
+  hotels:      '#0369a1',
+  users:       '#0891b2',
+  feedback:    '#db2777',
+  outreach:    '#d97706',
+};
+
 type HotelOption = { id: number; name: string };
 
 type NavGroup = {
@@ -162,7 +190,7 @@ function SidebarNavItem({ href, label, locked, upgradeLabel, icon }: NavItemDef)
         transition: 'background 0.12s ease, color 0.12s ease',
       }}
     >
-      {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0 }}>{iconEl}</span>}
+      {iconEl && <span aria-hidden="true" style={{ display: 'flex', flexShrink: 0, color: active ? 'var(--accent)' : (icon && NAV_COLORS[icon] ? NAV_COLORS[icon] : 'var(--text-secondary)') }}>{iconEl}</span>}
       {label}
     </Link>
   );

@@ -53,7 +53,7 @@ Hotels und Ferienwohnungen betten ein JavaScript-Widget auf ihrer eigenen Websit
 - [x] Sofortbuchung & Anfragemodus (pro Widget konfigurierbar) — Sofortbuchung setzt Status automatisch auf "gebucht", kein manueller Schritt nötig
 - [x] Online Check-in — Gast füllt Meldezettel-Daten (Geburtsdatum, Staatsangehörigkeit, Ausweisnummer) + Ankunftszeit vorab aus; Hotel bekommt Benachrichtigung per E-Mail
 - [x] Anzahlung & Bankdaten — konfigurierbarer Anzahlungsbetrag (Prozentsatz oder Fixbetrag), Zahlungsfrist, IBAN/BIC werden im Widget und in der Bestätigungsmail angezeigt
-- [x] E-Mails automatisch dreisprachig (DE / EN / IT)
+- [x] E-Mails automatisch neunsprachig (DE / EN / IT / FR / NL / RU / PL / CS / ES)
 - [x] Anpassbare E-Mail-Templates mit Variablen (Pro)
 - [x] Branding (Farben, Schriften, Radius, Layout)
 - [x] Zusatzleistungen & Versicherungen (4 Abrechnungstypen)
@@ -143,7 +143,7 @@ Hotels und Ferienwohnungen betten ein JavaScript-Widget auf ihrer eigenen Websit
 |---------|-------------|-----------|
 | Ferienwohnungen (2–10 Einheiten) | Häufig noch kein Buchungssystem | 🔴 Hoch |
 | Kleinhotels (10–30 Zimmer) | Unzufrieden mit Provision | 🔴 Hoch |
-| Berghotels / Pensionen (Alpen) | Starke Saisonalität, dreisprachig wichtig | 🔴 Hoch |
+| Berghotels / Pensionen (Alpen) | Starke Saisonalität, mehrsprachig wichtig | 🔴 Hoch |
 | Bauernhöfe mit Urlaub | Wenig Technik-Erfahrung, brauchen Einfachheit | 🟡 Mittel |
 | Boutique-Hotels (30–80 Zimmer) | Mehr Ansprüche, höherer LTV | 🟡 Mittel |
 
@@ -165,7 +165,7 @@ Hotels und Ferienwohnungen betten ein JavaScript-Widget auf ihrer eigenen Websit
 |-------------|---------------------|-------------------|
 | 0 % Provision | 15–20 % Provision | Teuer, komplex |
 | 1 Script-Tag Einbindung | Eigene Plattform nötig | Aufwändige Integration |
-| Dreisprachig (DE/EN/IT) | — | Teilweise |
+| E-Mails 9-sprachig, Widget DE/EN | — | Teilweise |
 | DSGVO-konform, EU-Daten | Drittland-Transfer | Je nach Anbieter |
 | Eigene Website bleibt zentral | Gäste werden abgelenkt | — |
 | Ab €49/Mo | Provisionsbasiert | Ab €100+/Mo |
