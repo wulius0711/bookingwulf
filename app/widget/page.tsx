@@ -8,7 +8,7 @@ type Props = {
 
 export default async function WidgetPage({ searchParams }: Props) {
   const params = await searchParams;
-  const hotel = params.hotel ?? 'beimoser';
+  const hotel = params.hotel ?? 'alpine-retreat';
 
   return <IframeWrapper hotel={hotel} />;
 }

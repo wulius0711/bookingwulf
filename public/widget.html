@@ -3020,7 +3020,9 @@
         const _preType = _qp.get('type') || ''; // 'request' | 'booking'
         const _preAdults = Math.max(1, parseInt(_qp.get('adults') || '2', 10) || 2);
 
-        const LANG = (_qp.get('lang') || 'de') === 'en' ? 'en' : 'de';
+        const SUPPORTED_LANGS = ['de', 'en', 'it'];
+        const LANG = SUPPORTED_LANGS.includes(_qp.get('lang')) ? _qp.get('lang') : 'de';
+        const LOCALE = { de: 'de-AT', en: 'en-GB', it: 'it-IT' };
         const TRANSLATIONS = {
           de: {
             months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
@@ -3218,6 +3220,9 @@
             ph_street: 'Musterstraße 1',
             ph_zip: '1010',
             ph_city: 'Wien',
+            apt_none_selected: 'Noch keine Kategorie ausgewählt.',
+            apt_one_selected: '1 Apartment ausgewählt.',
+            apt_n_selected: '{n} Apartments ausgewählt.',
           },
           en: {
             months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -3415,6 +3420,9 @@
             ph_street: 'Sample Street 1',
             ph_zip: '1010',
             ph_city: 'Vienna',
+            apt_none_selected: 'No category selected yet.',
+            apt_one_selected: '1 apartment selected.',
+            apt_n_selected: '{n} apartments selected.',
           },
         };
         function t(key, vars = {}) {
@@ -3488,7 +3496,7 @@
         }
 
         const eur = (n) =>
-          new Intl.NumberFormat(LANG === 'en' ? 'en-GB' : 'de-AT', {
+          new Intl.NumberFormat(LOCALE[LANG], {
             style: 'currency',
             currency: 'EUR',
           }).format(Number(n || 0));
@@ -3783,7 +3791,7 @@
 
         function formatDate(d) {
           if (!d) return '–';
-          return new Intl.DateTimeFormat(LANG === 'en' ? 'en-GB' : 'de-AT', {
+          return new Intl.DateTimeFormat(LOCALE[LANG], {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -4780,7 +4788,7 @@
             if (ap.size) metaParts.push(ap.size + ' m²');
             metaParts.push(`${ap.maxAdults || 0} ${t('apt_adults_abbr')}`);
             if ((ap.maxChildren || 0) > 0)
-              metaParts.push(`${ap.maxChildren} ${LANG === 'en' ? 'children' : 'Kinder'}`);
+              metaParts.push(`${ap.maxChildren} ${t('label_children')}`);
 
             const description =
               ap.description || t('apt_default_desc');
@@ -5080,10 +5088,10 @@
           const count = state.selectedApartmentIds.length;
           document.getElementById('selectionCountNote').textContent =
             count === 0
-              ? (LANG === 'en' ? 'No category selected yet.' : 'Noch keine Kategorie ausgewählt.')
+              ? t('apt_none_selected')
               : count === 1
-                ? (LANG === 'en' ? '1 apartment selected.' : '1 Apartment ausgewählt.')
-                : (LANG === 'en' ? `${count} apartments selected.` : `${count} Apartments ausgewählt.`);
+                ? t('apt_one_selected')
+                : t('apt_n_selected', { n: count });
         }
 
         function renderSteps() {
@@ -5627,7 +5635,7 @@
           if (state.adults > 1) {
             const at = document.createElement('div');
             at.className = 'guest-section-title';
-            at.textContent = LANG === 'en' ? 'Adults' : 'Erwachsene';
+            at.textContent = t('label_adults');
             wrap.appendChild(at);
             for (let i = 1; i < state.adults; i++) {
               const row = document.createElement('div');
@@ -5651,7 +5659,7 @@
             const ct = document.createElement('div');
             ct.className = 'guest-section-title';
             ct.style.marginTop = state.adults > 1 ? '16px' : '0';
-            ct.textContent = LANG === 'en' ? 'Children' : 'Kinder';
+            ct.textContent = t('label_children');
             wrap.appendChild(ct);
             for (let i = 0; i < state.children; i++) {
               const bdEl = document.getElementById(`childBirthday_${i}`);
