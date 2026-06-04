@@ -10,160 +10,142 @@
       body {
         font-family: Inter, ui-sans-serif, system-ui, sans-serif;
         background: transparent;
-        color: #111;
         font-size: 13px;
       }
 
-      .aw-wrap { padding: 4px 0 12px; }
+      .aw-wrap {
+        background: transparent;
+        padding: 4px 0 12px;
+        color: #111;
+      }
 
       /* Header */
       .aw-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        gap: 8px;
-      }
-      .aw-month-label {
-        font-size: 15px;
-        font-weight: 700;
-        color: #111;
-        flex: 1;
-        text-align: center;
-        letter-spacing: -0.01em;
+        gap: 10px;
+        margin-bottom: 20px;
       }
       .aw-nav {
-        background: none;
+        background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         cursor: pointer;
-        font-size: 20px;
-        line-height: 1;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #374151;
         flex-shrink: 0;
-        transition: background 0.12s;
+        transition: background 0.1s;
       }
       .aw-nav:hover:not(:disabled) { background: #f3f4f6; }
-      .aw-nav:disabled { opacity: 0.25; cursor: default; }
+      .aw-nav:disabled { color: #d1d5db; cursor: default; }
 
-      /* Table */
-      .aw-table-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-      }
-      .aw-table {
-        border-collapse: collapse;
-        min-width: max-content;
-        width: 100%;
-      }
-
-      /* Header row */
-      .aw-table thead th {
-        background: #f9fafb;
-        font-size: 10px;
-        font-weight: 600;
-        color: #9ca3af;
-        padding: 5px 0;
+      .aw-month-label {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111;
+        min-width: 110px;
         text-align: center;
-        border-bottom: 1px solid #e5e7eb;
-        min-width: 30px;
-        width: 30px;
-        user-select: none;
+        letter-spacing: -0.01em;
       }
-      .aw-table thead th.aw-apt-header {
-        min-width: 130px;
-        width: 130px;
-        text-align: left;
-        padding: 5px 10px;
-        position: sticky;
-        left: 0;
-        z-index: 3;
-        background: #f9fafb;
-        border-right: 1px solid #e5e7eb;
-      }
-      .aw-table thead th.aw-day-today {
-        color: #111;
-        background: #f0fdf4;
-      }
-      .aw-table thead th.aw-day-weekend {
-        color: #d1d5db;
-      }
-
-      /* Body rows */
-      .aw-table tbody tr { border-bottom: 1px solid #f3f4f6; }
-      .aw-table tbody tr:last-child { border-bottom: none; }
-
-      .aw-apt-name {
-        position: sticky;
-        left: 0;
-        background: #fff;
-        font-size: 12px;
-        font-weight: 600;
-        color: #111;
-        padding: 0 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 130px;
-        border-right: 1px solid #e5e7eb;
-        z-index: 1;
-        height: 34px;
-        vertical-align: middle;
-      }
-      .aw-table tbody tr:hover .aw-apt-name { background: #fafafa; }
-
-      .aw-day {
-        width: 30px;
-        min-width: 30px;
-        height: 34px;
-        border-right: 1px solid #f3f4f6;
-        vertical-align: middle;
-        cursor: default;
-        transition: opacity 0.1s;
-      }
-      .aw-day:last-child { border-right: none; }
-
-      .aw-day.free     { background: #dcfce7; }
-      .aw-day.booked   { background: #fecaca; }
-      .aw-day.blocked  { background: #e5e7eb; }
-      .aw-day.past     { background: #f9fafb; opacity: 0.5; }
-      .aw-day.today    { box-shadow: inset 0 0 0 1px #111; }
-
-      .aw-day.free.clickable { cursor: pointer; }
-      .aw-day.free.clickable:hover { background: #fff; }
+      .aw-spacer { flex: 1; }
 
       /* Legend */
       .aw-legend {
         display: flex;
-        gap: 14px;
-        margin-top: 10px;
-        padding: 0 2px;
+        align-items: center;
+        gap: 12px;
         flex-wrap: wrap;
       }
       .aw-legend-item {
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 11px;
-        color: #6b7280;
+        gap: 6px;
+        font-size: 12px;
+        color: #9ca3af;
       }
       .aw-dot {
-        width: 11px;
-        height: 11px;
+        width: 12px;
+        height: 12px;
         border-radius: 3px;
-        display: inline-block;
         flex-shrink: 0;
       }
-      .aw-dot.free    { background: #dcfce7; border: 1px solid #bbf7d0; }
-      .aw-dot.booked  { background: #fecaca; }
-      .aw-dot.blocked { background: #e5e7eb; }
+
+      /* Grid */
+      .aw-grid {
+        display: flex;
+        align-items: flex-start;
+      }
+      .aw-labels {
+        width: 120px;
+        flex-shrink: 0;
+        padding-right: 12px;
+      }
+      .aw-label-spacer { height: 24px; }
+      .aw-apt-label {
+        height: 26px;
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        color: #374151;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 4px;
+      }
+      .aw-apt-label:last-child { margin-bottom: 0; }
+
+      .aw-days-col {
+        flex: 1;
+        min-width: 0;
+      }
+      .aw-day-numbers {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 6px;
+        height: 18px;
+      }
+      .aw-day-num {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #9ca3af;
+      }
+      .aw-day-num.is-today { color: #378ADD; font-weight: 700; }
+
+      .aw-row {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 4px;
+      }
+      .aw-row:last-child { margin-bottom: 0; }
+
+      .aw-cell {
+        flex: 1;
+        min-width: 0;
+        height: 26px;
+        border-radius: 4px;
+        cursor: default;
+        transition: opacity 0.1s;
+      }
+      .aw-cell.run-start  { border-radius: 4px 0 0 4px; }
+      .aw-cell.run-middle { border-radius: 0; }
+      .aw-cell.run-end    { border-radius: 0 4px 4px 0; }
+      .aw-cell.booked.run-start,  .aw-cell.booked.run-middle  { box-shadow: 2px 0 0 0 #F5C4B3; }
+      .aw-cell.blocked.run-start, .aw-cell.blocked.run-middle { box-shadow: 2px 0 0 0 #D1D5DB; }
+      .aw-cell.free    { background: #C0DD97; }
+      .aw-cell.booked  { background: #F5C4B3; }
+      .aw-cell.blocked { background: #D1D5DB; }
+      .aw-cell.past    { background: #ECEAE3; }
+      .aw-cell.is-today { box-shadow: 0 0 0 1.5px #378ADD; }
+      .aw-cell.clickable { cursor: pointer; }
+      .aw-cell.clickable:hover { opacity: 0.8; }
 
       .aw-state {
         text-align: center;
@@ -175,7 +157,7 @@
     </style>
   </head>
   <body>
-    <div id="awRoot"><div class="aw-state" id="awLoading">Lädt…</div></div>
+    <div id="awRoot"><div class="aw-wrap"><p class="aw-state" id="awLoading">Lädt…</p></div></div>
 
     <script>
       (function () {
@@ -183,50 +165,28 @@
         var hotel  = qp.get('hotel')  || '';
         var lang   = ['de','en','it'].includes(qp.get('lang')) ? qp.get('lang') : 'de';
         var target = qp.get('target') || '';
-        var months = parseInt(qp.get('months') || '3', 10) || 3;
+        var months = parseInt(qp.get('months') || '6', 10) || 6;
         var base   = location.origin;
 
+        var SHOW_DAYS = new Set([1, 5, 10, 15, 20, 25]);
+
         var T = {
-          de: {
-            months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
-            days:   ['Mo','Di','Mi','Do','Fr','Sa','So'],
-            free: 'Frei', booked: 'Belegt', blocked: 'Blockiert',
-            loading: 'Lädt…', error: 'Fehler beim Laden.', empty: 'Keine Apartments verfügbar.',
-            prev: 'Vorheriger Monat', next: 'Nächster Monat',
-          },
-          en: {
-            months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-            days:   ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-            free: 'Available', booked: 'Booked', blocked: 'Blocked',
-            loading: 'Loading…', error: 'Error loading data.', empty: 'No apartments available.',
-            prev: 'Previous month', next: 'Next month',
-          },
-          it: {
-            months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
-            days:   ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'],
-            free: 'Libero', booked: 'Occupato', blocked: 'Bloccato',
-            loading: 'Caricamento…', error: 'Errore durante il caricamento.', empty: 'Nessun appartamento disponibile.',
-            prev: 'Mese precedente', next: 'Mese successivo',
-          },
+          de: { months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'], free: 'Frei', booked: 'Belegt', blocked: 'Blockiert', loading: 'Lädt…', error: 'Fehler beim Laden.', empty: 'Keine Apartments verfügbar.', prev: 'Vorheriger Monat', next: 'Nächster Monat' },
+          en: { months: ['January','February','March','April','May','June','July','August','September','October','November','December'], free: 'Available', booked: 'Booked', blocked: 'Blocked', loading: 'Loading…', error: 'Error loading data.', empty: 'No apartments available.', prev: 'Previous month', next: 'Next month' },
+          it: { months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'], free: 'Libero', booked: 'Occupato', blocked: 'Bloccato', loading: 'Caricamento…', error: 'Errore durante il caricamento.', empty: 'Nessun appartamento disponibile.', prev: 'Mese precedente', next: 'Mese successivo' },
         };
         var t = T[lang] || T.de;
 
         var apartments = [];
         var fromIso = '';
         var toIso   = '';
-        var curYear  = new Date().getFullYear();
-        var curMonth = new Date().getMonth(); // 0-indexed
-
-        function todayIso() {
-          var n = new Date();
-          return n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate());
-        }
+        var now = new Date();
+        var curYear  = now.getFullYear();
+        var curMonth = now.getMonth();
 
         function pad(n) { return String(n).padStart(2, '0'); }
-
-        function isoStr(year, month1, day) {
-          return year + '-' + pad(month1) + '-' + pad(day);
-        }
+        function isoStr(y, m1, d) { return y + '-' + pad(m1) + '-' + pad(d); }
+        function todayIso() { return isoStr(now.getFullYear(), now.getMonth() + 1, now.getDate()); }
 
         function dayStatus(dateStr, ranges) {
           for (var i = 0; i < ranges.length; i++) {
@@ -236,17 +196,15 @@
           return 'free';
         }
 
-        function isWeekend(year, month0, day) {
-          var dow = new Date(year, month0, day).getDay();
-          return dow === 0 || dow === 6;
+        function showDayLabel(d, daysInMo) {
+          return SHOW_DAYS.has(d) || d === daysInMo;
         }
 
         function render() {
           var today     = todayIso();
           var daysInMo  = new Date(curYear, curMonth + 1, 0).getDate();
-          var label     = t.months[curMonth] + ' ' + curYear;
+          var isCurrentMonth = curYear === now.getFullYear() && curMonth === now.getMonth();
 
-          // Navigation bounds
           var fromParts = fromIso.split('-');
           var fromY = +fromParts[0], fromM = +fromParts[1] - 1;
           var toParts = toIso.split('-');
@@ -257,106 +215,101 @@
           var nextM = curMonth === 11 ? 0 : curMonth + 1;
           var canNext = nextY < toY || (nextY === toY && nextM < toM);
 
+          var svgPrev = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          var svgNext = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
           var html = '<div class="aw-wrap">';
 
           // Header
           html += '<div class="aw-header">';
-          html += '<button class="aw-nav" id="awPrev" aria-label="' + t.prev + '"' + (canPrev ? '' : ' disabled') + '>&#8249;</button>';
-          html += '<span class="aw-month-label">' + label + '</span>';
-          html += '<button class="aw-nav" id="awNext" aria-label="' + t.next + '"' + (canNext ? '' : ' disabled') + '>&#8250;</button>';
-          html += '</div>';
+          html += '<button class="aw-nav" id="awPrev" aria-label="' + t.prev + '"' + (canPrev ? '' : ' disabled') + '>' + svgPrev + '</button>';
+          html += '<span class="aw-month-label">' + t.months[curMonth] + ' ' + curYear + '</span>';
+          html += '<button class="aw-nav" id="awNext" aria-label="' + t.next + '"' + (canNext ? '' : ' disabled') + '>' + svgNext + '</button>';
+          html += '<div class="aw-spacer"></div>';
+          html += '<div class="aw-legend">';
+          html += '<span class="aw-legend-item"><span class="aw-dot" style="background:#C0DD97"></span>' + t.free + '</span>';
+          html += '<span class="aw-legend-item"><span class="aw-dot" style="background:#F5C4B3"></span>' + t.booked + '</span>';
+          html += '<span class="aw-legend-item"><span class="aw-dot" style="background:#D1D5DB"></span>' + t.blocked + '</span>';
+          html += '</div></div>';
 
           if (apartments.length === 0) {
             html += '<p class="aw-state">' + t.empty + '</p>';
           } else {
-            // Table
-            html += '<div class="aw-table-wrap"><table class="aw-table" role="grid"><thead><tr>';
-            html += '<th class="aw-apt-header" scope="col"></th>';
+            html += '<div class="aw-grid">';
 
+            // Labels column
+            html += '<div class="aw-labels"><div class="aw-label-spacer"></div>';
+            for (var a = 0; a < apartments.length; a++) {
+              html += '<div class="aw-apt-label" title="' + apartments[a].name + '">' + apartments[a].name + '</div>';
+            }
+            html += '</div>';
+
+            // Days column
+            html += '<div class="aw-days-col">';
+
+            // Day number row
+            html += '<div class="aw-day-numbers">';
             for (var d = 1; d <= daysInMo; d++) {
               var ds = isoStr(curYear, curMonth + 1, d);
-              var isToday = ds === today;
-              var isSat = isWeekend(curYear, curMonth, d);
-              var cls = isToday ? ' class="aw-day-today"' : (isSat ? ' class="aw-day-weekend"' : '');
-              var dow = new Date(curYear, curMonth, d).getDay();
-              var dowLabel = t.days[dow === 0 ? 6 : dow - 1];
-              html += '<th scope="col"' + cls + ' title="' + dowLabel + ' ' + d + '">' + d + '</th>';
+              var isTodayD = isCurrentMonth && ds === today;
+              var label = (showDayLabel(d, daysInMo) || isTodayD) ? d : '';
+              html += '<div class="aw-day-num' + (isTodayD ? ' is-today' : '') + '">' + label + '</div>';
             }
+            html += '</div>';
 
-            html += '</tr></thead><tbody>';
+            // Apartment rows
+            for (var ai = 0; ai < apartments.length; ai++) {
+              var apt = apartments[ai];
 
-            for (var a = 0; a < apartments.length; a++) {
-              var apt = apartments[a];
-              html += '<tr>';
-              html += '<td class="aw-apt-name" title="' + apt.name + '">' + apt.name + '</td>';
-
+              // Pre-calculate status for each day
+              var statuses = [];
               for (var dd = 1; dd <= daysInMo; dd++) {
                 var ds2 = isoStr(curYear, curMonth + 1, dd);
-                var isPast = ds2 < today;
-                var isToday2 = ds2 === today;
-                var status = isPast ? 'past' : dayStatus(ds2, apt.ranges);
-
-                var cls2 = 'aw-day ' + status;
-                if (!isPast && status === 'free' && target) cls2 += ' clickable';
-                if (isToday2) cls2 += ' today';
-
-                var onclick = '';
-                if (!isPast && status === 'free' && target) {
-                  onclick = ' data-date="' + ds2 + '"';
-                }
-
-                html += '<td class="' + cls2 + '"' + onclick + '></td>';
+                var isPastDay = isCurrentMonth && ds2 < today;
+                statuses.push(isPastDay ? 'past' : dayStatus(ds2, apt.ranges));
               }
 
-              html += '</tr>';
+              html += '<div class="aw-row">';
+              for (var dd = 1; dd <= daysInMo; dd++) {
+                var ds2 = isoStr(curYear, curMonth + 1, dd);
+                var isTodayCell = isCurrentMonth && ds2 === today;
+                var status = statuses[dd - 1];
+                var isBlock = status === 'booked' || status === 'blocked';
+                var prevSame = isBlock && dd > 1 && statuses[dd - 2] === status;
+                var nextSame = isBlock && dd < daysInMo && statuses[dd] === status;
+                var runCls = isBlock ? (prevSame && nextSame ? ' run-middle' : prevSame ? ' run-end' : nextSame ? ' run-start' : '') : '';
+                var canClick = status === 'free' && !isTodayCell && target && !(isCurrentMonth && ds2 < today);
+                var cls = 'aw-cell ' + status + runCls + (isTodayCell ? ' is-today' : '') + (canClick ? ' clickable' : '');
+                var dataDate = canClick ? ' data-date="' + ds2 + '"' : '';
+                html += '<div class="' + cls + '"' + dataDate + '></div>';
+              }
+              html += '</div>';
             }
 
-            html += '</tbody></table></div>';
-
-            // Legend
-            html += '<div class="aw-legend">';
-            html += '<span class="aw-legend-item"><span class="aw-dot free"></span>' + t.free + '</span>';
-            html += '<span class="aw-legend-item"><span class="aw-dot booked"></span>' + t.booked + '</span>';
-            html += '<span class="aw-legend-item"><span class="aw-dot blocked"></span>' + t.blocked + '</span>';
-            html += '</div>';
+            html += '</div></div>';
           }
 
           html += '</div>';
           document.getElementById('awRoot').innerHTML = html;
 
-          // Event listeners
-          var prevBtn = document.getElementById('awPrev');
-          var nextBtn = document.getElementById('awNext');
-
-          if (prevBtn) prevBtn.addEventListener('click', function () {
-            if (curMonth === 0) { curMonth = 11; curYear--; }
-            else curMonth--;
+          document.getElementById('awPrev').addEventListener('click', function () {
+            if (curMonth === 0) { curMonth = 11; curYear--; } else curMonth--;
+            render();
+          });
+          document.getElementById('awNext').addEventListener('click', function () {
+            if (curMonth === 11) { curMonth = 0; curYear++; } else curMonth++;
             render();
           });
 
-          if (nextBtn) nextBtn.addEventListener('click', function () {
-            if (curMonth === 11) { curMonth = 0; curYear++; }
-            else curMonth++;
-            render();
-          });
-
-          // Click on free day → navigate
           if (target) {
-            document.querySelectorAll('.aw-day.clickable').forEach(function (cell) {
+            document.querySelectorAll('.aw-cell.clickable').forEach(function (cell) {
               cell.addEventListener('click', function () {
                 var date = this.getAttribute('data-date');
                 if (!date) return;
                 var url = new URL(target);
                 url.searchParams.set('arrival', date);
-                // Write to own (bookingwulf.com) localStorage — widget.html reads it on load
-                try {
-                  localStorage.setItem('bw_pending_arrival', JSON.stringify({
-                    arrival: date,
-                    exp: Date.now() + 10 * 60 * 1000,
-                  }));
-                } catch (_e) {}
+                try { localStorage.setItem('bw_pending_arrival', JSON.stringify({ arrival: date, exp: Date.now() + 10 * 60 * 1000 })); } catch (_e) {}
                 window.parent.postMessage({ type: 'aw-navigate', href: url.toString() }, '*');
-                // Fallback: direct top-frame navigation (works for non-sandboxed embeds)
                 try { window.top.location.href = url.toString(); } catch (_e) {}
               });
             });
@@ -367,10 +320,7 @@
 
         function sendHeight() {
           requestAnimationFrame(function () {
-            window.parent.postMessage(
-              { type: 'aw-height', height: document.documentElement.scrollHeight },
-              '*',
-            );
+            window.parent.postMessage({ type: 'aw-height', height: document.documentElement.scrollHeight }, '*');
           });
         }
 
@@ -384,7 +334,7 @@
             render();
           })
           .catch(function () {
-            document.getElementById('awRoot').innerHTML = '<p class="aw-state error">' + t.error + '</p>';
+            document.getElementById('awRoot').innerHTML = '<div class="aw-wrap"><p class="aw-state error">' + t.error + '</p></div>';
             sendHeight();
           });
       })();
