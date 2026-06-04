@@ -18,6 +18,7 @@ import Button from '../components/ui/Button';
 import FeatureToggles from './FeatureToggles';
 import FontUploadRow from './FontUploadRow';
 import PaymentSettings from './PaymentSettings';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
 
 export const dynamic = 'force-dynamic';
 
@@ -226,6 +227,29 @@ export default async function Page({ searchParams }: PageProps) {
     : null;
 
   if (!selected) return <p>Kein Hotel</p>;
+
+  const now = new Date()
+  const to = new Date(now)
+  to.setUTCMonth(to.getUTCMonth() + 6)
+
+  function toIso(d: Date) {
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
+  }
+
+  const [availApartments, availBookings, availBlocked] = await Promise.all([
+    prisma.apartment.findMany({ where: { hotelId: selected.id, isActive: true }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    prisma.request.findMany({ where: { hotelId: selected.id, status: { in: ['booked', 'pending_paypal', 'pending_stripe'] }, arrival: { lt: to }, departure: { gt: now } }, select: { arrival: true, departure: true, selectedApartmentIds: true } }),
+    prisma.blockedRange.findMany({ where: { hotelId: selected.id, startDate: { lt: to }, endDate: { gt: now } }, select: { apartmentId: true, startDate: true, endDate: true } }),
+  ])
+
+  const availCalendarData = availApartments.map(apt => ({
+    id: apt.id,
+    name: apt.name,
+    ranges: [
+      ...availBookings.filter(b => b.selectedApartmentIds.split(',').map(Number).includes(apt.id)).map(b => ({ start: toIso(b.arrival), end: toIso(b.departure), type: 'booked' as const })),
+      ...availBlocked.filter(b => b.apartmentId === apt.id || b.apartmentId === null).map(b => ({ start: toIso(b.startDate), end: toIso(b.endDate), type: 'blocked' as const })),
+    ],
+  }))
 
   const fullBranding = isSuperAdmin || hasFullBranding(selected.plan ?? 'starter');
   const hasPro = isSuperAdmin || hasPlanAccess(selected.plan ?? 'starter', 'pro');
@@ -666,15 +690,14 @@ export default async function Page({ searchParams }: PageProps) {
             <div style={{ padding: '0 28px 26px', display: 'flex', flexDirection: 'column', gap: 16, opacity: hasPro ? 1 : 0.4 }}>
               {hasPro && <>
                 <EmbedCode
-                  code={`<iframe src="https://bookingwulf.com/availability-widget.html?hotel=${selected.slug}&months=2" width="100%" height="420" frameborder="0" style="border-radius:12px;"></iframe>`}
+                  code={`<iframe src="https://bookingwulf.com/availability-widget.html?hotel=${selected.slug}&months=6" width="100%" height="420" frameborder="0" style="border-radius:12px;"></iframe>`}
                 />
+                <p style={{ margin: '0', fontSize: 12, color: 'var(--text-disabled)' }}>
+                  Den Wert <code>months=6</code> kannst du im Embed-Code anpassen — z.B. <code>months=3</code> für 3 Monate.
+                </p>
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Vorschau</div>
-                  <iframe
-                    src={`/availability-widget.html?hotel=${encodeURIComponent(selected.slug)}&months=2`}
-                    style={{ width: '100%', height: 380, border: '1px solid var(--border)', borderRadius: 12, background: 'var(--surface)', display: 'block' }}
-                    title="Verfügbarkeits-Widget Vorschau"
-                  />
+                  <AvailabilityCalendar apartments={availCalendarData} />
                 </div>
               </>}
             </div>
