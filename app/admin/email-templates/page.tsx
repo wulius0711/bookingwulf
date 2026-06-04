@@ -151,12 +151,12 @@ export default async function EmailTemplatesPage() {
           <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Verfügbare Platzhalter</p>
           <span className="card-caret"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
         </summary>
-        <div style={{ padding: '0 18px 14px', display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
+        <div style={{ padding: '0 18px 14px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px 24px' }}>
           {PLACEHOLDERS.map(({ key, desc }) => (
-            <span key={key} style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-              <code style={{ background: 'var(--surface-3)', borderRadius: 4, padding: '1px 6px', fontFamily: 'monospace', fontSize: 12 }}>{key}</code>
-              {' '}{desc}
-            </span>
+            <div key={key} style={{ display: 'flex', alignItems: 'baseline', gap: 8, fontSize: 13, color: 'var(--text-muted)', minWidth: 0 }}>
+              <code style={{ background: 'var(--surface-3)', borderRadius: 4, padding: '1px 6px', fontFamily: 'monospace', fontSize: 12, flexShrink: 0 }}>{key}</code>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{desc}</span>
+            </div>
           ))}
         </div>
       </details>
