@@ -87,14 +87,23 @@
       }
 
       /* Grid */
+      .aw-grid-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
       .aw-grid {
         display: flex;
         align-items: flex-start;
+        min-width: max-content;
       }
       .aw-labels {
         width: 120px;
         flex-shrink: 0;
         padding-right: 12px;
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 1;
       }
       .aw-label-spacer { height: 24px; }
       .aw-apt-label {
@@ -112,7 +121,6 @@
 
       .aw-days-col {
         flex: 1;
-        min-width: 0;
       }
       .aw-day-numbers {
         display: flex;
@@ -121,8 +129,7 @@
         height: 18px;
       }
       .aw-day-num {
-        flex: 1;
-        min-width: 0;
+        flex: 1 0 14px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -139,8 +146,7 @@
       .aw-row:last-child { margin-bottom: 0; }
 
       .aw-cell {
-        flex: 1;
-        min-width: 0;
+        flex: 1 0 14px;
         height: 26px;
         border-radius: 4px;
         cursor: default;
@@ -247,7 +253,7 @@
           if (apartments.length === 0) {
             html += '<p class="aw-state">' + t.empty + '</p>';
           } else {
-            html += '<div class="aw-grid">';
+            html += '<div class="aw-grid-wrap"><div class="aw-grid">';
 
             // Labels column
             html += '<div class="aw-labels"><div class="aw-label-spacer"></div>';
@@ -298,7 +304,7 @@
               html += '</div>';
             }
 
-            html += '</div></div>';
+            html += '</div></div></div>';
           }
 
           html += '</div>';
