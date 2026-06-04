@@ -698,6 +698,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <input
                   name="miniWidgetTarget"
                   type="url"
+                  form="settings-form"
                   defaultValue={selected.settings?.miniWidgetTarget ?? ''}
                   placeholder="https://deine-website.at/buchen"
                   style={{ ...inputStyle, marginTop: 8 }}
