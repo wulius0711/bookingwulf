@@ -52,6 +52,9 @@ export default function SaveButton({
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      {saved && !blocked && (
+        <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ Gespeichert</span>
+      )}
       <button
         type={blocked ? 'button' : 'submit'}
         disabled={pending}
@@ -92,9 +95,6 @@ export default function SaveButton({
         }}>
           Verbindliche Buchung ist aktiv. Bitte zuerst eine Zahlungsart aktivieren.
         </span>
-      )}
-      {saved && !blocked && (
-        <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ Gespeichert</span>
       )}
     </div>
   );

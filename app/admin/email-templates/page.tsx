@@ -7,43 +7,18 @@ import SaveButton from '../components/SaveButton';
 
 export const dynamic = 'force-dynamic';
 
-const TEMPLATE_TYPES = [
-  {
-    type: 'request_guest',
-    label: 'Buchungsanfrage — Bestätigung an Gast',
-    description: 'Wird gesendet wenn ein Gast eine Anfrage abschickt.',
-    defaultSubject: 'Deine Buchungsanfrage bei {{hotelName}}',
-    defaultBody: 'vielen Dank für deine Buchungsanfrage. Wir haben deine Daten erhalten und melden uns in Kürze mit den weiteren Details.',
-  },
-  {
-    type: 'booking_guest',
-    label: 'Verbindliche Buchung — Bestätigung an Gast',
-    description: 'Wird gesendet wenn ein Gast verbindlich bucht.',
-    defaultSubject: 'Buchungsbestätigung bei {{hotelName}}',
-    defaultBody: 'Deine Buchung ist bestätigt. Wir freuen uns auf deinen Besuch!',
-  },
-  {
-    type: 'cancellation_guest',
-    label: 'Stornobestätigung — Bestätigung an Gast',
-    description: 'Wird gesendet wenn eine Buchung storniert wird.',
-    defaultSubject: 'Deine Buchung wurde storniert — {{hotelName}}',
-    defaultBody: 'Deine Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir dir gerne zur Verfügung.',
-  },
-  {
-    type: 'request_hotel',
-    label: 'Neue Anfrage — Benachrichtigung an Hotel',
-    description: 'Wird an die Hotel-E-Mail gesendet bei jeder neuen Anfrage.',
-    defaultSubject: 'Neue Buchungsanfrage #{{bookingId}} — {{arrival}} bis {{departure}}',
-    defaultBody: '',
-  },
-  {
-    type: 'checkin_guest',
-    label: 'Check-in Infos — Benachrichtigung an den Gast',
-    description: 'Vorlage für Check-in Infos — manuell aus der Buchungsdetailansicht oder automatisch X Tage vor Anreise.',
-    defaultSubject: 'Deine Check-in Infos — {{hotelName}}',
-    defaultBody: 'wir freuen uns auf deinen Aufenthalt! Anbei die wichtigsten Check-in Infos für deinen Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier deine Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.',
-  },
+const TEMPLATES_BUCHUNG = [
+  { type: 'request_guest',     label: 'Buchungsanfrage — Bestätigung an Gast',      description: 'Wird gesendet wenn ein Gast eine Anfrage abschickt.',          defaultSubject: 'Deine Buchungsanfrage bei {{hotelName}}',                             defaultBody: 'vielen Dank für deine Buchungsanfrage. Wir haben deine Daten erhalten und melden uns in Kürze mit den weiteren Details.' },
+  { type: 'booking_guest',     label: 'Verbindliche Buchung — Bestätigung an Gast', description: 'Wird gesendet wenn ein Gast verbindlich bucht.',                defaultSubject: 'Buchungsbestätigung bei {{hotelName}}',                               defaultBody: 'Deine Buchung ist bestätigt. Wir freuen uns auf deinen Besuch!' },
+  { type: 'cancellation_guest',label: 'Stornobestätigung — Bestätigung an Gast',    description: 'Wird gesendet wenn eine Buchung storniert wird.',               defaultSubject: 'Deine Buchung wurde storniert — {{hotelName}}',                       defaultBody: 'Deine Buchungsanfrage wurde leider storniert. Bei Fragen stehen wir dir gerne zur Verfügung.' },
+  { type: 'request_hotel',     label: 'Neue Anfrage — Benachrichtigung an Hotel',   description: 'Wird an die Hotel-E-Mail gesendet bei jeder neuen Anfrage.',    defaultSubject: 'Neue Buchungsanfrage #{{bookingId}} — {{arrival}} bis {{departure}}', defaultBody: '' },
 ] as const;
+
+const TEMPLATES_CHECKIN = [
+  { type: 'checkin_guest', label: 'Check-in Infos — Benachrichtigung an den Gast', description: 'Vorlage für Check-in Infos — manuell aus der Buchungsdetailansicht oder automatisch X Tage vor Anreise.', defaultSubject: 'Deine Check-in Infos — {{hotelName}}', defaultBody: 'wir freuen uns auf deinen Aufenthalt! Anbei die wichtigsten Check-in Infos für deinen Aufenthalt vom {{arrival}} bis {{departure}}.\n\n[Hier deine Check-in Informationen einfügen — Adresse, Zugang, Parken etc.]\n\nBei Fragen stehen wir jederzeit gerne zur Verfügung.' },
+] as const;
+
+const TEMPLATE_TYPES = [...TEMPLATES_BUCHUNG, ...TEMPLATES_CHECKIN] as const;
 
 const PLACEHOLDERS = [
   { key: '{{guestName}}', desc: 'Vorname des Gastes' },
@@ -74,122 +49,67 @@ export default async function EmailTemplatesPage() {
   const templates = hotel?.emailTemplates ?? [];
   const getTemplate = (type: string) => templates.find((t) => t.type === type);
 
-  async function saveTemplates(formData: FormData) {
+  async function saveAll(formData: FormData) {
     'use server';
     const session = await verifySession();
     if (session.hotelId === null) return;
+    const hotel = await prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { plan: true } });
+    const isPro = hasPlanAccess(hotel?.plan ?? 'starter', 'pro');
 
-    const hotel = await prisma.hotel.findUnique({
-      where: { id: session.hotelId },
-      select: { plan: true },
+    const data = {
+      preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
+      preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
+      preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
+      checkinEmailEnabled: formData.get('checkinEmailEnabled') === 'on',
+      checkinEmailDays: parseInt(String(formData.get('checkinEmailDays') || '3')) || 3,
+      checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
+      checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
+      checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
+      checkoutReminderSubject: String(formData.get('checkoutReminderSubject') || '').trim() || null,
+      checkoutReminderBody: String(formData.get('checkoutReminderBody') || '').trim() || null,
+      ...(isPro && {
+        reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
+        reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
+        reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
+        reviewRequestSubject: String(formData.get('reviewRequestSubject') || '').trim() || null,
+        reviewRequestBody: String(formData.get('reviewRequestBody') || '').trim() || null,
+      }),
+    };
+
+    await prisma.hotelSettings.upsert({
+      where: { hotelId: session.hotelId },
+      update: data,
+      create: { hotelId: session.hotelId, ...data },
     });
-    if (!hasPlanAccess(hotel?.plan ?? 'starter', 'pro')) return;
 
-    for (const { type } of TEMPLATE_TYPES) {
-      const subject = String(formData.get(`${type}_subject`) || '').trim();
-      const greeting = String(formData.get(`${type}_greeting`) || '').trim() || null;
-      const body = String(formData.get(`${type}_body`) || '').trim();
-      const signoff = String(formData.get(`${type}_signoff`) || '').trim() || null;
-      if (!subject) continue;
-
-      await prisma.emailTemplate.upsert({
-        where: { hotelId_type: { hotelId: session.hotelId, type } },
-        create: { hotelId: session.hotelId, type, subject, greeting, body, signoff },
-        update: { subject, greeting, body, signoff },
-      });
+    if (isPro) {
+      for (const { type } of TEMPLATE_TYPES) {
+        const subject = String(formData.get(`${type}_subject`) || '').trim();
+        const greeting = String(formData.get(`${type}_greeting`) || '').trim() || null;
+        const body = String(formData.get(`${type}_body`) || '').trim();
+        const signoff = String(formData.get(`${type}_signoff`) || '').trim() || null;
+        if (!subject) continue;
+        await prisma.emailTemplate.upsert({
+          where: { hotelId_type: { hotelId: session.hotelId, type } },
+          create: { hotelId: session.hotelId, type, subject, greeting, body, signoff },
+          update: { subject, greeting, body, signoff },
+        });
+      }
     }
 
     revalidatePath('/admin/email-templates');
   }
 
-  async function saveCheckinEmailSettings(formData: FormData) {
-    'use server';
-    const session = await verifySession();
-    if (session.hotelId === null) return;
-    const enabled = formData.get('checkinEmailEnabled') === 'on';
-    const days = parseInt(String(formData.get('checkinEmailDays') || '3')) || 3;
-    await prisma.hotelSettings.upsert({
-      where: { hotelId: session.hotelId },
-      update: { checkinEmailEnabled: enabled, checkinEmailDays: days },
-      create: { hotelId: session.hotelId, checkinEmailEnabled: enabled, checkinEmailDays: days },
-    });
-    revalidatePath('/admin/email-templates');
-  }
-
-  async function saveCheckinSettings(formData: FormData) {
-    'use server';
-    const session = await verifySession();
-    if (session.hotelId === null) return;
-    await prisma.hotelSettings.upsert({
-      where: { hotelId: session.hotelId },
-      update: {
-        preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
-        preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
-        preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
-      },
-      create: {
-        hotelId: session.hotelId,
-        preArrivalEnabled: formData.get('preArrivalEnabled') === 'on',
-        preArrivalReminderDays: parseInt(String(formData.get('preArrivalReminderDays') || '3')) || 3,
-        preArrivalHouseRules: String(formData.get('preArrivalHouseRules') || '').trim() || null,
-      },
-    });
-    revalidatePath('/admin/email-templates');
-  }
-
-  async function saveCheckoutSettings(formData: FormData) {
-    'use server';
-    const session = await verifySession();
-    if (session.hotelId === null) return;
-    await prisma.hotelSettings.upsert({
-      where: { hotelId: session.hotelId },
-      update: {
-        checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
-        checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
-        checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
-        checkoutReminderSubject: String(formData.get('checkoutReminderSubject') || '').trim() || null,
-        checkoutReminderBody: String(formData.get('checkoutReminderBody') || '').trim() || null,
-      },
-      create: {
-        hotelId: session.hotelId,
-        checkoutReminderEnabled: formData.get('checkoutReminderEnabled') === 'on',
-        checkoutTime: String(formData.get('checkoutTime') || '').trim() || null,
-        checkoutReminderText: String(formData.get('checkoutReminderText') || '').trim() || null,
-        checkoutReminderSubject: String(formData.get('checkoutReminderSubject') || '').trim() || null,
-        checkoutReminderBody: String(formData.get('checkoutReminderBody') || '').trim() || null,
-      },
-    });
-    revalidatePath('/admin/email-templates');
-  }
-
-  async function saveReviewSettings(formData: FormData) {
-    'use server';
-    const session = await verifySession();
-    if (session.hotelId === null) return;
-    const hotel = await prisma.hotel.findUnique({ where: { id: session.hotelId }, select: { plan: true } });
-    if (!hasPlanAccess(hotel?.plan ?? 'starter', 'pro')) return;
-    await prisma.hotelSettings.upsert({
-      where: { hotelId: session.hotelId },
-      update: {
-        reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
-        reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
-        reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
-        reviewRequestSubject: String(formData.get('reviewRequestSubject') || '').trim() || null,
-        reviewRequestBody: String(formData.get('reviewRequestBody') || '').trim() || null,
-      },
-      create: {
-        hotelId: session.hotelId,
-        reviewRequestEnabled: formData.get('reviewRequestEnabled') === 'on',
-        reviewRequestDays: parseInt(String(formData.get('reviewRequestDays') || '2')) || 2,
-        reviewRequestLink: String(formData.get('reviewRequestLink') || '').trim() || null,
-        reviewRequestSubject: String(formData.get('reviewRequestSubject') || '').trim() || null,
-        reviewRequestBody: String(formData.get('reviewRequestBody') || '').trim() || null,
-      },
-    });
-    revalidatePath('/admin/email-templates');
-  }
-
   const s = hotel?.settings;
+
+  const sectionLabel: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 700,
+    color: 'var(--text-muted)',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    margin: 0,
+  };
 
   const labelStyle: React.CSSProperties = {
     fontSize: 12,
@@ -226,9 +146,12 @@ export default async function EmailTemplatesPage() {
       </div>
 
       {/* Placeholder reference */}
-      <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px', marginBottom: 28 }}>
-        <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>Verfügbare Platzhalter</p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
+      <details style={{ border: '1px solid var(--border)', borderRadius: 10, background: 'var(--surface-2)', marginBottom: 28 }}>
+        <summary style={{ padding: '12px 18px', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Verfügbare Platzhalter</p>
+          <span className="card-caret"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+        </summary>
+        <div style={{ padding: '0 18px 14px', display: 'flex', flexWrap: 'wrap', gap: '6px 16px' }}>
           {PLACEHOLDERS.map(({ key, desc }) => (
             <span key={key} style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               <code style={{ background: 'var(--surface-3)', borderRadius: 4, padding: '1px 6px', fontFamily: 'monospace', fontSize: 12 }}>{key}</code>
@@ -236,41 +159,35 @@ export default async function EmailTemplatesPage() {
             </span>
           ))}
         </div>
-      </div>
+      </details>
 
-      <div style={{ position: 'relative' }}>
-        <div style={{ opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
-          <form action={saveTemplates} style={{ display: 'grid', gap: 12 }}>
-            {TEMPLATE_TYPES.map(({ type, label, description, defaultSubject, defaultBody }) => {
-              const saved = getTemplate(type);
-              return (
-                <details key={type} style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
-                  <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
-                    <div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{label}</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>{description}</div>
-                    </div>
-                    <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-                  </summary>
-                  <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <a
-                        href={`/api/admin/email-preview?type=${type}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}
-                      >
-                        Vorschau
-                      </a>
-                    </div>
+      <form action={saveAll} style={{ display: 'grid', gap: 32 }}>
 
-                    <div style={{ display: 'grid', gap: 4 }}>
-                      <label style={labelStyle}>Betreff</label>
-                      <input name={`${type}_subject`} type="text" defaultValue={saved?.subject ?? defaultSubject} style={inputStyle} />
-                    </div>
-
-                    {type !== 'request_hotel' && (
-                      <>
+        {/* BUCHUNG */}
+        <div style={{ display: 'grid', gap: 8 }}>
+          <p style={sectionLabel}>Buchung</p>
+          <div style={{ position: 'relative' }}>
+            <div style={{ display: 'grid', gap: 8, opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
+              {TEMPLATES_BUCHUNG.map(({ type, label, description, defaultSubject, defaultBody }) => {
+                const saved = getTemplate(type);
+                return (
+                  <details key={type} style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
+                    <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{label}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>{description}</div>
+                      </div>
+                      <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    </summary>
+                    <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <a href={`/api/admin/email-preview?type=${type}`} target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>Vorschau</a>
+                      </div>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Betreff</label>
+                        <input name={`${type}_subject`} type="text" defaultValue={saved?.subject ?? defaultSubject} style={inputStyle} />
+                      </div>
+                      {type !== 'request_hotel' && (<>
                         <div style={{ display: 'grid', gap: 4 }}>
                           <label style={labelStyle}>Begrüßung</label>
                           <input name={`${type}_greeting`} type="text" defaultValue={saved?.greeting ?? 'Hallo {{guestName}},'} style={inputStyle} />
@@ -283,208 +200,198 @@ export default async function EmailTemplatesPage() {
                           <label style={labelStyle}>Verabschiedung</label>
                           <input name={`${type}_signoff`} type="text" defaultValue={saved?.signoff ?? 'Mit freundlichen Grüßen'} style={inputStyle} />
                         </div>
-                      </>
-                    )}
-                  </div>
-                </details>
-              );
-            })}
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <SaveButton />
+                      </>)}
+                    </div>
+                  </details>
+                );
+              })}
             </div>
-          </form>
+            {!hasPro && <ProLockOverlay />}
+          </div>
         </div>
-        {!hasPro && <ProLockOverlay />}
-      </div>
 
-      {/* ONLINE CHECK-IN */}
-      {hotel && (
-        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 32 }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Online Check-in</div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
+        {/* VOR DER ANREISE */}
+        <div style={{ display: 'grid', gap: 8 }}>
+          <p style={sectionLabel}>Vor der Anreise</p>
+          <div style={{ position: 'relative' }}>
+            <div style={{ display: 'grid', gap: 8, opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
+              {TEMPLATES_CHECKIN.map(({ type, label, description, defaultSubject, defaultBody }) => {
+                const saved = getTemplate(type);
+                return (
+                  <details key={type} style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
+                    <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{label}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>{description}</div>
+                      </div>
+                      <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    </summary>
+                    <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <a href={`/api/admin/email-preview?type=${type}`} target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>Vorschau</a>
+                      </div>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Betreff</label>
+                        <input name={`${type}_subject`} type="text" defaultValue={saved?.subject ?? defaultSubject} style={inputStyle} />
+                      </div>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Begrüßung</label>
+                        <input name={`${type}_greeting`} type="text" defaultValue={saved?.greeting ?? 'Hallo {{guestName}},'} style={inputStyle} />
+                      </div>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Fließtext</label>
+                        <textarea name={`${type}_body`} defaultValue={saved?.body ?? defaultBody} rows={4} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                      </div>
+                      <div style={{ display: 'grid', gap: 4 }}>
+                        <label style={labelStyle}>Verabschiedung</label>
+                        <input name={`${type}_signoff`} type="text" defaultValue={saved?.signoff ?? 'Mit freundlichen Grüßen'} style={inputStyle} />
+                      </div>
+                    </div>
+                  </details>
+                );
+              })}
             </div>
-            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-          </summary>
-          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
-            <form action={saveCheckinSettings} style={{ display: 'grid', gap: 14 }}>
-              <label className="form-toggle">
-                <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false} />
-                <span className="toggle-track"><span className="toggle-thumb" /></span>
-                Online Check-in aktivieren
-              </label>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
-                <input type="number" name="preArrivalReminderDays" min="1" max="14"
-                  defaultValue={s?.preArrivalReminderDays ?? 3}
-                  style={{ ...inputStyle, width: 120 }} />
-              </div>
-              <div style={{ background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-new-text)', lineHeight: 1.6 }}>
-                📋 <strong>Hausordnung</strong> wird jetzt zentral unter{' '}
-                <a href="/admin/settings" style={{ color: 'var(--status-new-text)', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
-                gepflegt — der Gast muss sie beim Online Check-in bestätigen.
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <SaveButton />
-              </div>
-            </form>
+            {!hasPro && <ProLockOverlay />}
           </div>
-        </details>
-      )}
-
-      {/* CHECK-IN E-MAIL AUTO-VERSAND */}
-      {hotel && (
-        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 12 }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-in E-Mail — Automatisch</div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
-            </div>
-            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-          </summary>
-          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
-            <form action={saveCheckinEmailSettings} style={{ display: 'grid', gap: 14 }}>
-              <label className="form-toggle">
-                <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false} />
-                <span className="toggle-track"><span className="toggle-thumb" /></span>
-                Automatischen Versand aktivieren
-              </label>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>X Tage vor Anreise senden</label>
-                <input type="number" name="checkinEmailDays" min="1" max="30"
-                  defaultValue={s?.checkinEmailDays ?? 3}
-                  style={{ ...inputStyle, width: 120 }} />
-              </div>
-              <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-booked-text)', lineHeight: 1.6 }}>
-                ℹ️ Die E-Mail wird nur einmalig gesendet. Manuell versendete Mails werden nicht doppelt versendet.
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <SaveButton />
-              </div>
-            </form>
-          </div>
-        </details>
-      )}
-
-      {/* CHECKOUT REMINDER */}
-      {hotel && (
-        <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', marginTop: 12 }}>
-          <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-out-Erinnerung</div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
-            </div>
-            <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-          </summary>
-          <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-              <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>
-                Vorschau
-              </a>
-            </div>
-            <form action={saveCheckoutSettings} style={{ display: 'grid', gap: 14 }}>
-              <label className="form-toggle">
-                <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false} />
-                <span className="toggle-track"><span className="toggle-thumb" /></span>
-                Check-out-Erinnerung aktivieren
-              </label>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Check-out-Zeit</label>
-                <input type="text" name="checkoutTime"
-                  defaultValue={s?.checkoutTime ?? '10:00 Uhr'}
-                  placeholder="z. B. 10:00 Uhr"
-                  style={{ ...inputStyle, width: 160 }} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: 'var(--text-disabled)', fontSize: 11 }}>(optional)</span></label>
-                <textarea name="checkoutReminderText" rows={4}
-                  defaultValue={s?.checkoutReminderText ?? ''}
-                  placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1."
-                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
-              </div>
-              <div style={{ height: 1, background: 'var(--border)' }} />
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Betreff</label>
-                <input type="text" name="checkoutReminderSubject"
-                  defaultValue={s?.checkoutReminderSubject ?? 'Erinnerung Check-out heute — {{hotelName}}'}
-                  style={inputStyle} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>E-Mail-Text</label>
-                <textarea name="checkoutReminderBody" rows={4}
-                  defaultValue={s?.checkoutReminderBody ?? 'wir hoffen, du hattest einen schönen Aufenthalt! Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis {{checkoutTime}}.'}
-                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <SaveButton />
-              </div>
-            </form>
-          </div>
-        </details>
-      )}
-
-      {/* BEWERTUNGSANFRAGE */}
-      {hotel && (
-        <div style={{ position: 'relative', marginTop: 12 }}>
-          <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
-            <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Bewertungsanfrage</div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
-              </div>
-              <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-            </summary>
-            <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-                <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>
-                  Vorschau
-                </a>
-              </div>
-            <form action={saveReviewSettings} style={{ display: 'grid', gap: 14 }}>
-              <label className="form-toggle">
-                <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false} />
-                <span className="toggle-track"><span className="toggle-thumb" /></span>
-                Bewertungsanfrage aktivieren
-              </label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {hotel && (<>
+            <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
+              <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Online Check-in</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Persönlicher Check-in-Link in der Bestätigungsmail, automatische Erinnerung vor Anreise.</div>
+                </div>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+              </summary>
+              <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                <label className="form-toggle">
+                  <input type="checkbox" name="preArrivalEnabled" defaultChecked={s?.preArrivalEnabled ?? false} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
+                  Online Check-in aktivieren
+                </label>
                 <div style={{ display: 'grid', gap: 4 }}>
-                  <label style={labelStyle}>Versand X Tage nach Abreise</label>
-                  <input type="number" name="reviewRequestDays" min="1" max="14"
-                    defaultValue={s?.reviewRequestDays ?? 2}
-                    style={{ ...inputStyle, width: 120 }} />
+                  <label style={labelStyle}>Erinnerung X Tage vor Anreise</label>
+                  <input type="number" name="preArrivalReminderDays" min="1" max="14" defaultValue={s?.preArrivalReminderDays ?? 3} style={{ ...inputStyle, width: 120 }} />
+                </div>
+                <div style={{ background: 'var(--status-new-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-new-text)', lineHeight: 1.6 }}>
+                  📋 <strong>Hausordnung</strong> wird jetzt zentral unter{' '}
+                  <a href="/admin/settings" style={{ color: 'var(--status-new-text)', fontWeight: 700 }}>Einstellungen → Hausinfos / Gästemappe</a>{' '}
+                  gepflegt — der Gast muss sie beim Online Check-in bestätigen.
                 </div>
               </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Google Reviews Link</label>
-                <input type="url" name="reviewRequestLink"
-                  defaultValue={s?.reviewRequestLink ?? ''}
-                  placeholder="https://g.page/r/…/review"
-                  style={inputStyle} />
+            </details>
+            <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
+              <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-in E-Mail — Automatisch</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Sendet die Check-in Infos automatisch X Tage vor Anreise. Vorlage oben unter "Check-in Infos" konfigurieren.</div>
+                </div>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+              </summary>
+              <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                <label className="form-toggle">
+                  <input type="checkbox" name="checkinEmailEnabled" defaultChecked={s?.checkinEmailEnabled ?? false} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
+                  Automatischen Versand aktivieren
+                </label>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>X Tage vor Anreise senden</label>
+                  <input type="number" name="checkinEmailDays" min="1" max="30" defaultValue={s?.checkinEmailDays ?? 3} style={{ ...inputStyle, width: 120 }} />
+                </div>
+                <div style={{ background: 'var(--status-booked-bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--status-booked-text)', lineHeight: 1.6 }}>
+                  ℹ️ Die E-Mail wird nur einmalig gesendet. Manuell versendete Mails werden nicht doppelt versendet.
+                </div>
               </div>
-              <div style={{ height: 1, background: 'var(--border)' }} />
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>Betreff</label>
-                <input type="text" name="reviewRequestSubject"
-                  defaultValue={s?.reviewRequestSubject ?? 'Wie war dein Aufenthalt? — {{hotelName}}'}
-                  style={inputStyle} />
-              </div>
-              <div style={{ display: 'grid', gap: 4 }}>
-                <label style={labelStyle}>E-Mail-Text</label>
-                <textarea name="reviewRequestBody" rows={4}
-                  defaultValue={s?.reviewRequestBody ?? 'wir hoffen, es hat dir bei uns gefallen! Wenn du einen Moment Zeit hast, würden wir uns sehr über eine kurze Bewertung freuen — das hilft uns sehr und anderen Gästen bei ihrer Entscheidung.'}
-                  style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <SaveButton />
-              </div>
-            </form>
-            </div>
-          </details>
-          {!hasPro && <ProLockOverlay />}
+            </details>
+          </>)}
         </div>
-      )}
+
+        {/* ABREISE & NACHHER */}
+        {hotel && (
+          <div style={{ display: 'grid', gap: 8 }}>
+            <p style={sectionLabel}>Abreise & Nachher</p>
+            <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden' }}>
+              <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Check-out-Erinnerung</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail am Abreisetag mit Uhrzeit und Hinweisen.</div>
+                </div>
+                <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+              </summary>
+              <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <a href="/api/admin/email-preview?type=checkout_reminder" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>Vorschau</a>
+                </div>
+                <label className="form-toggle">
+                  <input type="checkbox" name="checkoutReminderEnabled" defaultChecked={s?.checkoutReminderEnabled ?? false} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
+                  Check-out-Erinnerung aktivieren
+                </label>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Check-out-Zeit</label>
+                  <input type="text" name="checkoutTime" defaultValue={s?.checkoutTime ?? '10:00 Uhr'} placeholder="z. B. 10:00 Uhr" style={{ ...inputStyle, width: 160 }} />
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Hinweise für den Gast <span style={{ fontWeight: 400, textTransform: 'none', color: 'var(--text-disabled)', fontSize: 11 }}>(optional)</span></label>
+                  <textarea name="checkoutReminderText" rows={4} defaultValue={s?.checkoutReminderText ?? ''} placeholder="z. B. Schlüssel im Briefkasten hinterlassen. Fenster schließen, Heizung auf Stufe 1." style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                </div>
+                <div style={{ height: 1, background: 'var(--border)' }} />
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>Betreff</label>
+                  <input type="text" name="checkoutReminderSubject" defaultValue={s?.checkoutReminderSubject ?? 'Erinnerung Check-out heute — {{hotelName}}'} style={inputStyle} />
+                </div>
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <label style={labelStyle}>E-Mail-Text</label>
+                  <textarea name="checkoutReminderBody" rows={4} defaultValue={s?.checkoutReminderBody ?? 'wir hoffen, du hattest einen schönen Aufenthalt! Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis {{checkoutTime}}.'} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                </div>
+              </div>
+            </details>
+            <div style={{ position: 'relative' }}>
+              <details style={{ border: '1px solid var(--border)', borderRadius: 14, background: 'var(--surface)', overflow: 'hidden', opacity: hasPro ? 1 : 0.4, pointerEvents: hasPro ? 'auto' : 'none' }}>
+                <summary style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Bewertungsanfrage</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 1 }}>Automatische E-Mail X Tage nach Abreise mit Bitte um Google-Bewertung. (Pro)</div>
+                  </div>
+                  <span className="card-caret"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                </summary>
+                <div style={{ borderTop: '1px solid var(--border)', padding: '18px 20px', display: 'grid', gap: 14 }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <a href="/api/admin/email-preview?type=review_request" target="_blank" rel="noopener noreferrer" style={{ padding: '5px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>Vorschau</a>
+                  </div>
+                  <label className="form-toggle">
+                    <input type="checkbox" name="reviewRequestEnabled" defaultChecked={s?.reviewRequestEnabled ?? false} />
+                    <span className="toggle-track"><span className="toggle-thumb" /></span>
+                    Bewertungsanfrage aktivieren
+                  </label>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>Versand X Tage nach Abreise</label>
+                    <input type="number" name="reviewRequestDays" min="1" max="14" defaultValue={s?.reviewRequestDays ?? 2} style={{ ...inputStyle, width: 120 }} />
+                  </div>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>Google Reviews Link</label>
+                    <input type="url" name="reviewRequestLink" defaultValue={s?.reviewRequestLink ?? ''} placeholder="https://g.page/r/…/review" style={inputStyle} />
+                  </div>
+                  <div style={{ height: 1, background: 'var(--border)' }} />
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>Betreff</label>
+                    <input type="text" name="reviewRequestSubject" defaultValue={s?.reviewRequestSubject ?? 'Wie war dein Aufenthalt? — {{hotelName}}'} style={inputStyle} />
+                  </div>
+                  <div style={{ display: 'grid', gap: 4 }}>
+                    <label style={labelStyle}>E-Mail-Text</label>
+                    <textarea name="reviewRequestBody" rows={4} defaultValue={s?.reviewRequestBody ?? 'wir hoffen, es hat dir bei uns gefallen! Wenn du einen Moment Zeit hast, würden wir uns sehr über eine kurze Bewertung freuen — das hilft uns sehr und anderen Gästen bei ihrer Entscheidung.'} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }} />
+                  </div>
+                </div>
+              </details>
+              {!hasPro && <ProLockOverlay />}
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <SaveButton />
+        </div>
+
+      </form>
     </main>
   );
 }
