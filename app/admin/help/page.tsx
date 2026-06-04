@@ -797,11 +797,26 @@ function EmailsSection() {
     <div>
       <H2>E-Mails & Check-in</H2>
       <P>
-        Unter <strong>Konfiguration → E-Mails</strong> passt du automatische E-Mails an und
-        konfigurieren den Online Check-in für Gäste.
+        Unter <strong>Konfiguration → E-Mails</strong> passt du automatische Gäste-Benachrichtigungen
+        an und konfigurierst den Online Check-in. Die Seite ist in drei Gruppen gegliedert:
       </P>
+      <div style={{ display: 'grid', gap: 8, margin: '12px 0' }}>
+        {[
+          { name: 'Buchung',            desc: 'Vorlagen für Anfrage, Buchungsbestätigung, Storno und interne Benachrichtigung.' },
+          { name: 'Vor der Anreise',    desc: 'Check-in Infos Vorlage, Online Check-in, automatischer Check-in E-Mail-Versand.' },
+          { name: 'Abreise & Nachher',  desc: 'Check-out-Erinnerung und automatische Bewertungsanfrage.' },
+        ].map((e) => (
+          <div key={e.name} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border-2)' }}>
+            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 180, color: 'var(--text-primary)' }}>{e.name}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{e.desc}</span>
+          </div>
+        ))}
+      </div>
+      <Note>
+        Alle Einstellungen werden mit einem einzigen <strong>Speichern</strong>-Button ganz unten auf der Seite gespeichert.
+      </Note>
       <H3>E-Mail Templates <span style={{ fontSize: 12, fontWeight: 500, color: '#7c3aed', background: '#ede9fe', padding: '2px 8px', borderRadius: 6, marginLeft: 6 }}>Pro</span></H3>
-      <P>Betreff, Anrede, Fließtext und Verabschiedung der automatischen E-Mails individuell anpassen.</P>
+      <P>Betreff, Anrede, Fließtext und Verabschiedung der automatischen E-Mails individuell anpassen. Verfügbare Platzhalter (z.B. <Code>{'{{guestName}}'}</Code>, <Code>{'{{arrival}}'}</Code>) sind oben auf der Seite aufgelistet.</P>
       <H3>Automatisch versendete E-Mails</H3>
       <div style={{ display: 'grid', gap: 8, margin: '12px 0' }}>
         {[
@@ -1487,6 +1502,24 @@ function EinbindungSection() {
         <strong>Hinweis:</strong> Auf der Ziel-Seite muss das Buchungs-Widget mit <Code>widget.js</Code> eingebunden sein,
         damit Anreise, Abreise und Gästezahl automatisch übernommen werden.
       </Note>
+      <H3>Verfügbarkeits-Widget</H3>
+      <P>
+        Zeigt einen Monatskalender mit Frei/Belegt-Übersicht für alle Apartments — als iframe
+        auf deiner Website einbindbar. Gäste sehen auf einen Blick, welche Zeiträume verfügbar sind.
+      </P>
+      <Step num={1} title="Embed-Code kopieren">
+        Gehe zu <strong>Widget & Design</strong> und klappe den Abschnitt <strong>„Verfügbarkeits-Widget"</strong> auf.
+        Kopiere den iframe-Code und füge ihn auf deiner Website ein.
+      </Step>
+      <Step num={2} title="Anzahl Monate anpassen">
+        Im Embed-Code steht standardmäßig <Code>months=6</Code> — das bedeutet 6 Monate Navigation.
+        Du kannst diesen Wert im Code auf deiner Website direkt ändern, z.B. <Code>months=3</Code> für 3 Monate.
+      </Step>
+      <Note>
+        Das Widget ist responsiv: auf Desktop zeigt es die volle Breite, auf Mobilgeräten kann
+        horizontal gescrollt werden. Die Apartment-Namen bleiben dabei links fixiert.
+      </Note>
+
       <H3>Mehrere Widget-Konfigurationen</H3>
       <PlanNote plan="Pro" feature="Mehrere Widget-Varianten auf verschiedenen Seiten einbinden" />
       <P>
