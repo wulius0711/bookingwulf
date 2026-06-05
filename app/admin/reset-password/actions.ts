@@ -13,6 +13,8 @@ export async function resetPassword(_state: ResetState, formData: FormData): Pro
   if (!token) return { error: 'Ungültiger oder abgelaufener Link.' };
   if (!password || !confirm) return { error: 'Bitte Passwort eingeben und bestätigen.' };
   if (password.length < 8) return { error: 'Passwort muss mindestens 8 Zeichen lang sein.' };
+  if (!/[0-9]/.test(password)) return { error: 'Passwort muss mindestens eine Zahl enthalten.' };
+  if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) return { error: 'Passwort muss Groß- und Kleinbuchstaben enthalten.' };
   if (password !== confirm) return { error: 'Passwörter stimmen nicht überein.' };
 
   const user = await prisma.adminUser.findUnique({ where: { resetToken: token } });

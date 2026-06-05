@@ -8,11 +8,9 @@ const inputText = '#F4F2EC';
 const labelColor = '#5B6772';
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 9,
-  fontWeight: 700,
-  color: labelColor,
-  letterSpacing: '0.1em',
-  textTransform: 'uppercase',
+  fontSize: 13,
+  fontWeight: 600,
+  color: '#c9d1d9',
   display: 'block',
   marginBottom: 6,
 };
@@ -159,7 +157,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={pending}
-              className="auth-cta"
+              className="auth-cta btn-shine"
               style={{
                 width: '100%',
                 padding: '14px',

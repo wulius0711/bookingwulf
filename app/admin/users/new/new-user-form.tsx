@@ -1,8 +1,20 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { createAdminUser } from '../actions';
 import { Button } from '../../components/ui';
+
+function checkReqs(pw: string) {
+  return {
+    length: pw.length >= 8,
+    number: /[0-9]/.test(pw),
+    upper:  /[A-Z]/.test(pw),
+    lower:  /[a-z]/.test(pw),
+  };
+}
+
+const STRENGTH_COLORS = ['#e5e7eb', '#ef4444', '#f59e0b', '#22c55e', '#16a34a'];
+const STRENGTH_LABELS = ['', 'Schwach', 'Mittel', 'Stark', 'Sehr stark'];
 
 type Hotel = { id: number; name: string; slug: string };
 
@@ -58,6 +70,9 @@ const radioLabelStyle: React.CSSProperties = {
 
 export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
   const [state, action, pending] = useActionState(createAdminUser, undefined);
+  const [pw, setPw] = useState('');
+  const reqs = checkReqs(pw);
+  const score = Object.values(reqs).filter(Boolean).length;
 
   return (
     <main className="admin-page" style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
@@ -84,10 +99,40 @@ export default function NewUserForm({ hotels }: { hotels: Hotel[] }) {
                 <span style={lbl}>E-Mail</span>
                 <input name="email" type="email" required autoComplete="off" style={inp} />
               </label>
-              <label style={fld}>
+              <div style={fld}>
                 <span style={lbl}>Passwort</span>
-                <input name="password" type="password" required minLength={8} autoComplete="new-password" style={inp} />
-              </label>
+                <input name="password" type="password" required autoComplete="new-password" style={inp}
+                  value={pw} onChange={(e) => setPw(e.target.value)} />
+                {pw.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Anforderungen</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: STRENGTH_COLORS[score] }}>{STRENGTH_LABELS[score]}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        {[1, 2, 3, 4].map((i) => (
+                          <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= score ? STRENGTH_COLORS[score] : '#e5e7eb', transition: 'background 0.2s' }} />
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      {[
+                        { ok: reqs.length, label: 'Mindestens 8 Zeichen' },
+                        { ok: reqs.upper && reqs.lower, label: 'Groß- und Kleinbuchstaben' },
+                        { ok: reqs.number, label: 'Mindestens eine Zahl' },
+                      ].map(({ ok, label }) => (
+                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <div style={{ width: 18, height: 18, borderRadius: '50%', flexShrink: 0, background: ok ? '#16a34a' : '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}>
+                            {ok && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                          </div>
+                          <span style={{ fontSize: 12, color: ok ? '#16a34a' : 'var(--text-muted)' }}>{label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
               <label style={fld}>
                 <span style={lbl}>Passwort bestätigen</span>
                 <input name="confirm" type="password" required autoComplete="new-password" style={inp} />

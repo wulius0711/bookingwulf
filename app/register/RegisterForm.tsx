@@ -17,11 +17,9 @@ const inputText = '#F4F2EC';
 const labelColor = '#5B6772';
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 9,
-  fontWeight: 700,
-  color: labelColor,
-  letterSpacing: '0.1em',
-  textTransform: 'uppercase',
+  fontSize: 13,
+  fontWeight: 600,
+  color: '#c9d1d9',
   display: 'block',
   marginBottom: 6,
 };

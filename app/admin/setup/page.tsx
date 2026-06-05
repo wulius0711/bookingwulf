@@ -33,7 +33,7 @@ export default async function SetupPage() {
         <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>
           Ersteinrichtung
         </h1>
-        <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 28 }}>
           Erstelle deinen ersten Admin-Account. Diese Seite ist danach nicht mehr zugänglich.
         </p>
         <SetupForm />

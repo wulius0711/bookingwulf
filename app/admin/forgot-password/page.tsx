@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
         <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>
           Passwort vergessen
         </h1>
-        <p style={{ fontSize: 14, color: '#666', marginBottom: 28 }}>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 28 }}>
           Gib deine E-Mail ein. Wir senden dir einen Link zum Zurücksetzen.
         </p>
 
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
                 display: 'block',
                 textAlign: 'center',
                 fontSize: 14,
-                color: '#374151',
+                color: 'var(--text-primary)',
                 fontWeight: 600,
                 textDecoration: 'none',
               }}
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
         ) : (
           <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label htmlFor="email" style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+              <label htmlFor="email" style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
                 E-Mail
               </label>
               <input
@@ -83,7 +83,8 @@ export default function ForgotPasswordPage() {
                   borderRadius: 8,
                   border: '1px solid var(--border)',
                   fontSize: 14,
-                  color: '#111',
+                  color: 'var(--text-primary)',
+                  background: 'var(--surface-2)',
                 }}
               />
             </div>
@@ -107,12 +108,13 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={pending}
+              className="btn-shine"
               style={{
                 marginTop: 4,
                 padding: '11px 0',
                 borderRadius: 8,
                 border: 'none',
-                background: pending ? '#aaa' : '#111',
+                background: pending ? 'var(--primitive-gray-300)' : 'var(--accent)',
                 color: '#fff',
                 fontSize: 14,
                 fontWeight: 600,
@@ -127,7 +129,7 @@ export default function ForgotPasswordPage() {
               style={{
                 textAlign: 'center',
                 fontSize: 13,
-                color: '#666',
+                color: 'var(--text-muted)',
                 textDecoration: 'none',
               }}
             >
