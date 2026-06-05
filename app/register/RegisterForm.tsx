@@ -54,29 +54,25 @@ const EyeIcon = ({ open }: { open: boolean }) =>
   );
 
 
-export default function RegisterForm() {
+export default function RegisterForm({ bgIndex }: { bgIndex: number }) {
   const [state, action, pending] = useActionState(registerHotel, undefined);
   const [slug, setSlug] = useState('');
   const [autoSlug] = useState(true);
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [terms, setTerms] = useState(false);
 
   return (
     <main style={{
       minHeight: '100vh',
-      background: '#0B0D10',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 24,
       fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
     }}>
       <style>{`
         .auth-input { border: 1px solid #252d38; }
         .auth-input:focus { border-color: #0E8BA9; box-shadow: 0 0 0 3px rgba(14,139,169,.15); outline: none; }
         .auth-input::placeholder { color: #8a9aa8; }
-        @keyframes auth-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .auth-cta { position: relative; overflow: hidden; }
         .auth-cta::before {
           content: '';
@@ -97,21 +93,56 @@ export default function RegisterForm() {
         .invite-body.closed { max-height: 0; opacity: 0; margin-top: 0; }
         .pw-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
         @media (min-width: 480px) { .pw-grid { grid-template-columns: 1fr 1fr; } }
+        .auth-split-left { display: flex; }
+        @media (max-width: 768px) {
+          .auth-split-left { display: none !important; }
+          .auth-split-right { width: 100% !important; }
+        }
       `}</style>
 
-      <div style={{ width: '100%', maxWidth: 440 }}>
-
-        <div style={{ marginBottom: 28 }}>
-          <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" style={{ height: 36 }} />
+      {/* Left: mountain photo */}
+      <div
+        className="auth-split-left"
+        style={{
+          flex: 1,
+          backgroundImage: `url(/auth-bg/${bgIndex}.jpg)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'relative',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '40px 48px',
+        }}
+      >
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%)' }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" style={{ height: 32 }} />
         </div>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+            Dein Buchungssystem.<br />Einfach. Direkt.
+          </p>
+          <p style={{ margin: '8px 0 0', fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>
+            Keine Provision. Keine Plattform.
+          </p>
+        </div>
+      </div>
 
-        <div style={{
-          background: '#13161b',
-          border: '1px solid #1e2530',
-          borderRadius: 16,
-          padding: '36px 32px',
-          boxShadow: '0 0 0 1px rgba(14,139,169,0.06), 0 24px 48px rgba(0,0,0,0.4)',
-        }}>
+      {/* Right: form */}
+      <div
+        className="auth-split-right"
+        style={{
+          width: '50%',
+          flexShrink: 0,
+          background: '#0B0D10',
+          overflowY: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '64px 40px',
+        }}
+      >
+      <div style={{ width: '100%', maxWidth: 420 }}>
           <h1 style={{ margin: '0 0 6px', fontSize: 26, fontWeight: 700, color: inputText, letterSpacing: '-0.02em' }}>
             Bereit für den ersten Gast?
           </h1>
@@ -259,7 +290,24 @@ export default function RegisterForm() {
             <input type="hidden" name="plan" value="starter" />
 
             <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13, color: '#8a9aa8', lineHeight: 1.5, cursor: 'pointer' }}>
-              <input name="terms" type="checkbox" required style={{ marginTop: 2, accentColor: accent, flexShrink: 0 }} />
+              <input name="terms" type="checkbox" required checked={terms} onChange={() => {}} onClick={e => e.preventDefault()} style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }} />
+              <div
+                onClick={() => setTerms(v => !v)}
+                style={{
+                  width: 18, height: 18, borderRadius: 5, flexShrink: 0, marginTop: 1,
+                  border: `2px solid ${terms ? accent : '#3a4450'}`,
+                  background: terms ? accent : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s, border-color 0.15s',
+                  cursor: 'pointer',
+                }}
+              >
+                {terms && (
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M1.5 5l2.5 2.5L8.5 2" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
               <span>
                 Ich akzeptiere die{' '}
                 <a href="/agb" target="_blank" rel="noopener noreferrer" style={{ color: inputText, textDecoration: 'underline' }}>AGB</a>
@@ -307,3 +355,4 @@ export default function RegisterForm() {
     </main>
   );
 }
+
