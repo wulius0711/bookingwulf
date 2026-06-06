@@ -23,6 +23,7 @@
     "@vercel/blob": "^2.3.3",
     "canvas-confetti": "^1.9.4",
     "dotenv": "^17.4.0",
+    "framer-motion": "^12.40.0",
     "ical.js": "^2.2.1",
     "jose": "^6.2.2",
     "lucide-react": "^1.8.0",

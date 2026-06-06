@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+// import { FeatureGrid } from '@/components/landing/FeatureGrid';
 import Link from 'next/link';
 import { useV4Animate } from '../_components/useV4Animate';
 import {
