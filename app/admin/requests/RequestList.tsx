@@ -11,6 +11,7 @@ type RequestItem = {
   lastname: string;
   selectedApartmentIds: string;
   status: string;
+  checkinCompletedAt: Date | null;
   hotel: { name: string; accentColor: string | null } | null;
 };
 
@@ -86,15 +87,29 @@ export default function RequestList({ requests, apartments, isSuperAdmin }: {
                 </span>
               </div>
 
-              <span style={{
-                display: 'inline-flex', alignItems: 'center',
-                padding: '4px 10px', borderRadius: 7,
-                background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`,
-                fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
-                flexShrink: 0,
-              }}>
-                {badge.label}
-              </span>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+                {r.checkinCompletedAt && (
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    padding: '4px 8px', borderRadius: 7,
+                    background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)',
+                    fontSize: 11, fontWeight: 700,
+                  }}>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Check-in
+                  </span>
+                )}
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '4px 10px', borderRadius: 7,
+                  background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`,
+                  fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
+                }}>
+                  {badge.label}
+                </span>
+              </div>
             </div>
           </Link>
         );

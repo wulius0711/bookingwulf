@@ -73,6 +73,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
         id: true, createdAt: true, status: true, nights: true,
         adults: true, children: true, selectedApartmentIds: true,
         extrasJson: true, arrival: true, departure: true, country: true,
+        checkinCompletedAt: true,
         hotel: { select: { name: true } },
       },
       orderBy: { createdAt: 'asc' },
@@ -197,6 +198,8 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const conversionRate = total > 0 ? ((booked / total) * 100).toFixed(1) : '0.0';
   const avgNights = total > 0 ? (allRequests.reduce((s, r) => s + r.nights, 0) / total).toFixed(1) : '0.0';
   const avgGuests = total > 0 ? (allRequests.reduce((s, r) => s + r.adults + r.children, 0) / total).toFixed(1) : '0.0';
+  const checkinCompleted = allRequests.filter((r) => r.checkinCompletedAt !== null).length;
+  const checkinRate = booked > 0 ? ((checkinCompleted / booked) * 100).toFixed(0) : '0';
 
   const sectionTitleStyle: React.CSSProperties = { margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' };
 
@@ -230,6 +233,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             { label: 'Ø Gäste', value: avgGuests },
             { label: 'Umsatz', value: `€ ${totalRevenue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
             { label: 'Ø Buchungswert', value: `€ ${avgBookingValue.toLocaleString('de-AT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` },
+            { label: 'Online Check-in', value: `${checkinRate}%` },
           ].map(({ label, value }) => (
             <div key={label} className="analytics-card" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</div>
