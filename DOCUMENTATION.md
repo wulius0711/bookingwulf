@@ -1,6 +1,6 @@
 # bookingwulf — Interne Dokumentation
 
-> Stand: Mai 2026  
+> Stand: Juni 2026  
 > Stack: Next.js 16 · React 19 · PostgreSQL (Railway/Amsterdam) · Stripe · Resend · Vercel
 
 ---
@@ -916,7 +916,9 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 3. Bestätigungsmail enthält zusätzlichen „Jetzt einchecken →"-Button mit Link `/checkin/[token]`
 4. Gast öffnet `/checkin/[token]` (öffentliche Seite, kein Login): Ankunftszeit wählen, Notizen, Hausordnung akzeptieren → speichert `checkinCompletedAt`, `checkinArrivalTime`, `checkinNotes`
 5. Cron `/api/cron/pre-arrival-reminder` läuft täglich 09:00 UTC und prüft, ob heute = Anreisetag − X Tage ist. Jeder Gast erhält genau eine Erinnerungsmail (Guard: `checkinReminderSentAt IS NULL`), danach wird `checkinReminderSentAt` gesetzt
-6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit und Notizen
+6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit, Notizen und ausklappbaren Meldedaten (Geburtsdatum, Staatsangehörigkeit, Ausweisnummer)
+7. Buchungsliste zeigt grünen „✓ Check-in"-Badge (abgeschlossen) bzw. grauen „Check-in"-Badge (ausstehend) bei gebuchten Anfragen
+8. Analytics-Seite (Business) zeigt KPI „Online Check-in" als Abschlussrate in % (completedCheckins / booked)
 
 ### Check-out-Erinnerung
 
