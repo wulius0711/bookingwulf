@@ -620,7 +620,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
 
           {request.checkinToken && (
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, alignItems: 'center', padding: '6px 0' }}>
-              <span style={{ ...rowLabel, display: 'flex', alignItems: 'center', gap: 4, textTransform: 'none', fontWeight: 400 }}>
+              <span style={{ ...rowLabel, display: 'flex', alignItems: 'center', gap: 4, textTransform: 'none' }}>
                 Gäste-Lounge
                 <InfoTooltip text="Persönliche Lounge des Gastes mit Hausinfos, Extras, Nachrichten und Check-out. Link manuell teilen — z.B. per Airbnb-Chat oder WhatsApp." />
               </span>
