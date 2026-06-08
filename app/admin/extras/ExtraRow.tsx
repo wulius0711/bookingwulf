@@ -57,6 +57,27 @@ const chevron = (
   </svg>
 );
 
+function ToggleBadge({ label, active, action, id, field }: {
+  label: string; active: boolean; action: (fd: FormData) => void | Promise<void>; id: number; field: string;
+}) {
+  return (
+    <form action={action} style={{ margin: 0, display: 'inline' }}>
+      <input type="hidden" name="id" value={id} />
+      <input type="hidden" name={field} value={active ? 'false' : 'true'} />
+      <button
+        type="submit"
+        style={{
+          padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer',
+          background: active ? 'var(--status-new-bg)' : 'var(--bg-surface-sunken)',
+          color: active ? 'var(--status-new-text)' : 'var(--text-disabled)',
+        }}
+      >
+        {label}{active ? ' ✓' : ''}
+      </button>
+    </form>
+  );
+}
+
 export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidgetAction, toggleUpsellAction, deleteAction }: Props) {
   const [editing, setEditing] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -89,11 +110,61 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
     await deleteAction(fd);
   }
 
-  if (editing) {
-    return (
-      <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
-        <td colSpan={8} style={{ padding: 16 }}>
-          <form action={updateAction} style={{ display: 'grid', gap: 12 }}>
+  return (
+    <>
+      <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px', opacity: extra.isActive ? 1 : 0.55 }}>
+        {/* Header row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          {/* Image + Name */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 180px', minWidth: 0 }}>
+            {extra.imageUrl && (
+              <img src={extra.imageUrl} alt="" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />
+            )}
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{extra.name}</div>
+              {extra.description && (
+                <div style={{ fontSize: 12, color: 'var(--text-disabled)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{extra.description}</div>
+              )}
+            </div>
+          </div>
+
+          {/* Type + Billing + Price */}
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flex: '0 0 auto', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+            <span>{TYPE_LABELS[extra.type] ?? extra.type}</span>
+            <span style={{ color: 'var(--border)' }}>·</span>
+            <span>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</span>
+            <span style={{ color: 'var(--border)' }}>·</span>
+            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>€ {extra.price.toFixed(2)}</span>
+          </div>
+
+          {/* Toggles */}
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', flex: '0 0 auto' }}>
+            <form action={toggleAction} style={{ margin: 0, display: 'inline' }}>
+              <input type="hidden" name="id" value={extra.id} />
+              <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
+              <button type="submit" style={{ padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer', background: extra.isActive ? 'var(--status-booked-bg)' : 'var(--bg-surface-sunken)', color: extra.isActive ? 'var(--status-booked-text)' : 'var(--text-disabled)' }}>
+                {extra.isActive ? 'Aktiv' : 'Inaktiv'}
+              </button>
+            </form>
+            <ToggleBadge label="Widget" active={extra.showInWidget} action={toggleWidgetAction} id={extra.id} field="showInWidget" />
+            <ToggleBadge label="Upsell" active={extra.showInUpsell} action={toggleUpsellAction} id={extra.id} field="showInUpsell" />
+            {extra.linkUrl && (
+              <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: 'var(--accent-text)', padding: '2px 8px' }}>↗ Link</a>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0, marginLeft: 'auto' }}>
+            <Button variant="secondary" size="sm" onClick={() => setEditing(e => !e)}>
+              {editing ? 'Abbrechen' : 'Bearbeiten'}
+            </Button>
+            <Button variant="danger" size="sm" onClick={() => setConfirmOpen(true)}>Löschen</Button>
+          </div>
+        </div>
+
+        {/* Edit form */}
+        {editing && (
+          <form action={updateAction} style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)', display: 'grid', gap: 12 }}>
             <input type="hidden" name="id" value={extra.id} />
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr 1fr 80px', gap: 10, alignItems: 'end' }}>
@@ -152,9 +223,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
                       type="button"
                       onClick={() => setImageUrl('')}
                       style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: 'var(--primitive-gray-700)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      ×
-                    </button>
+                    >×</button>
                   </div>
                 )}
                 <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 12, cursor: uploading ? 'not-allowed' : 'pointer', opacity: uploading ? 0.6 : 1 }}>
@@ -189,102 +258,9 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
               <Button variant="primary" size="sm" type="submit">Speichern</Button>
             </div>
           </form>
-        </td>
-      </tr>
-    );
-  }
+        )}
+      </div>
 
-  return (
-    <>
-      <tr style={{ borderBottom: '1px solid var(--border)' }}>
-        <td style={{ padding: '12px 16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {extra.imageUrl && (
-              <img src={extra.imageUrl} alt="" style={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
-            )}
-            <div>
-              <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{extra.name}</div>
-              {extra.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{extra.description}</div>}
-            </div>
-          </div>
-        </td>
-        <td style={{ padding: '12px 16px' }}>
-          <span style={{
-            padding: '2px 8px',
-            borderRadius: 8,
-            fontSize: 11,
-            fontWeight: 600,
-            background: extra.type === 'insurance' ? 'var(--status-pending-bg)' : 'var(--status-new-bg)',
-            color: extra.type === 'insurance' ? 'var(--status-pending-text)' : 'var(--status-new-text)',
-          }}>
-            {TYPE_LABELS[extra.type] ?? extra.type}
-          </span>
-        </td>
-        <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{BILLING_LABELS[extra.billingType] ?? extra.billingType}</td>
-        <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', minWidth: 90 }}>€ {extra.price.toFixed(2)}</td>
-        <td style={{ padding: '12px 16px' }}>
-          {extra.linkUrl ? (
-            <a href={extra.linkUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-text)', textDecoration: 'none' }}>Link</a>
-          ) : '—'}
-        </td>
-        <td style={{ padding: '12px 16px' }}>
-          <form action={toggleAction} style={{ margin: 0 }}>
-            <input type="hidden" name="id" value={extra.id} />
-            <input type="hidden" name="isActive" value={extra.isActive ? 'false' : 'true'} />
-            <button
-              type="submit"
-              title={extra.isActive ? 'Klicken zum Deaktivieren' : 'Klicken zum Aktivieren'}
-              style={{
-                padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer',
-                background: extra.isActive ? 'var(--status-booked-bg)' : 'var(--bg-surface-sunken)',
-                color: extra.isActive ? 'var(--status-booked-text)' : 'var(--text-secondary)',
-              }}
-            >
-              {extra.isActive ? 'Aktiv' : 'Inaktiv'}
-            </button>
-          </form>
-        </td>
-        <td style={{ padding: '12px 16px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <form action={toggleWidgetAction} style={{ margin: 0 }}>
-              <input type="hidden" name="id" value={extra.id} />
-              <input type="hidden" name="showInWidget" value={extra.showInWidget ? 'false' : 'true'} />
-              <button
-                type="submit"
-                title="Im Buchungs-Widget anzeigen"
-                style={{
-                  padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  background: extra.showInWidget ? 'var(--status-new-bg)' : 'var(--bg-surface-sunken)',
-                  color: extra.showInWidget ? 'var(--status-new-text)' : 'var(--text-disabled)',
-                }}
-              >
-                Widget{extra.showInWidget ? ' ✓' : ''}
-              </button>
-            </form>
-            <form action={toggleUpsellAction} style={{ margin: 0 }}>
-              <input type="hidden" name="id" value={extra.id} />
-              <input type="hidden" name="showInUpsell" value={extra.showInUpsell ? 'false' : 'true'} />
-              <button
-                type="submit"
-                title="Im Bestätigungs-E-Mail als Upsell anbieten"
-                style={{
-                  padding: '2px 8px', borderRadius: 20, border: 'none', fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  background: extra.showInUpsell ? 'var(--status-booked-bg)' : 'var(--bg-surface-sunken)',
-                  color: extra.showInUpsell ? 'var(--status-booked-text)' : 'var(--text-disabled)',
-                }}
-              >
-                Upsell{extra.showInUpsell ? ' ✓' : ''}
-              </button>
-            </form>
-          </div>
-        </td>
-        <td style={{ padding: '12px 16px' }}>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <Button variant="secondary" size="sm" onClick={() => setEditing(true)}>Bearbeiten</Button>
-            <Button variant="danger" size="sm" onClick={() => setConfirmOpen(true)}>Löschen</Button>
-          </div>
-        </td>
-      </tr>
       <ConfirmDialog
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}

@@ -63,48 +63,37 @@ export default async function ExtrasPage() {
                 description="Nutze das Formular unten, um eine neue Zusatzleistung hinzuzufügen."
               />
             ) : (
-              <div className="table-scroll">
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                      {['Name', 'Typ', 'Abrechnung', 'Preis', 'Link', 'Status', 'Sichtbarkeit', ''].map((h) => (
-                        <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {extras.map((extra) => (
-                      <ExtraRow
-                        key={extra.id}
-                        extra={{ ...extra, price: Number(extra.price) }}
-                        updateAction={updateExtra}
-                        toggleAction={async (formData: FormData) => {
-                          'use server';
-                          const id = Number(formData.get('id'));
-                          const isActive = formData.get('isActive') === 'true';
-                          await toggleExtra(id, isActive);
-                        }}
-                        toggleWidgetAction={async (formData: FormData) => {
-                          'use server';
-                          const id = Number(formData.get('id'));
-                          const showInWidget = formData.get('showInWidget') === 'true';
-                          await toggleWidgetExtra(id, showInWidget);
-                        }}
-                        toggleUpsellAction={async (formData: FormData) => {
-                          'use server';
-                          const id = Number(formData.get('id'));
-                          const showInUpsell = formData.get('showInUpsell') === 'true';
-                          await toggleUpsellExtra(id, showInUpsell);
-                        }}
-                        deleteAction={async (formData: FormData) => {
-                          'use server';
-                          const id = Number(formData.get('id'));
-                          await deleteExtra(id);
-                        }}
-                      />
-                    ))}
-                  </tbody>
-                </table>
+              <div style={{ display: 'grid', gap: 10, padding: 16 }}>
+                {extras.map((extra) => (
+                  <ExtraRow
+                    key={extra.id}
+                    extra={{ ...extra, price: Number(extra.price) }}
+                    updateAction={updateExtra}
+                    toggleAction={async (formData: FormData) => {
+                      'use server';
+                      const id = Number(formData.get('id'));
+                      const isActive = formData.get('isActive') === 'true';
+                      await toggleExtra(id, isActive);
+                    }}
+                    toggleWidgetAction={async (formData: FormData) => {
+                      'use server';
+                      const id = Number(formData.get('id'));
+                      const showInWidget = formData.get('showInWidget') === 'true';
+                      await toggleWidgetExtra(id, showInWidget);
+                    }}
+                    toggleUpsellAction={async (formData: FormData) => {
+                      'use server';
+                      const id = Number(formData.get('id'));
+                      const showInUpsell = formData.get('showInUpsell') === 'true';
+                      await toggleUpsellExtra(id, showInUpsell);
+                    }}
+                    deleteAction={async (formData: FormData) => {
+                      'use server';
+                      const id = Number(formData.get('id'));
+                      await deleteExtra(id);
+                    }}
+                  />
+                ))}
               </div>
             )}
           </div>
