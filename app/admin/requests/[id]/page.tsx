@@ -597,16 +597,23 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                 </div>
               )}
               {(request.checkinBirthdate || request.checkinNationality || request.checkinDocNumber) && (
-                <div style={{ gridColumn: '2', marginTop: 8, fontSize: 13, color: 'var(--text-primary)', background: 'var(--status-new-bg)', border: '1px solid var(--primitive-blue-100)', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--status-new-text)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Meldedaten</div>
-                  {(request.salutation || request.firstname || request.lastname) && (
-                    <div>Name: <strong>{[request.salutation, request.firstname, request.lastname].filter(Boolean).join(' ')}</strong></div>
-                  )}
-                  {request.checkinBirthdate && <div>Geburtsdatum: <strong>{request.checkinBirthdate}</strong></div>}
-                  {request.checkinNationality && <div>Staatsangehörigkeit: <strong>{request.checkinNationality}</strong></div>}
-                  {request.country && <div>Herkunftsland: <strong>{request.country}</strong></div>}
-                  {request.checkinDocNumber && <div>Ausweis-/Reisepassnr.: <strong>{request.checkinDocNumber}</strong></div>}
-                </div>
+                <details style={{ gridColumn: '2', marginTop: 8 }}>
+                  <summary style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer', userSelect: 'none', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ transition: 'transform 0.15s' }}>
+                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Meldedaten
+                  </summary>
+                  <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-primary)', background: 'var(--status-new-bg)', border: '1px solid var(--primitive-blue-100)', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
+                    {(request.salutation || request.firstname || request.lastname) && (
+                      <div>Name: <strong>{[request.salutation, request.firstname, request.lastname].filter(Boolean).join(' ')}</strong></div>
+                    )}
+                    {request.checkinBirthdate && <div>Geburtsdatum: <strong>{request.checkinBirthdate}</strong></div>}
+                    {request.checkinNationality && <div>Staatsangehörigkeit: <strong>{request.checkinNationality}</strong></div>}
+                    {request.country && <div>Herkunftsland: <strong>{request.country}</strong></div>}
+                    {request.checkinDocNumber && <div>Ausweis-/Reisepassnr.: <strong>{request.checkinDocNumber}</strong></div>}
+                  </div>
+                </details>
               )}
             </div>
           )}
