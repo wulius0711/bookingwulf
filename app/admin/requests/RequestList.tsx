@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 
 type RequestItem = {
   id: number;
@@ -36,95 +37,185 @@ function resolveApartmentNames(ids: string, apartments: ApartmentLookup[]): stri
 
 const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
 
+const STATUS_TABS = [
+  { key: 'all',      label: 'Alle' },
+  { key: 'new',      label: 'Neu' },
+  { key: 'booked',   label: 'Gebucht' },
+  { key: 'answered', label: 'Beantwortet' },
+  { key: 'pending',  label: 'Zahlung offen' },
+  { key: 'cancelled',label: 'Storniert' },
+];
+
+function matchesStatus(status: string, tab: string) {
+  if (tab === 'all') return true;
+  if (tab === 'pending') return status === 'pending_stripe' || status === 'pending_paypal';
+  return status === tab;
+}
+
 export default function RequestList({ requests, apartments, isSuperAdmin }: {
   requests: RequestItem[];
   apartments: ApartmentLookup[];
   isSuperAdmin: boolean;
 }) {
+  const [activeTab, setActiveTab] = useState('all');
+  const [search, setSearch] = useState('');
+
+  const filtered = requests.filter((r) => {
+    if (!matchesStatus(r.status, activeTab)) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      const name = [r.firstname, r.lastname].filter(Boolean).join(' ').toLowerCase();
+      if (!name.includes(q)) return false;
+    }
+    return true;
+  });
+
   return (
-    <div style={{ display: 'grid', gap: 6 }}>
-      {requests.map((r) => {
-        const badge = getStatusBadge(r.status);
-        const name = [r.firstname, r.lastname].filter(Boolean).join(' ');
-        const aptNames = resolveApartmentNames(r.selectedApartmentIds, apartments);
-
-        return (
-          <Link
-            key={r.id}
-            href={`/admin/requests/${r.id}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 12,
-              padding: '12px 16px',
-              border: '1px solid var(--border)',
-              borderRadius: 10,
-              background: 'var(--surface)',
-              cursor: 'pointer',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1, flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', flexShrink: 0 }}>{name}</span>
-
-                {isSuperAdmin && r.hotel?.name && (
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, color: '#fafafa',
-                    background: r.hotel.accentColor || '#111827',
-                    borderRadius: 6, padding: '2px 8px', flexShrink: 0,
-                  }}>
-                    {r.hotel.name}
-                  </span>
-                )}
-
-                <span style={{ fontSize: 13, color: 'var(--text-muted)', flexShrink: 0 }}>
-                  {fmt(r.arrival)} – {fmt(r.departure)}
-                </span>
-
-                <span style={{ fontSize: 13, color: 'var(--text-subtle)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {aptNames}
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
-                {r.status === 'booked' && (
-                  r.checkinCompletedAt ? (
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 4,
-                      padding: '4px 8px', borderRadius: 7,
-                      background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)',
-                      fontSize: 11, fontWeight: 700,
-                    }}>
-                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      Check-in
-                    </span>
-                  ) : (
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center',
-                      padding: '4px 8px', borderRadius: 7,
-                      background: 'var(--bg-surface-raised)', color: 'var(--text-disabled)',
-                      fontSize: 11, fontWeight: 700,
-                    }}>
-                      Check-in
-                    </span>
-                  )
-                )}
+    <div style={{ display: 'grid', gap: 16 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          {STATUS_TABS.map((tab) => {
+            const count = tab.key === 'all'
+              ? requests.length
+              : requests.filter((r) => matchesStatus(r.status, tab.key)).length;
+            if (count === 0 && tab.key !== 'all') return null;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                style={{
+                  padding: '5px 12px',
+                  borderRadius: 8,
+                  border: '1px solid var(--border)',
+                  background: activeTab === tab.key ? 'var(--accent)' : 'var(--surface)',
+                  color: activeTab === tab.key ? 'var(--text-on-accent)' : 'var(--text-muted)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  gap: 5,
+                  alignItems: 'center',
+                }}
+              >
+                {tab.label}
                 <span style={{
-                  display: 'inline-flex', alignItems: 'center',
-                  padding: '4px 10px', borderRadius: 7,
-                  background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`,
-                  fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
+                  background: activeTab === tab.key ? 'rgba(255,255,255,0.25)' : 'var(--bg-surface-raised)',
+                  borderRadius: 4,
+                  padding: '1px 5px',
+                  fontSize: 11,
                 }}>
-                  {badge.label}
+                  {count}
                 </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <input
+          type="search"
+          placeholder="Gast suchen…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{
+            padding: '5px 12px',
+            borderRadius: 8,
+            border: '1px solid var(--border)',
+            background: 'var(--surface)',
+            color: 'var(--text-primary)',
+            fontSize: 13,
+            outline: 'none',
+            width: 180,
+          }}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gap: 6 }}>
+        {filtered.length === 0 && (
+          <p style={{ color: 'var(--text-muted)', fontSize: 14, margin: 0 }}>Keine Einträge gefunden.</p>
+        )}
+        {filtered.map((r) => {
+          const badge = getStatusBadge(r.status);
+          const name = [r.firstname, r.lastname].filter(Boolean).join(' ');
+          const aptNames = resolveApartmentNames(r.selectedApartmentIds, apartments);
+
+          return (
+            <Link
+              key={r.id}
+              href={`/admin/requests/${r.id}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                padding: '12px 16px',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                background: 'var(--surface)',
+                cursor: 'pointer',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1, flexWrap: 'wrap' }}>
+                  <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', flexShrink: 0 }}>{name}</span>
+
+                  {isSuperAdmin && r.hotel?.name && (
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, color: '#fafafa',
+                      background: r.hotel.accentColor || '#111827',
+                      borderRadius: 6, padding: '2px 8px', flexShrink: 0,
+                    }}>
+                      {r.hotel.name}
+                    </span>
+                  )}
+
+                  <span style={{ fontSize: 13, color: 'var(--text-muted)', flexShrink: 0 }}>
+                    {fmt(r.arrival)} – {fmt(r.departure)}
+                  </span>
+
+                  <span style={{ fontSize: 13, color: 'var(--text-subtle)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {aptNames}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+                  {r.status === 'booked' && (
+                    r.checkinCompletedAt ? (
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                        padding: '4px 8px', borderRadius: 7,
+                        background: 'var(--status-booked-bg)', color: 'var(--status-booked-text)',
+                        fontSize: 11, fontWeight: 700,
+                      }}>
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                          <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        Check-in
+                      </span>
+                    ) : (
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center',
+                        padding: '4px 8px', borderRadius: 7,
+                        background: 'var(--bg-surface-raised)', color: 'var(--text-disabled)',
+                        fontSize: 11, fontWeight: 700,
+                      }}>
+                        Check-in
+                      </span>
+                    )
+                  )}
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center',
+                    padding: '4px 10px', borderRadius: 7,
+                    background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`,
+                    fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
+                  }}>
+                    {badge.label}
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
-        );
-      })}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

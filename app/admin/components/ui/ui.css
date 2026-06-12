@@ -160,14 +160,27 @@
 
 
 .ui-btn-danger {
+  background: transparent;
+  color: var(--btn-danger-bg);
+  border-color: var(--btn-danger-bg);
+}
+.ui-btn-danger:hover:not(:disabled):not([data-loading="true"]) {
+  background: var(--btn-danger-bg);
+  color: var(--text-on-danger);
+}
+.ui-btn-danger:active:not(:disabled) {
+  background: var(--btn-danger-bg-hover);
+  color: var(--text-on-danger);
+}
+.ui-btn-danger-filled {
   background: var(--btn-danger-bg);
   color: var(--text-on-danger);
   border-color: transparent;
 }
-.ui-btn-danger:hover:not(:disabled):not([data-loading="true"]) {
+.ui-btn-danger-filled:hover:not(:disabled):not([data-loading="true"]) {
   background: var(--btn-danger-bg-hover);
 }
-.ui-btn-danger:active:not(:disabled) {
+.ui-btn-danger-filled:active:not(:disabled) {
   background: var(--btn-danger-bg-hover);
 }
 

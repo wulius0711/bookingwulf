@@ -26,6 +26,10 @@ export default function PriceSeasonList({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [confirmId, setConfirmId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState<number | null>(null);
+  const [aptFilter, setAptFilter] = useState('all');
+
+  const apartmentNames = [...new Set(initial.map((s) => s.apartment?.name).filter(Boolean))] as string[];
+  const visible = aptFilter === 'all' ? seasons : seasons.filter((s) => s.apartment?.name === aptFilter);
 
   const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
 
@@ -50,8 +54,24 @@ export default function PriceSeasonList({
         @media (min-width: 640px) { .price-season-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
         .dark .season-card, [data-theme="dark"] .season-card { background: var(--bg-surface-raised) !important; }
       `}</style>
+
+      {apartmentNames.length > 1 && (
+        <div style={{ marginBottom: 16 }}>
+          <select
+            value={aptFilter}
+            onChange={(e) => setAptFilter(e.target.value)}
+            style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 13, cursor: 'pointer' }}
+          >
+            <option value="all">Alle Apartments ({seasons.length})</option>
+            {apartmentNames.map((name) => (
+              <option key={name} value={name}>{name} ({seasons.filter((s) => s.apartment?.name === name).length})</option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <div className="price-season-grid">
-        {seasons.map((s) => {
+        {visible.map((s) => {
           const isOpen = expandedId === s.id;
           return (
             <div

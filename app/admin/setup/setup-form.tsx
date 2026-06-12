@@ -66,7 +66,7 @@ export default function SetupForm() {
           borderRadius: 8,
           border: 'none',
           background: pending ? 'var(--primitive-gray-300)' : 'var(--accent)',
-          color: '#fff',
+          color: 'var(--text-on-accent)',
           fontSize: 14,
           fontWeight: 600,
           cursor: pending ? 'not-allowed' : 'pointer',

@@ -104,7 +104,7 @@ export default function ConfirmDialog({
             Abbrechen
           </Button>
           <Button
-            variant={dangerous ? 'danger' : 'primary'}
+            variant={dangerous ? 'danger-filled' : 'primary'}
             onClick={handleConfirm}
             loading={loading}
             disabled={!confirmEnabled}

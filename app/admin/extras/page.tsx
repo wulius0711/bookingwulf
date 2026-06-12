@@ -6,6 +6,7 @@ import { updateExtra, toggleExtra, deleteExtra, toggleUpsellExtra, toggleWidgetE
 import ExtraRow from './ExtraRow';
 import CreateExtraForm from './CreateExtraForm';
 import { EmptyState } from '../components/ui';
+import CollapsibleCard from '../components/CollapsibleCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,12 +51,7 @@ export default async function ExtrasPage() {
         )}
 
         {selectedHotel && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
-              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
-                {selectedHotel.name} — {extras.length} {extras.length === 1 ? 'Eintrag' : 'Einträge'}
-              </h2>
-            </div>
+          <CollapsibleCard title={`${selectedHotel.name} — ${extras.length} ${extras.length === 1 ? 'Eintrag' : 'Einträge'}`} defaultOpen>
 
             {extras.length === 0 ? (
               <EmptyState
@@ -96,14 +92,15 @@ export default async function ExtrasPage() {
                 ))}
               </div>
             )}
-          </div>
+          </CollapsibleCard>
         )}
 
         {selectedId && (
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 24 }}>
-            <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Neue Zusatzleistung anlegen</h2>
-            <CreateExtraForm hotelId={selectedId} />
-          </div>
+          <CollapsibleCard title="Neue Zusatzleistung anlegen" defaultOpen={false}>
+            <div style={{ padding: '16px 24px 24px' }}>
+              <CreateExtraForm hotelId={selectedId} />
+            </div>
+          </CollapsibleCard>
         )}
 
       </div>
