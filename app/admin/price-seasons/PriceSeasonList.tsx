@@ -27,9 +27,15 @@ export default function PriceSeasonList({
   const [confirmId, setConfirmId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [aptFilter, setAptFilter] = useState('all');
+  const [nameFilter, setNameFilter] = useState('all');
 
   const apartmentNames = [...new Set(initial.map((s) => s.apartment?.name).filter(Boolean))] as string[];
-  const visible = aptFilter === 'all' ? seasons : seasons.filter((s) => s.apartment?.name === aptFilter);
+  const seasonNames = [...new Set(initial.map((s) => s.name).filter(Boolean))] as string[];
+  const showNameFilter = seasonNames.length >= 2 && apartmentNames.length >= 2;
+
+  const visible = seasons
+    .filter((s) => aptFilter === 'all' || s.apartment?.name === aptFilter)
+    .filter((s) => nameFilter === 'all' || s.name === nameFilter);
 
   const fmt = (d: Date) => new Date(d).toLocaleDateString('de-AT');
 
@@ -55,18 +61,32 @@ export default function PriceSeasonList({
         .dark .season-card, [data-theme="dark"] .season-card { background: var(--bg-surface-raised) !important; }
       `}</style>
 
-      {apartmentNames.length > 1 && (
-        <div style={{ marginBottom: 16 }}>
-          <select
-            value={aptFilter}
-            onChange={(e) => setAptFilter(e.target.value)}
-            style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 13, cursor: 'pointer' }}
-          >
-            <option value="all">Alle Apartments ({seasons.length})</option>
-            {apartmentNames.map((name) => (
-              <option key={name} value={name}>{name} ({seasons.filter((s) => s.apartment?.name === name).length})</option>
-            ))}
-          </select>
+      {(apartmentNames.length > 1 || showNameFilter) && (
+        <div style={{ marginBottom: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {apartmentNames.length > 1 && (
+            <select
+              value={aptFilter}
+              onChange={(e) => setAptFilter(e.target.value)}
+              style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 13, cursor: 'pointer' }}
+            >
+              <option value="all">Alle Apartments ({seasons.length})</option>
+              {apartmentNames.map((name) => (
+                <option key={name} value={name}>{name} ({seasons.filter((s) => s.apartment?.name === name).length})</option>
+              ))}
+            </select>
+          )}
+          {showNameFilter && (
+            <select
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
+              style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 13, cursor: 'pointer' }}
+            >
+              <option value="all">Alle Saisons</option>
+              {seasonNames.map((name) => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          )}
         </div>
       )}
 
