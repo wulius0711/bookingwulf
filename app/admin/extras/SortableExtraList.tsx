@@ -115,7 +115,7 @@ export default function SortableExtraList({ initialExtras, actions }: { initialE
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={extras.map((e) => e.id)} strategy={verticalListSortingStrategy}>
-        <div style={{ display: 'grid', gap: 10, padding: 16 }}>
+        <div style={{ display: 'grid', gap: 10, padding: 16, background: 'var(--surface-2)' }}>
           {extras.map((extra) => (
             <SortableExtraRow key={extra.id} extra={extra} actions={actions} />
           ))}

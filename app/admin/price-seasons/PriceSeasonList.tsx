@@ -58,7 +58,6 @@ export default function PriceSeasonList({
       <style>{`
         .price-season-grid { display: grid; gap: 12px; align-items: start; }
         @media (min-width: 640px) { .price-season-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
-        .dark .season-card, [data-theme="dark"] .season-card { background: var(--bg-surface-raised) !important; }
       `}</style>
 
       {(apartmentNames.length > 1 || showNameFilter) && (

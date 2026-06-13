@@ -113,7 +113,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
 
   return (
     <>
-      <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px', opacity: extra.isActive ? 1 : 0.55 }}>
+      <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px', opacity: extra.isActive ? 1 : 0.55, background: 'var(--surface)' }}>
         {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           {dragHandle}
