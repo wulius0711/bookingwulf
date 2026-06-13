@@ -3,7 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import type { PlanKey } from '@/src/lib/plans';
 import { updateExtra, toggleExtra, deleteExtra, toggleUpsellExtra, toggleWidgetExtra } from './actions';
-import ExtraRow from './ExtraRow';
+import SortableExtraList from './SortableExtraList';
 import CreateExtraForm from './CreateExtraForm';
 import { EmptyState } from '../components/ui';
 import CollapsibleCard from '../components/CollapsibleCard';
@@ -59,38 +59,28 @@ export default async function ExtrasPage() {
                 description="Nutze das Formular unten, um eine neue Zusatzleistung hinzuzufügen."
               />
             ) : (
-              <div style={{ display: 'grid', gap: 10, padding: 16 }}>
-                {extras.map((extra) => (
-                  <ExtraRow
-                    key={extra.id}
-                    extra={{ ...extra, price: Number(extra.price) }}
-                    updateAction={updateExtra}
-                    toggleAction={async (formData: FormData) => {
-                      'use server';
-                      const id = Number(formData.get('id'));
-                      const isActive = formData.get('isActive') === 'true';
-                      await toggleExtra(id, isActive);
-                    }}
-                    toggleWidgetAction={async (formData: FormData) => {
-                      'use server';
-                      const id = Number(formData.get('id'));
-                      const showInWidget = formData.get('showInWidget') === 'true';
-                      await toggleWidgetExtra(id, showInWidget);
-                    }}
-                    toggleUpsellAction={async (formData: FormData) => {
-                      'use server';
-                      const id = Number(formData.get('id'));
-                      const showInUpsell = formData.get('showInUpsell') === 'true';
-                      await toggleUpsellExtra(id, showInUpsell);
-                    }}
-                    deleteAction={async (formData: FormData) => {
-                      'use server';
-                      const id = Number(formData.get('id'));
-                      await deleteExtra(id);
-                    }}
-                  />
-                ))}
-              </div>
+              <SortableExtraList
+                initialExtras={extras.map((e) => ({ ...e, price: Number(e.price) }))}
+                actions={{
+                  updateAction: updateExtra,
+                  toggleAction: async (formData: FormData) => {
+                    'use server';
+                    await toggleExtra(Number(formData.get('id')), formData.get('isActive') === 'true');
+                  },
+                  toggleWidgetAction: async (formData: FormData) => {
+                    'use server';
+                    await toggleWidgetExtra(Number(formData.get('id')), formData.get('showInWidget') === 'true');
+                  },
+                  toggleUpsellAction: async (formData: FormData) => {
+                    'use server';
+                    await toggleUpsellExtra(Number(formData.get('id')), formData.get('showInUpsell') === 'true');
+                  },
+                  deleteAction: async (formData: FormData) => {
+                    'use server';
+                    await deleteExtra(Number(formData.get('id')));
+                  },
+                }}
+              />
             )}
           </CollapsibleCard>
         )}

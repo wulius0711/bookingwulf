@@ -2,7 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { ImageUploadField } from '@/app/admin/components/image-upload-field';
+import { SortableImageList } from '@/app/admin/components/SortableImageList';
 import CheckinImageManager from '@/app/admin/components/CheckinImageManager';
 import IcalSection from './IcalSection';
 import NukiLockSection from './NukiLockSection';
@@ -400,14 +400,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <details style={detailsStyle}>
             <summary style={summaryStyle}><h2 style={cardTitle}>Bilder</h2>{caret}</summary>
             <div style={cardBody}>
-              {[0, 1, 2, 3, 4, 5].map((index) => (
-                <ImageUploadField
-                  key={index}
-                  index={index}
-                  defaultUrl={apartment.images[index]?.imageUrl || ''}
-                  defaultAlt={apartment.images[index]?.altText || ''}
-                />
-              ))}
+              <SortableImageList initialImages={apartment.images} />
             </div>
           </details>
 

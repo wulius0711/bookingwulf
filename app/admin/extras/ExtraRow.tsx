@@ -42,6 +42,7 @@ type Props = {
   toggleWidgetAction: (formData: FormData) => void | Promise<void>;
   toggleUpsellAction: (formData: FormData) => void | Promise<void>;
   deleteAction: (formData: FormData) => void | Promise<void>;
+  dragHandle?: React.ReactNode;
 };
 
 const labelSt: React.CSSProperties = {
@@ -78,7 +79,7 @@ function ToggleBadge({ label, active, action, id, field }: {
   );
 }
 
-export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidgetAction, toggleUpsellAction, deleteAction }: Props) {
+export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidgetAction, toggleUpsellAction, deleteAction, dragHandle }: Props) {
   const [editing, setEditing] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState(extra.imageUrl || '');
@@ -115,6 +116,7 @@ export default function ExtraRow({ extra, updateAction, toggleAction, toggleWidg
       <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px', opacity: extra.isActive ? 1 : 0.55 }}>
         {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          {dragHandle}
           {/* Image + Name */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 180px', minWidth: 0 }}>
             {extra.imageUrl && (

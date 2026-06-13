@@ -1,6 +1,21 @@
 'use client';
 
 import { useState, useEffect, useRef, useTransition } from 'react';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { ConfirmDialog } from '../components/ui';
 
 type Item = {
@@ -39,6 +54,130 @@ function catIcon(v: string) {
   return CATEGORIES.find((c) => c.value === v)?.icon ?? '📍';
 }
 
+const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', boxSizing: 'border-box' };
+const btn: React.CSSProperties = { padding: '7px 14px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
+
+interface CardProps {
+  item: Item;
+  draggable: boolean;
+  editId: number | null;
+  editData: Partial<Item>;
+  apartments: Apartment[];
+  onEditStart: (id: number) => void;
+  onEditChange: (patch: Partial<Item>) => void;
+  onEditSave: () => void;
+  onEditCancel: () => void;
+  onToggleActive: (id: number, isActive: boolean) => void;
+  onDelete: (id: number) => void;
+}
+
+function SortableCard({ item, draggable, editId, editData, apartments, onEditStart, onEditChange, onEditSave, onEditCancel, onToggleActive, onDelete }: CardProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+    disabled: !draggable,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: 14,
+        overflow: 'hidden',
+        opacity: item.isActive ? (isDragging ? 0.6 : 1) : 0.5,
+        position: 'relative',
+        ...(isDragging && { zIndex: 1 }),
+      }}
+    >
+      {editId === item.id ? (
+        <div style={{ padding: 20, display: 'grid', gap: 12 }}>
+          <div className="two-col-grid" style={{ gap: 12 }}>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Titel</label>
+              <input style={inp} value={editData.title ?? item.title} onChange={(e) => onEditChange({ title: e.target.value })} />
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Kategorie</label>
+              <select style={inp} value={editData.category ?? item.category} onChange={(e) => onEditChange({ category: e.target.value })}>
+                {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.icon} {c.label}</option>)}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Beschreibung</label>
+            <textarea style={{ ...inp, resize: 'vertical' }} rows={2} value={editData.description ?? item.description ?? ''} onChange={(e) => onEditChange({ description: e.target.value })} />
+          </div>
+          <div>
+            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Adresse</label>
+            <input style={inp} value={editData.address ?? item.address ?? ''} onChange={(e) => onEditChange({ address: e.target.value })} />
+          </div>
+          {apartments.length > 1 && (
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Wohnung (optional)</label>
+              <select
+                style={inp}
+                value={editData.apartmentId !== undefined ? (editData.apartmentId ?? '') : (item.apartmentId ?? '')}
+                onChange={(e) => onEditChange({ apartmentId: e.target.value ? Number(e.target.value) : null })}
+              >
+                <option value="">Alle Wohnungen</option>
+                {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={onEditCancel}>Abbrechen</button>
+            <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={onEditSave}>Speichern</button>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'stretch' }}>
+          {draggable && (
+            <div
+              {...attributes}
+              {...listeners}
+              style={{ display: 'flex', alignItems: 'center', padding: '0 10px', cursor: isDragging ? 'grabbing' : 'grab', color: 'var(--text-disabled)', fontSize: 18, flexShrink: 0, touchAction: 'none', userSelect: 'none' }}
+            >
+              ⠿
+            </div>
+          )}
+          {item.imageUrl && (
+            <img src={item.imageUrl} alt={item.title} style={{ width: 100, height: 90, objectFit: 'cover', flexShrink: 0 }} />
+          )}
+          <div style={{ flex: 1, padding: '12px 16px', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {catIcon(item.category)} {item.title}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-disabled)', marginTop: 2 }}>{catLabel(item.category)}</div>
+                {item.address && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.address}</div>}
+                {item.description && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</div>}
+                {item.apartmentId && apartments.length > 1 && (
+                  <div style={{ marginTop: 5 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--surface-2)', borderRadius: 6, padding: '2px 7px' }}>
+                      {apartments.find((a) => a.id === item.apartmentId)?.name ?? 'Wohnung'}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                <button aria-label="Eintrag bearbeiten" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '5px 10px' }} onClick={() => onEditStart(item.id)}>✏️</button>
+                <button aria-label={item.isActive ? 'Eintrag deaktivieren' : 'Eintrag aktivieren'} style={{ ...btn, background: item.isActive ? 'var(--status-booked-bg)' : 'var(--surface-2)', color: item.isActive ? 'var(--status-booked-text)' : 'var(--text-muted)', padding: '5px 10px' }} onClick={() => onToggleActive(item.id, !item.isActive)}>
+                  {item.isActive ? 'Aktiv' : 'Inaktiv'}
+                </button>
+                <button aria-label="Eintrag löschen" style={{ ...btn, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', padding: '5px 10px' }} onClick={() => onDelete(item.id)}>🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ThingsToSeeManager({ hotelId, initialItems, apartments }: { hotelId: number; initialItems: Item[]; apartments: Apartment[] }) {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [query, setQuery] = useState('');
@@ -54,6 +193,10 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
   const [confirmId, setConfirmId] = useState<number | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -147,10 +290,32 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
     setEditData({});
   }
 
-  const filtered = filterCat === 'all' ? items : items.filter((i) => i.category === filterCat);
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-  const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', boxSizing: 'border-box' };
-  const btn: React.CSSProperties = { padding: '7px 14px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
+    const oldIndex = items.findIndex((i) => i.id === active.id);
+    const newIndex = items.findIndex((i) => i.id === over.id);
+    const reordered = arrayMove(items, oldIndex, newIndex);
+    const updated = reordered.map((item, index) => ({ ...item, sortOrder: index * 10 }));
+
+    setItems(updated);
+
+    const changed = updated.filter((item) => {
+      const orig = items.find((o) => o.id === item.id);
+      return orig?.sortOrder !== item.sortOrder;
+    });
+
+    await Promise.all(changed.map((item) =>
+      fetch(`/api/admin/things-to-see/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sortOrder: item.sortOrder }),
+      })
+    ));
+  }
+
+  const filtered = filterCat === 'all' ? items : items.filter((i) => i.category === filterCat);
 
   return (
     <div style={{ display: 'grid', gap: 24 }}>
@@ -260,83 +425,28 @@ export default function ThingsToSeeManager({ hotelId, initialItems, apartments }
         </div>
       )}
 
-      {filtered.map((item) => (
-        <div key={item.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', opacity: item.isActive ? 1 : 0.5 }}>
-          {editId === item.id ? (
-            <div style={{ padding: 20, display: 'grid', gap: 12 }}>
-              <div className="two-col-grid" style={{ gap: 12 }}>
-                <div>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Titel</label>
-                  <input style={inp} value={editData.title ?? item.title} onChange={(e) => setEditData((d) => ({ ...d, title: e.target.value }))} />
-                </div>
-                <div>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Kategorie</label>
-                  <select style={inp} value={editData.category ?? item.category} onChange={(e) => setEditData((d) => ({ ...d, category: e.target.value }))}>
-                    {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.icon} {c.label}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Beschreibung</label>
-                <textarea style={{ ...inp, resize: 'vertical' }} rows={2} value={editData.description ?? item.description ?? ''} onChange={(e) => setEditData((d) => ({ ...d, description: e.target.value }))} />
-              </div>
-              <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Adresse</label>
-                <input style={inp} value={editData.address ?? item.address ?? ''} onChange={(e) => setEditData((d) => ({ ...d, address: e.target.value }))} />
-              </div>
-              {apartments.length > 1 && (
-                <div>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Wohnung (optional)</label>
-                  <select
-                    style={inp}
-                    value={editData.apartmentId !== undefined ? (editData.apartmentId ?? '') : (item.apartmentId ?? '')}
-                    onChange={(e) => setEditData((d) => ({ ...d, apartmentId: e.target.value ? Number(e.target.value) : null }))}
-                  >
-                    <option value="">Alle Wohnungen</option>
-                    {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-                  </select>
-                </div>
-              )}
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)' }} onClick={() => { setEditId(null); setEditData({}); }}>Abbrechen</button>
-                <button className="btn-shine" style={{ ...btn, background: 'var(--accent)', color: 'var(--text-on-accent)' }} onClick={saveEdit}>Speichern</button>
-              </div>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', gap: 0 }}>
-              {item.imageUrl && (
-                <img src={item.imageUrl} alt={item.title} style={{ width: 100, height: 90, objectFit: 'cover', flexShrink: 0 }} />
-              )}
-              <div style={{ flex: 1, padding: '12px 16px', minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {catIcon(item.category)} {item.title}
-                    </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-disabled)', marginTop: 2 }}>{catLabel(item.category)}</div>
-                    {item.address && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.address}</div>}
-                    {item.description && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.description}</div>}
-                    {item.apartmentId && apartments.length > 1 && (
-                      <div style={{ marginTop: 5 }}>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--surface-2)', borderRadius: 6, padding: '2px 7px' }}>
-                          {apartments.find((a) => a.id === item.apartmentId)?.name ?? 'Wohnung'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                    <button aria-label="Eintrag bearbeiten" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', padding: '5px 10px' }} onClick={() => { setEditId(item.id); setEditData({}); }}>✏️</button>
-                    <button aria-label={item.isActive ? 'Eintrag deaktivieren' : 'Eintrag aktivieren'} style={{ ...btn, background: item.isActive ? 'var(--status-booked-bg)' : 'var(--surface-2)', color: item.isActive ? 'var(--status-booked-text)' : 'var(--text-muted)', padding: '5px 10px' }} onClick={() => toggleActive(item.id, !item.isActive)}>
-                      {item.isActive ? 'Aktiv' : 'Inaktiv'}
-                    </button>
-                    <button aria-label="Eintrag löschen" style={{ ...btn, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', padding: '5px 10px' }} onClick={() => setConfirmId(item.id)}>🗑️</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={filtered.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+          <div style={{ display: 'grid', gap: 16 }}>
+            {filtered.map((item) => (
+              <SortableCard
+                key={item.id}
+                item={item}
+                draggable={filterCat === 'all'}
+                editId={editId}
+                editData={editData}
+                apartments={apartments}
+                onEditStart={(id) => { setEditId(id); setEditData({}); }}
+                onEditChange={(patch) => setEditData((d) => ({ ...d, ...patch }))}
+                onEditSave={saveEdit}
+                onEditCancel={() => { setEditId(null); setEditData({}); }}
+                onToggleActive={toggleActive}
+                onDelete={setConfirmId}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       <ConfirmDialog
         isOpen={confirmId !== null}

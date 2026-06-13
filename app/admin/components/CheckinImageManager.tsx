@@ -1,6 +1,16 @@
 'use client';
 
 import { useState, useRef, useTransition } from 'react';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import { SortableContext, rectSortingStrategy, useSortable, arrayMove } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type CheckinImage = {
   id: number;
@@ -8,6 +18,81 @@ type CheckinImage = {
   caption: string | null;
   sortOrder: number;
 };
+
+const inp: React.CSSProperties = { width: '100%', padding: '8px 11px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
+const btn: React.CSSProperties = { padding: '6px 12px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
+
+function SortableCheckinImage({ img, editId, editCaption, setEditCaption, onEditStart, onSaveCaption, onDelete, isPending }: {
+  img: CheckinImage;
+  editId: number | null;
+  editCaption: string;
+  setEditCaption: (v: string) => void;
+  onEditStart: (img: CheckinImage) => void;
+  onSaveCaption: (id: number) => void;
+  onDelete: (id: number) => void;
+  isPending: boolean;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: img.id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        border: '1px solid var(--border)',
+        borderRadius: 10,
+        overflow: 'hidden',
+        background: 'var(--surface)',
+        ...(isDragging && { zIndex: 1, position: 'relative' }),
+      }}
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        style={{ display: 'flex', justifyContent: 'center', padding: '4px 0', cursor: isDragging ? 'grabbing' : 'grab', color: 'var(--text-disabled)', fontSize: 16, touchAction: 'none', userSelect: 'none', borderBottom: '1px solid var(--border)' }}
+      >
+        ⠿
+      </div>
+      <div style={{ position: 'relative' }}>
+        <img src={img.imageUrl} alt={img.caption ?? ''} style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
+        <button
+          onClick={() => onDelete(img.id)}
+          style={{ position: 'absolute', top: '6px', right: '6px', background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: 12, padding: '3px 7px', cursor: 'pointer' }}
+        >
+          ✕
+        </button>
+      </div>
+      <div style={{ padding: '8px 10px' }}>
+        {editId === img.id ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <input
+              style={inp}
+              value={editCaption}
+              onChange={(e) => setEditCaption(e.target.value)}
+              placeholder="Beschreibung…"
+              autoFocus
+            />
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', flex: 1 }} onClick={() => onEditStart({ ...img, caption: null })}>Abbrechen</button>
+              <button className="btn-shine" style={{ ...btn, background: '#111827', color: '#fff', flex: 1 }} onClick={() => onSaveCaption(img.id)} disabled={isPending}>OK</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => onEditStart(img)}
+            style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, fontFamily: 'inherit' }}
+          >
+            <span style={{ fontSize: 12, color: img.caption ? 'var(--text-muted)' : '#9ca3af' }}>
+              {img.caption || '+ Beschreibung'}
+            </span>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function CheckinImageManager({
   hotelId,
@@ -25,8 +110,32 @@ export default function CheckinImageManager({
   const [isPending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const inp: React.CSSProperties = { width: '100%', padding: '8px 11px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' };
-  const btn: React.CSSProperties = { padding: '6px 12px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' };
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = images.findIndex((i) => i.id === active.id);
+    const newIndex = images.findIndex((i) => i.id === over.id);
+    const reordered = arrayMove(images, oldIndex, newIndex);
+    const updated = reordered.map((img, i) => ({ ...img, sortOrder: i * 10 }));
+
+    setImages(updated);
+
+    const changed = updated.filter((img) => {
+      const orig = images.find((o) => o.id === img.id);
+      return orig?.sortOrder !== img.sortOrder;
+    });
+
+    await Promise.all(changed.map((img) =>
+      fetch(`/api/admin/checkin-images/${img.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sortOrder: img.sortOrder }),
+      })
+    ));
+  }
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -76,47 +185,25 @@ export default function CheckinImageManager({
         <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>Noch keine Bilder — laden Sie Fotos hoch (z. B. Schlüsselkasten, Eingang, Türcode).</p>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
-        {images.map((img) => (
-          <div key={img.id} style={{ border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', background: 'var(--surface)' }}>
-            <div style={{ position: 'relative' }}>
-              <img src={img.imageUrl} alt={img.caption ?? ''} style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
-              <button
-                onClick={() => deleteImage(img.id)}
-                style={{ position: 'absolute', top: '6px', right: '6px', background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: 12, padding: '3px 7px', cursor: 'pointer' }}
-              >
-                ✕
-              </button>
-            </div>
-            <div style={{ padding: '8px 10px' }}>
-              {editId === img.id ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <input
-                    style={inp}
-                    value={editCaption}
-                    onChange={(e) => setEditCaption(e.target.value)}
-                    placeholder="Beschreibung…"
-                    autoFocus
-                  />
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <button className="btn-shine" style={{ ...btn, background: 'var(--surface-2)', color: 'var(--text-muted)', flex: 1 }} onClick={() => setEditId(null)}>Abbrechen</button>
-                    <button className="btn-shine" style={{ ...btn, background: '#111827', color: '#fff', flex: 1 }} onClick={() => saveCaption(img.id)} disabled={isPending}>OK</button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={() => { setEditId(img.id); setEditCaption(img.caption ?? ''); }}
-                  style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, fontFamily: 'inherit' }}
-                >
-                  <span style={{ fontSize: 12, color: img.caption ? 'var(--text-muted)' : '#9ca3af' }}>
-                    {img.caption || '+ Beschreibung'}
-                  </span>
-                </button>
-              )}
-            </div>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={images.map((i) => i.id)} strategy={rectSortingStrategy}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
+            {images.map((img) => (
+              <SortableCheckinImage
+                key={img.id}
+                img={img}
+                editId={editId}
+                editCaption={editCaption}
+                setEditCaption={setEditCaption}
+                onEditStart={(i) => { setEditId(i.caption !== null ? i.id : null); setEditCaption(i.caption ?? ''); }}
+                onSaveCaption={saveCaption}
+                onDelete={deleteImage}
+                isPending={isPending}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
 
       <div>
         <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
