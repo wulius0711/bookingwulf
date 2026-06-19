@@ -438,36 +438,65 @@ export default function HomePage() {
         <div className="v4-container">
           <div className="text-center mb-16">
             <span className="v4-eyebrow v4-animate">Wer steckt dahinter</span>
-            <h2 id="founder-heading" className="v4-h2 v4-animate v4-d1">Kein Konzern. Ein Entwickler aus Wien.</h2>
+            <h2 id="founder-heading" className="v4-h2 v4-animate v4-d1">Kein Konzern. Menschen aus Wien.</h2>
           </div>
-          <div className="v4-animate v4-card max-w-2xl mx-auto p-8 flex flex-col sm:flex-row gap-8 items-center">
-            <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
-              <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
-              <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
-              <text
-                x="48" y="48"
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
-                fontSize="26"
-                fontWeight="700"
-                fill="#108ba9"
-                letterSpacing="2"
-              >WH</text>
-            </svg>
-            <div>
-              <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Wolfgang Heis</h3>
-              <p className="text-[13px] mb-4 v4-text-muted">Webentwickler · Wien, Österreich</p>
-              <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                bookingwulf ist mein Vollzeit-Projekt. Ich entwickle seit über 15 Jahren Webanwendungen — und habe bookingwulf gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
-              </p>
-              <a
-                href="mailto:support@bookingwulf.com"
-                className="inline-flex items-center gap-1.5 mt-4 text-sm font-semibold hover:underline underline-offset-4 v4-text-navy"
-              >
-                support@bookingwulf.com →
-              </a>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Wolfgang Card */}
+            <div className="v4-animate v4-card p-8 flex flex-col sm:flex-row gap-8 items-center">
+              <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
+                <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
+                <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
+                <text
+                  x="48" y="48"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
+                  fontSize="26"
+                  fontWeight="700"
+                  fill="#108ba9"
+                  letterSpacing="2"
+                >WH</text>
+              </svg>
+              <div>
+                <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Wolfgang Heis</h3>
+                <p className="text-[13px] mb-4 v4-text-muted">Webentwickler · Wien, Österreich</p>
+                <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
+                  bookingwulf ist mein Vollzeit-Projekt. Ich entwickle seit über 15 Jahren Webanwendungen — und habe bookingwulf gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
+                </p>
+              </div>
             </div>
+            {/* Sebastian Card */}
+            <div className="v4-animate v4-card p-8 flex flex-col sm:flex-row gap-8 items-center">
+              <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
+                <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
+                <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
+                <text
+                  x="48" y="48"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
+                  fontSize="26"
+                  fontWeight="700"
+                  fill="#108ba9"
+                  letterSpacing="2"
+                >SM</text>
+              </svg>
+              <div>
+                <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Sebastian Mercz</h3>
+                <p className="text-[13px] mb-4 v4-text-muted">Vermieter & Branchenkenner · Wien</p>
+                <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
+                  Sebastian verwaltet seit über 10 Jahren Apartments in Wien — mit 4,74 auf Airbnb, 8,5 auf Booking.com und über 1.500 Bewertungen. Er kennt den Alltag eines Vermieters von innen: was funktioniert, was nervt, und wo Tools wie bookingwulf den Unterschied machen. Als aktiver Vermieter begleitet er die Produktentwicklung von bookingwulf — damit das System nicht am Schreibtisch entsteht, sondern in der Praxis.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <a
+              href="mailto:support@bookingwulf.com"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline underline-offset-4 v4-text-navy"
+            >
+              support@bookingwulf.com →
+            </a>
           </div>
         </div>
       </section>
