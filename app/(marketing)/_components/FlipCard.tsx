@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type Props = {
   initials: string
@@ -14,13 +14,19 @@ type Props = {
 
 export default function FlipCard({ initials, name, subtitle, text, photo, linkLabel, linkHref }: Props) {
   const [flipped, setFlipped] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches)
+  }, [])
 
   return (
     <div
       className="v4-animate h-[380px]"
       style={{ perspective: '1000px' }}
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
+      onMouseEnter={() => !isTouch && setFlipped(true)}
+      onMouseLeave={() => !isTouch && setFlipped(false)}
+      onClick={() => isTouch && setFlipped(f => !f)}
     >
       <div
         style={{
@@ -51,7 +57,7 @@ export default function FlipCard({ initials, name, subtitle, text, photo, linkLa
                 <h3 className="text-[17px] font-bold mb-0.5" style={{ color: '#fff' }}>{name}</h3>
                 <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.75)' }}>{subtitle}</p>
               </div>
-              <p className="absolute top-4 right-5 text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Hover für mehr →</p>
+              <p className="absolute top-4 right-5 text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{isTouch ? 'Tippen für mehr →' : 'Hover für mehr →'}</p>
             </>
           ) : (
             <div className="flex flex-col items-center justify-center gap-5 h-full p-8">
@@ -73,7 +79,7 @@ export default function FlipCard({ initials, name, subtitle, text, photo, linkLa
                 <h3 className="text-[17px] font-bold mb-1 v4-text-navy">{name}</h3>
                 <p className="text-[13px] v4-text-muted">{subtitle}</p>
               </div>
-              <p className="absolute bottom-5 right-6 text-[12px] font-medium v4-text-muted">Hover für mehr →</p>
+              <p className="absolute bottom-5 right-6 text-[12px] font-medium v4-text-muted">{isTouch ? 'Tippen für mehr →' : 'Hover für mehr →'}</p>
             </div>
           )}
         </div>
