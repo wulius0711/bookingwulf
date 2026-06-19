@@ -493,7 +493,7 @@ export default function HomePage() {
                 <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Sebastian Mercz</h3>
                 <p className="text-[13px] mb-4 v4-text-muted">Vermieter & Branchenkenner</p>
                 <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                  Sebastian verwaltet seit über 10 Jahren Apartments in Wien — mit 4,74 auf Airbnb, 8,5 auf Booking.com und über 1.500 Bewertungen. Er kennt den Alltag eines Vermieters von innen: was funktioniert, was nervt, und wo Tools wie bookingwulf den Unterschied machen. Als aktiver Vermieter begleitet er die Produktentwicklung von bookingwulf — damit das System nicht am Schreibtisch entsteht, sondern in der Praxis.
+                  Sebastian verwaltet seit über 10 Jahren Apartments in Wien — mit einer Reviewrate von 4,74 auf Airbnb, 8,5 auf Booking.com und über 1.500 Bewertungen. Er kennt den Alltag eines Vermieters von innen: was funktioniert, was nervt, und wo Tools wie bookingwulf den Unterschied machen. Als aktiver Vermieter begleitet er die Produktentwicklung von bookingwulf — damit das System nicht am Schreibtisch entsteht, sondern in der Praxis.
                 </p>
                 <a
                   href="https://msq-vienna.com/"
