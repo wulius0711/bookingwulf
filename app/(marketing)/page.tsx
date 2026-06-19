@@ -461,7 +461,7 @@ export default function HomePage() {
                 <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Wolfgang Heis</h3>
                 <p className="text-[13px] mb-4 v4-text-muted">Webentwickler · Wien, Österreich</p>
                 <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                  bookingwulf ist mein Vollzeit-Projekt. Ich entwickle seit über 15 Jahren Webanwendungen — und habe bookingwulf gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
+                  Seit über 15 Jahren gestalte und entwickle ich Webanwendungen — weil gute UX/UI und reibungslose Funktionalität für mich nie getrennte Disziplinen waren. bookingwulf ist mein Vollzeit-Projekt: gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
                 </p>
               </div>
             </div>
