@@ -4962,7 +4962,8 @@
                   pricing.totalPrice + childSurcharge + ortstaxeAmount;
                 if (ap.otaComparisonPrice) {
                   const otaTotal = ap.otaComparisonPrice * pricing.nights + (pricing.cleaningFee || 0) + childSurcharge + ortstaxeAmount;
-                  otaHtml = `<div class="apt-ota-compare">Booking.com: <s>${eur(otaTotal)}</s></div>`;
+                  const otaName = ap.otaComparisonName || 'Booking.com';
+                  otaHtml = `<div class="apt-ota-compare">${otaName}: <s>${eur(otaTotal)}</s></div>`;
                 }
                 const popoverOpen = state.openPricePopover === ap.id;
                 const popoverHtml = popoverOpen

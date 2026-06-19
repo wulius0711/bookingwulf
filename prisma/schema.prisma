@@ -257,6 +257,7 @@ model Apartment {
   basePrice          Float?
   cleaningFee        Float?
   otaComparisonPrice Float?
+  otaComparisonName  String?
 
   // Compact Content
   size     Int?

@@ -111,6 +111,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const basePriceRaw = String(formData.get('basePrice') || '').trim();
     const cleaningFeeRaw = String(formData.get('cleaningFee') || '').trim();
     const otaComparisonPriceRaw = String(formData.get('otaComparisonPrice') || '').trim();
+    const otaComparisonName = String(formData.get('otaComparisonName') || '').trim() || null;
 
     const sortOrder = Number(formData.get('sortOrder') || 0);
     const isActive = formData.get('isActive') === 'on';
@@ -186,6 +187,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         basePrice,
         cleaningFee,
         otaComparisonPrice,
+        otaComparisonName,
         sortOrder,
         isActive,
         gpCheckinTime:  gpCheckinTime  || null,
@@ -313,8 +315,17 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <input type="number" step="0.01" name="cleaningFee" defaultValue={apartment.cleaningFee ?? ''} style={inputStyle} />
               </div>
               <div style={{ ...fieldWrap, gridColumn: '1 / -1' }}>
-                <label style={labelStyle}>Vergleichspreis OTA (€) <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>— z. B. Booking.com · Leer lassen = nicht anzeigen</span></label>
-                <input type="number" step="0.01" name="otaComparisonPrice" defaultValue={apartment.otaComparisonPrice ?? ''} style={{ ...inputStyle, maxWidth: 200 }} />
+                <label style={labelStyle}>Vergleichspreis OTA (€) <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>— Leer lassen = nicht anzeigen</span></label>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <input type="number" step="0.01" name="otaComparisonPrice" defaultValue={apartment.otaComparisonPrice ?? ''} style={{ ...inputStyle, maxWidth: 200 }} placeholder="Preis pro Nacht" />
+                  <select name="otaComparisonName" defaultValue={apartment.otaComparisonName ?? 'Booking.com'} style={{ ...inputStyle, maxWidth: 200 }}>
+                    <option value="Booking.com">Booking.com</option>
+                    <option value="Airbnb">Airbnb</option>
+                    <option value="Expedia">Expedia</option>
+                    <option value="Hotels.com">Hotels.com</option>
+                    <option value="VRBO">VRBO</option>
+                  </select>
+                </div>
               </div>
             </div>
           </details>
