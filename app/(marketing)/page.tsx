@@ -8,6 +8,7 @@ import BridgeSection from './_components/BridgeSection';
 import { PLANS } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 import ChatDemo from './_components/ChatDemo';
+import FlipCard from './_components/FlipCard';
 import HeroBg from './_components/HeroBg';
 
 const INTRO_WORDS = ['direkt.', 'modern.', 'unabhängig.', 'provisionsfrei.'];
@@ -441,102 +442,32 @@ export default function HomePage() {
             <h2 id="founder-heading" className="v4-h2 v4-animate v4-d1">Kein Konzern. Menschen aus Österreich.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {/* Wolfgang Card */}
-            <div className="v4-animate v4-card p-8 flex flex-col sm:flex-row md:flex-col gap-6 items-center md:items-start">
-              <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
-                <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
-                <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
-                <text
-                  x="48" y="48"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
-                  fontSize="26"
-                  fontWeight="700"
-                  fill="#108ba9"
-                  letterSpacing="2"
-                >WH</text>
-              </svg>
-              <div className="flex flex-col flex-1">
-                <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Wolfgang Heis, MSc</h3>
-                <p className="text-[13px] mb-4 v4-text-muted">Gründer, Designer & Entwickler</p>
-                <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                  Seit über 15 Jahren gestalte und entwickle ich Webanwendungen — weil gute UX/UI und reibungslose Funktionalität für mich nie getrennte Disziplinen waren. bookingwulf ist mein Vollzeit-Projekt: gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt.
-                </p>
-                <a
-                  href="https://wulius.at/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-auto pt-4 text-sm font-semibold hover:underline underline-offset-4 v4-text-navy"
-                >
-                  wulius.at →
-                </a>
-              </div>
-            </div>
-            {/* Sebastian Card */}
-            <div className="v4-animate v4-card p-8 flex flex-col sm:flex-row md:flex-col gap-6 items-center md:items-start">
-              <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
-                <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
-                <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
-                <text
-                  x="48" y="48"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
-                  fontSize="26"
-                  fontWeight="700"
-                  fill="#108ba9"
-                  letterSpacing="2"
-                >SM</text>
-              </svg>
-              <div className="flex flex-col flex-1">
-                <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Sebastian Mercz, MSc</h3>
-                <p className="text-[13px] mb-4 v4-text-muted">Vermieter & Branchenkenner</p>
-                <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                  Sebastian verwaltet seit über 10 Jahren Apartments in Wien — mit einer Reviewrate von 4,74 auf Airbnb, 8,5 auf Booking.com und über 1.500 Bewertungen. Er kennt den Alltag eines Vermieters von innen: was funktioniert, was nervt, und wo Tools wie bookingwulf den Unterschied machen. Als aktiver Vermieter begleitet er die Produktentwicklung von bookingwulf — damit das System nicht am Schreibtisch entsteht, sondern in der Praxis.
-                </p>
-                <a
-                  href="https://msq-vienna.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-auto pt-4 text-sm font-semibold hover:underline underline-offset-4 v4-text-navy"
-                >
-                  msq-vienna.com →
-                </a>
-              </div>
-            </div>
-            {/* David Card */}
-            <div className="v4-animate v4-card p-8 flex flex-col sm:flex-row md:flex-col gap-6 items-center md:items-start">
-              <svg width="64" height="64" viewBox="0 0 96 96" fill="none" className="shrink-0" aria-hidden>
-                <circle cx="48" cy="48" r="48" fill="#e4f4f8" />
-                <circle cx="48" cy="48" r="47.5" stroke="#90cce0" strokeWidth="1" />
-                <text
-                  x="48" y="48"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
-                  fontSize="26"
-                  fontWeight="700"
-                  fill="#108ba9"
-                  letterSpacing="2"
-                >DP</text>
-              </svg>
-              <div className="flex flex-col flex-1">
-                <h3 className="text-[17px] font-bold mb-1 v4-text-navy">Mag. David Paci</h3>
-                <p className="text-[13px] mb-4 v4-text-muted">Web-Entwickler & Technologieberater</p>
-                <p className="text-[14px] font-normal leading-[1.65] v4-text-body">
-                  David bringt fast drei Jahrzehnte Erfahrung mit — vom E-Commerce-Aufbau bei der Media-Saturn Gruppe bis hin zu komplexen Online-Auftritten im Modulhausbereich. Er begleitet bookingwulf von Anfang an technisch: mit Code-Reviews, Architektur-Feedback und dem Blick eines Entwicklers, der weiß, was in der Praxis funktioniert — und was nicht.
-                </p>
-                <a
-                  href="https://www.webse.at/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-auto pt-4 text-sm font-semibold hover:underline underline-offset-4 v4-text-navy"
-                >
-                  webse.at →
-                </a>
-              </div>
-            </div>
+            <FlipCard
+              initials="WH"
+              name="Wolfgang Heis, MSc"
+              subtitle="Gründer, Designer & Entwickler"
+              photo="/team/profilbild-wolfgang-heis.avif"
+              text="Seit über 15 Jahren gestalte und entwickle ich Webanwendungen — weil gute UX/UI und reibungslose Funktionalität für mich nie getrennte Disziplinen waren. bookingwulf ist mein Vollzeit-Projekt: gebaut, weil ich gesehen habe, wie viel Geld kleine Unterkünfte unnötig an Buchungsportale abgeben. Bei anderen Anbietern erreichst du einen anonymen Support. Bei bookingwulf erreichst du mich direkt."
+              linkLabel="wulius.at"
+              linkHref="https://wulius.at/"
+            />
+            <FlipCard
+              initials="SM"
+              name="Sebastian Mercz, MSc"
+              subtitle="Vermieter & Branchenkenner"
+              text="Sebastian verwaltet seit über 10 Jahren Apartments in Wien — mit einer Reviewrate von 4,74 auf Airbnb, 8,5 auf Booking.com und über 1.500 Bewertungen. Er kennt den Alltag eines Vermieters von innen: was funktioniert, was nervt, und wo Tools wie bookingwulf den Unterschied machen. Als aktiver Vermieter begleitet er die Produktentwicklung von bookingwulf — damit das System nicht am Schreibtisch entsteht, sondern in der Praxis."
+              linkLabel="msq-vienna.com"
+              linkHref="https://msq-vienna.com/"
+            />
+            <FlipCard
+              initials="DP"
+              name="Mag. David Paci"
+              subtitle="Web-Entwickler & Technologieberater"
+              photo="/team/profilbild-david-paci.webp"
+              text="David bringt fast drei Jahrzehnte Erfahrung mit — vom E-Commerce-Aufbau bei der Media-Saturn Gruppe bis hin zu komplexen Online-Auftritten im Modulhausbereich. Er begleitet bookingwulf von Anfang an technisch: mit Code-Reviews, Architektur-Feedback und dem Blick eines Entwicklers, der weiß, was in der Praxis funktioniert — und was nicht."
+              linkLabel="webse.at"
+              linkHref="https://www.webse.at/"
+            />
           </div>
           <div className="text-center mt-8">
             <a
