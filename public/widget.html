@@ -4902,9 +4902,6 @@
             const amenitiesExpanded = !!state.expandedAmenities[ap.id];
 
             let otaHtml = '';
-            if (ap.otaComparisonPrice && state.settings.showPrices && pricing && pricing.available) {
-              otaHtml = `<div class="apt-ota-compare">Booking.com: <s>${eur(ap.otaComparisonPrice * pricing.nights)}</s></div>`;
-            }
 
             let priceHtml = '';
             if (state.settings.showPrices) {
@@ -4963,6 +4960,10 @@
                     : '';
                 const grandTotal =
                   pricing.totalPrice + childSurcharge + ortstaxeAmount;
+                if (ap.otaComparisonPrice) {
+                  const otaTotal = ap.otaComparisonPrice * pricing.nights + (pricing.cleaningFee || 0) + childSurcharge + ortstaxeAmount;
+                  otaHtml = `<div class="apt-ota-compare">Booking.com: <s>${eur(otaTotal)}</s></div>`;
+                }
                 const popoverOpen = state.openPricePopover === ap.id;
                 const popoverHtml = popoverOpen
                   ? `
