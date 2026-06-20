@@ -115,6 +115,11 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
   - Mehrsprachig: DE / EN / IT mit Sprach-Switcher im Portal (Auswahl wird in localStorage gespeichert, Default aus Buchungssprache) — UI-Strings nur DE/EN/IT, E-Mails 9 Sprachen
 - [x] Anpassbares Admin-Dashboard — Widget-System mit Toggles (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert; Mai 2026
 - [x] **Gast-Chatbot** (Pro) — KI-Buchungsassistent als embeddable Shadow-DOM-Widget (`<script src="https://bookingwulf.com/chat.js" data-hotel="slug">`). Name, Farbe und Avatar aus Admin-Einstellungen. Informativ + empfehlend, kein direktes Buchen. Tools: `check_availability`, `get_property_info`, `get_booking_url`. Website-Kontext via Jina Reader, manuelle FAQ. Mobile Bottom-Sheet. Gemini 2.5 Flash. → Details: CHATBOT.md. Mai 2026
+- [x] **OTA-Vergleichspreis im Widget** (Pro) — Zeigt Gästen wie viel günstiger die Direktbuchung gegenüber Booking.com / Airbnb / etc. ist. OTA-Name frei konfigurierbar im Admin (Dropdown + eigener Name). Preisberechnung identisch mit grandTotal. Juni 2026
+- [x] **Apartment Highlight-Info** — Optionaler Zusatz nach dem Apartment-Namen im Widget (z.B. „mit Terrasse", „familienfreundlich"). Wird automatisch via DeepL nach EN/IT übersetzt. Der Apartment-Name selbst bleibt unübersetzt. Admin: Felder „Name" + „Highlight-Info" nebeneinander. Juni 2026
+- [x] **Drag-and-Drop Sortierung im Admin** — Für alle Listen mit manueller Reihenfolge (Extras, Bilder, etc.) via Drag-Handle. Juni 2026
+- [x] **Admin-Filter & Bulk-Preiszeitraum** — Anfragen- und Preisanpassungs-Liste filterbar (Status, Datum). Preiszeiträume bulk-bearbeitbar mit %-Modus (z.B. alle Preise +10%). Saison-Name-Filter ab 2 Namen + 2 Apartments. Juni 2026
+- [x] **Performance-Optimierungen** (Juni 2026) — N+1-Query-Fix im iCal-Sync (`syncAllFeeds` lädt alle Feeds mit einem Query statt N Einzelabfragen), Datumsfilter auf `blockedRanges` im Verfügbarkeitscheck, kombinierter DB-Index `(hotelId, status, arrival, departure)` auf der Request-Tabelle. DB connectionTimeout von 30s auf 8s reduziert (verhindert hängende Vercel-Functions).
 
 ## Roadmap (geplant)
 
@@ -129,7 +134,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Verpflegungsarten (Frühstück, Halbpension) | Mittel | Pro | 📋 Geplant |
 | **Bridge-Plan (Gäste-Lounge Standalone)** — Für potenzielle Kunden die noch bei Lodgify, Smoobu, easybooking o.ä. unter Vertrag sind. Funktionsweise: €29/Mo für die Gäste-Lounge allein, nur buchbar mit Pro-Plan-Zusage. Der Pro-Plan startet mit verzögertem Datum (wenn der Konkurrenz-Vertrag ausläuft), das Bridge-Modul geht dann nahtlos in den vollen Pro-Plan über. Keine 30-Tage-Garantie (Leistung wurde erbracht). **Live auf LP + Preise-Seite** (Mai 2026) als Kontaktformular → E-Mail an support@bookingwulf.com. **Aktuell manueller Prozess:** Anfrage kommt per E-Mail, Wolfgang kontaktiert den Interessenten, Account wird manuell angelegt, Stripe-Link manuell verschickt. **Technischer Fahrplan für Automatisierung:** (1) Stripe-Produkt €29/Mo anlegen, (2) Checkout-Flow mit `trial_end` für verzögerten Pro-Plan-Start, (3) Account-Erstellung beim Kauf, (4) Stripe-Webhook schaltet Pro automatisch frei. Bis ca. 5–10 Bridge-Kunden manuell skalierbar. | Hoch | Neuer Plan | 🚧 Manuell live |
 | Review-System / Bewertungen | Mittel | Pro | 💡 Idee |
-| Preisvergleichs-Badge im Widget ("X% günstiger als Booking.com") | Mittel | Pro | 💡 Idee |
+| Preisvergleichs-Badge / OTA-Vergleichspreis im Widget | Mittel | Pro | ✅ Live (Juni 2026) |
 | Last-Minute Blind Booking — Gast bucht ohne Zimmerwahl, bekommt verfügbares Apartment zugewiesen + konfigurierbaren Rabatt (z.B. 30%). Betreiber wählt welche Apartments qualifizieren. Erscheint im Widget wenn Anreise ≤ X Tage. | Mittel | Pro + Business | 💡 Idee |
 | Housekeeping-Modul (Reinigungsaufgaben per Magic-Link) | Mittel | Pro | 💡 Idee |
 | **"Heute"-Dashboard-Block** — tägliche Zusammenfassung oben im Admin: Anreisen heute, offene Anfragen, nächste freie Nacht, unbeantwortete Nachrichten (wenn Messaging live). Kein KI, nur smarte Aufbereitung vorhandener Daten. | Mittel | Alle | 💡 Idee |
@@ -713,6 +718,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 | Monat | Uptime | Incidents | Downtime | Ursache |
 |-------|--------|-----------|----------|---------|
 | Mai 2026 | 99.867% | 1 | 4 Stunden | Vercel-seitiger Ausfall — aus Kundensicht trotzdem bookingwulf-Ausfall |
+| Juni 2026 | — | 0 | — | 0 Errors (Sentry), 504 Transactions. 3 laufende N+1-Performance-Issues → behoben 20.06.2026 |
 
 **Avg. Response Time Mai 2026:** 683 ms (−22% vs. April) — 66 Peaks >1000 ms, wahrscheinlich Vercel Cold Starts bei selten genutzten API-Routen.
 
@@ -783,5 +789,9 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
     - *Besondere Anlässe:* Blumen / Dekoration aufs Zimmer · Flasche Sekt oder Wein · Geburtstagstorte · Romantik-Paket (Kerzen, Rosenblätter)
     - *Haustier:* Hund mitbringen (Aufpreis pro Nacht) · Hundebett / -napf bereitstellen
     - *Während des Aufenthalts:* Massagen / Wellness-Anwendungen · Leihfahrräder / E-Bikes · Skiverleih-Kooperation (in Bergregionen besonders relevant) · Ausflugstipps mit Buchung (geführte Wanderung etc.) · Wäscheservice
+
+- **Juni 2026 — Hydration-Fix SortableImageList:** dnd-kit generiert `aria-describedby`-IDs (`DndDescribedBy-{n}`) mit einem internen Zähler der auf Server und Client unterschiedliche Werte hat. Fix: `suppressHydrationWarning` auf dem Drag-Handle-Element in `SortableImageList.tsx`.
+
+- **Juni 2026 — Performance-Fixes (iCal-Sync + Availability):** Sentry meldete 3 laufende N+1-Queries auf `prisma:client:db_query`. Ursache: `syncAllFeeds()` lud alle Feeds als IDs und rief dann pro Feed erneut `findUnique()` auf (N+1). Fix: Core-Logik in `syncFeedData()` extrahiert, `syncAllFeeds()` lädt jetzt alle Feeds mit einem einzigen `findMany(include: apartment)`. Zusätzlich: `blockedRanges` im Verfügbarkeitscheck jetzt mit Datumsfilter statt alle historischen Einträge zu laden (Index `(apartmentId, startDate, endDate)` wird jetzt genutzt). Neuer kombinierter DB-Index `(hotelId, status, arrival, departure)` auf Request-Tabelle für schnellere Verfügbarkeitsabfragen. Erwartete Auswirkung: `GET /api/ical-sync` (1.4s) und `POST /api/availability` (1.5s) deutlich schneller.
 
 - **Mai 2026:** Beds24-Gäste erhalten Zugang zur Gäste-Lounge — beim Beds24-Webhook wird beim Erstellen einer Buchung automatisch ein `checkinToken` generiert. Im Admin-Buchungsdetail gibt es eine „Gäste-Lounge"-Zeile mit „Link öffnen" und „Link kopieren". Kein automatischer E-Mail-Versand — Hotel schickt den Link selbst über den jeweiligen Kanal (Airbnb-Chat, WhatsApp etc.).

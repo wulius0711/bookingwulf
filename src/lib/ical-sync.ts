@@ -33,14 +33,15 @@ export function parseIcal(icsText: string): ParsedEvent[] {
   return parsed;
 }
 
-export async function syncIcalFeed(feedId: number): Promise<{ synced: number; error?: string }> {
-  const feed = await prisma.icalFeed.findUnique({
-    where: { id: feedId },
-    include: { apartment: { select: { hotelId: true } } },
-  });
+type FeedWithApartment = {
+  id: number;
+  url: string;
+  name: string;
+  apartmentId: number;
+  apartment: { hotelId: number };
+};
 
-  if (!feed) return { synced: 0, error: 'Feed not found' };
-
+async function syncFeedData(feed: FeedWithApartment): Promise<{ synced: number; error?: string }> {
   try {
     const res = await fetch(feed.url, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -48,7 +49,6 @@ export async function syncIcalFeed(feedId: number): Promise<{ synced: number; er
     const icsText = await res.text();
     const events = parseIcal(icsText);
 
-    // Delete old ical_sync blocked ranges for this apartment+feed
     await prisma.blockedRange.deleteMany({
       where: {
         apartmentId: feed.apartmentId,
@@ -57,7 +57,6 @@ export async function syncIcalFeed(feedId: number): Promise<{ synced: number; er
       },
     });
 
-    // Create new blocked ranges
     if (events.length > 0) {
       await prisma.blockedRange.createMany({
         data: events.map((e) => ({
@@ -72,7 +71,7 @@ export async function syncIcalFeed(feedId: number): Promise<{ synced: number; er
     }
 
     await prisma.icalFeed.update({
-      where: { id: feedId },
+      where: { id: feed.id },
       data: { lastSyncAt: new Date(), lastError: null },
     });
 
@@ -80,22 +79,34 @@ export async function syncIcalFeed(feedId: number): Promise<{ synced: number; er
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     await prisma.icalFeed.update({
-      where: { id: feedId },
+      where: { id: feed.id },
       data: { lastError: message },
     });
     return { synced: 0, error: message };
   }
 }
 
+export async function syncIcalFeed(feedId: number): Promise<{ synced: number; error?: string }> {
+  const feed = await prisma.icalFeed.findUnique({
+    where: { id: feedId },
+    include: { apartment: { select: { hotelId: true } } },
+  });
+
+  if (!feed) return { synced: 0, error: 'Feed not found' };
+  return syncFeedData(feed);
+}
+
 const BATCH_SIZE = 10;
 
 export async function syncAllFeeds(): Promise<{ total: number; errors: number }> {
-  const feeds = await prisma.icalFeed.findMany({ select: { id: true } });
+  const feeds = await prisma.icalFeed.findMany({
+    include: { apartment: { select: { hotelId: true } } },
+  });
   let errors = 0;
 
   for (let i = 0; i < feeds.length; i += BATCH_SIZE) {
     const batch = feeds.slice(i, i + BATCH_SIZE);
-    const results = await Promise.allSettled(batch.map((f) => syncIcalFeed(f.id)));
+    const results = await Promise.allSettled(batch.map((f) => syncFeedData(f)));
     for (const r of results) {
       if (r.status === 'rejected' || (r.status === 'fulfilled' && r.value.error)) errors++;
     }

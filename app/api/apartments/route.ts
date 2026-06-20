@@ -51,6 +51,7 @@ export async function GET(req: Request) {
         id: true,
         hotelId: true,
         name: true,
+        nameSuffix: true,
         slug: true,
         description: true,
         amenities: true,
@@ -83,12 +84,13 @@ export async function GET(req: Request) {
 
     const result = apartments.map((apt) => {
       const trans = lang !== 'de' && apt.translationsJson
-        ? (apt.translationsJson as Record<string, { description?: string; amenities?: string[] }>)[lang]
+        ? (apt.translationsJson as Record<string, { description?: string; nameSuffix?: string; amenities?: string[] }>)[lang]
         : null;
       const { translationsJson: _t, ...rest } = apt;
       return {
         ...rest,
         description: trans?.description ?? apt.description,
+        nameSuffix: trans?.nameSuffix ?? apt.nameSuffix,
         amenities: trans?.amenities ?? apt.amenities,
       };
     });

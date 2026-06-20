@@ -66,6 +66,7 @@ function SortableImage({ item, onRemove, onUrlChange, onAltChange }: SortableIma
       <div
         {...attributes}
         {...listeners}
+        suppressHydrationWarning
         style={{ display: 'flex', justifyContent: 'center', cursor: isDragging ? 'grabbing' : 'grab', color: 'var(--text-disabled)', fontSize: 16, touchAction: 'none', userSelect: 'none' }}
       >
         ⠿

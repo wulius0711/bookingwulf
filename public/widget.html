@@ -1207,6 +1207,10 @@
         margin: 0 0 8px;
         line-height: 1.1;
       }
+      .apt-name-suffix {
+        font-weight: 400;
+        opacity: 0.7;
+      }
 
       .apt-meta {
         color: var(--muted);
@@ -5091,7 +5095,7 @@
               </div>
 
               <div class="apt-copy">
-                <h3 class="apt-name">${ap.name}</h3>
+                <h3 class="apt-name">${ap.name}${ap.nameSuffix ? '<span class="apt-name-suffix"> ' + ap.nameSuffix + '</span>' : ''}</h3>
                 <div class="apt-meta">${metaParts.join(' · ')}</div>
 
                 <div class="apt-desc ${expanded ? '' : 'is-clamped'}">

@@ -9,6 +9,7 @@ import NukiLockSection from './NukiLockSection';
 import { getNukiLocks } from '@/src/lib/nuki';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { autoTranslateFields, translateList } from '@/src/lib/translate';
+import InfoTooltip from '@/app/admin/components/InfoTooltip';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,6 +100,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const session = await verifySession();
     const hotelId = Number(formData.get('hotelId') || 0);
     const name = String(formData.get('name') || '').trim();
+    const nameSuffix = String(formData.get('nameSuffix') || '').trim() || null;
     const slug = String(formData.get('slug') || '').trim();
 
     const maxAdults = Number(formData.get('maxAdults') || 2);
@@ -157,15 +159,15 @@ export default async function EditApartmentPage({ params }: PageProps) {
       existingApt?.gpTranslationsJson as Record<string, Record<string, string>> | null,
     );
 
-    // Translate description + amenities into EN and IT
-    const existingTrans = existingApt?.translationsJson as Record<string, { description?: string; amenities?: string[] }> | null;
-    const descTrans = await autoTranslateFields(
-      { description: description || null },
-      existingTrans ? Object.fromEntries(Object.entries(existingTrans).map(([l, v]) => [l, { description: v.description ?? '' }])) : null,
+    // Translate description + nameSuffix + amenities into EN and IT
+    const existingTrans = existingApt?.translationsJson as Record<string, { description?: string; nameSuffix?: string; amenities?: string[] }> | null;
+    const contentTrans = await autoTranslateFields(
+      { description: description || null, nameSuffix: nameSuffix || null },
+      existingTrans ? Object.fromEntries(Object.entries(existingTrans).map(([l, v]) => [l, { description: v.description ?? '', nameSuffix: v.nameSuffix ?? '' }])) : null,
     );
-    const translationsJson: Record<string, { description?: string; amenities?: string[] }> = {};
+    const translationsJson: Record<string, { description?: string; nameSuffix?: string; amenities?: string[] }> = {};
     for (const lang of ['en', 'it']) {
-      translationsJson[lang] = { description: descTrans[lang]?.description };
+      translationsJson[lang] = { description: contentTrans[lang]?.description, nameSuffix: contentTrans[lang]?.nameSuffix };
       if (amenities.length) {
         translationsJson[lang].amenities = await translateList(amenities, lang);
       }
@@ -176,6 +178,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
       data: {
         hotelId,
         name,
+        nameSuffix,
         slug,
         maxAdults,
         maxChildren,
@@ -250,9 +253,18 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <details style={detailsStyle} open>
             <summary style={summaryStyle}><h2 style={cardTitle}>Allgemein</h2>{caret}</summary>
             <div style={cardBody}>
-              <div style={fieldWrap}>
-                <label style={labelStyle}>Name</label>
-                <input name="name" defaultValue={apartment.name} style={inputStyle} required />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+                <div style={fieldWrap}>
+                  <label style={labelStyle}>Name</label>
+                  <input name="name" defaultValue={apartment.name} style={inputStyle} required />
+                </div>
+                <div style={fieldWrap}>
+                  <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    Highlight-Info&nbsp;<span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, opacity: 0.6 }}>(optional)</span>
+                    <InfoTooltip text="Wird nach dem Namen im Widget angezeigt und automatisch nach EN/IT übersetzt. Ideal für Highlights wie »mit Terrasse« oder »familienfreundlich«. Der Apartment-Name selbst bleibt immer unübersetzt." />
+                  </label>
+                  <input name="nameSuffix" defaultValue={apartment.nameSuffix ?? ''} style={inputStyle} placeholder="z.B. mit Terrasse" />
+                </div>
               </div>
               <div>
                 <label className="form-toggle">

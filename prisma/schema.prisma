@@ -246,8 +246,9 @@ model Apartment {
   hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   // Core
-  name String
-  slug String
+  name       String
+  nameSuffix String? // Optionaler Zusatz nach dem Namen, wird nach EN/IT übersetzt
+  slug       String
 
   // Capacity
   maxAdults   Int @default(2)
@@ -419,6 +420,7 @@ model Request {
   @@index([hotelId])
   @@index([hotelId, status])
   @@index([arrival, departure])
+  @@index([hotelId, status, arrival, departure])
 }
 
 model RequestMessage {

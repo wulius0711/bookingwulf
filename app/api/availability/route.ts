@@ -89,7 +89,10 @@ export async function POST(req: Request) {
     const [apartments, confirmedBookings, beforeBookings, afterBookings] = await Promise.all([
       prisma.apartment.findMany({
         where: { hotelId: hotel.id, name: { in: apartmentNames }, isActive: true },
-        include: { blockedRanges: true, priceSeasons: true },
+        include: {
+          blockedRanges: { where: { startDate: { lt: departure }, endDate: { gt: arrival } } },
+          priceSeasons: true,
+        },
       }),
       prisma.request.findMany({
         where: { hotelId: hotel.id, status: { in: ['booked', 'pending_paypal', 'pending_stripe'] }, arrival: { lt: departure }, departure: { gt: arrival } },
