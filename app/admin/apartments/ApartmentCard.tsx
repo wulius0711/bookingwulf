@@ -163,7 +163,7 @@ export default function ApartmentCard({ apartment: a, showHotelBadge = true, dup
 
               {a.description && (
                 <div style={{ marginTop: 10, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.5 }}>
-                  <strong>Beschreibung:</strong> {a.description}
+                  <strong>Beschreibung:</strong> {a.description.replace(/<[^>]+>/g, '')}
                 </div>
               )}
 

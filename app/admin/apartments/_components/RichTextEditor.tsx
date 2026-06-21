@@ -11,6 +11,7 @@ export default function RichTextEditor({ name, defaultValue }: { name: string; d
     extensions: [StarterKit],
     content: defaultValue || '',
     immediatelyRender: false,
+    onCreate: ({ editor }) => setHtml(editor.getHTML()),
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
   })
 
