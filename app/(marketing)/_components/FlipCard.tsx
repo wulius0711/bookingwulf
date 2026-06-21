@@ -8,11 +8,13 @@ type Props = {
   subtitle: string
   text: string
   photo?: string
+  bgPosition?: string
+  bgSize?: string
   linkLabel?: string
   linkHref?: string
 }
 
-export default function FlipCard({ initials, name, subtitle, text, photo, linkLabel, linkHref }: Props) {
+export default function FlipCard({ initials, name, subtitle, text, photo, bgPosition = 'center top', bgSize = 'cover', linkLabel, linkHref }: Props) {
   const [flipped, setFlipped] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
 
@@ -45,8 +47,8 @@ export default function FlipCard({ initials, name, subtitle, text, photo, linkLa
             backfaceVisibility: 'hidden',
             ...(photo ? {
               backgroundImage: `url(${photo})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center top',
+              backgroundSize: bgSize,
+              backgroundPosition: bgPosition,
             } : {}),
           }}
         >
