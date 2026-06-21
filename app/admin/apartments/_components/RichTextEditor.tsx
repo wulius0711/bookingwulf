@@ -2,20 +2,17 @@
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useEffect } from 'react'
+import { useState } from 'react'
 
 export default function RichTextEditor({ name, defaultValue }: { name: string; defaultValue?: string }) {
+  const [html, setHtml] = useState(defaultValue || '')
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: defaultValue || '',
     immediatelyRender: false,
+    onUpdate: ({ editor }) => setHtml(editor.getHTML()),
   })
-
-  useEffect(() => {
-    return () => { editor?.destroy() }
-  }, [editor])
-
-  const html = editor?.getHTML() ?? defaultValue ?? ''
 
   return (
     <div>
