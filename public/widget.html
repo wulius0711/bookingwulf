@@ -4997,8 +4997,18 @@
             if ((ap.maxChildren || 0) > 0)
               metaParts.push(`${ap.maxChildren} ${t('label_children')}`);
 
-            const description =
-              ap.description || t('apt_default_desc');
+            const description = (() => {
+              const raw = ap.description || t('apt_default_desc');
+              const isHtml = /<[a-z][\s\S]*>/i.test(raw);
+              if (isHtml) {
+                return raw
+                  .replace(/<script[\s\S]*?<\/script>/gi, '')
+                  .replace(/\s+on\w+="[^"]*"/gi, '')
+                  .replace(/\s+on\w+='[^']*'/gi, '')
+                  .replace(/<(?!\/?(?:b|strong|i|em|ul|ol|li|p|br)\b)[^>]*>/gi, '');
+              }
+              return raw.replace(/\n{2,}/g, '<br><br>').replace(/\n/g, ' ');
+            })();
 
             const hasAmenities = !!(ap.amenities && ap.amenities.length && state.settings.showAmenities);
 

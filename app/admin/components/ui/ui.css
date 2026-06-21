@@ -595,3 +595,11 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+
+/* ── Rich Text Editor (Tiptap) ─────────────────────────────────────── */
+.rte-wrap .ProseMirror { outline: none; min-height: 120px; padding: 10px 12px; font-size: 14px; color: var(--text-primary) !important; }
+.rte-wrap .ProseMirror p { margin: 0 0 0.75em; color: var(--text-primary) !important; }
+.rte-wrap .ProseMirror p:last-child { margin-bottom: 0; }
+.rte-wrap .ProseMirror ul { padding-left: 1.25em; margin: 0 0 0.75em; }
+.rte-wrap .ProseMirror strong { font-weight: 700; }
+.rte-wrap .ProseMirror em { font-style: italic; }

@@ -8,6 +8,7 @@ import IcalSection from './IcalSection';
 import NukiLockSection from './NukiLockSection';
 import { getNukiLocks } from '@/src/lib/nuki';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
+import RichTextEditor from '../_components/RichTextEditor';
 import { autoTranslateFields, translateList } from '@/src/lib/translate';
 import InfoTooltip from '@/app/admin/components/InfoTooltip';
 
@@ -348,17 +349,16 @@ export default async function EditApartmentPage({ params }: PageProps) {
             <div style={cardBody}>
               <div style={fieldWrap}>
                 <label style={labelStyle}>Beschreibung</label>
-                <textarea name="description" defaultValue={apartment.description || ''} style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }} />
+                <RichTextEditor name="description" defaultValue={apartment.description || ''} />
               </div>
               <div style={fieldWrap}>
-                <label style={labelStyle}>Ausstattung</label>
+                <label style={labelStyle}>Ausstattung <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: 'var(--text-disabled)' }}>(ein Eintrag pro Zeile)</span></label>
                 <textarea
                   name="amenities"
                   defaultValue={(apartment.amenities || []).join('\n')}
                   placeholder={`WLAN\nBalkon\nKaffeemaschine`}
                   style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
                 />
-                <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>Eine Ausstattung pro Zeile</span>
               </div>
             </div>
           </details>
