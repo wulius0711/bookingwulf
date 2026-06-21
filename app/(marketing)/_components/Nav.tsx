@@ -39,7 +39,7 @@ export default function Nav() {
         className="v4-container flex items-center justify-between h-16"
         aria-label="Hauptnavigation"
       >
-        <Link href="/" aria-label="bookingwulf – Zur Startseite" className="shrink-0">
+        <Link href="/" aria-label="bookingwulf – Zur Startseite" className="shrink-0" onClick={e => { if (pathname === '/') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}>
           <img src="/bookingwulf-logo-wh.png" alt="bookingwulf" className="h-9 sm:h-10 w-auto" />
         </Link>
 

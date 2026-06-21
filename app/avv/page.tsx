@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import Footer from '../(marketing)/_components/Footer';
 
 export const metadata = { title: 'Auftragsverarbeitungsvertrag (AVV) — bookingwulf' };
 
+const wrap = { background: '#fff', minHeight: '100vh' };
 const s = { maxWidth: 720, margin: '0 auto', padding: '48px 24px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', color: '#111' };
 const h1 = { fontSize: 32, fontWeight: 800 as const, letterSpacing: '-0.03em', margin: '0 0 32px' };
 const h2 = { fontSize: 18, fontWeight: 700 as const, margin: '28px 0 8px' };
@@ -10,7 +12,7 @@ const ul = { fontSize: 15, lineHeight: 1.7, color: '#374151', margin: '0 0 12px'
 
 export default function AVVPage() {
   return (
-    <main style={s}>
+    <div style={wrap}><main style={s}>
       <Link href="/" style={{ fontSize: 13, color: '#666', textDecoration: 'none', display: 'inline-block', marginBottom: 24 }}>← Zurück zur Startseite</Link>
 
       <h1 style={h1}>Auftragsverarbeitungsvertrag (AVV)</h1>
@@ -117,6 +119,6 @@ export default function AVVPage() {
       <p style={p}>
         Bei Fragen zum AVV oder zur Ausübung des Weisungsrechts: <strong>support@bookingwulf.com</strong>
       </p>
-    </main>
+    </main><Footer /></div>
   );
 }
