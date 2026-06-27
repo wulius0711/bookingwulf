@@ -48,16 +48,25 @@ export async function GET(req: Request) {
     }
     const totalNights = allNights.size;
 
-    // Collect booked nights from confirmed/pending bookings
-    const bookings = await prisma.request.findMany({
-      where: {
-        hotelId: hotel.id,
-        status: { in: ['booked', 'new', 'answered'] },
-        arrival: { lte: monthEnd },
-        departure: { gt: rangeStart },
-      },
-      select: { arrival: true, departure: true },
-    });
+    const [bookings, blocked] = await Promise.all([
+      prisma.request.findMany({
+        where: {
+          hotelId: hotel.id,
+          status: { in: ['booked', 'new', 'answered'] },
+          arrival: { lte: monthEnd },
+          departure: { gt: rangeStart },
+        },
+        select: { arrival: true, departure: true },
+      }),
+      prisma.blockedRange.findMany({
+        where: {
+          hotelId: hotel.id,
+          startDate: { lte: monthEnd },
+          endDate: { gt: rangeStart },
+        },
+        select: { startDate: true, endDate: true },
+      }),
+    ]);
 
     const bookedSet = new Set<string>();
     for (const b of bookings) {
@@ -71,16 +80,6 @@ export async function GET(req: Request) {
         cur.setDate(cur.getDate() + 1);
       }
     }
-
-    // Collect blocked nights
-    const blocked = await prisma.blockedRange.findMany({
-      where: {
-        hotelId: hotel.id,
-        startDate: { lte: monthEnd },
-        endDate: { gt: rangeStart },
-      },
-      select: { startDate: true, endDate: true },
-    });
 
     for (const bl of blocked) {
       const cur = new Date(bl.startDate);

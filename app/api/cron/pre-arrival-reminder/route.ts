@@ -17,6 +17,7 @@ export async function GET(req: Request) {
   });
 
   let sent = 0;
+  const sentIds: number[] = [];
 
   for (const hs of hotelsWithFeature) {
     const reminderDays = hs.preArrivalReminderDays ?? 3;
@@ -81,16 +82,20 @@ export async function GET(req: Request) {
             }),
           });
 
-          await prisma.request.update({
-            where: { id: r.id },
-            data: { checkinReminderSentAt: new Date() },
-          });
+          sentIds.push(r.id);
           sent++;
         }
       } catch (e) {
         console.error(`[pre-arrival-reminder] Error for request ${r.id}:`, e);
       }
     }
+  }
+
+  if (sentIds.length > 0) {
+    await prisma.request.updateMany({
+      where: { id: { in: sentIds } },
+      data: { checkinReminderSentAt: new Date() },
+    });
   }
 
   console.log(`[pre-arrival-reminder] Sent ${sent} reminder(s).`);

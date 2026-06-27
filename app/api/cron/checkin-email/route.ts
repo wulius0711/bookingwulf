@@ -16,6 +16,7 @@ export async function GET(req: Request) {
   });
 
   let sent = 0;
+  const sentIds: number[] = [];
 
   for (const hs of hotelsWithFeature) {
     const days = hs.checkinEmailDays ?? 3;
@@ -88,13 +89,20 @@ export async function GET(req: Request) {
             subject,
             html: buildEmailHtml({ hotelName, accentColor: accent, title: subject, preheader: `Check-in Infos für Ihren Aufenthalt vom ${fmt(r.arrival)}`, body: bodyHtml, autoReplyText: '' }),
           });
-          await prisma.request.update({ where: { id: r.id }, data: { checkinEmailSentAt: new Date() } });
+          sentIds.push(r.id);
           sent++;
         }
       } catch (e) {
         console.error(`[checkin-email] Error for request ${r.id}:`, e);
       }
     }
+  }
+
+  if (sentIds.length > 0) {
+    await prisma.request.updateMany({
+      where: { id: { in: sentIds } },
+      data: { checkinEmailSentAt: new Date() },
+    });
   }
 
   console.log(`[checkin-email] Sent ${sent} email(s).`);

@@ -26,6 +26,7 @@ export async function GET(req: Request) {
 
   const resend = getResend();
   let sent = 0;
+  const sentIds: number[] = [];
 
   for (const request of pending) {
     if (!resend || !request.hotel?.email) continue;
@@ -59,16 +60,19 @@ export async function GET(req: Request) {
         }),
       });
 
-      await prisma.request.update({
-        where: { id: request.id },
-        data: { paymentReminderSentAt: new Date() },
-      });
-
+      sentIds.push(request.id);
       log('payment.reminder_sent', { requestId: request.id, hotelId: request.hotel.id, method });
       sent++;
     } catch (err) {
       log('payment.reminder_error', { requestId: request.id, error: err instanceof Error ? err.message : String(err) });
     }
+  }
+
+  if (sentIds.length > 0) {
+    await prisma.request.updateMany({
+      where: { id: { in: sentIds } },
+      data: { paymentReminderSentAt: new Date() },
+    });
   }
 
   return NextResponse.json({ ok: true, sent });

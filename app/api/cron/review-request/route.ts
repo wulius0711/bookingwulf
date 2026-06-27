@@ -22,6 +22,7 @@ export async function GET(req: Request) {
   });
 
   let sent = 0;
+  const sentIds: number[] = [];
 
   for (const hs of hotelsWithFeature) {
     if (!hasPlanAccess(hs.hotel?.plan ?? 'starter', 'pro')) continue;
@@ -90,16 +91,20 @@ export async function GET(req: Request) {
             }),
           });
 
-          await prisma.request.update({
-            where: { id: r.id },
-            data: { reviewRequestSentAt: new Date() },
-          });
+          sentIds.push(r.id);
           sent++;
         }
       } catch (e) {
         console.error(`[review-request] Error for request ${r.id}:`, e);
       }
     }
+  }
+
+  if (sentIds.length > 0) {
+    await prisma.request.updateMany({
+      where: { id: { in: sentIds } },
+      data: { reviewRequestSentAt: new Date() },
+    });
   }
 
   console.log(`[review-request] Sent ${sent} review request(s).`);
