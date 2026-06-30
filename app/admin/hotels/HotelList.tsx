@@ -160,12 +160,13 @@ export default function HotelList({
                   </Button>
                 </form>
 
-                {h.subscriptionStatus !== 'trialing' && h.subscriptionStatus !== 'active' && (
+                {(h.subscriptionStatus !== 'trialing' && h.subscriptionStatus !== 'active') ||
+                 (h.subscriptionStatus === 'trialing' && (h.trialDaysLeft ?? 1) <= 0) ? (
                   <form action={onResetTrial}>
                     <input type="hidden" name="id" value={h.id} />
                     <Button variant="secondary" size="sm" type="submit">Trial zurücksetzen</Button>
                   </form>
-                )}
+                ) : null}
 
                 <DeleteHotelButton hotelId={h.id} hotelName={h.name} action={onDelete} />
               </div>
