@@ -413,6 +413,11 @@ export default function HomePage() {
           <div className="mt-12 v4-animate">
             <BridgeSection />
           </div>
+          <div className="mt-8 v4-animate text-center">
+            <Link href="/website" className="inline-flex items-center gap-1.5 text-sm v4-text-muted hover:text-white transition-colors">
+              Noch keine Website? <span style={{ color: 'var(--v4-green)', fontWeight: 600 }}>Individuelle Website ab € 900 mit bookingwulf-Abo →</span>
+            </Link>
+          </div>
         </div>
       </section>
 

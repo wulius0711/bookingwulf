@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/der-unterschied', label: 'Der Unterschied' },
   { href: '/preise',          label: 'Preise' },
   { href: '/demo',            label: 'Demo' },
+  { href: '/website',         label: 'Website' },
 ];
 
 export default function Nav() {
