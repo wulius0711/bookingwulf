@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { href: '/der-unterschied', label: 'Der Unterschied' },
   { href: '/preise',          label: 'Preise' },
   { href: '/demo',            label: 'Demo' },
-  { href: '/website',         label: 'Website ab €900' },
+  { href: '/website-bundle',  label: 'Website-Bundle' },
 ];
 
 export default function Nav() {

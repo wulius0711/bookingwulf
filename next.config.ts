@@ -9,6 +9,11 @@ const baseHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { source: '/website', destination: '/website-bundle', permanent: true },
+    ];
+  },
   async headers() {
     return [
       // All routes get base headers
