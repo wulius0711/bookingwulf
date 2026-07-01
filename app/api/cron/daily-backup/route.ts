@@ -70,6 +70,12 @@ export async function GET(req: Request) {
     await del(toDelete.map(b => b.url));
   }
 
+  await prisma.cronJobHeartbeat.upsert({
+    where: { jobName: 'daily-backup' },
+    create: { jobName: 'daily-backup' },
+    update: { lastSuccessAt: new Date() },
+  });
+
   console.log(`[daily-backup] Saved ${filename} (${(content.length / 1024).toFixed(0)} KB), deleted ${toDelete.length} old backup(s).`);
   return NextResponse.json({ ok: true, filename, sizeKb: Math.round(content.length / 1024), deleted: toDelete.length });
 }

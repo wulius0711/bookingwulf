@@ -685,6 +685,11 @@ model Voucher {
   @@index([code])
 }
 
+model CronJobHeartbeat {
+  jobName       String   @id
+  lastSuccessAt DateTime @default(now())
+}
+
 model AdminFeedback {
   id         Int      @id @default(autoincrement())
   hotelId    Int?

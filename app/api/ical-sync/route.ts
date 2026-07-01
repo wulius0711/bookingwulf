@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { syncIcalFeed, syncAllFeeds } from '@/src/lib/ical-sync';
 import { verifySession } from '@/src/lib/session';
+import { prisma } from '@/src/lib/prisma';
 
 // Sync a single feed (manual trigger from admin)
 export async function POST(req: Request) {
@@ -25,5 +26,12 @@ export async function GET(req: Request) {
   }
 
   const result = await syncAllFeeds();
+
+  await prisma.cronJobHeartbeat.upsert({
+    where: { jobName: 'ical-sync' },
+    create: { jobName: 'ical-sync' },
+    update: { lastSuccessAt: new Date() },
+  });
+
   return NextResponse.json(result);
 }
