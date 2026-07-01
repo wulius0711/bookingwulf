@@ -411,12 +411,54 @@ export default function HomePage() {
             <Link href="/preise" className="text-sm font-semibold hover:underline underline-offset-4 v4-text-muted">Alle Details zu den Preisen →</Link>
           </div>
           <div className="mt-12 v4-animate">
-            <BridgeSection />
-          </div>
-          <div className="mt-8 v4-animate text-center">
-            <Link href="/website-bundle" className="inline-flex items-center gap-1.5 text-sm v4-text-muted hover:text-white transition-colors">
-              Noch keine Website? <span style={{ color: 'var(--v4-green)', fontWeight: 600 }}>Individuelle Website ab € 900 mit bookingwulf-Abo →</span>
-            </Link>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.12)', marginBottom: 32 }} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <BridgeSection />
+              {/* Website-Bundle Card */}
+              <div className="flex flex-col sm:flex-row overflow-hidden h-full" style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)' }}>
+                <div className="flex-1 p-7">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2.5 py-1 mb-3" style={{ background: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' }}>
+                    🌐 Noch keine Website?
+                  </span>
+                  <h3 className="text-[17px] font-semibold mb-2" style={{ color: 'var(--v4-navy)' }}>
+                    Individuelle Website — mit Abo-Rabatt.
+                  </h3>
+                  <p className="text-[15px] mb-4" style={{ color: 'var(--v4-body)', lineHeight: 1.6 }}>
+                    Zum bookingwulf-Abo gibt es eine individuell gestaltete Hotel-Website — speziell für deine Unterkunft, mit bookingwulf-Widget bereits eingebaut.
+                  </p>
+                  <ul className="flex flex-col gap-2.5 list-none m-0 p-0">
+                    {[
+                      'Individuell gestaltet — nicht von der Stange',
+                      'bookingwulf-Widget bereits eingebaut',
+                      'SEO-Basics inklusive',
+                    ].map((t) => (
+                      <li key={t} className="flex gap-2 items-start text-[15px]">
+                        <span className="mt-0.5 shrink-0 font-bold v4-text-green">✓</span>
+                        <span style={{ color: 'var(--v4-body)' }}>{t}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex flex-col items-center justify-center gap-1 p-7 text-center border-t sm:border-t-0 sm:border-l" style={{ borderColor: 'rgba(0,0,0,0.10)' }}>
+                  <span className="text-xs font-medium" style={{ color: 'var(--v4-body)' }}>ab</span>
+                  <div className="text-[40px] font-extrabold tracking-tight" style={{ color: 'var(--v4-navy)', lineHeight: 1 }}>
+                    €900<span className="text-base font-normal v4-text-muted"> einmalig</span>
+                  </div>
+                  <p className="text-xs mt-1 mb-4" style={{ lineHeight: 1.5, color: 'var(--v4-body)' }}>
+                    Nur mit<br />bookingwulf-Abo.<br />Statt ab € 2.200.
+                  </p>
+                  <Link
+                    href="/website-bundle"
+                    className="text-[13px] font-semibold px-5 py-2.5 rounded-[10px] whitespace-nowrap transition-all duration-200"
+                    style={{ border: '1.5px solid var(--v4-navy)', background: '#fff', color: 'var(--v4-navy)', display: 'inline-block', textDecoration: 'none' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--v4-green)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--v4-green)'; (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#fff'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--v4-navy)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--v4-navy)'; }}
+                  >
+                    Mehr erfahren ↗
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

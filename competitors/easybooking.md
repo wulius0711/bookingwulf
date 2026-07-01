@@ -86,13 +86,17 @@ Keine öffentlichen Preise — individuell über Kalkulator (Anzahl Einheiten + 
 | Preistransparenz | Nein (Kalkulator) | Ja |
 | Buchungsgebühr | Unklar | 0% |
 | Testphase | Unklar | 14 Tage kostenlos |
-| Channel Manager | Ja | iCal (Airbnb, Booking.com) |
+| Channel Manager | Ja | Ja (Beds24-Integration) |
+| Belegungsplan | Ja | Ja |
 | Dynamic Pricing | Ja | Ja (inklusive) |
+| Website | Template-Builder (alle gleich, nicht hochwertig) | Individuelle Framer-Site — ~50% Rabatt bei bookingwulf-Abo |
 | Smart Lock | Nein | Nuki (nativ) |
+| KI-Gästechatbot | Nein | Ja |
 | Kassensystem | Ja (fiskaltrust) | Nein |
-| Meldepflicht | Ja (AT) | Nein |
+| Meldepflicht AT | Ja (automatisiert) | Daten im Check-in erfasst, Weitergabe manuell |
+| Rechnungserstellung | Ja | In Planung |
 | Kunden DACH | 5.500+ | — |
 
 ---
 
-*Zuletzt aktualisiert: Mai 2026*
+*Zuletzt aktualisiert: Juni 2026*

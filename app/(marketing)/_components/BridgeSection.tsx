@@ -27,12 +27,8 @@ export default function BridgeSection() {
 
   return (
     <>
-      {/* Divider */}
-      <div className="w-full mb-8" style={{ height: 1, background: 'rgba(255,255,255,0.12)' }} />
-
       {/* Card */}
-      <div className="flex justify-center">
-        <div className="flex flex-col sm:flex-row overflow-hidden" style={{ width: '66%', minWidth: 340, background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)' }}>
+      <div className="flex flex-col sm:flex-row overflow-hidden h-full" style={{ background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 'var(--v4-radius-card)' }}>
 
           {/* Linke Spalte */}
           <div className="flex-1 p-7">
@@ -79,7 +75,6 @@ export default function BridgeSection() {
             </button>
           </div>
         </div>
-      </div>
 
       {/* Modal */}
       {open && createPortal(

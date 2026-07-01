@@ -81,13 +81,13 @@ export default function WebsitePage() {
           marginTop: -64,
           paddingTop: 164,
           paddingBottom: 120,
-          backgroundImage: 'url(https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80)',
+          backgroundImage: 'url(/website-bundle-hero_v3.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(23,36,66,0.97) 0%, rgba(23,36,66,0.75) 40%, rgba(23,36,66,0.5) 100%)' }} aria-hidden />
-        <div className="v4-container relative z-10" style={{ maxWidth: 760 }}>
+        <div className="v4-container relative z-10">
           <span className="v4-eyebrow v4-animate">Website-Bundle</span>
           <h1 className="v4-animate v4-d1 text-white" style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, lineHeight: 1.07, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
             Deine Unterkunft verdient<br />eine individuelle Website.
@@ -134,7 +134,7 @@ export default function WebsitePage() {
               <div className="v4-card overflow-hidden">
                 <div style={{ height: 220, overflow: 'hidden', position: 'relative' }}>
                   <img
-                    src="/sa-chessa-screen.png"
+                    src="/sa-chessa-screen.jpg"
                     alt="Sa Chessa Website Screenshot"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
                   />
@@ -169,7 +169,7 @@ export default function WebsitePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
             {PACKAGES.map((pkg, i) => (
               <div
                 key={pkg.name}

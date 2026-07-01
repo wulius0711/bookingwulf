@@ -141,7 +141,7 @@ function Cell({ val, isPro }: { val: CellVal; isPro: boolean }) {
 }
 
 export default function PreisePage() {
-  const [billing, setBilling] = useState<'month' | 'year'>('month');
+  const [billing, setBilling] = useState<'month' | 'year'>('year');
 
   useV4Animate();
 
