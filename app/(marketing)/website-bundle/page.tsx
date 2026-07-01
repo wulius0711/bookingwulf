@@ -111,7 +111,7 @@ export default function WebsitePage() {
             <div>
               <span className="v4-eyebrow v4-animate">Der Unterschied</span>
               <h2 id="why-heading" className="v4-h2 mb-4 v4-animate v4-d1">
-                Individuell gestaltet — nicht von der Stange.
+                Individuell gestaltet.<br />Nicht von der Stange.
               </h2>
               <p className="text-[17px] leading-[1.7] v4-text-body mb-6 v4-animate v4-d2">
                 Viele Buchungssysteme bieten einen Website-Baukasten an — schnell eingerichtet, aber für alle gleich. Gäste sehen den Unterschied.
