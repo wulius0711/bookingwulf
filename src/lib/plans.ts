@@ -7,7 +7,7 @@ export const PLANS = {
     apartmentFeeYearly: 9,
     maxUsers: 1,
     maxHotels: 1,
-    features: ['1. Apartment inklusive, +10€/weiteres', '1 Admin-User', 'Basis Branding', 'Mini-Widget (einbettbar)', 'Zimmerplan', 'iCal-Sync (Airbnb & Booking.com)', 'Online Check-in für Gäste'],
+    features: ['1 Admin-User', 'Basis Branding', 'Mini-Widget (einbettbar)', 'Zimmerplan', 'iCal-Sync (Airbnb & Booking.com)', 'Online Check-in für Gäste'],
   },
   pro: {
     name: 'Pro',
@@ -17,7 +17,7 @@ export const PLANS = {
     apartmentFeeYearly: 9,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Alles aus Starter', '1. Apartment inklusive, +10€/weiteres', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin'],
+    features: ['Alles aus Starter', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin'],
   },
   business: {
     name: 'Business',
