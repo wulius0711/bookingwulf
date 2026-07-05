@@ -407,12 +407,16 @@ SuperAdmin-Auswertung unter `/admin/chat-analytics` (Themen-Verteilung, letzte F
 
 ### Preise
 
-| Plan | Monatlich | Jährlich | Apartments | Nutzer | Hotels | Besonderheit |
-|---|---|---|---|---|---|---|
-| **Starter** | €59 | €54 | 3 | 1 | 1 | — |
-| **Pro** | €119 | €109 | 15 | 3 | 1 | — |
-| **Business** | €249 | €229 | unbegrenzt | unbegrenzt | 2 | — |
-| **hotelwulf Bundle** | €179 | €164 | unbegrenzt | unbegrenzt | 1 | Nur per Superadmin zuweisbar |
+Grundgebühr pro Plan (deckt das erste Apartment ab) + einheitlich €10/Monat (€9 jährlich) je weiterem Apartment, planübergreifend gleich. Kein Apartment-Limit mehr in irgendeinem Plan (`calculatePlanPrice()` in `src/lib/plans.ts`).
+
+| Plan | Grundgebühr monatlich | Grundgebühr jährlich | Nutzer | Hotels | Besonderheit |
+|---|---|---|---|---|---|
+| **Starter** | €29 | €26 | 1 | 1 | — |
+| **Pro** | €59 | €53 | 3 | 1 | — |
+| **Business** | €89 | €80 | unbegrenzt | 2 | — |
+| **hotelwulf Bundle** | €179 | €164 | unbegrenzt | 1 | Nur per Superadmin zuweisbar, keine Apartment-Fee |
+
+Zusätzlich kann pro Hotel eine manuelle Mindest-Abrechnungsgröße (`Hotel.billedApartments`) hinterlegt werden, falls im System noch nicht alle Apartments angelegt sind — die Abrechnung nutzt dann `max(echte Apartment-Anzahl, billedApartments)` (`effectiveApartmentCount()` in `src/lib/stripe-sync.ts`). Die Stripe-Subscription-Quantity der Apartment-Fee-Position wird nach jedem Apartment-Create/Delete/Duplicate synchronisiert — als High-Water-Mark: sie steigt automatisch (mit sofortiger anteiliger Rechnung, `proration_behavior: 'always_invoice'`), sinkt aber nie automatisch bei Apartment-Löschung.
 
 ### Plan-Hierarchie (`src/lib/plan-gates.ts`)
 
@@ -434,7 +438,6 @@ Navigations-Sperren (`NAV_PLAN_GATES`):
 | `/admin/analytics` | Business |
 
 Weitere Prüfungen per `hasPlanAccess(hotelPlan, minPlan)`:
-- Apartment-Limit (`canAddApartment`)
 - Nutzer-Limit (`canAddUser`)
 - Branding-Features: `hasFullBranding` → Pro, Business, bundle_all; `hasAdvancedTypography` → Business, bundle_all
 - Messaging (Gast-Kommunikation) → `FEATURE_PLAN_GATES.messages = 'business'`
@@ -1251,12 +1254,14 @@ Auf `/admin/chatbot` sieht nur der superAdmin einen Zähler wie oft der Buchungs
 | `NEXT_PUBLIC_APP_URL` | Basis-URL (z.B. `https://bookingwulf.com`) |
 | `STRIPE_SECRET_KEY` | Stripe API-Key (live: `sk_live_...`) |
 | `STRIPE_WEBHOOK_SECRET` | Webhook-Signatur-Geheimnis |
-| `STRIPE_PRICE_STARTER` | Stripe Price ID — Starter monatlich |
-| `STRIPE_PRICE_PRO` | Stripe Price ID — Pro monatlich |
-| `STRIPE_PRICE_BUSINESS` | Stripe Price ID — Business monatlich |
-| `STRIPE_PRICE_STARTER_YEARLY` | Stripe Price ID — Starter jährlich |
-| `STRIPE_PRICE_PRO_YEARLY` | Stripe Price ID — Pro jährlich |
-| `STRIPE_PRICE_BUSINESS_YEARLY` | Stripe Price ID — Business jährlich |
+| `STRIPE_PRICE_STARTER_BASE` | Stripe Price ID — Starter Grundgebühr monatlich |
+| `STRIPE_PRICE_PRO_BASE` | Stripe Price ID — Pro Grundgebühr monatlich |
+| `STRIPE_PRICE_BUSINESS_BASE` | Stripe Price ID — Business Grundgebühr monatlich |
+| `STRIPE_PRICE_STARTER_BASE_YEARLY` | Stripe Price ID — Starter Grundgebühr jährlich |
+| `STRIPE_PRICE_PRO_BASE_YEARLY` | Stripe Price ID — Pro Grundgebühr jährlich |
+| `STRIPE_PRICE_BUSINESS_BASE_YEARLY` | Stripe Price ID — Business Grundgebühr jährlich |
+| `STRIPE_PRICE_APARTMENT` | Stripe Price ID — Apartment-Fee monatlich (planübergreifend gleich) |
+| `STRIPE_PRICE_APARTMENT_YEARLY` | Stripe Price ID — Apartment-Fee jährlich |
 | `RESEND_API_KEY` | Resend E-Mail-API-Key |
 | `BOOKING_FROM_EMAIL` | Absender-Adresse (z.B. `"bookingwulf <noreply@bookingwulf.com>"`) |
 | `CRON_SECRET` | Bearer-Token für Vercel Cron-Endpunkte |
@@ -1906,3 +1911,20 @@ Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert 
 | Error Tracking | Sentry | EU Ingest | ✅ |
 | E-Mail | Resend | US (DSGVO-konform via DPA) | ✅ |
 | Monitoring | Sentry (10% Tracing) | — | ✅ |
+
+---
+
+## 24. Preismodell-Umstellung (Juli 2026)
+
+> Stand: Juli 2026.
+
+Fixpreis-Pläne mit Apartment-Deckel (Starter max. 3, Pro max. 15, Business unbegrenzt) durch Grundgebühr + einheitliche Apartment-Fee ersetzt, siehe Kapitel 6 für die aktuellen Preise. Wichtigste Änderungen:
+
+- Kein Apartment-Limit mehr in irgendeinem Plan — `maxApartments`/`canAddApartment` entfernt.
+- Stripe-Checkout und Subscriptions haben jetzt zwei Line-Items pro Abo: Grundgebühr-Preis (Quantity 1) + Apartment-Fee-Preis (Quantity = Apartments − 1). Preis-ID-Env-Vars entsprechend auf `_BASE`/`_BASE_YEARLY` sowie neue `STRIPE_PRICE_APARTMENT`/`_YEARLY` umbenannt (siehe Kapitel 15).
+- `src/lib/stripe-sync.ts::syncApartmentQuantity()` hält die Apartment-Fee-Quantity nach jedem Apartment-Create/Delete/Duplicate aktuell — High-Water-Mark (steigt automatisch mit sofortiger Proration-Rechnung, sinkt nie automatisch bei Löschung).
+- `Hotel.billedApartments` (optional) erlaubt eine manuell hinterlegte Mindest-Abrechnungsgröße, falls im System noch nicht alle realen Apartments angelegt sind; `effectiveApartmentCount()` = `max(echte Anzahl, billedApartments)`.
+- Setup-Skript `scripts/setup-stripe-pricing.ts` legt die 8 Stripe-Preise (3 Pläne × Grundgebühr monatlich/jährlich + Apartment-Fee monatlich/jährlich) per API an — sowohl für Test- als auch Live-Mode einsetzbar (Secret Key explizit als Env-Var übergeben, nicht aus `.env`/`.env.local` verlassen, da beide Dateien unterschiedliche Keys enthalten können).
+- AGB (`app/agb/page.tsx`), Admin-Hilfe-Handbuch und alle Marketing-Preisseiten (Haupt-, v2, v3, v4, lp-photo) entsprechend aktualisiert.
+
+**Bekannte Altlast:** `prisma migrate dev` erkennt gegen die produktive Railway-DB einen kompletten Migrations-Historie-Drift (will bei fast jeder Tabelle FKs/Indizes nachziehen) und bietet einen Reset an — **niemals bestätigen**. Die echte DB stimmt exakt mit `schema.prisma` überein (geprüft via `prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script`); nur die Migrations-Dateien replizieren diesen Zustand nicht mehr sauber von Null weg. Für künftige Schema-Änderungen: `schema.prisma` anpassen, per `migrate diff --script` das SQL generieren lassen und direkt anwenden, kein `migrate dev` gegen Produktion.

@@ -29,12 +29,14 @@ Hotels und Ferienwohnungen betten ein JavaScript-Widget auf ihrer eigenen Websit
 
 ## Pläne & Preise
 
-| Plan | Monatlich | Jährlich | Apartments | Nutzer | Hotels |
-|------|-----------|----------|------------|--------|--------|
-| Starter | €59 | €54/Mo | 3 | 1 | 1 |
-| Pro | €119 | €109/Mo | 15 | 3 | 1 |
-| Business | €249 | €229/Mo | Unbegrenzt | Unbegrenzt | 2 |
-| hotelwulf Bundle ⭐ | €179 | €164/Mo | Unbegrenzt | Unbegrenzt | 1 |
+Seit Juli 2026: Grundgebühr (deckt 1. Apartment) + einheitlich €10/Monat (€9 jährlich) je weiterem Apartment, planübergreifend gleich — kein Apartment-Limit mehr in irgendeinem Plan.
+
+| Plan | Grundgebühr monatlich | Grundgebühr jährlich | Nutzer | Hotels |
+|------|-----------|----------|--------|--------|
+| Starter | €29 | €26/Mo | 1 | 1 |
+| Pro | €59 | €53/Mo | 3 | 1 |
+| Business | €89 | €80/Mo | Unbegrenzt | 2 |
+| hotelwulf Bundle ⭐ | €179 | €164/Mo | Unbegrenzt | 1 |
 
 **Trial:** 14 Tage kostenlos, keine Kreditkarte nötig
 
