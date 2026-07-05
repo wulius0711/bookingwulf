@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Ban, BotMessageSquare, Check, ConciergeBell, Globe, Palette, Plus, RefreshCw, Zap } from 'lucide-react';
 import RotatingBadge from './_components/RotatingBadge';
 import BridgeSection from './_components/BridgeSection';
-import { PLANS } from '@/src/lib/plans';
+import { PLANS, calculatePlanPrice } from '@/src/lib/plans';
 import { useV4Animate } from './_components/useV4Animate';
 import ChatDemo from './_components/ChatDemo';
 import FlipCard from './_components/FlipCard';
@@ -72,6 +72,7 @@ const CONTENT = {
 
 export default function HomePage() {
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('year');
+  const [apartmentCount, setApartmentCount] = useState(1);
   const [revenue, setRevenue] = useState(50_000);
 
   const heroRef = useRef<HTMLElement>(null);
@@ -365,6 +366,25 @@ export default function HomePage() {
             </span>
           </div>
 
+          <div className="flex items-center justify-center gap-4 mb-10 v4-animate">
+            <span className="text-sm font-medium" style={{ color: 'var(--v4-muted)' }}>Anzahl Apartments</span>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setApartmentCount((v) => Math.max(1, v - 1))}
+                aria-label="Weniger Apartments"
+                className="w-8 h-8 rounded-full shrink-0"
+                style={{ border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >−</button>
+              <span className="text-lg font-bold" style={{ color: '#fff', minWidth: 24, textAlign: 'center' }}>{apartmentCount}</span>
+              <button
+                onClick={() => setApartmentCount((v) => v + 1)}
+                aria-label="Mehr Apartments"
+                className="w-8 h-8 rounded-full shrink-0"
+                style={{ border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >+</button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-start">
             {plans.map(([key, plan], i) => (
               <div
@@ -390,8 +410,11 @@ export default function HomePage() {
                 )}
                 <h3 className="text-[17px] font-semibold mb-1" style={{ color: key === 'pro' ? 'var(--v4-navy)' : '#fff' }}>{plan.name}</h3>
                 <div className="text-[40px] font-extrabold tracking-tight my-4" style={{ color: key === 'pro' ? 'var(--v4-navy)' : '#fff' }}>
-                  € {billingInterval === 'year' ? plan.baseFeeYearly : plan.baseFeeMonthly}
+                  € {calculatePlanPrice(key as keyof typeof PLANS, apartmentCount, billingInterval)}
                   <span className="text-base font-normal v4-text-muted"> / Mo</span>
+                </div>
+                <div className="text-xs mb-2" style={{ color: key === 'pro' ? 'var(--v4-body)' : '#94a3b8' }}>
+                  inkl. 1 Apartment, +{billingInterval === 'year' ? plan.apartmentFeeYearly : plan.apartmentFeeMonthly}€ je weiterem
                 </div>
                 <ul className="flex flex-col gap-2.5 mb-6 list-none m-0 p-0">
                   {plan.features.map((f) => (
@@ -445,7 +468,7 @@ export default function HomePage() {
                     €900<span className="text-base font-normal v4-text-muted"> einmalig</span>
                   </div>
                   <p className="text-xs mt-1 mb-4" style={{ lineHeight: 1.5, color: 'var(--v4-body)' }}>
-                    Nur mit<br />bookingwulf-Abo.<br />Statt ab € 2.200.
+                    Nur ab<br />bookingwulf Pro.<br />Statt ab € 2.200.
                   </p>
                   <Link
                     href="/website-bundle"

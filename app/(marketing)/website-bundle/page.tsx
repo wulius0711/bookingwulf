@@ -93,7 +93,7 @@ export default function WebsitePage() {
             Deine Unterkunft verdient<br />eine individuelle Website.
           </h1>
           <p className="v4-animate v4-d2 v4-text-white-soft" style={{ fontSize: 18, lineHeight: 1.7, margin: '0 0 36px', maxWidth: 580 }}>
-            Individuelle Website — speziell für Hotels, Pensionen und Ferienwohnungen. Ab <strong style={{ color: '#fff' }}>€ 900</strong> mit bookingwulf-Abo.
+            Individuelle Website — speziell für Hotels, Pensionen und Ferienwohnungen. Ab <strong style={{ color: '#fff' }}>€ 900</strong> ab bookingwulf Pro.
           </p>
           <div className="v4-animate v4-d3 flex flex-wrap gap-3">
             <a href="mailto:support@bookingwulf.com?subject=Website-Anfrage" className="v4-btn v4-btn-primary">
@@ -165,7 +165,7 @@ export default function WebsitePage() {
             <span className="v4-eyebrow v4-animate">Pakete</span>
             <h2 id="pakete-heading" className="v4-h2 mb-3 v4-animate v4-d1" style={{ color: '#fff' }}>Das richtige Paket für dein Haus</h2>
             <p className="text-[17px] leading-[1.65] v4-animate v4-d2 max-w-xl mx-auto v4-text-muted">
-              Alle Preise gelten bei gleichzeitigem bookingwulf-Abo. Ohne Abo auf Anfrage.
+              Alle Preise gelten ab einem bookingwulf Pro-Abo (oder höher). Mit Starter oder ohne Abo auf Anfrage.
             </p>
           </div>
 
@@ -198,7 +198,7 @@ export default function WebsitePage() {
                       </span>
                     </div>
                     <div className="inline-flex items-center gap-1 mt-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold" style={{ background: 'rgba(16,139,169,0.15)', color: 'var(--v4-green)' }}>
-                      mit bookingwulf · € {((pkg.normalPrice ?? 0) - pkg.bundlePrice).toLocaleString('de-DE')} gespart
+                      mit bookingwulf Pro · € {((pkg.normalPrice ?? 0) - pkg.bundlePrice).toLocaleString('de-DE')} gespart
                     </div>
                   </div>
                 ) : (
