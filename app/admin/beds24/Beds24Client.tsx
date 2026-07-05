@@ -160,7 +160,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         <div style={cardStyle}>
           <p style={sectionTitle}>Webhook URL</p>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
-            Trage diese URL in Beds24 unter Einstellungen → Benachrichtigungen ein, damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
+            Trage diese URL in Beds24 unter Unterkünfte → Zugang → Buchung Webhook ein (Webhook Version 2), damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
           <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
             {host}/api/beds24-webhook?token=<span style={{ color: 'var(--text-disabled)' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
