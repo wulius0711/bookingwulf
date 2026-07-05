@@ -1346,6 +1346,15 @@ npx prisma studio  # Datenbank-Browser
 
 Fehler werden automatisch an Sentry gemeldet, wenn `SENTRY_DSN` gesetzt ist. Konfiguration in `instrumentation.ts` und `sentry.*.config.ts`.
 
+### Monitoring — Railway Health-Check (Claude Cloud-Routine)
+
+Stündliche automatisierte Cloud-Routine (`https://claude.ai/code/routines/trig_016jwP8P8m9ceX2Gr3rgy897`), unabhängig von UptimeRobot/Sentry. Prüft gezielt Railway-Deployment-/Service-Status und Logs — deckt Fälle ab, die UptimeRobot (Downtime) und Sentry (App-Fehler) nicht zuverlässig fangen, z.B. fehlgeschlagene Builds oder Crash-Loops direkt nach einem Deploy.
+
+- **Zugriff:** Railway-MCP-Connector (`https://mcp.railway.com`, OAuth), eingerichtet unter claude.ai → Connectors.
+- **Ablauf:** Status/Deployments/Logs abfragen → bei Fehler/Crash/fehlgeschlagenem Deploy E-Mail an `support@bookingwulf.com` via Resend-API. Bei gesundem Zustand: silent, keine Aktion.
+- **Resend-Key:** eigener, auf "Sending Access" beschränkter Key (nicht der Haupt-Key aus `.env.production.local`) — verwaltbar im Resend-Dashboard unter API Keys (`bookingwulf-railway-monitor`).
+- **Intervall:** stündlich (`0 * * * *` UTC) — Mindestintervall für Cloud-Routinen ist 1h.
+
 ---
 
 ## 16. Schlüsselloses Einchecken (Nuki, Pro+)

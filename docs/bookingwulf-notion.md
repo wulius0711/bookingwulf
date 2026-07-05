@@ -702,6 +702,7 @@ Für **öffentlichen Launch**: noch offene Punkte bei Logging und Backup-Restore
 | Schicht | Lösung | Status |
 |---------|--------|--------|
 | Uptime-Monitoring | UptimeRobot (Mai 2026: 99.867%, 1 Incident) | ✅ Aktiv |
+| Deploy-/Crash-Monitoring | Stündliche Claude Cloud-Routine, prüft Railway-Status/Logs, mailt bei Problem an support@bookingwulf.com | ✅ Aktiv seit Jul 2026 |
 | Hosting | Vercel (Serverless, auto-scaling) | ✅ Live |
 | Datenbank | Railway PostgreSQL, Amsterdam/EU | ✅ Live |
 | CDN | Vercel Edge Network | ✅ Automatisch |
