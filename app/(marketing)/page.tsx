@@ -93,11 +93,13 @@ export default function HomePage() {
 
   useV4Animate();
 
-  const plans       = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([k]) => k !== 'bundle_all');
-  const commission  = Math.round(revenue * CONTENT.pain.commissionPct / 100);
-  const bwMonthly   = calculatePlanPrice('pro', apartmentCount, 'year');
+  const plans        = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([k]) => k !== 'bundle_all');
+  const commission   = Math.round(revenue * CONTENT.pain.commissionPct / 100);
+  // Beispielrechnung mit fixer Apartment-Zahl (unabhängig vom Umsatz-Regler) — bewusst einfach gehalten statt eines zweiten Reglers.
+  const EXAMPLE_APARTMENTS = 5;
+  const bwMonthly    = calculatePlanPrice('pro', EXAMPLE_APARTMENTS, 'year');
   const bwYearlyCost = bwMonthly * 12;
-  const saving      = commission - bwYearlyCost;
+  const saving       = commission - bwYearlyCost;
 
   return (
     <>
@@ -285,8 +287,8 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { label: 'OTA-Provision*', value: `−€ ${commission.toLocaleString('de-DE')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
-              { label: 'bookingwulf Pro',                               value: `€ ${bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: `€ ${bwMonthly}/Monat · jederzeit kündbar`, tone: 'neutral'  as const },
-              { label: 'Deine Ersparnis',                               value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit deinem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
+              { label: 'bookingwulf Pro',                               value: `€ ${bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: `€ ${bwMonthly}/Monat · Beispiel: ${EXAMPLE_APARTMENTS} Apartments`, tone: 'neutral'  as const },
+              { label: 'Deine Ersparnis',                               value: `€ ${saving.toLocaleString('de-DE')}/Jahr`, note: '', tone: 'positive' as const },
             ].map((item, i) => (
               <div
                 key={item.label}
@@ -294,15 +296,18 @@ export default function HomePage() {
                 style={item.tone === 'positive' ? { background: 'var(--v4-green)' } : undefined}
               >
                 <p className={`text-xs font-bold uppercase tracking-widest mb-2 ${item.tone === 'positive' ? 'text-white/80' : 'text-slate-400'}`}>{item.label}</p>
-                {item.tone === 'positive' && saving > 0 && (
+                {item.tone === 'positive' && (
                   <span className="block text-xs font-semibold text-white/60 mb-0.5 uppercase tracking-widest">bis zu</span>
                 )}
                 <p className={`text-[32px] font-extrabold tracking-tight mb-1.5 whitespace-nowrap ${item.tone === 'negative' ? 'text-red-400' : 'text-white'}`}>{item.value}</p>
-                <p className={`text-xs ${item.tone === 'positive' ? 'text-white/70' : 'text-slate-500'}`}>{item.note}</p>
+                {item.note && (
+                  <p className={`text-xs ${item.tone === 'positive' ? 'text-white/70' : 'text-slate-500'}`}>{item.note}</p>
+                )}
               </div>
             ))}
           </div>
-          <p className="text-xs mt-5" style={{ color: '#64748b' }}>*Provision-Annahme: {CONTENT.pain.commissionPct}% (Branchen-Durchschnitt Booking.com). Tatsächliche Einsparungen variieren.</p>
+          <p className="text-xs mt-5" style={{ color: '#64748b' }}>*Provision-Annahme: {CONTENT.pain.commissionPct}% (Branchen-Durchschnitt Booking.com).</p>
+          <p className="text-xs mt-1" style={{ color: '#64748b' }}>Tatsächliche Kosten und Einsparungen hängen von deiner echten Apartment-Anzahl ab.</p>
         </div>
       </section>
 
