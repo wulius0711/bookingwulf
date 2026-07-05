@@ -97,7 +97,7 @@ export default function WebsitePage() {
           </p>
           <div className="v4-animate v4-d3 flex flex-wrap gap-3">
             <a href="mailto:support@bookingwulf.com?subject=Website-Anfrage" className="v4-btn v4-btn-primary">
-              Anfrage stellen <ArrowRight size={16} style={{ marginLeft: 6 }} aria-hidden />
+              Jetzt anfragen <ArrowRight size={16} style={{ marginLeft: 6 }} aria-hidden />
             </a>
             <Link href="#pakete" className="v4-btn v4-btn-ghost-white">Pakete ansehen</Link>
           </div>
@@ -221,7 +221,7 @@ export default function WebsitePage() {
                   href={`mailto:support@bookingwulf.com?subject=Website-Anfrage: ${pkg.name}`}
                   className={`v4-btn w-full ${pkg.highlight ? 'v4-btn-primary' : 'v4-btn-outline-green'}`}
                 >
-                  Anfrage stellen
+                  Jetzt anfragen
                 </a>
               </div>
             ))}
