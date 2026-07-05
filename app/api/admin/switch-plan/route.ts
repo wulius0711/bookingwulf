@@ -23,16 +23,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Planwechsel nur während der Testphase möglich.' }, { status: 403 });
     }
 
-    const newPlan = PLANS[plan as PlanKey];
-    if (newPlan.maxApartments !== Infinity) {
-      const apartmentCount = await prisma.apartment.count({ where: { hotelId: session.hotelId } });
-      if (apartmentCount > newPlan.maxApartments) {
-        return NextResponse.json({
-          error: `Sie haben ${apartmentCount} Apartments. Der ${newPlan.name}-Plan erlaubt maximal ${newPlan.maxApartments}. Bitte löschen Sie zuerst ${apartmentCount - newPlan.maxApartments} Apartment(s).`,
-        }, { status: 409 });
-      }
-    }
-
     await prisma.hotel.update({
       where: { id: session.hotelId },
       data: { plan: plan as PlanKey },

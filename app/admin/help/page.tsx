@@ -494,19 +494,12 @@ function ApartmentsSection() {
         Unter <strong>Apartments</strong> legst du alle buchbaren Einheiten an — Zimmer,
         Appartements, Suiten oder Häuser.
       </P>
-      <H3>Limits je Plan</H3>
-      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
-        {[
-          { plan: 'Starter', limit: 'Bis zu 5 Apartments' },
-          { plan: 'Pro',     limit: 'Bis zu 20 Apartments' },
-          { plan: 'Business', limit: 'Unlimitierte Apartments' },
-        ].map((p) => (
-          <div key={p.plan} style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, minWidth: 80, color: 'var(--text-primary)' }}>{p.plan}</span>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{p.limit}</span>
-          </div>
-        ))}
-      </div>
+      <H3>Preis je Apartment</H3>
+      <P>
+        Kein Limit für die Anzahl der Apartments, in jedem Plan. Das erste Apartment ist in der
+        Grundgebühr enthalten, jedes weitere kostet € 10/Monat (€ 9 bei Jahreszahlung) —
+        unabhängig davon, welchen Plan du gewählt hast.
+      </P>
       <H3>Apartment anlegen</H3>
       <Step num={1} title="Apartment hinzufügen">
         Gib Name, Beschreibung, maximale Personenanzahl und Basispreis pro Nacht ein.
@@ -1102,16 +1095,16 @@ function AbonnementSection() {
       <div style={{ display: 'grid', gap: 12, margin: '12px 0 20px' }}>
         {[
           {
-            name: 'Starter', price: '€ 59 / Monat (€ 54 bei Jahreszahlung)',
-            features: ['Bis zu 3 Apartments', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
+            name: 'Starter', price: '€ 29 / Monat (€ 26 bei Jahreszahlung) + € 10 je weiterem Apartment',
+            features: ['1 Apartment inklusive', '1 Admin-User', 'Basis Branding', 'E-Mail-Benachrichtigungen'],
           },
           {
-            name: 'Pro', price: '€ 119 / Monat (€ 109 bei Jahreszahlung)',
-            features: ['Bis zu 15 Apartments', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Kinderpreise', 'Widget-Konfigurationen'],
+            name: 'Pro', price: '€ 59 / Monat (€ 53 bei Jahreszahlung) + € 10 je weiterem Apartment',
+            features: ['1 Apartment inklusive', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Kinderpreise', 'Widget-Konfigurationen'],
           },
           {
-            name: 'Business', price: '€ 249 / Monat (€ 229 bei Jahreszahlung)',
-            features: ['Unlimitierte Apartments & User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
+            name: 'Business', price: '€ 89 / Monat (€ 80 bei Jahreszahlung) + € 10 je weiterem Apartment',
+            features: ['1 Apartment inklusive', 'Unlimitierte User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
           <div key={p.name} style={{ border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px' }}>

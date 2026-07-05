@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { stripe, getPriceId } from '@/src/lib/stripe';
+import { stripe, getPriceId, getApartmentPriceId } from '@/src/lib/stripe';
 import { PLANS, PlanKey } from '@/src/lib/plans';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { checkoutSchema } from '@/src/lib/schemas';
+import { effectiveApartmentCount } from '@/src/lib/stripe-sync';
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     const billingInterval = interval;
     const priceId = getPriceId(planKey, billingInterval);
 
-    const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { id: true, name: true, email: true, stripeCustomerId: true } });
+    const hotel = await prisma.hotel.findUnique({ where: { id: hotelId }, select: { id: true, name: true, email: true, stripeCustomerId: true, billedApartments: true, _count: { select: { apartments: true } } } });
     if (!hotel) return NextResponse.json({ error: 'Hotel nicht gefunden.' }, { status: 404 });
 
     let customerId = hotel.stripeCustomerId;
@@ -47,10 +48,18 @@ export async function POST(req: Request) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
+    const lineItems = [{ price: priceId, quantity: 1 }];
+    const apartmentPriceId = planKey !== 'bundle_all' ? getApartmentPriceId(billingInterval) : '';
+    if (apartmentPriceId) {
+      const count = effectiveApartmentCount(hotel._count.apartments, hotel.billedApartments);
+      const extraApartments = Math.max(0, count - 1);
+      lineItems.push({ price: apartmentPriceId, quantity: extraApartments });
+    }
+
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: lineItems,
       success_url: `${appUrl}/admin/billing?success=1&hotelId=${hotelId}`,
       cancel_url: `${appUrl}/admin/billing?cancelled=1&hotelId=${hotelId}`,
       metadata: { hotelId: String(hotelId), plan: planKey },

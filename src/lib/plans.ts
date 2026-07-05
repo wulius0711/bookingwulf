@@ -1,36 +1,40 @@
 export const PLANS = {
   starter: {
     name: 'Starter',
-    priceMonthly: 59,
-    priceYearly: 54,
-    maxApartments: 3,
+    baseFeeMonthly: 29,
+    baseFeeYearly: 26,
+    apartmentFeeMonthly: 10,
+    apartmentFeeYearly: 9,
     maxUsers: 1,
     maxHotels: 1,
-    features: ['Bis zu 3 Apartments', '1 Admin-User', 'Basis Branding', 'Mini-Widget (einbettbar)', 'Zimmerplan', 'iCal-Sync (Airbnb & Booking.com)', 'Online Check-in für Gäste'],
+    features: ['1. Apartment inklusive, +10€/weiteres', '1 Admin-User', 'Basis Branding', 'Mini-Widget (einbettbar)', 'Zimmerplan', 'iCal-Sync (Airbnb & Booking.com)', 'Online Check-in für Gäste'],
   },
   pro: {
     name: 'Pro',
-    priceMonthly: 119,
-    priceYearly: 109,
-    maxApartments: 15,
+    baseFeeMonthly: 59,
+    baseFeeYearly: 53,
+    apartmentFeeMonthly: 10,
+    apartmentFeeYearly: 9,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Alles aus Starter', 'Bis zu 15 Apartments', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin'],
+    features: ['Alles aus Starter', '1. Apartment inklusive, +10€/weiteres', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin'],
   },
   business: {
     name: 'Business',
-    priceMonthly: 249,
-    priceYearly: 229,
-    maxApartments: Infinity,
+    baseFeeMonthly: 89,
+    baseFeeYearly: 80,
+    apartmentFeeMonthly: 10,
+    apartmentFeeYearly: 9,
     maxUsers: Infinity,
     maxHotels: 2,
-    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte Apartments', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Chatbot-Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Chatbot-Analytics', 'Priority Support'],
   },
   bundle_all: {
     name: 'hotelwulf Bundle',
-    priceMonthly: 179,
-    priceYearly: 164,
-    maxApartments: Infinity,
+    baseFeeMonthly: 179,
+    baseFeeYearly: 164,
+    apartmentFeeMonthly: 0,
+    apartmentFeeYearly: 0,
     maxUsers: Infinity,
     maxHotels: 1,
     features: ['bookingwulf — Zimmerbuchungen', 'hungrywulf — Tischreservierungen', 'eventwulf — Event-Management', 'Alle Business-Features inklusive', 'Einheitliches Dashboard & Reporting', 'Priority Support & persönlicher Ansprechpartner', 'Keine Provision auf Buchungen'],
@@ -38,3 +42,11 @@ export const PLANS = {
 } as const;
 
 export type PlanKey = keyof typeof PLANS;
+
+/** Grundgebühr deckt das erste Apartment ab; jedes weitere kostet den Apartment-Fee-Satz. */
+export function calculatePlanPrice(plan: PlanKey, apartmentCount: number, interval: 'month' | 'year' = 'month'): number {
+  const p = PLANS[plan];
+  const base = interval === 'year' ? p.baseFeeYearly : p.baseFeeMonthly;
+  const perUnit = interval === 'year' ? p.apartmentFeeYearly : p.apartmentFeeMonthly;
+  return base + perUnit * Math.max(0, apartmentCount - 1);
+}

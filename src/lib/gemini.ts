@@ -38,7 +38,7 @@ const NAV_LABELS: Record<string, string> = {
 function buildPlansSection(): string {
   const planLines = (Object.keys(PLANS) as PlanKey[]).map((key) => {
     const p = PLANS[key];
-    const price = `${p.priceMonthly} €/Monat, ${p.priceYearly} € jährlich`;
+    const price = `${p.baseFeeMonthly} €/Monat, ${p.baseFeeYearly} € jährlich`;
     return `- ${p.name} (${price}): ${p.features.join(', ')}.`;
   });
 

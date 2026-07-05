@@ -24,7 +24,7 @@ const CONTENT = {
     sub:   'Jede Buchung über Booking.com oder Airbnb kostet Sie 15–25 % Provision. Mit bookingwulf buchen Gäste direkt — und Sie behalten jeden Cent.',
     revenueExample: 50_000,
     commissionPct:  18,
-    bwYearlyCost:   119 * 12,
+    bwYearlyCost:   59 * 12,
   },
   features: {
     h2:  'Alles was Sie brauchen',
@@ -254,7 +254,7 @@ export default function HomePage() {
               {
                 label:    'bookingwulf Pro',
                 value:    `€${CONTENT.pain.bwYearlyCost.toLocaleString('de-AT')}/Jahr`,
-                note:     '€119/Monat · jederzeit kündbar',
+                note:     '€59/Monat · jederzeit kündbar',
                 tone:     'neutral' as const,
               },
               {
@@ -424,7 +424,7 @@ export default function HomePage() {
                   {plan.name}
                 </h3>
                 <div className={`text-4xl font-extrabold tracking-tight my-4 ${key === 'pro' ? 'text-white' : 'text-slate-900'}`}>
-                  €{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
+                  €{billingInterval === 'year' ? plan.baseFeeYearly : plan.baseFeeMonthly}
                   <span className="text-base font-normal text-slate-400">/Mo</span>
                 </div>
                 <ul className="flex flex-col gap-2.5 mb-6 list-none m-0 p-0 mb-6">

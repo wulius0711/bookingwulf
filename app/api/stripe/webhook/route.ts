@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { stripe, getPlanFromPriceId } from '@/src/lib/stripe';
+import { stripe, getPlanFromPriceIds } from '@/src/lib/stripe';
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
 import { generateVoucherPdf } from '@/src/lib/voucherPdf';
-import { PLANS, PlanKey } from '@/src/lib/plans';
+import { PLANS, PlanKey, calculatePlanPrice } from '@/src/lib/plans';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
@@ -135,13 +135,13 @@ export async function POST(req: Request) {
         if (!hotelId || !subscriptionId) break;
 
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        const priceId = subscription.items.data[0]?.price.id;
-        const plan = getPlanFromPriceId(priceId);
+        const priceIds = subscription.items.data.map((item) => item.price.id);
+        const plan = getPlanFromPriceIds(priceIds);
 
         const hotel = await prisma.hotel.update({
           where: { id: hotelId },
           data: { stripeSubscriptionId: subscriptionId, plan, subscriptionStatus: subscription.status },
-          select: { name: true, email: true },
+          select: { name: true, email: true, _count: { select: { apartments: true } } },
         });
 
         // Send subscription confirmation email
@@ -149,6 +149,7 @@ export async function POST(req: Request) {
           try {
             const resend = getResend();
             const planInfo = PLANS[plan as PlanKey] ?? PLANS.starter;
+            const monthlyPrice = calculatePlanPrice(plan as PlanKey, hotel._count.apartments, 'month');
             if (resend) {
               await resend.emails.send({
                 from: getFromEmail(),
@@ -164,7 +165,7 @@ export async function POST(req: Request) {
                     </p>
                     <div style="padding:16px 20px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:20px;">
                       <div style="font-size:13px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Ihr Plan</div>
-                      <div style="font-size:18px;font-weight:700;color:#111;">${planInfo.name} — \u20AC ${planInfo.priceMonthly}/Monat</div>
+                      <div style="font-size:18px;font-weight:700;color:#111;">${planInfo.name} — € ${monthlyPrice}/Monat</div>
                     </div>
                     <ul style="font-size:14px;color:#374151;line-height:1.8;margin:0 0 20px;padding-left:20px;">
                       ${planInfo.features.map(f => '<li>' + f + '</li>').join('')}
@@ -188,8 +189,8 @@ export async function POST(req: Request) {
         const hotelId = Number(subscription.metadata?.hotelId);
         if (!hotelId) break;
 
-        const priceId = subscription.items.data[0]?.price.id;
-        const plan = getPlanFromPriceId(priceId);
+        const priceIds = subscription.items.data.map((item) => item.price.id);
+        const plan = getPlanFromPriceIds(priceIds);
 
         await prisma.hotel.update({
           where: { id: hotelId },

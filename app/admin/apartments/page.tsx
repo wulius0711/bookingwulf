@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ApartmentCard from './ApartmentCard';
 import { EmptyState } from '../components/ui';
+import { syncApartmentQuantity } from '@/src/lib/stripe-sync';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,12 +15,12 @@ async function deleteApartment(formData: FormData) {
   const id = Number(formData.get('id'));
   if (!id) return;
 
-  if (session.hotelId !== null) {
-    const apt = await prisma.apartment.findUnique({ where: { id }, select: { hotelId: true } });
-    if (!apt || apt.hotelId !== session.hotelId) return;
-  }
+  const apt = await prisma.apartment.findUnique({ where: { id }, select: { hotelId: true } });
+  if (!apt) return;
+  if (session.hotelId !== null && apt.hotelId !== session.hotelId) return;
 
   await prisma.apartment.delete({ where: { id } });
+  await syncApartmentQuantity(apt.hotelId);
   redirect('/admin/apartments');
 }
 
@@ -67,6 +68,7 @@ async function duplicateApartment(formData: FormData) {
     },
   });
 
+  await syncApartmentQuantity(apartment.hotelId);
   redirect('/admin/apartments');
 }
 

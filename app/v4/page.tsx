@@ -23,7 +23,7 @@ const CONTENT = {
     h2:            'Was zahlen Sie wirklich für Buchungsportale?',
     sub:           'Jede Buchung über Booking.com oder Airbnb kostet Sie 15–25 % Provision. Mit bookingwulf buchen Gäste direkt — und Sie behalten jeden Cent.',
     commissionPct: 18,
-    bwYearlyCost:  119 * 12,
+    bwYearlyCost:  59 * 12,
   },
   features: {
     label: 'Features',
@@ -251,7 +251,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { label: `${CONTENT.pain.commissionPct}% OTA-Provision`, value: `−€ ${commission.toLocaleString('de-DE')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
-              { label: 'bookingwulf Pro',                               value: `€ ${CONTENT.pain.bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: '€ 119/Monat · jederzeit kündbar', tone: 'neutral'  as const },
+              { label: 'bookingwulf Pro',                               value: `€ ${CONTENT.pain.bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: '€ 59/Monat · jederzeit kündbar', tone: 'neutral'  as const },
               { label: 'Ihre Ersparnis',                                value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit Ihrem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
             ].map((item, i) => (
               <div
@@ -358,7 +358,7 @@ export default function HomePage() {
                 )}
                 <h3 className="text-[17px] font-semibold mb-1" style={{ color: key === 'pro' ? 'var(--v4-navy)' : '#fff' }}>{plan.name}</h3>
                 <div className="text-[40px] font-extrabold tracking-tight my-4" style={{ color: key === 'pro' ? 'var(--v4-navy)' : '#fff' }}>
-                  € {billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
+                  € {billingInterval === 'year' ? plan.baseFeeYearly : plan.baseFeeMonthly}
                   <span className="text-base font-normal" style={{ color: 'var(--v4-muted)' }}>/Mo</span>
                 </div>
                 <ul className="flex flex-col gap-2.5 mb-6 list-none m-0 p-0">

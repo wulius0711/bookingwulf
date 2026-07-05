@@ -22,7 +22,7 @@ const CONTENT = {
     sub:            'Jede Buchung über Booking.com oder Airbnb kostet Sie 15–25 % Provision. Mit bookingwulf buchen Gäste direkt — und Sie behalten jeden Cent.',
     revenueExample: 50_000,
     commissionPct:  18,
-    bwYearlyCost:   119 * 12,
+    bwYearlyCost:   59 * 12,
   },
   features: {
     label: 'Features',
@@ -251,7 +251,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { label: `${CONTENT.pain.commissionPct}% OTA-Provision`, value: `−€${commission.toLocaleString('de-AT')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
-              { label: 'bookingwulf Pro',       value: `€${CONTENT.pain.bwYearlyCost.toLocaleString('de-AT')}/Jahr`, note: '€119/Monat · jederzeit kündbar', tone: 'neutral'  as const },
+              { label: 'bookingwulf Pro',       value: `€${CONTENT.pain.bwYearlyCost.toLocaleString('de-AT')}/Jahr`, note: '€59/Monat · jederzeit kündbar', tone: 'neutral'  as const },
               { label: 'Ihre Ersparnis',        value: saving > 0 ? `bis zu €${saving.toLocaleString('de-AT')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit Ihrem Umsatz' : 'Ab ~€8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
             ].map((item, i) => (
               <div key={item.label} className={`bw-animate bw-card-dark bw-animate-delay-${i + 2} p-6 transition-all duration-300 ${item.tone === 'positive' ? 'bg-green-500' : 'bg-white/12'}`}>
@@ -379,7 +379,7 @@ export default function HomePage() {
                 {key === 'pro' && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-green-500 text-white text-xs font-bold whitespace-nowrap">Beliebt</div>}
                 <h3 className={`text-lg font-bold mb-1 ${key === 'pro' ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
                 <div className={`text-4xl font-extrabold tracking-tight my-4 ${key === 'pro' ? 'text-white' : 'text-slate-900'}`}>
-                  €{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
+                  €{billingInterval === 'year' ? plan.baseFeeYearly : plan.baseFeeMonthly}
                   <span className="text-base font-normal text-slate-400">/Mo</span>
                 </div>
                 <ul className="flex flex-col gap-2.5 mb-6 list-none m-0 p-0">

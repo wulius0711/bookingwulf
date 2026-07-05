@@ -20,33 +20,49 @@ export const stripe = new Proxy({} as Stripe, {
   },
 });
 
-export function getPlanFromPriceId(priceId: string): PlanKey {
+/** Findet den Plan anhand der Grundgebühr-Price-ID unter allen Line-Items einer Subscription (die Apartment-Fee-Price-ID ist planübergreifend identisch und daher nicht aussagekräftig). */
+export function getPlanFromPriceIds(priceIds: string[]): PlanKey {
   const priceMap: Record<string, PlanKey> = {
-    [process.env.STRIPE_PRICE_STARTER ?? '']: 'starter',
-    [process.env.STRIPE_PRICE_PRO ?? '']: 'pro',
-    [process.env.STRIPE_PRICE_BUSINESS ?? '']: 'business',
-    [process.env.STRIPE_PRICE_STARTER_YEARLY ?? '']: 'starter',
-    [process.env.STRIPE_PRICE_PRO_YEARLY ?? '']: 'pro',
-    [process.env.STRIPE_PRICE_BUSINESS_YEARLY ?? '']: 'business',
+    [process.env.STRIPE_PRICE_STARTER_BASE ?? '']: 'starter',
+    [process.env.STRIPE_PRICE_PRO_BASE ?? '']: 'pro',
+    [process.env.STRIPE_PRICE_BUSINESS_BASE ?? '']: 'business',
+    [process.env.STRIPE_PRICE_STARTER_BASE_YEARLY ?? '']: 'starter',
+    [process.env.STRIPE_PRICE_PRO_BASE_YEARLY ?? '']: 'pro',
+    [process.env.STRIPE_PRICE_BUSINESS_BASE_YEARLY ?? '']: 'business',
   };
-  return priceMap[priceId] ?? 'starter';
+  const match = priceIds.find((id) => priceMap[id]);
+  return match ? priceMap[match] : 'starter';
 }
 
 export function getPriceId(plan: PlanKey, interval: 'month' | 'year' = 'month'): string {
   if (interval === 'year') {
     const map: Record<PlanKey, string> = {
-      starter: process.env.STRIPE_PRICE_STARTER_YEARLY ?? '',
-      pro: process.env.STRIPE_PRICE_PRO_YEARLY ?? '',
-      business: process.env.STRIPE_PRICE_BUSINESS_YEARLY ?? '',
-      bundle_all: '',
+      starter: process.env.STRIPE_PRICE_STARTER_BASE_YEARLY ?? '',
+      pro: process.env.STRIPE_PRICE_PRO_BASE_YEARLY ?? '',
+      business: process.env.STRIPE_PRICE_BUSINESS_BASE_YEARLY ?? '',
+      bundle_all: process.env.STRIPE_PRICE_BUNDLE_BASE_YEARLY ?? '',
     };
     return map[plan];
   }
   const map: Record<PlanKey, string> = {
-    starter: process.env.STRIPE_PRICE_STARTER ?? '',
-    pro: process.env.STRIPE_PRICE_PRO ?? '',
-    business: process.env.STRIPE_PRICE_BUSINESS ?? '',
-    bundle_all: '',
+    starter: process.env.STRIPE_PRICE_STARTER_BASE ?? '',
+    pro: process.env.STRIPE_PRICE_PRO_BASE ?? '',
+    business: process.env.STRIPE_PRICE_BUSINESS_BASE ?? '',
+    bundle_all: process.env.STRIPE_PRICE_BUNDLE_BASE ?? '',
   };
   return map[plan];
+}
+
+/** Gemeinsame Apartment-Fee-Price-ID (10€/Monat, gleich für Starter/Pro/Business) für das gewünschte Abrechnungsintervall. */
+export function getApartmentPriceId(interval: 'month' | 'year' = 'month'): string {
+  return interval === 'year'
+    ? process.env.STRIPE_PRICE_APARTMENT_YEARLY ?? ''
+    : process.env.STRIPE_PRICE_APARTMENT ?? '';
+}
+
+/** Alle bekannten Apartment-Fee-Price-IDs (monatlich + jährlich), zum Wiedererkennen eines Subscription-Items. */
+export function getApartmentPriceIds(): string[] {
+  return [process.env.STRIPE_PRICE_APARTMENT, process.env.STRIPE_PRICE_APARTMENT_YEARLY].filter(
+    (id): id is string => Boolean(id)
+  );
 }

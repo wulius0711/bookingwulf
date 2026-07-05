@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Check, Minus } from 'lucide-react';
-import { PLANS } from '@/src/lib/plans';
+import { PLANS, calculatePlanPrice } from '@/src/lib/plans';
 import { useV4Animate } from '../_components/useV4Animate';
 import BridgeSection from '../_components/BridgeSection';
 
@@ -18,7 +18,7 @@ const COMPARISON: FeatureGroup[] = [
   {
     group: 'Kapazität',
     rows: [
-      { label: 'Apartments', starter: '3', pro: '15', business: 'Unlimitiert' },
+      { label: 'Apartments', starter: 'Unlimitiert', pro: 'Unlimitiert', business: 'Unlimitiert' },
       { label: 'Admin-User', starter: '1', pro: '3', business: 'Unlimitiert' },
       { label: 'Hotelanlagen', starter: '1', pro: '1', business: '2' },
     ],
@@ -103,8 +103,8 @@ const FAQ_ITEMS = [
     a: 'Beds24 ist ein separater Drittanbieter mit eigenem kostenpflichtigen Account (ab ca. €9/Mo). bookingwulf verlangt dafür keinen Aufpreis — Du verbindest einfach deinen bestehenden Beds24-Account.',
   },
   {
-    q: 'Was passiert wenn ich mehr Apartments brauche als mein Plan erlaubt?',
-    a: 'Du kannst jederzeit in einen größeren Plan wechseln. Deine bestehenden Daten, Buchungen und Einstellungen bleiben vollständig erhalten.',
+    q: 'Was kostet ein zusätzliches Apartment?',
+    a: 'Jeder Plan enthält das erste Apartment in der Grundgebühr, jedes weitere kostet 10€/Monat (9€ bei jährlicher Abrechnung) — unabhängig davon wie viele Apartments du hast. Kein Limit, kein Plan-Zwangswechsel.',
   },
 ];
 
@@ -142,10 +142,15 @@ function Cell({ val, isPro }: { val: CellVal; isPro: boolean }) {
 
 export default function PreisePage() {
   const [billing, setBilling] = useState<'month' | 'year'>('year');
+  const [apartmentCount, setApartmentCount] = useState(1);
 
   useV4Animate();
 
-  const plans = PLAN_KEYS.map((k) => ({ key: k, ...PLANS[k] }));
+  const plans = PLAN_KEYS.map((k) => ({
+    key: k,
+    ...PLANS[k],
+    price: calculatePlanPrice(k, apartmentCount, billing),
+  }));
 
   return (
     <>
@@ -164,7 +169,7 @@ export default function PreisePage() {
       <section className="v4-angled" style={{ background: 'var(--v4-navy)', padding: '100px 0 152px' }}>
         <div className="v4-container">
           {/* Toggle */}
-          <div className="flex items-center justify-center gap-3 v4-animate mb-10">
+          <div className="flex items-center justify-center gap-3 v4-animate mb-6">
             <span style={{ fontSize: 14, fontWeight: 500, color: billing === 'month' ? '#fff' : 'var(--v4-muted)' }}>Monatlich</span>
             <button
               onClick={() => setBilling((v) => v === 'month' ? 'year' : 'month')}
@@ -186,8 +191,26 @@ export default function PreisePage() {
               >~10% sparen</span>
             </span>
           </div>
+
+          {/* Apartment-Anzahl */}
+          <div className="flex items-center justify-center gap-4 v4-animate mb-10">
+            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--v4-muted)' }}>Anzahl Apartments</span>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setApartmentCount((v) => Math.max(1, v - 1))}
+                aria-label="Weniger Apartments"
+                style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >−</button>
+              <span style={{ fontSize: 18, fontWeight: 700, color: '#fff', minWidth: 24, textAlign: 'center' }}>{apartmentCount}</span>
+              <button
+                onClick={() => setApartmentCount((v) => v + 1)}
+                aria-label="Mehr Apartments"
+                style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >+</button>
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-start">
-            {plans.map(({ key, name, priceMonthly, priceYearly, features }, i) => {
+            {plans.map(({ key, name, price, features }, i) => {
               const isPro = key === 'pro';
               return (
                 <div
@@ -207,14 +230,17 @@ export default function PreisePage() {
                   <div style={{ fontSize: 12, fontWeight: 700, color: isPro ? 'var(--v4-green)' : 'var(--v4-green-border)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{name}</div>
                   <div style={{ marginBottom: 20 }}>
                     <span style={{ fontSize: 42, fontWeight: 800, letterSpacing: '-0.03em', color: isPro ? 'var(--v4-navy)' : '#fff' }}>
-                      € {billing === 'year' ? priceYearly : priceMonthly}
+                      € {price}
                     </span>
                     <span style={{ fontSize: 14, color: 'var(--v4-muted)', marginLeft: 3 }}> / Mo</span>
                     {billing === 'year' && (
                       <div style={{ fontSize: 12, color: isPro ? 'var(--v4-body)' : '#64748b', marginTop: 3 }}>
-                        = € {(priceYearly * 12).toLocaleString('de-AT')} / Jahr
+                        = € {(price * 12).toLocaleString('de-AT')} / Jahr
                       </div>
                     )}
+                    <div style={{ fontSize: 12, color: isPro ? 'var(--v4-body)' : '#64748b', marginTop: 3 }}>
+                      inkl. 1 Apartment, +{billing === 'year' ? PLANS[key].apartmentFeeYearly : PLANS[key].apartmentFeeMonthly}€ je weiterem
+                    </div>
                   </div>
                   <ul style={{ listStyle: 'none', margin: '0 0 24px', padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {(features as readonly string[]).map((f) => (
@@ -310,10 +336,10 @@ export default function PreisePage() {
                   <td style={{ padding: '20px 16px 8px', fontSize: 15, fontWeight: 600, color: 'var(--v4-navy)', borderTop: '2px solid var(--v4-border)' }}>
                     {billing === 'year' ? 'Preis / Monat (jährlich)' : 'Preis / Monat'}
                   </td>
-                  {plans.map(({ key, priceMonthly, priceYearly }) => (
+                  {plans.map(({ key, price }) => (
                     <td key={key} style={{ padding: '20px 16px 8px', textAlign: 'center', background: key === 'pro' ? 'rgba(16,139,169,0.04)' : 'transparent', borderTop: '2px solid var(--v4-border)' }}>
                       <div style={{ fontSize: 26, fontWeight: 800, color: key === 'pro' ? 'var(--v4-green)' : 'var(--v4-navy)' }}>
-                        € {billing === 'year' ? priceYearly : priceMonthly}
+                        € {price}
                       </div>
                       <div style={{ fontSize: 13, color: 'var(--v4-muted)' }}>/ Mo</div>
                     </td>

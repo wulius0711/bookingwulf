@@ -13,7 +13,7 @@ const COMPARISON_ROWS = [
   { label: 'Individuelles Branding',            bw: true,               ota: false          },
   { label: 'Gäste-Lounge mit Upselling',        bw: true,               ota: false          },
   { label: 'DSGVO-konform (EU-Server)',          bw: true,               ota: 'Teilweise'    },
-  { label: 'Monatliche Fixkosten',              bw: 'ab €54/Mo',        ota: '–'            },
+  { label: 'Monatliche Fixkosten',              bw: 'ab €26/Mo',        ota: '–'            },
 ];
 
 const PRICING_FAQ = [
@@ -90,12 +90,12 @@ export default function PreisePage() {
                 {plan.name}
               </h2>
               <div className={`text-4xl font-extrabold tracking-tight my-4 ${key === 'pro' ? 'text-white' : 'text-slate-900'}`}>
-                €{billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
+                €{billingInterval === 'year' ? plan.baseFeeYearly : plan.baseFeeMonthly}
                 <span className="text-base font-normal text-slate-400">/Mo</span>
               </div>
               {billingInterval === 'year' && (
                 <p className={`text-xs mb-4 -mt-2 ${key === 'pro' ? 'text-slate-400' : 'text-slate-400'}`}>
-                  €{plan.priceYearly * 12} / Jahr · spare €{(plan.priceMonthly - plan.priceYearly) * 12}
+                  €{plan.baseFeeYearly * 12} / Jahr · spare €{(plan.baseFeeMonthly - plan.baseFeeYearly) * 12}
                 </p>
               )}
               <ul className="flex flex-col gap-2.5 mb-6 list-none m-0 p-0">

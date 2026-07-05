@@ -55,6 +55,10 @@ export const switchPlanSchema = z.object({
   plan: z.string().min(1).max(50),
 });
 
+export const billedApartmentsSchema = z.object({
+  billedApartments: z.number().int().min(0).max(1000).nullable(),
+});
+
 export const switchHotelSchema = z.object({
   hotelId: z.number().int().positive(),
 });

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { PLANS, PlanKey } from '@/src/lib/plans';
+import { PLANS, PlanKey, calculatePlanPrice } from '@/src/lib/plans';
 import { Button } from '../components/ui';
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
@@ -15,7 +15,8 @@ const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }
 
 export default function BillingPage() {
   const searchParams = useSearchParams();
-  const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string; trialEndsAt: string | null } | null>(null);
+  const [hotel, setHotel] = useState<{ id: number; name: string; plan: string; subscriptionStatus: string; trialEndsAt: string | null; apartmentCount: number; actualApartmentCount: number } | null>(null);
+  const [apartmentSaving, setApartmentSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,6 +97,28 @@ export default function BillingPage() {
       setError(String(e));
     }
     setActionLoading(false);
+  }
+
+  async function handleSetApartmentCount(count: number) {
+    if (!hotel || count < hotel.actualApartmentCount) return;
+    setApartmentSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/admin/billed-apartments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ billedApartments: count > hotel.actualApartmentCount ? count : null }),
+      });
+      if (res.ok) {
+        setHotel({ ...hotel, apartmentCount: count });
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Konnte Apartment-Anzahl nicht speichern.');
+      }
+    } catch (e) {
+      setError(String(e));
+    }
+    setApartmentSaving(false);
   }
 
   async function openPortal() {
@@ -216,6 +239,36 @@ export default function BillingPage() {
           </span>
         </div>
 
+        {/* Apartment count for billing */}
+        {currentPlan !== 'bundle_all' && hotel && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '0 0 8px' }}>
+            <span />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <span style={{ fontSize: 14, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>Apartments für Abrechnung</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <button
+                  onClick={() => handleSetApartmentCount(Math.max(hotel.actualApartmentCount, 1, hotel.apartmentCount - 1))}
+                  disabled={apartmentSaving || hotel.apartmentCount <= Math.max(hotel.actualApartmentCount, 1)}
+                  aria-label="Weniger"
+                  style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 16, cursor: 'pointer', lineHeight: 1 }}
+                >−</button>
+                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', minWidth: 20, textAlign: 'center' }}>{hotel.apartmentCount}</span>
+                <button
+                  onClick={() => handleSetApartmentCount(hotel.apartmentCount + 1)}
+                  disabled={apartmentSaving}
+                  aria-label="Mehr"
+                  style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 16, cursor: 'pointer', lineHeight: 1 }}
+                >+</button>
+              </div>
+            </div>
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)', paddingLeft: 14, whiteSpace: 'nowrap' }}>
+              {hotel.apartmentCount > hotel.actualApartmentCount
+                ? `(${hotel.actualApartmentCount} im System angelegt, ${hotel.apartmentCount} abgerechnet)`
+                : ''}
+            </span>
+          </div>
+        )}
+
         {/* Bundle plan indicator (only shown when on bundle_all) */}
         {currentPlan === 'bundle_all' && (
           <div style={{ padding: '20px 24px', background: 'var(--status-new-bg)', border: '2px solid var(--status-new-text)', borderRadius: 16 }}>
@@ -257,13 +310,21 @@ export default function BillingPage() {
 
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{plan.name}</div>
-                  <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginTop: 8, letterSpacing: '-0.02em' }}>
-                    € {billingInterval === 'year' ? plan.priceYearly : plan.priceMonthly}
-                    <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--text-secondary)' }}> / Monat</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, visibility: billingInterval === 'year' ? 'visible' : 'hidden' }}>
-                    = € {plan.priceYearly * 12} / Jahr
-                  </div>
+                  {(() => {
+                    const billedApartments = Math.max(1, hotel?.apartmentCount ?? 1);
+                    return (
+                      <>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginTop: 8, letterSpacing: '-0.02em' }}>
+                          € {calculatePlanPrice(key, billedApartments, billingInterval)}
+                          <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--text-secondary)' }}> / Monat</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
+                          für {billedApartments} Apartment{billedApartments === 1 ? '' : 's'}
+                          {billingInterval === 'year' && ` · = € ${calculatePlanPrice(key, billedApartments, 'year') * 12} / Jahr`}
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
 
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, flex: 1 }}>

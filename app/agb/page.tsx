@@ -17,7 +17,7 @@ export default function AGBPage() {
 
       <h1 style={h1}>Allgemeine Geschäftsbedingungen (AGB)</h1>
 
-      <p style={p}>Stand: Mai 2026</p>
+      <p style={p}>Stand: Juli 2026</p>
 
       <h2 style={h2}>§ 1 Geltungsbereich</h2>
       <p style={p}>
@@ -58,10 +58,13 @@ export default function AGBPage() {
         Es stehen folgende Pläne zur Verfügung:
       </p>
       <ul style={ul}>
-        <li><strong>Starter</strong> — € 59/Monat (bei Jahresabrechnung: € 54/Monat)</li>
-        <li><strong>Pro</strong> — € 119/Monat (bei Jahresabrechnung: € 109/Monat)</li>
-        <li><strong>Business</strong> — € 249/Monat (bei Jahresabrechnung: € 229/Monat)</li>
+        <li><strong>Starter</strong> — € 29/Monat Grundgebühr (bei Jahresabrechnung: € 26/Monat), inkl. 1 Apartment</li>
+        <li><strong>Pro</strong> — € 59/Monat Grundgebühr (bei Jahresabrechnung: € 53/Monat), inkl. 1 Apartment</li>
+        <li><strong>Business</strong> — € 89/Monat Grundgebühr (bei Jahresabrechnung: € 80/Monat), inkl. 1 Apartment</li>
       </ul>
+      <p style={p}>
+        Jedes weitere Apartment kostet zusätzlich € 10/Monat (bei Jahresabrechnung: € 9/Monat), unabhängig vom gewählten Plan. Es gibt kein Limit für die Anzahl der Apartments.
+      </p>
       <p style={p}>
         Die Abrechnung erfolgt monatlich oder jährlich im Voraus über Stripe. Der Kunde kann sein Abonnement jederzeit zum Ende des laufenden Abrechnungszeitraums kündigen.
       </p>
