@@ -29,7 +29,6 @@ const CONTENT = {
     h2:            'Was zahlst du wirklich für Buchungsportale?',
     sub:           'Über Buchungsportale kosten dich Buchungen bis zu 25% Provision. Mit bookingwulf buchen Gäste direkt — und du behältst jeden Cent.',
     commissionPct: 15,
-    bwYearlyCost:  59 * 12,
   },
   features: {
     label: 'Features',
@@ -94,9 +93,11 @@ export default function HomePage() {
 
   useV4Animate();
 
-  const plans      = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([k]) => k !== 'bundle_all');
-  const commission = Math.round(revenue * CONTENT.pain.commissionPct / 100);
-  const saving     = commission - CONTENT.pain.bwYearlyCost;
+  const plans       = (Object.entries(PLANS) as [string, typeof PLANS[keyof typeof PLANS]][]).filter(([k]) => k !== 'bundle_all');
+  const commission  = Math.round(revenue * CONTENT.pain.commissionPct / 100);
+  const bwMonthly   = calculatePlanPrice('pro', apartmentCount, 'year');
+  const bwYearlyCost = bwMonthly * 12;
+  const saving      = commission - bwYearlyCost;
 
   return (
     <>
@@ -284,7 +285,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { label: 'OTA-Provision*', value: `−€ ${commission.toLocaleString('de-DE')}/Jahr`, note: 'Was die Portale jährlich einbehalten',    tone: 'negative' as const },
-              { label: 'bookingwulf Pro',                               value: `€ ${CONTENT.pain.bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: '€ 59/Monat · jederzeit kündbar', tone: 'neutral'  as const },
+              { label: 'bookingwulf Pro',                               value: `€ ${bwYearlyCost.toLocaleString('de-DE')}/Jahr`, note: `€ ${bwMonthly}/Monat · jederzeit kündbar`, tone: 'neutral'  as const },
               { label: 'Deine Ersparnis',                               value: saving > 0 ? `€ ${saving.toLocaleString('de-DE')}/Jahr` : 'Noch kein Vorteil', note: saving > 0 ? 'Steigt mit deinem Umsatz' : 'Ab ~€ 8k Umsatz lohnt sich bookingwulf', tone: 'positive' as const },
             ].map((item, i) => (
               <div
