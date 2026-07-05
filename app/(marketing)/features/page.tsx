@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useV4Animate } from '../_components/useV4Animate';
 import {
-  BotMessageSquare, Building2, Calendar, Palette, LayoutGrid, RefreshCw, ToggleLeft,
+  BotMessageSquare, Building2, Calendar, ConciergeBell, Palette, LayoutGrid, RefreshCw, ToggleLeft,
   ClipboardList, TrendingDown, Globe, Code2, Lock, ShieldCheck,
 } from 'lucide-react';
 
@@ -25,6 +25,13 @@ const FEATURES: Feature[] = [
     short: 'Beliebig viele Apartments — jede Einheit mit eigenen Preisen, Fotos und Ausstattung. Saisontarife und Aufschläge pro Apartment konfigurierbar.',
     long: 'Lege jede Einheit mit eigenem Namen, eigenen Fotos, Ausstattungsmerkmalen und Preisstruktur an. Saisontarife, Wochenend-Zuschläge und Mindestaufenthalte sind pro Apartment konfigurierbar. Neue Einheiten sind in Minuten eingerichtet — ohne technisches Wissen.',
     bullets: ['Eigene Bilder & Beschreibung pro Einheit', 'Individuelle Preissaisons & Aufschläge', 'Separate Verfügbarkeitskalender'],
+  },
+  {
+    icon: ConciergeBell, label: 'Gäste-Erlebnis',
+    title: 'Gäste-Lounge',
+    short: 'Jeder Gast erhält mit der Buchungsbestätigung einen persönlichen Link — kein Login, kein Download. Buchungsdetails, Zugangscode und Hausinfos automatisch befüllt.',
+    long: 'Mit der Buchungsbestätigung bekommt jeder Gast einen persönlichen Link zur Gäste-Lounge — ohne Login, ohne App-Download. Dort findet er Buchungsdetails, Zugangscode (bei Nuki-Integration), Hausinfos und Upselling-Angebote automatisch befüllt. Lokale Ausflugstipps lassen sich in Sekunden direkt aus Google Maps importieren.',
+    bullets: ['Persönlicher Link, kein Login nötig', 'Zugangscode & Hausinfos automatisch befüllt', 'Lokale Ausflugstipps aus Google Maps', 'Upselling direkt in der Lounge'],
   },
   {
     icon: Calendar, label: 'Kalender',
