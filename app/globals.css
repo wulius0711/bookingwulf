@@ -1239,13 +1239,6 @@ html.theme-transitioning *::after {
   .pw-grid { grid-template-columns: 1fr 1fr; }
 }
 
-.invite-body {
-  overflow: hidden;
-  transition: max-height 0.25s ease, opacity 0.2s ease;
-}
-
-.invite-body.open   { max-height: 60px; opacity: 1; }
-.invite-body.closed { max-height: 0;    opacity: 0; }
 
 .flip-card-inner {
   transform-style: preserve-3d;

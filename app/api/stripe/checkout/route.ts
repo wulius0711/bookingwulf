@@ -60,6 +60,7 @@ export async function POST(req: Request) {
       customer: customerId,
       mode: 'subscription',
       line_items: lineItems,
+      allow_promotion_codes: true,
       success_url: `${appUrl}/admin/billing?success=1&hotelId=${hotelId}`,
       cancel_url: `${appUrl}/admin/billing?cancelled=1&hotelId=${hotelId}`,
       metadata: { hotelId: String(hotelId), plan: planKey },
