@@ -27,7 +27,7 @@ export async function resetPassword(_state: ResetState, formData: FormData): Pro
 
   await prisma.adminUser.update({
     where: { id: user.id },
-    data: { passwordHash, resetToken: null, resetExpiresAt: null },
+    data: { passwordHash, resetToken: null, resetExpiresAt: null, sessionVersion: { increment: 1 } },
   });
 
   return { success: true };
