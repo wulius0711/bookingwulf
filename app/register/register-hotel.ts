@@ -145,5 +145,13 @@ export async function registerHotel(
     throw e;
   }
 
+  // Notify support — best-effort, must not block registration.
+  resend.emails.send({
+    from: getFromEmail(),
+    to: 'support@bookingwulf.com',
+    subject: `Neue Registrierung: ${hotelName}`,
+    text: `Hotel: ${hotelName}\nSlug: ${slug}\nE-Mail: ${email}\nPlan: ${plan}`,
+  }).catch((e) => console.error('New-registration notification mail error:', e));
+
   redirect('/register/check-email');
 }
