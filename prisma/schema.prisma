@@ -425,14 +425,17 @@ model Request {
 }
 
 model RequestMessage {
-  id        Int      @id @default(autoincrement())
-  requestId Int
-  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  sender    String   // 'hotel' | 'guest'
-  body      String
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  requestId  Int
+  request    Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender     String   // 'hotel' | 'guest'
+  channel    String   @default("direct") // 'direct' | 'beds24'
+  externalId String?  // Beds24 message id — für Webhook/Poll-Dedupe, null bei channel='direct'
+  body       String
+  createdAt  DateTime @default(now())
 
   @@index([requestId])
+  @@unique([requestId, externalId])
 }
 
 model ThingsToSee {

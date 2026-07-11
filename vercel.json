@@ -40,6 +40,10 @@
     {
       "path": "/api/cron/expire-trials",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/beds24-messages-sync",
+      "schedule": "*/30 * * * *"
     }
   ]
 }

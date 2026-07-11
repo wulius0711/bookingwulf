@@ -5,6 +5,7 @@ import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18
 import { bookingIcalUrl, generateBookingToken } from '@/src/lib/booking-token';
 import { hasPlanAccess, FEATURE_PLAN_GATES } from '@/src/lib/plan-gates';
 import { PlanKey } from '@/src/lib/plans';
+import { sendBeds24Message } from '@/src/lib/beds24';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import StatusButtons from './StatusButtons';
@@ -15,7 +16,7 @@ import Button from '../../components/ui/Button';
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; bederror?: string }>;
 };
 
 export const dynamic = 'force-dynamic';
@@ -316,55 +317,79 @@ async function sendAdminMessage(formData: FormData) {
 
   const request = await prisma.request.findUnique({
     where: { id },
-    include: { hotel: { select: { name: true, accentColor: true, email: true } } },
+    include: { hotel: { select: { name: true, accentColor: true, email: true, beds24Config: { select: { refreshToken: true, isEnabled: true } } } } },
   });
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
 
-  await prisma.requestMessage.create({
-    data: { requestId: id, sender: 'hotel', body },
-  });
+  let beds24Error = false;
 
-  try {
-    const resend = getResend();
-    if (resend && request.email) {
-      const lang = (request.language || 'de') as Lang;
-      const i18n = getEmailTranslations(lang);
-      const token = generateBookingToken(id, request.createdAt);
-      const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
-      const replyUrl = `${base}/nachrichten?id=${id}&token=${token}`;
-      const hotelName = request.hotel?.name || 'Hotel';
-
-      await resend.emails.send({
-        from: getFromEmail(),
-        to: request.email,
-        subject: i18n.newMessageSubject(hotelName),
-        html: buildEmailHtml({
-          hotelName,
-          accentColor: request.hotel?.accentColor || undefined,
-          title: i18n.newMessage,
-          autoReplyText: i18n.autoReply,
-          body: `
-            <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px;">
-              ${i18n.newMessageIntro(request.firstname || '')}
-            </p>
-            <div style="padding:16px;background:#f9fafb;border-left:3px solid #e5e7eb;border-radius:4px;font-size:15px;color:#374151;line-height:1.6;white-space:pre-wrap;">${body}</div>
-            <div style="margin-top:24px;">
-              <a href="${replyUrl}" style="display:inline-block;padding:11px 22px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
-                ${i18n.reply}
-              </a>
-            </div>
-            ${request.hotel?.email ? `<p style="font-size:13px;color:#6b7280;margin:16px 0 0;">${i18n.contactLine(request.hotel.email)}</p>` : ''}
-          `,
-          footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(id)}</p>`,
-        }),
-      });
+  if (request.beds24BookingId) {
+    // OTA-Buchung: Antwort geht über Beds24 an Airbnb/Booking.com, keine E-Mail
+    // (OTA-Gäste haben oft ohnehin nur eine maskierte Relay-Adresse)
+    const cfg = request.hotel?.beds24Config;
+    let externalId: string | null = null;
+    if (cfg?.isEnabled && cfg.refreshToken) {
+      try {
+        const result = await sendBeds24Message(cfg.refreshToken, request.beds24BookingId, body);
+        externalId = result.id || null;
+      } catch (e) {
+        console.error('Beds24 sendMessage error:', e);
+        beds24Error = true;
+      }
+    } else {
+      beds24Error = true;
     }
-  } catch (e) {
-    console.error('Admin message email error:', e);
+
+    await prisma.requestMessage.create({
+      data: { requestId: id, sender: 'hotel', channel: 'beds24', externalId, body },
+    });
+  } else {
+    await prisma.requestMessage.create({
+      data: { requestId: id, sender: 'hotel', channel: 'direct', body },
+    });
+
+    try {
+      const resend = getResend();
+      if (resend && request.email) {
+        const lang = (request.language || 'de') as Lang;
+        const i18n = getEmailTranslations(lang);
+        const token = generateBookingToken(id, request.createdAt);
+        const base = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+        const replyUrl = `${base}/nachrichten?id=${id}&token=${token}`;
+        const hotelName = request.hotel?.name || 'Hotel';
+
+        await resend.emails.send({
+          from: getFromEmail(),
+          to: request.email,
+          subject: i18n.newMessageSubject(hotelName),
+          html: buildEmailHtml({
+            hotelName,
+            accentColor: request.hotel?.accentColor || undefined,
+            title: i18n.newMessage,
+            autoReplyText: i18n.autoReply,
+            body: `
+              <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px;">
+                ${i18n.newMessageIntro(request.firstname || '')}
+              </p>
+              <div style="padding:16px;background:#f9fafb;border-left:3px solid #e5e7eb;border-radius:4px;font-size:15px;color:#374151;line-height:1.6;white-space:pre-wrap;">${body}</div>
+              <div style="margin-top:24px;">
+                <a href="${replyUrl}" style="display:inline-block;padding:11px 22px;background:#111827;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;">
+                  ${i18n.reply}
+                </a>
+              </div>
+              ${request.hotel?.email ? `<p style="font-size:13px;color:#6b7280;margin:16px 0 0;">${i18n.contactLine(request.hotel.email)}</p>` : ''}
+            `,
+            footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${i18n.bookingId(id)}</p>`,
+          }),
+        });
+      }
+    } catch (e) {
+      console.error('Admin message email error:', e);
+    }
   }
 
-  redirect(`/admin/requests/${id}`);
+  redirect(`/admin/requests/${id}${beds24Error ? '?bederror=1' : ''}`);
 }
 
 function getStatusBadge(status: string) {
@@ -381,7 +406,7 @@ function getStatusBadge(status: string) {
 export default async function BookingDetailPage({ params, searchParams }: PageProps) {
   const session = await verifySession();
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, bederror } = await searchParams;
   const requestId = parseInt(id, 10);
 
   if (!Number.isInteger(requestId)) notFound();
@@ -752,6 +777,11 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
       })()}
 
       {/* ─── Nachrichtenthread ─── */}
+      {bederror === '1' && (
+        <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', fontSize: 13 }}>
+          ⚠️ Nachricht wurde gespeichert, konnte aber nicht an Airbnb/Booking.com übermittelt werden. Bitte Beds24-Verbindung unter <a href="/admin/beds24">Einstellungen → Beds24</a> prüfen.
+        </div>
+      )}
       {!canUseMessages ? (
         <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: 'var(--text-secondary)' }}>
           🔒 Direktnachrichten sind ab dem <strong style={{ color: 'var(--text-primary)' }}>Business-Plan</strong> verfügbar.{' '}
@@ -834,7 +864,9 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
             />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 12, color: 'var(--text-disabled)' }}>
-                Der Gast erhält eine E-Mail mit Antwort-Link.
+                {request.beds24BookingId
+                  ? 'Diese Nachricht wird über Airbnb/Booking.com an den Gast gesendet.'
+                  : 'Der Gast erhält eine E-Mail mit Antwort-Link.'}
               </span>
               <button
                 type="submit"

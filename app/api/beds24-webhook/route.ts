@@ -4,8 +4,8 @@
 
 import { timingSafeEqual, randomUUID } from 'crypto';
 import { prisma } from '@/src/lib/prisma';
-import { fetchBeds24BookingDetails } from '@/src/lib/beds24';
-import type { Beds24WebhookBooking } from '@/src/lib/beds24';
+import { fetchBeds24BookingDetails, saveIncomingBeds24Message } from '@/src/lib/beds24';
+import type { Beds24WebhookBooking, Beds24Message } from '@/src/lib/beds24';
 
 export async function POST(req: Request) {
   const secret = process.env.BEDS24_WEBHOOK_SECRET;
@@ -25,14 +25,26 @@ export async function POST(req: Request) {
     return Response.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  // Beds24 v2 booking webhook sends an array of booking objects
-  const bookings: Beds24WebhookBooking[] = Array.isArray(body) ? body : [body as Beds24WebhookBooking];
+  // Beds24 v2 booking webhook sends an array of booking objects — message events are
+  // detected defensively since the exact Beds24 payload shape for messages isn't publicly documented
+  const items: (Beds24WebhookBooking & Beds24Message)[] = Array.isArray(body) ? body : [body as Beds24WebhookBooking & Beds24Message];
 
-  for (const booking of bookings) {
+  for (const booking of items) {
     const roomId = String(booking.roomId ?? '');
     const arrival = booking.arrival;
     const departure = booking.departure;
     const status = booking.status ?? '1';
+
+    const looksLikeMessage = (booking.message || booking.text) && !roomId && !arrival && !departure;
+    if (looksLikeMessage) {
+      const bookingId = booking.bookingId ?? booking.id;
+      if (bookingId) {
+        await saveIncomingBeds24Message(String(bookingId), booking);
+      } else {
+        console.warn('[Beds24 webhook] message event ohne bookingId, übersprungen', booking);
+      }
+      continue;
+    }
 
     if (!roomId || !arrival || !departure) {
       console.warn('[Beds24 webhook] skipping booking — missing roomId/arrival/departure', booking);

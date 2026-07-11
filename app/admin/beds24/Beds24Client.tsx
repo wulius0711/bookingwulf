@@ -168,6 +168,19 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         </div>
       )}
 
+      {/* Guest messages info card */}
+      {connected && (
+        <div style={cardStyle}>
+          <p style={sectionTitle}>Gästenachrichten (Airbnb/Booking.com)</p>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+            Damit Antworten im Chat unter Buchungen an Airbnb/Booking.com-Gäste übermittelt werden können,
+            benötigt dein Invite Code zusätzlich den Scope <code>bookings-personal</code>. Falls das Senden
+            einer Nachricht fehlschlägt: In Beds24 unter Einstellungen → Marketplace → API einen neuen Invite
+            Code mit diesem Scope erzeugen und hier oben erneut verbinden (Zimmer-Zuordnungen bleiben erhalten).
+          </p>
+        </div>
+      )}
+
       <ConfirmDialog
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}

@@ -1,3 +1,5 @@
+import { prisma } from '@/src/lib/prisma';
+
 const BEDS24_API = 'https://api.beds24.com/v2';
 
 export type Beds24BookingPayload = {
@@ -163,4 +165,70 @@ export async function pushBooking(refreshToken: string, payload: Beds24BookingPa
 
   const data = await res.json().catch(() => []);
   return String(data?.[0]?.id ?? '');
+}
+
+export type Beds24Message = {
+  id?: number | string;
+  bookingId?: number | string;
+  message?: string;
+  text?: string;
+  source?: 'guest' | 'host' | 'internalNote' | 'system';
+};
+
+// Send a host reply to Airbnb/Booking.com through Beds24 (used from the admin chat for OTA bookings)
+export async function sendBeds24Message(
+  refreshToken: string,
+  bookingId: string,
+  message: string,
+): Promise<{ id: string }> {
+  const accessToken = await getAccessToken(refreshToken);
+  const res = await fetch(`${BEDS24_API}/bookings/messages`, {
+    method: 'POST',
+    headers: { 'token': accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify([{ bookingId, message, source: 'host' }]),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 sendMessage fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+  const data = await res.json().catch(() => []);
+  return { id: String(data?.[0]?.id ?? data?.data?.[0]?.id ?? '') };
+}
+
+// Fetch the message thread for an OTA booking (used by the fallback poll cron)
+export async function fetchBeds24Messages(refreshToken: string, bookingId: string): Promise<Beds24Message[]> {
+  const accessToken = await getAccessToken(refreshToken);
+  const url = new URL(`${BEDS24_API}/bookings/messages`);
+  url.searchParams.set('bookingId', bookingId);
+  const res = await fetch(url.toString(), { headers: { token: accessToken } });
+  if (!res.ok) return [];
+  const data = await res.json().catch(() => ({}));
+  return (Array.isArray(data?.data) ? data.data : []) as Beds24Message[];
+}
+
+// Saves an inbound Beds24 message (guest or host, from webhook or poll cron) into RequestMessage.
+// Dedup is by external Beds24 message id, NOT by sender: Beds24 mirrors the full OTA thread back,
+// including messages bookingwulf itself sent via sendBeds24Message (same id → recognized as echo
+// and skipped) as well as replies the host typed directly in the Airbnb/Booking.com app (new id →
+// saved as a 'hotel' message so the admin chat stays a complete mirror regardless of reply channel).
+export async function saveIncomingBeds24Message(bookingId: string, msg: Beds24Message): Promise<boolean> {
+  const body = (msg.message ?? msg.text ?? '').trim();
+  if (!body) return false;
+  if (msg.source === 'internalNote' || msg.source === 'system') return false;
+
+  const request = await prisma.request.findUnique({ where: { beds24BookingId: bookingId }, select: { id: true } });
+  if (!request) return false;
+
+  const externalId = msg.id != null ? String(msg.id) : null;
+  if (externalId) {
+    const existing = await prisma.requestMessage.findFirst({ where: { requestId: request.id, externalId }, select: { id: true } });
+    if (existing) return false;
+  }
+
+  const sender = msg.source === 'host' ? 'hotel' : 'guest';
+
+  await prisma.requestMessage.create({
+    data: { requestId: request.id, sender, channel: 'beds24', externalId, body },
+  });
+  return true;
 }
