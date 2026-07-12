@@ -1163,11 +1163,11 @@ KI-Buchungsassistent als embeddables Shadow-DOM-Widget. **Pro-Feature** — nur 
 
 ```
 Gast-Website
-  └── <script src="https://bookingwulf.com/chat.js" data-hotel="slug">
+  └── <script src="https://bookingwulf.com/chat.js" data-hotel="slug" data-lang="de">
         │
         ├── Shadow DOM (isoliertes CSS, kein Konflikt mit Hotel-CSS)
         ├── GET /api/chat?hotel=slug   → lädt Name, Farbe, Avatar
-        └── POST /api/chat            → sendet Nachricht, empfängt Antwort
+        └── POST /api/chat            → sendet Nachricht + lang, empfängt Antwort
               │
               └── Google Gemini 2.5 Flash (Function Calling)
                     ├── check_availability   → Prisma → Railway DB
@@ -1178,6 +1178,13 @@ Gast-Website
 - Kein iframe — vollständig in Shadow DOM, funktioniert auf jeder Website
 - Stateless: Gesprächshistory liegt nur im Browser (kein DB-Logging)
 - Mobile: Bottom-Sheet-Layout (72dvh), iOS-Zoom-Fix (`font-size: 16px` auf Input)
+
+### Sprache (`data-lang`)
+
+- `data-lang` (`de` | `en` | `it`, Default `de`) am Script-Tag legt die **Startsprache** fest — Begrüßungstext, Buttons und Platzhalter im Widget. Diese UI-Texte wechseln nicht dynamisch, nur beim Laden gesetzt.
+- Bei mehreren Sprachversionen der Hotel-Website wird das Script auf jeder Version mit dem passenden `data-lang`-Wert eingebunden (kein zentrales Hotel-weites Sprach-Setting).
+- Die **KI-Antworten** wechseln reaktiv, unabhängig von `data-lang`: Schreibt der Gast auf Deutsch, Englisch oder Italienisch, antwortet der Bot in genau dieser Sprache. Bei jeder anderen erkannten Sprache (z.B. Russisch, Französisch) antwortet der Bot auf Englisch statt in der erkannten Sprache — keine unbegrenzte Sprachauswahl.
+- Implementiert in `buildSystemPrompt()` (`app/api/chat/route.ts`) über `resolveLang()`; UI-Strings als DE/EN/IT-Dictionary in `public/chat.js`. Juli 2026.
 
 ### API-Routen
 
@@ -1191,11 +1198,12 @@ Gibt Widget-Konfiguration zurück. Wird beim Start automatisch vom Widget gefetc
 Hauptendpunkt — nimmt Gesprächshistory entgegen, gibt Antwort zurück.
 ```json
 // Request
-{ "hotelSlug": "mein-hotel", "messages": [{ "role": "user", "parts": [{ "text": "Habt ihr noch was frei?" }] }] }
+{ "hotelSlug": "mein-hotel", "messages": [{ "role": "user", "parts": [{ "text": "Habt ihr noch was frei?" }] }], "lang": "de" }
 
 // Response
 { "message": "Ja, für diesen Zeitraum haben wir zwei Apartments frei …" }
 ```
+`lang` optional, `de` | `en` | `it`, Default `de` — siehe Abschnitt "Sprache" oben.
 
 #### `PATCH /api/chat`
 Wird vom Widget gefeuert wenn der Gast auf den Buchungsbutton klickt — inkrementiert `chatbotBookingClicks` am Hotel-Datensatz.
@@ -1215,7 +1223,7 @@ Unter `/admin/chatbot` (Pro-Plan erforderlich):
 2. Name, Akzentfarbe, Avatar konfigurieren
 3. Website-URL scrapen (Jina Reader) → Bot kennt Lage, Storno, Umgebung
 4. Manuelle FAQ-Einträge ergänzen
-5. Einbindungs-Code (`<script>`-Tag) kopieren und auf der Hotel-Website einfügen
+5. Einbindungs-Code (`<script>`-Tag) kopieren und auf der Hotel-Website einfügen — bei mehreren Sprachversionen `data-lang` pro Version anpassen
 
 ### Buchungslink-Klicks (superAdmin)
 
