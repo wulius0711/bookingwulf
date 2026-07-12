@@ -246,7 +246,15 @@ async function loadHotel(slug: string) {
 
 // ── System prompt ─────────────────────────────────────────────────────────────
 
-function buildSystemPrompt(hotel: NonNullable<Awaited<ReturnType<typeof loadHotel>>>) {
+const SUPPORTED_LANGS = ['de', 'en', 'it'] as const;
+type Lang = typeof SUPPORTED_LANGS[number];
+const LANG_NAMES: Record<Lang, string> = { de: 'Deutsch', en: 'Englisch', it: 'Italienisch' };
+
+function resolveLang(lang: unknown): Lang {
+  return typeof lang === 'string' && (SUPPORTED_LANGS as readonly string[]).includes(lang) ? (lang as Lang) : 'de';
+}
+
+function buildSystemPrompt(hotel: NonNullable<Awaited<ReturnType<typeof loadHotel>>>, lang: Lang) {
   const upsells = hotel.extras
     .filter(e => e.showInUpsell && e.isActive)
     .map(e => `- ${e.name} (${Number(e.price).toFixed(2)} €, ${e.billingType})`)
@@ -294,7 +302,7 @@ Wichtige Regeln:
 - Rufe IMMER check_availability bevor du konkrete Preise oder Verfügbarkeit nennst
 - Frage nach Anreise, Abreise und Personenzahl (inkl. Kinder) falls noch unbekannt
 - Halte dich an Buchungs- und Unterkunftsthemen
-- Antworte auf Deutsch; wechsle auf Englisch wenn der Gast Englisch schreibt
+- Antworte standardmäßig auf ${LANG_NAMES[lang]}. Schreibt der Gast auf Deutsch, Englisch oder Italienisch, wechsle in genau diese Sprache. Schreibt der Gast in einer anderen Sprache, antworte auf Englisch.
 - Sprich den Gast konsequent mit "Sie" an — niemals "du", auch nicht nach mehreren Nachrichten
 - Ton: ruhig, klar, direkt — kein Marketing-Speak, keine übertriebenen Adjektive; Ausrufezeichen sparsam einsetzen, nicht am Anfang jeder Antwort
 - Bevor du den Buchungslink generierst: frage kurz und neutral nach 1–2 passenden Extras — keine Verkaufsfloskeln, nur sachlich z.B. "Möchtet ihr noch Frühstück dazunehmen (12 € p.P./Nacht)?" — warte auf Antwort, dann Link
@@ -350,9 +358,10 @@ type ClientMessage = { role: 'user' | 'assistant'; content: string };
 
 export async function POST(req: Request) {
   try {
-    const { hotelSlug, messages } = await req.json() as {
+    const { hotelSlug, messages, lang } = await req.json() as {
       hotelSlug: string;
       messages: ClientMessage[];
+      lang?: string;
     };
 
     if (!hotelSlug || !Array.isArray(messages)) {
@@ -363,7 +372,7 @@ export async function POST(req: Request) {
     if (!hotel) return NextResponse.json({ error: 'Hotel nicht gefunden.' }, { status: 404, headers: corsHeaders });
     if (!hotel.chatbotEnabled) return NextResponse.json({ error: 'Chatbot nicht aktiviert.' }, { status: 403, headers: corsHeaders });
 
-    const systemPrompt = buildSystemPrompt(hotel);
+    const systemPrompt = buildSystemPrompt(hotel, resolveLang(lang));
 
     // Convert client messages to Gemini format
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

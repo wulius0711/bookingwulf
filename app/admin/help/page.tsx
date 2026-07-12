@@ -1387,11 +1387,14 @@ function ChatbotSection() {
         Den Code mit deinem persönlichen Hotel-Slug findest du direkt auf der Chatbot-Seite ganz unten.
         Er sieht so aus:
       </P>
-      <CodeBlock>{`<script\n  src="https://bookingwulf.com/chat.js"\n  data-hotel="dein-hotel-slug">\n</script>`}</CodeBlock>
+      <CodeBlock>{`<script\n  src="https://bookingwulf.com/chat.js"\n  data-hotel="dein-hotel-slug"\n  data-lang="de">\n</script>`}</CodeBlock>
 
       <Tip>
         <strong>Tipp:</strong> Name, Farbe und Avatar übernimmt das Widget automatisch aus deinen
         Admin-Einstellungen — du musst nach einer Änderung nichts am Code auf deiner Website anpassen.
+        Mit <code>data-lang</code> (de, en oder it) legst du die Startsprache fest. Hast du mehrere
+        Sprachversionen deiner Website, bindest du das Script auf jeder mit dem passenden Wert ein —
+        schreibt ein Gast in einer der drei Sprachen, wechselt der Assistent automatisch mit.
       </Tip>
     </div>
   );

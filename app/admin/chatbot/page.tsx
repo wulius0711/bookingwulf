@@ -141,9 +141,10 @@ export default async function ChatbotPage({ searchParams }: { searchParams: Prom
           border: '1px solid var(--border)',
           fontFamily: '"SF Mono", "Fira Code", monospace',
           whiteSpace: 'pre',
-        }}>{`<script\n  src="https://bookingwulf.com/chat.js"\n  data-hotel="${hotel.slug}">\n</script>`}</pre>
+        }}>{`<script\n  src="https://bookingwulf.com/chat.js"\n  data-hotel="${hotel.slug}"\n  data-lang="de">\n</script>`}</pre>
         <p style={{ margin: '12px 0 0', fontSize: 12, color: 'var(--text-secondary)' }}>
           Name, Farbe und Avatar werden automatisch aus den Einstellungen oben übernommen — kein zusätzliches Attribut nötig.
+          Mit <code style={{ fontFamily: 'monospace', background: 'var(--surface-2)', padding: '1px 5px', borderRadius: 4 }}>data-lang</code> (de, en oder it) legt ihr die Startsprache fest — auf einer englischen oder italienischen Seitenversion entsprechend anpassen. Schreibt ein Gast in einer der drei Sprachen, wechselt der Assistent automatisch mit.
         </p>
       </section>
 

@@ -1,6 +1,6 @@
 /*!
  * bookingwulf Chat Widget
- * Einbindung: <script src="https://bookingwulf.com/chat.js" data-hotel="HOTEL-SLUG" data-color="#1a1a1a"></script>
+ * Einbindung: <script src="https://bookingwulf.com/chat.js" data-hotel="HOTEL-SLUG" data-color="#1a1a1a" data-lang="de"></script>
  */
 (function () {
   'use strict';
@@ -12,7 +12,55 @@
   const COLOR = script.getAttribute('data-color') || '#1a1a1a';
   const API   = new URL(script.src).origin + '/api/chat';
 
+  const SUPPORTED_LANGS = ['de', 'en', 'it'];
+  const requestedLang = script.getAttribute('data-lang');
+  const LANG = SUPPORTED_LANGS.indexOf(requestedLang) !== -1 ? requestedLang : 'de';
+
   if (!HOTEL) { console.warn('[bookingwulf] data-hotel fehlt'); return; }
+
+  // ── Strings ────────────────────────────────────────────────────────────────
+  var STRINGS = {
+    de: {
+      chatOpen: 'Chat öffnen',
+      dialogLabel: 'Buchungs-Assistent',
+      defaultName: 'Buchungs-Assistent',
+      subtitle: 'Wie kann ich helfen?',
+      placeholder: 'Nachricht schreiben …',
+      inputLabel: 'Nachricht',
+      sendLabel: 'Senden',
+      bookNow: 'Jetzt buchen →',
+      greeting: 'Hallo! 👋 Ich helfe gerne bei Ihrer Zimmerbuchung.\n\nWann möchten Sie anreisen, für wie viele Personen — und haben Sie bestimmte Wünsche?',
+      noAnswer: 'Entschuldigung, ich konnte keine Antwort laden. Bitte versuchen Sie es erneut.',
+      connError: 'Verbindungsfehler. Bitte versuchen Sie es erneut.',
+    },
+    en: {
+      chatOpen: 'Open chat',
+      dialogLabel: 'Booking assistant',
+      defaultName: 'Booking Assistant',
+      subtitle: 'How can I help?',
+      placeholder: 'Write a message …',
+      inputLabel: 'Message',
+      sendLabel: 'Send',
+      bookNow: 'Book now →',
+      greeting: "Hello! 👋 I'm happy to help with your room booking.\n\nWhen would you like to arrive, for how many people — and any special requests?",
+      noAnswer: "Sorry, I couldn't load a response. Please try again.",
+      connError: 'Connection error. Please try again.',
+    },
+    it: {
+      chatOpen: 'Apri chat',
+      dialogLabel: 'Assistente di prenotazione',
+      defaultName: 'Assistente di prenotazione',
+      subtitle: 'Come posso aiutarti?',
+      placeholder: 'Scrivi un messaggio …',
+      inputLabel: 'Messaggio',
+      sendLabel: 'Invia',
+      bookNow: 'Prenota ora →',
+      greeting: 'Ciao! 👋 Sono felice di aiutarti con la prenotazione della camera.\n\nQuando vorresti arrivare, per quante persone — e hai richieste particolari?',
+      noAnswer: 'Spiacenti, non sono riuscito a caricare una risposta. Riprova.',
+      connError: 'Errore di connessione. Riprova.',
+    },
+  };
+  var T = STRINGS[LANG];
 
   // ── Contrast helper ────────────────────────────────────────────────────────
   function luminance(hex) {
@@ -163,7 +211,7 @@
     '  }',
     '</style>',
 
-    '<button id="fab" aria-label="Chat öffnen" aria-expanded="false">',
+    '<button id="fab" aria-label="' + T.chatOpen + '" aria-expanded="false">',
     '  <svg class="icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
     '    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     '  </svg>',
@@ -172,12 +220,12 @@
     '  </svg>',
     '</button>',
 
-    '<div id="panel" role="dialog" aria-modal="true" aria-label="Buchungs-Assistent">',
+    '<div id="panel" role="dialog" aria-modal="true" aria-label="' + T.dialogLabel + '">',
     '  <div id="header">',
     '    <div id="header-avatar">' + DEFAULT_AVATAR_SVG + '</div>',
     '    <div id="header-text">',
-    '      <div id="header-name">Buchungs-Assistent</div>',
-    '      <div id="header-sub">Wie kann ich helfen?</div>',
+    '      <div id="header-name">' + T.defaultName + '</div>',
+    '      <div id="header-sub">' + T.subtitle + '</div>',
     '    </div>',
     '  </div>',
     '  <div id="messages"></div>',
@@ -185,8 +233,8 @@
     '    <span class="dot"></span><span class="dot"></span><span class="dot"></span>',
     '  </div>',
     '  <div id="input-wrap">',
-    '    <textarea id="textarea" rows="1" placeholder="Nachricht schreiben …" aria-label="Nachricht"></textarea>',
-    '    <button id="send" aria-label="Senden">',
+    '    <textarea id="textarea" rows="1" placeholder="' + T.placeholder + '" aria-label="' + T.inputLabel + '"></textarea>',
+    '    <button id="send" aria-label="' + T.sendLabel + '">',
     '      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">',
     '        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
     '      </svg>',
@@ -259,7 +307,7 @@
       btn.href = urlMatch[0];
       btn.target = '_self';
       btn.className = 'booking-btn';
-      btn.textContent = 'Jetzt buchen →';
+      btn.textContent = T.bookNow;
       btn.addEventListener('click', function () {
         fetch(API, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hotel: HOTEL }) }).catch(function(){});
       });
@@ -283,7 +331,7 @@
     if (isOpen) {
       if (!greeted) {
         greeted = true;
-        addMessage('assistant', 'Hallo! 👋 Ich helfe gerne bei Ihrer Zimmerbuchung.\n\nWann möchten Sie anreisen, für wie viele Personen — und haben Sie bestimmte Wünsche?');
+        addMessage('assistant', T.greeting);
       }
       setTimeout(function() { textarea.focus(); }, 50);
     }
@@ -307,7 +355,7 @@
     fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hotelSlug: HOTEL, messages: messages }),
+      body: JSON.stringify({ hotelSlug: HOTEL, messages: messages, lang: LANG }),
     })
       .then(function(res) { return res.json(); })
       .then(function(data) {
@@ -327,12 +375,12 @@
           messages.push({ role: 'assistant', content: data.message });
           addMessage('assistant', data.message);
         } else {
-          addMessage('assistant', 'Entschuldigung, ich konnte keine Antwort laden. Bitte versuchen Sie es erneut.');
+          addMessage('assistant', T.noAnswer);
         }
       })
       .catch(function() {
         typingEl.hidden = true;
-        addMessage('assistant', 'Verbindungsfehler. Bitte versuchen Sie es erneut.');
+        addMessage('assistant', T.connError);
       })
       .finally(function() {
         isLoading = false;
