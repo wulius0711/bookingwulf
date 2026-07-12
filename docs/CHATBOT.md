@@ -7,11 +7,21 @@ KI-Buchungsassistent als embeddable Widget. Hotelier bindet einen einzigen `<scr
 ```html
 <script
   src="https://bookingwulf.com/chat.js"
-  data-hotel="mein-hotel-slug">
+  data-hotel="mein-hotel-slug"
+  data-lang="de">
 </script>
 ```
 
 Den Code vor dem schließenden `</body>`-Tag einfügen. Name, Farbe und Avatar werden automatisch aus den Admin-Einstellungen geladen — kein weiteres Attribut nötig.
+
+`data-lang` (`de` | `en` | `it`, Default `de`) legt die Startsprache fest (Begrüßung + UI-Texte). Bei mehreren Sprachversionen der Website das Script auf jeder Version mit passendem Wert einbinden.
+
+## Sprache
+
+- `data-lang` bestimmt nur die **Startsprache** — Begrüßungstext, Buttons und Platzhalter im Widget sind fix in dieser Sprache und wechseln nicht dynamisch.
+- Die **KI-Antworten** wechseln reaktiv: Schreibt der Gast auf Deutsch, Englisch oder Italienisch, antwortet der Bot in genau dieser Sprache — unabhängig von `data-lang`.
+- Schreibt der Gast in einer anderen Sprache (z.B. Russisch, Französisch), antwortet der Bot auf Englisch statt in der erkannten Sprache.
+- Fehlt `data-lang` im Embed, ist die Startsprache Deutsch (unverändertes Verhalten bestehender Einbindungen).
 
 ## Setup (Admin-UI)
 
@@ -57,9 +67,12 @@ Gibt die Widget-Konfiguration zurück (wird vom Widget beim Start automatisch ge
   "hotelSlug": "mein-hotel-slug",
   "messages": [
     { "role": "user", "content": "Habt ihr was für 2 Erwachsene + 1 Kind?" }
-  ]
+  ],
+  "lang": "de"
 }
 ```
+
+`lang` optional, `de` | `en` | `it`, Default `de` — siehe Abschnitt "Sprache" oben.
 
 Response:
 ```json
