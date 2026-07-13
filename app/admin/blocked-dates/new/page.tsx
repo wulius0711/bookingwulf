@@ -20,22 +20,37 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
     'use server';
 
     const session = await verifySession();
-    const apartmentId = Number(formData.get('apartmentId'));
+    const apartmentIdRaw = String(formData.get('apartmentId') || '');
+    const apartmentId = apartmentIdRaw === 'all' ? null : Number(apartmentIdRaw);
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const type = String(formData.get('type') || 'manual');
     const note = String(formData.get('note') || '');
 
-    if (!apartmentId || !startDate || !endDate) return;
+    if (!apartmentIdRaw || !startDate || !endDate) return;
+    if (apartmentId !== null && !apartmentId) return;
 
-    if (session.hotelId !== null) {
-      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
-      if (!apt || apt.hotelId !== session.hotelId) return;
+    if (apartmentId !== null) {
+      if (session.hotelId !== null) {
+        const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
+        if (!apt || apt.hotelId !== session.hotelId) return;
+      }
+    } else if (session.hotelId === null) {
+      return; // Superadmin hat auf dieser Seite keinen impliziten Hotel-Kontext für "Alle Apartments"
     }
 
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
-    await prisma.blockedRange.create({ data: { apartmentId, startDate, endDate, type, note } });
+    await prisma.blockedRange.create({
+      data: {
+        apartmentId,
+        startDate,
+        endDate,
+        type,
+        note,
+        ...(apartmentId === null ? { hotelId: session.hotelId } : {}),
+      },
+    });
     redirect('/admin/blocked-dates');
   }
 
@@ -62,6 +77,7 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
                 <label style={labelStyle}>Apartment</label>
                 <select name="apartmentId" required style={inputStyle}>
                   <option value="">Bitte auswählen</option>
+                  {session.hotelId !== null && <option value="all">Alle Apartments (hotelweit)</option>}
                   {apartments.map((a) => (
                     <option key={a.id} value={a.id}>{a.name}</option>
                   ))}
