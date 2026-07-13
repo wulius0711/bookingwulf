@@ -21,7 +21,9 @@ async function deleteBlockedDate(formData: FormData) {
       where: { id },
       include: { apartment: { select: { hotelId: true } } },
     });
-    if (!range || range.apartment?.hotelId !== session.hotelId) return;
+    const ownedByHotel = range?.apartment?.hotelId === session.hotelId
+      || (range?.apartmentId === null && range?.hotelId === session.hotelId);
+    if (!range || !ownedByHotel) return;
   }
 
   await prisma.blockedRange.delete({ where: { id } });
@@ -43,7 +45,13 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
 
   const ranges = await prisma.blockedRange.findMany({
     where: selectedHotelId !== null
-      ? { apartment: { hotelId: selectedHotelId }, NOT: { type: 'booking' } }
+      ? {
+          OR: [
+            { apartment: { hotelId: selectedHotelId } },
+            { apartmentId: null, hotelId: selectedHotelId },
+          ],
+          NOT: { type: 'booking' },
+        }
       : { NOT: { type: 'booking' } },
     include: { apartment: { include: { hotel: { select: { name: true, settings: { select: { accentColor: true } } } } } } },
     orderBy: { startDate: 'asc' },

@@ -15,7 +15,9 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
   });
 
   if (!range) notFound();
-  if (session.hotelId !== null && range.apartment?.hotelId !== session.hotelId) notFound();
+  const ownedByHotel = range.apartment?.hotelId === session.hotelId
+    || (range.apartmentId === null && range.hotelId === session.hotelId);
+  if (session.hotelId !== null && !ownedByHotel) notFound();
 
   const apartments = await prisma.apartment.findMany({
     where: {
@@ -29,18 +31,23 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
     'use server';
 
     const session = await verifySession();
-    const apartmentId = Number(formData.get('apartmentId'));
+    const apartmentIdRaw = String(formData.get('apartmentId') || '');
+    const apartmentId = apartmentIdRaw === 'all' ? null : Number(apartmentIdRaw);
     const startDate = new Date(String(formData.get('startDate')));
     const endDate = new Date(String(formData.get('endDate')));
     const type = String(formData.get('type') || 'manual');
     const note = String(formData.get('note') || '');
 
-    if (!apartmentId || !startDate || !endDate) return;
+    if (!apartmentIdRaw || !startDate || !endDate) return;
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
     if (session.hotelId !== null) {
-      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
-      if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+      if (apartmentId !== null) {
+        const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
+        if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
+      } else if (range?.hotelId !== session.hotelId) {
+        throw new Error('Zugriff verweigert.');
+      }
     }
 
     await prisma.blockedRange.update({
@@ -84,7 +91,8 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
       <form action={updateBlockedDate} style={{ display: 'grid', gap: 16 }}>
         <div style={fieldWrap}>
           <label style={labelStyle}>Apartment</label>
-          <select name="apartmentId" required defaultValue={range.apartmentId ?? ''} style={fieldStyle}>
+          <select name="apartmentId" required defaultValue={range.apartmentId ?? 'all'} style={fieldStyle}>
+            {range.apartmentId === null && <option value="all">Alle Apartments (hotelweit)</option>}
             {apartments.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
@@ -112,6 +120,7 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
             <select name="type" defaultValue={range.type} style={fieldStyle}>
               <option value="manual">Eigennutzung</option>
               <option value="other">Sonstiges</option>
+              {range.type === 'blocked' && <option value="blocked">Blockiert</option>}
             </select>
           )}
         </div>
