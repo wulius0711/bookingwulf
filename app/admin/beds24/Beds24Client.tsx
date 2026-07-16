@@ -27,6 +27,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
   const [status, setStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [showReconnect, setShowReconnect] = useState(false);
 
   async function handleConnect(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +41,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
     const data = await res.json();
     if (res.ok) {
       setConnected(true);
+      setShowReconnect(false);
       setStatus({ type: 'success', msg: `Verbunden${data.info ? ` — ${data.info}` : ''}` });
       setInviteCode('');
     } else {
@@ -96,19 +98,37 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
         <p style={sectionTitle}>Verbindung</p>
 
         {connected ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--status-booked-text)', display: 'inline-block' }} />
-              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--status-booked-text)' }}>Verbunden</span>
+          <div style={{ display: 'grid', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--status-booked-text)', display: 'inline-block' }} />
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--status-booked-text)' }}>Verbunden</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <label className="form-toggle">
+                  <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
+                  Sync aktiv
+                </label>
+                <Button variant="secondary" size="sm" onClick={() => setShowReconnect((v) => !v)}>Neu verbinden</Button>
+                <Button variant="secondary" size="sm" onClick={() => setConfirmOpen(true)}>Trennen</Button>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <label className="form-toggle">
-                <input type="checkbox" checked={enabled} onChange={handleToggleEnabled} />
-                <span className="toggle-track"><span className="toggle-thumb" /></span>
-                Sync aktiv
-              </label>
-              <Button variant="secondary" size="sm" onClick={() => setConfirmOpen(true)}>Trennen</Button>
-            </div>
+
+            {showReconnect && (
+              <form onSubmit={handleConnect} style={{ display: 'grid', gap: 12, paddingTop: 4, borderTop: '1px solid var(--border)' }}>
+                <div style={{ display: 'grid', gap: 4, marginTop: 12 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Neuer Invite Code</label>
+                  <input type="password" value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Beds24 Invite Code" style={inputStyle} required />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <Button variant="primary" type="submit" loading={saving} disabled={saving}>
+                    {saving ? 'Verbinden…' : 'Verbinden'}
+                  </Button>
+                  <Button variant="secondary" type="button" onClick={() => setShowReconnect(false)}>Abbrechen</Button>
+                </div>
+              </form>
+            )}
           </div>
         ) : (
           <form onSubmit={handleConnect} style={{ display: 'grid', gap: 12 }}>
