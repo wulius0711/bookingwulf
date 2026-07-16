@@ -621,7 +621,7 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                   {request.checkinNotes}
                 </div>
               )}
-              {(request.checkinBirthdate || request.checkinNationality || request.checkinDocNumber) && (
+              {(request.checkinBirthdate || request.checkinNationality || request.checkinDocNumber || request.street || Array.isArray(request.checkinGuestsJson)) && (
                 <details style={{ gridColumn: '2', marginTop: 8 }}>
                   <summary style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer', userSelect: 'none', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ transition: 'transform 0.15s' }}>
@@ -637,7 +637,34 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
                     {request.checkinNationality && <div>Staatsangehörigkeit: <strong>{request.checkinNationality}</strong></div>}
                     {request.country && <div>Herkunftsland: <strong>{request.country}</strong></div>}
                     {request.checkinDocNumber && <div>Ausweis-/Reisepassnr.: <strong>{request.checkinDocNumber}</strong></div>}
+                    {(request.street || request.zip || request.city) && (
+                      <div>Adresse: <strong>{[request.street, [request.zip, request.city].filter(Boolean).join(' ')].filter(Boolean).join(', ')}</strong></div>
+                    )}
+                    {request.checkinSignature && (
+                      <div>
+                        Unterschrift:
+                        <div style={{ marginTop: 4, background: '#fff', border: '1px solid var(--primitive-blue-100)', borderRadius: 6, padding: 6, maxWidth: 260 }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={request.checkinSignature} alt="Unterschrift des Gasts" style={{ display: 'block', width: '100%', height: 'auto' }} />
+                        </div>
+                      </div>
+                    )}
                   </div>
+                  {Array.isArray(request.checkinGuestsJson) && request.checkinGuestsJson.length > 0 && (
+                    <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+                      {(request.checkinGuestsJson as { type?: string; firstname?: string; lastname?: string; birthdate?: string; nationality?: string; docNumber?: string }[]).map((guest, i) => (
+                        <div key={i} style={{ fontSize: 13, color: 'var(--text-primary)', background: 'var(--status-new-bg)', border: '1px solid var(--primitive-blue-100)', padding: '10px 12px', borderRadius: 8, display: 'grid', gap: 4 }}>
+                          <div style={{ fontWeight: 700 }}>Mitreisende(r) {i + 1}{guest.type ? ` (${guest.type})` : ''}</div>
+                          {(guest.firstname || guest.lastname) && (
+                            <div>Name: <strong>{[guest.firstname, guest.lastname].filter(Boolean).join(' ')}</strong></div>
+                          )}
+                          {guest.birthdate && <div>Geburtsdatum: <strong>{guest.birthdate}</strong></div>}
+                          {guest.nationality && <div>Staatsangehörigkeit: <strong>{guest.nationality}</strong></div>}
+                          {guest.docNumber && <div>Ausweis-/Reisepassnr.: <strong>{guest.docNumber}</strong></div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </details>
               )}
             </div>

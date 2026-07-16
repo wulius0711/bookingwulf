@@ -108,7 +108,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 - [x] Check-out-Erinnerung: automatische E-Mail am Abreisetag (08:00 UTC) mit Check-out-Uhrzeit und konfigurierbaren Hinweisen des Betreibers
 - [x] Bewertungsanfrage (Post-Stay): automatische E-Mail X Tage nach Abreise mit Google-Reviews-Link — Pro, Mai 2026
 - [x] Gäste-Portal: persönlicher Buchungsbereich per Token-Link (kein Login) — alle Pläne, Mai 2026
-  - Online Check-in (Ankunftszeit + Hausordnung bestätigen)
+  - Online Check-in (Ankunftszeit + Hausordnung bestätigen) — inkl. Meldegesetz-Compliance seit Juli 2026: Adresse, digitale Unterschrift (`signature_pad`), Vor-Ort-Bestätigung per QR-Code am Objekt (schaltet ggf. Nuki-Zugangscode frei). Details: `docs/Meldewesen-und-Rechnungen/feratel-meldewesen.md`
   - Online Check-out anfordern
   - Extras buchen & Varianten-Gruppen (exklusiv buchbare Alternativen, z. B. Hotelstorno-Varianten)
   - Hausinfos / Gästemappe (WLAN, Parkplatz, Müll, Hausordnung, Notfallnummern)
@@ -534,7 +534,7 @@ Voraussetzung: Dev-Server läuft auf Port 3000 (`npm run dev`).
 - [ ] Mini-Widget: "ab X €/Nacht" Preisanzeige — Mindestpreis aus Apartment-Einstellungen automatisch anzeigen, wartungsfrei, kein manueller Eintrag nötig
 - [ ] Housekeeping-Modul: Reinigungsaufgaben nach Abreise, Status offen/fertig, Zugang per Magic-Link ohne Login → Pro
 - [x] DATEV / Buchhaltungsexport: CSV mit Buchungen und Steuerpositionen — fertig (Mai 2026)
-- [ ] Gästemeldeexport: Gastdaten (Name, Geburtsdatum, Nationalität, Reisepassnummer, Anreise/Abreise, Unterkunft) als CSV exportieren — Betrieb lädt selbst im Landesportal hoch, kein Direktanschluss ans Meldesystem → Pro
+- [x] Gästemeldeexport: Gastdaten (Name, Geburtsdatum, Nationalität, Reisepassnummer, Adresse, Anreise/Abreise, Unterkunft) als CSV exportieren — Betrieb lädt selbst im Landesportal/Feratel-WebClient hoch, kein Direktanschluss ans Meldesystem → Juli 2026
 - [ ] Google Hotels Free Booking Links (Meta-Suche-Integration via Datenfeed) → Business
 - [ ] Affiliate- / Empfehlungsprogramm: Betreiber empfehlen bookingwulf, Provision auf erste Zahlungen
 - [ ] SMS-Benachrichtigungen (Check-in Codes, Erinnerungen)

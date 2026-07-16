@@ -250,6 +250,7 @@ export async function POST(req: Request) {
         hotelId: hotel.id, arrival, departure, nights, adults, children,
         selectedApartmentIds: selectedApartmentIds.join(','),
         salutation, firstname, lastname, email, country,
+        street: street || null, zip: zip || null, city: city || null,
         message: message || null, paymentMethod: paymentMethod || null, newsletter,
         status: isPaypalBooking ? 'pending_paypal' : isStripeBooking ? 'pending_stripe' : (isInstantBooking ? 'booked' : 'new'),
         language: autoLang,

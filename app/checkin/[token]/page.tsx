@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { notFound } from 'next/navigation';
 import { submitCheckin } from './actions';
+import SignatureField from './SignatureField';
 
 type Props = { params: Promise<{ token: string }> };
 
@@ -271,6 +272,8 @@ export default async function CheckinPage({ params }: Props) {
                     </div>
                   </div>
                 )}
+
+                <SignatureField accent={accent} />
 
                 <button type="submit" className="btn">Check-in abschließen</button>
               </form>

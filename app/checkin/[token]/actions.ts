@@ -17,8 +17,9 @@ export async function submitCheckin(formData: FormData) {
   const token = String(formData.get('token') || '').trim();
   const arrivalTime = String(formData.get('arrivalTime') || '').trim();
   const notes = String(formData.get('notes') || '').trim();
+  const signature = String(formData.get('signature') || '').trim();
 
-  if (!token || !arrivalTime) redirect(`/checkin/${token}`);
+  if (!token || !arrivalTime || !signature) redirect(`/checkin/${token}`);
 
   const request = await prisma.request.findUnique({
     where: { checkinToken: token },
@@ -75,6 +76,7 @@ export async function submitCheckin(formData: FormData) {
       checkinNationality: primary?.nationality || null,
       checkinDocNumber: primary?.docNumber || null,
       checkinGuestsJson: checkinGuests,
+      checkinSignature: signature,
     },
   });
 

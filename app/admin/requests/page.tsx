@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { DeleteAllRequestsButton } from './DeleteButtons';
 import RequestList from './RequestList';
 import ExportButton from './ExportButton';
+import ExportMeldedatenButton from './ExportMeldedatenButton';
 import { EmptyState } from '../components/ui';
 
 export const dynamic = 'force-dynamic';
@@ -65,6 +66,7 @@ export default async function RequestsPage() {
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <ExportButton />
+          <ExportMeldedatenButton />
           {isSuperAdmin && requests.length > 0 && (
             <DeleteAllRequestsButton hotelSlug="" count={requests.length} />
           )}

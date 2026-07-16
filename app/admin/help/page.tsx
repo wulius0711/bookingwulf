@@ -743,8 +743,8 @@ function GastePortalSection() {
       <H3>Was der Gast im Portal sieht</H3>
       <div style={{ display: 'grid', gap: 8, margin: '12px 0 16px' }}>
         {[
-          { label: 'Buchung',     desc: 'Anreise, Abreise, Apartment(s), Preisübersicht und Zahlungsart. Bei Nuki-Integration wird der Zugangscode hier angezeigt.' },
-          { label: 'Check-in',   desc: 'Ankunftszeit auswählen und Hausordnung bestätigen — erscheint nur wenn „Online Check-in" in den Einstellungen aktiviert ist.' },
+          { label: 'Buchung',     desc: 'Anreise, Abreise, Apartment(s), Preisübersicht und Zahlungsart. Bei Nuki-Integration wird der Zugangscode hier angezeigt, sobald der Gast die Vor-Ort-Bestätigung (QR-Code) durchgeführt hat.' },
+          { label: 'Check-in',   desc: 'Ankunftszeit, Meldedaten (Geburtsdatum, Nationalität, Ausweisnr., Adresse), digitale Unterschrift und Hausordnung bestätigen — erscheint nur wenn „Online Check-in" in den Einstellungen aktiviert ist.' },
           { label: 'Extras',     desc: 'Alle aktiven Zusatzleistungen. Bereits gebuchte sind grün markiert. Mit Varianten-Gruppe: nur eine Variante buchbar.' },
           { label: 'Hausinfos',  desc: 'WLAN-Zugangsdaten, Parkplatz, Müllentsorgung, Hausordnung und Notfallnummern. Wird befüllt unter Konfiguration → Gäste-Lounge.' },
           { label: 'Umgebung',   desc: 'Restaurants, Aktivitäten, Events und Sehenswürdigkeiten rund ums Hotel. Verwaltung unter Konfiguration → Gäste-Lounge.' },
@@ -840,13 +840,25 @@ function EmailsSection() {
       <H3>Online Check-in</H3>
       <P>
         Gäste erhalten nach der Buchungsbestätigung einen persönlichen Link zu einem Formular,
-        in dem sie ihre Ankunftszeit und optionale Hinweise angeben können. Falls eine Hausordnung
-        hinterlegt ist, muss der Gast diese bestätigen.
+        in dem sie ihre Ankunftszeit, ihre gesetzlich vorgeschriebenen Meldedaten (Geburtsdatum,
+        Nationalität, Ausweisnummer, Adresse) sowie optionale Hinweise angeben. Mit einer digitalen
+        Unterschrift bestätigt der Gast die Richtigkeit seiner Angaben. Falls eine Hausordnung
+        hinterlegt ist, muss der Gast diese ebenfalls bestätigen.
       </P>
       <P>
-        Der Betreiber sieht in der Buchungsdetailansicht ob der Check-in ausgefüllt wurde.
-        Der Gast erhält genau eine Erinnerungsmail — X Tage vor Anreise, falls noch nicht ausgefüllt.
+        Der Betreiber sieht in der Buchungsdetailansicht ob der Check-in ausgefüllt wurde, inklusive
+        aller Meldedaten und der Unterschrift. Der Gast erhält genau eine Erinnerungsmail — X Tage
+        vor Anreise, falls noch nicht ausgefüllt.
       </P>
+      <Note>
+        <strong>Wichtig für die Meldepflicht:</strong> Die Online-Unterschrift wird laut österreichischem
+        Meldegesetz erst gültig, wenn der Gast sie vor Ort bestätigt. Drucke dafür in den
+        Apartment-Einstellungen unter <strong>„Vor-Ort-Bestätigung"</strong> den QR-Code aus und bringe
+        ihn am Eingang bzw. Schlüsselkasten an — der Gast scannt ihn bei Ankunft. Bei Nuki-Hotels wird
+        der Zugangscode in der Gäste-Lounge erst nach dieser Bestätigung angezeigt.
+        Über den <strong>Gästemeldeexport</strong> (Button in der Anfragen-Liste) kannst du die Meldedaten
+        aller eingecheckten Gäste als CSV exportieren und im Landesportal bzw. Feratel-WebClient hochladen.
+      </Note>
 
       <H3>Check-out-Erinnerung</H3>
       <P>

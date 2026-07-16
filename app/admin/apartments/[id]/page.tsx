@@ -11,6 +11,7 @@ import { hasPlanAccess } from '@/src/lib/plan-gates';
 import RichTextEditor from '../_components/RichTextEditor';
 import { autoTranslateFields, translateList } from '@/src/lib/translate';
 import InfoTooltip from '@/app/admin/components/InfoTooltip';
+import QRCode from 'qrcode';
 
 export const dynamic = 'force-dynamic';
 
@@ -384,6 +385,30 @@ export default async function EditApartmentPage({ params }: PageProps) {
                 <div style={{ display: 'grid', gap: 4 }}>
                   <label style={labelStyle}>Schlüsselübergabe / Check-in Info</label>
                   <textarea name="gpCheckinInfo" defaultValue={apartment.gpCheckinInfo ?? ''} rows={3} placeholder="Wo liegt der Schlüssel, Codeschloss-Code etc." style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <div style={{ display: 'grid', gap: 8 }}>
+                  <label style={labelStyle}>
+                    Vor-Ort-Bestätigung (QR-Code)
+                    <InfoTooltip text="Zum Ausdrucken und Anbringen am Eingang/Schlüsselkasten. Gäste scannen den Code bei Ankunft, um ihre Meldedaten-Unterschrift rechtsgültig zu bestätigen (gesetzliche Vorgabe lt. Meldegesetz) — danach wird ggf. der Nuki-Zugangscode freigeschaltet." />
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <img
+                      src={await QRCode.toDataURL(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/vor-ort/${apartment.id}`, { width: 200, margin: 1 })}
+                      alt="QR-Code zur Vor-Ort-Bestätigung"
+                      style={{ width: 140, height: 140, border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }}
+                    />
+                    <div style={{ fontSize: 13, color: 'var(--text-muted)', display: 'grid', gap: 6 }}>
+                      <span>Ausdrucken und am Eingang bzw. Schlüsselkasten anbringen.</span>
+                      <a
+                        href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/vor-ort/${apartment.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+                      >
+                        Seite öffnen
+                      </a>
+                    </div>
+                  </div>
                 </div>
                 <div style={{ display: 'grid', gap: 8 }}>
                   <label style={labelStyle}>Check-in Fotos</label>

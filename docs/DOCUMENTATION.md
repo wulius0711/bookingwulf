@@ -209,6 +209,11 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | checkinCompletedAt | DateTime? | Zeitstempel wenn Gast Online-Check-in ausgefüllt hat |
 | checkinArrivalTime | String? | Vom Gast angegebene Ankunftszeit (z.B. „15:00") |
 | checkinNotes | String? | Freitext-Notizen des Gastes beim Check-in |
+| street / zip / city | String? | Heimatadresse des Gasts, aus dem Buchungswidget (für Meldepflicht AT) |
+| checkinBirthdate / checkinNationality / checkinDocNumber | String? | Meldedaten des Hauptgasts |
+| checkinGuestsJson | Json? | Meldedaten aller Gäste inkl. Hauptgast: `[{type, firstname, lastname, birthdate, nationality, docNumber}]` |
+| checkinSignature | String? `@db.Text` | Digitale Unterschrift des Gasts (Base64-PNG), bestätigt Meldedaten-Richtigkeit lt. Meldegesetz |
+| checkinOnsiteConfirmedAt | DateTime? | Zeitstempel der Vor-Ort-Bestätigung per QR-Code (`/vor-ort/[apartmentId]`) — macht die Unterschrift rechtsgültig |
 | checkoutRequestedAt | DateTime? | Zeitstempel wenn Gast Check-out angefordert hat |
 | checkinReminderSentAt | DateTime? | Guard: Pre-Arrival-Reminder nur einmal senden |
 | checkoutReminderSentAt | DateTime? | Guard: Checkout-Erinnerung nur einmal senden |
@@ -911,17 +916,19 @@ Die Nav-Items sind in Gruppen (z. B. Betrieb, Verwaltung, Einstellungen) aufgete
 
 **HotelSettings Felder:** `preArrivalEnabled`, `preArrivalHouseRules String?`, `preArrivalReminderDays Int @default(3)`
 
-**Request Felder:** `checkinToken String? @unique`, `checkinCompletedAt DateTime?`, `checkinArrivalTime String?`, `checkinNotes String?`, `checkinReminderSentAt DateTime?`
+**Request Felder:** `checkinToken String? @unique`, `checkinCompletedAt DateTime?`, `checkinArrivalTime String?`, `checkinNotes String?`, `checkinReminderSentAt DateTime?`, `street String?`, `zip String?`, `city String?`, `checkinBirthdate String?`, `checkinNationality String?`, `checkinDocNumber String?`, `checkinGuestsJson Json?` (Array `{type, firstname, lastname, birthdate, nationality, docNumber}` — ein Eintrag pro Gast inkl. Hauptgast), `checkinSignature String? @db.Text` (Base64-PNG der digitalen Unterschrift), `checkinOnsiteConfirmedAt DateTime?`
 
 **Flow:**
 1. Betreiber aktiviert Feature in Einstellungen (optional: Hausordnung-Text, Reminder-Tage)
 2. Bei Status → `booked`: `crypto.randomUUID()` generiert Token, wird in `Request.checkinToken` gespeichert
 3. Bestätigungsmail enthält zusätzlichen „Jetzt einchecken →"-Button mit Link `/checkin/[token]`
-4. Gast öffnet `/checkin/[token]` (öffentliche Seite, kein Login): Ankunftszeit wählen, Notizen, Hausordnung akzeptieren → speichert `checkinCompletedAt`, `checkinArrivalTime`, `checkinNotes`
+4. Gast öffnet `/checkin/[token]` (öffentliche Seite, kein Login): Ankunftszeit wählen, pro Gast Meldedaten (Geburtsdatum, Nationalität, bei Erwachsenen Ausweisnr.), Notizen, digitale Unterschrift (`signature_pad`-Canvas, Pflichtfeld client- und serverseitig), Hausordnung akzeptieren → speichert `checkinCompletedAt`, `checkinArrivalTime`, `checkinNotes`, `checkinGuestsJson`, `checkinSignature`
 5. Cron `/api/cron/pre-arrival-reminder` läuft täglich 09:00 UTC und prüft, ob heute = Anreisetag − X Tage ist. Jeder Gast erhält genau eine Erinnerungsmail (Guard: `checkinReminderSentAt IS NULL`), danach wird `checkinReminderSentAt` gesetzt
-6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit, Notizen und ausklappbaren Meldedaten (Geburtsdatum, Staatsangehörigkeit, Ausweisnummer)
+6. Buchungsdetailseite zeigt Check-in Status (✓ Ausgefüllt / ⏳ Ausstehend) mit Ankunftszeit, Notizen und ausklappbaren Meldedaten (Adresse, alle Gäste aus `checkinGuestsJson`, Unterschrift-Vorschau als Bild)
 7. Buchungsliste zeigt grünen „✓ Check-in"-Badge (abgeschlossen) bzw. grauen „Check-in"-Badge (ausstehend) bei gebuchten Anfragen
 8. Analytics-Seite (Business) zeigt KPI „Online Check-in" als Abschlussrate in % (completedCheckins / booked)
+9. **Vor-Ort-Bestätigung** (`app/vor-ort/[apartmentId]/`): Hotel druckt einen pro Apartment generierten QR-Code aus (Admin → Apartment → „Vor-Ort-Bestätigung", `qrcode`-Paket) und bringt ihn am Eingang/Schlüsselkasten an. Gast scannt bei Ankunft, gibt Nachname + Anreisedatum ein → Server Action matched die Buchung (Apartment-ID + Nachname + Anreisedatum) und setzt `checkinOnsiteConfirmedAt`, dann Redirect zu `/gast/[token]`. Bei Nuki-Hotels wird der Zugangscode in der Gäste-Lounge erst nach dieser Bestätigung angezeigt (vorher Hinweistext mit Fallback-Link). Hintergrund: § 5 Abs 1 MeldeG verlangt eine vor Ort bestätigte Unterschrift, eine rein vorab online geleistete reicht laut BMI-Klarstellung nicht — Details: `docs/Meldewesen-und-Rechnungen/feratel-meldewesen.md`
+10. **Gästemeldeexport** (`/api/admin/export-meldedaten`, Button in der Anfragen-Liste): CSV mit einer Zeile pro Gast (Name, Geburtsdatum, Nationalität, Ausweisnr., Adresse, Herkunftsland), gefiltert nach Anreisezeitraum, nur Buchungen mit abgeschlossenem Check-in — zum manuellen Hochladen im Landesportal/Feratel-WebClient
 
 ### Check-out-Erinnerung
 

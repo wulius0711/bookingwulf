@@ -380,6 +380,9 @@ model Request {
   lastname             String
   email                String
   country              String
+  street               String?
+  zip                  String?
+  city                 String?
   message              String?
   paymentMethod        String?
   paypalOrderId        String?
@@ -404,6 +407,8 @@ model Request {
   checkinNationality     String?
   checkinDocNumber       String?
   checkinGuestsJson      Json?    // [{ type, firstname, lastname, birthdate, nationality, docNumber }]
+  checkinSignature       String?  @db.Text // base64 PNG data URL, confirms accuracy of Meldedaten (§ 5 Abs 1 MeldeG)
+  checkinOnsiteConfirmedAt DateTime? // final vor-Ort confirmation, required for the signature to be legally valid
 
   guestsJson             Json?    // additional_guests from widget: [{ type, firstname, lastname, birthday? }]
 

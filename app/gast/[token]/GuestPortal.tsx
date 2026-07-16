@@ -18,6 +18,9 @@ type Booking = {
   pricingJson: Record<string, unknown> | null;
   extrasJson: unknown[] | null;
   nukiCode: string | null;
+  hasNukiCode: boolean;
+  onsiteConfirmed: boolean;
+  apartmentId: number | null;
   checkinCompleted: boolean;
   checkinArrivalTime: string | null;
   checkoutRequested: boolean;
@@ -611,6 +614,20 @@ export default function GuestPortal({ token, booking, hotel, apartments, allExtr
                   <div className="nuki-label">{t.accessCode}</div>
                   <div className="nuki-code">{booking.nukiCode}</div>
                   <div className="nuki-hint">{t.accessCodeValid}</div>
+                </div>
+              )}
+              {!booking.nukiCode && booking.hasNukiCode && !booking.onsiteConfirmed && (
+                <div className="nuki">
+                  <div className="nuki-label">{t.accessCode}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, margin: '4px 0 0' }}>
+                    Bitte scanne den QR-Code am Eingang/Schlüsselkasten, um deine Ankunft zu bestätigen — danach wird dein Zugangscode hier angezeigt.
+                    {booking.apartmentId && (
+                      <>
+                        {' '}
+                        <a href={`/vor-ort/${booking.apartmentId}`} style={{ color: hotel.accentColor }}>Kein QR-Code zur Hand?</a>
+                      </>
+                    )}
+                  </p>
                 </div>
               )}
               {mapsUrl && (
