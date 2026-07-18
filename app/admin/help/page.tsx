@@ -9,6 +9,7 @@ const sections = [
   { id: 'buchungen',     title: 'Buchungen & Anfragen',  plan: null,       content: BuchungenSection },
   { id: 'kalender',      title: 'Kalender',              plan: null,       content: KalenderSection },
   { id: 'zimmerplan',   title: 'Zimmerplan',            plan: null,       content: ZimmerplanSection },
+  { id: 'housekeeping', title: 'Housekeeping',          plan: 'Pro',      content: HousekeepingSection },
   { id: 'analytics',     title: 'Analytics',             plan: 'Business', content: AnalyticsSection },
   { id: 'apartments',    title: 'Apartments verwalten',  plan: null,       content: ApartmentsSection },
   { id: 'preise',        title: 'Preisanpassungen',       plan: null,       content: PreiseSection },
@@ -441,6 +442,84 @@ function ZimmerplanSection() {
         Bei belegten Apartments werden Gastname, verbleibende Tage sowie Anreise- und Abreisedatum
         angezeigt. Fällt die Abreise auf den gewählten Tag, erscheint ein <strong>„Check-out heute"</strong>-Badge.
         Mit dem Datumsfeld oben rechts kannst du jeden Tag prüfen.
+      </P>
+    </div>
+  );
+}
+
+function HousekeepingSection() {
+  return (
+    <div>
+      <H2>Housekeeping</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Reinigungsstatus und Checkliste je Apartment — direkt im bookingwulf-Admin, ganz ohne
+        Beds24-Login. Ideal für Rezeption oder Reinigungspersonal, um auf einen Blick zu sehen,
+        welche Apartments bereit für den nächsten Gast sind.
+      </P>
+
+      <H3>Status</H3>
+      <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { color: '#86efac', bg: '#f0fdf4', label: 'Sauber – bereit für den nächsten Gast' },
+          { color: '#fcd34d', bg: '#fffbeb', label: 'Reinigung nötig' },
+          { color: '#fca5a5', bg: '#fff5f5', label: 'Reparatur nötig' },
+        ].map((c) => (
+          <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 14, height: 14, borderRadius: 3, background: c.bg, border: `2px solid ${c.color}`, flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{c.label}</span>
+          </div>
+        ))}
+      </div>
+      <P>
+        Status per Klick auf das Dropdown neben dem Apartment-Namen ändern. Jede Karte lässt sich
+        aufklappen (Klick auf Namen oder Pfeil) — darin: Checkliste, Notizen und Zeitpunkt der
+        letzten Aktualisierung.
+      </P>
+
+      <H3>Checkliste</H3>
+      <P>
+        Beim Aufklappen einer Karte erscheint die Checkliste dieses Apartments zum Abhaken.
+        Sind <strong>alle Punkte abgehakt</strong>, springt der Status automatisch auf „Sauber" —
+        entfernst du danach wieder ein Häkchen, springt er automatisch zurück auf
+        „Reinigung nötig".
+      </P>
+      <Tip>
+        <strong>Checkliste anpassen:</strong> Welche Punkte pro Apartment abgefragt werden, legst
+        du unter <strong>Verwaltung → Apartments → [Apartment] bearbeiten → Housekeeping</strong> fest
+        (ein Punkt pro Zeile). Nicht auf der Housekeeping-Seite selbst — die zeigt nur die
+        aktuelle Liste zum Abhaken.
+      </Tip>
+
+      <H3>Notizen</H3>
+      <P>
+        Freitextfeld pro Apartment, z.B. „Fenster klemmt" oder „Handtücher fehlen". Es gibt keinen
+        Verlauf — eine neue Notiz überschreibt die alte, und sie bleibt (anders als die Checkliste)
+        auch nach einer Statusänderung stehen, bis sie manuell geändert wird.
+      </P>
+
+      <H3>Belegungsanzeige</H3>
+      <P>
+        Unter dem Apartment-Namen zeigt ein farbiger Punkt den aktuellen Belegungsstatus:
+        <strong> Frei</strong>, <strong>Belegt bis [Datum]</strong>, <strong>Check-out heute</strong> oder
+        <strong> Belegt</strong> (bei einer manuellen Sperrzeit). Das hilft einzuordnen, ob „Sauber"
+        bedeutet „bereit für den nächsten Gast" oder nur „war beim letzten Check-in sauber, Gast ist
+        aber noch da".
+      </P>
+
+      <H3>Automatik bei Check-out</H3>
+      <P>
+        Täglich um 12:00 Uhr prüft ein automatischer Job, welche Apartments heute Check-out haben,
+        und setzt deren Status von „Sauber" auf „Reinigung nötig" — die Checkliste wird dabei
+        zurückgesetzt. Ein manuell gesetzter Status „Reparatur nötig" wird dabei nie überschrieben.
+      </P>
+
+      <H3>Sortierung</H3>
+      <P>
+        Oben rechts kannst du zwischen zwei Sortierungen wählen: <strong>Anlegezeitpunkt</strong>
+        (Reihenfolge, in der die Apartments angelegt wurden) oder <strong>Status</strong> (Reparatur
+        nötig zuerst, dann Reinigung nötig, dann Sauber — für den schnellen Überblick, wo
+        Handlungsbedarf besteht).
       </P>
     </div>
   );

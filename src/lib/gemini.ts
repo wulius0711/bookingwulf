@@ -19,6 +19,7 @@ const NAV_LABELS: Record<string, string> = {
   '/admin/requests':         'Betrieb → Anfragen',
   '/admin/calendar':         'Betrieb → Kalender',
   '/admin/zimmerplan':       'Betrieb → Zimmerplan',
+  '/admin/housekeeping':     'Betrieb → Housekeeping',
   '/admin/analytics':        'Betrieb → Analytics',
   '/admin/apartments':       'Verwaltung → Apartments',
   '/admin/price-seasons':    'Verwaltung → Preisanpassungen',
@@ -69,6 +70,7 @@ BETRIEB:
 - Betrieb → Anfragen: Liste aller Buchungsanfragen mit Status (offen, bestätigt, abgelehnt). Anfragen beantworten, bestätigen, ablehnen, Status ändern.
 - Betrieb → Kalender: Monatsansicht aller Buchungen und Sperrzeiten pro Apartment.
 - Betrieb → Zimmerplan: Horizontaler Belegungsplan — alle Apartments als Zeilen, Tage als Spalten.
+- Betrieb → Housekeeping (Pro-Plan): Reinigungsstatus pro Apartment (Sauber / Reinigung nötig / Reparatur nötig), Checkliste zum Abhaken, Notizen, Belegungsanzeige (Frei/Belegt). Status springt automatisch auf „Sauber", sobald alle Checklisten-Punkte abgehakt sind. Bei Check-out springt der Status automatisch auf „Reinigung nötig" (täglich um 12:00 Uhr).
 - Betrieb → Analytics: Auswertungen zu Buchungsvolumen, Umsatz, Auslastung (Business-Plan).
 
 VERWALTUNG:
@@ -83,6 +85,7 @@ VERWALTUNG:
   - Check-in-Fotos: Bilder für die Anreisebeschreibung (z.B. Schlüsselbox-Standort)
   - iCal: Kalender-Feeds für Sync mit Booking.com, Airbnb etc.
   - Nuki: Smartlock diesem Apartment zuordnen
+  - Housekeeping: Reinigungs-Checkliste für dieses Apartment festlegen (ein Punkt pro Zeile) — wird unter Betrieb → Housekeeping zum Abhaken angezeigt
 - Verwaltung → Preisanpassungen: Saisonale Aufschläge oder Rabatte definieren, z.B. Hochsaison +20% (Pro-Plan).
 - Verwaltung → Sperrzeiten: Zeiträume sperren, in denen keine Buchungen möglich sind.
 - Verwaltung → Zusatzleistungen: Optionale Extras für Gäste konfigurieren, z.B. Frühstück, Parkplatz (Pro-Plan).
@@ -128,7 +131,8 @@ Apartment-Ebene (je Apartment separat unter Verwaltung → Apartments → Apartm
 - Kapazität (max. Erwachsene, Kinder, Babys)
 - iCal-Feeds für dieses Apartment (Sync mit Booking.com, Airbnb etc.)
 - Nuki-Schloss diesem Apartment zuordnen
-- Check-in-Fotos (Anreisebeschreibung mit Bildern, z.B. Schlüsselbox-Standort)`;
+- Check-in-Fotos (Anreisebeschreibung mit Bildern, z.B. Schlüsselbox-Standort)
+- Housekeeping-Checkliste (welche Punkte beim Reinigen abgehakt werden)`;
 
 // ─── System prompt builder ────────────────────────────────────────────────────
 function buildSystemPrompt(): string {

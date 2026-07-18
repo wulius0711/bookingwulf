@@ -1,6 +1,6 @@
 # bookingwulf — Interne Dokumentation
 
-> Stand: Juni 2026  
+> Stand: Juli 2026  
 > Stack: Next.js 16 · React 19 · PostgreSQL (Railway/Amsterdam) · Stripe · Resend · Vercel
 
 ---
@@ -24,12 +24,17 @@
 13. API-Routen
 14. Gast-Chatbot
 15. Umgebungsvariablen
-15. Deployment
-16. Schlüsselloses Einchecken (Nuki)
-17. Beds24 Channel Manager
-18. Datenschutz & DSGVO
-22. Gäste-Portal
-23. Launch Readiness & Infrastruktur-Hardening
+16. Deployment
+17. Schlüsselloses Einchecken (Nuki)
+18. Beds24 Channel Manager
+19. hungrywulf-Integration
+20. eventwulf-Integration
+21. Datenschutz & DSGVO
+22. Security
+23. Gäste-Portal
+24. Gutschein-System
+25. Launch Readiness & Infrastruktur-Hardening
+26. Preismodell-Umstellung (Juli 2026)
 
 ---
 
@@ -168,6 +173,11 @@ Erlaubt es, pro Einbettungsort andere Feature-Toggles zu setzen (z.B. Widget A =
 | bedrooms | Int? | Schlafzimmer |
 | amenities | String[] | Ausstattungsmerkmale |
 | isActive | Boolean | Sichtbarkeit im Widget |
+| housekeepingStatus | String | `clean` / `dirty` / `repair`, Default `clean` |
+| housekeepingNote | String? | Freitext-Notiz (mehrzeilig) |
+| housekeepingUpdatedAt | DateTime? | Letzte Statusänderung |
+| housekeepingChecklistItems | Json? | Reinigungs-Checkliste, `string[]` (Default falls leer: 5 Standardpunkte, siehe `DEFAULT_CHECKLIST_ITEMS` in `src/lib/housekeeping.ts`) |
+| housekeepingChecklistState | Json? | Abhak-Status der Checkliste, `{ [item]: boolean }` |
 
 Relationen: `ApartmentImage[]`, `PriceSeason[]`, `BlockedRange[]`, `IcalFeed[]`
 
@@ -838,6 +848,8 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/requests` | Alle | Buchungsanfragen verwalten |
 | `/admin/requests/[id]` | Alle | Detailansicht, Messaging (Business) |
 | `/admin/calendar` | Alle | Monatskalender mit Sperrzeiten + Buchungen |
+| `/admin/zimmerplan` | Alle | Belegungsplan (Gantt) & Tagesansicht, Sperrzeiten/Preiszeiträume/Buchungen direkt anlegen |
+| `/admin/housekeeping` | Pro | Reinigungsstatus (Sauber/Reinigung nötig/Reparatur nötig) + Checkliste je Apartment, Belegungsanzeige |
 | `/admin/apartments` | Alle | Apartments anlegen, Bilder hochladen |
 | `/admin/blocked-dates` | Alle | Manuelle Sperrzeiten |
 | `/admin/price-seasons` | Pro | Saisonale Preise, Last-Minute Rabatt, Lücken-Rabatt, Verfügbarkeits-Hinweise, Ortstaxe/Kurtaxe, Steuereinstellungen (MwSt.-Sätze für CSV-Export) |
@@ -1044,6 +1056,27 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 
 **Tagesansicht:** Karten-Grid mit Farbstatus (Grün/Rot/Gelb) für einen bestimmten Tag. Zeigt Gastname, verbleibende Tage, Check-out-Badge, Platform-Badges für iCal-Sperrzeiten.
 
+> **Bugfix 2026-07-18:** `belegungsplan`-Route und `src/lib/zimmerplan.ts` filterten `BlockedRange` nur über das direkte `hotelId`-Feld — dadurch fehlten apartment-spezifische Sperrzeiten (die nur über `apartment.hotelId` laufen) komplett im Zimmerplan. Query nutzt jetzt `OR: [{ apartment: { hotelId } }, { apartmentId: null, hotelId }]`, damit beide Varianten (apartment-spezifisch und hotelweit) erfasst werden. Gleicher Fix in `/api/admin/blocked-date` (Zugriffsprüfung beim Löschen/Bearbeiten) und `/admin/calendar` (hotelweite Sperrzeiten fehlten dort ebenfalls).
+
+### Housekeeping
+
+`/admin/housekeeping` (Pro) — Reinigungsstatus pro Apartment, ersetzt das nur per direktem Beds24-Login erreichbare native Beds24-Housekeeping-Modul durch eine bookingwulf-eigene, rein lokale Variante (kein Beds24-API-Call).
+
+**Datenmodell:** direkt auf `Apartment` (siehe Abschnitt 4) — `housekeepingStatus`, `housekeepingNote`, `housekeepingUpdatedAt`, `housekeepingChecklistItems`, `housekeepingChecklistState`.
+
+**Seite:** `app/admin/housekeeping/page.tsx` + `HousekeepingClient.tsx` — Karten-Grid (analog Zimmerplan-Tagesansicht), pro Apartment aufklappbar. Zeigt:
+- Status-Badge (Sauber/Reinigung nötig/Reparatur nötig), änderbar per Dropdown
+- Checkliste (Checkboxen) — Status springt automatisch auf „Sauber", sobald alle Punkte abgehakt sind, und zurück auf „Reinigung nötig", falls danach wieder ein Punkt entfernt wird
+- Notizen (mehrzeilig)
+- Belegungsanzeige (Frei/Belegt bis Datum/Check-out heute/Blockiert), via `buildZimmerplan()` wiederverwendet
+- Sortier-Umschalter: Anlegezeitpunkt (`createdAt`) oder Status-Dringlichkeit (Reparatur → Reinigung nötig → Sauber)
+
+**Checklisten-Vorlage:** pro Apartment editierbar unter `/admin/apartments/[id]` → Abschnitt „Housekeeping" (Freitext, ein Punkt pro Zeile). Default: 5 Standardpunkte (`DEFAULT_CHECKLIST_ITEMS` in `src/lib/housekeeping.ts`).
+
+**API:** `app/api/admin/housekeeping/route.ts` — `GET` (Liste), `PATCH` (`{apartmentId, status?, note?, checklistItem?, checklistDone?}`).
+
+**Cron-Job:** `app/api/cron/housekeeping-checkout/route.ts`, täglich 11:00 Uhr (`vercel.json`). Setzt Apartments mit Check-out heute automatisch von „Sauber" auf „Reinigung nötig" (überschreibt nie einen manuell gesetzten „Reparatur nötig"-Status).
+
 ### Geführte Tour
 
 `GuidedTour`-Komponente (`app/admin/components/GuidedTour.tsx`) — schrittweise Einführung für neue Nutzer mit `data-tour`-Attributen an Nav-Elementen. Da Items immer im DOM sind (auch bei zugeklappter Gruppe), funktioniert die Tour unabhängig vom Akkordeon-Zustand.
@@ -1150,6 +1183,9 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 | `/api/cron/pre-arrival-reminder` | `0 9 * * *` | 10:00 | Pre-Arrival-Reminder X Tage vor Anreise |
 | `/api/cron/review-request` | `0 10 * * *` | 11:00 | Bewertungsanfrage X Tage nach Abreise |
 | `/api/cron/daily-backup` | `0 2 * * *` | 03:00 | Vollständiger DB-Dump → Vercel Blob (private, 30 Tage) |
+| `/api/cron/beds24-messages-sync` | `*/30 * * * *` | alle 30 Min | Beds24-Gästenachrichten synchronisieren |
+| `/api/cron/housekeeping-checkout` | `0 11 * * *` | 12:00 | Apartments mit Check-out heute auf „Reinigung nötig" setzen |
+| `/api/health` | `*/5 * * * *` | alle 5 Min | Health-Check-Endpunkt |
 
 ### Sicherheitsschichten
 
@@ -1300,7 +1336,7 @@ Auf `/admin/chatbot` sieht nur der superAdmin einen Zähler wie oft der Buchungs
 
 ### Vercel
 
-Deployment via GitHub-Integration. Jeder Push auf `main` löst ein Deployment aus.
+Kein automatisches Deployment bei Push (`ignoreCommand: exit 0` in `vercel.json`). Deployment erfolgt manuell via `vercel --prod` nach jedem Push.
 
 **Cron Jobs (`vercel.json`):**
 
@@ -1317,6 +1353,9 @@ Alle Cron-Routen erfordern den `Authorization: Bearer <CRON_SECRET>` Header. Vol
 | `/api/cron/pre-arrival-reminder` | `0 9 * * *` | 10:00 tägl. | Pre-Arrival-Reminder |
 | `/api/cron/review-request` | `0 10 * * *` | 11:00 tägl. | Bewertungsanfrage |
 | `/api/cron/daily-backup` | `0 2 * * *` | 03:00 tägl. | DB-Dump → Vercel Blob (private) |
+| `/api/cron/beds24-messages-sync` | `*/30 * * * *` | alle 30 Min | Beds24-Gästenachrichten synchronisieren |
+| `/api/cron/housekeeping-checkout` | `0 11 * * *` | 12:00 tägl. | Housekeeping-Status auf „Reinigung nötig" bei Check-out |
+| `/api/health` | `*/5 * * * *` | alle 5 Min | Health-Check-Endpunkt |
 
 ### Rate Limits (öffentliche Endpunkte)
 
@@ -1377,7 +1416,7 @@ Stündliche automatisierte Cloud-Routine (`https://claude.ai/code/routines/trig_
 
 ---
 
-## 16. Schlüsselloses Einchecken (Nuki, Pro+)
+## 17. Schlüsselloses Einchecken (Nuki, Pro+)
 
 ### Übersicht
 
@@ -1417,7 +1456,7 @@ Sofortbuchung (bookingType='booking')
 
 ---
 
-## 17. Beds24 Channel Manager (Pro)
+## 18. Beds24 Channel Manager (Pro)
 
 ### Übersicht
 
@@ -1478,6 +1517,7 @@ Airbnb verarbeitet eingehende Sperrzeiten mit ~1–5 Min. Eigendelay. End-to-End
 ---
 
 ## 19. hungrywulf-Integration (Tischreservierungen)
+
 
 hungrywulf ist eine separate Next.js-App für Tischreservierungen in Restaurants. bookingwulf-Kunden können hungrywulf über den Superadmin freigeschaltet bekommen und werden dann per Magic-Link automatisch eingeloggt.
 
@@ -1594,7 +1634,7 @@ Super-Admin → Button „Deaktivieren" → `DELETE /api/admin/eventwulf` → `e
 
 ---
 
-## 18. Datenschutz & DSGVO
+## 21. Datenschutz & DSGVO
 
 ### Datenspeicherung
 
@@ -1633,7 +1673,7 @@ Alle unter `/datenschutz`, `/impressum`, `/agb`, `/avv` erreichbar und im Admin-
 
 ---
 
-## 21. Security
+## 22. Security
 
 ### HTTP Security Headers
 
@@ -1702,7 +1742,7 @@ Widget-APIs (`/api/hotel-settings`, `/api/availability-quick`, `/api/availabilit
 
 ---
 
-## 22. Gäste-Portal
+## 23. Gäste-Portal
 
 ### Übersicht
 
@@ -1797,7 +1837,7 @@ Das Portal unterstützt **DE / EN / IT**. Die Sprache wird initialisiert aus `lo
 
 ---
 
-## 23. Gutschein-System (Pro)
+## 24. Gutschein-System (Pro)
 
 ### Übersicht
 
@@ -1840,7 +1880,7 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 
 ---
 
-## 23. Launch Readiness & Infrastruktur-Hardening
+## 25. Launch Readiness & Infrastruktur-Hardening
 
 > Stand: Mai 2026. Vollständige Security-Analyse durchgeführt.
 
@@ -1929,7 +1969,7 @@ Alle aktiven Admin-Sessions werden nach Secret-Rotation automatisch invalidiert 
 
 ---
 
-## 24. Preismodell-Umstellung (Juli 2026)
+## 26. Preismodell-Umstellung (Juli 2026)
 
 > Stand: Juli 2026.
 

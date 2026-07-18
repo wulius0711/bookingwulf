@@ -1,7 +1,7 @@
 # 🐺 bookingwulf — Projektübersicht
 
 > Direktbuchungssystem für Hotels & Ferienwohnungen — ohne Provision, ohne Drittplattformen
-> Stand: Juni 2026
+> Stand: Juli 2026
 
 ---
 
@@ -122,6 +122,8 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 - [x] **Drag-and-Drop Sortierung im Admin** — Für alle Listen mit manueller Reihenfolge (Extras, Bilder, etc.) via Drag-Handle. Juni 2026
 - [x] **Admin-Filter & Bulk-Preiszeitraum** — Anfragen- und Preisanpassungs-Liste filterbar (Status, Datum). Preiszeiträume bulk-bearbeitbar mit %-Modus (z.B. alle Preise +10%). Saison-Name-Filter ab 2 Namen + 2 Apartments. Juni 2026
 - [x] **Performance-Optimierungen** (Juni 2026) — N+1-Query-Fix im iCal-Sync (`syncAllFeeds` lädt alle Feeds mit einem Query statt N Einzelabfragen), Datumsfilter auf `blockedRanges` im Verfügbarkeitscheck, kombinierter DB-Index `(hotelId, status, arrival, departure)` auf der Request-Tabelle. DB connectionTimeout von 30s auf 8s reduziert (verhindert hängende Vercel-Functions).
+- [x] **Housekeeping-Basis** (Pro, Juli 2026) — Reinigungsstatus (Sauber/Reinigung nötig/Reparatur nötig), Checkliste pro Apartment (individuell editierbar), Notizen, Belegungsanzeige. Status-Automatik: alle Checklisten-Punkte abgehakt → „Sauber", Check-out heute → täglicher Cron setzt automatisch „Reinigung nötig" zurück. Rein bookingwulf-nativ, kein Beds24-API-Call nötig (ersetzt den sonst nur per direktem Beds24-Login erreichbaren nativen Housekeeping-Bereich). Magic-Link-Zugang für externes Reinigungspersonal ist noch offen (siehe Roadmap).
+- [x] **Sperrzeiten-Bugfix** (Juli 2026) — Hotelweite Sperrzeiten (`apartmentId: null`, z.B. Betriebsurlaub) waren an drei Stellen unsichtbar bzw. nicht löschbar: Zimmerplan-Löschen/-Bearbeiten ("Zugriff verweigert"), Zimmerplan-Gantt/Tagesansicht (zeigte dafür keine apartment-spezifischen Sperrzeiten mehr), Monatskalender. Alle drei behoben, gleiche Ursache: inkonsistente Filterung über `apartment.hotelId`-Relation vs. direktes `hotelId`-Feld.
 
 ## Roadmap (geplant)
 
@@ -138,7 +140,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 | Review-System / Bewertungen | Mittel | Pro | 💡 Idee |
 | Preisvergleichs-Badge / OTA-Vergleichspreis im Widget | Mittel | Pro | ✅ Live (Juni 2026) |
 | Last-Minute Blind Booking — Gast bucht ohne Zimmerwahl, bekommt verfügbares Apartment zugewiesen + konfigurierbaren Rabatt (z.B. 30%). Betreiber wählt welche Apartments qualifizieren. Erscheint im Widget wenn Anreise ≤ X Tage. | Mittel | Pro + Business | 💡 Idee |
-| Housekeeping-Modul (Reinigungsaufgaben per Magic-Link) | Mittel | Pro | 💡 Idee |
+| Housekeeping-Modul (Reinigungsaufgaben per Magic-Link) | Mittel | Pro | ✅ Basis live (Juli 2026) — Status/Checkliste/Notizen im Admin, Auto-Reset bei Check-out. Magic-Link-Zugang für externes Reinigungspersonal ohne Admin-Login weiterhin offen. |
 | **"Heute"-Dashboard-Block** — tägliche Zusammenfassung oben im Admin: Anreisen heute, offene Anfragen, nächste freie Nacht, unbeantwortete Nachrichten (wenn Messaging live). Kein KI, nur smarte Aufbereitung vorhandener Daten. | Mittel | Alle | 💡 Idee |
 | **Guest Journey Add-on** — Pre-Arrival Mail + Messenger + Extras-Upsell (inspiriert von reguest.io): automatisierte Pre-Arrival-Mail T-5 mit personalisiertem Zusatzleistungs-Angebot, In-Stay-Messaging (Chat-ähnlich über Gäste-Lounge), Post-Stay-Upsell für Wiederbucher | Mittel | Add-on ~€19/Mo | 💡 Idee |
 | **Website Builder** — Template-basierter Editor für Hotel-Websites direkt in bookingwulf. Onepager als Standard (Sections ein/aus: Hero, Zimmer, Galerie, Ausstattung, Lage, Buchung, Kontakt), Multipager als Upgrade (eigene Unterseiten pro Zimmer, Aktivitäten, Blog). Buchungs-Widget automatisch eingebettet. Eigene Domain. Competitor: Lodgify. Aufwand: ~6–8 Wochen (Template-Editor) oder 4–6 Monate (vollwertiger visueller Builder). Empfehlung: Onepager-Standard + Multipager als Pro-Feature. | Mittel | Business | 💡 Idee |
@@ -235,10 +237,10 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 |-------------|---------------------|-------------------|
 | 0 % Provision | 15–20 % Provision | Teuer, komplex |
 | 1 Script-Tag Einbindung | Eigene Plattform nötig | Aufwändige Integration |
-| E-Mails 9-sprachig, Widget DE/EN | — | Teilweise |
+| E-Mails 9-sprachig, Widget DE/EN/IT | — | Teilweise |
 | DSGVO-konform, EU-Daten | Drittland-Transfer | Je nach Anbieter |
 | Eigene Website bleibt zentral | Gäste werden abgelenkt | — |
-| Ab €49/Mo | Provisionsbasiert | Ab €100+/Mo |
+| Ab €26/Mo | Provisionsbasiert | Ab €100+/Mo |
 
 ## Konkurrenz-Analyse
 
@@ -532,7 +534,7 @@ Voraussetzung: Dev-Server läuft auf Port 3000 (`npm run dev`).
 - [x] Gutschein- & Rabattcodes — Wert- & Nächte-Gutscheine, Kauf via Stripe, PDF-Gutschein per E-Mail, Einlösung im Widget mit automatischer Rabattberechnung, Admin-Verwaltung → Pro (live Mai 2026)
 - [ ] Preisvergleichs-Badge im Widget ("X% günstiger als Booking.com") → Pro
 - [ ] Mini-Widget: "ab X €/Nacht" Preisanzeige — Mindestpreis aus Apartment-Einstellungen automatisch anzeigen, wartungsfrei, kein manueller Eintrag nötig
-- [ ] Housekeeping-Modul: Reinigungsaufgaben nach Abreise, Status offen/fertig, Zugang per Magic-Link ohne Login → Pro
+- [x] Housekeeping-Modul: Status (Sauber/Reinigung nötig/Reparatur nötig) + Checkliste, Auto-Reset nach Abreise → Pro, live Juli 2026. Offen: Zugang per Magic-Link ohne Admin-Login für externes Reinigungspersonal.
 - [x] DATEV / Buchhaltungsexport: CSV mit Buchungen und Steuerpositionen — fertig (Mai 2026)
 - [x] Gästemeldeexport: Gastdaten (Name, Geburtsdatum, Nationalität, Reisepassnummer, Adresse, Anreise/Abreise, Unterkunft) als CSV exportieren — Betrieb lädt selbst im Landesportal/Feratel-WebClient hoch, kein Direktanschluss ans Meldesystem → Juli 2026
 - [ ] Google Hotels Free Booking Links (Meta-Suche-Integration via Datenfeed) → Business
