@@ -42,7 +42,8 @@ export async function GET(request: Request) {
       }),
       prisma.blockedRange.findMany({
         where: {
-          ...(hotelId ? { hotelId } : {}),
+          // Apartment-spezifische Sperrzeiten hängen an apartment.hotelId, hotelweite (apartmentId: null) direkt an hotelId
+          ...(hotelId ? { OR: [{ apartment: { hotelId } }, { apartmentId: null, hotelId }] } : {}),
           startDate: { lte: rangeEnd },
           endDate: { gt: rangeStart },
         },

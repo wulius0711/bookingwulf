@@ -9,12 +9,12 @@ export const dynamic = 'force-dynamic';
 
 type PageProps = { searchParams: Promise<{ hotel?: string }> };
 
-async function deleteBlockedDate(formData: FormData) {
+async function deleteBlockedDate(formData: FormData): Promise<{ ok: boolean; error?: string }> {
   'use server';
 
   const session = await verifySession();
   const id = Number(formData.get('id'));
-  if (!id) return;
+  if (!id) return { ok: false, error: 'ID fehlt' };
 
   if (session.hotelId !== null) {
     const range = await prisma.blockedRange.findUnique({
@@ -23,10 +23,11 @@ async function deleteBlockedDate(formData: FormData) {
     });
     const ownedByHotel = range?.apartment?.hotelId === session.hotelId
       || (range?.apartmentId === null && range?.hotelId === session.hotelId);
-    if (!range || !ownedByHotel) return;
+    if (!range || !ownedByHotel) return { ok: false, error: 'Zugriff verweigert' };
   }
 
   await prisma.blockedRange.delete({ where: { id } });
+  return { ok: true };
 }
 
 export default async function BlockedDatesPage({ searchParams }: PageProps) {

@@ -76,12 +76,13 @@ export default function BlockedDateList({
   isSuperAdmin,
 }: {
   ranges: Range[];
-  deleteBlockedDate: (formData: FormData) => Promise<void>;
+  deleteBlockedDate: (formData: FormData) => Promise<{ ok: boolean; error?: string }>;
   isSuperAdmin: boolean;
 }) {
   const [ranges, setRanges] = useState<Range[]>(initial);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [confirmId, setConfirmId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const confirmRange = confirmId !== null ? ranges.find((r) => r.id === confirmId) : null;
 
@@ -89,10 +90,15 @@ export default function BlockedDateList({
     if (confirmId === null) return;
     setDeleting(confirmId);
     setConfirmId(null);
+    setError(null);
     const fd = new FormData();
     fd.append('id', String(confirmId));
-    await deleteBlockedDate(fd);
-    setRanges((prev) => prev.filter((r) => r.id !== confirmId));
+    const result = await deleteBlockedDate(fd);
+    if (result.ok) {
+      setRanges((prev) => prev.filter((r) => r.id !== confirmId));
+    } else {
+      setError(result.error || 'Löschen fehlgeschlagen.');
+    }
     setDeleting(null);
   }
 
@@ -108,6 +114,12 @@ export default function BlockedDateList({
           .bdc-actions { flex-direction: row; flex-shrink: 0; }
         }
       `}</style>
+
+      {error && (
+        <div style={{ marginBottom: 12, padding: '10px 14px', borderRadius: 8, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', fontSize: 13, fontWeight: 600 }}>
+          {error}
+        </div>
+      )}
 
       <div className="blocked-date-grid">
         {ranges.map((r) => (

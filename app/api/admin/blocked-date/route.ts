@@ -6,7 +6,9 @@ import { verifySession } from '@/src/lib/session';
 async function checkAccess(id: number, hotelId: number | null) {
   if (hotelId === null) return true;
   const r = await prisma.blockedRange.findUnique({ where: { id }, include: { apartment: { select: { hotelId: true } } } });
-  return r?.apartment?.hotelId === hotelId;
+  if (!r) return false;
+  // Hotelweite Sperrzeiten (apartmentId: null) haben keine Apartment-Relation, hotelId steht direkt am Datensatz
+  return r.apartment?.hotelId === hotelId || (r.apartmentId === null && r.hotelId === hotelId);
 }
 
 export async function POST(req: NextRequest) {

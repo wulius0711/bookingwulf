@@ -125,7 +125,10 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   // Build day → blocked ranges map
   const blockedRanges = await prisma.blockedRange.findMany({
     where: {
-      ...(session.hotelId ? { apartment: { hotelId: session.hotelId } } : {}),
+      // Apartment-spezifische Sperrzeiten hängen an apartment.hotelId, hotelweite (apartmentId: null) direkt an hotelId
+      ...(session.hotelId
+        ? { OR: [{ apartment: { hotelId: session.hotelId } }, { apartmentId: null, hotelId: session.hotelId }] }
+        : {}),
       startDate: { lte: lastDay },
       endDate: { gt: firstDay },
       NOT: { type: 'booking' },
@@ -140,7 +143,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       if (cur.getFullYear() === year && cur.getMonth() === month) {
         const key = dateKey(cur);
         if (!dayBlockedMap.has(key)) dayBlockedMap.set(key, []);
-        dayBlockedMap.get(key)!.push({ id: r.id, aptName: r.apartment?.name ?? '', note: r.note ?? '', type: r.type, startDate: r.startDate.toISOString().slice(0,10), endDate: r.endDate.toISOString().slice(0,10) });
+        dayBlockedMap.get(key)!.push({ id: r.id, aptName: r.apartment?.name ?? 'Alle Apartments', note: r.note ?? '', type: r.type, startDate: r.startDate.toISOString().slice(0,10), endDate: r.endDate.toISOString().slice(0,10) });
       }
       cur.setDate(cur.getDate() + 1);
     }

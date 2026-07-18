@@ -37,7 +37,8 @@ export async function buildZimmerplan(hotelId: number | null, dateIso: string) {
     }),
     prisma.blockedRange.findMany({
       where: {
-        ...(hotelId ? { hotelId } : {}),
+        // Apartment-spezifische Sperrzeiten hängen an apartment.hotelId, hotelweite (apartmentId: null) direkt an hotelId
+        ...(hotelId ? { OR: [{ apartment: { hotelId } }, { apartmentId: null, hotelId } ] } : {}),
         startDate: { lte: dayEnd },
         endDate: { gt: dayStart },
       },
