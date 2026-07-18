@@ -40,6 +40,7 @@ export const NAV_PLAN_GATES: Record<string, PlanKey> = {
   '/admin/email-templates': 'pro',
   '/admin/nuki': 'pro',
   '/admin/beds24': 'pro',
+  '/admin/housekeeping': 'pro',
   '/admin/chatbot': 'pro',
   '/admin/analytics': 'business',
 };

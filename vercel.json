@@ -44,6 +44,10 @@
     {
       "path": "/api/cron/beds24-messages-sync",
       "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/housekeeping-checkout",
+      "schedule": "0 11 * * *"
     }
   ]
 }

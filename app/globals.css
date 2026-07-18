@@ -24,6 +24,11 @@
   --text-subtle: #9ca3af;
   --sidebar-bg: #f8f9fc;
   --sidebar-border: #eaecf0;
+
+  /* Housekeeping card backgrounds — stronger than the small-badge status tokens so full cards read as colored */
+  --housekeeping-clean-bg:  #f0fdf4;
+  --housekeeping-dirty-bg:  #fffbeb;
+  --housekeeping-repair-bg: #fff5f5;
 }
 
 .theme-classic {
@@ -72,6 +77,11 @@
   /* Indigo dark-mode gradient (replaces the hardcoded btn-primary override) */
   --accent-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
   --accent-gradient-hover: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+
+  /* Housekeeping card backgrounds — visibly tinted against the dark surface */
+  --housekeeping-clean-bg:  rgba(34, 197, 94, 0.16);
+  --housekeeping-dirty-bg:  rgba(234, 179, 8, 0.16);
+  --housekeeping-repair-bg: rgba(239, 68, 68, 0.16);
 }
 .dark.theme-classic {
   /* Classic = light/white accent in dark mode so buttons are visible */
@@ -444,6 +454,14 @@ button, a[role="button"], input[type="submit"] {
   gap: 16px;
 }
 
+/* Housekeeping grid */
+.housekeeping-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
 /* Belegungsplan (Gantt) */
 .gantt-apt-label:hover {
   background: var(--accent-light) !important;
@@ -719,6 +737,10 @@ button, a[role="button"], input[type="submit"] {
   }
 
   .plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .housekeeping-grid {
     grid-template-columns: 1fr;
   }
 

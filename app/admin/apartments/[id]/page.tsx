@@ -12,6 +12,7 @@ import RichTextEditor from '../_components/RichTextEditor';
 import { autoTranslateFields, translateList } from '@/src/lib/translate';
 import InfoTooltip from '@/app/admin/components/InfoTooltip';
 import QRCode from 'qrcode';
+import { DEFAULT_CHECKLIST_ITEMS } from '@/src/lib/housekeeping';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,6 +123,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
 
     const description = String(formData.get('description') || '').trim();
     const amenitiesRaw = String(formData.get('amenities') || '').trim();
+    const checklistRaw = String(formData.get('housekeepingChecklistItems') || '').trim();
 
     if (!hotelId || !name || !slug) {
       throw new Error('Hotel, Name und Slug sind erforderlich.');
@@ -138,6 +140,11 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const otaComparisonPrice = otaComparisonPriceRaw ? Number(otaComparisonPriceRaw) : null;
 
     const amenities = amenitiesRaw
+      .split('\n')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const housekeepingChecklistItems = checklistRaw
       .split('\n')
       .map((item) => item.trim())
       .filter(Boolean);
@@ -205,6 +212,7 @@ export default async function EditApartmentPage({ params }: PageProps) {
         gpHouseRules:   gpHouseRules   || null,
         gpTranslationsJson,
         translationsJson,
+        housekeepingChecklistItems,
       },
     });
 
@@ -358,6 +366,22 @@ export default async function EditApartmentPage({ params }: PageProps) {
                   name="amenities"
                   defaultValue={(apartment.amenities || []).join('\n')}
                   placeholder={`WLAN\nBalkon\nKaffeemaschine`}
+                  style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
+                />
+              </div>
+            </div>
+          </details>
+
+          {/* Housekeeping */}
+          <details style={detailsStyle}>
+            <summary style={summaryStyle}><h2 style={cardTitle}>Housekeeping</h2>{caret}</summary>
+            <div style={cardBody}>
+              <div style={fieldWrap}>
+                <label style={labelStyle}>Reinigungs-Checkliste <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: 'var(--text-disabled)' }}>(ein Punkt pro Zeile)</span></label>
+                <textarea
+                  name="housekeepingChecklistItems"
+                  defaultValue={((apartment.housekeepingChecklistItems as string[] | null) ?? DEFAULT_CHECKLIST_ITEMS).join('\n')}
+                  placeholder={DEFAULT_CHECKLIST_ITEMS.join('\n')}
                   style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }}
                 />
               </div>

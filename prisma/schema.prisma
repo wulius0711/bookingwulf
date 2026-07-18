@@ -279,6 +279,13 @@ model Apartment {
   // Nuki
   nukiSmartlockId String?
 
+  // Housekeeping
+  housekeepingStatus         String    @default("clean") // "clean" | "dirty" | "repair"
+  housekeepingNote           String?
+  housekeepingUpdatedAt      DateTime?
+  housekeepingChecklistItems Json?     // string[]
+  housekeepingChecklistState Json?     // { [item]: boolean }
+
   // Gästeportal-Overrides (überschreiben Hotel-Defaults wenn befüllt)
   gpCheckinTime   String?
   gpCheckinInfo   String?
