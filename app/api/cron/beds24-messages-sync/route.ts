@@ -12,17 +12,29 @@ export async function GET(req: Request) {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 7);
 
-  const configs = await prisma.beds24Config.findMany({
-    where: { isEnabled: true },
-    select: { hotelId: true, refreshToken: true },
-  });
+  let configs;
+  try {
+    configs = await prisma.beds24Config.findMany({
+      where: { isEnabled: true },
+      select: { hotelId: true, refreshToken: true },
+    });
+  } catch (e) {
+    console.error('[beds24-messages-sync] Fehler beim Laden der Configs, überspringe diesen Lauf', e);
+    return NextResponse.json({ ok: false, synced: 0 });
+  }
 
   let synced = 0;
   for (const cfg of configs) {
-    const requests = await prisma.request.findMany({
-      where: { hotelId: cfg.hotelId, status: { not: 'cancelled' }, beds24BookingId: { not: null }, departure: { gte: cutoff } },
-      select: { beds24BookingId: true },
-    });
+    let requests;
+    try {
+      requests = await prisma.request.findMany({
+        where: { hotelId: cfg.hotelId, status: { not: 'cancelled' }, beds24BookingId: { not: null }, departure: { gte: cutoff } },
+        select: { beds24BookingId: true },
+      });
+    } catch (e) {
+      console.error('[beds24-messages-sync] Fehler beim Laden der Requests für Hotel', cfg.hotelId, e);
+      continue;
+    }
 
     for (const r of requests) {
       if (!r.beds24BookingId) continue;

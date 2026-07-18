@@ -12,6 +12,10 @@ const pool = new Pool({
   keepAliveInitialDelayMillis: 10_000,
 });
 
+pool.on('error', (err) => {
+  console.error('[prisma] Unerwarteter Fehler bei idle pg-Connection:', err);
+});
+
 const adapter = new PrismaPg(pool);
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
