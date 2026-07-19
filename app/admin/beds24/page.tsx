@@ -25,7 +25,7 @@ export default async function Beds24Page() {
     where: { id: session.hotelId },
     select: {
       plan: true,
-      beds24Config: { select: { isEnabled: true } },
+      beds24Config: { select: { isEnabled: true, webhookSecret: true } },
       apartments: { select: { id: true, name: true }, where: { isActive: true }, orderBy: { sortOrder: 'asc' } },
     },
   });
@@ -59,7 +59,7 @@ export default async function Beds24Page() {
         initialEnabled={hotel.beds24Config?.isEnabled ?? false}
         apartments={hotel.apartments}
         initialMappings={mappingMap}
-        host={host}
+        webhookUrl={hotel.beds24Config ? `${host}/api/beds24-webhook?token=${hotel.beds24Config.webhookSecret}` : ''}
       />
     </main>
   );

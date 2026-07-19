@@ -1,22 +1,19 @@
 // Beds24 inbound webhook — receives booking notifications from Airbnb/Booking.com via Beds24
-// Webhook URL: https://your-domain.com/api/beds24-webhook?token=<BEDS24_WEBHOOK_SECRET>
-// Configure under: Beds24 → Settings → Properties → Access → Booking Webhook
+// Webhook URL (per hotel, shown in Admin → Beds24 Channel Manager): /api/beds24-webhook?token=<per-hotel secret>
+// Configure under: Beds24 → Unterkünfte → Zugang → Buchung Webhook
 
-import { timingSafeEqual, randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/src/lib/prisma';
 import { fetchBeds24BookingDetails, saveIncomingBeds24Message } from '@/src/lib/beds24';
 import type { Beds24WebhookBooking, Beds24Message } from '@/src/lib/beds24';
 
 export async function POST(req: Request) {
-  const secret = process.env.BEDS24_WEBHOOK_SECRET;
   const token = new URL(req.url).searchParams.get('token') ?? '';
-  const authorized =
-    !!secret &&
-    token.length === secret.length &&
-    timingSafeEqual(Buffer.from(token), Buffer.from(secret));
-  if (!authorized) {
+  const config = token ? await prisma.beds24Config.findUnique({ where: { webhookSecret: token }, select: { hotelId: true } }) : null;
+  if (!config) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const authorizedHotelId = config.hotelId;
 
   let body: unknown;
   try {
@@ -51,6 +48,23 @@ export async function POST(req: Request) {
       continue;
     }
 
+    // Find the apartment mapped to this Beds24 room, and confirm it belongs to the hotel
+    // that owns the token — prevents one hotel's webhook secret from touching another's data
+    const mapping = await prisma.beds24ApartmentMapping.findFirst({
+      where: { beds24RoomId: roomId },
+      select: { apartmentId: true, apartment: { select: { hotelId: true } } },
+    });
+
+    if (!mapping) {
+      console.warn('[Beds24 webhook] no apartment mapping found for roomId', roomId);
+      continue;
+    }
+
+    if (mapping.apartment?.hotelId !== authorizedHotelId) {
+      console.warn('[Beds24 webhook] token/hotel mismatch for roomId', roomId);
+      continue;
+    }
+
     // Cancelled bookings (status "3") → remove BlockedRange + cancel Request
     if (status === '3') {
       await prisma.blockedRange.deleteMany({
@@ -58,7 +72,7 @@ export async function POST(req: Request) {
           type: 'beds24_sync',
           startDate: new Date(arrival),
           endDate: new Date(departure),
-          apartment: { beds24Mapping: { beds24RoomId: roomId } },
+          apartmentId: mapping.apartmentId,
         },
       });
 
@@ -71,17 +85,6 @@ export async function POST(req: Request) {
       }
 
       console.log('[Beds24 webhook] removed block + cancelled request for booking', booking.id, roomId);
-      continue;
-    }
-
-    // Find the apartment mapped to this Beds24 room
-    const mapping = await prisma.beds24ApartmentMapping.findFirst({
-      where: { beds24RoomId: roomId },
-      select: { apartmentId: true, apartment: { select: { hotelId: true } } },
-    });
-
-    if (!mapping) {
-      console.warn('[Beds24 webhook] no apartment mapping found for roomId', roomId);
       continue;
     }
 

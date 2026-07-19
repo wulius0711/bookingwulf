@@ -10,7 +10,7 @@ type Props = {
   initialEnabled: boolean;
   apartments: Apartment[];
   initialMappings: Record<number, string>;
-  host: string;
+  webhookUrl: string;
 };
 
 const inputStyle: React.CSSProperties = {
@@ -19,7 +19,7 @@ const inputStyle: React.CSSProperties = {
   color: 'var(--text-primary)',
 };
 
-export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, host }: Props) {
+export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, webhookUrl }: Props) {
   const [connected, setConnected] = useState(initialConnected);
   const [enabled, setEnabled] = useState(initialEnabled);
   const [inviteCode, setInviteCode] = useState('');
@@ -183,7 +183,7 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
             Trage diese URL in Beds24 unter Unterkünfte → Zugang → Buchung Webhook ein (Webhook Version 2), damit Verfügbarkeitsänderungen in Echtzeit übermittelt werden.
           </p>
           <code style={{ display: 'block', padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
-            {host}/api/beds24-webhook?token=<span style={{ color: 'var(--text-disabled)' }}>{'<BEDS24_WEBHOOK_SECRET>'}</span>
+            {webhookUrl}
           </code>
         </div>
       )}

@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
 
     await prisma.beds24Config.upsert({
       where: { hotelId: session.hotelId! },
-      create: { hotelId: session.hotelId!, refreshToken },
+      create: { hotelId: session.hotelId!, refreshToken, webhookSecret: randomBytes(32).toString('hex') },
       update: { refreshToken },
     });
 
