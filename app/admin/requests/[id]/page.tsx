@@ -184,7 +184,7 @@ async function updateBookingStatus(formData: FormData) {
     try {
       const beds24Config = await prisma.beds24Config.findUnique({
         where: { hotelId: request.hotelId },
-        select: { isEnabled: true, refreshToken: true },
+        select: { isEnabled: true },
       });
       if (beds24Config?.isEnabled) {
         const { pushBooking } = await import('@/src/lib/beds24');
@@ -196,7 +196,7 @@ async function updateBookingStatus(formData: FormData) {
         const arrStr = request.arrival.toISOString().slice(0, 10);
         const depStr = request.departure.toISOString().slice(0, 10);
         for (const m of mappings) {
-          await pushBooking(beds24Config.refreshToken, {
+          await pushBooking(request.hotelId, {
             roomId: m.beds24RoomId,
             arrival: arrStr,
             departure: depStr,
@@ -317,7 +317,7 @@ async function sendAdminMessage(formData: FormData) {
 
   const request = await prisma.request.findUnique({
     where: { id },
-    include: { hotel: { select: { name: true, accentColor: true, email: true, beds24Config: { select: { refreshToken: true, isEnabled: true } } } } },
+    include: { hotel: { select: { name: true, accentColor: true, email: true, beds24Config: { select: { isEnabled: true } } } } },
   });
   if (!request) return;
   if (session.hotelId !== null && request.hotelId !== session.hotelId) return;
@@ -329,9 +329,9 @@ async function sendAdminMessage(formData: FormData) {
     // (OTA-Gäste haben oft ohnehin nur eine maskierte Relay-Adresse)
     const cfg = request.hotel?.beds24Config;
     let externalId: string | null = null;
-    if (cfg?.isEnabled && cfg.refreshToken) {
+    if (cfg?.isEnabled && request.hotelId) {
       try {
-        const result = await sendBeds24Message(cfg.refreshToken, request.beds24BookingId, body);
+        const result = await sendBeds24Message(request.hotelId, request.beds24BookingId, body);
         externalId = result.id || null;
       } catch (e) {
         console.error('Beds24 sendMessage error:', e);

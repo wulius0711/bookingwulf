@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   try {
     configs = await prisma.beds24Config.findMany({
       where: { isEnabled: true },
-      select: { hotelId: true, refreshToken: true },
+      select: { hotelId: true },
     });
   } catch (e) {
     console.error('[beds24-messages-sync] Fehler beim Laden der Configs, überspringe diesen Lauf', e);
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
     for (const r of requests) {
       if (!r.beds24BookingId) continue;
       try {
-        const messages = await fetchBeds24Messages(cfg.refreshToken, r.beds24BookingId);
+        const messages = await fetchBeds24Messages(cfg.hotelId, r.beds24BookingId);
         for (const msg of messages) {
           if (await saveIncomingBeds24Message(r.beds24BookingId, msg)) synced++;
         }

@@ -1484,9 +1484,22 @@ Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Ei
 
 ### Datenbankmodelle
 
-- `Beds24Config` — `refreshToken` (v2 API) + `isEnabled`-Kill-Switch pro Hotel
+- `Beds24Config` — `refreshToken` (v2 API) + `webhookSecret` (eindeutig pro Hotel, seit Juli 2026) + `isEnabled`-Kill-Switch
 - `Beds24ApartmentMapping` — verknüpft lokale `Apartment.id` mit `beds24RoomId`
 - `Request.beds24BookingId` — optionales Unique-Feld, gesetzt für alle über Beds24-Webhook eingehenden Buchungen (ermöglicht idempotentes Upsert)
+
+### Webhook-Auth (seit Juli 2026: pro Hotel)
+
+Bis Juli 2026 validierte `/api/beds24-webhook` den Token gegen ein einziges globales `BEDS24_WEBHOOK_SECRET` (Env-Var) — alle Hotels teilten sich dasselbe Secret, und die Admin-UI zeigte dafür nur einen literalen Platzhalter (`<BEDS24_WEBHOOK_SECRET>`) statt einer funktionierenden URL an, da der echte Wert nie ans Frontend gelangte.
+
+Seit der Migration am 2026-07-19 hat jedes Hotel ein eigenes, beim Verbinden zufällig generiertes `webhookSecret` in der DB:
+
+1. `/api/admin/beds24` (POST, Connect) generiert `randomBytes(32).toString('hex')` bei Erstverbindung; bleibt bei „Neu verbinden" (Reconnect) stabil erhalten
+2. `/api/beds24-webhook` sucht das Hotel per `prisma.beds24Config.findUnique({ where: { webhookSecret: token } })` statt eines Konstantenvergleichs
+3. Zusätzliche Ownership-Prüfung: die im Payload übermittelte `roomId` muss zu einem Apartment gehören, dessen `hotelId` mit dem Hotel des Tokens übereinstimmt — verhindert, dass ein Hotel mit seinem eigenen Secret Webhook-Events für ein fremdes Hotel einspielen kann
+4. Admin-UI (`/admin/beds24`) zeigt die fertige, copy-paste-fertige URL inkl. echtem Secret an (Server Component liest `webhookSecret` direkt aus der DB)
+
+`BEDS24_WEBHOOK_SECRET` als globale Env-Var wird nicht mehr verwendet und kann aus Vercel entfernt werden.
 
 ### Implementierungsstand
 
@@ -1505,10 +1518,9 @@ Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Ei
 
 1. Beds24-Account anlegen unter beds24.com
 2. In Beds24: Airbnb/Booking.com unter Channel Manager verbinden
-3. `BEDS24_WEBHOOK_SECRET` als Umgebungsvariable in Vercel setzen
-4. In bookingwulf Admin → Beds24: Invite Code eingeben → Verbinden
-5. Zimmer-IDs pro Apartment zuordnen, Sync aktiv einschalten
-6. Webhook-URL in Beds24 unter Unterkünfte → Zugang eintragen: `https://domain/api/beds24-webhook?token=<SECRET>`, Webhook Version 2
+3. In bookingwulf Admin → Beds24: Invite Code eingeben → Verbinden (generiert automatisch ein per-Hotel `webhookSecret`)
+4. Zimmer-IDs pro Apartment zuordnen, Sync aktiv einschalten
+5. Die in der Admin-UI angezeigte, bereits fertige Webhook-URL in Beds24 unter Unterkünfte → Zugang → Buchung Webhook eintragen, Webhook Version 2
 
 ### Sync-Frequenz
 
@@ -1915,6 +1927,12 @@ Generiert mit `@react-pdf/renderer` in `src/lib/voucherPdf.tsx`. A5-Format, Akze
 | **Status-Machine Admin** | `updateBookingStatus` erzwingt erlaubte Übergänge — `cancelled → booked` nicht mehr möglich |
 | **DSGVO: Weekly-Backup-Cron entfernt** | CSV mit Gastdaten per E-Mail (Resend) abgestellt; ersetzt durch On-Demand-Export im Admin |
 | **DSGVO: Daily-Backup private** | Vercel Blob `access: 'private'` — JSON-Dumps nicht mehr öffentlich per URL erreichbar; Download via `/api/admin/backups` (Super-Admin) |
+
+### Erledigte Fixes (Juli 2026)
+
+| Fix | Details |
+|-----|---------|
+| **Beds24-Webhook: per-Hotel-Secret** | War globales `BEDS24_WEBHOOK_SECRET`, geteilt von allen Hotels; Admin-UI zeigte nur einen literalen Platzhalter statt einer nutzbaren URL. Jetzt eigenes `webhookSecret` pro Hotel in der DB (siehe Abschnitt 18), inkl. Ownership-Check (Room-ID muss zum Hotel des Tokens gehören) |
 
 ### Secret Rotation
 

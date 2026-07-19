@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
     try {
       const beds24Config = await prisma.beds24Config.findUnique({
         where: { hotelId: request.hotel!.id },
-        select: { isEnabled: true, refreshToken: true },
+        select: { isEnabled: true },
       });
       if (beds24Config?.isEnabled) {
         const mappings = await prisma.beds24ApartmentMapping.findMany({
@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
         const arrStr = request.arrival.toISOString().slice(0, 10);
         const depStr = request.departure.toISOString().slice(0, 10);
         for (const m of mappings) {
-          await pushBooking(beds24Config.refreshToken, {
+          await pushBooking(request.hotel!.id, {
             roomId: m.beds24RoomId,
             arrival: arrStr,
             departure: depStr,

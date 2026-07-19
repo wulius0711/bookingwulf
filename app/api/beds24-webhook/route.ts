@@ -2,9 +2,8 @@
 // Webhook URL (per hotel, shown in Admin → Beds24 Channel Manager): /api/beds24-webhook?token=<per-hotel secret>
 // Configure under: Beds24 → Unterkünfte → Zugang → Buchung Webhook
 
-import { randomUUID } from 'crypto';
 import { prisma } from '@/src/lib/prisma';
-import { fetchBeds24BookingDetails, saveIncomingBeds24Message } from '@/src/lib/beds24';
+import { processBeds24Booking, saveIncomingBeds24Message } from '@/src/lib/beds24';
 import type { Beds24WebhookBooking, Beds24Message } from '@/src/lib/beds24';
 
 export async function POST(req: Request) {
@@ -27,12 +26,7 @@ export async function POST(req: Request) {
   const items: (Beds24WebhookBooking & Beds24Message)[] = Array.isArray(body) ? body : [body as Beds24WebhookBooking & Beds24Message];
 
   for (const booking of items) {
-    const roomId = String(booking.roomId ?? '');
-    const arrival = booking.arrival;
-    const departure = booking.departure;
-    const status = booking.status ?? '1';
-
-    const looksLikeMessage = (booking.message || booking.text) && !roomId && !arrival && !departure;
+    const looksLikeMessage = (booking.message || booking.text) && !booking.roomId && !booking.arrival && !booking.departure;
     if (looksLikeMessage) {
       const bookingId = booking.bookingId ?? booking.id;
       if (bookingId) {
@@ -43,156 +37,9 @@ export async function POST(req: Request) {
       continue;
     }
 
-    if (!roomId || !arrival || !departure) {
-      console.warn('[Beds24 webhook] skipping booking — missing roomId/arrival/departure', booking);
-      continue;
-    }
-
-    // Find the apartment mapped to this Beds24 room, and confirm it belongs to the hotel
-    // that owns the token — prevents one hotel's webhook secret from touching another's data
-    const mapping = await prisma.beds24ApartmentMapping.findFirst({
-      where: { beds24RoomId: roomId },
-      select: { apartmentId: true, apartment: { select: { hotelId: true } } },
-    });
-
-    if (!mapping) {
-      console.warn('[Beds24 webhook] no apartment mapping found for roomId', roomId);
-      continue;
-    }
-
-    if (mapping.apartment?.hotelId !== authorizedHotelId) {
-      console.warn('[Beds24 webhook] token/hotel mismatch for roomId', roomId);
-      continue;
-    }
-
-    // Cancelled bookings (status "3") → remove BlockedRange + cancel Request
-    if (status === '3') {
-      await prisma.blockedRange.deleteMany({
-        where: {
-          type: 'beds24_sync',
-          startDate: new Date(arrival),
-          endDate: new Date(departure),
-          apartmentId: mapping.apartmentId,
-        },
-      });
-
-      const beds24Id = booking.id ? String(booking.id) : null;
-      if (beds24Id) {
-        await prisma.request.updateMany({
-          where: { beds24BookingId: beds24Id },
-          data: { status: 'cancelled' },
-        });
-      }
-
-      console.log('[Beds24 webhook] removed block + cancelled request for booking', booking.id, roomId);
-      continue;
-    }
-
-    // Upsert BlockedRange to prevent double-bookings
-    await prisma.blockedRange.upsert({
-      where: {
-        id: await findExistingBlockId(mapping.apartmentId, arrival, departure) ?? 0,
-      },
-      update: {
-        endDate: new Date(departure),
-        note: `Beds24 sync — booking ${booking.id ?? roomId}`,
-      },
-      create: {
-        apartmentId: mapping.apartmentId,
-        hotelId: mapping.apartment?.hotelId ?? null,
-        startDate: new Date(arrival),
-        endDate: new Date(departure),
-        type: 'beds24_sync',
-        note: `Beds24 sync — booking ${booking.id ?? roomId}`,
-      },
-    });
-
-    // Upsert Request record so the booking appears in CSV export and admin overview
-    const beds24Id = booking.id ? String(booking.id) : null;
-    if (beds24Id) {
-      const arrivalDate = new Date(arrival);
-      const departureDate = new Date(departure);
-      const nights = Math.round((departureDate.getTime() - arrivalDate.getTime()) / 86_400_000);
-
-      await prisma.request.upsert({
-        where: { beds24BookingId: beds24Id },
-        update: {
-          arrival: arrivalDate,
-          departure: departureDate,
-          nights,
-          adults: booking.numAdult ?? 1,
-          children: booking.numChild ?? 0,
-          firstname: booking.firstName ?? '',
-          lastname: booking.lastName || '—',
-          email: booking.email ?? '',
-          country: booking.guestCountry ?? '',
-          status: 'booked',
-        },
-        create: {
-          beds24BookingId: beds24Id,
-          hotelId: mapping.apartment?.hotelId ?? null,
-          arrival: arrivalDate,
-          departure: departureDate,
-          nights,
-          adults: booking.numAdult ?? 1,
-          children: booking.numChild ?? 0,
-          selectedApartmentIds: JSON.stringify([mapping.apartmentId]),
-          salutation: '',
-          firstname: booking.firstName ?? '',
-          lastname: booking.lastName || '—',
-          email: booking.email ?? '',
-          country: booking.guestCountry ?? '',
-          status: 'booked',
-          language: 'de',
-          checkinToken: randomUUID(),
-        },
-      });
-
-      // Fetch pricing from Beds24 API and store in pricingJson
-      if (mapping.apartment?.hotelId) {
-        const beds24Config = await prisma.beds24Config.findUnique({
-          where: { hotelId: mapping.apartment.hotelId },
-          select: { refreshToken: true, isEnabled: true },
-        });
-        if (beds24Config?.isEnabled && beds24Config.refreshToken) {
-          const aptName = await prisma.apartment.findUnique({
-            where: { id: mapping.apartmentId },
-            select: { name: true },
-          });
-          const pricing = await fetchBeds24BookingDetails(
-            beds24Config.refreshToken,
-            beds24Id,
-            aptName?.name ?? 'Zimmer',
-          );
-          if (pricing) {
-            await prisma.request.update({
-              where: { beds24BookingId: beds24Id },
-              data: { pricingJson: pricing },
-            });
-          }
-        }
-      }
-    }
-
-    console.log('[Beds24 webhook] blocked', arrival, '→', departure, 'for apartment', mapping.apartmentId);
+    const result = await processBeds24Booking(booking, authorizedHotelId);
+    console.log('[Beds24 webhook]', result, 'roomId', booking.roomId, 'booking', booking.id);
   }
 
   return Response.json({ ok: true });
-}
-
-async function findExistingBlockId(
-  apartmentId: number,
-  arrival: string,
-  departure: string,
-): Promise<number | null> {
-  const existing = await prisma.blockedRange.findFirst({
-    where: {
-      apartmentId,
-      startDate: new Date(arrival),
-      endDate: new Date(departure),
-      type: 'beds24_sync',
-    },
-    select: { id: true },
-  });
-  return existing?.id ?? null;
 }
