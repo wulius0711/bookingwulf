@@ -47,12 +47,23 @@ export async function setupWithInviteCode(inviteCode: string): Promise<{ refresh
   return { refreshToken: data.refreshToken, accessToken: data.token };
 }
 
-// Get a fresh access token for a hotel's stored refresh token.
-// Beds24 rotates the refresh token on every use (old one becomes invalid) — the rotated
-// value must be persisted immediately or the next call fails with "Token not valid".
+// Get an access token for a hotel, reusing the cached one while it's still valid.
+// Beds24 access tokens last ~24h; requesting a new one also rotates the refresh token
+// (invalidating the old one), so refreshing on every call risks races between concurrent
+// requests and burns Beds24 API credits unnecessarily. Only refresh when actually expired.
+const ACCESS_TOKEN_TTL_SECONDS = 20 * 60 * 60; // conservative, under the documented ~24h
+const EXPIRY_BUFFER_MS = 5 * 60 * 1000;
+
 async function getAccessToken(hotelId: number): Promise<string> {
-  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { refreshToken: true } });
+  const config = await prisma.beds24Config.findUnique({
+    where: { hotelId },
+    select: { refreshToken: true, accessToken: true, accessTokenExpiresAt: true },
+  });
   if (!config) throw new Error(`Beds24: keine Config für Hotel ${hotelId}`);
+
+  if (config.accessToken && config.accessTokenExpiresAt && config.accessTokenExpiresAt.getTime() - EXPIRY_BUFFER_MS > Date.now()) {
+    return config.accessToken;
+  }
 
   const res = await fetch(`${BEDS24_API}/authentication/token`, {
     method: 'GET',
@@ -65,9 +76,14 @@ async function getAccessToken(hotelId: number): Promise<string> {
   const data = await res.json();
   if (!data.token) throw new Error('Beds24: Token-Refresh lieferte kein token');
 
-  if (data.refreshToken && data.refreshToken !== config.refreshToken) {
-    await prisma.beds24Config.update({ where: { hotelId }, data: { refreshToken: data.refreshToken } });
-  }
+  await prisma.beds24Config.update({
+    where: { hotelId },
+    data: {
+      accessToken: data.token,
+      accessTokenExpiresAt: new Date(Date.now() + ACCESS_TOKEN_TTL_SECONDS * 1000),
+      ...(data.refreshToken && data.refreshToken !== config.refreshToken ? { refreshToken: data.refreshToken } : {}),
+    },
+  });
 
   return data.token;
 }
