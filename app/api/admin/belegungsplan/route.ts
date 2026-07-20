@@ -51,6 +51,20 @@ export async function GET(request: Request) {
       }),
     ]);
 
+    // beds24_sync blocks carry the Beds24 booking id at the end of their note (e.g. "[Airbnb] 12345")
+    // — look those Requests up so the UI can link to the full booking instead of just the note text.
+    const beds24Ids = blocked
+      .filter((b) => b.type === 'beds24_sync')
+      .map((b) => b.note?.match(/(\d+)\s*$/)?.[1])
+      .filter((id): id is string => !!id);
+    const beds24Requests = beds24Ids.length
+      ? await prisma.request.findMany({
+          where: { beds24BookingId: { in: beds24Ids } },
+          select: { id: true, beds24BookingId: true, firstname: true, lastname: true },
+        })
+      : [];
+    const requestByBeds24Id = new Map(beds24Requests.map((r) => [r.beds24BookingId, r]));
+
     const entries = apartments.map((apt) => {
       const bookings = requests
         .filter((r) => r.selectedApartmentIds.split(',').map(Number).includes(apt.id))
@@ -65,14 +79,20 @@ export async function GET(request: Request) {
 
       const blocks = blocked
         .filter((b) => b.apartmentId === apt.id || b.apartmentId === null)
-        .map((b) => ({
-          id: b.id,
-          kind: 'blocked' as const,
-          startDate: toIso(b.startDate),
-          endDate: toIso(b.endDate),
-          note: b.note,
-          type: b.type,
-        }));
+        .map((b) => {
+          const beds24Id = b.type === 'beds24_sync' ? b.note?.match(/(\d+)\s*$/)?.[1] : undefined;
+          const request = beds24Id ? requestByBeds24Id.get(beds24Id) : undefined;
+          return {
+            id: b.id,
+            kind: 'blocked' as const,
+            startDate: toIso(b.startDate),
+            endDate: toIso(b.endDate),
+            note: b.note,
+            type: b.type,
+            requestId: request?.id,
+            guestLabel: request ? [request.firstname, request.lastname].filter(Boolean).join(' ') : undefined,
+          };
+        });
 
       return { id: apt.id, name: apt.name, bookings, blocks };
     });

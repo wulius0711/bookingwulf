@@ -27,6 +27,7 @@ export type Beds24WebhookBooking = {
   numAdult?: number;
   numChild?: number;
   guestCountry?: string; // ISO 3166-1 alpha-2 country code
+  apiSource?: string; // e.g. "Airbnb", "Booking.com" — the OTA channel a booking came through
 };
 
 // Exchange invite code for refresh token (one-time setup)
@@ -325,16 +326,21 @@ export async function processBeds24Booking(
     return 'cancelled';
   }
 
+  // "[Airbnb] 12345" mirrors the iCal-sync note format so the admin UI can show a channel
+  // badge instead of a generic "beds24" label — falls back to a plain note if Beds24 doesn't
+  // tell us the source channel.
+  const note = booking.apiSource ? `[${booking.apiSource}] ${booking.id ?? roomId}` : `Beds24 sync — booking ${booking.id ?? roomId}`;
+
   await prisma.blockedRange.upsert({
     where: { id: await findExistingBlockId(mapping.apartmentId, arrival, departure) ?? 0 },
-    update: { endDate: new Date(departure), note: `Beds24 sync — booking ${booking.id ?? roomId}` },
+    update: { endDate: new Date(departure), note },
     create: {
       apartmentId: mapping.apartmentId,
       hotelId: authorizedHotelId,
       startDate: new Date(arrival),
       endDate: new Date(departure),
       type: 'beds24_sync',
-      note: `Beds24 sync — booking ${booking.id ?? roomId}`,
+      note,
     },
   });
 

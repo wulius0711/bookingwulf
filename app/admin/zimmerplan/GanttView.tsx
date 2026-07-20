@@ -6,7 +6,7 @@ import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Button from '../components/ui/Button';
 
 type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number };
-type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string };
+type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
 type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[] };
 
 const PLATFORM_COLORS: Record<string, { bg: string; text: string }> = {
@@ -71,7 +71,7 @@ function weekdayMon(iso: string): number {
 
 type CalItem =
   | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number }
-  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string };
+  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
 
 function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSelectItem }: { apt: AptData; allApts: AptData[]; todayIso: string; initialMonth: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
   const [monthIso, setMonthIso] = useState(() => initialMonth);
@@ -110,7 +110,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
 
   const items: CalItem[] = [
     ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId })),
-    ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type })),
+    ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type, requestId: b.requestId, guestLabel: b.guestLabel })),
   ];
 
   const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
@@ -232,7 +232,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                             if (item.kind === 'booking') {
                               onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, aptName: aptData.name } });
                             } else {
-                              onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, aptName: aptData.name } });
+                              onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, requestId: item.requestId, guestLabel: item.guestLabel, aptName: aptData.name } });
                             }
                           }}
                           style={{
@@ -733,9 +733,10 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
               ) : (selectedItem.data.type === 'ical_sync' || selectedItem.data.type === 'beds24_sync') ? (
                 (() => {
                   const isIcal = selectedItem.data.type === 'ical_sync';
-                  const parsed = isIcal ? parsePlatform(selectedItem.data.note) : null;
+                  const parsed = parsePlatform(selectedItem.data.note);
                   const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
-                  const note = !isIcal ? selectedItem.data.note : parsed?.rest;
+                  const note = parsed ? parsed.rest : selectedItem.data.note;
+                  const { requestId, guestLabel } = selectedItem.data;
                   return (
                     <div style={{ display: 'grid', gap: 14 }}>
                       {parsed && ps && (
@@ -745,6 +746,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       )}
                       <div style={{ display: 'grid', gap: 6 }}>
                         {([
+                          ...(guestLabel ? [['Gast', guestLabel]] : []),
                           ['Von', formatDisplay(selectedItem.data.startDate)],
                           ['Bis', formatDisplay(selectedItem.data.endDate)],
                           ...(note ? [['Bezeichnung', note]] : []),
@@ -760,7 +762,12 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           ? 'Automatisch synchronisiert — wird beim nächsten iCal-Sync aktualisiert.'
                           : 'Automatisch synchronisiert via Beds24.'}
                       </p>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', justifyContent: requestId ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+                        {requestId && (
+                          <a href={`/admin/requests/${requestId}`} style={{ padding: '6px 16px', background: '#10b981', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                            Anfrage ansehen →
+                          </a>
+                        )}
                         <Button variant="ghost" size="sm" type="button" onClick={() => setSelectedItem(null)}>Schließen</Button>
                       </div>
                     </div>
