@@ -704,7 +704,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
           <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden', ['--text-primary' as string]: '#f0f4ff', ['--text-secondary' as string]: '#b4c0d8' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
-                {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
+                {selectedItem.kind === 'booking' || selectedItem.data.requestId ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
               </span>
               <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
