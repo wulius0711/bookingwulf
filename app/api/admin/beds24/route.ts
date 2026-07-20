@@ -37,12 +37,13 @@ export async function POST(req: Request) {
     if (!inviteCode?.trim())
       return NextResponse.json({ error: 'Invite Code erforderlich.' }, { status: 400 });
 
-    const { refreshToken } = await setupWithInviteCode(inviteCode.trim());
+    const { refreshToken, accessToken, expiresIn } = await setupWithInviteCode(inviteCode.trim());
+    const accessTokenExpiresAt = new Date(Date.now() + expiresIn * 1000);
 
     await prisma.beds24Config.upsert({
       where: { hotelId: session.hotelId! },
-      create: { hotelId: session.hotelId!, refreshToken, webhookSecret: randomBytes(32).toString('hex') },
-      update: { refreshToken },
+      create: { hotelId: session.hotelId!, refreshToken, accessToken, accessTokenExpiresAt, webhookSecret: randomBytes(32).toString('hex') },
+      update: { refreshToken, accessToken, accessTokenExpiresAt },
     });
 
     return NextResponse.json({ ok: true });

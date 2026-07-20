@@ -49,4 +49,7 @@ async function main() {
   console.log('Ergebnis:', tally);
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect());
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect())
+  .finally(() => process.exit(0)); // the pg pool can leave a lingering handle open otherwise

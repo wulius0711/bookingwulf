@@ -31,7 +31,7 @@ export type Beds24WebhookBooking = {
 
 // Exchange invite code for refresh token (one-time setup)
 // Invite codes are generated in Beds24: Einstellungen → Marketplace → API → Invite Code generieren
-export async function setupWithInviteCode(inviteCode: string): Promise<{ refreshToken: string; accessToken: string }> {
+export async function setupWithInviteCode(inviteCode: string): Promise<{ refreshToken: string; accessToken: string; expiresIn: number }> {
   const res = await fetch(`${BEDS24_API}/authentication/setup`, {
     method: 'GET',
     headers: { 'code': inviteCode.trim() },
@@ -44,15 +44,14 @@ export async function setupWithInviteCode(inviteCode: string): Promise<{ refresh
   if (!data.refreshToken || !data.token) {
     throw new Error('Beds24: Ungültige Antwort — refreshToken oder token fehlt');
   }
-  return { refreshToken: data.refreshToken, accessToken: data.token };
+  return { refreshToken: data.refreshToken, accessToken: data.token, expiresIn: data.expiresIn ?? 86400 };
 }
 
 // Get an access token for a hotel, reusing the cached one while it's still valid.
 // Beds24 access tokens last ~24h; requesting a new one also rotates the refresh token
 // (invalidating the old one), so refreshing on every call risks races between concurrent
 // requests and burns Beds24 API credits unnecessarily. Only refresh when actually expired.
-const ACCESS_TOKEN_TTL_SECONDS = 20 * 60 * 60; // conservative, under the documented ~24h
-const EXPIRY_BUFFER_MS = 5 * 60 * 1000;
+const EXPIRY_BUFFER_MS = 60 * 60 * 1000; // 1h safety margin under Beds24's actual expiresIn
 
 async function getAccessToken(hotelId: number): Promise<string> {
   const config = await prisma.beds24Config.findUnique({
@@ -65,9 +64,11 @@ async function getAccessToken(hotelId: number): Promise<string> {
     return config.accessToken;
   }
 
+  // Note: the refresh call needs the "refreshToken" header, NOT "token" — "token" is only
+  // for authenticated calls made WITH an access token (e.g. GET /bookings).
   const res = await fetch(`${BEDS24_API}/authentication/token`, {
     method: 'GET',
-    headers: { 'token': config.refreshToken },
+    headers: { 'refreshToken': config.refreshToken },
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
@@ -80,7 +81,7 @@ async function getAccessToken(hotelId: number): Promise<string> {
     where: { hotelId },
     data: {
       accessToken: data.token,
-      accessTokenExpiresAt: new Date(Date.now() + ACCESS_TOKEN_TTL_SECONDS * 1000),
+      accessTokenExpiresAt: new Date(Date.now() + (data.expiresIn ?? 86400) * 1000),
       ...(data.refreshToken && data.refreshToken !== config.refreshToken ? { refreshToken: data.refreshToken } : {}),
     },
   });
