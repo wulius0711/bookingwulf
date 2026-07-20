@@ -726,7 +726,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 4 }}>
                     <a href={`/admin/requests/${selectedItem.data.requestId}`} style={{ padding: '6px 16px', background: '#10b981', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                      Anfrage ansehen →
+                      Buchung ansehen →
                     </a>
                   </div>
                 </div>
@@ -766,7 +766,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                         <Button variant="ghost" size="sm" type="button" onClick={() => setSelectedItem(null)}>Schließen</Button>
                         {requestId && (
                           <a href={`/admin/requests/${requestId}`} style={{ padding: '6px 16px', background: '#10b981', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                            Anfrage ansehen →
+                            Buchung ansehen →
                           </a>
                         )}
                       </div>

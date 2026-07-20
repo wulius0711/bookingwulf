@@ -16,7 +16,7 @@ export default function CopyLinkButton({ url }: { url: string }) {
     <button
       type="button"
       onClick={handleCopy}
-      style={{ fontSize: 12, padding: '3px 10px', borderRadius: 8, border: '1px solid #d1d5db', background: copied ? '#dcfce7' : '#fff', color: copied ? '#15803d' : '#374151', cursor: 'pointer', fontWeight: copied ? 700 : 400 }}
+      style={{ fontSize: 12, padding: '3px 10px', borderRadius: 8, border: '1px solid var(--border)', background: copied ? 'var(--status-booked-bg)' : 'var(--surface)', color: copied ? 'var(--status-booked-text)' : 'var(--text-primary)', cursor: 'pointer', fontWeight: copied ? 700 : 400 }}
     >
       {copied ? '✓ Kopiert' : 'Link kopieren'}
     </button>
