@@ -9,6 +9,20 @@ type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string
 type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
 type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[] };
 
+// These popups are always dark-styled regardless of the site theme — override every CSS
+// var the shared Button component reads (not just text color), or hover/active states
+// pull surface colors from the light theme and become illegible (light text on light bg).
+const DARK_MODAL_VARS: React.CSSProperties = {
+  background: '#1e293b',
+  border: '1px solid #334155',
+  ['--text-primary' as string]: '#f0f4ff',
+  ['--text-secondary' as string]: '#b4c0d8',
+  ['--bg-surface-raised' as string]: '#334155',
+  ['--bg-surface-sunken' as string]: '#475569',
+  ['--border-default' as string]: '#334155',
+  ['--border-strong' as string]: '#475569',
+};
+
 const PLATFORM_COLORS: Record<string, { bg: string; text: string }> = {
   'Airbnb':      { bg: '#ff5a5f', text: '#fff' },
   'Booking.com': { bg: '#003580', text: '#fff' },
@@ -552,7 +566,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selection && createPortal(
         <>
           <div aria-hidden="true" onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-create-title" style={{ ...DARK_MODAL_VARS, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 560, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <div>
                 <div id="gantt-create-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -701,7 +715,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
       {selectedItem && createPortal(
         <>
           <div aria-hidden="true" onClick={() => setSelectedItem(null)} className="gantt-detail-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 100, backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)' }} />
-          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden', ['--text-primary' as string]: '#f0f4ff', ['--text-secondary' as string]: '#b4c0d8' }}>
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ ...DARK_MODAL_VARS, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                 {selectedItem.kind === 'booking' || selectedItem.data.requestId ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}

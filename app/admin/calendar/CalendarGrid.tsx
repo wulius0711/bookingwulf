@@ -11,6 +11,20 @@ const PLATFORM_COLORS: Record<string, { border: string; bg: string; text: string
   'Booking.com': { border: '#003580', bg: '#003580', text: '#fff' },
 };
 
+// These popups are always dark-styled regardless of the site theme — override every CSS
+// var the shared Button component reads (not just text color), or hover/active states
+// pull surface colors from the light theme and become illegible (light text on light bg).
+const DARK_MODAL_VARS: React.CSSProperties = {
+  background: '#1e293b',
+  border: '1px solid #334155',
+  ['--text-primary' as string]: '#f0f4ff',
+  ['--text-secondary' as string]: '#b4c0d8',
+  ['--bg-surface-raised' as string]: '#334155',
+  ['--bg-surface-sunken' as string]: '#475569',
+  ['--border-default' as string]: '#334155',
+  ['--border-strong' as string]: '#475569',
+};
+
 function parsePlatform(note: string | null | undefined): { platform: string; rest: string } | null {
   if (!note) return null;
   const m = note.match(/^\[(.+?)\]\s*(.*)/);
@@ -285,7 +299,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
       {selLo && selHi && !isDragging && (
         <>
           <div aria-hidden="true" onClick={closePopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-create-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 620, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div ref={createModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-create-title" style={{ ...DARK_MODAL_VARS, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 620, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
             <span id="cal-create-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
@@ -425,7 +439,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
       {selectedItem && (
         <>
           <div aria-hidden="true" onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 100 }} />
-          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-edit-title" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 480, background: '#1e293b', border: '1px solid #334155', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
+          <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="cal-edit-title" style={{ ...DARK_MODAL_VARS, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 480, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="cal-edit-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
