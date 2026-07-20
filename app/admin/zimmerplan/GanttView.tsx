@@ -222,7 +222,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                       const fg = item.kind === 'booking' ? '#166534' : (ps?.text ?? '#78350f');
                       const label = item.kind === 'booking'
                         ? item.label
-                        : parsed ? parsed.platform + (parsed.rest ? ` · ${parsed.rest}` : '') : (item.note || 'Gesperrt');
+                        : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
 
                       return (
                         <div
@@ -510,7 +510,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       if (!style) return null;
                       const parsed = parsePlatform(b.note);
                       const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#fcd34d', text: '#78350f' }) : { bg: '#fcd34d', text: '#78350f' };
-                      const label = parsed ? parsed.platform + (parsed.rest ? ` · ${parsed.rest}` : '') : (b.note || 'Gesperrt');
+                      const label = parsed ? (b.guestLabel ? `${b.guestLabel} (${parsed.platform})` : parsed.platform) : (b.note || 'Gesperrt');
                       return (
                         <div
                           key={b.id}
@@ -749,7 +749,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           ...(guestLabel ? [['Gast', guestLabel]] : []),
                           ['Von', formatDisplay(selectedItem.data.startDate)],
                           ['Bis', formatDisplay(selectedItem.data.endDate)],
-                          ...(note ? [['Bezeichnung', note]] : []),
+                          ...(note && !guestLabel ? [['Bezeichnung', note]] : []),
                         ] as [string, string][]).map(([label, value]) => (
                           <div key={label} style={{ display: 'flex', gap: 10 }}>
                             <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', width: 100, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</span>
@@ -763,12 +763,12 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           : 'Automatisch synchronisiert via Beds24.'}
                       </p>
                       <div style={{ display: 'flex', justifyContent: requestId ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+                        <Button variant="ghost" size="sm" type="button" onClick={() => setSelectedItem(null)}>Schließen</Button>
                         {requestId && (
                           <a href={`/admin/requests/${requestId}`} style={{ padding: '6px 16px', background: '#10b981', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                             Anfrage ansehen →
                           </a>
                         )}
-                        <Button variant="ghost" size="sm" type="button" onClick={() => setSelectedItem(null)}>Schließen</Button>
                       </div>
                     </div>
                   );
