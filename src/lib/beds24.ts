@@ -300,7 +300,10 @@ export async function processBeds24Booking(
   const roomId = String(booking.roomId ?? '');
   const arrival = booking.arrival;
   const departure = booking.departure;
-  const status = booking.status ?? '1';
+  // Status comes as a numeric string ("1"/"2"/"3") from the webhook, but as a word
+  // ("confirmed"/"cancelled"/...) from GET /bookings — normalize both.
+  const status = String(booking.status ?? '1').toLowerCase();
+  const isCancelled = status === '3' || status === 'cancelled';
 
   if (!roomId || !arrival || !departure) return 'skipped-incomplete';
 
@@ -311,7 +314,7 @@ export async function processBeds24Booking(
   if (!mapping) return 'skipped-no-mapping';
   if (mapping.apartment?.hotelId !== authorizedHotelId) return 'skipped-hotel-mismatch';
 
-  if (status === '3') {
+  if (isCancelled) {
     await prisma.blockedRange.deleteMany({
       where: { type: 'beds24_sync', startDate: new Date(arrival), endDate: new Date(departure), apartmentId: mapping.apartmentId },
     });
