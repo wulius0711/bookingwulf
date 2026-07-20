@@ -44,6 +44,11 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
     ? (hotel && !Number.isNaN(Number(hotel)) ? Number(hotel) : null)
     : session.hotelId;
 
+  // "booking", "beds24_sync" und "ical_sync" sind automatisch verwaltete Sperren zu einer
+  // echten Buchung — die gehören nicht in diese Seite für manuell angelegte Sperrzeiten,
+  // sonst könnte ein Admin versehentlich eine synchronisierte Buchung hier löschen.
+  const autoManagedTypes = ['booking', 'beds24_sync', 'ical_sync'];
+
   const ranges = await prisma.blockedRange.findMany({
     where: selectedHotelId !== null
       ? {
@@ -51,9 +56,9 @@ export default async function BlockedDatesPage({ searchParams }: PageProps) {
             { apartment: { hotelId: selectedHotelId } },
             { apartmentId: null, hotelId: selectedHotelId },
           ],
-          NOT: { type: 'booking' },
+          type: { notIn: autoManagedTypes },
         }
-      : { NOT: { type: 'booking' } },
+      : { type: { notIn: autoManagedTypes } },
     include: { apartment: { include: { hotel: { select: { name: true, settings: { select: { accentColor: true } } } } } } },
     orderBy: { startDate: 'asc' },
   });
