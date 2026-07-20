@@ -44,6 +44,9 @@ export async function GET(request: Request) {
         where: {
           // Apartment-spezifische Sperrzeiten hängen an apartment.hotelId, hotelweite (apartmentId: null) direkt an hotelId
           ...(hotelId ? { OR: [{ apartment: { hotelId } }, { apartmentId: null, hotelId }] } : {}),
+          // type "booking" ist nur die interne Doppelbuchungssperre zu einem Request — der ist
+          // bereits über die "bookings" oben abgedeckt, sonst gäbe es zwei überlappende Balken
+          type: { not: 'booking' },
           startDate: { lte: rangeEnd },
           endDate: { gt: rangeStart },
         },
