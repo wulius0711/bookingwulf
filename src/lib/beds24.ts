@@ -336,6 +336,9 @@ export async function processBeds24Booking(
   // ("confirmed"/"cancelled"/...) from GET /bookings — normalize both.
   const status = String(booking.status ?? '1').toLowerCase();
   const isCancelled = status === '3' || status === 'cancelled';
+  // Airbnb "Request to Book" etc. — guest sent a request, host hasn't confirmed yet.
+  // Beds24 represents this as numeric "2"/"provisional" (webhook) or "request" (GET /bookings).
+  const isPending = status === '2' || status === 'provisional' || status === 'request';
 
   if (!roomId || !arrival || !departure) return 'skipped-incomplete';
 
@@ -380,6 +383,9 @@ export async function processBeds24Booking(
     const arrivalDate = new Date(arrival);
     const departureDate = new Date(departure);
     const nights = Math.round((departureDate.getTime() - arrivalDate.getTime()) / 86_400_000);
+    // 'new' mirrors bookingwulf's own "Anfrage" state for a not-yet-confirmed request; a later
+    // sync (webhook or backfill) with status='confirmed' upgrades it to 'booked' automatically.
+    const requestStatus = isPending ? 'new' : 'booked';
 
     await prisma.request.upsert({
       where: { beds24BookingId: beds24Id },
@@ -389,7 +395,7 @@ export async function processBeds24Booking(
         selectedApartmentIds: String(mapping.apartmentId),
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',
-        status: 'booked',
+        status: requestStatus,
       },
       create: {
         beds24BookingId: beds24Id,
@@ -400,7 +406,7 @@ export async function processBeds24Booking(
         salutation: '',
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',
-        status: 'booked', language: 'de', checkinToken: randomUUID(),
+        status: requestStatus, language: 'de', checkinToken: randomUUID(),
       },
     });
 
