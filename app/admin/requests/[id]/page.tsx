@@ -3,7 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { getResend, getFromEmail, buildEmailHtml, buildDivider, buildInfoBlock } from '@/src/lib/email';
 import { getEmailTranslations, dateLocale, type Lang } from '@/src/lib/email-i18n';
 import { bookingIcalUrl, generateBookingToken } from '@/src/lib/booking-token';
-import { hasPlanAccess, FEATURE_PLAN_GATES } from '@/src/lib/plan-gates';
+import { hasPlanAccess, FEATURE_PLAN_GATES, PLAN_LABEL } from '@/src/lib/plan-gates';
 import { PlanKey } from '@/src/lib/plans';
 import { sendBeds24Message } from '@/src/lib/beds24';
 import Link from 'next/link';
@@ -448,7 +448,10 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
   const hotelPlan = isSuperAdmin
     ? 'business'
     : ((await prisma.hotel.findUnique({ where: { id: session.hotelId! }, select: { plan: true } }))?.plan as PlanKey ?? 'starter');
-  const canUseMessages = hasPlanAccess(hotelPlan, FEATURE_PLAN_GATES.messages);
+  // OTA-sourced (Beds24/Airbnb/Booking.com) messaging needs Business (unified inbox); a hotel's
+  // own direct-booking guests can already be messaged on Pro.
+  const messagesMinPlan = request.beds24BookingId ? FEATURE_PLAN_GATES.messagesOta : FEATURE_PLAN_GATES.messages;
+  const canUseMessages = hasPlanAccess(hotelPlan, messagesMinPlan);
 
   const apartmentIds = parseApartmentIds(request.selectedApartmentIds);
 
@@ -814,7 +817,8 @@ export default async function BookingDetailPage({ params, searchParams }: PagePr
       )}
       {!canUseMessages ? (
         <div style={{ marginTop: 24, padding: '16px 20px', border: `1px solid ${borderColor}`, borderRadius: 8, background: 'var(--surface-2)', fontSize: 13, color: 'var(--text-secondary)' }}>
-          🔒 Direktnachrichten sind ab dem <strong style={{ color: 'var(--text-primary)' }}>Business-Plan</strong> verfügbar.{' '}
+          🔒 {request.beds24BookingId ? 'Nachrichten für Airbnb/Booking.com-Buchungen' : 'Direktnachrichten'} sind ab dem{' '}
+          <strong style={{ color: 'var(--text-primary)' }}>{PLAN_LABEL[messagesMinPlan]}-Plan</strong> verfügbar.{' '}
           <a href="/admin/billing" style={{ color: 'var(--accent)', fontWeight: 600 }}>Jetzt upgraden →</a>
         </div>
       ) : (

@@ -47,7 +47,8 @@ export const NAV_PLAN_GATES: Record<string, PlanKey> = {
 
 /** Minimum plan required for specific features (non-nav) */
 export const FEATURE_PLAN_GATES: Record<string, PlanKey> = {
-  messages: 'business',
+  messages: 'pro',       // direct-booking guest messaging (own website widget)
+  messagesOta: 'business', // Airbnb/Booking.com messaging via Beds24 — unified inbox across channels
 };
 
 /** Minimum plan label for tooltip */
