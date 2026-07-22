@@ -17,7 +17,7 @@ export const PLANS = {
     apartmentFeeYearly: 9,
     maxUsers: 3,
     maxHotels: 1,
-    features: ['Alles aus Starter', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin'],
+    features: ['Alles aus Starter', '3 Admin-User', 'Erweitertes Branding', 'Anpassbare E-Mail-Texte', 'Konfigurierbare Zusatzleistungen', 'Preissaisons, Last-Minute & Lücken-Rabatt', 'Verfügbarkeits-Widget (einbettbar)', 'Nuki-Integration', 'Beds24 Channel Manager', 'Widget doppelt einsetzbar – für Anfrage & Buchung', 'Gast-Chatbot (KI-Buchungsassistent)', 'KI-Assistent im Admin', 'Direktnachrichten an Gäste'],
   },
   business: {
     name: 'Business',
@@ -27,7 +27,7 @@ export const PLANS = {
     apartmentFeeYearly: 9,
     maxUsers: Infinity,
     maxHotels: 2,
-    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Direktnachrichten an Gäste', 'Analytics', 'Chatbot-Analytics', 'Priority Support'],
+    features: ['Alles aus Pro', 'Bis zu 2 Hotelanlagen', 'Unlimitierte User', 'Belegungsbasierter Preisaufschlag', 'Volles Branding', 'Ohne bookingwulf-Logo', 'Nachrichten für Airbnb/Booking.com-Gäste (ein Posteingang für alle Kanäle)', 'Analytics', 'Chatbot-Analytics', 'Priority Support'],
   },
   bundle_all: {
     name: 'hotelwulf Bundle',

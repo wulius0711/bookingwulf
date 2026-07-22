@@ -455,7 +455,7 @@ Navigations-Sperren (`NAV_PLAN_GATES`):
 Weitere Prüfungen per `hasPlanAccess(hotelPlan, minPlan)`:
 - Nutzer-Limit (`canAddUser`)
 - Branding-Features: `hasFullBranding` → Pro, Business, bundle_all; `hasAdvancedTypography` → Business, bundle_all
-- Messaging (Gast-Kommunikation) → `FEATURE_PLAN_GATES.messages = 'business'`
+- Messaging (Gast-Kommunikation), aufgesplittet nach Quelle (Juli 2026): Direktbuchungs-Nachrichten → `FEATURE_PLAN_GATES.messages = 'pro'`; Airbnb/Booking.com-Nachrichten über Beds24 → `FEATURE_PLAN_GATES.messagesOta = 'business'` (unified inbox als Business-Differenzierung). Gate in `app/admin/requests/[id]/page.tsx` prüft `request.beds24BookingId`, um die passende Mindest-Plan-Stufe zu wählen.
 - **Pro**: Last-Minute Rabatt, Mindestaufenthalt pro Saison (`/api/pricing`)
 - **Business**: Belegungsbasierter Preisaufschlag (`/api/pricing`), eigene Schrift-Uploads (`headlineFontUrl`, `bodyFontUrl` via Vercel Blob — `POST/DELETE /api/admin/font-upload`)
 - **bundle_all**: `isBundlePlan(plan)` → gibt true zurück; alle Business-Features + hungrywulf + eventwulf freigeschaltet
@@ -846,7 +846,7 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 |---|---|---|
 | `/admin` | Alle | Dashboard — anpassbares Widget-System (Statistiken, Anfragestatus, Schnellzugriff, Nächste Anreisen, Letzte Anfragen, Mini-Zimmerplan); Sichtbarkeit pro Widget in localStorage gespeichert |
 | `/admin/requests` | Alle | Buchungsanfragen verwalten |
-| `/admin/requests/[id]` | Alle | Detailansicht, Messaging (Business) |
+| `/admin/requests/[id]` | Alle | Detailansicht, Messaging (Direktbuchung ab Pro, OTA/Beds24 ab Business) |
 | `/admin/calendar` | Alle | Monatskalender mit Sperrzeiten + Buchungen |
 | `/admin/zimmerplan` | Alle | Belegungsplan (Gantt) & Tagesansicht, Sperrzeiten/Preiszeiträume/Buchungen direkt anlegen |
 | `/admin/housekeeping` | Pro | Reinigungsstatus (Sauber/Reinigung nötig/Reparatur nötig) + Checkliste je Apartment, Belegungsanzeige |

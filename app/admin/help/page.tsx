@@ -283,7 +283,7 @@ function BuchungenSection() {
         ))}
       </div>
       <H3>Nachricht senden</H3>
-      <PlanNote plan="Business" feature="Direktnachrichten an Gäste" />
+      <PlanNote plan="Pro" feature="Direktnachrichten an Gäste" />
       <P>
         In der Buchungsdetailansicht kannst du dem Gast eine individuelle Nachricht schicken.
         Diese wird als E-Mail in der gewählten Sprache des Gastes versendet.
@@ -1191,11 +1191,11 @@ function AbonnementSection() {
           },
           {
             name: 'Pro', price: '€ 59 / Monat (€ 53 bei Jahreszahlung) + € 10 je weiterem Apartment',
-            features: ['1 Apartment inklusive', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Kinderpreise', 'Widget-Konfigurationen'],
+            features: ['1 Apartment inklusive', '3 Admin-User', 'E-Mail Templates', 'Preiszeiträume', 'Mindestaufenthalt', 'Last-Minute Rabatt', 'Zusatzleistungen', 'Kinderpreise', 'Widget-Konfigurationen', 'Direktnachrichten an Gäste'],
           },
           {
             name: 'Business', price: '€ 89 / Monat (€ 80 bei Jahreszahlung) + € 10 je weiterem Apartment',
-            features: ['1 Apartment inklusive', 'Unlimitierte User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Direktnachrichten', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
+            features: ['1 Apartment inklusive', 'Unlimitierte User', 'Bis zu 2 Hotelanlagen', 'Analytics', 'Nachrichten für Airbnb/Booking.com-Gäste', 'Belegungsaufschlag', 'Volles Branding', 'Priority Support'],
           },
         ].map((p) => (
           <div key={p.name} style={{ border: '1px solid var(--border)', borderRadius: 10, padding: '14px 18px' }}>
@@ -1364,6 +1364,7 @@ function Beds24Section() {
       </ul>
 
       <H3>Gästenachrichten (Airbnb/Booking.com)</H3>
+      <PlanNote plan="Business" feature="Nachrichten für Airbnb/Booking.com-Gäste" />
       <P>
         Nachrichten von Airbnb/Booking.com-Gästen erscheinen im Chat der jeweiligen Buchung — du kannst
         direkt aus bookingwulf heraus antworten, ohne Airbnb/Booking.com separat zu öffnen. Damit auch
