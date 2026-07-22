@@ -106,6 +106,31 @@ export type Beds24PricingSnapshot = {
   ortstaxeTotal: number;
 };
 
+// OTA bookings (Airbnb etc.) often come back with no invoiceItems, or a single lump line
+// that doesn't map to room/cleaning — but Beds24 includes a labeled breakdown in
+// rateDescription ("Base Price 190 EUR\nCleaning fee 35.00 EUR\n...") we can parse instead.
+const RATE_DESCRIPTION_LABELS_DE: Record<string, string> = {
+  'base price': 'Zimmerpreis',
+  'cleaning fee': 'Endreinigung',
+  'city tax': 'Ortstaxe',
+  'tourist tax': 'Ortstaxe',
+  'ortstaxe': 'Ortstaxe',
+  'kurtaxe': 'Kurtaxe',
+};
+
+function parseRateDescriptionItems(rateDescription: string): Beds24InvoiceItem[] {
+  const items: Beds24InvoiceItem[] = [];
+  for (const line of rateDescription.split('\n')) {
+    const match = line.trim().match(/^(Base Price|Cleaning fee|City Tax|Tourist Tax|Ortstaxe|Kurtaxe)\s+(-?[\d.,]+)\s*[A-Za-z]{0,3}$/i);
+    if (!match) continue;
+    const amount = Number(match[2].replace(',', '.'));
+    if (!Number.isFinite(amount)) continue;
+    const description = RATE_DESCRIPTION_LABELS_DE[match[1].toLowerCase()] ?? match[1];
+    items.push({ type: 'rateDescription', description, amount });
+  }
+  return items;
+}
+
 export async function fetchBeds24BookingDetails(
   hotelId: number,
   bookingId: string,
@@ -115,21 +140,12 @@ export async function fetchBeds24BookingDetails(
     const accessToken = await getAccessToken(hotelId);
     const url = new URL(`${BEDS24_API}/bookings`);
     url.searchParams.set('bookingId', bookingId);
+    url.searchParams.set('includeInvoiceItems', 'true');
     const res = await fetch(url.toString(), { headers: { token: accessToken } });
     if (!res.ok) return null;
     const data = await res.json() as { data?: Record<string, unknown>[] };
     const b = data?.data?.[0];
     if (!b) return null;
-
-    const rawItems = (Array.isArray(b.invoiceItems) ? b.invoiceItems : []) as Record<string, unknown>[];
-    const items: Beds24InvoiceItem[] = rawItems.map((i) => ({
-      type: String(i.type ?? ''),
-      description: String(i.description ?? ''),
-      amount: Number(i.amount ?? 0),
-      vatRate: i.vatRate != null ? Number(i.vatRate) : undefined,
-    }));
-
-    const invoiceTotal = Number(b.invoiceTotal ?? b.price ?? items.reduce((s, i) => s + i.amount, 0));
 
     const isCleaning = (item: Beds24InvoiceItem) =>
       /cleaning|reinigung|endreinigung/i.test(item.description) || /cleaning/i.test(item.type);
@@ -137,7 +153,22 @@ export async function fetchBeds24BookingDetails(
       /ortstaxe|kurtaxe|tourist|city.?tax|local.?tax/i.test(item.description) ||
       /local_fee|tourist|city_tax/i.test(item.type);
     const isRoom = (item: Beds24InvoiceItem) =>
-      /room|zimmer|booking|unterkunft/i.test(item.type) || /room|zimmer/i.test(item.description);
+      /room|zimmer|booking|unterkunft|base price/i.test(item.type) || /room|zimmer|base price/i.test(item.description);
+
+    const rawItems = (Array.isArray(b.invoiceItems) ? b.invoiceItems : []) as Record<string, unknown>[];
+    let items: Beds24InvoiceItem[] = rawItems.map((i) => ({
+      type: String(i.type ?? ''),
+      description: String(i.description ?? ''),
+      amount: Number(i.amount ?? 0),
+      vatRate: i.vatRate != null ? Number(i.vatRate) : undefined,
+    }));
+
+    if (!items.some(isCleaning) && typeof b.rateDescription === 'string') {
+      const parsed = parseRateDescriptionItems(b.rateDescription);
+      if (parsed.length > 0) items = parsed;
+    }
+
+    const invoiceTotal = Number(b.invoiceTotal ?? b.price ?? items.reduce((s, i) => s + i.amount, 0));
 
     const roomTotal = items.filter((i) => isRoom(i) && !isCleaning(i)).reduce((s, i) => s + i.amount, 0);
     const cleaningFee = items.filter(isCleaning).reduce((s, i) => s + i.amount, 0);
@@ -355,6 +386,7 @@ export async function processBeds24Booking(
       update: {
         arrival: arrivalDate, departure: departureDate, nights,
         adults: booking.numAdult ?? 1, children: booking.numChild ?? 0,
+        selectedApartmentIds: String(mapping.apartmentId),
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',
         status: 'booked',
@@ -364,7 +396,7 @@ export async function processBeds24Booking(
         hotelId: authorizedHotelId,
         arrival: arrivalDate, departure: departureDate, nights,
         adults: booking.numAdult ?? 1, children: booking.numChild ?? 0,
-        selectedApartmentIds: JSON.stringify([mapping.apartmentId]),
+        selectedApartmentIds: String(mapping.apartmentId),
         salutation: '',
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',

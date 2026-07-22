@@ -1335,7 +1335,8 @@ function Beds24Section() {
       <Step num={2} title="Invite Code generieren & Verbindung herstellen">
         <P>
           In Beds24 unter <strong>Einstellungen → Marketplace → API → Einladungscode erstellen</strong> einen
-          neuen Code generieren (Berechtigungen: bookings lesen + ändern, inventory lesen).
+          neuen Code generieren (Berechtigungen: bookings lesen + ändern, inventory lesen; für Gästenachrichten
+          zusätzlich bookings-personal, siehe unten).
           Den Code im bookingwulf Admin unter <strong>Beds24 Channel Manager</strong> einfügen und auf
           „Verbinden" klicken. Invite Codes sind Einmalcodes — nach Verbindung werden sie nicht mehr benötigt.
         </P>
@@ -1361,6 +1362,16 @@ function Beds24Section() {
         <li>Buchung auf Airbnb → bei dir gesperrt: <strong>Echtzeit via Webhook</strong></li>
         <li>Zum Vergleich: iCal-Sync alle 30 Minuten</li>
       </ul>
+
+      <H3>Gästenachrichten (Airbnb/Booking.com)</H3>
+      <P>
+        Nachrichten von Airbnb/Booking.com-Gästen erscheinen im Chat der jeweiligen Buchung — du kannst
+        direkt aus bookingwulf heraus antworten, ohne Airbnb/Booking.com separat zu öffnen. Damit auch
+        deine Antworten übermittelt werden, braucht der Invite Code zusätzlich den Scope{' '}
+        <strong>bookings-personal</strong>. Falls das Senden einer Nachricht fehlschlägt: in Beds24 unter{' '}
+        <strong>Einstellungen → Marketplace → API</strong> einen neuen Invite Code mit diesem Scope erzeugen
+        und oben erneut verbinden — die Zimmer-Zuordnungen bleiben dabei erhalten.
+      </P>
 
       <H3>Gäste-Lounge für Airbnb/Booking.com-Gäste</H3>
       <P>

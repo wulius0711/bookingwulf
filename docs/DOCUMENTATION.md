@@ -1482,6 +1482,14 @@ Beds24 API v2 verwendet ein Invite-Code-basiertes Token-Flow:
 
 Invite Codes werden in Beds24 unter Einstellungen → Marketplace → API → Einladungscode erstellen generiert. Sie sind **Einmalcodes** — nach Verwendung ungültig.
 
+**Wichtig — Header-Namen nicht verwechseln:** Der Refresh-Call an `GET /authentication/token` braucht den Header `refreshToken`, NICHT `token` (letzterer ist nur für bereits authentifizierte Calls mit einem Access-Token, z.B. `GET /bookings`). Dieser Bug war seit Beginn der Integration vorhanden (jeder Refresh-Versuch schlug mit 401 fehl) und wurde erst am 2026-07-19/20 gefunden und gefixt — siehe `getAccessToken()` in `src/lib/beds24.ts`.
+
+**Wichtig — Property-Verknüpfung bei Sub-Account-Zugriff:** Beim Erstellen eines Invite-Codes (Marketplace → API → „Einladungscode erstellen") gibt es neben den Berechtigungs-Scopes ein Dropdown „Wählen Sie aus, auf welche Unterkünfte dieses Token zugreifen kann" mit zwei Optionen:
+- „Alle die Account besitzt" (Default)
+- „Alle die Account besitzt oder verbunden sind"
+
+Falls der bookingwulf-Zugang zu einem Hotel-Beds24-Account nur über einen **Sub-Account/Association-Code** läuft (das Hotel besitzt den Master-Account, bookingwulf hat nur verknüpften Zugriff — z.B. bei MSQ Vienna der Fall), schließt die Default-Option „Alle die Account besitzt" diese Property komplett aus. Der resultierende Token authentifiziert sich zwar fehlerfrei (kein 401), aber `GET /properties` und `GET /bookings` liefern dann `count: 0` — stiller Ausfall ohne Fehlermeldung. Erkennbar an `GET /authentication/details` → `"linkedProperties": false`. **Fix:** Beim Invite-Code-Erstellen immer „...oder verbunden sind" wählen, sobald bookingwulf nicht der direkte Account-Owner ist. Bei eigenen Accounts (bookingwulf/Hotel besitzt den Beds24-Account direkt) ist die Default-Option unproblematisch.
+
 ### Datenbankmodelle
 
 - `Beds24Config` — `refreshToken` (v2 API) + `webhookSecret` (eindeutig pro Hotel, seit Juli 2026) + `isEnabled`-Kill-Switch
@@ -1513,6 +1521,18 @@ Seit der Migration am 2026-07-19 hat jedes Hotel ein eigenes, beim Verbinden zuf
 | `/api/beds24-webhook` — Inbound, Token-Auth, BlockedRange + Request-Upsert | ✅ fertig |
 | Admin UI `/admin/beds24` | ✅ fertig |
 | Outbound Sync in `/api/request` | ✅ fertig (non-blocking) |
+| Preis-Aufschlüsselung (`fetchBeds24BookingDetails`) | ✅ fertig (Juli 2026) |
+| Backfill-Script (`scripts/beds24-backfill.ts`) | ✅ fertig |
+
+### Preis-Aufschlüsselung
+
+`fetchBeds24BookingDetails()` ruft `GET /bookings?bookingId=...&includeInvoiceItems=true` auf und baut daraus einen `Beds24PricingSnapshot` (`Request.pricingJson`), der auf der Buchungsdetailseite (`/admin/requests/[id]`) aufgeschlüsselt angezeigt wird (Zimmerpreis, Reinigung, Ortstaxe, Extras statt nur Gesamtsumme).
+
+Bei OTA-Buchungen (Airbnb etc.) liefert Beds24 in `invoiceItems` oft nur eine nicht aufschlüsselbare Sammelposition (Netto-Payout-Betrag). In diesem Fall parst `parseRateDescriptionItems()` stattdessen das Textfeld `rateDescription`, das Beds24 mitliefert (z.B. `"Base Price 190 EUR\nCleaning fee 35.00 EUR\n..."`), und übersetzt die Labels ins Deutsche (Zimmerpreis, Endreinigung, Ortstaxe/Kurtaxe).
+
+### Backfill-Script
+
+`scripts/beds24-backfill.ts <hotelId> [--write]` — holt Buchungen der letzten 7 Tage bis 12 Monate voraus per `GET /bookings` und verarbeitet sie über dieselbe `processBeds24Booking()`-Funktion wie der Live-Webhook (BlockedRange + Request + Preis-Snapshot). Ohne `--write` nur Dry-Run (zeigt Rohdaten, schreibt nichts) — nützlich, um eine Verbindung nach einem Reconnect live zu verifizieren (echter API-Call statt nur „kein Fehler beim Verbinden"). Anwendungsfälle: erstmaliger Sync nach einer Neuanbindung, Nachholen von Buchungen nach einem Ausfall (siehe Property-Verknüpfung oben).
 
 ### Aktivierung (Ersteinrichtung)
 
