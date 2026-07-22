@@ -82,6 +82,16 @@ export async function GET(request: Request) {
 
       const blocks = blocked
         .filter((b) => b.apartmentId === apt.id || b.apartmentId === null)
+        .filter((b) => {
+          // A confirmed Beds24 booking already has a 'booking'-kind chip above (built from the
+          // same Request) — showing its beds24_sync block too would duplicate the bar. A still-
+          // pending request (status not in ['booked','confirmed'], so absent from `bookings`)
+          // has no other chip yet, so its block stays visible as the only indicator.
+          if (b.type !== 'beds24_sync') return true;
+          const beds24Id = b.note?.match(/(\d+)\s*$/)?.[1];
+          const request = beds24Id ? requestByBeds24Id.get(beds24Id) : undefined;
+          return !(request && bookings.some((bk) => bk.id === request.id));
+        })
         .map((b) => {
           const beds24Id = b.type === 'beds24_sync' ? b.note?.match(/(\d+)\s*$/)?.[1] : undefined;
           const request = beds24Id ? requestByBeds24Id.get(beds24Id) : undefined;

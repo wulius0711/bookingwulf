@@ -131,7 +131,10 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         : {}),
       startDate: { lte: lastDay },
       endDate: { gt: firstDay },
-      NOT: { type: 'booking' },
+      // 'booking'/'beds24_sync' are auto-managed availability blocks that mirror a Request shown
+      // separately above — hiding them here avoids a duplicate chip per booking. 'ical_sync' has
+      // no paired Request (ical-sync.ts only ever writes a BlockedRange), so it must stay visible.
+      NOT: { type: { in: ['booking', 'beds24_sync'] } },
     },
     include: { apartment: { select: { name: true } } },
   });
