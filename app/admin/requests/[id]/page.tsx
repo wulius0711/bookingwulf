@@ -179,8 +179,11 @@ async function updateBookingStatus(formData: FormData) {
     });
   }
 
-  // Push to Beds24 when an Anfrage is confirmed (status was not 'booked' before)
-  if (status === 'booked' && request.status !== 'booked' && request.hotelId) {
+  // Push to Beds24 when an Anfrage is confirmed (status was not 'booked' before).
+  // Skip if the booking already came FROM Beds24 (beds24BookingId set) — it already exists there
+  // (e.g. an Airbnb "Request to Book"); pushing again would create a duplicate booking instead of
+  // approving the original, and approval has to happen on Airbnb/Beds24 directly anyway.
+  if (status === 'booked' && request.status !== 'booked' && request.hotelId && !request.beds24BookingId) {
     try {
       const beds24Config = await prisma.beds24Config.findUnique({
         where: { hotelId: request.hotelId },
