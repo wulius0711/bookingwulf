@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect, notFound } from 'next/navigation';
+import { pushBlockedRangeSync } from '@/src/lib/beds24';
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -41,19 +42,38 @@ export default async function EditBlockedDatePage({ params }: PageProps) {
     if (!apartmentIdRaw || !startDate || !endDate) return;
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
-    if (session.hotelId !== null) {
-      if (apartmentId !== null) {
-        const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
-        if (!apt || apt.hotelId !== session.hotelId) throw new Error('Zugriff verweigert.');
-      } else if (range?.hotelId !== session.hotelId) {
-        throw new Error('Zugriff verweigert.');
-      }
+    let newHotelId = session.hotelId;
+    if (apartmentId !== null) {
+      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
+      if (!apt || (session.hotelId !== null && apt.hotelId !== session.hotelId)) throw new Error('Zugriff verweigert.');
+      newHotelId = apt.hotelId;
+    } else if (session.hotelId !== null && range?.hotelId !== session.hotelId) {
+      throw new Error('Zugriff verweigert.');
     }
+
+    const oldApartmentId = range!.apartmentId;
+    const oldHotelId = range!.apartment?.hotelId ?? range!.hotelId;
+    const oldStart = range!.startDate;
+    const oldEnd = range!.endDate;
 
     await prisma.blockedRange.update({
       where: { id: rangeId },
       data: { apartmentId, startDate, endDate, type, note },
     });
+
+    let syncError: string | null = null;
+    if (oldApartmentId === apartmentId && oldHotelId !== null) {
+      // Same target apartment/hotel-wide scope — one sync call over the union of old and new dates.
+      const windowStart = oldStart < startDate ? oldStart : startDate;
+      const windowEnd = oldEnd > endDate ? oldEnd : endDate;
+      syncError = await pushBlockedRangeSync(oldHotelId, apartmentId, windowStart, windowEnd);
+    } else {
+      // The Sperrzeit moved to a different apartment (or in/out of hotel-wide) — reopen the old
+      // target's old window, then block the new target's new window.
+      if (oldHotelId !== null) await pushBlockedRangeSync(oldHotelId, oldApartmentId, oldStart, oldEnd);
+      if (newHotelId !== null) syncError = await pushBlockedRangeSync(newHotelId, apartmentId, startDate, endDate);
+    }
+    await prisma.blockedRange.update({ where: { id: rangeId }, data: { beds24SyncError: syncError } });
 
     redirect('/admin/blocked-dates');
   }

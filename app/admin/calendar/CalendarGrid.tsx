@@ -561,8 +561,11 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
                         <Button variant="danger" size="sm" type="button" onClick={async () => {
                           const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
-                          if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800); }
-                          else setEditError((await res.json()).error ?? 'Fehler');
+                          const json = await res.json();
+                          if (res.ok) {
+                            if (json.beds24SyncError) alert(`Gelöscht, aber nicht an OTA-Plattformen übertragen: ${json.beds24SyncError}`);
+                            setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800);
+                          } else setEditError(json.error ?? 'Fehler');
                         }}>Wirklich löschen</Button>
                       </div>
                     )}

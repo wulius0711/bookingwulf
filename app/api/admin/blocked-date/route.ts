@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
-import { syncBlockedRangeAvailability } from '@/src/lib/beds24';
+import { pushBlockedRangeSync } from '@/src/lib/beds24';
 
 async function checkAccess(id: number, hotelId: number | null) {
   if (hotelId === null) return true;
@@ -24,12 +24,9 @@ export async function POST(req: NextRequest) {
     if (!apt) return NextResponse.json({ error: 'Apartment nicht gefunden' }, { status: 404 });
     if (session.hotelId !== null && apt.hotelId !== session.hotelId) return NextResponse.json({ error: 'Zugriff verweigert' }, { status: 403 });
     const range = await prisma.blockedRange.create({ data: { apartmentId, startDate: start, endDate: end, type: type || 'manual', note: note || '' } });
-    try {
-      await syncBlockedRangeAvailability(apt.hotelId, apartmentId, start, end);
-    } catch (err) {
-      await prisma.blockedRange.update({ where: { id: range.id }, data: { beds24SyncError: (err as Error).message } });
-    }
-    return NextResponse.json({ ok: true });
+    const syncError = await pushBlockedRangeSync(apt.hotelId, apartmentId, start, end);
+    if (syncError) await prisma.blockedRange.update({ where: { id: range.id }, data: { beds24SyncError: syncError } });
+    return NextResponse.json({ ok: true, beds24SyncError: syncError });
   } catch {
     return NextResponse.json({ error: 'Fehler beim Speichern' }, { status: 500 });
   }
@@ -49,17 +46,14 @@ export async function PUT(req: NextRequest) {
       select: { apartmentId: true, startDate: true, endDate: true, apartment: { select: { hotelId: true } } },
     });
     await prisma.blockedRange.update({ where: { id }, data: { startDate: start, endDate: end, type, note: note || '' } });
+    let syncError: string | null = null;
     if (existing?.apartmentId && existing.apartment) {
       const windowStart = existing.startDate < start ? existing.startDate : start;
       const windowEnd = existing.endDate > end ? existing.endDate : end;
-      try {
-        await syncBlockedRangeAvailability(existing.apartment.hotelId, existing.apartmentId, windowStart, windowEnd);
-        await prisma.blockedRange.update({ where: { id }, data: { beds24SyncError: null } });
-      } catch (err) {
-        await prisma.blockedRange.update({ where: { id }, data: { beds24SyncError: (err as Error).message } });
-      }
+      syncError = await pushBlockedRangeSync(existing.apartment.hotelId, existing.apartmentId, windowStart, windowEnd);
+      await prisma.blockedRange.update({ where: { id }, data: { beds24SyncError: syncError } });
     }
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, beds24SyncError: syncError });
   } catch {
     return NextResponse.json({ error: 'Fehler beim Speichern' }, { status: 500 });
   }
@@ -76,14 +70,13 @@ export async function DELETE(req: NextRequest) {
       select: { apartmentId: true, startDate: true, endDate: true, apartment: { select: { hotelId: true } } },
     });
     await prisma.blockedRange.delete({ where: { id } });
-    if (existing?.apartmentId && existing.apartment) {
-      try {
-        await syncBlockedRangeAvailability(existing.apartment.hotelId, existing.apartmentId, existing.startDate, existing.endDate);
-      } catch (err) {
-        console.error('[Beds24] Sperrzeit-Sync nach Löschen fehlgeschlagen:', err);
-      }
-    }
-    return NextResponse.json({ ok: true });
+    // The row is gone, so there's nowhere left to persist a failure — return it instead so the
+    // admin UI can warn immediately (the alternative, silently logging it server-side only, is
+    // how this used to fail invisibly).
+    const syncError = existing?.apartmentId && existing.apartment
+      ? await pushBlockedRangeSync(existing.apartment.hotelId, existing.apartmentId, existing.startDate, existing.endDate)
+      : null;
+    return NextResponse.json({ ok: true, beds24SyncError: syncError });
   } catch {
     return NextResponse.json({ error: 'Fehler beim Löschen' }, { status: 500 });
   }

@@ -224,7 +224,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                       const chColor = item.kind === 'booking' ? getChannelColor(item.channel) : blockedRangeColor(item.note).color;
                       const blockedPattern = item.kind === 'blocked' ? blockedRangeColor(item.note).pattern : undefined;
                       const bg = blockedPattern ?? chColor.bg;
-                      const fg = blockedPattern ? chColor.text : '#fff';
+                      const fg = chColor.text;
                       const baseLabel = item.kind === 'booking'
                         ? item.label
                         : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
@@ -845,8 +845,11 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                         <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
                         <Button variant="danger" size="sm" type="button" onClick={async () => {
                           const res = await fetch('/api/admin/blocked-date', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
-                          if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
-                          else setEditError((await res.json()).error ?? 'Fehler');
+                          const json = await res.json();
+                          if (res.ok) {
+                            if (json.beds24SyncError) alert(`Gelöscht, aber nicht an OTA-Plattformen übertragen: ${json.beds24SyncError}`);
+                            setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800);
+                          } else setEditError(json.error ?? 'Fehler');
                         }}>Wirklich löschen</Button>
                       </div>
                     )}

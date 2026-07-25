@@ -82,13 +82,14 @@ export default function BlockedDateList({
   isSuperAdmin,
 }: {
   ranges: Range[];
-  deleteBlockedDate: (formData: FormData) => Promise<{ ok: boolean; error?: string }>;
+  deleteBlockedDate: (formData: FormData) => Promise<{ ok: boolean; error?: string; beds24SyncError?: string }>;
   isSuperAdmin: boolean;
 }) {
   const [ranges, setRanges] = useState<Range[]>(initial);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [confirmId, setConfirmId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   const confirmRange = confirmId !== null ? ranges.find((r) => r.id === confirmId) : null;
 
@@ -97,11 +98,13 @@ export default function BlockedDateList({
     setDeleting(confirmId);
     setConfirmId(null);
     setError(null);
+    setWarning(null);
     const fd = new FormData();
     fd.append('id', String(confirmId));
     const result = await deleteBlockedDate(fd);
     if (result.ok) {
       setRanges((prev) => prev.filter((r) => r.id !== confirmId));
+      if (result.beds24SyncError) setWarning(`Gelöscht, aber nicht an OTA-Plattformen übertragen: ${result.beds24SyncError}`);
     } else {
       setError(result.error || 'Löschen fehlgeschlagen.');
     }
@@ -124,6 +127,11 @@ export default function BlockedDateList({
       {error && (
         <div style={{ marginBottom: 12, padding: '10px 14px', borderRadius: 8, background: 'var(--status-cancelled-bg)', color: 'var(--status-cancelled-text)', fontSize: 13, fontWeight: 600 }}>
           {error}
+        </div>
+      )}
+      {warning && (
+        <div style={{ marginBottom: 12, padding: '10px 14px', borderRadius: 8, background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', color: '#b45309', fontSize: 13, fontWeight: 600 }}>
+          ⚠️ {warning}
         </div>
       )}
 

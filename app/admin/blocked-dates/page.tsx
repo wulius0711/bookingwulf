@@ -4,30 +4,33 @@ import Link from 'next/link';
 import BlockedDateList from './BlockedDateList';
 import { EmptyState } from '../components/ui';
 import Button from '../components/ui/Button';
+import { pushBlockedRangeSync } from '@/src/lib/beds24';
 
 export const dynamic = 'force-dynamic';
 
 type PageProps = { searchParams: Promise<{ hotel?: string }> };
 
-async function deleteBlockedDate(formData: FormData): Promise<{ ok: boolean; error?: string }> {
+async function deleteBlockedDate(formData: FormData): Promise<{ ok: boolean; error?: string; beds24SyncError?: string }> {
   'use server';
 
   const session = await verifySession();
   const id = Number(formData.get('id'));
   if (!id) return { ok: false, error: 'ID fehlt' };
 
-  if (session.hotelId !== null) {
-    const range = await prisma.blockedRange.findUnique({
-      where: { id },
-      include: { apartment: { select: { hotelId: true } } },
-    });
-    const ownedByHotel = range?.apartment?.hotelId === session.hotelId
-      || (range?.apartmentId === null && range?.hotelId === session.hotelId);
-    if (!range || !ownedByHotel) return { ok: false, error: 'Zugriff verweigert' };
-  }
+  const range = await prisma.blockedRange.findUnique({
+    where: { id },
+    include: { apartment: { select: { hotelId: true } } },
+  });
+  if (!range) return { ok: false, error: 'Nicht gefunden' };
+  const hotelId = range.apartment?.hotelId ?? range.hotelId;
+  if (session.hotelId !== null && hotelId !== session.hotelId) return { ok: false, error: 'Zugriff verweigert' };
 
   await prisma.blockedRange.delete({ where: { id } });
-  return { ok: true };
+
+  const syncError = hotelId !== null
+    ? (await pushBlockedRangeSync(hotelId, range.apartmentId, range.startDate, range.endDate)) ?? undefined
+    : undefined;
+  return { ok: true, beds24SyncError: syncError };
 }
 
 export default async function BlockedDatesPage({ searchParams }: PageProps) {

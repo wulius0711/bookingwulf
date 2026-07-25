@@ -228,8 +228,9 @@ export async function pushBooking(hotelId: number, payload: Beds24BookingPayload
 
 // Pushes host-created Sperrzeiten out to Beds24 so Airbnb/Booking.com also see the room as
 // unavailable. Beds24's "override" calendar field is blackout/none per date — reconciling against
-// every remaining manual block for the apartment (not just the one just changed) avoids reopening
-// days that another, still-active Sperrzeit for the same apartment also covers.
+// every other BlockedRange for the apartment (regardless of type: other manual Sperrzeiten, real
+// bookings, beds24_sync/ical_sync blocks, ...) avoids reopening days that are still genuinely
+// occupied for a different reason than the Sperrzeit that was just changed.
 export async function syncBlockedRangeAvailability(
   hotelId: number,
   apartmentId: number,
@@ -246,7 +247,7 @@ export async function syncBlockedRangeAvailability(
   if (!config?.isEnabled) return;
 
   const active = await prisma.blockedRange.findMany({
-    where: { apartmentId, type: { in: ['manual', 'other'] }, startDate: { lt: windowEnd }, endDate: { gt: windowStart } },
+    where: { apartmentId, startDate: { lt: windowEnd }, endDate: { gt: windowStart } },
     select: { startDate: true, endDate: true },
   });
 
@@ -275,6 +276,42 @@ export async function syncBlockedRangeAvailability(
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`Beds24 Kalender-Sync fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+}
+
+// Runs syncBlockedRangeAvailability and reports success/failure as a string instead of throwing,
+// so every call site (the 3 blocked-date API handlers, plus the legacy /admin/blocked-dates
+// pages) can persist or surface the outcome without repeating its own try/catch. Hotel-wide
+// Sperrzeiten (apartmentId: null) have no single Beds24 room mapping — push to every apartment
+// in the hotel individually and report the first failure, if any.
+export async function pushBlockedRangeSync(
+  hotelId: number,
+  apartmentId: number | null,
+  windowStart: Date,
+  windowEnd: Date,
+): Promise<string | null> {
+  const apartmentIds = apartmentId !== null
+    ? [apartmentId]
+    : (await prisma.apartment.findMany({ where: { hotelId }, select: { id: true } })).map((a) => a.id);
+  let firstError: string | null = null;
+  for (const id of apartmentIds) {
+    const err = await pushSingleApartment(hotelId, id, windowStart, windowEnd);
+    if (err && !firstError) firstError = err;
+  }
+  return firstError;
+}
+
+async function pushSingleApartment(
+  hotelId: number,
+  apartmentId: number,
+  windowStart: Date,
+  windowEnd: Date,
+): Promise<string | null> {
+  try {
+    await syncBlockedRangeAvailability(hotelId, apartmentId, windowStart, windowEnd);
+    return null;
+  } catch (err) {
+    return (err as Error).message;
   }
 }
 

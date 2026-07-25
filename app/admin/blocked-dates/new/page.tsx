@@ -1,6 +1,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';
+import { pushBlockedRangeSync } from '@/src/lib/beds24';
 
 type PageProps = { searchParams: Promise<{ start?: string; end?: string }> };
 
@@ -30,18 +31,18 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
     if (!apartmentIdRaw || !startDate || !endDate) return;
     if (apartmentId !== null && !apartmentId) return;
 
+    let resolvedHotelId = session.hotelId;
     if (apartmentId !== null) {
-      if (session.hotelId !== null) {
-        const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
-        if (!apt || apt.hotelId !== session.hotelId) return;
-      }
+      const apt = await prisma.apartment.findUnique({ where: { id: apartmentId }, select: { hotelId: true } });
+      if (!apt || (session.hotelId !== null && apt.hotelId !== session.hotelId)) return;
+      resolvedHotelId = apt.hotelId;
     } else if (session.hotelId === null) {
       return; // Superadmin hat auf dieser Seite keinen impliziten Hotel-Kontext für "Alle Apartments"
     }
 
     if (endDate <= startDate) throw new Error('Enddatum muss nach Startdatum liegen');
 
-    await prisma.blockedRange.create({
+    const range = await prisma.blockedRange.create({
       data: {
         apartmentId,
         startDate,
@@ -51,6 +52,10 @@ export default async function NewBlockedDatePage({ searchParams }: PageProps) {
         ...(apartmentId === null ? { hotelId: session.hotelId } : {}),
       },
     });
+
+    const syncError = await pushBlockedRangeSync(resolvedHotelId!, apartmentId, startDate, endDate);
+    if (syncError) await prisma.blockedRange.update({ where: { id: range.id }, data: { beds24SyncError: syncError } });
+
     redirect('/admin/blocked-dates');
   }
 
