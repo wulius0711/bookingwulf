@@ -395,7 +395,7 @@ export async function processBeds24Booking(
         selectedApartmentIds: String(mapping.apartmentId),
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',
-        status: requestStatus,
+        status: requestStatus, channel: booking.apiSource || 'direct',
       },
       create: {
         beds24BookingId: beds24Id,
@@ -407,6 +407,7 @@ export async function processBeds24Booking(
         firstname: booking.firstName ?? '', lastname: booking.lastName || '—',
         email: booking.email ?? '', country: booking.guestCountry ?? '',
         status: requestStatus, language: 'de', checkinToken: randomUUID(),
+        channel: booking.apiSource || 'direct',
       },
     });
 

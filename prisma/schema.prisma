@@ -427,6 +427,7 @@ model Request {
   paymentReminderSentAt DateTime? // set when hotel is notified of pending payment
 
   beds24BookingId String? @unique // set for bookings synced from Beds24 webhook
+  channel         String  @default("direct") // "direct" | Beds24 apiSource (e.g. "Airbnb", "Booking.com")
 
   messages RequestMessage[]
 

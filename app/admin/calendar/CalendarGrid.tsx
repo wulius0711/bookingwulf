@@ -5,11 +5,7 @@ import Button from '../components/ui/Button';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
-const PLATFORM_COLORS: Record<string, { border: string; bg: string; text: string }> = {
-  'Airbnb':      { border: '#ff5a5f', bg: '#ff5a5f', text: '#fff' },
-  'Booking.com': { border: '#003580', bg: '#003580', text: '#fff' },
-};
+import { getChannelColor, parsePlatform, blockedRangeColor } from '@/src/lib/channelColors';
 
 // These popups are always dark-styled regardless of the site theme — override every CSS
 // var the shared Button component reads (not just text color), or hover/active states
@@ -24,13 +20,6 @@ const DARK_MODAL_VARS: React.CSSProperties = {
   ['--border-default' as string]: '#334155',
   ['--border-strong' as string]: '#475569',
 };
-
-function parsePlatform(note: string | null | undefined): { platform: string; rest: string } | null {
-  if (!note) return null;
-  const m = note.match(/^\[(.+?)\]\s*(.*)/);
-  if (!m) return null;
-  return { platform: m[1], rest: m[2] };
-}
 
 const STATUS_COLORS: Record<string, string> = {
   new: '#3b82f6',
@@ -63,6 +52,7 @@ export type BookingChip = {
   departure: string;
   nights: number;
   status: string;
+  channel: string;
   aptName: string;
   isArrival: boolean;
 };
@@ -268,20 +258,28 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       {[...bookings].sort((a, b) => {
                         const p: Record<string, number> = { booked: 0, answered: 1, new: 2 };
                         return (p[a.status] ?? 3) - (p[b.status] ?? 3);
-                      }).slice(0, 4).map((req) => (
-                        <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: STATUS_BG[req.status] ?? '#f3f4f6', borderLeft: `3px solid ${STATUS_COLORS[req.status] ?? '#9ca3af'}`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: STATUS_COLORS[req.status] ?? '#9ca3af', fontSize: 10, color: STATUS_TEXT[req.status] ?? '#111', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte`}>
-                          <span className="calendar-chip-label">{req.isArrival ? '↘ ' : ''}{req.firstname ? req.firstname[0] + '. ' : ''}{req.lastname}{req.aptName ? ` · ${req.aptName}` : ''}</span>
-                        </button>
-                      ))}
+                      }).slice(0, 4).map((req) => {
+                        // Channel color once a booking is confirmed; pending/cancelled requests keep
+                        // the workflow-status color since their channel isn't the relevant signal yet.
+                        const chColor = req.status === 'booked' ? getChannelColor(req.channel) : null;
+                        const bg = chColor ? `color-mix(in srgb, ${chColor.bg} 18%, white)` : (STATUS_BG[req.status] ?? '#f3f4f6');
+                        const border = chColor ? chColor.border : (STATUS_COLORS[req.status] ?? '#9ca3af');
+                        const text = chColor ? chColor.border : (STATUS_TEXT[req.status] ?? '#111');
+                        return (
+                          <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: bg, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: border, fontSize: 10, color: text, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte${chColor ? ' · ' + (req.channel === 'direct' ? 'Direktbuchung' : req.channel) : ''}`}>
+                            <span className="calendar-chip-label">{req.isArrival ? '↘ ' : ''}{req.firstname ? req.firstname[0] + '. ' : ''}{req.lastname}{req.aptName ? ` · ${req.aptName}` : ''}</span>
+                          </button>
+                        );
+                      })}
                       {bookings.length > 4 && <div className="calendar-chip-label" style={{ fontSize: 10, color: '#9ca3af', paddingLeft: 5 }}>+{bookings.length - 4} weitere</div>}
                       {blocked.map((b) => {
                         const parsed = parsePlatform(b.note);
-                        const platformStyle = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { border: '#ef4444', bg: '#ef4444', text: '#fff' }) : null;
+                        const { color, pattern } = blockedRangeColor(b.note);
                         const chipLabel = parsed
                           ? `${parsed.platform}${b.aptName ? ' · ' + b.aptName : ''}${parsed.rest ? ' · ' + parsed.rest : ''}`
                           : `${b.aptName || 'Gesperrt'}${b.note ? ' · ' + b.note : ''}`;
                         return (
-                          <button key={b.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'blocked', data: b }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: '#fee2e2', border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: platformStyle ? platformStyle.border : '#ef4444', fontSize: 10, color: '#7f1d1d', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={chipLabel}>
+                          <button key={b.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'blocked', data: b }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: pattern ?? `color-mix(in srgb, ${color.bg} 20%, white)`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: color.border, fontSize: 10, color: pattern ? color.text : color.border, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={chipLabel}>
                             <span className="calendar-chip-label">🚫 {chipLabel}</span>
                           </button>
                         );
@@ -488,7 +486,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 /* iCal-synced — read-only, show platform info */
                 (() => {
                   const parsed = parsePlatform(selectedItem.data.note);
-                  const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
+                  const ps = parsed ? getChannelColor(parsed.platform) : null;
                   return (
                     <div style={{ display: 'grid', gap: 14 }}>
                       {parsed && ps && (

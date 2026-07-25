@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Button from '../components/ui/Button';
+import { getChannelColor, channelLabel, parsePlatform, blockedRangeColor, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
 
-type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number };
+type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number; channel: string };
 type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
 type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[] };
 
@@ -22,17 +23,6 @@ const DARK_MODAL_VARS: React.CSSProperties = {
   ['--border-default' as string]: '#334155',
   ['--border-strong' as string]: '#475569',
 };
-
-const PLATFORM_COLORS: Record<string, { bg: string; text: string }> = {
-  'Airbnb':      { bg: '#ff5a5f', text: '#fff' },
-  'Booking.com': { bg: '#003580', text: '#fff' },
-};
-
-function parsePlatform(note: string | null | undefined): { platform: string; rest: string } | null {
-  if (!note) return null;
-  const m = note.match(/^\[(.+?)\]\s*(.*)/);
-  return m ? { platform: m[1], rest: m[2] } : null;
-}
 
 function addDays(iso: string, n: number): string {
   const d = new Date(iso + 'T00:00:00Z');
@@ -84,7 +74,7 @@ function weekdayMon(iso: string): number {
 }
 
 type CalItem =
-  | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number }
+  | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number; channel: string }
   | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
 
 function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSelectItem }: { apt: AptData; allApts: AptData[]; todayIso: string; initialMonth: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
@@ -123,7 +113,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   const isCurrentMonth = monthIso === monthStart(todayIso);
 
   const items: CalItem[] = [
-    ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId })),
+    ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId, channel: b.channel })),
     ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type, requestId: b.requestId, guestLabel: b.guestLabel })),
   ];
 
@@ -231,9 +221,10 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                       const isFirstSeg = item.start >= weekStart;
                       const isLastSeg = item.end <= weekEndExcl;
                       const parsed = item.kind === 'blocked' ? parsePlatform(item.note) : null;
-                      const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#fcd34d', text: '#78350f' }) : null;
-                      const bg = item.kind === 'booking' ? '#bbf7d0' : (ps?.bg ?? '#fcd34d');
-                      const fg = item.kind === 'booking' ? '#166534' : (ps?.text ?? '#78350f');
+                      const chColor = item.kind === 'booking' ? getChannelColor(item.channel) : blockedRangeColor(item.note).color;
+                      const blockedPattern = item.kind === 'blocked' ? blockedRangeColor(item.note).pattern : undefined;
+                      const bg = blockedPattern ?? chColor.bg;
+                      const fg = blockedPattern ? chColor.text : '#fff';
                       const label = item.kind === 'booking'
                         ? item.label
                         : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
@@ -244,7 +235,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                           title={label}
                           onClick={() => {
                             if (item.kind === 'booking') {
-                              onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, aptName: aptData.name } });
+                              onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, channel: item.channel, aptName: aptData.name } });
                             } else {
                               onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, requestId: item.requestId, guestLabel: item.guestLabel, aptName: aptData.name } });
                             }
@@ -414,6 +405,9 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
   const createModalRef = useFocusTrap(!!selection, () => { setSelection(null); setFormError(null); setFormSuccess(false); });
   const editModalRef   = useFocusTrap(!!selectedItem, () => setSelectedItem(null));
 
+  const bookedChannels = Array.from(new Set(apartments.flatMap((a) => a.bookings.map((b) => b.channel))));
+  const legendChannels = ['direct', ...bookedChannels.filter((c) => c !== 'direct')];
+
   return (
     <div style={{ position: 'relative' }}>
       {/* Month nav */}
@@ -424,6 +418,19 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
         {monthIso !== monthStart(todayIso) && (
           <button onClick={() => setMonthIso(monthStart(todayIso))} style={{ marginLeft: 4, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', fontSize: 13, cursor: 'pointer', color: 'var(--text-muted)' }}>Heute</button>
         )}
+        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          {legendChannels.map((channel) => (
+            <div key={channel} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: getChannelColor(channel).bg }} />
+              {channelLabel(channel)}
+            </div>
+          ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: BLOCKED_HOST_COLOR.bg }} />
+            Host-blockiert
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -497,13 +504,14 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                     {apt.bookings.map((b) => {
                       const style = barStyle(b.startDate, b.endDate);
                       if (!style) return null;
+                      const chColor = getChannelColor(b.channel);
                       return (
                         <a
                           key={b.id}
                           data-bar="1"
                           href={`/admin/requests/${b.requestId}`}
-                          title={`${b.label} · ${b.startDate} – ${b.endDate}`}
-                          style={{ ...style, background: '#bbf7d0', color: '#166534', textDecoration: 'none' }}
+                          title={`${b.label} · ${b.startDate} – ${b.endDate} · ${b.channel === 'direct' ? 'Direktbuchung' : b.channel}`}
+                          style={{ ...style, background: chColor.bg, color: chColor.text, textDecoration: 'none' }}
                           onMouseDown={(e) => e.stopPropagation()}
                           onClick={(e) => {
                             e.preventDefault();
@@ -523,7 +531,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       const style = barStyle(b.startDate, b.endDate);
                       if (!style) return null;
                       const parsed = parsePlatform(b.note);
-                      const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#fcd34d', text: '#78350f' }) : { bg: '#fcd34d', text: '#78350f' };
+                      const { color, pattern } = blockedRangeColor(b.note);
                       const label = parsed ? (b.guestLabel ? `${b.guestLabel} (${parsed.platform})` : parsed.platform) : (b.note || 'Gesperrt');
                       return (
                         <div
@@ -532,7 +540,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           title={label}
                           role="button"
                           tabIndex={0}
-                          style={{ ...style, background: ps.bg, color: ps.text }}
+                          style={{ ...style, background: pattern ?? color.bg, color: color.text }}
                           onMouseDown={(e) => e.stopPropagation()}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -748,7 +756,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                 (() => {
                   const isIcal = selectedItem.data.type === 'ical_sync';
                   const parsed = parsePlatform(selectedItem.data.note);
-                  const ps = parsed ? (PLATFORM_COLORS[parsed.platform] ?? { bg: '#6b7280', text: '#fff' }) : null;
+                  const ps = parsed ? getChannelColor(parsed.platform) : null;
                   const note = parsed ? parsed.rest : selectedItem.data.note;
                   const { requestId, guestLabel } = selectedItem.data;
                   return (

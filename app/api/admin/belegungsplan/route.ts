@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         },
         select: {
           id: true, firstname: true, lastname: true,
-          arrival: true, departure: true, selectedApartmentIds: true, status: true,
+          arrival: true, departure: true, selectedApartmentIds: true, status: true, channel: true,
         },
       }),
       prisma.blockedRange.findMany({
@@ -78,6 +78,7 @@ export async function GET(request: Request) {
           endDate: toIso(r.departure),
           label: [r.firstname, r.lastname].filter(Boolean).join(' '),
           requestId: r.id,
+          channel: r.channel,
         }));
 
       const blocks = blocked

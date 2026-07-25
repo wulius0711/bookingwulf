@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Link from 'next/link';
 import CalendarGrid, { type BookingChip, type BlockedChip } from './CalendarGrid';
+import { getChannelColor, channelLabel, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +74,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       children: true,
       selectedApartmentIds: true,
       status: true,
+      channel: true,
       hotel: { select: { name: true } },
     },
     orderBy: { arrival: 'asc' },
@@ -113,6 +115,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
           departure: req.departure.toISOString(),
           nights: req.nights,
           status: req.status,
+          channel: req.channel,
           aptName: aptIds.length > 0 ? (apartmentMap.get(aptIds[0]) ?? '') : '',
           isArrival: dateKey(arrival) === key,
         });
@@ -165,6 +168,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
 
   const todayKey = dateKey(now);
+
+  // Channels present among confirmed bookings this month, "direct" always first — drives the
+  // legend so it only lists channels actually in use instead of every hypothetical OTA.
+  const bookedChannels = Array.from(new Set(requests.filter((r) => r.status === 'booked').map((r) => r.channel)));
+  const legendChannels = ['direct', ...bookedChannels.filter((c) => c !== 'direct')];
 
   // KPIs for the month
   const bookedCount = requests.filter((r) => r.status === 'booked').length;
@@ -230,12 +238,23 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         <div style={{ flex: 1 }} />
         {/* Legend */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-          {Object.entries(STATUS_LABELS).filter(([s]) => s !== 'cancelled').map(([status, label]) => (
+          {(['new', 'answered'] as const).map((status) => (
             <div key={status} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: STATUS_COLORS[status] }} />
-              {label}
+              {STATUS_LABELS[status]}
             </div>
           ))}
+          <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
+          {legendChannels.map((channel) => (
+            <div key={channel} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: getChannelColor(channel).bg }} />
+              {channelLabel(channel)}
+            </div>
+          ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: BLOCKED_HOST_COLOR.bg }} />
+            Host-blockiert
+          </div>
         </div>
       </div>
 
