@@ -9,6 +9,7 @@ type Range = {
   endDate: Date;
   type: string;
   note: string | null;
+  beds24SyncError: string | null;
   apartment: { name: string; hotel?: { name: string; settings?: { accentColor?: string | null } | null } | null; [key: string]: unknown } | null;
 };
 
@@ -51,6 +52,11 @@ function BlockedDateCard({
         )}
         {r.note && (
           <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>{r.note}</div>
+        )}
+        {r.beds24SyncError && (
+          <div style={{ fontSize: 13, color: '#b45309', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 6, padding: '4px 8px', marginTop: 6 }}>
+            ⚠️ Nicht an OTA-Plattformen übertragen: {r.beds24SyncError}
+          </div>
         )}
       </div>
 

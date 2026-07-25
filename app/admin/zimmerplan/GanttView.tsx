@@ -229,7 +229,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                         ? item.label
                         : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
                       const label = (item.kind === 'blocked' && item.beds24SyncError)
-                        ? `⚠️ ${baseLabel} (nicht an Beds24 übertragen: ${item.beds24SyncError})`
+                        ? `⚠️ ${baseLabel} (nicht an OTA-Plattformen übertragen: ${item.beds24SyncError})`
                         : baseLabel;
 
                       return (
@@ -536,7 +536,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       const parsed = parsePlatform(b.note);
                       const { color, pattern } = blockedRangeColor(b.note);
                       const baseLabel = parsed ? (b.guestLabel ? `${b.guestLabel} (${parsed.platform})` : parsed.platform) : (b.note || 'Gesperrt');
-                      const label = b.beds24SyncError ? `⚠️ ${baseLabel} (nicht an Beds24 übertragen: ${b.beds24SyncError})` : baseLabel;
+                      const label = b.beds24SyncError ? `⚠️ ${baseLabel} (nicht an OTA-Plattformen übertragen: ${b.beds24SyncError})` : baseLabel;
                       return (
                         <div
                           key={b.id}
@@ -810,7 +810,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                 }} style={{ display: 'grid', gap: 14 }}>
                   {selectedItem.data.beds24SyncError && (
                     <div style={{ fontSize: 12, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 8, padding: '8px 10px' }}>
-                      ⚠️ Nicht an Beds24 übertragen: {selectedItem.data.beds24SyncError}
+                      ⚠️ Nicht an OTA-Plattformen übertragen: {selectedItem.data.beds24SyncError}
                     </div>
                   )}
                   <div className="gantt-form-2col" style={{ gap: 10 }}>
