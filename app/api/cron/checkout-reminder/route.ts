@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
+import { resolveLang, getEmailTranslations, dateLocale } from '@/src/lib/email-i18n';
 
 export async function GET(req: Request) {
   const auth = req.headers.get('authorization');
@@ -35,6 +36,7 @@ export async function GET(req: Request) {
         lastname: true,
         email: true,
         departure: true,
+        language: true,
         hotel: { select: { name: true, accentColor: true } },
       },
     });
@@ -42,13 +44,14 @@ export async function GET(req: Request) {
     for (const r of requests) {
       if (!r.email) continue;
       const hotelName = r.hotel?.name || 'Hotel';
-      const checkoutTime = hs.checkoutTime || '10:00 Uhr';
-      const departureDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(r.departure);
+      const lang = resolveLang(r.language);
+      const T = getEmailTranslations(lang);
+      const checkoutTime = hs.checkoutTime || (lang === 'de' ? '10:00 Uhr' : '10:00');
+      const departureDate = new Intl.DateTimeFormat(dateLocale[lang], { day: '2-digit', month: '2-digit', year: 'numeric' }).format(r.departure);
 
-      const subject = (hs.checkoutReminderSubject || 'Erinnerung Check-out heute — {{hotelName}}')
+      const subject = (hs.checkoutReminderSubject || T.checkoutSubjectDefault)
         .replace('{{hotelName}}', hotelName);
-      const bodyText = (hs.checkoutReminderBody ||
-        'wir hoffen, du hattest einen schönen Aufenthalt! Heute ist dein Abreisetag — bitte hinterlasse das Zimmer bis {{checkoutTime}}.')
+      const bodyText = (hs.checkoutReminderBody || T.checkoutBodyDefault)
         .replace('{{checkoutTime}}', checkoutTime)
         .replace('{{hotelName}}', hotelName);
 
@@ -66,16 +69,16 @@ export async function GET(req: Request) {
             html: buildEmailHtml({
               hotelName,
               accentColor: r.hotel?.accentColor || undefined,
-              title: 'Auf Wiedersehen!',
-              autoReplyText: 'Diese E-Mail wurde automatisch versendet.',
+              title: T.checkoutTitle,
+              autoReplyText: T.autoReply,
               body: `
                 <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 12px;">
-                  Hallo ${r.firstname || r.lastname},<br/><br/>
+                  ${T.greeting(r.firstname || r.lastname)}<br/><br/>
                   ${bodyText.replace(/\n/g, '<br/>')}
                 </p>
                 ${instructionsBlock}
               `,
-              footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchung #${r.id} · Abreise ${departureDate}</p>`,
+              footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${T.checkoutFooter(r.id, departureDate)}</p>`,
             }),
           });
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
+import { resolveLang, getEmailTranslations, dateLocale } from '@/src/lib/email-i18n';
 
 export async function GET(req: Request) {
   const auth = req.headers.get('authorization');
@@ -51,7 +52,9 @@ export async function GET(req: Request) {
       const hotelName = r.hotel?.name ?? '';
       const accent = r.hotel?.accentColor ?? '#111827';
       const guestName = r.firstname || r.lastname;
-      const fmt = (d: Date) => new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
+      const lang = resolveLang(r.language);
+      const T = getEmailTranslations(lang);
+      const fmt = (d: Date) => new Intl.DateTimeFormat(dateLocale[lang], { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(d));
       const portalUrl = r.checkinToken ? `${base}/gast/${r.checkinToken}` : '';
 
       function fill(str: string) {
@@ -67,17 +70,17 @@ export async function GET(req: Request) {
           .replace(/\{\{portalUrl\}\}/g, portalUrl);
       }
 
-      const subject = fill(template?.subject ?? `Ihre Check-in Infos — ${hotelName}`);
-      const greeting = fill(template?.greeting ?? `Hallo ${guestName},`);
-      const bodyText = fill(template?.body || 'wir freuen uns auf Ihren Aufenthalt! Anbei die wichtigsten Check-in Infos für Ihren Aufenthalt.');
-      const signoff = fill(template?.signoff ?? 'Mit freundlichen Grüßen');
+      const subject = fill(template?.subject ?? T.checkinSubjectDefault(hotelName));
+      const greeting = fill(template?.greeting ?? T.greeting(guestName));
+      const bodyText = fill(template?.body || T.checkinBodyDefault);
+      const signoff = fill(template?.signoff ?? T.signoff);
 
       const bodyHtml = `
         <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 20px;">${greeting}</p>
         <p style="font-size:15px;color:#374151;line-height:1.8;margin:0 0 20px;white-space:pre-wrap;">${bodyText.replace(/\n/g, '<br/>')}</p>
         <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 4px;">${signoff},</p>
         <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 24px;">${hotelName}</p>
-        ${portalUrl ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;"><p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ihre Gästemappe</p><a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;word-break:break-all;">${portalUrl}</a></div>` : ''}
+        ${portalUrl ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;"><p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">${T.guestFolder}</p><a href="${portalUrl}" style="font-size:14px;font-weight:700;color:${accent};text-decoration:none;word-break:break-all;">${portalUrl}</a></div>` : ''}
       `;
 
       try {
@@ -87,7 +90,7 @@ export async function GET(req: Request) {
             from: getFromEmail(),
             to: r.email,
             subject,
-            html: buildEmailHtml({ hotelName, accentColor: accent, title: subject, preheader: `Check-in Infos für Ihren Aufenthalt vom ${fmt(r.arrival)}`, body: bodyHtml, autoReplyText: '' }),
+            html: buildEmailHtml({ hotelName, accentColor: accent, title: subject, preheader: T.checkinPreheader(fmt(r.arrival)), body: bodyHtml, autoReplyText: '' }),
           });
           sentIds.push(r.id);
           sent++;

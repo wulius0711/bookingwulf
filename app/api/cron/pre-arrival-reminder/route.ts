@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { getResend, getFromEmail, buildEmailHtml } from '@/src/lib/email';
+import { resolveLang, getEmailTranslations, dateLocale } from '@/src/lib/email-i18n';
 
 export async function GET(req: Request) {
   const auth = req.headers.get('authorization');
@@ -44,6 +45,7 @@ export async function GET(req: Request) {
         arrival: true,
         departure: true,
         checkinToken: true,
+        language: true,
         hotel: { select: { name: true, accentColor: true } },
       },
     });
@@ -52,7 +54,9 @@ export async function GET(req: Request) {
       if (!r.email || !r.checkinToken) continue;
       const hotelName = r.hotel?.name || 'Hotel';
       const checkinUrl = `${base}/checkin/${r.checkinToken}`;
-      const arrivalDate = new Intl.DateTimeFormat('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(r.arrival);
+      const lang = resolveLang(r.language);
+      const T = getEmailTranslations(lang);
+      const arrivalDate = new Intl.DateTimeFormat(dateLocale[lang], { day: '2-digit', month: '2-digit', year: 'numeric' }).format(r.arrival);
 
       try {
         const resend = getResend();
@@ -60,25 +64,24 @@ export async function GET(req: Request) {
           await resend.emails.send({
             from: getFromEmail(),
             to: r.email,
-            subject: `Online Check-in — ${hotelName}`,
+            subject: T.preArrivalSubject(hotelName),
             html: buildEmailHtml({
               hotelName,
               accentColor: r.hotel?.accentColor || undefined,
-              title: 'Online Check-in',
-              autoReplyText: 'Diese E-Mail wurde automatisch versendet.',
+              title: T.preArrivalTitle,
+              autoReplyText: T.autoReply,
               body: `
                 <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 20px;">
-                  Hallo ${r.firstname || r.lastname},<br/><br/>
-                  Ihr Aufenthalt in <strong>${hotelName}</strong> beginnt am <strong>${arrivalDate}</strong>.
-                  Bitte füllen Sie vorab das Online Check-in Formular aus — das spart Zeit bei der Ankunft.
+                  ${T.greeting(r.firstname || r.lastname)}<br/><br/>
+                  ${T.preArrivalBody(hotelName, arrivalDate)}
                 </p>
                 <div style="margin-top:24px;">
                   <a href="${checkinUrl}" style="display:inline-block;padding:13px 28px;background:${r.hotel?.accentColor || '#111827'};color:#ffffff;text-decoration:none;border-radius:10px;font-size:15px;font-weight:700;">
-                    Jetzt einchecken →
+                    ${T.preArrivalButton}
                   </a>
                 </div>
               `,
-              footer: `<p style="margin:0;font-size:12px;color:#6b7280;">Buchung #${r.id}</p>`,
+              footer: `<p style="margin:0;font-size:12px;color:#6b7280;">${T.preArrivalFooter(r.id)}</p>`,
             }),
           });
 
