@@ -57,7 +57,7 @@ export type BookingChip = {
   isArrival: boolean;
 };
 
-export type BlockedChip = { id: number; aptName: string; note: string; type: string; startDate: string; endDate: string };
+export type BlockedChip = { id: number; aptName: string; note: string; type: string; startDate: string; endDate: string; beds24SyncError: string | null };
 export type ApartmentOption = { id: number; name: string };
 
 type Props = {
@@ -275,12 +275,13 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                       {blocked.map((b) => {
                         const parsed = parsePlatform(b.note);
                         const { color, pattern } = blockedRangeColor(b.note);
-                        const chipLabel = parsed
+                        const chipLabel = (parsed
                           ? `${parsed.platform}${b.aptName ? ' · ' + b.aptName : ''}${parsed.rest ? ' · ' + parsed.rest : ''}`
-                          : `${b.aptName || 'Gesperrt'}${b.note ? ' · ' + b.note : ''}`;
+                          : `${b.aptName || 'Gesperrt'}${b.note ? ' · ' + b.note : ''}`)
+                          + (b.beds24SyncError ? ` · nicht an Beds24 übertragen: ${b.beds24SyncError}` : '');
                         return (
                           <button key={b.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'blocked', data: b }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: pattern ?? `color-mix(in srgb, ${color.bg} 20%, white)`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: color.border, fontSize: 10, color: pattern ? color.text : color.border, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={chipLabel}>
-                            <span className="calendar-chip-label">🚫 {chipLabel}</span>
+                            <span className="calendar-chip-label">{b.beds24SyncError ? '⚠️' : '🚫'} {chipLabel}</span>
                           </button>
                         );
                       })}
@@ -523,6 +524,11 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800); }
                   else setEditError((await res.json()).error ?? 'Fehler');
                 }} style={{ display: 'grid', gap: 14 }}>
+                  {selectedItem.data.beds24SyncError && (
+                    <div style={{ fontSize: 12, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 8, padding: '8px 10px' }}>
+                      ⚠️ Nicht an Beds24 übertragen: {selectedItem.data.beds24SyncError}
+                    </div>
+                  )}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div style={field}>
                       <label htmlFor="cal-e-from" style={labelStyle}>Von</label>

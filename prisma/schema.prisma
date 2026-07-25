@@ -367,6 +367,8 @@ model BlockedRange {
   note      String?
   createdAt DateTime @default(now())
 
+  beds24SyncError String? // set when pushing this block's availability to Beds24 failed — surfaced in the admin UI
+
   @@index([hotelId, startDate, endDate])
   @@index([apartmentId, startDate, endDate])
 }

@@ -7,7 +7,7 @@ import Button from '../components/ui/Button';
 import { getChannelColor, channelLabel, parsePlatform, blockedRangeColor, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
 
 type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number; channel: string };
-type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
+type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string; beds24SyncError: string | null };
 type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[] };
 
 // These popups are always dark-styled regardless of the site theme — override every CSS
@@ -75,7 +75,7 @@ function weekdayMon(iso: string): number {
 
 type CalItem =
   | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number; channel: string }
-  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string };
+  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string; beds24SyncError: string | null };
 
 function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSelectItem }: { apt: AptData; allApts: AptData[]; todayIso: string; initialMonth: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
   const [monthIso, setMonthIso] = useState(() => initialMonth);
@@ -114,7 +114,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
 
   const items: CalItem[] = [
     ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId, channel: b.channel })),
-    ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type, requestId: b.requestId, guestLabel: b.guestLabel })),
+    ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type, requestId: b.requestId, guestLabel: b.guestLabel, beds24SyncError: b.beds24SyncError })),
   ];
 
   const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
@@ -225,9 +225,12 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                       const blockedPattern = item.kind === 'blocked' ? blockedRangeColor(item.note).pattern : undefined;
                       const bg = blockedPattern ?? chColor.bg;
                       const fg = blockedPattern ? chColor.text : '#fff';
-                      const label = item.kind === 'booking'
+                      const baseLabel = item.kind === 'booking'
                         ? item.label
                         : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
+                      const label = (item.kind === 'blocked' && item.beds24SyncError)
+                        ? `⚠️ ${baseLabel} (nicht an Beds24 übertragen: ${item.beds24SyncError})`
+                        : baseLabel;
 
                       return (
                         <div
@@ -237,7 +240,7 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                             if (item.kind === 'booking') {
                               onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, channel: item.channel, aptName: aptData.name } });
                             } else {
-                              onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, requestId: item.requestId, guestLabel: item.guestLabel, aptName: aptData.name } });
+                              onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, requestId: item.requestId, guestLabel: item.guestLabel, beds24SyncError: item.beds24SyncError, aptName: aptData.name } });
                             }
                           }}
                           style={{
@@ -532,7 +535,8 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                       if (!style) return null;
                       const parsed = parsePlatform(b.note);
                       const { color, pattern } = blockedRangeColor(b.note);
-                      const label = parsed ? (b.guestLabel ? `${b.guestLabel} (${parsed.platform})` : parsed.platform) : (b.note || 'Gesperrt');
+                      const baseLabel = parsed ? (b.guestLabel ? `${b.guestLabel} (${parsed.platform})` : parsed.platform) : (b.note || 'Gesperrt');
+                      const label = b.beds24SyncError ? `⚠️ ${baseLabel} (nicht an Beds24 übertragen: ${b.beds24SyncError})` : baseLabel;
                       return (
                         <div
                           key={b.id}
@@ -804,6 +808,11 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                   if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
                   else setEditError((await res.json()).error ?? 'Fehler');
                 }} style={{ display: 'grid', gap: 14 }}>
+                  {selectedItem.data.beds24SyncError && (
+                    <div style={{ fontSize: 12, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 8, padding: '8px 10px' }}>
+                      ⚠️ Nicht an Beds24 übertragen: {selectedItem.data.beds24SyncError}
+                    </div>
+                  )}
                   <div className="gantt-form-2col" style={{ gap: 10 }}>
                     <div style={fieldStyle}>
                       <label htmlFor="gantt-e-from" style={labelStyle}>Von</label>

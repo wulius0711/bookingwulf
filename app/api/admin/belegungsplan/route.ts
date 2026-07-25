@@ -50,7 +50,7 @@ export async function GET(request: Request) {
           startDate: { lte: rangeEnd },
           endDate: { gt: rangeStart },
         },
-        select: { id: true, apartmentId: true, startDate: true, endDate: true, note: true, type: true },
+        select: { id: true, apartmentId: true, startDate: true, endDate: true, note: true, type: true, beds24SyncError: true },
       }),
     ]);
 
@@ -103,6 +103,7 @@ export async function GET(request: Request) {
             endDate: toIso(b.endDate),
             note: b.note,
             type: b.type,
+            beds24SyncError: b.beds24SyncError,
             requestId: request?.id,
             guestLabel: request ? [request.firstname, request.lastname].filter(Boolean).join(' ') : undefined,
           };

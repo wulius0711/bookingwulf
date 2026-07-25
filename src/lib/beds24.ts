@@ -226,6 +226,93 @@ export async function pushBooking(hotelId: number, payload: Beds24BookingPayload
   return String(data?.[0]?.id ?? '');
 }
 
+// Pushes host-created Sperrzeiten out to Beds24 so Airbnb/Booking.com also see the room as
+// unavailable. Beds24's "override" calendar field is blackout/none per date — reconciling against
+// every remaining manual block for the apartment (not just the one just changed) avoids reopening
+// days that another, still-active Sperrzeit for the same apartment also covers.
+export async function syncBlockedRangeAvailability(
+  hotelId: number,
+  apartmentId: number,
+  windowStart: Date,
+  windowEnd: Date,
+): Promise<void> {
+  const mapping = await prisma.beds24ApartmentMapping.findUnique({
+    where: { apartmentId },
+    select: { beds24RoomId: true },
+  });
+  if (!mapping) return;
+
+  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { isEnabled: true } });
+  if (!config?.isEnabled) return;
+
+  const active = await prisma.blockedRange.findMany({
+    where: { apartmentId, type: { in: ['manual', 'other'] }, startDate: { lt: windowEnd }, endDate: { gt: windowStart } },
+    select: { startDate: true, endDate: true },
+  });
+
+  const covered = mergeIntervals(
+    active.map((r): [Date, Date] => [
+      r.startDate > windowStart ? r.startDate : windowStart,
+      r.endDate < windowEnd ? r.endDate : windowEnd,
+    ])
+  );
+  const gaps = invertIntervals(covered, windowStart, windowEnd);
+
+  // "to" in Beds24's calendar is the last blocked calendar day (inclusive), while BlockedRange.endDate
+  // is the checkout/departure day (exclusive, the room is free again that day) — shift back a day.
+  const calendar = [
+    ...covered.map(([from, to]) => ({ from: isoDate(from), to: isoDate(addDays(to, -1)), override: 'blackout' as const })),
+    ...gaps.map(([from, to]) => ({ from: isoDate(from), to: isoDate(addDays(to, -1)), override: 'none' as const })),
+  ].filter((c) => c.from <= c.to);
+  if (!calendar.length) return;
+
+  const accessToken = await getAccessToken(hotelId);
+  const res = await fetch(`${BEDS24_API}/inventory/rooms/calendar`, {
+    method: 'POST',
+    headers: { 'token': accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify([{ roomId: mapping.beds24RoomId, calendar }]),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 Kalender-Sync fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+}
+
+function addDays(d: Date, n: number): Date {
+  const r = new Date(d);
+  r.setUTCDate(r.getUTCDate() + n);
+  return r;
+}
+
+function isoDate(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+function mergeIntervals(intervals: [Date, Date][]): [Date, Date][] {
+  const sorted = intervals.filter(([a, b]) => a < b).sort((a, b) => a[0].getTime() - b[0].getTime());
+  const merged: [Date, Date][] = [];
+  for (const [start, end] of sorted) {
+    const last = merged[merged.length - 1];
+    if (last && start <= last[1]) {
+      if (end > last[1]) last[1] = end;
+    } else {
+      merged.push([start, end]);
+    }
+  }
+  return merged;
+}
+
+function invertIntervals(covered: [Date, Date][], windowStart: Date, windowEnd: Date): [Date, Date][] {
+  const gaps: [Date, Date][] = [];
+  let cursor = windowStart;
+  for (const [start, end] of covered) {
+    if (start > cursor) gaps.push([cursor, start]);
+    if (end > cursor) cursor = end;
+  }
+  if (cursor < windowEnd) gaps.push([cursor, windowEnd]);
+  return gaps;
+}
+
 export type Beds24Message = {
   id?: number | string;
   bookingId?: number | string;
