@@ -189,10 +189,11 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| type | String | `ical_sync` / `booking` / manuell |
+| type | String | `ical_sync` / `beds24_sync` / `booking` / `manual` / `other` |
 | startDate / endDate | DateTime | Gesperrter Zeitraum |
 | apartmentId | Int? | Einzelnes Apartment (oder null = ganzes Hotel) |
 | note | String? | Interne Notiz |
+| beds24SyncError | String? | Fehlermeldung, falls der letzte Push dieser Sperrzeit an Beds24 fehlgeschlagen ist (sonst `null`) — im Admin-UI als ⚠️-Hinweis sichtbar |
 
 ### Request *(Buchungsanfrage / Buchung)*
 
@@ -207,7 +208,8 @@ Zeitraum mit eigenem Preis pro Nacht und optionalem Mindestaufenthalt (`minStay`
 | email / firstname / lastname | String | Gastdaten |
 | salutation / country / message | String? | Optionale Felder |
 | newsletter | Boolean | Newsletter-Einwilligung |
-| language | String | `de` / `en` / `it` |
+| language | String | `de` / `en` / `it` / `fr` / `nl` / `ru` / `pl` / `cs` / `es` |
+| channel | String | Buchungskanal: `direct` (Website) oder der Beds24-`apiSource`-Wert (`Airbnb`, `Booking.com`, ...) — steuert die Farbe in Kalender/Zimmerplan |
 | extrasJson | Json | Gebuchte Zusatzleistungen (Zeilenpositionen mit key, name, type, subtotal) |
 | pricingJson | Json? | Vollständiger Preis-Snapshot bei Buchungserstellung: `{ apartments: [{name, total, cleaning}], extrasTotal, ortstaxeTotal, total }` |
 | paymentMethod | String? | `'bank'` / `'paypal'` / `'stripe'` — gesetzt bei Buchungserstellung |
@@ -696,10 +698,10 @@ Pro Einbettungsort kann ein eigenes `config`-Slug konfiguriert werden mit eigene
 |---|---|---|---|
 | `/api/cron/expire-trials` — Tag+3 | Hotelbetreiber | `subscriptionStatus='inactive'`, E-Mail 1 noch nicht gesendet. `isTest=false`: Ablauf-Warnung; `isTest=true`: Danke-Mail | `trialEmail1SentAt IS NULL` |
 | `/api/cron/expire-trials` — Tag+7 | Hotelbetreiber | E-Mail 1 gesendet, E-Mail 2 noch nicht. `isTest=false`: Letzte Erinnerung; `isTest=true`: Danke-Mail + sanfter Lösch-Hinweis | `trialEmail2SentAt IS NULL` |
-| `/api/cron/payment-reminder` | Hotel | Offene Banküberweisungen (alle 30 Min) | — |
-| `/api/cron/checkin-email` | Gast | Anreise − X Tage (default 3) 10:00 Wien, `checkinEmailEnabled` | `checkinEmailSentAt IS NULL` |
-| `/api/cron/pre-arrival-reminder` | Gast | Anreise − X Tage 10:00 Wien, `preArrivalEnabled` | `checkinReminderSentAt IS NULL` |
-| `/api/cron/checkout-reminder` | Gast | Abreisetag 09:00 Wien, `checkoutReminderEnabled` | `checkoutReminderSentAt IS NULL` |
+| `/api/cron/payment-reminder` | Hotel | Offene Banküberweisungen (alle 30 Min) — immer Deutsch (Empfänger ist der Host) | — |
+| `/api/cron/checkin-email` | Gast | Anreise − X Tage (default 3) 10:00 Wien, `checkinEmailEnabled` — Sprache aus `Request.language` (seit 2026-07-25) | `checkinEmailSentAt IS NULL` |
+| `/api/cron/pre-arrival-reminder` | Gast | Anreise − X Tage 10:00 Wien, `preArrivalEnabled` — Sprache aus `Request.language` (seit 2026-07-25) | `checkinReminderSentAt IS NULL` |
+| `/api/cron/checkout-reminder` | Gast | Abreisetag 09:00 Wien, `checkoutReminderEnabled` — Sprache aus `Request.language` (seit 2026-07-25) | `checkoutReminderSentAt IS NULL` |
 | `/api/cron/review-request` | Gast | Abreise − X Tage 11:00 Wien, `reviewRequestEnabled` (Pro+), `reviewRequestLink` gesetzt | `reviewRequestSentAt IS NULL` |
 
 ### E-Mail-Aufbau (`src/lib/email.ts`)
@@ -719,7 +721,9 @@ Responsive HTML-Template (max. 600px), Akzentfarbe in Header und Buttons, Auto-R
 
 ### Mehrsprachigkeit
 
-`src/lib/email-i18n.ts` — Übersetzungen für `de`, `en`, `it`. Sprache wird automatisch aus dem Browser-Language-Header des Gastes erkannt.
+`src/lib/email-i18n.ts` — Übersetzungen für `de`, `en`, `it`, `fr`, `nl`, `ru`, `pl`, `cs`, `es` (`Lang`-Type, `resolveLang()`/`getEmailTranslations()`/`dateLocale`). Sprache wird bei Buchungs-/Anfrage-Mails automatisch aus dem Browser-Language-Header des Gastes erkannt und in `Request.language` gespeichert.
+
+Seit 2026-07-25 nutzen auch die drei gastseitigen Cron-Erinnerungsmails (Check-in-Infos, Vor-Anreise-Erinnerung, Checkout-Erinnerung) `Request.language` statt fix Deutsch — zuvor liefen diese drei unabhängig vom Buchungs-i18n-System immer auf Deutsch. Die host-seitige Zahlungserinnerung (`payment-reminder`) bleibt bewusst Deutsch, da der Empfänger der Hotelbetreiber ist.
 
 ### Provider
 
@@ -1040,7 +1044,9 @@ useFocusTrap(enabled: boolean, onClose: () => void): RefObject<HTMLDivElement>
 
 Klick-Drag über Tageszellen markiert einen Zeitraum (lila Highlight). Nach dem Loslassen öffnet sich ein modales Inline-Formular (Lightbox mit Backdrop) zum direkten Anlegen von Sperrzeiten, Preiszeiträumen oder manuellen Buchungen — ohne Seitennavigation. Datumfelder sind im Formular editierbar. Nach dem Speichern wird die Seite per `router.refresh()` aktualisiert.
 
-Sperrzeiten werden im Kalender als roter Chip `🚫` angezeigt (neben den Buchungs-Chips). iCal-synchronisierte Sperrzeiten (`type: 'ical_sync'`) zeigen zusätzlich einen farbigen Platform-Badge (Airbnb rot, Booking.com blau) — erkannt durch `[Platform] Titel`-Format im `note`-Feld. Klick auf solche Chips öffnet ein read-only Detail-Panel.
+**Channel-Farben (seit 2026-07-25):** Bestätigte Buchungs-Chips werden nach `Request.channel` eingefärbt statt einheitlich grün — Airbnb pink, Booking.com blau, Direktbuchung grün, host-blockierte Sperrzeiten grau mit Schraffur. Zentrale Farblogik in `src/lib/channelColors.ts` (`getChannelColor()`, `blockedRangeColor()`); unbekannte Channels bekommen automatisch eine deterministische Farbe aus einer Reserve-Palette. Legende über dem Kalender zeigt nur die im aktuellen Monat tatsächlich vorkommenden Channels.
+
+Sperrzeiten werden im Kalender als Chip `🚫` angezeigt (neben den Buchungs-Chips). iCal-/Beds24-synchronisierte Sperrzeiten zeigen zusätzlich einen farbigen Platform-Badge (per `[Platform] Titel`-Format im `note`-Feld erkannt, gleiche Farblogik wie oben). Schlug der Beds24-Push einer Sperrzeit fehl, erscheint zusätzlich ein ⚠️-Hinweis (siehe Abschnitt 18, „Sperrzeiten-Push"). Klick auf solche Chips öffnet ein read-only Detail-Panel.
 
 Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt aufrufbar).
 
@@ -1048,7 +1054,7 @@ Neue Seite: `/admin/requests/new` — manuelles Buchungsformular (auch direkt au
 
 `/admin/zimmerplan` hat zwei Ansichten, umschaltbar per Toggle (oben rechts):
 
-**Belegungsplan (Standard):** Monats-Gantt-Diagramm. Jedes Apartment ist eine Zeile, jeder Tag eine Spalte (36 px). Buchungen erscheinen als grüne Balken (klickbar → Anfrage), Sperrzeiten als plattformfarbige Balken (Airbnb rot, Booking.com blau, sonstige amber). iCal-Blöcke zeigen Platform-Badge + read-only Detail beim Klick; manuelle Sperrzeiten sind editier- und löschbar.
+**Belegungsplan (Standard):** Monats-Gantt-Diagramm. Jedes Apartment ist eine Zeile, jeder Tag eine Spalte (36 px). Buchungen erscheinen als Balken in der Channel-Farbe (klickbar → Anfrage, gleiche Farblogik wie im Kalender, siehe oben), Sperrzeiten als plattformfarbige Balken bzw. grau/schraffiert bei Host-Blocks. iCal-/Beds24-Blöcke zeigen Platform-Badge + read-only Detail beim Klick; manuelle Sperrzeiten sind editier- und löschbar, ein ⚠️-Hinweis zeigt fehlgeschlagene Beds24-Pushes.
 
 **Drag-to-Create im Gantt:** Klick-Drag horizontal innerhalb einer Apartment-Zeile markiert einen Zeitraum (lila Highlight). Nach dem Loslassen öffnet sich ein dunkles Popup mit Apartment-Name und Datumsbereich — Tabs: Sperrzeit, Preiszeitraum (Pro), Buchung. Nach dem Speichern wird der Gantt automatisch neu geladen (lokaler State, kein `router.refresh()`).
 
@@ -1134,7 +1140,7 @@ API-Endpunkt: `GET /api/admin/belegungsplan?from=YYYY-MM-DD&to=YYYY-MM-DD` — l
 |---|---|---|
 | `/api/upload` | POST | Bild-Upload (Vercel Blob, max. 10 MB) |
 | `/api/ical-sync` | POST | iCal-Feed manuell synchronisieren |
-| `/api/admin/blocked-date` | POST | Sperrzeit anlegen (Kalender-Inline-Formular) |
+| `/api/admin/blocked-date` | POST/PUT/DELETE | Sperrzeit anlegen/bearbeiten/löschen (Kalender-Inline-Formular) — pusht bei Beds24-verbundenem Apartment an Beds24 (siehe Abschnitt 18) |
 | `/api/admin/price-season` | POST | Preiszeitraum anlegen (Kalender-Inline-Formular) |
 | `/api/admin/booking` | POST | Manuelle Buchung anlegen (Kalender-Inline-Formular) |
 | `/api/admin/switch-hotel` | POST | Aktives Hotel wechseln |
@@ -1471,6 +1477,7 @@ Booking.com ←→ Beds24 ↗
 
 - **Inbound (Echtzeit):** Beds24 → Webhook → `/api/beds24-webhook` → `BlockedRange` anlegen + `Request`-Datensatz erstellen (für CSV-Export)
 - **Outbound (sofort):** Buchung in bookingwulf → `pushBooking()` → Beds24 → Airbnb/Booking.com sperren
+- **Outbound (Sperrzeiten, seit 2026-07-25):** Manuell angelegte Sperrzeit in bookingwulf → `syncBlockedRangeAvailability()` → Beds24 Calendar-Inventory-API → Airbnb/Booking.com sperren (siehe „Sperrzeiten-Push" unten)
 
 ### Authentifizierung (Beds24 API v2)
 
@@ -1521,6 +1528,7 @@ Seit der Migration am 2026-07-19 hat jedes Hotel ein eigenes, beim Verbinden zuf
 | `/api/beds24-webhook` — Inbound, Token-Auth, BlockedRange + Request-Upsert | ✅ fertig |
 | Admin UI `/admin/beds24` | ✅ fertig |
 | Outbound Sync in `/api/request` | ✅ fertig (non-blocking) |
+| Sperrzeiten-Push (`syncBlockedRangeAvailability()`) | ✅ fertig (2026-07-25) |
 | Preis-Aufschlüsselung (`fetchBeds24BookingDetails`) | ✅ fertig (Juli 2026) |
 | Backfill-Script (`scripts/beds24-backfill.ts`) | ✅ fertig |
 
@@ -1529,6 +1537,18 @@ Seit der Migration am 2026-07-19 hat jedes Hotel ein eigenes, beim Verbinden zuf
 `fetchBeds24BookingDetails()` ruft `GET /bookings?bookingId=...&includeInvoiceItems=true` auf und baut daraus einen `Beds24PricingSnapshot` (`Request.pricingJson`), der auf der Buchungsdetailseite (`/admin/requests/[id]`) aufgeschlüsselt angezeigt wird (Zimmerpreis, Reinigung, Ortstaxe, Extras statt nur Gesamtsumme).
 
 Bei OTA-Buchungen (Airbnb etc.) liefert Beds24 in `invoiceItems` oft nur eine nicht aufschlüsselbare Sammelposition (Netto-Payout-Betrag). In diesem Fall parst `parseRateDescriptionItems()` stattdessen das Textfeld `rateDescription`, das Beds24 mitliefert (z.B. `"Base Price 190 EUR\nCleaning fee 35.00 EUR\n..."`), und übersetzt die Labels ins Deutsche (Zimmerpreis, Endreinigung, Ortstaxe/Kurtaxe).
+
+### Sperrzeiten-Push (Calendar Inventory API)
+
+Bis 2026-07-25 blieben in bookingwulf manuell angelegte Sperrzeiten (`BlockedRange.type: 'manual'/'other'`) lokal — sie erreichten Airbnb/Booking.com nur, falls der Host zusätzlich den `/api/ical`-Export-Link bei der OTA/bei Beds24 als externen Kalender hinterlegt hatte (Polling, oft mehrere Stunden Verzögerung).
+
+Seither pusht `syncBlockedRangeAvailability()` (`src/lib/beds24.ts`) bei Anlegen/Bearbeiten/Löschen einer Sperrzeit direkt per `POST /inventory/rooms/calendar` (Beds24 API v2) mit `override: 'blackout'` (sperren) bzw. `override: 'none'` (freigeben) — End-to-End ca. 1–2 Minuten statt bis zu mehreren Stunden.
+
+- **Reconciliation:** Vor jedem Push werden alle `BlockedRange`-Einträge des Apartments im betroffenen Zeitraum neu ausgewertet (nicht nur der gerade geänderte) — verhindert, dass Tage fälschlich freigegeben werden, die noch durch eine andere Sperrzeit, eine echte Buchung oder einen Sync-Block belegt sind.
+- **Hotelweite Sperrzeiten** (`apartmentId: null`) haben keine einzelne Beds24-Zimmer-Zuordnung — der Push läuft für jedes Apartment des Hotels einzeln (`pushBlockedRangeSync()`).
+- **Angebunden an:** `/api/admin/blocked-date` (Kalender/Zimmerplan-Popups) sowie die klassische Sperrzeiten-Verwaltung unter `/admin/blocked-dates` (Neu/Bearbeiten/Löschen).
+- **Fehler-Sichtbarkeit:** Schlägt der Push fehl, wird die Meldung in `BlockedRange.beds24SyncError` gespeichert (bei Löschungen zusätzlich per API-Response ans UI zurückgegeben, da die Zeile danach nicht mehr existiert) und im Admin-UI als ⚠️-Hinweis angezeigt (Kalender, Zimmerplan, Sperrzeiten-Liste).
+- **Kein Feature-Flag:** Aktiv für alle Beds24-verbundenen Hotels, kein Opt-in pro Hotel.
 
 ### Backfill-Script
 

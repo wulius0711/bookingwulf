@@ -339,13 +339,12 @@ function KalenderSection() {
       <H3>Ansicht</H3>
       <P>
         Jede Anfrage wird als farbiger Balken im jeweiligen Zeitraum (Anreise bis Abreise) dargestellt.
-        Die Farbe entspricht dem Status:
+        Noch nicht bestätigte Anfragen zeigen den Bearbeitungsstatus:
       </P>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
         {[
           { color: '#3b82f6', label: 'Blau – Neu' },
           { color: '#f59e0b', label: 'Gelb – Beantwortet' },
-          { color: '#10b981', label: 'Grün – Gebucht' },
         ].map((c) => (
           <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 12, height: 12, borderRadius: 2, background: c.color, flexShrink: 0 }} />
@@ -353,12 +352,31 @@ function KalenderSection() {
           </div>
         ))}
       </div>
+      <P>
+        Sobald eine Buchung <strong>bestätigt</strong> ist, färbt sich der Balken nach Buchungskanal statt
+        nach Status — so siehst du auf einen Blick, woher die Buchung kommt:
+      </P>
       <div style={{ display: 'grid', gap: 6, margin: '8px 0 16px' }}>
+        {[
+          { color: '#16a34a', label: 'Grün – Direktbuchung (über deine Website)' },
+          { color: '#ec4899', label: 'Pink – Airbnb' },
+          { color: '#2563eb', label: 'Blau – Booking.com' },
+        ].map((c) => (
+          <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 12, height: 12, borderRadius: 2, background: c.color, flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{c.label}</span>
+          </div>
+        ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 2, background: '#ef4444', flexShrink: 0 }} />
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Rot – Sperrzeit</span>
+          <div style={{ width: 12, height: 12, borderRadius: 2, background: 'repeating-linear-gradient(45deg, #9ca3af, #9ca3af 3px, #d1d5db 3px, #d1d5db 6px)', flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Grau/schraffiert – von dir blockierte Zeiträume (z. B. Eigennutzung)</span>
         </div>
       </div>
+      <P>
+        Weitere Buchungsportale (z. B. Expedia, Vrbo) bekommen automatisch eine eigene, feste Farbe
+        zugewiesen, sobald die erste Buchung darüber eingeht — eine Legende über dem Kalender zeigt
+        immer nur die im aktuellen Monat tatsächlich vorkommenden Kanäle.
+      </P>
       <H3>Zeitraum per Drag anlegen</H3>
       <P>
         Halte die Maustaste gedrückt und ziehe über mehrere Tage, um einen Zeitraum zu markieren.
@@ -370,6 +388,11 @@ function KalenderSection() {
         <li><strong style={{ color: '#10b981' }}>Buchung</strong> – Manuelle Buchung erfassen</li>
       </ul>
       <P>Start- und Enddatum sind im Formular editierbar, falls der gewünschte Zeitraum über einen Monatswechsel hinausgeht.</P>
+      <P>
+        Bei angebundenem Beds24-Kanalmanager wird eine Sperrzeit automatisch auch dort blockiert,
+        sodass Airbnb/Booking.com den Zeitraum ebenfalls als nicht verfügbar zeigen. Schlägt das
+        fehl, erscheint ein ⚠️-Hinweis direkt am Eintrag.
+      </P>
       <H3>Navigation</H3>
       <P>
         Mit den Pfeilen links und rechts wechselst du den Monat. Der Button <strong>„Heute"</strong> bringt
@@ -398,8 +421,9 @@ function ZimmerplanSection() {
       <H3>Belegungsplan (Standard)</H3>
       <P>
         Die Hauptansicht zeigt alle Apartments als monatliches Gantt-Diagramm: jede Zeile ein
-        Apartment, jede Spalte ein Tag. Buchungen erscheinen als <strong style={{ color: '#166534' }}>grüne Balken</strong>,
-        Sperrzeiten je nach Herkunft farbig (Airbnb rot, Booking.com blau, manuell amber).
+        Apartment, jede Spalte ein Tag. Buchungen erscheinen als Balken in der <strong>Kanal-Farbe</strong> (Direktbuchung
+        grün, Airbnb pink, Booking.com blau — gleiche Farblogik wie im Kalender), Sperrzeiten je
+        nach Herkunft farbig oder grau/schraffiert bei von dir blockierten Zeiträumen.
         Mit den Pfeilen links wechselst du den Monat, <strong>„Heute"</strong> springt zum aktuellen Monat.
       </P>
       <H3>Sperrzeiten & Buchungen anlegen</H3>
@@ -409,15 +433,15 @@ function ZimmerplanSection() {
         mit dem Apartment und den Daten bereits vorausgefüllt. Wähle den Typ:
       </P>
       <ul style={{ margin: '6px 0 14px', paddingLeft: 20, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>
-        <li><strong>Sperrzeit</strong> — Eigennutzung oder sonstiger Block</li>
+        <li><strong>Sperrzeit</strong> — Eigennutzung oder sonstiger Block. Bei angebundenem Beds24 wird der Zeitraum automatisch auch dort blockiert (Airbnb/Booking.com), ein ⚠️-Hinweis erscheint, falls das fehlschlägt.</li>
         <li><strong>Preiszeitraum</strong> — Saisonpreis für diesen Zeitraum <span style={{ fontSize: 11, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 6px', fontWeight: 700, marginLeft: 4 }}>Pro</span></li>
         <li><strong>Buchung</strong> — manuelle Buchung direkt eintragen</li>
       </ul>
       <H3>Balken anklicken</H3>
       <P>
-        Klick auf einen <strong>grünen Buchungsbalken</strong> öffnet ein Detail-Panel mit Link zur Anfrage.
+        Klick auf einen <strong>Buchungsbalken</strong> öffnet ein Detail-Panel mit Link zur Anfrage.
         Klick auf einen <strong>Sperrzeit-Balken</strong> öffnet ein Bearbeitungsformular — Datum, Grund und
-        Notiz können geändert oder die Sperrzeit gelöscht werden. iCal-synchronisierte Sperrzeiten
+        Notiz können geändert oder die Sperrzeit gelöscht werden. iCal-/Beds24-synchronisierte Sperrzeiten
         (Airbnb, Booking.com) sind read-only und zeigen nur den Plattform-Badge.
       </P>
 
@@ -909,6 +933,7 @@ function EmailsSection() {
         Templates werden immer auf Deutsch bearbeitet. Die tatsächlich versendete E-Mail wird
         automatisch in die Sprache übersetzt, die für die jeweilige Buchung eingestellt ist
         (Deutsch, Englisch, Italienisch, Französisch, Niederländisch, Spanisch, Polnisch, Tschechisch oder Russisch).
+        Das gilt auch für die Check-in-Infos, die Vor-Anreise- und die Check-out-Erinnerung weiter unten.
       </P>
       <Note>
         <strong>Hinweis:</strong> Wenn du den Status auf <strong>„Beantwortet"</strong> setzt,
@@ -1316,6 +1341,7 @@ function Beds24Section() {
       <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.9, paddingLeft: 20, margin: '0 0 16px' }}>
         <li><strong>Buchung bei dir</strong> → bookingwulf meldet sie an Beds24 → Airbnb/Booking.com wird sofort gesperrt</li>
         <li><strong>Buchung auf Airbnb/Booking.com</strong> → Beds24 schickt Webhook → bookingwulf sperrt sofort</li>
+        <li><strong>Sperrzeit in bookingwulf angelegt</strong> (Kalender, Zimmerplan oder Sperrzeiten-Liste) → wird ebenfalls an Beds24 gepusht → Airbnb/Booking.com zeigen den Zeitraum als nicht verfügbar</li>
       </ul>
 
       <H3>Voraussetzungen</H3>
