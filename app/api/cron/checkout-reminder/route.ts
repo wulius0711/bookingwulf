@@ -17,7 +17,10 @@ export async function GET(req: Request) {
   let sent = 0;
   const sentIds: number[] = [];
 
-  for (const hs of hotelsWithFeature) {
+  if (hotelsWithFeature.length > 0) {
+    // Same departure window for every hotel — one batched findMany instead of one per hotel.
+    // Per-hotel settings (checkoutTime, custom text) are looked up per request below.
+    const settingsByHotel = new Map(hotelsWithFeature.map((hs) => [hs.hotelId, hs]));
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -25,13 +28,14 @@ export async function GET(req: Request) {
 
     const requests = await prisma.request.findMany({
       where: {
-        hotelId: hs.hotelId,
+        hotelId: { in: hotelsWithFeature.map((hs) => hs.hotelId) },
         status: { in: ['booked', 'confirmed'] },
         checkoutReminderSentAt: null,
         departure: { gte: today, lt: tomorrow },
       },
       select: {
         id: true,
+        hotelId: true,
         firstname: true,
         lastname: true,
         email: true,
@@ -42,7 +46,8 @@ export async function GET(req: Request) {
     });
 
     for (const r of requests) {
-      if (!r.email) continue;
+      if (!r.email || r.hotelId === null) continue;
+      const hs = settingsByHotel.get(r.hotelId)!;
       const hotelName = r.hotel?.name || 'Hotel';
       const lang = resolveLang(r.language);
       const T = getEmailTranslations(lang);

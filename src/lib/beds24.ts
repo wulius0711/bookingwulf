@@ -243,9 +243,6 @@ export async function syncBlockedRangeAvailability(
   });
   if (!mapping) return;
 
-  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { isEnabled: true } });
-  if (!config?.isEnabled) return;
-
   const active = await prisma.blockedRange.findMany({
     where: { apartmentId, startDate: { lt: windowEnd }, endDate: { gt: windowStart } },
     select: { startDate: true, endDate: true },
@@ -290,6 +287,11 @@ export async function pushBlockedRangeSync(
   windowStart: Date,
   windowEnd: Date,
 ): Promise<string | null> {
+  // Checked once here (not per apartment) — the same hotel's config was previously re-fetched
+  // inside syncBlockedRangeAvailability() for every apartment in a hotel-wide Sperrzeit.
+  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { isEnabled: true } });
+  if (!config?.isEnabled) return null;
+
   const apartmentIds = apartmentId !== null
     ? [apartmentId]
     : (await prisma.apartment.findMany({ where: { hotelId }, select: { id: true } })).map((a) => a.id);

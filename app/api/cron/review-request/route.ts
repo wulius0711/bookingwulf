@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const hotelsWithFeature = await prisma.hotelSettings.findMany({
+  const hotelsWithFeatureRaw = await prisma.hotelSettings.findMany({
     where: { reviewRequestEnabled: true },
     select: {
       hotelId: true,
@@ -20,30 +20,36 @@ export async function GET(req: Request) {
       hotel: { select: { plan: true } },
     },
   });
+  const hotelsWithFeature = hotelsWithFeatureRaw.filter(
+    (hs) => hasPlanAccess(hs.hotel?.plan ?? 'starter', 'pro') && !!hs.reviewRequestLink
+  );
 
   let sent = 0;
   const sentIds: number[] = [];
 
-  for (const hs of hotelsWithFeature) {
-    if (!hasPlanAccess(hs.hotel?.plan ?? 'starter', 'pro')) continue;
-    if (!hs.reviewRequestLink) continue;
-
-    const days = hs.reviewRequestDays ?? 2;
-    const targetDate = new Date();
-    targetDate.setHours(0, 0, 0, 0);
-    targetDate.setDate(targetDate.getDate() - days);
-    const nextDay = new Date(targetDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+  if (hotelsWithFeature.length > 0) {
+    // Each hotel picks its own reminder offset (reviewRequestDays), so the target departure
+    // window differs per hotel — encoded as one OR'd findMany instead of a query per hotel.
+    const settingsByHotel = new Map(hotelsWithFeature.map((hs) => [hs.hotelId, hs]));
+    const dateWindows = hotelsWithFeature.map((hs) => {
+      const days = hs.reviewRequestDays ?? 2;
+      const targetDate = new Date();
+      targetDate.setHours(0, 0, 0, 0);
+      targetDate.setDate(targetDate.getDate() - days);
+      const nextDay = new Date(targetDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      return { hotelId: hs.hotelId, departure: { gte: targetDate, lt: nextDay } };
+    });
 
     const requests = await prisma.request.findMany({
       where: {
-        hotelId: hs.hotelId,
         status: { in: ['booked', 'confirmed'] },
         reviewRequestSentAt: null,
-        departure: { gte: targetDate, lt: nextDay },
+        OR: dateWindows,
       },
       select: {
         id: true,
+        hotelId: true,
         firstname: true,
         lastname: true,
         email: true,
@@ -53,7 +59,8 @@ export async function GET(req: Request) {
     });
 
     for (const r of requests) {
-      if (!r.email) continue;
+      if (!r.email || r.hotelId === null) continue;
+      const hs = settingsByHotel.get(r.hotelId)!;
       const hotelName = r.hotel?.name || 'Hotel';
       const reviewUrl = hs.reviewRequestLink;
       const subject = (hs.reviewRequestSubject || 'Wie war dein Aufenthalt? — {{hotelName}}')

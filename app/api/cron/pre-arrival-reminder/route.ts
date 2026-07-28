@@ -20,22 +20,26 @@ export async function GET(req: Request) {
   let sent = 0;
   const sentIds: number[] = [];
 
-  for (const hs of hotelsWithFeature) {
-    const reminderDays = hs.preArrivalReminderDays ?? 3;
-    const targetDate = new Date();
-    targetDate.setHours(0, 0, 0, 0);
-    targetDate.setDate(targetDate.getDate() + reminderDays);
-    const nextDay = new Date(targetDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+  if (hotelsWithFeature.length > 0) {
+    // Each hotel picks its own reminder offset (preArrivalReminderDays), so the target arrival
+    // window differs per hotel — encoded as one OR'd findMany instead of a query per hotel.
+    const dateWindows = hotelsWithFeature.map((hs) => {
+      const reminderDays = hs.preArrivalReminderDays ?? 3;
+      const targetDate = new Date();
+      targetDate.setHours(0, 0, 0, 0);
+      targetDate.setDate(targetDate.getDate() + reminderDays);
+      const nextDay = new Date(targetDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      return { hotelId: hs.hotelId, arrival: { gte: targetDate, lt: nextDay } };
+    });
 
     const requests = await prisma.request.findMany({
       where: {
-        hotelId: hs.hotelId,
         status: 'booked',
         checkinToken: { not: null },
         checkinCompletedAt: null,
         checkinReminderSentAt: null,
-        arrival: { gte: targetDate, lt: nextDay },
+        OR: dateWindows,
       },
       select: {
         id: true,
