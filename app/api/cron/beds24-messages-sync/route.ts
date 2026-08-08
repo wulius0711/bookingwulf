@@ -23,29 +23,32 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, synced: 0 });
   }
 
-  let synced = 0;
-  for (const cfg of configs) {
-    let requests;
-    try {
-      requests = await prisma.request.findMany({
-        where: { hotelId: cfg.hotelId, status: { not: 'cancelled' }, beds24BookingId: { not: null }, departure: { gte: cutoff } },
-        select: { beds24BookingId: true },
-      });
-    } catch (e) {
-      console.error('[beds24-messages-sync] Fehler beim Laden der Requests für Hotel', cfg.hotelId, e);
-      continue;
-    }
+  let requests;
+  try {
+    requests = await prisma.request.findMany({
+      where: {
+        hotelId: { in: configs.map((cfg) => cfg.hotelId) },
+        status: { not: 'cancelled' },
+        beds24BookingId: { not: null },
+        departure: { gte: cutoff },
+      },
+      select: { hotelId: true, beds24BookingId: true },
+    });
+  } catch (e) {
+    console.error('[beds24-messages-sync] Fehler beim Laden der Requests, überspringe diesen Lauf', e);
+    return NextResponse.json({ ok: false, synced: 0 });
+  }
 
-    for (const r of requests) {
-      if (!r.beds24BookingId) continue;
-      try {
-        const messages = await fetchBeds24Messages(cfg.hotelId, r.beds24BookingId);
-        for (const msg of messages) {
-          if (await saveIncomingBeds24Message(r.beds24BookingId, msg)) synced++;
-        }
-      } catch (e) {
-        console.error('[beds24-messages-sync] Fehler für Buchung', r.beds24BookingId, e);
+  let synced = 0;
+  for (const r of requests) {
+    if (r.hotelId == null || !r.beds24BookingId) continue;
+    try {
+      const messages = await fetchBeds24Messages(r.hotelId, r.beds24BookingId);
+      for (const msg of messages) {
+        if (await saveIncomingBeds24Message(r.beds24BookingId, msg)) synced++;
       }
+    } catch (e) {
+      console.error('[beds24-messages-sync] Fehler für Buchung', r.beds24BookingId, e);
     }
   }
 
