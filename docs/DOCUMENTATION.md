@@ -1235,6 +1235,10 @@ Gast-Website
 - Die **KI-Antworten** wechseln reaktiv, unabhängig von `data-lang`: Schreibt der Gast auf Deutsch, Englisch oder Italienisch, antwortet der Bot in genau dieser Sprache. Bei jeder anderen erkannten Sprache (z.B. Russisch, Französisch) antwortet der Bot auf Englisch statt in der erkannten Sprache — keine unbegrenzte Sprachauswahl.
 - Implementiert in `buildSystemPrompt()` (`app/api/chat/route.ts`) über `resolveLang()`; UI-Strings als DE/EN/IT-Dictionary in `public/chat.js`. Juli 2026.
 
+### KI-Kennzeichnung (Art. 50 EU AI Act, seit 2.8.2026)
+
+Der Header-Untertitel im Chat-Panel (`subtitle` in `public/chat.js`, `T.subtitle`) zeigt fest "KI-Chatbot" / "AI chatbot" / "Chatbot IA" — unabhängig vom individuell gesetzten Bot-Namen (`chatbotName`/`cfg.name` überschreibt nur `header-name`, nicht `header-sub`). Das ist die einzige KI-Kennzeichnung; die Begrüßungsnachricht selbst enthält bewusst keinen zusätzlichen Hinweis (wäre redundant, Subtitle ist schon vor der ersten Nachricht sichtbar). **Diese Zeile beim Anpassen der Chat-Widget-Texte nicht versehentlich entfernen** — sie ist die gesetzliche Kennzeichnung, nicht nur UI-Copy.
+
 ### API-Routen
 
 #### `GET /api/chat?hotel=SLUG`

@@ -1511,6 +1511,12 @@ function ChatbotSection() {
         Er führt den Gast zum Buchungsformular — die Buchung läuft wie gewohnt ab.
       </Note>
 
+      <Note>
+        <strong>KI-Kennzeichnung:</strong> Im Chat-Fenster steht fest "KI-Chatbot" als Untertitel — das ist
+        gesetzlich vorgeschrieben (EU AI Act) und lässt sich nicht deaktivieren, auch nicht bei einem
+        individuellen Bot-Namen.
+      </Note>
+
       <H3>Einbindungs-Code</H3>
       <P>
         Den Code mit deinem persönlichen Hotel-Slug findest du direkt auf der Chatbot-Seite ganz unten.

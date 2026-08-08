@@ -1,8 +1,8 @@
-@AGENTS.md
+@docs/AGENTS.md
 
 ## Dokumentation aktuell halten
 
-`DOCUMENTATION.md` ist die interne Projektdokumentation. Bei jeder Änderung die einen der folgenden Bereiche betrifft, die betroffenen Abschnitte in `DOCUMENTATION.md` mitaktualisieren:
+`docs/DOCUMENTATION.md` ist die interne Projektdokumentation. Bei jeder Änderung die einen der folgenden Bereiche betrifft, die betroffenen Abschnitte in `docs/DOCUMENTATION.md` mitaktualisieren:
 
 - Datenbankschema (Prisma) → Abschnitt 4
 - Auth / Sessions → Abschnitt 5
@@ -13,9 +13,9 @@
 - iCal-Sync → Abschnitt 10
 - Stripe / Billing → Abschnitt 11
 - Admin-Seiten → Abschnitt 12
-- Umgebungsvariablen → Abschnitt 14
-- Deployment / Cron Jobs → Abschnitt 15
-- Datenschutz / DSGVO → Abschnitt 16
+- Umgebungsvariablen → Abschnitt 15
+- Deployment / Cron Jobs → Abschnitt 16
+- Datenschutz / DSGVO → Abschnitt 21
 
 ## Handbuch aktuell halten
 

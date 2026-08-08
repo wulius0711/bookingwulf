@@ -50,6 +50,10 @@ Der fertige Einbindungs-Code (mit dem korrekten Slug) wird unten auf der Admin-S
 - Keine Zahlungen verarbeiten
 - Keine Gästedaten speichern (stateless, History im Browser)
 
+## KI-Kennzeichnung
+
+Seit 2.8.2026 verlangt Art. 50 EU AI Act, dass Chatbots sich für Gäste als KI zu erkennen geben. Der Chat-Header zeigt deshalb fest "KI-Chatbot" / "AI chatbot" / "Chatbot IA" als Untertitel — unabhängig vom individuell gesetzten Namen/Avatar. Beim Anpassen der Widget-Texte in `public/chat.js` (`STRINGS.*.subtitle`) diese Zeile nicht entfernen.
+
 ## API
 
 ### GET /api/chat?hotel=SLUG

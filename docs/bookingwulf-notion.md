@@ -127,6 +127,7 @@ Das Bundle richtet sich an Betriebe, die mehrere wulf-Produkte kombinieren wolle
 - [x] **Channel-Farben in Kalender & Zimmerplan** (2026-07-25) — Buchungen werden nach Buchungskanal eingefärbt statt einheitlich grün: Airbnb pink, Booking.com blau, Direktbuchung grün, host-blockierte Sperrzeiten grau mit Schraffur. Neue Channels bekommen automatisch eine feste Farbe. Neues `Request.channel`-Feld, zentrale Farblogik in `src/lib/channelColors.ts`.
 - [x] **Beds24-Sperrzeiten-Push** (2026-07-25) — Manuell im Admin angelegte Sperrzeiten werden jetzt aktiv an Beds24 gepusht (Calendar-Inventory-API, `override: blackout/none`) statt nur lokal gespeichert zu bleiben — vorher erreichten sie Airbnb/Booking.com nur über den optionalen, oft stundenlang verzögerten iCal-Export. End-to-End ca. 1–2 Min. Aktiv für alle 4 Beds24-verbundenen Häuser (MSQ, Sa Chessa, WuMoser, Vorgarte), kein Feature-Flag.
 - [x] **Cron-Erinnerungsmails jetzt mehrsprachig** (2026-07-25) — Check-in-Infos, Vor-Anreise- und Checkout-Erinnerung liefen bisher immer auf Deutsch, unabhängig von der Gastsprache (Lücke ggü. den bereits neunsprachigen Buchungsmails). Jetzt über `Request.language` lokalisiert wie der Rest des E-Mail-Systems.
+- [x] **KI-Kennzeichnung im Gast-Chatbot** (2026-08-05) — EU AI Act Art. 50 (KI-Kennzeichnungspflicht für Chatbots, gültig seit 2.8.2026): Chat-Header zeigt fest "KI-Chatbot"/"AI chatbot"/"Chatbot IA" als Untertitel, unabhängig vom individuell gesetzten Bot-Namen. Details: CHATBOT.md.
 
 ## Roadmap (geplant)
 
