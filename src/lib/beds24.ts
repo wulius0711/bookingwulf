@@ -322,17 +322,6 @@ async function pushSingleApartment(
 // and silently drifted from Beds24/the OTAs). Mirrors pushBlockedRangeSync's contract: never
 // throws, returns an error string (or null on success/no-op) for the caller to persist into
 // Apartment.beds24SyncError.
-//
-// TODO(beds24-occupancy-endpoint): the write call below is a STUB. Beds24's v2 REST field names
-// for room occupancy (Erwachsene maximal / Kinder maximal / Gäste maximal) have not been verified
-// against a live connection — Beds24Config currently has no enabled hotels to check against. Do
-// NOT replace this with a blind POST. Before implementing the real call:
-//   1. Get a hotel connected (Einstellungen → Marketplace → API → Invite Code, setupWithInviteCode()).
-//   2. GET {BEDS24_API}/properties?includeAllRooms=true for that hotel's room and read the actual
-//      occupancy field names from the response.
-//   3. Read-modify-write only those occupancy fields — do not send the full room object back, to
-//      avoid clobbering Beds24-side room configuration (e.g. bed types) that bookingwulf doesn't
-//      manage.
 export async function pushOccupancySync(
   hotelId: number,
   apartmentId: number,
@@ -356,18 +345,41 @@ export async function pushOccupancySync(
   }
 }
 
+// Beds24's "Gäste maximal" (maxPeople) is NOT auto-derived from Erwachsene/Kinder maximal —
+// verified live against a test property: setting maxAdult/maxChildren alone leaves a stale
+// maxPeople in place. All three must be sent together. roomTypes[].id (the beds24RoomId) alone
+// is enough to target the update — no propertyId needed. HTTP status stays 2xx even on a
+// per-item failure (e.g. an unknown/inaccessible roomId) — the real outcome is the "success"
+// field inside the response body, which must be checked explicitly.
 async function syncOccupancyToBeds24(
   hotelId: number,
-  _beds24RoomId: string,
-  _maxAdults: number,
-  _maxChildren: number,
+  beds24RoomId: string,
+  maxAdults: number,
+  maxChildren: number,
 ): Promise<void> {
-  // Force a token check so a real auth/config problem still surfaces as a sync error even before
-  // the actual write is implemented.
-  await getAccessToken(hotelId);
-  throw new Error(
-    'Beds24-Belegungssync noch nicht implementiert (Endpunkt für Erwachsene/Kinder-Maxima nicht verifiziert) — bitte manuell in Beds24 pflegen.',
-  );
+  const accessToken = await getAccessToken(hotelId);
+  const res = await fetch(`${BEDS24_API}/properties`, {
+    method: 'POST',
+    headers: { 'token': accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify([{
+      roomTypes: [{
+        id: beds24RoomId,
+        maxAdult: maxAdults,
+        maxChildren,
+        maxPeople: maxAdults + maxChildren,
+      }],
+    }]),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 Belegungs-Sync fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+  const data = await res.json().catch(() => null);
+  const item = Array.isArray(data) ? data[0] : null;
+  if (!item?.success) {
+    const message = item?.errors?.[0]?.roomTypes?.[0]?.message ?? JSON.stringify(item?.errors ?? data);
+    throw new Error(`Beds24 Belegungs-Sync fehlgeschlagen: ${message}`);
+  }
 }
 
 function addDays(d: Date, n: number): Date {
