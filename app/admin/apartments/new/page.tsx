@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 import { ImageUploadField } from '@/app/admin/components/image-upload-field';
 import { NameSlugFields } from '@/app/admin/components/NameSlugFields';
 import { syncApartmentQuantity } from '@/src/lib/stripe-sync';
+import { pushOccupancySync } from '@/src/lib/beds24';
+import CapacityFields from '../_components/CapacityFields';
 
 async function createApartment(formData: FormData) {
   'use server';
@@ -13,7 +15,8 @@ async function createApartment(formData: FormData) {
   const name = String(formData.get('name') || '').trim();
   const slug = String(formData.get('slug') || '').trim();
 
-  const maxAdults = Number(formData.get('maxAdults') || 2);
+  const maxAdultsRaw = formData.get('maxAdults');
+  const maxAdults = maxAdultsRaw === null || maxAdultsRaw === '' ? 2 : Number(maxAdultsRaw);
   const maxChildren = Number(formData.get('maxChildren') || 0);
 
   const sizeRaw = String(formData.get('size') || '').trim();
@@ -58,7 +61,7 @@ async function createApartment(formData: FormData) {
     }))
     .filter((img) => img.imageUrl.length > 0);
 
-  await prisma.apartment.create({
+  const created = await prisma.apartment.create({
     data: {
       hotelId,
       name,
@@ -77,6 +80,11 @@ async function createApartment(formData: FormData) {
       images: cleanedImages.length > 0 ? { create: cleanedImages } : undefined,
     },
   });
+
+  const occupancySyncError = await pushOccupancySync(hotelId, created.id, maxAdults, maxChildren);
+  if (occupancySyncError) {
+    await prisma.apartment.update({ where: { id: created.id }, data: { beds24SyncError: occupancySyncError } });
+  }
 
   await syncApartmentQuantity(hotelId);
 
@@ -192,14 +200,7 @@ export default async function NewApartmentPage() {
             </div>
             <div style={cardBody}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div style={fld}>
-                  <label style={lbl}>Max. Erwachsene</label>
-                  <input type="number" name="maxAdults" defaultValue={2} min={1} style={inp} />
-                </div>
-                <div style={fld}>
-                  <label style={lbl}>Max. Kinder</label>
-                  <input type="number" name="maxChildren" defaultValue={0} min={0} style={inp} />
-                </div>
+                <CapacityFields defaultMaxAdults={2} defaultMaxChildren={0} labelStyle={lbl} inputStyle={inp} fieldStyle={fld} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
                 <div style={fld}>

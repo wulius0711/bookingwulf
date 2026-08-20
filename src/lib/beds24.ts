@@ -317,6 +317,59 @@ async function pushSingleApartment(
   }
 }
 
+// Pushes an apartment's maxAdults/maxChildren to Beds24 so Airbnb/Booking.com occupancy limits
+// stay in sync with bookingwulf's admin UI (previously this was purely local to bookingwulf's DB
+// and silently drifted from Beds24/the OTAs). Mirrors pushBlockedRangeSync's contract: never
+// throws, returns an error string (or null on success/no-op) for the caller to persist into
+// Apartment.beds24SyncError.
+//
+// TODO(beds24-occupancy-endpoint): the write call below is a STUB. Beds24's v2 REST field names
+// for room occupancy (Erwachsene maximal / Kinder maximal / Gäste maximal) have not been verified
+// against a live connection — Beds24Config currently has no enabled hotels to check against. Do
+// NOT replace this with a blind POST. Before implementing the real call:
+//   1. Get a hotel connected (Einstellungen → Marketplace → API → Invite Code, setupWithInviteCode()).
+//   2. GET {BEDS24_API}/properties?includeAllRooms=true for that hotel's room and read the actual
+//      occupancy field names from the response.
+//   3. Read-modify-write only those occupancy fields — do not send the full room object back, to
+//      avoid clobbering Beds24-side room configuration (e.g. bed types) that bookingwulf doesn't
+//      manage.
+export async function pushOccupancySync(
+  hotelId: number,
+  apartmentId: number,
+  maxAdults: number,
+  maxChildren: number,
+): Promise<string | null> {
+  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { isEnabled: true } });
+  if (!config?.isEnabled) return null;
+
+  const mapping = await prisma.beds24ApartmentMapping.findUnique({
+    where: { apartmentId },
+    select: { beds24RoomId: true },
+  });
+  if (!mapping) return null;
+
+  try {
+    await syncOccupancyToBeds24(hotelId, mapping.beds24RoomId, maxAdults, maxChildren);
+    return null;
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
+async function syncOccupancyToBeds24(
+  hotelId: number,
+  _beds24RoomId: string,
+  _maxAdults: number,
+  _maxChildren: number,
+): Promise<void> {
+  // Force a token check so a real auth/config problem still surfaces as a sync error even before
+  // the actual write is implemented.
+  await getAccessToken(hotelId);
+  throw new Error(
+    'Beds24-Belegungssync noch nicht implementiert (Endpunkt für Erwachsene/Kinder-Maxima nicht verifiziert) — bitte manuell in Beds24 pflegen.',
+  );
+}
+
 function addDays(d: Date, n: number): Date {
   const r = new Date(d);
   r.setUTCDate(r.getUTCDate() + n);

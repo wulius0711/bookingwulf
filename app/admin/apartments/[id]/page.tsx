@@ -13,6 +13,8 @@ import { autoTranslateFields, translateList } from '@/src/lib/translate';
 import InfoTooltip from '@/app/admin/components/InfoTooltip';
 import QRCode from 'qrcode';
 import { DEFAULT_CHECKLIST_ITEMS } from '@/src/lib/housekeeping';
+import { pushOccupancySync } from '@/src/lib/beds24';
+import CapacityFields from '../_components/CapacityFields';
 
 export const dynamic = 'force-dynamic';
 
@@ -106,7 +108,8 @@ export default async function EditApartmentPage({ params }: PageProps) {
     const nameSuffix = String(formData.get('nameSuffix') || '').trim() || null;
     const slug = String(formData.get('slug') || '').trim();
 
-    const maxAdults = Number(formData.get('maxAdults') || 2);
+    const maxAdultsRaw = formData.get('maxAdults');
+    const maxAdults = maxAdultsRaw === null || maxAdultsRaw === '' ? 2 : Number(maxAdultsRaw);
     const maxChildren = Number(formData.get('maxChildren') || 0);
 
     const bedroomsRaw = String(formData.get('bedrooms') || '').trim();
@@ -216,6 +219,12 @@ export default async function EditApartmentPage({ params }: PageProps) {
       },
     });
 
+    const occupancySyncError = await pushOccupancySync(hotelId, apartmentId, maxAdults, maxChildren);
+    await prisma.apartment.update({
+      where: { id: apartmentId },
+      data: { beds24SyncError: occupancySyncError },
+    });
+
     const imageUrls = formData.getAll('imageUrl').map((v) => String(v).trim());
     const altTexts = formData.getAll('altText').map((v) => String(v).trim());
 
@@ -294,14 +303,18 @@ export default async function EditApartmentPage({ params }: PageProps) {
           <details style={detailsStyle}>
             <summary style={summaryStyle}><h2 style={cardTitle}>Kapazität</h2>{caret}</summary>
             <div style={{ ...cardBody, gridTemplateColumns: '1fr 1fr' }}>
-              <div style={fieldWrap}>
-                <label style={labelStyle}>Max. Erwachsene</label>
-                <input type="number" name="maxAdults" min="1" defaultValue={apartment.maxAdults} style={inputStyle} />
-              </div>
-              <div style={fieldWrap}>
-                <label style={labelStyle}>Max. Kinder</label>
-                <input type="number" name="maxChildren" min="0" defaultValue={apartment.maxChildren} style={inputStyle} />
-              </div>
+              <CapacityFields
+                defaultMaxAdults={apartment.maxAdults}
+                defaultMaxChildren={apartment.maxChildren}
+                labelStyle={labelStyle}
+                inputStyle={inputStyle}
+                fieldStyle={fieldWrap}
+              />
+              {apartment.beds24SyncError && (
+                <div style={{ gridColumn: '1 / -1', fontSize: 13, color: '#b45309', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 6, padding: '4px 8px' }}>
+                  ⚠️ Nicht an OTA-Plattformen übertragen: {apartment.beds24SyncError}
+                </div>
+              )}
             </div>
           </details>
 

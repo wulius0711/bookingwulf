@@ -252,8 +252,9 @@ model Apartment {
   slug       String
 
   // Capacity
-  maxAdults   Int @default(2)
-  maxChildren Int @default(0)
+  maxAdults       Int     @default(2)
+  maxChildren     Int     @default(0)
+  beds24SyncError String? // set when pushing maxAdults/maxChildren to Beds24 failed — surfaced in the admin UI
 
   // Pricing
   basePrice          Float?
