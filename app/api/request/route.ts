@@ -7,6 +7,7 @@ import { createNukiCode } from '@/src/lib/nuki';
 import { pushBooking } from '@/src/lib/beds24';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import { calculateOrtstaxe } from '@/src/lib/ortstaxe';
+import { calculateChildPriceSurcharge } from '@/src/lib/child-pricing';
 import { log } from '@/src/lib/logger';
 
 const corsHeaders = {
@@ -123,6 +124,7 @@ export async function POST(req: Request) {
         },
         nukiConfig: { select: { apiToken: true } },
         settings: { select: { ortstaxeMode: true, ortstaxePerPersonPerNight: true, ortstaxeMinAge: true, preArrivalEnabled: true, depositEnabled: true, depositType: true, depositValue: true, depositDueDays: true, bankAccountHolder: true, bankIban: true, bankBic: true } },
+        childPriceRanges: { select: { minAge: true, maxAge: true, pricePerNight: true } },
       },
     });
 
@@ -213,7 +215,14 @@ export async function POST(req: Request) {
       childBirthdays,
     });
 
-    const totalBookingPrice = apartmentsTotal + extrasTotal + ortstaxeTotal;
+    const childPriceSurcharge = calculateChildPriceSurcharge({
+      childPriceRanges: hotel.childPriceRanges.map((r) => ({ ...r, pricePerNight: Number(r.pricePerNight) })),
+      childBirthdays: childBirthdays ?? [],
+      arrivalDate: arrival,
+      nights,
+    });
+
+    const totalBookingPrice = apartmentsTotal + extrasTotal + ortstaxeTotal + childPriceSurcharge;
 
     // Generate token for all instant bookings — used for guest portal + check-in
     const isInstantBooking = bookingType === 'booking';
@@ -260,6 +269,7 @@ export async function POST(req: Request) {
           apartments: apartmentPricing,
           extrasTotal,
           ortstaxeTotal,
+          childPriceSurcharge,
           total: totalBookingPrice,
         },
         ...(checkinToken ? { checkinToken } : {}),
