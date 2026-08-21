@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
+import { pushOccupancySync } from '@/src/lib/beds24';
 
 export async function GET() {
   try {
@@ -24,7 +25,10 @@ export async function POST(req: Request) {
     if (!apartmentId || !beds24RoomId?.trim())
       return NextResponse.json({ error: 'apartmentId und beds24RoomId erforderlich.' }, { status: 400 });
 
-    const apt = await prisma.apartment.findUnique({ where: { id: Number(apartmentId) }, select: { hotelId: true } });
+    const apt = await prisma.apartment.findUnique({
+      where: { id: Number(apartmentId) },
+      select: { hotelId: true, maxAdults: true, maxChildren: true },
+    });
     if (!apt || apt.hotelId !== session.hotelId)
       return NextResponse.json({ error: 'Apartment nicht gefunden.' }, { status: 404 });
 
@@ -33,7 +37,16 @@ export async function POST(req: Request) {
       create: { apartmentId: Number(apartmentId), beds24RoomId: beds24RoomId.trim() },
       update: { beds24RoomId: beds24RoomId.trim() },
     });
-    return NextResponse.json({ ok: true });
+
+    // Push the apartment's current occupancy immediately on (re-)connect — otherwise it would
+    // only reach Beds24 the next time someone happens to re-save the apartment's capacity fields.
+    const occupancySyncError = await pushOccupancySync(apt.hotelId, Number(apartmentId), apt.maxAdults, apt.maxChildren);
+    await prisma.apartment.update({
+      where: { id: Number(apartmentId) },
+      data: { beds24SyncError: occupancySyncError },
+    });
+
+    return NextResponse.json({ ok: true, beds24SyncError: occupancySyncError });
   } catch {
     return NextResponse.json({ error: 'Fehler beim Speichern.' }, { status: 500 });
   }
