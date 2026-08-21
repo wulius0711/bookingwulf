@@ -33,7 +33,10 @@ export function getChannelColor(channel: string | null | undefined): ChannelColo
   return CHANNEL_COLORS[channel] ?? FALLBACK_PALETTE[hashString(channel) % FALLBACK_PALETTE.length];
 }
 
-export const CHANNEL_LABELS: Record<string, string> = { direct: 'Direktbuchung' };
+export const CHANNEL_LABELS: Record<string, string> = {
+  direct: 'Direktbuchung',
+  'Direct': 'Direkt in Beds24', // Beds24's own channel value for bookings entered directly in Beds24 (not via bookingwulf, not via an OTA) — distinct from bookingwulf's own "Direktbuchung"
+};
 
 export function channelLabel(channel: string): string {
   return CHANNEL_LABELS[channel] ?? channel;

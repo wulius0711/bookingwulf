@@ -513,7 +513,7 @@ export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: 
                           key={b.id}
                           data-bar="1"
                           href={`/admin/requests/${b.requestId}`}
-                          title={`${b.label} · ${b.startDate} – ${b.endDate} · ${b.channel === 'direct' ? 'Direktbuchung' : b.channel}`}
+                          title={`${b.label} · ${b.startDate} – ${b.endDate} · ${channelLabel(b.channel)}`}
                           style={{ ...style, background: chColor.bg, color: chColor.text, textDecoration: 'none' }}
                           onMouseDown={(e) => e.stopPropagation()}
                           onClick={(e) => {

@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getChannelColor, parsePlatform, blockedRangeColor } from '@/src/lib/channelColors';
+import { getChannelColor, channelLabel, parsePlatform, blockedRangeColor } from '@/src/lib/channelColors';
 
 // These popups are always dark-styled regardless of the site theme — override every CSS
 // var the shared Button component reads (not just text color), or hover/active states
@@ -266,7 +266,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         const border = chColor ? chColor.border : (STATUS_COLORS[req.status] ?? '#9ca3af');
                         const text = chColor ? chColor.border : (STATUS_TEXT[req.status] ?? '#111');
                         return (
-                          <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: bg, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: border, fontSize: 10, color: text, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte${chColor ? ' · ' + (req.channel === 'direct' ? 'Direktbuchung' : req.channel) : ''}`}>
+                          <button key={req.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'booking', data: req }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: bg, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: border, fontSize: 10, color: text, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={`${req.firstname ? req.firstname[0] + '. ' : ''}${req.lastname}${req.aptName ? ' · ' + req.aptName : ''} | ${req.nights} Nächte${chColor ? ' · ' + channelLabel(req.channel) : ''}`}>
                             <span className="calendar-chip-label">{req.isArrival ? '↘ ' : ''}{req.firstname ? req.firstname[0] + '. ' : ''}{req.lastname}{req.aptName ? ` · ${req.aptName}` : ''}</span>
                           </button>
                         );
