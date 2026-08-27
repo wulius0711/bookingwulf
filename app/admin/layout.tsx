@@ -72,7 +72,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { label: 'Verwaltung', items: [
       { href: '/admin/apartments', label: 'Apartments', icon: 'apartments' },
       { href: '/admin/price-seasons', label: 'Preisanpassungen', icon: 'prices' },
-      { href: '/admin/channel-prices', label: 'Kanalpreise', icon: 'prices' },
+      { href: '/admin/channel-prices', label: 'Kanalpreise', icon: 'channelprices' },
       { href: '/admin/blocked-dates', label: 'Sperrzeiten', icon: 'blocked' },
       { href: '/admin/extras', label: 'Zusatzleistungen', icon: 'extras' },
       { href: '/admin/vouchers', label: 'Gutscheine', icon: 'vouchers' },
