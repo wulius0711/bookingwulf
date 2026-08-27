@@ -11,6 +11,7 @@ export type UserRow = {
   isActive: boolean;
   hotelName: string | null;
   hotelSlug: string | null;
+  isLastAdminOfHotel: boolean;
 };
 
 export default function UserList({
@@ -132,9 +133,13 @@ export default function UserList({
                   <Button variant="secondary" size="sm" type="submit">Sessions beenden</Button>
                 </form>
 
-                <ConfirmDeleteForm action={onDelete} id={u.id} message={`Benutzer „${u.email}" wirklich löschen?`}>
-                  <Button variant="danger" size="sm" type="submit">Löschen</Button>
-                </ConfirmDeleteForm>
+                {u.isLastAdminOfHotel ? (
+                  <Button variant="danger" size="sm" type="button" disabled title="Letzter Admin dieses Hotels — kann nicht gelöscht werden">Löschen</Button>
+                ) : (
+                  <ConfirmDeleteForm action={onDelete} id={u.id} message={`Benutzer „${u.email}" wirklich löschen?`}>
+                    <Button variant="danger" size="sm" type="submit">Löschen</Button>
+                  </ConfirmDeleteForm>
+                )}
               </div>
             )}
           </div>

@@ -15,6 +15,12 @@ async function deleteUser(formData: FormData) {
   const id = Number(formData.get('id'));
   if (!id || id === session.userId) return;
 
+  const user = await prisma.adminUser.findUnique({ where: { id }, select: { hotelId: true } });
+  if (user?.hotelId) {
+    const remainingAdmins = await prisma.adminUser.count({ where: { hotelId: user.hotelId } });
+    if (remainingAdmins <= 1) return;
+  }
+
   await prisma.adminUser.delete({ where: { id } });
   redirect('/admin/users');
 }
@@ -55,6 +61,11 @@ export default async function UsersPage() {
     orderBy: [{ role: 'asc' }, { email: 'asc' }],
   });
 
+  const adminCountByHotel = new Map<number, number>();
+  for (const u of raw) {
+    if (u.hotelId) adminCountByHotel.set(u.hotelId, (adminCountByHotel.get(u.hotelId) ?? 0) + 1);
+  }
+
   const users: UserRow[] = raw.map((u) => ({
     id: u.id,
     email: u.email,
@@ -62,6 +73,7 @@ export default async function UsersPage() {
     isActive: u.isActive,
     hotelName: u.hotel?.name ?? null,
     hotelSlug: u.hotel?.slug ?? null,
+    isLastAdminOfHotel: !!u.hotelId && adminCountByHotel.get(u.hotelId) === 1,
   }));
 
   return (
