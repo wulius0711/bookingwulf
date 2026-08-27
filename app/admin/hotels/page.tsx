@@ -35,6 +35,10 @@ async function resetTrial(formData: FormData) {
       subscriptionStatus: 'trialing',
       trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       trialResetCount: { increment: 1 },
+      trialEmail1SentAt: null,
+      trialEmail2SentAt: null,
+      deletionToken: null,
+      deletionTokenExpiresAt: null,
     },
   });
   redirect('/admin/hotels');

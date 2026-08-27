@@ -33,12 +33,14 @@ export async function GET(req: Request) {
       subscriptionStatus: 'inactive',
       trialEndsAt: { not: null, lt: day3ago },
       trialEmail1SentAt: null,
-      email: { not: null },
+      adminUsers: { some: {} },
     },
-    select: { id: true, name: true, email: true, isTest: true },
+    select: { id: true, name: true, isTest: true, adminUsers: { orderBy: { id: 'asc' }, take: 1, select: { email: true } } },
   });
 
   for (const hotel of email1Hotels) {
+    const recipientEmail = hotel.adminUsers[0]?.email;
+    if (!recipientEmail) continue;
     const token = randomBytes(32).toString('hex');
     const tokenExpires = new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000);
     const deleteUrl = `${BASE_URL}/delete-account?token=${token}`;
@@ -47,7 +49,7 @@ export async function GET(req: Request) {
     try {
       await resend?.emails.send({
         from: getFromEmail(),
-        to: hotel.email!,
+        to: recipientEmail,
         subject: hotel.isTest
           ? 'Danke für deinen bookingwulf-Test!'
           : 'Deine bookingwulf-Testphase ist abgelaufen',
@@ -108,12 +110,14 @@ export async function GET(req: Request) {
       trialEndsAt: { not: null, lt: day7ago },
       trialEmail1SentAt: { not: null },
       trialEmail2SentAt: null,
-      email: { not: null },
+      adminUsers: { some: {} },
     },
-    select: { id: true, name: true, email: true, isTest: true, deletionToken: true },
+    select: { id: true, name: true, isTest: true, deletionToken: true, adminUsers: { orderBy: { id: 'asc' }, take: 1, select: { email: true } } },
   });
 
   for (const hotel of email2Hotels) {
+    const recipientEmail = hotel.adminUsers[0]?.email;
+    if (!recipientEmail) continue;
     const deleteUrl = hotel.deletionToken
       ? `${BASE_URL}/delete-account?token=${hotel.deletionToken}`
       : null;
@@ -122,7 +126,7 @@ export async function GET(req: Request) {
     try {
       await resend?.emails.send({
         from: getFromEmail(),
-        to: hotel.email!,
+        to: recipientEmail,
         subject: hotel.isTest
           ? 'Wie war dein bookingwulf-Test? Wir freuen uns auf dein Feedback!'
           : 'Letzte Erinnerung — dein bookingwulf-Konto wird in 7 Tagen gelöscht',
