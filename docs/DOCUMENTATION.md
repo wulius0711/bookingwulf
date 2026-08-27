@@ -852,11 +852,12 @@ Stripe Price IDs via Umgebungsvariablen (monatlich + jährlich je Plan). Mapping
 | `/admin/requests` | Alle | Buchungsanfragen verwalten |
 | `/admin/requests/[id]` | Alle | Detailansicht, Messaging (Direktbuchung ab Pro, OTA/Beds24 ab Business) |
 | `/admin/calendar` | Alle | Monatskalender mit Sperrzeiten + Buchungen |
-| `/admin/zimmerplan` | Alle | Belegungsplan (Gantt) & Tagesansicht, Sperrzeiten/Preiszeiträume/Buchungen direkt anlegen |
+| `/admin/zimmerplan` | Alle | Belegungsplan (Gantt) & Tagesansicht, Sperrzeiten/Preiszeiträume/Buchungen/Kanalpreise direkt anlegen; dritte Ansicht „Preise" (Pro) — reine Tagespreis-Matrix pro Kanal |
 | `/admin/housekeeping` | Pro | Reinigungsstatus (Sauber/Reinigung nötig/Reparatur nötig) + Checkliste je Apartment, Belegungsanzeige |
 | `/admin/apartments` | Alle | Apartments anlegen, Bilder hochladen |
 | `/admin/blocked-dates` | Alle | Manuelle Sperrzeiten |
 | `/admin/price-seasons` | Pro | Saisonale Preise, Last-Minute Rabatt, Lücken-Rabatt, Verfügbarkeits-Hinweise, Ortstaxe/Kurtaxe, Steuereinstellungen (MwSt.-Sätze für CSV-Export) |
+| `/admin/channel-prices` | Pro | Preise pro OTA-Kanal (Airbnb, Booking.com, ...), Akkordeon-Ansicht nach Apartment/Kanal umschaltbar, Bearbeiten/Löschen |
 | `/admin/extras` | Pro | Zusatzleistungen & Versicherung |
 | `/admin/email-templates` | Pro | E-Mail-Vorlagen anpassen |
 | `/admin/users` | Pro | Team-Mitglieder einladen |
@@ -1535,6 +1536,7 @@ Seit der Migration am 2026-07-19 hat jedes Hotel ein eigenes, beim Verbinden zuf
 | Sperrzeiten-Push (`syncBlockedRangeAvailability()`) | ✅ fertig (2026-07-25) |
 | Preis-Aufschlüsselung (`fetchBeds24BookingDetails`) | ✅ fertig (Juli 2026) |
 | Backfill-Script (`scripts/beds24-backfill.ts`) | ✅ fertig |
+| Kanalpreise (`pushChannelPriceSync()`, `provisionChannelOffers()`, `/admin/channel-prices`) | ✅ fertig (2026-08-27) |
 
 ### Preis-Aufschlüsselung
 

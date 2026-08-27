@@ -23,6 +23,7 @@ const sections = [
   { id: 'abonnement',    title: 'Abonnement',            plan: null,       content: AbonnementSection },
   { id: 'nuki',          title: 'Schlüsselloses Einchecken', plan: 'Pro',   content: NukiSection },
   { id: 'beds24',        title: 'Beds24 Channel Manager', plan: 'Pro',    content: Beds24Section },
+  { id: 'kanalpreise',   title: 'Kanalpreise',           plan: 'Pro',    content: KanalpreiseSection },
   { id: 'chatbot',       title: 'Gast-Chatbot',           plan: null,       content: ChatbotSection },
   { id: 'assistent',     title: 'Hasky',                  plan: 'Pro',      content: AssistentSection },
   { id: 'einbindung',    title: 'Widget einbinden',      plan: null,       content: EinbindungSection },
@@ -1411,6 +1412,68 @@ function Beds24Section() {
         Kommunikation an den Gast. Eine zweite E-Mail von bookingwulf wäre verwirrend — deshalb
         entscheidest du selbst, wann und über welchen Kanal du den Link teilst.
       </P>
+    </div>
+  );
+}
+
+function KanalpreiseSection() {
+  return (
+    <div>
+      <H2>Kanalpreise</H2>
+      <PlanNote plan="Pro" />
+      <P>
+        Mit Kanalpreisen setzt du für Airbnb, Booking.com und weitere OTA-Plattformen jeweils einen
+        eigenen Preis — getrennt von deinem Direktpreis auf der eigenen Buchungsseite. So kannst du
+        z.B. auf Airbnb einen höheren Preis ansetzen, um die Airbnb-Provision auszugleichen, während
+        Direktbucher weiterhin den regulären Preis sehen.
+      </P>
+      <H3>Voraussetzung</H3>
+      <P>
+        Beds24 muss verbunden sein (siehe <InternalLink id="beds24">Beds24 Channel Manager</InternalLink>).
+        Kanalpreise nutzen intern Beds24s Preis-Slots — es sind unabhängig von Airbnb/Booking.com bis zu 8
+        Plattformen vorbereitet: Airbnb, Booking.com, Expedia, Vrbo, HRS, Traumferienwohnungen, Agoda, Feratel.
+      </P>
+      <H3>Einrichtung</H3>
+      <Step num={1} title="Verbundene Kanäle angeben">
+        <P>
+          Unter <strong>Beds24 Channel Manager</strong> im Abschnitt <strong>Verbundene OTA-Kanäle</strong> ankreuzen,
+          welche Plattformen bei dir über Beds24 tatsächlich verbunden sind. Nur angehakte Kanäle stehen später
+          zur Auswahl — ein fälschlich angehakter, nicht wirklich verbundener Kanal bleibt wirkungslos, da bookingwulf
+          das nicht automatisch prüfen kann.
+        </P>
+      </Step>
+      <Step num={2} title="Pro Apartment aktivieren">
+        <P>
+          Im Abschnitt <strong>Kanalpreise</strong> (gleiche Seite) siehst du pro Apartment den Status und einen
+          „Aktivieren"-Button. Das richtet einmalig einen eigenen Beds24-Preis-Slot je verbundenem Kanal ein.
+          Kommt später ein weiterer Kanal dazu, reicht ein erneuter Klick — nur der fehlende Kanal wird nachprovisioniert.
+        </P>
+      </Step>
+      <H3>Preise setzen</H3>
+      <P>
+        Sobald eingerichtet, lassen sich Kanalpreise an drei Stellen anlegen:
+      </P>
+      <ul style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 20, margin: '0 0 16px' }}>
+        <li><strong>Kalender</strong> — Zeitraum ziehen, im Dropdown „Kanalpreis" wählen, Kanal + Preis eintragen</li>
+        <li><strong>Zimmerplan</strong> (Belegungsplan) — gleiches Dropdown beim Ziehen über eine Apartment-Zeile</li>
+        <li><strong>Kanalpreise</strong>-Seite — Formular unten in der Liste</li>
+      </ul>
+      <P>
+        Bestehende Kanalpreise erscheinen als Chip (Kalender) bzw. Balken (Zimmerplan) — anklicken öffnet ein
+        Bearbeiten/Löschen-Popup. Auf der <strong>Kanalpreise</strong>-Seite selbst sind sie als aufklappbare Liste
+        gruppiert (nach Apartment oder nach Kanal umschaltbar), inklusive Bearbeiten und Löschen.
+      </P>
+      <H3>Tagespreis-Matrix</H3>
+      <P>
+        Im Zimmerplan gibt es zusätzlich die Ansicht <strong>Preise</strong> — eine reine Übersichtsmatrix
+        (Apartments als Zeilen, Tage als Spalten) für einen ausgewählten Kanal, um schnell zu sehen, wo
+        überall schon ein Preis gesetzt ist. Diese Ansicht dient nur der Übersicht, Bearbeiten geht von dort
+        nicht direkt.
+      </P>
+      <Tip>
+        <strong>Hinweis:</strong> Ein ⚠️-Symbol an einem Kanalpreis bedeutet, dass die Übertragung an Beds24
+        fehlgeschlagen ist — der Preis gilt dann nur lokal in bookingwulf, nicht auf der OTA-Plattform.
+      </Tip>
     </div>
   );
 }
