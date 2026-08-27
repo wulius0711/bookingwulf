@@ -6,7 +6,6 @@ import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getChannelColor, channelLabel, parsePlatform, blockedRangeColor } from '@/src/lib/channelColors';
-import { SUPPORTED_CHANNELS, CHANNEL_DISPLAY_NAME, type Beds24ChannelKey } from '@/src/lib/beds24Channels';
 
 // These popups are always dark-styled regardless of the site theme — override every CSS
 // var the shared Button component reads (not just text color), or hover/active states
@@ -59,7 +58,6 @@ export type BookingChip = {
 };
 
 export type BlockedChip = { id: number; aptName: string; note: string; type: string; startDate: string; endDate: string; beds24SyncError: string | null };
-export type ChannelPriceChip = { id: number; apartmentId: number; aptName: string; channel: string; name: string | null; pricePerNight: number; startDate: string; endDate: string; beds24SyncError: string | null };
 export type ApartmentOption = { id: number; name: string };
 
 type Props = {
@@ -67,13 +65,11 @@ type Props = {
   todayKey: string;
   dayBookings: Record<string, BookingChip[]>;
   dayBlocked: Record<string, BlockedChip[]>;
-  dayChannelPrices: Record<string, ChannelPriceChip[]>;
   apartments: ApartmentOption[];
   hasPro: boolean;
-  channelOfferIds: Record<number, Record<string, number>>;
 };
 
-type TabType = 'blocked' | 'season' | 'channelPrice' | 'booking';
+type TabType = 'blocked' | 'season' | 'booking';
 
 function compareDates(a: string, b: string) {
   return a < b ? [a, b] : [b, a];
@@ -98,17 +94,15 @@ const field: React.CSSProperties = { display: 'grid', gap: 3 };
 const TAB_COLORS: Record<TabType, string> = {
   blocked: '#ef4444',
   season: '#3b82f6',
-  channelPrice: '#ec4899',
   booking: '#10b981',
 };
 const TAB_LABELS: Record<TabType, string> = {
   blocked: 'Sperrzeit',
   season: 'Preiszeitraum',
-  channelPrice: 'Kanalpreis',
   booking: 'Buchung',
 };
 
-export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked, dayChannelPrices, apartments, hasPro, channelOfferIds }: Props) {
+export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked, apartments, hasPro }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -119,29 +113,17 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
   const [activeTab, setActiveTab] = useState<TabType>('blocked');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [selectedApartmentId, setSelectedApartmentId] = useState('');
-  const [selectedChannel, setSelectedChannel] = useState('');
-  const availableChannels = Object.keys(channelOfferIds[Number(selectedApartmentId)] ?? {}) as Beds24ChannelKey[];
 
   function isTabLocked(tab: TabType): boolean {
-    if (tab === 'season') return !hasPro;
-    if (tab === 'channelPrice') return !hasPro || availableChannels.length === 0;
-    return false;
+    return tab === 'season' && !hasPro;
   }
   function tabLockReason(tab: TabType): string {
-    if (tab === 'season') return 'Pro';
-    if (tab === 'channelPrice') {
-      if (!hasPro) return 'Pro';
-      if (!selectedApartmentId) return 'zuerst Apartment wählen';
-      return 'nicht eingerichtet';
-    }
-    return '';
+    return tab === 'season' ? 'Pro' : '';
   }
 
   type SelectedItem =
     | { kind: 'booking'; data: BookingChip }
-    | { kind: 'blocked'; data: BlockedChip }
-    | { kind: 'channelPrice'; data: ChannelPriceChip };
+    | { kind: 'blocked'; data: BlockedChip };
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
   const [editSuccess, setEditSuccess] = useState(false);
@@ -200,9 +182,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
     } else if (activeTab === 'season') {
       url = '/api/admin/price-season';
       body = { apartmentId: Number(data.apartmentId), name: data.name, startDate: data.startDate, endDate: data.endDate, pricePerNight: Number(data.pricePerNight), minStay: Number(data.minStay) || 1 };
-    } else if (activeTab === 'channelPrice') {
-      url = '/api/admin/channel-price';
-      body = { apartmentId: Number(data.apartmentId), channel: data.channel, name: data.name, startDate: data.startDate, endDate: data.endDate, pricePerNight: Number(data.pricePerNight) };
     } else {
       url = '/api/admin/booking';
       body = { apartmentId: Number(data.apartmentId), arrival: data.arrival, departure: data.departure, adults: Number(data.adults), children: Number(data.children), salutation: data.salutation, firstname: data.firstname, lastname: data.lastname, email: data.email, status: data.status, message: data.message };
@@ -265,7 +244,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
 
                 const bookings = dayBookings[key] ?? [];
                 const blocked = dayBlocked[key] ?? [];
-                const channelPrices = dayChannelPrices[key] ?? [];
                 const isToday = key === todayKey;
                 const isWeekend = di >= 5;
                 const selected = inSelection(key);
@@ -314,16 +292,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                           </button>
                         );
                       })}
-                      {channelPrices.map((cp) => {
-                        const label = CHANNEL_DISPLAY_NAME[cp.channel as Beds24ChannelKey] ?? cp.channel;
-                        const color = getChannelColor(label);
-                        const chipLabel = `${label}${cp.aptName ? ' · ' + cp.aptName : ''} · € ${cp.pricePerNight}/Nacht${cp.beds24SyncError ? ` · nicht an Beds24 übertragen: ${cp.beds24SyncError}` : ''}`;
-                        return (
-                          <button key={cp.id} onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setSelectedItem({ kind: 'channelPrice', data: cp }); setEditError(null); setEditSuccess(false); setConfirmDelete(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '2px 5px', borderRadius: 3, background: `color-mix(in srgb, ${color.bg} 20%, white)`, border: 'none', borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: color.border, fontSize: 10, color: color.border, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.5 }} title={chipLabel}>
-                            <span className="calendar-chip-label">{cp.beds24SyncError ? '⚠️ ' : '💶 '}{label} · €{cp.pricePerNight}</span>
-                          </button>
-                        );
-                      })}
                     </div>
                   </div>
                 );
@@ -349,7 +317,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 onChange={(e) => { const tab = e.target.value as TabType; if (!isTabLocked(tab)) { setActiveTab(tab); setError(null); } }}
                 style={{ width: 118, padding: '5px 6px', borderRadius: 6, border: '1px solid #334155', background: TAB_COLORS[activeTab], color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
               >
-                {(['blocked', 'season', 'booking', 'channelPrice'] as TabType[]).map((tab) => {
+                {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
                   const locked = isTabLocked(tab);
                   return (
                     <option key={tab} value={tab} disabled={locked}>
@@ -372,7 +340,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                   <div style={field}>
                     <label htmlFor="cal-c-apt" style={labelStyle}>Apartment</label>
-                    <select id="cal-c-apt" name="apartmentId" required style={inputStyle} value={selectedApartmentId} onChange={(e) => { setSelectedApartmentId(e.target.value); setSelectedChannel(''); }}>
+                    <select id="cal-c-apt" name="apartmentId" required style={inputStyle} defaultValue="">
                       <option value="">Auswählen</option>
                       {apartments.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
                     </select>
@@ -417,33 +385,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                     <div style={field}>
                       <label htmlFor="cal-c-minstay" style={labelStyle}>Mindestaufenthalt</label>
                       <input id="cal-c-minstay" type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'channelPrice' && (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-                    <div style={field}>
-                      <label htmlFor="cal-c-channel" style={labelStyle}>Kanal</label>
-                      <select id="cal-c-channel" name="channel" required style={inputStyle} value={selectedChannel} onChange={(e) => setSelectedChannel(e.target.value)}>
-                        <option value="" disabled>Auswählen</option>
-                        {SUPPORTED_CHANNELS.map((c) => {
-                          const disabled = !availableChannels.includes(c);
-                          return (
-                            <option key={c} value={c} disabled={disabled} style={disabled ? { color: '#64748b' } : undefined}>
-                              {CHANNEL_DISPLAY_NAME[c]}{disabled ? ' (nicht eingerichtet)' : ''}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                    <div style={field}>
-                      <label htmlFor="cal-c-cprice" style={labelStyle}>Preis / Nacht (€)</label>
-                      <input id="cal-c-cprice" type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
-                    </div>
-                    <div style={field}>
-                      <label htmlFor="cal-c-cname" style={labelStyle}>Bezeichnung</label>
-                      <input id="cal-c-cname" type="text" name="name" style={inputStyle} placeholder="Optional" />
                     </div>
                   </div>
                 )}
@@ -514,7 +455,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="cal-edit-title" style={{ fontSize: 13, fontWeight: 700, color: '#e2e8f0' }}>
-                {selectedItem.kind === 'booking' ? '📋 Buchung' : selectedItem.kind === 'channelPrice' ? '💶 Kanalpreis' : '🚫 Sperrzeit'}
+                {selectedItem.kind === 'booking' ? '📋 Buchung' : '🚫 Sperrzeit'}
               </span>
               <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
@@ -555,64 +496,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                     <a href={`/admin/requests/${selectedItem.data.id}`} style={{ fontSize: 13, color: '#94a3b8', textDecoration: 'underline', lineHeight: '32px' }}>Zur Buchung →</a>
                   </div>
                 </div>
-              ) : selectedItem.kind === 'channelPrice' ? (
-                /* Channel price edit form */
-                <form onSubmit={async (e) => {
-                  e.preventDefault();
-                  setEditError(null);
-                  const fd = new FormData(e.currentTarget);
-                  const res = await fetch('/api/admin/channel-price', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id, startDate: fd.get('startDate'), endDate: fd.get('endDate'), pricePerNight: Number(fd.get('pricePerNight')), name: fd.get('name') }) });
-                  if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800); }
-                  else setEditError((await res.json()).error ?? 'Fehler');
-                }} style={{ display: 'grid', gap: 14 }}>
-                  <span style={{ display: 'inline-flex', alignSelf: 'start', alignItems: 'center', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: getChannelColor(CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel).bg, color: getChannelColor(CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel).text }}>
-                    {CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel} · {selectedItem.data.aptName}
-                  </span>
-                  {selectedItem.data.beds24SyncError && (
-                    <div style={{ fontSize: 12, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 8, padding: '8px 10px' }}>
-                      ⚠️ Nicht an Beds24 übertragen: {selectedItem.data.beds24SyncError}
-                    </div>
-                  )}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                    <div style={field}>
-                      <label htmlFor="cal-e-cfrom" style={labelStyle}>Von</label>
-                      <input id="cal-e-cfrom" type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
-                    </div>
-                    <div style={field}>
-                      <label htmlFor="cal-e-cto" style={labelStyle}>Bis</label>
-                      <input id="cal-e-cto" type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
-                    </div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                    <div style={field}>
-                      <label htmlFor="cal-e-cprice" style={labelStyle}>Preis / Nacht (€)</label>
-                      <input id="cal-e-cprice" type="number" step="0.01" name="pricePerNight" required style={inputStyle} defaultValue={selectedItem.data.pricePerNight} />
-                    </div>
-                    <div style={field}>
-                      <label htmlFor="cal-e-cname" style={labelStyle}>Bezeichnung</label>
-                      <input id="cal-e-cname" type="text" name="name" style={inputStyle} defaultValue={selectedItem.data.name ?? ''} />
-                    </div>
-                  </div>
-                  {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
-                    {!confirmDelete ? (
-                      <Button variant="danger" size="sm" type="button" onClick={() => setConfirmDelete(true)}>Löschen</Button>
-                    ) : (
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
-                        <Button variant="danger" size="sm" type="button" onClick={async () => {
-                          const res = await fetch('/api/admin/channel-price', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
-                          const json = await res.json();
-                          if (res.ok) {
-                            if (json.beds24SyncError) alert(`Gelöscht, aber nicht an Beds24 übertragen: ${json.beds24SyncError}`);
-                            setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); startTransition(() => router.refresh()); }, 800);
-                          } else setEditError(json.error ?? 'Fehler');
-                        }}>Wirklich löschen</Button>
-                      </div>
-                    )}
-                    <Button variant="danger" size="sm" type="submit">Speichern</Button>
-                  </div>
-                </form>
               ) : selectedItem.data.type === 'ical_sync' ? (
                 /* iCal-synced — read-only, show platform info */
                 (() => {

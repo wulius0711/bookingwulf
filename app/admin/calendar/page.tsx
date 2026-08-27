@@ -2,7 +2,7 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Link from 'next/link';
-import CalendarGrid, { type BookingChip, type BlockedChip, type ChannelPriceChip } from './CalendarGrid';
+import CalendarGrid, { type BookingChip, type BlockedChip } from './CalendarGrid';
 import LegendGroup from './LegendGroup';
 import { getChannelColor, channelLabel, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
 
@@ -97,14 +97,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
 
   const apartmentMap = new Map(apartments.map((a) => [a.id, a.name]));
 
-  const beds24Mappings = await prisma.beds24ApartmentMapping.findMany({
-    where: { apartmentId: { in: apartments.map((a) => a.id) } },
-    select: { apartmentId: true, channelOfferIds: true },
-  });
-  const channelOfferIds = Object.fromEntries(
-    beds24Mappings.map((m) => [m.apartmentId, (m.channelOfferIds as Record<string, number> | null) ?? {}])
-  );
-
   // Build day → bookings map (serializable for client component)
   const dayBookingsMap = new Map<string, BookingChip[]>();
   for (const req of requests) {
@@ -165,35 +157,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   }
   const dayBlocked = Object.fromEntries(dayBlockedMap);
 
-  // Build day → channel price map
-  const channelPriceRanges = await prisma.channelPriceRange.findMany({
-    where: {
-      apartmentId: { in: apartments.map((a) => a.id) },
-      startDate: { lte: lastDay },
-      endDate: { gt: firstDay },
-    },
-    include: { apartment: { select: { name: true } } },
-  });
-
-  const dayChannelPricesMap = new Map<string, ChannelPriceChip[]>();
-  for (const r of channelPriceRanges) {
-    const cur = new Date(r.startDate);
-    while (cur < r.endDate) {
-      if (cur.getFullYear() === year && cur.getMonth() === month) {
-        const key = dateKey(cur);
-        if (!dayChannelPricesMap.has(key)) dayChannelPricesMap.set(key, []);
-        dayChannelPricesMap.get(key)!.push({
-          id: r.id, apartmentId: r.apartmentId, aptName: r.apartment.name, channel: r.channel,
-          name: r.name, pricePerNight: r.pricePerNight,
-          startDate: r.startDate.toISOString().slice(0, 10), endDate: r.endDate.toISOString().slice(0, 10),
-          beds24SyncError: r.beds24SyncError,
-        });
-      }
-      cur.setDate(cur.getDate() + 1);
-    }
-  }
-  const dayChannelPrices = Object.fromEntries(dayChannelPricesMap);
-
   // Build calendar grid (Mon=0) — serializable as (string | null)[][]
   const firstDayOfWeek = (firstDay.getDay() + 6) % 7;
   const totalDays = lastDay.getDate();
@@ -236,7 +199,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 className="page-title">Kalender</h1>
-          <p className="page-subtitle">Buchungen, Sperrzeiten, Preiszeiträume und Kanalpreise im Monatsüberblick.</p>
+          <p className="page-subtitle">Buchungen, Sperrzeiten und Preiszeiträume im Monatsüberblick.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
@@ -256,7 +219,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
           <span style={{ background: '#10b981', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Buchung</span>
           <span style={{ background: '#3b82f6', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Preiszeitraum</span>
           <span style={{ background: '#ef4444', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Sperrzeit</span>
-          <span style={{ background: '#ec4899', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Kanalpreis</span>
           anlegen
         </span>
       </div>
@@ -296,7 +258,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       </div>
 
       {/* Calendar grid */}
-      <CalendarGrid weeks={weeks} todayKey={todayKey} dayBookings={dayBookings} dayBlocked={dayBlocked} dayChannelPrices={dayChannelPrices} apartments={apartments.map(a => ({ id: a.id, name: a.name }))} hasPro={hasPro} channelOfferIds={channelOfferIds} />
+      <CalendarGrid weeks={weeks} todayKey={todayKey} dayBookings={dayBookings} dayBlocked={dayBlocked} apartments={apartments.map(a => ({ id: a.id, name: a.name }))} hasPro={hasPro} />
 
       {requests.length === 0 && cancelledCount === 0 && (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 14 }}>

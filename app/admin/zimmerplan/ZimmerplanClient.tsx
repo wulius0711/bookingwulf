@@ -85,10 +85,10 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro, ch
       </div>
 
       {/* Gantt view */}
-      {view === 'gantt' && <GanttView todayIso={initialDate} initialIso={date} hasPro={hasPro} channelOfferIds={channelOfferIds} />}
+      {view === 'gantt' && <GanttView todayIso={initialDate} initialIso={date} hasPro={hasPro} />}
 
       {/* Price grid view */}
-      {view === 'preise' && hasPro && <PriceGridView todayIso={initialDate} initialIso={date} availableChannels={availableChannels} />}
+      {view === 'preise' && hasPro && <PriceGridView todayIso={initialDate} initialIso={date} availableChannels={availableChannels} channelOfferIds={channelOfferIds} />}
 
       {/* Tag-Navigation */}
       {view === 'tag' && (

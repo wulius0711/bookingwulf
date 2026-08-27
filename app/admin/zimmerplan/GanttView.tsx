@@ -5,12 +5,10 @@ import { createPortal } from 'react-dom';
 import { useFocusTrap } from '@/app/admin/hooks/useFocusTrap';
 import Button from '../components/ui/Button';
 import { getChannelColor, channelLabel, parsePlatform, blockedRangeColor, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
-import { SUPPORTED_CHANNELS, CHANNEL_DISPLAY_NAME, type Beds24ChannelKey } from '@/src/lib/beds24Channels';
 
 type Booking = { id: number; kind: 'booking'; startDate: string; endDate: string; label: string; requestId: number; channel: string };
 type Block   = { id: number; kind: 'blocked'; startDate: string; endDate: string; note: string | null; type: string; requestId?: number; guestLabel?: string; beds24SyncError: string | null };
-type ChannelPrice = { id: number; kind: 'channelPrice'; startDate: string; endDate: string; channel: string; name: string | null; pricePerNight: number; beds24SyncError: string | null };
-type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[]; channelPrices: ChannelPrice[] };
+type AptData = { id: number; name: string; bookings: Booking[]; blocks: Block[] };
 
 // These popups are always dark-styled regardless of the site theme — override every CSS
 // var the shared Button component reads (not just text color), or hover/active states
@@ -77,8 +75,7 @@ function weekdayMon(iso: string): number {
 
 type CalItem =
   | { kind: 'booking'; id: number; start: string; end: string; label: string; requestId: number; channel: string }
-  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string; beds24SyncError: string | null }
-  | { kind: 'channelPrice'; id: number; start: string; end: string; channel: string; name: string | null; pricePerNight: number; beds24SyncError: string | null };
+  | { kind: 'blocked'; id: number; start: string; end: string; note: string | null; type: string; requestId?: number; guestLabel?: string; beds24SyncError: string | null };
 
 function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSelectItem }: { apt: AptData; allApts: AptData[]; todayIso: string; initialMonth: string; onClose: () => void; onSelectItem: (item: SelectedItem) => void }) {
   const [monthIso, setMonthIso] = useState(() => initialMonth);
@@ -118,7 +115,6 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
   const items: CalItem[] = [
     ...aptData.bookings.map(b => ({ kind: 'booking' as const, id: b.id, start: b.startDate, end: b.endDate, label: b.label, requestId: b.requestId, channel: b.channel })),
     ...aptData.blocks.map(b => ({ kind: 'blocked' as const, id: b.id, start: b.startDate, end: b.endDate, note: b.note, type: b.type, requestId: b.requestId, guestLabel: b.guestLabel, beds24SyncError: b.beds24SyncError })),
-    ...aptData.channelPrices.map(cp => ({ kind: 'channelPrice' as const, id: cp.id, start: cp.startDate, end: cp.endDate, channel: cp.channel, name: cp.name, pricePerNight: cp.pricePerNight, beds24SyncError: cp.beds24SyncError })),
   ];
 
   const btnStyle: React.CSSProperties = { padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', cursor: 'pointer', fontSize: 18, lineHeight: 1 };
@@ -225,19 +221,15 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                       const isFirstSeg = item.start >= weekStart;
                       const isLastSeg = item.end <= weekEndExcl;
                       const parsed = item.kind === 'blocked' ? parsePlatform(item.note) : null;
-                      const chColor = item.kind === 'booking' ? getChannelColor(item.channel)
-                        : item.kind === 'channelPrice' ? getChannelColor(CHANNEL_DISPLAY_NAME[item.channel as Beds24ChannelKey] ?? item.channel)
-                        : blockedRangeColor(item.note).color;
+                      const chColor = item.kind === 'booking' ? getChannelColor(item.channel) : blockedRangeColor(item.note).color;
                       const blockedPattern = item.kind === 'blocked' ? blockedRangeColor(item.note).pattern : undefined;
                       const bg = blockedPattern ?? chColor.bg;
                       const fg = chColor.text;
                       const baseLabel = item.kind === 'booking'
                         ? item.label
-                        : item.kind === 'channelPrice'
-                        ? `${CHANNEL_DISPLAY_NAME[item.channel as Beds24ChannelKey] ?? item.channel} · €${item.pricePerNight}`
                         : parsed ? (item.guestLabel ? `${item.guestLabel} (${parsed.platform})` : parsed.platform) : (item.note || 'Gesperrt');
-                      const label = ((item.kind === 'blocked' || item.kind === 'channelPrice') && item.beds24SyncError)
-                        ? `⚠️ ${baseLabel} (nicht an ${item.kind === 'channelPrice' ? 'Beds24' : 'OTA-Plattformen'} übertragen: ${item.beds24SyncError})`
+                      const label = (item.kind === 'blocked' && item.beds24SyncError)
+                        ? `⚠️ ${baseLabel} (nicht an OTA-Plattformen übertragen: ${item.beds24SyncError})`
                         : baseLabel;
 
                       return (
@@ -247,8 +239,6 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
                           onClick={() => {
                             if (item.kind === 'booking') {
                               onSelectItem({ kind: 'booking', data: { id: item.id, kind: 'booking', startDate: item.start, endDate: item.end, label: item.label, requestId: item.requestId, channel: item.channel, aptName: aptData.name } });
-                            } else if (item.kind === 'channelPrice') {
-                              onSelectItem({ kind: 'channelPrice', data: { id: item.id, kind: 'channelPrice', startDate: item.start, endDate: item.end, channel: item.channel, name: item.name, pricePerNight: item.pricePerNight, beds24SyncError: item.beds24SyncError, aptName: aptData.name } });
                             } else {
                               onSelectItem({ kind: 'blocked', data: { id: item.id, kind: 'blocked', startDate: item.start, endDate: item.end, note: item.note, type: item.type, requestId: item.requestId, guestLabel: item.guestLabel, beds24SyncError: item.beds24SyncError, aptName: aptData.name } });
                             }
@@ -284,9 +274,9 @@ function ApartmentCalendar({ apt, allApts, todayIso, initialMonth, onClose, onSe
 }
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
-type TabType = 'blocked' | 'season' | 'channelPrice' | 'booking';
-const TAB_COLORS: Record<TabType, string> = { blocked: '#ef4444', season: '#3b82f6', channelPrice: '#ec4899', booking: '#10b981' };
-const TAB_LABELS: Record<TabType, string> = { blocked: 'Sperrzeit', season: 'Preiszeitraum', channelPrice: 'Kanalpreis', booking: 'Buchung' };
+type TabType = 'blocked' | 'season' | 'booking';
+const TAB_COLORS: Record<TabType, string> = { blocked: '#ef4444', season: '#3b82f6', booking: '#10b981' };
+const TAB_LABELS: Record<TabType, string> = { blocked: 'Sperrzeit', season: 'Preiszeitraum', booking: 'Buchung' };
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '7px 10px', border: '1px solid #334155',
@@ -300,10 +290,9 @@ const fieldStyle: React.CSSProperties = { display: 'grid', gap: 3 };
 
 type SelectedItem =
   | { kind: 'booking'; data: Booking & { aptName: string } }
-  | { kind: 'blocked'; data: Block & { aptName: string } }
-  | { kind: 'channelPrice'; data: ChannelPrice & { aptName: string } };
+  | { kind: 'blocked'; data: Block & { aptName: string } };
 
-export default function GanttView({ todayIso, initialIso, hasPro, channelOfferIds }: { todayIso: string; initialIso?: string; hasPro: boolean; channelOfferIds: Record<number, Record<string, number>> }) {
+export default function GanttView({ todayIso, initialIso, hasPro }: { todayIso: string; initialIso?: string; hasPro: boolean }) {
   const [monthIso, setMonthIso] = useState(() => monthStart(initialIso ?? todayIso));
   const [apartments, setApartments] = useState<AptData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -390,7 +379,7 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
     if (span <= 0) return null;
     return {
       position: 'absolute', left: startIdx * COL_W + 2, width: span * COL_W - 4,
-      top: 6, height: ROW_H - 12, borderRadius: 6, overflow: 'hidden',
+      top: 5, height: ROW_H - 14, borderRadius: 6, overflow: 'hidden',
       display: 'flex', alignItems: 'center', paddingLeft: 8,
       fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', boxSizing: 'border-box',
       cursor: 'pointer', zIndex: 1,
@@ -401,13 +390,11 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
     e.preventDefault();
     setFormError(null);
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const url = activeTab === 'blocked' ? '/api/admin/blocked-date' : activeTab === 'season' ? '/api/admin/price-season' : activeTab === 'channelPrice' ? '/api/admin/channel-price' : '/api/admin/booking';
+    const url = activeTab === 'blocked' ? '/api/admin/blocked-date' : activeTab === 'season' ? '/api/admin/price-season' : '/api/admin/booking';
     const body: Record<string, unknown> = activeTab === 'blocked'
       ? { apartmentId: selection!.aptId, startDate: data.startDate, endDate: data.endDate, type: data.type, note: data.note }
       : activeTab === 'season'
       ? { apartmentId: selection!.aptId, name: data.name, startDate: data.startDate, endDate: data.endDate, pricePerNight: Number(data.pricePerNight), minStay: Number(data.minStay) || 1 }
-      : activeTab === 'channelPrice'
-      ? { apartmentId: selection!.aptId, channel: data.channel, name: data.name, startDate: data.startDate, endDate: data.endDate, pricePerNight: Number(data.pricePerNight) }
       : { apartmentId: selection!.aptId, arrival: data.arrival, departure: data.departure, adults: Number(data.adults), children: Number(data.children), salutation: data.salutation, firstname: data.firstname, lastname: data.lastname, email: data.email, status: data.status };
     const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const json = await res.json();
@@ -579,43 +566,6 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
                         </div>
                       );
                     })}
-
-                    {/* Channel price bars */}
-                    {apt.channelPrices.map((cp) => {
-                      const style = barStyle(cp.startDate, cp.endDate);
-                      if (!style) return null;
-                      const label = CHANNEL_DISPLAY_NAME[cp.channel as Beds24ChannelKey] ?? cp.channel;
-                      const color = getChannelColor(label);
-                      const title = `${label} · €${cp.pricePerNight}/Nacht${cp.beds24SyncError ? ` · nicht an Beds24 übertragen: ${cp.beds24SyncError}` : ''}`;
-                      return (
-                        <div
-                          key={`cp-${cp.id}`}
-                          data-bar="1"
-                          title={title}
-                          role="button"
-                          tabIndex={0}
-                          style={{ ...style, top: (style.top as number) + ROW_H / 2 - 4, height: 14, background: color.bg, color: color.text, fontSize: 9 }}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
-                              setSelectedItem({ kind: 'channelPrice', data: { ...cp, aptName: apt.name } });
-                              setEditError(null);
-                              setEditSuccess(false);
-                              setConfirmDelete(false);
-                            }
-                          }}
-                          onClick={() => {
-                            setSelectedItem({ kind: 'channelPrice', data: { ...cp, aptName: apt.name } });
-                            setEditError(null);
-                            setEditSuccess(false);
-                            setConfirmDelete(false);
-                          }}
-                        >
-                          {cp.beds24SyncError ? '⚠️ ' : ''}{label} €{cp.pricePerNight}
-                        </div>
-                      );
-                    })}
                   </div>
                 ))}
               </div>
@@ -637,27 +587,20 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
                 <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>{selection.aptName}</div>
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {(() => {
-                  const availableChannels = Object.keys(channelOfferIds[selection.aptId] ?? {});
-                  const isLocked = (tab: TabType) => tab === 'season' ? !hasPro : tab === 'channelPrice' ? (!hasPro || availableChannels.length === 0) : false;
-                  const lockReason = (tab: TabType) => tab === 'season' ? 'Pro' : tab === 'channelPrice' ? (!hasPro ? 'Pro' : 'nicht eingerichtet') : '';
-                  return (
-                    <select
-                      value={activeTab}
-                      onChange={(e) => { const tab = e.target.value as TabType; if (!isLocked(tab)) { setActiveTab(tab); setFormError(null); } }}
-                      style={{ width: 118, padding: '5px 6px', borderRadius: 6, border: '1px solid #334155', background: TAB_COLORS[activeTab], color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
-                    >
-                      {(['blocked', 'season', 'booking', 'channelPrice'] as TabType[]).map((tab) => {
-                        const locked = isLocked(tab);
-                        return (
-                          <option key={tab} value={tab} disabled={locked}>
-                            {TAB_LABELS[tab]}{locked ? ` (${lockReason(tab)})` : ''}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  );
-                })()}
+                <select
+                  value={activeTab}
+                  onChange={(e) => { const tab = e.target.value as TabType; if (!(tab === 'season' && !hasPro)) { setActiveTab(tab); setFormError(null); } }}
+                  style={{ width: 118, padding: '5px 6px', borderRadius: 6, border: '1px solid #334155', background: TAB_COLORS[activeTab], color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+                >
+                  {(['blocked', 'season', 'booking'] as TabType[]).map((tab) => {
+                    const locked = tab === 'season' && !hasPro;
+                    return (
+                      <option key={tab} value={tab} disabled={locked}>
+                        {TAB_LABELS[tab]}{locked ? ' (Pro)' : ''}
+                      </option>
+                    );
+                  })}
+                </select>
                 <button onClick={() => { setSelection(null); setFormError(null); setFormSuccess(false); }} aria-label="Schließen" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
               </div>
             </div>
@@ -706,33 +649,6 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
                       <div style={fieldStyle}>
                         <label htmlFor="gantt-c-minstay" style={labelStyle}>Mindestaufenthalt</label>
                         <input id="gantt-c-minstay" type="number" name="minStay" defaultValue={1} min={1} style={inputStyle} />
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'channelPrice' && (
-                    <div className="gantt-form-3col">
-                      <div style={fieldStyle}>
-                        <label htmlFor="gantt-c-channel" style={labelStyle}>Kanal</label>
-                        <select id="gantt-c-channel" name="channel" required style={inputStyle}>
-                          {SUPPORTED_CHANNELS.map((c) => {
-                            const availableChannels = Object.keys(channelOfferIds[selection.aptId] ?? {});
-                            const disabled = !availableChannels.includes(c);
-                            return (
-                              <option key={c} value={c} disabled={disabled}>
-                                {CHANNEL_DISPLAY_NAME[c]}{disabled ? ' (nicht eingerichtet)' : ''}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                      <div style={fieldStyle}>
-                        <label htmlFor="gantt-c-cprice" style={labelStyle}>Preis / Nacht (€)</label>
-                        <input id="gantt-c-cprice" type="number" step="0.01" name="pricePerNight" required style={inputStyle} placeholder="0.00" />
-                      </div>
-                      <div style={fieldStyle}>
-                        <label htmlFor="gantt-c-cname" style={labelStyle}>Bezeichnung</label>
-                        <input id="gantt-c-cname" type="text" name="name" style={inputStyle} placeholder="Optional" />
                       </div>
                     </div>
                   )}
@@ -820,7 +736,7 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
           <div ref={editModalRef} role="dialog" aria-modal="true" aria-labelledby="gantt-edit-title" style={{ ...DARK_MODAL_VARS, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 'calc(100% - 32px)', maxWidth: 460, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)', zIndex: 101, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #334155' }}>
               <span id="gantt-edit-title" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
-                {selectedItem.kind === 'booking' || (selectedItem.kind === 'blocked' && selectedItem.data.requestId) ? '📋 Buchung' : selectedItem.kind === 'channelPrice' ? '💶 Kanalpreis' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
+                {selectedItem.kind === 'booking' || (selectedItem.kind === 'blocked' && selectedItem.data.requestId) ? '📋 Buchung' : '🚫 Sperrzeit'} · {selectedItem.data.aptName}
               </span>
               <button onClick={() => setSelectedItem(null)} aria-label="Schließen" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
             </div>
@@ -846,63 +762,6 @@ export default function GanttView({ todayIso, initialIso, hasPro, channelOfferId
                     </a>
                   </div>
                 </div>
-              ) : selectedItem.kind === 'channelPrice' ? (
-                <form onSubmit={async (e) => {
-                  e.preventDefault();
-                  setEditError(null);
-                  const fd = new FormData(e.currentTarget);
-                  const res = await fetch('/api/admin/channel-price', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id, startDate: fd.get('startDate'), endDate: fd.get('endDate'), pricePerNight: Number(fd.get('pricePerNight')), name: fd.get('name') }) });
-                  if (res.ok) { setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800); }
-                  else setEditError((await res.json()).error ?? 'Fehler');
-                }} style={{ display: 'grid', gap: 14 }}>
-                  <span style={{ display: 'inline-flex', alignSelf: 'start', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: getChannelColor(CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel).bg, color: getChannelColor(CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel).text }}>
-                    {CHANNEL_DISPLAY_NAME[selectedItem.data.channel as Beds24ChannelKey] ?? selectedItem.data.channel}
-                  </span>
-                  {selectedItem.data.beds24SyncError && (
-                    <div style={{ fontSize: 12, color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 8, padding: '8px 10px' }}>
-                      ⚠️ Nicht an Beds24 übertragen: {selectedItem.data.beds24SyncError}
-                    </div>
-                  )}
-                  <div className="gantt-form-2col" style={{ gap: 10 }}>
-                    <div style={fieldStyle}>
-                      <label htmlFor="gantt-e-cfrom" style={labelStyle}>Von</label>
-                      <input id="gantt-e-cfrom" type="date" name="startDate" required style={inputStyle} defaultValue={selectedItem.data.startDate} />
-                    </div>
-                    <div style={fieldStyle}>
-                      <label htmlFor="gantt-e-cto" style={labelStyle}>Bis</label>
-                      <input id="gantt-e-cto" type="date" name="endDate" required style={inputStyle} defaultValue={selectedItem.data.endDate} />
-                    </div>
-                  </div>
-                  <div className="gantt-form-2col" style={{ gap: 10 }}>
-                    <div style={fieldStyle}>
-                      <label htmlFor="gantt-e-cprice" style={labelStyle}>Preis / Nacht (€)</label>
-                      <input id="gantt-e-cprice" type="number" step="0.01" name="pricePerNight" required style={inputStyle} defaultValue={selectedItem.data.pricePerNight} />
-                    </div>
-                    <div style={fieldStyle}>
-                      <label htmlFor="gantt-e-cname" style={labelStyle}>Bezeichnung</label>
-                      <input id="gantt-e-cname" type="text" name="name" style={inputStyle} defaultValue={selectedItem.data.name ?? ''} />
-                    </div>
-                  </div>
-                  {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
-                    {!confirmDelete ? (
-                      <Button variant="danger" size="sm" type="button" onClick={() => setConfirmDelete(true)}>Löschen</Button>
-                    ) : (
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        <Button variant="ghost" size="sm" type="button" onClick={() => setConfirmDelete(false)}>Abbrechen</Button>
-                        <Button variant="danger" size="sm" type="button" onClick={async () => {
-                          const res = await fetch('/api/admin/channel-price', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selectedItem.data.id }) });
-                          const json = await res.json();
-                          if (res.ok) {
-                            if (json.beds24SyncError) alert(`Gelöscht, aber nicht an Beds24 übertragen: ${json.beds24SyncError}`);
-                            setEditSuccess(true); setTimeout(() => { setSelectedItem(null); setEditSuccess(false); refetch(); }, 800);
-                          } else setEditError(json.error ?? 'Fehler');
-                        }}>Wirklich löschen</Button>
-                      </div>
-                    )}
-                    <Button variant="danger" size="sm" type="submit">Speichern</Button>
-                  </div>
-                </form>
               ) : (selectedItem.data.type === 'ical_sync' || selectedItem.data.type === 'beds24_sync') ? (
                 (() => {
                   const isIcal = selectedItem.data.type === 'ical_sync';

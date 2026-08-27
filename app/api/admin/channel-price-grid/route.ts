@@ -3,7 +3,9 @@ import { prisma } from '@/src/lib/prisma';
 import { verifySession } from '@/src/lib/session';
 
 // Returns, for a given channel and date range, each apartment's daily price map —
-// used by the Zimmerplan "Preise"-Ansicht (PriceGridView.tsx) to render a rate calendar.
+// used by the Zimmerplan "Preise"-Ansicht (PriceGridView.tsx) to render an editable rate
+// calendar. Each priced day carries its range id + full range bounds so a click can open the
+// exact ChannelPriceRange for editing without a second round-trip.
 export async function GET(req: NextRequest) {
   try {
     const session = await verifySession();
@@ -29,7 +31,7 @@ export async function GET(req: NextRequest) {
         startDate: { lt: toDate },
         endDate: { gt: fromDate },
       },
-      select: { apartmentId: true, startDate: true, endDate: true, pricePerNight: true },
+      select: { id: true, apartmentId: true, startDate: true, endDate: true, pricePerNight: true, name: true, beds24SyncError: true },
     });
 
     const rangesByApartment = new Map<number, typeof ranges>();
@@ -40,15 +42,24 @@ export async function GET(req: NextRequest) {
     }
 
     const result = apartments.map((apt) => {
-      const prices: Record<string, number> = {};
+      const days: Record<string, { rangeId: number; price: number }> = {};
+      const rangeById: Record<number, { id: number; startDate: string; endDate: string; pricePerNight: number; name: string | null; beds24SyncError: string | null }> = {};
       for (const r of rangesByApartment.get(apt.id) ?? []) {
+        rangeById[r.id] = {
+          id: r.id,
+          startDate: r.startDate.toISOString().slice(0, 10),
+          endDate: r.endDate.toISOString().slice(0, 10),
+          pricePerNight: r.pricePerNight,
+          name: r.name,
+          beds24SyncError: r.beds24SyncError,
+        };
         const start = r.startDate > fromDate ? r.startDate : fromDate;
         const end = r.endDate < toDate ? r.endDate : toDate;
         for (let d = new Date(start); d < end; d.setUTCDate(d.getUTCDate() + 1)) {
-          prices[d.toISOString().slice(0, 10)] = r.pricePerNight;
+          days[d.toISOString().slice(0, 10)] = { rangeId: r.id, price: r.pricePerNight };
         }
       }
-      return { id: apt.id, name: apt.name, prices };
+      return { id: apt.id, name: apt.name, days, ranges: rangeById };
     });
 
     return NextResponse.json({ apartments: result });
