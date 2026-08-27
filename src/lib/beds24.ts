@@ -554,6 +554,23 @@ export async function provisionChannelOffers(hotelId: number, apartmentId: numbe
       body: JSON.stringify([{ roomTypes: [{ id: mapping.beds24RoomId, priceRules: [{ id: offerId, offer: offerId, channels: { [channel]: { enable: true } } }] }] }]),
     });
     if (!ruleRes.ok) throw new Error(`Beds24 Kanal-Routing fehlgeschlagen (${channel}): HTTP ${ruleRes.status} ${await ruleRes.text().catch(() => '')}`);
+
+    // Beds24 enables every channel by default on offer 1 (and possibly other pre-existing
+    // offers) — without disabling the channel there, both offer 1's price and this new
+    // dedicated offer's price stay simultaneously "active" for the channel, and it's undefined
+    // (observed live: the old default price kept winning) which one actually reaches the OTA.
+    // Only ever one offer may have a given channel enabled at a time.
+    const conflictingRuleIds = (room.priceRules ?? [])
+      .filter((r: any) => Number(r.id) !== offerId && r.channels?.[channel]?.enable === true)
+      .map((r: any) => Number(r.id));
+    for (const conflictId of conflictingRuleIds) {
+      const disableRes = await fetch(`${BEDS24_API}/properties`, {
+        method: 'POST',
+        headers: { token: accessToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify([{ roomTypes: [{ id: mapping.beds24RoomId, priceRules: [{ id: conflictId, channels: { [channel]: { enable: false } } }] }] }]),
+      });
+      if (!disableRes.ok) throw new Error(`Beds24 Kanal-Deaktivierung auf Offer ${conflictId} fehlgeschlagen (${channel}): HTTP ${disableRes.status} ${await disableRes.text().catch(() => '')}`);
+    }
   }
 
   await prisma.beds24ApartmentMapping.update({ where: { apartmentId }, data: { channelOfferIds: assignment } });
