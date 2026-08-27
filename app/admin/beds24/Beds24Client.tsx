@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button, ConfirmDialog } from '../components/ui';
+import { SUPPORTED_CHANNELS, CHANNEL_DISPLAY_NAME, type Beds24ChannelKey } from '@/src/lib/beds24Channels';
 
 type Apartment = { id: number; name: string };
 
@@ -11,6 +12,8 @@ type Props = {
   apartments: Apartment[];
   initialMappings: Record<number, string>;
   webhookUrl: string;
+  initialConnectedChannels: string[];
+  initialChannelOfferIds: Record<number, Record<string, number>>;
 };
 
 const inputStyle: React.CSSProperties = {
@@ -19,7 +22,7 @@ const inputStyle: React.CSSProperties = {
   color: 'var(--text-primary)',
 };
 
-export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, webhookUrl }: Props) {
+export default function Beds24Client({ initialConnected, initialEnabled, apartments, initialMappings, webhookUrl, initialConnectedChannels, initialChannelOfferIds }: Props) {
   const [connected, setConnected] = useState(initialConnected);
   const [enabled, setEnabled] = useState(initialEnabled);
   const [inviteCode, setInviteCode] = useState('');
@@ -28,6 +31,34 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
   const [saving, setSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [showReconnect, setShowReconnect] = useState(false);
+  const [connectedChannels, setConnectedChannels] = useState<string[]>(initialConnectedChannels);
+  const [channelOfferIds, setChannelOfferIds] = useState<Record<number, Record<string, number>>>(initialChannelOfferIds);
+
+  async function toggleChannel(channel: Beds24ChannelKey) {
+    const next = connectedChannels.includes(channel)
+      ? connectedChannels.filter((c) => c !== channel)
+      : [...connectedChannels, channel];
+    setConnectedChannels(next);
+    await fetch('/api/admin/beds24', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ connectedChannels: next }),
+    });
+  }
+
+  async function provisionChannels(apartmentId: number) {
+    const res = await fetch('/api/admin/beds24-channel-offers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apartmentId }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setChannelOfferIds((prev) => ({ ...prev, [apartmentId]: data.assigned }));
+    } else {
+      setStatus({ type: 'error', msg: data.error || 'Fehler beim Einrichten der Kanalpreise' });
+    }
+  }
 
   async function handleConnect(e: React.FormEvent) {
     e.preventDefault();
@@ -171,6 +202,63 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
                 onSave={(val) => saveMapping(apt.id, val)}
               />
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Connected channels card */}
+      {connected && (
+        <div style={cardStyle}>
+          <p style={sectionTitle}>Verbundene OTA-Kanäle</p>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
+            Welche Plattformen sind bei euch über Beds24 verbunden? Nur ausgewählte Kanäle stehen später
+            bei den Kanalpreisen zur Auswahl.
+          </p>
+          <p style={{ fontSize: 13, color: '#b45309', marginBottom: 16, lineHeight: 1.5 }}>
+            ⚠️ Nur verbundene Kanäle anhaken. Nicht verbundene Kanäle bleiben wirkungslos.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+            {SUPPORTED_CHANNELS.map((channel) => (
+              <label key={channel} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, cursor: 'pointer' }}>
+                <input type="checkbox" checked={connectedChannels.includes(channel)} onChange={() => toggleChannel(channel)} />
+                {CHANNEL_DISPLAY_NAME[channel]}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Channel price setup card */}
+      {connected && connectedChannels.length > 0 && apartments.length > 0 && (
+        <div style={cardStyle}>
+          <p style={sectionTitle}>Kanalpreise</p>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
+            Richtet pro Apartment einmalig einen eigenen Beds24-Preis-Slot je verbundenem Kanal ein.
+            Danach lassen sich Preise pro Kanal im Kalender setzen (Tab „Kanalpreis").
+          </p>
+          <div style={{ display: 'grid', gap: 12 }}>
+            {apartments.map((apt) => {
+              const assigned = channelOfferIds[apt.id] ?? {};
+              const missing = connectedChannels.filter((c) => !assigned[c]);
+              const hasMapping = !!mappings[apt.id];
+              return (
+                <div key={apt.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                  <div>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{apt.name}</span>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
+                      {!hasMapping
+                        ? 'Zuerst Zimmer-ID zuordnen'
+                        : missing.length === 0
+                          ? `Eingerichtet: ${Object.entries(assigned).map(([c, offerId]) => `${CHANNEL_DISPLAY_NAME[c as Beds24ChannelKey] ?? c} (Offer ${offerId})`).join(', ')}`
+                          : `Fehlt für: ${missing.map((c) => CHANNEL_DISPLAY_NAME[c as Beds24ChannelKey] ?? c).join(', ')}`}
+                    </div>
+                  </div>
+                  {hasMapping && missing.length > 0 && (
+                    <Button variant="secondary" size="sm" onClick={() => provisionChannels(apt.id)}>Aktivieren</Button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

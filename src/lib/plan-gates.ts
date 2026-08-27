@@ -37,6 +37,7 @@ export function hasPlanAccess(currentPlan: string, minPlan: PlanKey): boolean {
 /** Minimum plan required for each nav route */
 export const NAV_PLAN_GATES: Record<string, PlanKey> = {
   '/admin/price-seasons': 'pro',
+  '/admin/channel-prices': 'pro',
   '/admin/email-templates': 'pro',
   '/admin/nuki': 'pro',
   '/admin/beds24': 'pro',

@@ -1558,6 +1558,26 @@ Seither pusht `syncBlockedRangeAvailability()` (`src/lib/beds24.ts`) bei Anlegen
 
 `scripts/beds24-backfill.ts <hotelId> [--write]` — holt Buchungen der letzten 7 Tage bis 12 Monate voraus per `GET /bookings` und verarbeitet sie über dieselbe `processBeds24Booking()`-Funktion wie der Live-Webhook (BlockedRange + Request + Preis-Snapshot). Ohne `--write` nur Dry-Run (zeigt Rohdaten, schreibt nichts) — nützlich, um eine Verbindung nach einem Reconnect live zu verifizieren (echter API-Call statt nur „kein Fehler beim Verbinden"). Anwendungsfälle: erstmaliger Sync nach einer Neuanbindung, Nachholen von Buchungen nach einem Ausfall (siehe Property-Verknüpfung oben).
 
+### Kanal-spezifisches Pricing (implementiert 2026-08-26/27)
+
+Ziel: ein Kalender in bookingwulf, in dem Preise pro Tag/Zeitraum getrennt pro OTA-Kanal (Airbnb, Booking.com, Direktbuchung) gesetzt und über Beds24 ausgespielt werden. Machbarkeit wurde recherchiert und ein Teil live gegen MSQ (hotelId 44) verifiziert — siehe unten für Quelle.
+
+**Mechanismus:**
+- Jedes Beds24-Zimmer hat bis zu 16 Preis-Slots ("Offers", `roomTypes[].offers[]`, Feld heißt **`offerId`**, nicht `id`).
+- Jeder Offer bekommt seinen Tagespreis über den **bereits genutzten** Endpoint `POST /inventory/rooms/calendar` (`price1`..`price16` als Geschwisterfelder von `override`/`numAvail`/`minStay`).
+- Welcher Kanal welchen Offer sieht, steuert `roomTypes[].priceRules[]` (`channels.<kanal>.enable`, ~38 Kanäle: `airbnb`, `booking`, `direct`, ...). Für den einfachen Fall (nur unterschiedlicher Flatpreis pro Kanal) ist **kein** Rate-Code nötig. Ein Rate-Code ist nur für zusätzliche *benannte* Rate-Pläne auf demselben Kanal nötig (z.B. stornierbar/nicht stornierbar) und muss dafür einmalig manuell in der Beds24-UI abgerufen werden ("Get Codes"-Button unter Channel Manager → Airbnb/Booking.com → Rate Plans).
+- Beds24 pusht automatisch zum jeweiligen OTA, sobald ein Kanal am Offer aktiviert ist — kein manueller Zwischenschritt nötig.
+
+**Live verifiziert (2026-08-26):** `POST /properties` schreibt `roomTypes[].offers[].enable` zuverlässig — trotz "Beta"-Kennzeichnung im OpenAPI-Spec (`https://api.beds24.com/v2/apiV2.yaml`). Response enthält ein `modified`-Feld mit dem exakten angewendeten Diff, keine Seiteneffekte auf andere Offers. Test-Skript (Baseline lesen → Offer 2 testweise umschalten → verifizieren → zurücksetzen → Endzustand bestätigen) liegt unter `scripts/beds24-offer-write-test.ts` — Wegwerf-Skript, absichtlich behalten als Referenz/Vorlage für einen erneuten Live-Test.
+
+**Live verifiziert (2026-08-26, Folgetest):** `priceRules[].channels.<kanal>.enable` und `price2`-Werte über `/inventory/rooms/calendar` sind ebenfalls schreibbar (`scripts/beds24-channel-price-test.ts`). Zwei Details dabei wichtig:
+- **`priceRules[].id` entspricht NICHT automatisch dem Preis-Slot.** Jede PriceRule hat ein eigenes `offer`-Feld (1-16), das explizit mitgeschickt werden muss — wird es weggelassen, defaultet Beds24 stillschweigend auf `offer: 1`. Der Schreib-Payload muss also immer `{ id, offer, channels }` zusammen enthalten, nicht nur `id` + `channels`.
+- `price<N>: null` im Calendar-Endpoint entfernt das Preisfeld sauber wieder (laut Spec-Doku "To remove any property, set the value to null" — live bestätigt), ohne `override`/`minStay`/`numAvail`/andere Preisfelder zu beeinflussen.
+
+**Vorgeschichte:** Eine erste Recherche (2026-08-21, ~20 blind geratene Endpoints) fand nichts — der Fehler war methodisch: `GET /properties?includeAllRooms=true` **ohne** die Query-Flags `includeOffers=true&includePriceRules=true` liefert diese Felder gar nicht zurück, sieht dadurch komplett leer aus.
+
+**Bugfix (2026-08-27) — Offer-Wiederverwendung bei Disconnect/Reconnect:** `provisionChannelOffers()` (`src/lib/beds24.ts`) markierte ursprünglich jedes PriceRule mit einem `channels`-Objekt als "belegt", unabhängig vom `enable`-Status. Da Beds24 ein einmal berührtes PriceRule nie auf den ursprünglichen Bare-Stub zurücksetzt (siehe oben), blieb so jeder deaktivierte Slot für immer als "belegt" markiert — jeder Trennen/Neu-Verbinden-Zyklus eines Kanals hätte dauerhaft einen neuen der 16 Slots verbraucht, bis keiner mehr frei ist. Fix: einzig `offers[].enable` entscheidet über "frei"/"belegt", das PriceRule-Objekt selbst wird nicht mehr herangezogen — ein deaktivierter Slot ist wieder sofort wiederverwendbar.
+
 ### Aktivierung (Ersteinrichtung)
 
 1. Beds24-Account anlegen unter beds24.com

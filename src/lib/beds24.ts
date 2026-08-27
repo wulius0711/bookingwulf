@@ -382,6 +382,184 @@ async function syncOccupancyToBeds24(
   }
 }
 
+// Pushes a channel-specific daily price (ChannelPriceRange) to the Beds24 offer slot assigned
+// to that channel (Beds24ApartmentMapping.channelOfferIds). Mirrors pushBlockedRangeSync's
+// contract: never throws, returns an error string (or null on success/no-op) for the caller to
+// persist into ChannelPriceRange.beds24SyncError.
+export async function pushChannelPriceSync(
+  hotelId: number,
+  apartmentId: number,
+  channel: string,
+  windowStart: Date,
+  windowEnd: Date,
+): Promise<string | null> {
+  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { isEnabled: true } });
+  if (!config?.isEnabled) return null;
+
+  const mapping = await prisma.beds24ApartmentMapping.findUnique({
+    where: { apartmentId },
+    select: { beds24RoomId: true, channelOfferIds: true },
+  });
+  if (!mapping) return null;
+  const offerId = (mapping.channelOfferIds as Record<string, number> | null)?.[channel];
+  if (!offerId) return null;
+
+  try {
+    await syncChannelPriceToBeds24(hotelId, apartmentId, mapping.beds24RoomId, offerId, channel, windowStart, windowEnd);
+    return null;
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
+// Reconciles ALL ChannelPriceRange rows for this apartment+channel overlapping the window (not
+// just the one just edited — same reasoning as syncBlockedRangeAvailability: avoids clearing a
+// price that's still covered by a different, untouched range) and pushes price<offerId> per
+// date via the same calendar endpoint already used for Sperrzeiten. Gaps (no covering range)
+// push `null`, which clears the field cleanly — verified live, see
+// scripts/beds24-channel-price-test.ts Block B.
+async function syncChannelPriceToBeds24(
+  hotelId: number,
+  apartmentId: number,
+  beds24RoomId: string,
+  offerId: number,
+  channel: string,
+  windowStart: Date,
+  windowEnd: Date,
+): Promise<void> {
+  const ranges = await prisma.channelPriceRange.findMany({
+    where: { apartmentId, channel, startDate: { lt: windowEnd }, endDate: { gt: windowStart } },
+    select: { startDate: true, endDate: true, pricePerNight: true },
+  });
+
+  const priceField = `price${offerId}`;
+  // "to" in Beds24's calendar is the last priced calendar day (inclusive), while
+  // ChannelPriceRange.endDate is the checkout/departure day (exclusive) — shift back a day,
+  // same convention as syncBlockedRangeAvailability.
+  const priced = ranges.map((r) => ({
+    from: isoDate(r.startDate > windowStart ? r.startDate : windowStart),
+    to: isoDate(addDays(r.endDate < windowEnd ? r.endDate : windowEnd, -1)),
+    [priceField]: r.pricePerNight,
+  })).filter((c) => c.from <= c.to);
+
+  const covered = mergeIntervals(
+    ranges.map((r): [Date, Date] => [
+      r.startDate > windowStart ? r.startDate : windowStart,
+      r.endDate < windowEnd ? r.endDate : windowEnd,
+    ])
+  );
+  const gaps = invertIntervals(covered, windowStart, windowEnd)
+    .map(([from, to]) => ({ from: isoDate(from), to: isoDate(addDays(to, -1)), [priceField]: null }))
+    .filter((c) => c.from <= c.to);
+
+  const calendar = [...priced, ...gaps];
+  if (!calendar.length) return;
+
+  const accessToken = await getAccessToken(hotelId);
+  const res = await fetch(`${BEDS24_API}/inventory/rooms/calendar`, {
+    method: 'POST',
+    headers: { 'token': accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify([{ roomId: beds24RoomId, calendar }]),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 Kanalpreis-Sync fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+}
+
+async function getBeds24RoomState(accessToken: string, beds24RoomId: string): Promise<any> {
+  const url = new URL(`${BEDS24_API}/properties`);
+  url.searchParams.set('roomId', beds24RoomId);
+  url.searchParams.set('includeAllRooms', 'true');
+  url.searchParams.set('includeOffers', 'true');
+  url.searchParams.set('includePriceRules', 'true');
+  const res = await fetch(url.toString(), { headers: { token: accessToken } });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Beds24 GET /properties fehlgeschlagen: HTTP ${res.status} ${text}`);
+  }
+  const data = await res.json();
+  const property = data?.data?.[0];
+  const room = property?.roomTypes?.find((r: any) => String(r.id) === String(beds24RoomId));
+  if (!room) throw new Error(`Beds24-Zimmer ${beds24RoomId} nicht gefunden`);
+  return room;
+}
+
+export type ChannelOfferProvisionResult =
+  | { ok: true; assigned: Record<string, number> }
+  | { ok: false; conflicts: { channel: string; offerId: number; currentEnable: string }[] };
+
+// One-time per-apartment setup: assigns each of the hotel's connected OTA channels
+// (Beds24Config.connectedChannels) a free Beds24 offer slot (2–16, slot 1 is left alone —
+// it's Beds24's own default/direct offer), enables it, and writes the priceRules routing
+// ({id, offer, channels} together — see docs/DOCUMENTATION.md §18 for why `offer` must be
+// explicit). Idempotent: channels already present in channelOfferIds are skipped, so a repeat
+// call after adding a new connected channel only provisions the missing one(s).
+export async function provisionChannelOffers(hotelId: number, apartmentId: number): Promise<ChannelOfferProvisionResult> {
+  const mapping = await prisma.beds24ApartmentMapping.findUnique({
+    where: { apartmentId },
+    select: { beds24RoomId: true, channelOfferIds: true },
+  });
+  if (!mapping) throw new Error('Kein Beds24-Zimmer für dieses Apartment zugeordnet');
+
+  const config = await prisma.beds24Config.findUnique({ where: { hotelId }, select: { connectedChannels: true } });
+  const connectedChannels = ((config?.connectedChannels as string[] | null) ?? []);
+  if (!connectedChannels.length) throw new Error('Keine Kanäle als verbunden markiert (siehe Beds24-Einstellungen)');
+
+  const existing = ((mapping.channelOfferIds as Record<string, number> | null) ?? {});
+  const missingChannels = connectedChannels.filter((c) => !existing[c]);
+  if (!missingChannels.length) return { ok: true, assigned: existing };
+
+  const accessToken = await getAccessToken(hotelId);
+  const room = await getBeds24RoomState(accessToken, mapping.beds24RoomId);
+
+  // offers[].enable is the only authoritative "is this slot in use" signal — a priceRule can
+  // carry a fully-expanded `channels` object from a past (now-disabled) configuration, since
+  // Beds24 never resets a touched priceRule back to its bare-stub shape (see
+  // docs/DOCUMENTATION.md §18). Treating that residue as "used" would permanently burn a slot
+  // every time a channel gets disconnected and reconnected, eventually exhausting all 16.
+  const usedOfferIds = new Set<number>([
+    ...(room.offers ?? []).filter((o: any) => o.enable !== 'no').map((o: any) => Number(o.offerId)),
+    ...Object.values(existing),
+  ]);
+
+  const freeSlots: number[] = [];
+  for (let slot = 2; slot <= 16 && freeSlots.length < missingChannels.length; slot++) {
+    if (!usedOfferIds.has(slot)) freeSlots.push(slot);
+  }
+  if (freeSlots.length < missingChannels.length) {
+    const conflicts = missingChannels.slice(freeSlots.length).map((channel, i) => {
+      const offerId = 2 + freeSlots.length + i;
+      const offer = (room.offers ?? []).find((o: any) => Number(o.offerId) === offerId);
+      return { channel, offerId, currentEnable: offer?.enable ?? 'unbekannt' };
+    });
+    return { ok: false, conflicts };
+  }
+
+  const assignment: Record<string, number> = { ...existing };
+  missingChannels.forEach((channel, i) => { assignment[channel] = freeSlots[i]; });
+
+  for (const channel of missingChannels) {
+    const offerId = assignment[channel];
+    const enableRes = await fetch(`${BEDS24_API}/properties`, {
+      method: 'POST',
+      headers: { token: accessToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify([{ roomTypes: [{ id: mapping.beds24RoomId, offers: [{ offerId, enable: 'always' }] }] }]),
+    });
+    if (!enableRes.ok) throw new Error(`Beds24 Offer-Aktivierung fehlgeschlagen (${channel}): HTTP ${enableRes.status} ${await enableRes.text().catch(() => '')}`);
+
+    const ruleRes = await fetch(`${BEDS24_API}/properties`, {
+      method: 'POST',
+      headers: { token: accessToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify([{ roomTypes: [{ id: mapping.beds24RoomId, priceRules: [{ id: offerId, offer: offerId, channels: { [channel]: { enable: true } } }] }] }]),
+    });
+    if (!ruleRes.ok) throw new Error(`Beds24 Kanal-Routing fehlgeschlagen (${channel}): HTTP ${ruleRes.status} ${await ruleRes.text().catch(() => '')}`);
+  }
+
+  await prisma.beds24ApartmentMapping.update({ where: { apartmentId }, data: { channelOfferIds: assignment } });
+  return { ok: true, assigned: assignment };
+}
+
 function addDays(d: Date, n: number): Date {
   const r = new Date(d);
   r.setUTCDate(r.getUTCDate() + n);

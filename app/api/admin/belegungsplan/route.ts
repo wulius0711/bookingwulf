@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     const rangeStart = new Date(from + 'T00:00:00.000Z');
     const rangeEnd = new Date(to + 'T23:59:59.999Z');
 
-    const [apartments, requests, blocked] = await Promise.all([
+    const [apartments, requests, blocked, channelPriceRanges] = await Promise.all([
       prisma.apartment.findMany({
         where: hotelId ? { hotelId } : {},
         select: { id: true, name: true },
@@ -51,6 +51,14 @@ export async function GET(request: Request) {
           endDate: { gt: rangeStart },
         },
         select: { id: true, apartmentId: true, startDate: true, endDate: true, note: true, type: true, beds24SyncError: true },
+      }),
+      prisma.channelPriceRange.findMany({
+        where: {
+          apartment: hotelId ? { hotelId } : {},
+          startDate: { lte: rangeEnd },
+          endDate: { gt: rangeStart },
+        },
+        select: { id: true, apartmentId: true, channel: true, name: true, pricePerNight: true, startDate: true, endDate: true, beds24SyncError: true },
       }),
     ]);
 
@@ -109,7 +117,19 @@ export async function GET(request: Request) {
           };
         });
 
-      return { id: apt.id, name: apt.name, bookings, blocks };
+      const channelPrices = channelPriceRanges
+        .filter((cp) => cp.apartmentId === apt.id)
+        .map((cp) => ({
+          id: cp.id,
+          channel: cp.channel,
+          name: cp.name,
+          pricePerNight: cp.pricePerNight,
+          startDate: toIso(cp.startDate),
+          endDate: toIso(cp.endDate),
+          beds24SyncError: cp.beds24SyncError,
+        }));
+
+      return { id: apt.id, name: apt.name, bookings, blocks, channelPrices };
     });
 
     return Response.json({ apartments: entries });

@@ -57,10 +57,13 @@ export async function PATCH(req: Request) {
   try {
     const session = await verifySession();
     if (!session.hotelId) return NextResponse.json({ error: 'Kein Hotel.' }, { status: 400 });
-    const { isEnabled } = await req.json();
+    const { isEnabled, connectedChannels } = await req.json();
     await prisma.beds24Config.update({
       where: { hotelId: session.hotelId },
-      data: { isEnabled: Boolean(isEnabled) },
+      data: {
+        ...(isEnabled !== undefined ? { isEnabled: Boolean(isEnabled) } : {}),
+        ...(connectedChannels !== undefined ? { connectedChannels } : {}),
+      },
     });
     return NextResponse.json({ ok: true });
   } catch {

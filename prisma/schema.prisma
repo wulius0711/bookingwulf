@@ -8,24 +8,24 @@ datasource db {
 }
 
 model Hotel {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
-  accentColor String?
+  id               Int      @id @default(autoincrement())
+  name             String
+  slug             String   @unique
+  accentColor      String?
   email            String?
   phone            String?
   bookingTermsUrl  String?
   privacyPolicyUrl String?
   isActive         Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Billing
   plan                   String    @default("starter") // starter | pro | business
   stripeCustomerId       String?   @unique
   stripeSubscriptionId   String?   @unique
   subscriptionStatus     String    @default("inactive") // inactive | trialing | active | past_due | cancelled
-  billedApartments       Int?      // manuelle Mindest-Abrechnungsgröße; Abrechnung = max(echte Apartment-Anzahl, billedApartments)
+  billedApartments       Int? // manuelle Mindest-Abrechnungsgröße; Abrechnung = max(echte Apartment-Anzahl, billedApartments)
   trialEndsAt            DateTime?
   trialResetCount        Int       @default(0)
   trialEmail1SentAt      DateTime?
@@ -35,45 +35,45 @@ model Hotel {
   isTest                 Boolean   @default(false)
 
   // hungrywulf integration
-  hungrywulfEnabled      Boolean   @default(false)
+  hungrywulfEnabled      Boolean @default(false)
   hungrywulfRestaurantId String?
   hungrywulfSecret       String?
 
   // eventwulf integration
-  eventwulfEnabled Boolean  @default(false)
+  eventwulfEnabled Boolean @default(false)
   eventwulfOrgId   String?
   eventwulfSecret  String?
 
   // chatbot
-  chatbotEnabled   Boolean   @default(false)
-  chatbotName      String?
-  chatbotAvatar    String?
-  chatbotColor     String    @default("#1a1a1a")
-  chatbotContext   String?   // gescrapter Website-Text (via Jina Reader)
-  chatbotFaq       Json?     // manuelle Ergänzungen: [{question, answer}]
-  chatbotSourceUrl String?   // welche URL wurde gescrapt
+  chatbotEnabled       Boolean   @default(false)
+  chatbotName          String?
+  chatbotAvatar        String?
+  chatbotColor         String    @default("#1a1a1a")
+  chatbotContext       String? // gescrapter Website-Text (via Jina Reader)
+  chatbotFaq           Json? // manuelle Ergänzungen: [{question, answer}]
+  chatbotSourceUrl     String? // welche URL wurde gescrapt
   chatbotScrapedAt     DateTime? // wann zuletzt gescrapt
   chatbotBookingClicks Int       @default(0)
 
-  settings        HotelSettings?
-  settingsPresets HotelSettingsPreset[]
-  widgetConfigs   WidgetConfig[]
-  emailTemplates  EmailTemplate[]
-  apartments      Apartment[]
-  requests      Request[]
-  adminUsers    AdminUser[]
-  userHotels    AdminUserHotel[]
-  blockedRanges BlockedRange[]
-  extras            HotelExtra[]
-  thingsToSee       ThingsToSee[]
-  childPriceRanges  ChildPriceRange[]
-  nukiConfig    NukiConfig?
-  beds24Config  Beds24Config?
-  auditLogs     AuditLog[]
-  supportChats  SupportChatLog[]
-  voucherTemplates  VoucherTemplate[]
-  vouchers          Voucher[]
-  checkinImages     CheckinImage[]
+  settings         HotelSettings?
+  settingsPresets  HotelSettingsPreset[]
+  widgetConfigs    WidgetConfig[]
+  emailTemplates   EmailTemplate[]
+  apartments       Apartment[]
+  requests         Request[]
+  adminUsers       AdminUser[]
+  userHotels       AdminUserHotel[]
+  blockedRanges    BlockedRange[]
+  extras           HotelExtra[]
+  thingsToSee      ThingsToSee[]
+  childPriceRanges ChildPriceRange[]
+  nukiConfig       NukiConfig?
+  beds24Config     Beds24Config?
+  auditLogs        AuditLog[]
+  supportChats     SupportChatLog[]
+  voucherTemplates VoucherTemplate[]
+  vouchers         Voucher[]
+  checkinImages    CheckinImage[]
 }
 
 model HotelSettings {
@@ -82,22 +82,22 @@ model HotelSettings {
   hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
   // 🔧 Feature Toggles
-  showPrices        Boolean @default(true)
-  allowMultiSelect  Boolean @default(false)
-  showAmenities     Boolean @default(true)
-  showExtrasStep    Boolean @default(true)
-  showPhoneField    Boolean @default(true)
-  showMessageField  Boolean @default(true)
+  showPrices           Boolean @default(true)
+  allowMultiSelect     Boolean @default(false)
+  showAmenities        Boolean @default(true)
+  showExtrasStep       Boolean @default(true)
+  showPhoneField       Boolean @default(true)
+  showMessageField     Boolean @default(true)
   enableImageSlider    Boolean @default(true)
   enableLightbox       Boolean @default(true)
   instantBooking       Boolean @default(false)
   enableInstantBooking Boolean @default(false)
   hideRequestOption    Boolean @default(false)
   showUrgencySignals   Boolean @default(false)
-  gapNightDiscount     Int?    // % discount for gap nights (null = disabled)
-  gapNightMaxLength    Int?    // max gap length in nights to qualify
+  gapNightDiscount     Int? // % discount for gap nights (null = disabled)
+  gapNightMaxLength    Int? // max gap length in nights to qualify
 
-  urgencyThreshold       Int     @default(40)  // % free nights below which banner shows
+  urgencyThreshold Int @default(40) // % free nights below which banner shows
 
   preArrivalEnabled      Boolean @default(false)
   preArrivalHouseRules   String?
@@ -106,8 +106,8 @@ model HotelSettings {
   checkinEmailEnabled Boolean @default(false)
   checkinEmailDays    Int     @default(3)
 
-  checkinTime             String?
-  checkinInfo             String?
+  checkinTime String?
+  checkinInfo String?
 
   checkoutReminderEnabled Boolean @default(false)
   checkoutTime            String?
@@ -117,22 +117,22 @@ model HotelSettings {
   checkoutReminderBody    String?
 
   reviewRequestEnabled Boolean @default(false)
-  reviewRequestDays    Int     @default(2)   // days after departure to send
-  reviewRequestLink    String?              // Google Reviews URL
+  reviewRequestDays    Int     @default(2) // days after departure to send
+  reviewRequestLink    String? // Google Reviews URL
   reviewRequestSubject String?
   reviewRequestBody    String?
 
   // 🎨 Colors
-  accentColor      String?  // Primary highlight
-  backgroundColor  String?  // App background
-  cardBackground   String?  // Card background
-  textColor        String?  // Main text
-  mutedTextColor   String?  // Secondary text (#666)
-  borderColor      String?  // Borders / dividers
+  accentColor     String? // Primary highlight
+  backgroundColor String? // App background
+  cardBackground  String? // Card background
+  textColor       String? // Main text
+  mutedTextColor  String? // Secondary text (#666)
+  borderColor     String? // Borders / dividers
 
   // 💠 UI Shape
-  cardRadius   Int?  // z.B. 8 / 12 / 16
-  buttonRadius Int?  // optional getrennt
+  cardRadius   Int? // z.B. 8 / 12 / 16
+  buttonRadius Int? // optional getrennt
   buttonColor  String?
 
   // 🔤 Typography
@@ -142,56 +142,56 @@ model HotelSettings {
   bodyFontSize       Int?
   headlineFontWeight Int?
   bodyFontWeight     Int?
-  headlineFontUrl    String?  // custom uploaded font (Business)
-  bodyFontUrl        String?  // custom uploaded font (Business)
+  headlineFontUrl    String? // custom uploaded font (Business)
+  bodyFontUrl        String? // custom uploaded font (Business)
 
   // 💸 Dynamic Pricing
-  lastMinuteDiscountPercent   Int @default(0)  // 0 = disabled
+  lastMinuteDiscountPercent   Int @default(0) // 0 = disabled
   lastMinuteDiscountDays      Int @default(7)
-  occupancySurchargePercent   Int @default(0)  // 0 = disabled
+  occupancySurchargePercent   Int @default(0) // 0 = disabled
   occupancySurchargeThreshold Int @default(70) // % occupancy to trigger surcharge
 
   // 🏛️ Ortstaxe / Kurtaxe
-  ortstaxeMode              String   @default("off")  // "off" | "wien" | "custom"
-  ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2)  // used in "custom" mode
-  ortstaxeMinAge            Int?     // children below this age are exempt (null = all pay)
+  ortstaxeMode              String   @default("off") // "off" | "wien" | "custom"
+  ortstaxePerPersonPerNight Decimal? @db.Decimal(10, 2) // used in "custom" mode
+  ortstaxeMinAge            Int? // children below this age are exempt (null = all pay)
 
   // 🧾 Steuer / Buchhaltung
-  taxRateRoom     Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Zimmerpreis in % (z.B. 10.00)
-  taxRateCleaning Decimal? @db.Decimal(5, 2)  // MwSt.-Satz Reinigung in % (z.B. 20.00)
+  taxRateRoom     Decimal? @db.Decimal(5, 2) // MwSt.-Satz Zimmerpreis in % (z.B. 10.00)
+  taxRateCleaning Decimal? @db.Decimal(5, 2) // MwSt.-Satz Reinigung in % (z.B. 20.00)
 
   // 💳 Zahlungsarten
-  bankTransferEnabled Boolean @default(false)
-  paypalEnabled       Boolean @default(false)
-  paypalClientId      String?
-  paypalClientSecret  String?
-  stripeEnabled         Boolean @default(false)
-  stripePublishableKey  String?
-  stripeSecretKey       String?
+  bankTransferEnabled  Boolean @default(false)
+  paypalEnabled        Boolean @default(false)
+  paypalClientId       String?
+  paypalClientSecret   String?
+  stripeEnabled        Boolean @default(false)
+  stripePublishableKey String?
+  stripeSecretKey      String?
 
   // 💳 Anzahlung & Bankdaten
-  depositEnabled      Boolean @default(false)
-  depositType         String  @default("percent")  // "percent" | "fixed"
-  depositValue        Float   @default(25)
-  depositDueDays      Int     @default(7)
-  bankAccountHolder   String?
-  bankIban            String?
-  bankBic             String?
+  depositEnabled    Boolean @default(false)
+  depositType       String  @default("percent") // "percent" | "fixed"
+  depositValue      Float   @default(25)
+  depositDueDays    Int     @default(7)
+  bankAccountHolder String?
+  bankIban          String?
+  bankBic           String?
 
   // 🔗 Mini-Widget
-  miniWidgetTarget String?  // URL of the page where the full widget is embedded
+  miniWidgetTarget String? // URL of the page where the full widget is embedded
 
   // 🗺️ Gästeportal
-  address         String?  // Hotel-Adresse für Google Maps Deep-Link
-  whatsappNumber  String?  // WhatsApp-Nummer für Gästekontakt
+  address        String? // Hotel-Adresse für Google Maps Deep-Link
+  whatsappNumber String? // WhatsApp-Nummer für Gästekontakt
 
   // 🏠 Hausinfos / Gästemappe
-  wifiSsid      String?
-  wifiPassword  String?
-  parkingInfo   String?
-  wasteInfo     String?
-  houseRules    String?
-  emergencyJson Json?    // [{label: string, number: string}]
+  wifiSsid         String?
+  wifiPassword     String?
+  parkingInfo      String?
+  wasteInfo        String?
+  houseRules       String?
+  emergencyJson    Json? // [{label: string, number: string}]
   translationsJson Json? // { en: { checkinInfo, houseRules, parkingInfo, wasteInfo }, it: { ... } }
 
   createdAt DateTime @default(now())
@@ -203,8 +203,8 @@ model WidgetConfig {
   hotelId Int
   hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  slug String  // z.B. "anfrage" oder "buchung"
-  name String  // Anzeigename im Admin
+  slug String // z.B. "anfrage" oder "buchung"
+  name String // Anzeigename im Admin
 
   showPrices           Boolean @default(true)
   showAmenities        Boolean @default(true)
@@ -227,16 +227,16 @@ model HotelSettingsPreset {
   hotelId Int
   hotel   Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
 
-  name             String
-  accentColor      String?
-  backgroundColor  String?
-  cardBackground   String?
-  textColor        String?
-  mutedTextColor   String?
-  borderColor      String?
-  cardRadius       Int?
-  buttonRadius     Int?
-  buttonColor      String?
+  name            String
+  accentColor     String?
+  backgroundColor String?
+  cardBackground  String?
+  textColor       String?
+  mutedTextColor  String?
+  borderColor     String?
+  cardRadius      Int?
+  buttonRadius    Int?
+  buttonColor     String?
 
   createdAt DateTime @default(now())
 }
@@ -284,29 +284,30 @@ model Apartment {
   housekeepingStatus         String    @default("clean") // "clean" | "dirty" | "repair"
   housekeepingNote           String?
   housekeepingUpdatedAt      DateTime?
-  housekeepingChecklistItems Json?     // string[]
-  housekeepingChecklistState Json?     // { [item]: boolean }
+  housekeepingChecklistItems Json? // string[]
+  housekeepingChecklistState Json? // { [item]: boolean }
 
   // Gästeportal-Overrides (überschreiben Hotel-Defaults wenn befüllt)
-  gpCheckinTime   String?
-  gpCheckinInfo   String?
-  gpCheckoutTime  String?
-  gpWifiSsid      String?
-  gpWifiPassword  String?
-  gpParkingInfo   String?
-  gpWasteInfo     String?
-  gpHouseRules    String?
-  gpEmergencyJson Json?
+  gpCheckinTime      String?
+  gpCheckinInfo      String?
+  gpCheckoutTime     String?
+  gpWifiSsid         String?
+  gpWifiPassword     String?
+  gpParkingInfo      String?
+  gpWasteInfo        String?
+  gpHouseRules       String?
+  gpEmergencyJson    Json?
   gpTranslationsJson Json? // { en: { gpCheckinInfo, gpHouseRules, gpParkingInfo, gpWasteInfo }, it: { ... } }
   translationsJson   Json? // { en: { description, amenities: [] }, it: { ... } }
 
   // Relations
-  images        ApartmentImage[]
-  checkinImages CheckinImage[]
-  blockedRanges BlockedRange[]
-  priceSeasons  PriceSeason[]
-  icalFeeds       IcalFeed[]
-  beds24Mapping   Beds24ApartmentMapping?
+  images             ApartmentImage[]
+  checkinImages      CheckinImage[]
+  blockedRanges      BlockedRange[]
+  priceSeasons       PriceSeason[]
+  channelPriceRanges ChannelPriceRange[]
+  icalFeeds          IcalFeed[]
+  beds24Mapping      Beds24ApartmentMapping?
 
   @@unique([hotelId, slug])
 }
@@ -315,7 +316,7 @@ model IcalFeed {
   id          Int       @id @default(autoincrement())
   apartmentId Int
   apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
-  name        String    // e.g. "Airbnb", "Booking.com"
+  name        String // e.g. "Airbnb", "Booking.com"
   url         String
   lastSyncAt  DateTime?
   lastError   String?
@@ -352,6 +353,26 @@ model PriceSeason {
   apartment Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
 
   @@index([apartmentId, startDate, endDate])
+}
+
+// Preis pro OTA-Kanal (Airbnb/Booking.com/...), getrennt von PriceSeason (die ausschließlich
+// den eigenen Direktbuchungs-Preis speist und nie an Beds24 gepusht wird). Wird über
+// pushChannelPriceSync() an Beds24 (priceN im Calendar-Endpoint) weitergereicht.
+model ChannelPriceRange {
+  id              Int      @id @default(autoincrement())
+  apartmentId     Int
+  channel         String // Beds24-Kanalschlüssel: "airbnb" | "booking" | "expedia" | "vrbo"
+  name            String?
+  startDate       DateTime
+  endDate         DateTime
+  pricePerNight   Float
+  beds24SyncError String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  apartment Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  @@index([apartmentId, channel, startDate, endDate])
 }
 
 model BlockedRange {
@@ -400,27 +421,27 @@ model Request {
   status               String   @default("new")
   language             String   @default("de") // de | en | it
   extrasJson           Json?
-  pricingJson          Json?    // snapshot: { apartments: {name,total,cleaning}[], ortstaxe, total }
+  pricingJson          Json? // snapshot: { apartments: {name,total,cleaning}[], ortstaxe, total }
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
   nukiCode    String?
   nukiAuthIds String?
 
-  checkinToken           String?   @unique
-  checkinCompletedAt     DateTime?
-  checkinArrivalTime     String?
-  checkinNotes           String?
-  checkinReminderSentAt  DateTime?
-  checkinEmailSentAt     DateTime?
-  checkinBirthdate       String?
-  checkinNationality     String?
-  checkinDocNumber       String?
-  checkinGuestsJson      Json?    // [{ type, firstname, lastname, birthdate, nationality, docNumber }]
-  checkinSignature       String?  @db.Text // base64 PNG data URL, confirms accuracy of Meldedaten (§ 5 Abs 1 MeldeG)
+  checkinToken             String?   @unique
+  checkinCompletedAt       DateTime?
+  checkinArrivalTime       String?
+  checkinNotes             String?
+  checkinReminderSentAt    DateTime?
+  checkinEmailSentAt       DateTime?
+  checkinBirthdate         String?
+  checkinNationality       String?
+  checkinDocNumber         String?
+  checkinGuestsJson        Json? // [{ type, firstname, lastname, birthdate, nationality, docNumber }]
+  checkinSignature         String?   @db.Text // base64 PNG data URL, confirms accuracy of Meldedaten (§ 5 Abs 1 MeldeG)
   checkinOnsiteConfirmedAt DateTime? // final vor-Ort confirmation, required for the signature to be legally valid
 
-  guestsJson             Json?    // additional_guests from widget: [{ type, firstname, lastname, birthday? }]
+  guestsJson Json? // additional_guests from widget: [{ type, firstname, lastname, birthday? }]
 
   checkoutReminderSentAt DateTime?
   reviewRequestSentAt    DateTime?
@@ -444,63 +465,63 @@ model RequestMessage {
   id         Int      @id @default(autoincrement())
   requestId  Int
   request    Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  sender     String   // 'hotel' | 'guest'
+  sender     String // 'hotel' | 'guest'
   channel    String   @default("direct") // 'direct' | 'beds24'
-  externalId String?  // Beds24 message id — für Webhook/Poll-Dedupe, null bei channel='direct'
+  externalId String? // Beds24 message id — für Webhook/Poll-Dedupe, null bei channel='direct'
   body       String
   createdAt  DateTime @default(now())
 
-  @@index([requestId])
   @@unique([requestId, externalId])
+  @@index([requestId])
 }
 
 model ThingsToSee {
-  id          Int      @id @default(autoincrement())
-  hotelId     Int
-  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  apartmentId Int?
-  category    String   // 'restaurant' | 'attraction' | 'activity' | 'shopping' | 'emergency'
-  title       String
-  titleEn     String?
-  titleIt     String?
-  description String?
+  id            Int      @id @default(autoincrement())
+  hotelId       Int
+  hotel         Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  apartmentId   Int?
+  category      String // 'restaurant' | 'attraction' | 'activity' | 'shopping' | 'emergency'
+  title         String
+  titleEn       String?
+  titleIt       String?
+  description   String?
   descriptionEn String?
   descriptionIt String?
-  address     String?
-  mapsUrl     String?
-  imageUrl    String?
-  placeId     String?
-  isActive    Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  address       String?
+  mapsUrl       String?
+  imageUrl      String?
+  placeId       String?
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([hotelId])
 }
 
 model HotelExtra {
-  id          Int      @id @default(autoincrement())
-  hotelId     Int
-  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  name          String
-  nameEn        String?
-  nameIt        String?
-  key           String
-  type          String   @default("extra") // extra | insurance
-  billingType   String   // per_night | per_person_per_night | per_stay | per_person_per_stay
-  price         Decimal  @db.Decimal(10, 2)
-  imageUrl      String?
-  description   String?
-  descriptionEn String?
-  descriptionIt String?
-  linkUrl       String?
-  exclusiveGroup String?  // extras with same group: only one bookable at a time
-  isActive      Boolean  @default(true)
-  showInWidget  Boolean  @default(true)
-  showInUpsell  Boolean  @default(false)
-  sortOrder     Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  hotelId        Int
+  hotel          Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  name           String
+  nameEn         String?
+  nameIt         String?
+  key            String
+  type           String   @default("extra") // extra | insurance
+  billingType    String // per_night | per_person_per_night | per_stay | per_person_per_stay
+  price          Decimal  @db.Decimal(10, 2)
+  imageUrl       String?
+  description    String?
+  descriptionEn  String?
+  descriptionIt  String?
+  linkUrl        String?
+  exclusiveGroup String? // extras with same group: only one bookable at a time
+  isActive       Boolean  @default(true)
+  showInWidget   Boolean  @default(true)
+  showInUpsell   Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@unique([hotelId, key])
 }
@@ -510,22 +531,22 @@ model AdminUser {
   hotelId Int?
   hotel   Hotel? @relation(fields: [hotelId], references: [id], onDelete: SetNull)
 
-  email        String   @unique
+  email        String  @unique
   passwordHash String
-  role         String   @default("hotel_admin")
-  isActive     Boolean  @default(true)
+  role         String  @default("hotel_admin")
+  isActive     Boolean @default(true)
 
   resetToken     String?   @unique
   resetExpiresAt DateTime?
 
-  isEmailVerified        Boolean   @default(false)
-  emailVerifyToken       String?   @unique
+  isEmailVerified           Boolean   @default(false)
+  emailVerifyToken          String?   @unique
   emailVerifyTokenExpiresAt DateTime?
 
-  sessionVersion Int      @default(0)
+  sessionVersion Int @default(0)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userHotels AdminUserHotel[]
 }
@@ -543,7 +564,7 @@ model EmailTemplate {
   id        Int      @id @default(autoincrement())
   hotelId   Int
   hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  type      String   // request_guest | booking_guest | request_hotel
+  type      String // request_guest | booking_guest | request_hotel
   subject   String
   greeting  String?
   body      String
@@ -572,17 +593,19 @@ model Beds24Config {
   accessTokenExpiresAt DateTime?
   webhookSecret        String    @unique
   isEnabled            Boolean   @default(false)
+  connectedChannels    Json? // string[] der verbundenen OTA-Kanäle, z.B. ["airbnb","booking"] — vom Hotelier gepflegt, siehe /admin/beds24
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 }
 
 model Beds24ApartmentMapping {
-  id            Int       @id @default(autoincrement())
-  apartmentId   Int       @unique
-  apartment     Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
-  beds24RoomId  String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id              Int       @id @default(autoincrement())
+  apartmentId     Int       @unique
+  apartment       Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  beds24RoomId    String
+  channelOfferIds Json? // { "airbnb": 2, "booking": 3, ... } — Beds24-Offer-Slot je Kanal, null = noch nicht eingerichtet
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model AuditLog {
@@ -633,51 +656,50 @@ model OutreachLead {
 }
 
 model SupportChatLog {
-  id        Int      @id @default(autoincrement())
-  hotelId   Int?
-  question  String
-  answer    String
-  category  String   @default("sonstiges")
-  isSuperAdmin Boolean @default(false)
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  hotelId      Int?
+  question     String
+  answer       String
+  category     String   @default("sonstiges")
+  isSuperAdmin Boolean  @default(false)
+  createdAt    DateTime @default(now())
 
-  hotel     Hotel?   @relation(fields: [hotelId], references: [id], onDelete: SetNull)
+  hotel Hotel? @relation(fields: [hotelId], references: [id], onDelete: SetNull)
 
   @@index([hotelId])
   @@index([createdAt])
   @@index([category])
 }
 
-
 model VoucherTemplate {
-  id          Int      @id @default(autoincrement())
-  hotelId     Int
-  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  name        String
-  type        String   @default("value") // "value" | "nights" | "service"
-  value       Decimal  @db.Decimal(10, 2)
-  price       Decimal  @db.Decimal(10, 2)
-  description String?
-  imageUrl    String?
-  validDays        Int      @default(365)
-  isActive         Boolean  @default(true)
-  translationsJson Json?    // { en: { name, description }, it: { ... } }
-  createdAt        DateTime @default(now())
+  id               Int       @id @default(autoincrement())
+  hotelId          Int
+  hotel            Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  name             String
+  type             String    @default("value") // "value" | "nights" | "service"
+  value            Decimal   @db.Decimal(10, 2)
+  price            Decimal   @db.Decimal(10, 2)
+  description      String?
+  imageUrl         String?
+  validDays        Int       @default(365)
+  isActive         Boolean   @default(true)
+  translationsJson Json? // { en: { name, description }, it: { ... } }
+  createdAt        DateTime  @default(now())
   vouchers         Voucher[]
 
   @@index([hotelId])
 }
 
 model CheckinImage {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   hotelId     Int
-  hotel       Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotel       Hotel      @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   apartmentId Int?
   apartment   Apartment? @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
   imageUrl    String
   caption     String?
-  sortOrder   Int       @default(0)
-  createdAt   DateTime  @default(now())
+  sortOrder   Int        @default(0)
+  createdAt   DateTime   @default(now())
 
   @@index([hotelId])
 }

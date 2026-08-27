@@ -11,6 +11,10 @@ const CHANNEL_COLORS: Record<string, ChannelColor> = {
   'Vrbo':        { bg: '#14b8a6', border: '#14b8a6', text: '#fff' },
   'FeWo-direkt': { bg: '#14b8a6', border: '#14b8a6', text: '#fff' },
   'Google':      { bg: '#6366f1', border: '#6366f1', text: '#fff' },
+  'HRS':                   { bg: '#ea580c', border: '#ea580c', text: '#fff' },
+  'Traumferienwohnungen':  { bg: '#ca8a04', border: '#ca8a04', text: '#fff' },
+  'Agoda':                 { bg: '#dc2626', border: '#dc2626', text: '#fff' },
+  'Feratel':               { bg: '#0d9488', border: '#0d9488', text: '#fff' },
 };
 
 // Deterministic colors for channels we don't know about yet (e.g. a new OTA), so every

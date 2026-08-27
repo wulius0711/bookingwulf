@@ -21,5 +21,13 @@ export default async function ZimmerplanPage() {
 
   const hasPro = session.hotelId === null || hasPlanAccess(hotelData?.plan ?? 'starter', 'pro');
 
-  return <ZimmerplanClient initialDate={todayIso} initialCards={cards} hasPro={hasPro} />;
+  const beds24Mappings = await prisma.beds24ApartmentMapping.findMany({
+    where: session.hotelId !== null ? { apartment: { hotelId: session.hotelId } } : undefined,
+    select: { apartmentId: true, channelOfferIds: true },
+  });
+  const channelOfferIds = Object.fromEntries(
+    beds24Mappings.map((m) => [m.apartmentId, (m.channelOfferIds as Record<string, number> | null) ?? {}])
+  );
+
+  return <ZimmerplanClient initialDate={todayIso} initialCards={cards} hasPro={hasPro} channelOfferIds={channelOfferIds} />;
 }

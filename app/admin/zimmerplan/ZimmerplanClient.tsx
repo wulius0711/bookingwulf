@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import GanttView from './GanttView';
+import PriceGridView from './PriceGridView';
 
 type ApartmentStatus =
   | { kind: 'frei' }
@@ -34,11 +35,13 @@ function shiftDay(iso: string, delta: number) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: { initialDate: string; initialCards: ApartmentCard[]; hasPro: boolean }) {
-  const [view, setView] = useState<'tag' | 'gantt'>('gantt');
+export default function ZimmerplanClient({ initialDate, initialCards, hasPro, channelOfferIds }: { initialDate: string; initialCards: ApartmentCard[]; hasPro: boolean; channelOfferIds: Record<number, Record<string, number>> }) {
+  const [view, setView] = useState<'tag' | 'gantt' | 'preise'>('gantt');
   const [date, setDate] = useState(initialDate);
   const [cards, setCards] = useState(initialCards);
   const [loading, setLoading] = useState(false);
+
+  const availableChannels = Array.from(new Set(Object.values(channelOfferIds).flatMap((c) => Object.keys(c))));
 
   async function loadDate(newDate: string) {
     setLoading(true);
@@ -73,12 +76,19 @@ export default function ZimmerplanClient({ initialDate, initialCards, hasPro }: 
           <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
             <button onClick={() => setView('gantt')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', background: view === 'gantt' ? 'var(--accent)' : 'var(--surface)', color: view === 'gantt' ? 'var(--text-on-accent)' : 'var(--text-muted)', fontWeight: view === 'gantt' ? 600 : 400 }}>Belegungsplan</button>
             <button onClick={() => setView('tag')} style={{ padding: '8px 14px', fontSize: 13, cursor: 'pointer', border: 'none', borderLeft: '1px solid var(--border)', background: view === 'tag' ? 'var(--accent)' : 'var(--surface)', color: view === 'tag' ? 'var(--text-on-accent)' : 'var(--text-muted)', fontWeight: view === 'tag' ? 600 : 400 }}>Tagesansicht</button>
+            <button onClick={() => { if (hasPro) setView('preise'); }} disabled={!hasPro} title={!hasPro ? 'Pro-Feature' : undefined} style={{ padding: '8px 14px', fontSize: 13, cursor: hasPro ? 'pointer' : 'default', border: 'none', borderLeft: '1px solid var(--border)', background: view === 'preise' ? 'var(--accent)' : 'var(--surface)', color: view === 'preise' ? 'var(--text-on-accent)' : hasPro ? 'var(--text-muted)' : 'var(--text-disabled)', fontWeight: view === 'preise' ? 600 : 400, display: 'flex', alignItems: 'center', gap: 6 }}>
+              Preise
+              {!hasPro && <span style={{ fontSize: 10, background: '#7c3aed', color: '#fff', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>Pro</span>}
+            </button>
           </div>
         </div>
       </div>
 
       {/* Gantt view */}
-      {view === 'gantt' && <GanttView todayIso={initialDate} initialIso={date} hasPro={hasPro} />}
+      {view === 'gantt' && <GanttView todayIso={initialDate} initialIso={date} hasPro={hasPro} channelOfferIds={channelOfferIds} />}
+
+      {/* Price grid view */}
+      {view === 'preise' && hasPro && <PriceGridView todayIso={initialDate} initialIso={date} availableChannels={availableChannels} />}
 
       {/* Tag-Navigation */}
       {view === 'tag' && (

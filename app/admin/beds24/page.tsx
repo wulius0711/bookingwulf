@@ -25,7 +25,7 @@ export default async function Beds24Page() {
     where: { id: session.hotelId },
     select: {
       plan: true,
-      beds24Config: { select: { isEnabled: true, webhookSecret: true } },
+      beds24Config: { select: { isEnabled: true, webhookSecret: true, connectedChannels: true } },
       apartments: { select: { id: true, name: true }, where: { isActive: true }, orderBy: { sortOrder: 'asc' } },
     },
   });
@@ -36,10 +36,13 @@ export default async function Beds24Page() {
 
   const mappings = await prisma.beds24ApartmentMapping.findMany({
     where: { apartment: { hotelId: session.hotelId } },
-    select: { apartmentId: true, beds24RoomId: true },
+    select: { apartmentId: true, beds24RoomId: true, channelOfferIds: true },
   });
 
   const mappingMap = Object.fromEntries(mappings.map((m) => [m.apartmentId, m.beds24RoomId]));
+  const channelOfferMap = Object.fromEntries(
+    mappings.map((m) => [m.apartmentId, (m.channelOfferIds as Record<string, number> | null) ?? {}])
+  );
 
   const headerStore = await headers();
   const host = `https://${headerStore.get('host') ?? 'bookingwulf.com'}`;
@@ -60,6 +63,8 @@ export default async function Beds24Page() {
         apartments={hotel.apartments}
         initialMappings={mappingMap}
         webhookUrl={hotel.beds24Config ? `${host}/api/beds24-webhook?token=${hotel.beds24Config.webhookSecret}` : ''}
+        initialConnectedChannels={(hotel.beds24Config?.connectedChannels as string[] | null) ?? []}
+        initialChannelOfferIds={channelOfferMap}
       />
     </main>
   );
