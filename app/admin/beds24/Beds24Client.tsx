@@ -217,10 +217,11 @@ export default function Beds24Client({ initialConnected, initialEnabled, apartme
           <p style={{ fontSize: 13, color: '#b45309', marginBottom: 16, lineHeight: 1.5 }}>
             ⚠️ Nur verbundene Kanäle anhaken. Nicht verbundene Kanäle bleiben wirkungslos.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 24, rowGap: 12 }}>
             {SUPPORTED_CHANNELS.map((channel) => (
-              <label key={channel} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, cursor: 'pointer' }}>
+              <label key={channel} className="form-toggle">
                 <input type="checkbox" checked={connectedChannels.includes(channel)} onChange={() => toggleChannel(channel)} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
                 {CHANNEL_DISPLAY_NAME[channel]}
               </label>
             ))}
