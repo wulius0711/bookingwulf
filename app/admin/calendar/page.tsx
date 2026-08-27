@@ -3,6 +3,7 @@ import { verifySession } from '@/src/lib/session';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Link from 'next/link';
 import CalendarGrid, { type BookingChip, type BlockedChip, type ChannelPriceChip } from './CalendarGrid';
+import LegendGroup from './LegendGroup';
 import { getChannelColor, channelLabel, BLOCKED_HOST_COLOR } from '@/src/lib/channelColors';
 
 export const dynamic = 'force-dynamic';
@@ -235,7 +236,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 className="page-title">Kalender</h1>
-          <p className="page-subtitle">Buchungen, Sperrzeiten und Preiszeiträume im Monatsüberblick.</p>
+          <p className="page-subtitle">Buchungen, Sperrzeiten, Preiszeiträume und Kanalpreise im Monatsüberblick.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link href={prevLink} style={linkStyle}>←</Link>
@@ -255,6 +256,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
           <span style={{ background: '#10b981', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Buchung</span>
           <span style={{ background: '#3b82f6', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Preiszeitraum</span>
           <span style={{ background: '#ef4444', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Sperrzeit</span>
+          <span style={{ background: '#ec4899', color: '#fff', borderRadius: 6, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>Kanalpreis</span>
           anlegen
         </span>
       </div>
@@ -274,24 +276,22 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         ))}
         <div style={{ flex: 1 }} />
         {/* Legend */}
+        <style>{`.legend-group { position: relative; display: inline-flex; }
+          .legend-tooltip { display: none; position: absolute; bottom: 100%; right: 0; margin-bottom: 8px; background: #1e293b; color: #f1f5f9; border-radius: 8px; padding: 8px 12px; font-size: 12px; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.25); z-index: 20; }
+          .legend-group:hover .legend-tooltip { display: block; }`}</style>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-          {(['new', 'answered'] as const).map((status) => (
-            <div key={status} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: STATUS_COLORS[status] }} />
-              {STATUS_LABELS[status]}
-            </div>
-          ))}
+          <LegendGroup
+            label="Status"
+            items={(['new', 'answered'] as const).map((status) => ({ color: STATUS_COLORS[status], label: STATUS_LABELS[status] }))}
+          />
           <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
-          {legendChannels.map((channel) => (
-            <div key={channel} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: getChannelColor(channel).bg }} />
-              {channelLabel(channel)}
-            </div>
-          ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#6b7280' }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: BLOCKED_HOST_COLOR.bg }} />
-            Host-blockiert
-          </div>
+          <LegendGroup
+            label="Kanal"
+            items={[
+              ...legendChannels.map((channel) => ({ color: getChannelColor(channel).bg, label: channelLabel(channel) })),
+              { color: BLOCKED_HOST_COLOR.bg, label: 'Host-blockiert' },
+            ]}
+          />
         </div>
       </div>
 

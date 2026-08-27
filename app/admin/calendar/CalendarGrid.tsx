@@ -540,7 +540,6 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                   </div>
                   {editError && <div role="alert" style={{ fontSize: 12, color: '#f87171' }}>{editError}</div>}
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', paddingTop: 4 }}>
-                    <a href={`/admin/requests`} style={{ fontSize: 13, color: '#94a3b8', textDecoration: 'underline', lineHeight: '32px' }}>Zur Anfragenübersicht →</a>
                     {!confirmDelete ? (
                       <Button variant="danger" size="sm" type="button" onClick={() => setConfirmDelete(true)}>Löschen</Button>
                     ) : (
@@ -553,6 +552,7 @@ export default function CalendarGrid({ weeks, todayKey, dayBookings, dayBlocked,
                         }}>Wirklich löschen</Button>
                       </div>
                     )}
+                    <a href={`/admin/requests/${selectedItem.data.id}`} style={{ fontSize: 13, color: '#94a3b8', textDecoration: 'underline', lineHeight: '32px' }}>Zur Buchung →</a>
                   </div>
                 </div>
               ) : selectedItem.kind === 'channelPrice' ? (
