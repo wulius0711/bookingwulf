@@ -45,7 +45,9 @@ export default async function Beds24Page() {
 
   // Fixed canonical domain, not the request Host — Vercel preview/deployment URLs sit behind
   // Deployment Protection and silently 401 Beds24's webhook calls if this ever points there.
-  const host = process.env.NEXT_PUBLIC_APP_URL ?? 'https://bookingwulf.com';
+  // Uses the bare apex domain, not NEXT_PUBLIC_APP_URL (www.bookingwulf.com) — www 307-redirects
+  // to the apex, and webhook senders aren't guaranteed to follow redirects on POST.
+  const host = 'https://bookingwulf.com';
 
   return (
     <main className="admin-page" style={{ maxWidth: 960 }}>
