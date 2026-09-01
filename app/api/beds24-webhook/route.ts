@@ -14,6 +14,10 @@ export async function POST(req: Request) {
   }
   const authorizedHotelId = config.hotelId;
 
+  // Recorded regardless of what happens below — the one signal that lets us tell "Beds24 stopped
+  // calling us" apart from "no new bookings happened", instead of discovering a gap days later.
+  await prisma.beds24Config.update({ where: { webhookSecret: token }, data: { lastWebhookAt: new Date() } });
+
   let body: unknown;
   try {
     body = await req.json();
@@ -25,20 +29,32 @@ export async function POST(req: Request) {
   // detected defensively since the exact Beds24 payload shape for messages isn't publicly documented
   const items: (Beds24WebhookBooking & Beds24Message)[] = Array.isArray(body) ? body : [body as Beds24WebhookBooking & Beds24Message];
 
+  // Each item is isolated: one malformed/failing booking must not abort the rest of the batch or
+  // turn the whole request into a 500 (Beds24 auto-disables webhooks after repeated failures).
+  let lastError: string | null = null;
   for (const booking of items) {
-    const looksLikeMessage = (booking.message || booking.text) && !booking.roomId && !booking.arrival && !booking.departure;
-    if (looksLikeMessage) {
-      const bookingId = booking.bookingId ?? booking.id;
-      if (bookingId) {
-        await saveIncomingBeds24Message(String(bookingId), booking);
-      } else {
-        console.warn('[Beds24 webhook] message event ohne bookingId, übersprungen', booking);
+    try {
+      const looksLikeMessage = (booking.message || booking.text) && !booking.roomId && !booking.arrival && !booking.departure;
+      if (looksLikeMessage) {
+        const bookingId = booking.bookingId ?? booking.id;
+        if (bookingId) {
+          await saveIncomingBeds24Message(String(bookingId), booking);
+        } else {
+          console.warn('[Beds24 webhook] message event ohne bookingId, übersprungen', booking);
+        }
+        continue;
       }
-      continue;
-    }
 
-    const result = await processBeds24Booking(booking, authorizedHotelId);
-    console.log('[Beds24 webhook]', result, 'roomId', booking.roomId, 'booking', booking.id);
+      const result = await processBeds24Booking(booking, authorizedHotelId);
+      console.log('[Beds24 webhook]', result, 'roomId', booking.roomId, 'booking', booking.id);
+    } catch (e) {
+      lastError = e instanceof Error ? e.message : String(e);
+      console.error('[Beds24 webhook] Fehler bei Buchung', booking.id, e);
+    }
+  }
+
+  if (lastError) {
+    await prisma.beds24Config.update({ where: { webhookSecret: token }, data: { lastWebhookError: lastError } }).catch(() => {});
   }
 
   return Response.json({ ok: true });

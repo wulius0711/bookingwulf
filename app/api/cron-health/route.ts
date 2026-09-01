@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 const THRESHOLDS_MIN: Record<string, number> = {
   'daily-backup': 25 * 60,
   'ical-sync': 35,
+  'beds24-booking-sync': 7 * 60,
 };
 
 export async function GET() {

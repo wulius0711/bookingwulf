@@ -46,6 +46,10 @@
       "schedule": "*/30 * * * *"
     },
     {
+      "path": "/api/cron/beds24-booking-sync",
+      "schedule": "0 */6 * * *"
+    },
+    {
       "path": "/api/cron/housekeeping-checkout",
       "schedule": "0 11 * * *"
     }

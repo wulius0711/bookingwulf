@@ -594,6 +594,8 @@ model Beds24Config {
   webhookSecret        String    @unique
   isEnabled            Boolean   @default(false)
   connectedChannels    Json? // string[] der verbundenen OTA-Kanäle, z.B. ["airbnb","booking"] — vom Hotelier gepflegt, siehe /admin/beds24
+  lastWebhookAt        DateTime? // letzter authentifizierter Aufruf von /api/beds24-webhook, unabhängig vom Ergebnis — Basis für Stillstands-Erkennung
+  lastWebhookError     String? // Fehlermeldung des letzten fehlgeschlagenen Booking-Items im Webhook, zur Diagnose ohne Log-Zugriff
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 }

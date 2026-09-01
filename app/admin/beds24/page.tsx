@@ -1,7 +1,6 @@
 import { verifySession } from '@/src/lib/session';
 import { prisma } from '@/src/lib/prisma';
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
 import { hasPlanAccess } from '@/src/lib/plan-gates';
 import Beds24Client from './Beds24Client';
 
@@ -44,8 +43,9 @@ export default async function Beds24Page() {
     mappings.map((m) => [m.apartmentId, (m.channelOfferIds as Record<string, number> | null) ?? {}])
   );
 
-  const headerStore = await headers();
-  const host = `https://${headerStore.get('host') ?? 'bookingwulf.com'}`;
+  // Fixed canonical domain, not the request Host — Vercel preview/deployment URLs sit behind
+  // Deployment Protection and silently 401 Beds24's webhook calls if this ever points there.
+  const host = process.env.NEXT_PUBLIC_APP_URL ?? 'https://bookingwulf.com';
 
   return (
     <main className="admin-page" style={{ maxWidth: 960 }}>
